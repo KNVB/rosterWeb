@@ -17,13 +17,13 @@ MonthlyCalendar mc=cu.getMonthlyCalendar(now.get(Calendar.YEAR),now.get(Calendar
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<!-- script src="https://code.jquery.com/jquery-3.3.1.js"></script -->
 		<script type="text/javascript" src="<%=request.getContextPath() %>/webjars/jquery/3.3.1/jquery.min.js"></script>
 		<script src="js/Calendar.js"></script>
 		<script src="js/ITO.js"></script>
 		<script src="js/ShiftRule.js"></script>
 		<script src="js/Roster.js"></script>
 		<script src="js/RosterTable.js"></script>
+		<script src="js/Utility.js"></script>
 		<script>
 			var rosterTable,roster;
 			$( document ).ready(function() {
@@ -46,6 +46,9 @@ MonthlyCalendar mc=cu.getMonthlyCalendar(now.get(Calendar.YEAR),now.get(Calendar
 						$(".clearAllButton").on("click",function(){
 							rosterTable.clearAllShift()
 						})
+						$(".saveRosterToDBButton").on("click",function(){
+							roster.saveAllData();
+						});
 				})
 				.fail(function(error){
 					alert("An error occur when retrieving roster data:"+data);	
@@ -140,7 +143,7 @@ MonthlyCalendar mc=cu.getMonthlyCalendar(now.get(Calendar.YEAR),now.get(Calendar
 				<tr>	
 					<td colspan=34 style="text-align:center">	
 						<a class="exportButton">Export</a>
-						<a class="saveRosterToDBButton">Save Roster to DB</a>
+						<a class="saveRosterToDBButton">Save all data to DB</a>
 					</td>
 					
 				</tr>									

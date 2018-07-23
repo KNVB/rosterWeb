@@ -28,7 +28,8 @@ class RosterTable
 		$(this.rosterFooter).hide();
 		var ito;
 		var requestParameters={"year":year,"month":month}; 
-		//console.log(requestParameters);		
+		//console.log(requestParameters);
+		var utility=new Utility()
 		return	jQuery.ajax({"url": "getRoster.jsp",
 			 			dataType: 'json',
 			 			data:requestParameters,
@@ -60,7 +61,7 @@ class RosterTable
 				 						$(self.rosterFooter).show();
 				 						
 			 						},
-	//		 			error:this.showErrorMessage
+			 			error:utility.showAjaxErrorMessage
 					});
 	}
 	genRosterCaption()
@@ -392,7 +393,7 @@ class RosterTable
 		var shiftRow=theCell.parentElement;
 		var itoId=shiftRow.id.replace("shift_","");
 		var shift=theCell.textContent;
-		//console.log("|"+shift+"|");
+	//	console.log("|"+shift+"|");
 		if (shift=="")
 		{
 			theCell.className="borderCell shiftCell";
@@ -501,10 +502,6 @@ class RosterTable
 			$(autoPlanEndDateSelectBox).append("<option value="+i+">"+i+"</option>");
 		}
 		autoPlanEndDateSelectBox.options[i-2].selected=true;
-	}
-	showErrorMessage(jqXHR, textStatus, errorThrown)
-	{
-		console.log(jqXHR,textStatus);
 	}
 //----------------------------------------------------------------------------------------------------------------------------------	
 	clearAllShift()

@@ -24,28 +24,52 @@ class ShiftRule
 		});
 		return result;
 	}
+	getITOAvailableShiftList(shiftRow,requirementShift,index,ito,thatShift)
+	{
+		var result=[];
+		var self=this;
+		switch (requirementShift)
+		{
+			case "o":
+			case "d" : 
+			case "d1":
+			case "d2":
+			case "d3":
+			case "al":					
+						break;
+			default:
+					ito.availableShift.forEach(function(shift){
+						if (self.isThatShiftOkForAssign(shiftRow,requirementShift,index,ito,shift))
+						{
+							//console.log(ito.itoId,shift);
+							result.push(shift);
+						}
+					});
+		}
+		return result;
+	}
 	isThatShiftOkForAssign(shiftRow,requirementShift,index,ito,thatShift)
 	{
 		var result=true;
 		
 		if (this.isConflictWithRequirementShift(requirementShift,thatShift))
 		{
-			console.log(ito.itoId+","+(index-2)+","+thatShift+",Conflict with requirement("+requirementShift+").");
+//			console.log(ito.itoId+","+(index-2)+","+thatShift+",Conflict with requirement("+requirementShift+").");
 			result=false;
 		}
 		else
 		{
 			if (this.isThatShiftFormBlackListedShiftPattern(shiftRow,index,ito,thatShift))
 			{	
-				console.log(ito.itoId+","+(index-2)+","+thatShift+",black list");
+		//		console.log(ito.itoId+","+(index-2)+","+thatShift+",black list");
 				result=false;
 			}
 			else
 			{
-				var count=this.getNoOfConWorkingDay(shiftRow,index-1);
+				var count=this.getNoOfConWorkingDay(shiftRow,index);
 				if (count>this.maxConWorkingDay)
 				{	
-					console.log(ito.itoId+","+(index-2)+","+thatShift+",longer than maximum number of Consecutive working day");
+			//		console.log(ito.itoId+","+(index-2)+","+count+","+thatShift+",longer than maximum number of Consecutive working day");
 					result=false;
 				}
 			}			

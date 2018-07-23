@@ -18,21 +18,23 @@ class ITO
 	{
 		var self=this;
 		var isMatched=false;
-		if (shiftRequirement=="")
+		switch (shiftRequirement)
 		{
-			isMatched=true;
+			case "":
+			case "o":
+			case "al":
+						isMatched=true;
+						break;
+			default:
+					for (var i=0;i<this.availableShift.length;i++)
+					{
+						if ((this.availableShift[i]==shiftRequirement)|| (shiftRequirement==("n"+this.availableShift[i])))
+						{	
+							isMatched=true;
+							break;
+						}
+					}
 		}
-		else
-		{
-			for (var i=0;i<this.availableShift.length;i++)
-			{
-				if ((this.availableShift[i]==shiftRequirement)|| (shiftRequirement==("n"+this.availableShift[i])))
-				{	
-					isMatched=true;
-					break;
-				}
-			}
-		}	
 		return isMatched;
 	}
 	getBlackListedShiftPatternIndex(shiftPattern)

@@ -9,6 +9,53 @@ class Roster
 		this.itoList=this.rosterTable.itoList;
 		this.shiftRule=this.rosterTable.shiftRule;
 	}
+	saveAllData()
+	{
+		var utility=new Utility();
+		var shift,requirementShift;
+		var shiftRowList=this.rosterTable.getAllShiftRow();
+		var requirementRowList=this.rosterTable.getAllRequirementRow();
+		var shiftString="\"shiftList\":{";
+		var rosterData ="{\"year\":"+this.rosterTable.year+",";
+		rosterData+="\"month\":"+(this.rosterTable.month+1)+",";
+		
+		
+		for (var index=this.rosterTable.shiftStartCellIndex;
+			 index<(this.rosterTable.shiftStartCellIndex+this.rosterTable.calendarList.length);
+			 index++)
+		{
+			shiftString+="\"+(index-2)+":{";
+
+			for (var itoId in this.itoList)
+			{
+				//console.log(index,"itoId="+itoId);
+				shift=shiftRowList[itoId].cells[index].textContent;
+				requirementShift=requirementRowList[itoId].cells[index].textContent;
+				shiftString+="\""+itoId+"\":{\"shift\":\""+shift+"\",";
+				shiftString+="\"requirementShift\":\""+requirementShift+"\"},";
+			}
+			shiftString=shiftString.substring(0,shiftString.length-1);
+
+			shiftString+="},";
+
+			
+		}
+		shiftString=shiftString.substring(0,shiftString.length-1);
+
+		rosterData+=shiftString+"}";
+
+		rosterData+="}";
+		//console.log(rosterData);
+		jQuery.ajax({"url": "saveRosterData.jsp",
+					 dataType: 'text',
+					 data:rosterData,
+					 method:"POST",
+					 success:function(){
+						 		alert("All roster data are saved.");
+					 		 },	
+					 error:utility.showAjaxErrorMessage
+		});
+	}
 	autoAssign()
 	{
 		var startDate=parseInt($("#autoPlannStartDate").val());
@@ -18,30 +65,76 @@ class Roster
 			alert("Invalid shift requirement detected");
 		else
 		{
-			var ito,requirementShift;
-			var shift,shiftRow,thatShift;
+			var assigned=false;
+			var ito,requirementShift,comparetor;
+			var shift,shiftRow,thatShift,essentialShiftTemp;
 			var shiftRowList=this.rosterTable.getAllShiftRow();
+			var essentialShift=this.shiftRule.getEssentialShift();
 			var requirementRowList=this.rosterTable.getAllRequirementRow();
-			var result;		
+			
+			var result,utility=new Utility();		
 			var index=startDate+2;
-			var itoId="ITO1_1999-01-01";
-			//var itoId="ITO4_1999-01-01";
-			//var itoId="ITO3_2017-10-18";
-			//for (var itoId in shiftRowList)
-			{
-				shiftRow=shiftRowList[itoId];
-				requirementShift=requirementRowList[itoId].cells[index].textContent;
-				ito=this.itoList[itoId];
-				for (var i=0;i<this.shiftRule.essentialShiftList.length;i++)
+			//index=12;
+			for (var index=(startDate+2);index<=(endDate+2);index++)
+			{	
+				//console.log(index,(startDate+2),(endDate+2));
+				this.itoList=utility.shuffleProperties(this.itoList);
+				essentialShiftTemp=essentialShift;
+				for (var itoId in this.itoList)
 				{
-					thatShift=this.shiftRule.essentialShiftList[i];
-					result=this.shiftRule.isThatShiftOkForAssign(shiftRow,requirementShift,index,ito,thatShift);
-					//console.log(itoId,thatShift,requirementShift,result);
-					if (result)
-						break;
+					//console.log(index,"itoId="+itoId);
+					shiftRow=shiftRowList[itoId];
+					requirementShift=requirementRowList[itoId].cells[index].textContent;
+					$(shiftRow.cells[index]).html("");
+					switch (requirementShift)
+					{
+						case "o":
+								$(shiftRow.cells[index]).html("O").blur();
+								break;
+						case "d" : 
+						case "d1":
+						case "d2":
+						case "d3":
+								$(shiftRow.cells[index]).html(requirementShift).blur();
+								break;
+						default:
+							ito=this.itoList[itoId];
+							result=this.shiftRule.getITOAvailableShiftList(shiftRow,requirementShift,index,ito);
+							if (result.length==0)
+							{	
+								$(shiftRow.cells[index]).html("O").blur();
+								assigned=true;
+							}
+							else
+							{	
+								assigned=false;
+								for (var i=0;i<result.length;i++)
+								{
+									switch (result[i])
+									{
+										case "b1": 
+												comparetor="b";
+												break;
+										default:comparetor=result[i];	
+												break;
+									}
+									if (essentialShiftTemp.indexOf(comparetor)>-1)
+									{
+										essentialShiftTemp=essentialShiftTemp.replace(comparetor,"");
+										console.log((index-2)+" "+result[i]+" shift is assigned to "+itoId);
+										$(shiftRow.cells[index]).html(result[i]).blur();
+										assigned=true;
+										break;
+									}	
+								}
+								if (!assigned)
+									$(shiftRow.cells[index]).html("O").blur();
+							}	
+							break;	
+					}					
 				}
-				console.log(itoId,index-2,thatShift,result);
 			}
+			this.validate();
 		}
 	}
 	validate()
