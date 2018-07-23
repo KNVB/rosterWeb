@@ -1,0 +1,130 @@
+class ShiftRule
+{
+	constructor()
+	{
+		this.shiftHour=[];
+		this.shiftHour["a"]=9;
+		this.shiftHour["b"]=5.75;
+		this.shiftHour["b1"]=7.25;
+		this.shiftHour["c"]=10.75;
+		this.shiftHour["d"]=9;
+		this.shiftHour["d1"]=8;
+		this.shiftHour["d2"]=8;
+		this.shiftHour["d3"]=7.8;
+		
+		//maximum number of Consecutive working day
+		this.maxConWorkingDay=5;
+		this.essentialShiftList=["a","b","c"];
+	}
+	getEssentialShift()
+	{
+		var result="";
+		this.essentialShiftList.forEach(function(shift){
+										result+=shift;	
+		});
+		return result;
+	}
+	isThatShiftOkForAssign(shiftRow,requirementShift,index,ito,thatShift)
+	{
+		var result=true;
+		
+		if (this.isConflictWithRequirementShift(requirementShift,thatShift))
+		{
+			console.log(ito.itoId+","+(index-2)+","+thatShift+",Conflict with requirement("+requirementShift+").");
+			result=false;
+		}
+		else
+		{
+			if (this.isThatShiftFormBlackListedShiftPattern(shiftRow,index,ito,thatShift))
+			{	
+				console.log(ito.itoId+","+(index-2)+","+thatShift+",black list");
+				result=false;
+			}
+			else
+			{
+				var count=this.getNoOfConWorkingDay(shiftRow,index-1);
+				if (count>this.maxConWorkingDay)
+				{	
+					console.log(ito.itoId+","+(index-2)+","+thatShift+",longer than maximum number of Consecutive working day");
+					result=false;
+				}
+			}			
+		}
+		/*
+		result=result | this.isConflictWithRequirementShift(requirementShift,thatShift);*/
+		return result;
+	}
+	getNoOfConWorkingDay(shiftRow,index)
+	{
+		var cell;
+		var count=0,finished=false;
+		
+		for (var i=index;i>0;i--)
+		{
+			cell=shiftRow.cells[i];
+			switch (cell.textContent)
+			{
+				case "O":
+				case "d" : 
+				case "d1":
+				case "d2":
+				case "d3":
+							finished=true;
+							break;
+				default:
+						count++;
+						break;
+			}
+			if (finished)
+				break;
+		}	
+		return count;
+	}
+	isConflictWithRequirementShift(requirementShift,thatShift)
+	{
+		var result=false;
+		if ((requirementShift=="")||(requirementShift==thatShift))
+			return result;
+		else
+		{
+			if (requirementShift.startsWith("n"))
+			{
+				if (requirementShift.indexOf(thatShift)>-1)
+					result=true;
+			}	
+			else	
+				result=true;
+		}
+		return result;
+	}
+	isThatShiftFormBlackListedShiftPattern(shiftRow,index,ito,thatShift)
+	{
+		var result=false;
+		var indices=this.getBlackListedShiftPatternIndex(shiftRow,index,ito,thatShift);
+		if (indices.length>0)
+			result=true;
+	//	console.log(ito.itoId,thatShift,result);
+		return result;
+	}
+	getBlackListedShiftPatternIndex(shiftRow,endIndex,ito)
+	{
+		this.getBlackListedShiftPatternIndex(shiftRow,endIndex,ito,null);
+	}
+	getBlackListedShiftPatternIndex(shiftRow,endIndex,ito,thatShift)
+	{
+		var indices,cell;
+		var allShift="";
+		for (var i=1;i<endIndex;i++)
+		{
+			cell=shiftRow.cells[i];
+			allShift+=cell.textContent+",";
+		}
+		if (thatShift==null)
+			allShift=allShift.substring(0,allShift.length-1);
+		else
+			allShift+=thatShift;
+		//console.log(allShift);
+		indices=ito.getBlackListedShiftPatternIndex(allShift);
+		return indices;
+	}
+}

@@ -1,0 +1,7 @@
+DataStoreImplementationClassName = util.DbOp
+dbServerName=server
+dbms=mysql
+dbName=roster
+dbUserName=cstsang
+dbUserPwd=30Dec2010
+jdbcDriver = com.mysql.jdbc.Driver
