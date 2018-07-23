@@ -30,6 +30,10 @@ public class Roster {
 	{
 		return iTORosterList;
 	}
+	public void setITORosterList(Hashtable<String,ITORoster>iTORosterList)
+	{
+		this.iTORosterList=iTORosterList;
+	}
 	public GregorianCalendar getRosterDate() 
 	{
 		return rosterDate;
