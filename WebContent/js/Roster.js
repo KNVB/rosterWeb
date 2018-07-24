@@ -12,38 +12,36 @@ class Roster
 	saveAllData()
 	{
 		var utility=new Utility();
-		var shift,requirementShift;
+		var lastMonthBalance;
+		var shift,requirementShift,shiftDate;
 		var shiftRowList=this.rosterTable.getAllShiftRow();
 		var requirementRowList=this.rosterTable.getAllRequirementRow();
-		var shiftString="\"shiftList\":{";
+		var itoRosterString="";
 		var rosterData ="{\"year\":"+this.rosterTable.year+",";
 		rosterData+="\"month\":"+(this.rosterTable.month+1)+",";
-		
-		
-		for (var index=this.rosterTable.shiftStartCellIndex;
-			 index<(this.rosterTable.shiftStartCellIndex+this.rosterTable.calendarList.length);
-			 index++)
+		for (var itoId in this.itoList)
 		{
-			shiftString+="\"+(index-2)+":{";
-
-			for (var itoId in this.itoList)
+			itoRosterString+="\""+itoId+"\":{\"shiftList\":[";
+			for (var index=this.rosterTable.shiftStartCellIndex;index<(this.rosterTable.shiftStartCellIndex+this.rosterTable.calendarList.length);index++)
 			{
-				//console.log(index,"itoId="+itoId);
 				shift=shiftRowList[itoId].cells[index].textContent;
-				requirementShift=requirementRowList[itoId].cells[index].textContent;
-				shiftString+="\""+itoId+"\":{\"shift\":\""+shift+"\",";
-				shiftString+="\"requirementShift\":\""+requirementShift+"\"},";
+				shiftDate=new Date(this.rosterTable.year,this.rosterTable.month,index-2);
+				itoRosterString+="{\"itoId\":\""+itoId+"\",";
+				itoRosterString+="\"shift\":\""+shift+"\",";
+				itoRosterString+="\"shiftDate\":"+JSON.stringify(shiftDate);
+				itoRosterString+="},";
 			}
-			shiftString=shiftString.substring(0,shiftString.length-1);
 
-			shiftString+="},";
-
+			//get the lastMonthanBalance value
+			lastMonthBalance=shiftRowList[itoId].cells[this.rosterTable.totalHourCellIndex+4].textContent;
 			
+			itoRosterString=itoRosterString.substring(0,itoRosterString.length-1);
+			itoRosterString+="],";
+			itoRosterString+="\"lastMonthBalance\":"+lastMonthBalance;
+			itoRosterString+="},";
 		}
-		shiftString=shiftString.substring(0,shiftString.length-1);
-
-		rosterData+=shiftString+"}";
-
+		itoRosterString=itoRosterString.substring(0,itoRosterString.length-1);
+		rosterData+=itoRosterString;
 		rosterData+="}";
 		//console.log(rosterData);
 		jQuery.ajax({"url": "saveRosterData.jsp",
