@@ -17,9 +17,10 @@ class Roster
 		var shiftRowList=this.rosterTable.getAllShiftRow();
 		var requirementRowList=this.rosterTable.getAllRequirementRow();
 		var itoRosterString="";
-		var rosterData ="{\"year\":"+this.rosterTable.year+",";
-		rosterData+="\"month\":"+(this.rosterTable.month+1)+",";
-		for (var itoId in this.itoList)
+		var rosterData ="{\"rosterYear\":"+this.rosterTable.year+",";
+		rosterData+="\"rosterMonth\":"+(this.rosterTable.month+1)+",";
+		var itoId="ITO1_1999-01-01";
+		//for (var itoId in this.itoList)
 		{
 			itoRosterString+="\""+itoId+"\":{\"shiftList\":[";
 			for (var index=this.rosterTable.shiftStartCellIndex;index<(this.rosterTable.shiftStartCellIndex+this.rosterTable.calendarList.length);index++)
@@ -28,7 +29,7 @@ class Roster
 				shiftDate=new Date(this.rosterTable.year,this.rosterTable.month,index-2);
 				itoRosterString+="{\"itoId\":\""+itoId+"\",";
 				itoRosterString+="\"shift\":\""+shift+"\",";
-				itoRosterString+="\"shiftDate\":"+JSON.stringify(shiftDate);
+				itoRosterString+="\"shiftDate\":"+shiftDate.getTime();
 				itoRosterString+="},";
 			}
 
@@ -43,7 +44,7 @@ class Roster
 		itoRosterString=itoRosterString.substring(0,itoRosterString.length-1);
 		rosterData+=itoRosterString;
 		rosterData+="}";
-		//console.log(rosterData);
+		console.log(rosterData);
 		jQuery.ajax({"url": "saveRosterData.jsp",
 					 dataType: 'text',
 					 data:rosterData,
