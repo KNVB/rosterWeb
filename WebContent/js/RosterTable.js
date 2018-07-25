@@ -366,22 +366,19 @@ class RosterTable
 
 		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
 		cell.className="borderCell";
-		
-		
-		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
-		cell.className="borderCell";
+		cell.id="shiftAStdDev";
 		
 		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
 		cell.className="borderCell";
+		cell.id="shiftBStdDev";
 		
 		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
 		cell.className="borderCell";
+		cell.id="shiftCStdDev";
 		
-
 		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
 		cell.className="borderCell";
-
-
+		cell.colSpan=2;
 	}
 	refresh(self,select)
 	{
@@ -504,10 +501,14 @@ class RosterTable
 		
 		//update total no. of varies shift value
 		aShiftCountCell.textContent=aShiftCount;
-		this._updateStandardDevValue(aShiftCountCell.cellIndex);
+		this._updateStandardDevValue("A",aShiftCountCell.cellIndex);
 		
 		bShiftCountCell.textContent=bShiftCount;
+		this._updateStandardDevValue("B",bShiftCountCell.cellIndex);
+		
 		cShiftCountCell.textContent=cShiftCount;
+		this._updateStandardDevValue("C",cShiftCountCell.cellIndex);
+		
 		dShiftCountCell.textContent=dShiftCount;
 		noOfWorkingDayCell.textContent=Math.round((aShiftCount+bShiftCount+cShiftCount+dShiftCount)*100)/100;
 		
@@ -527,13 +528,13 @@ class RosterTable
 		}
 		autoPlanEndDateSelectBox.options[i-2].selected=true;
 	}
-	_updateStandardDevValue(cellIndex)
+	_updateStandardDevValue(shiftName,cellIndex)
 	{
 		
 		var shiftCount=[];
 		var rows=this.getAllShiftRow(),row;
 
-		console.log("cellIndex="+cellIndex);
+//		console.log("cellIndex="+cellIndex);
 		for (var itoId in rows)
 		{
 			row=rows[itoId];
@@ -545,15 +546,17 @@ class RosterTable
 				//shiftCount.push(parseInt(row.cells[cellIndex].textContent));
 			}
 		}
-		console.log("cellIndex="+cellIndex);
+		//console.log("cellIndex="+cellIndex);
 		if (shiftCount.length>0)
 		{
-			console.log(shiftCount);
-			var vancantShiftRow=document.getElementById("vancantShift");
-			var value=this.utility.standardDeviation(shiftCount);
-			vancantShiftRow.cells[cellIndex-4].textContent=value;
+			//console.log(shiftCount);
+			//var vancantShiftRow=document.getElementById("vancantShift");
+			var value=this.utility.getSD(shiftCount);
+			console.log(shiftCount,value);
+			document.getElementById("shift"+shiftName+"StdDev").textContent=value;
+			//vancantShiftRow.cells[cellIndex-4].textContent=value;
 		}
-		console.log("++++++++++++++++++++++++++++++++");
+		//console.log("++++++++++++++++++++++++++++++++");
 	}
 //----------------------------------------------------------------------------------------------------------------------------------	
 	clearAllShift()

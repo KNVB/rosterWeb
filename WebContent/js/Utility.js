@@ -38,25 +38,26 @@ class Utility
 	{
 		console.log(jqXHR,textStatus);
 	}
-	standardDeviation(values){
-		  var avg = this._average(values);
-		  
-		  var squareDiffs = values.map(function(value){
-		    var diff = value - avg;
-		    var sqrDiff = diff * diff;
-		    return sqrDiff;
-		  });
-		  var avgSquareDiff = this._average(squareDiffs);
-
-		  var stdDev = Math.sqrt(avgSquareDiff);
-		  return stdDev;
+	roundTo(theValue,decPlace)
+	{
+		var result=theValue*Math.pow(10,decPlace);
+		result=Math.round(result);
+		result=result/Math.pow(10,decPlace);
+		return result;
 	}
-	_average(data){
-		  var sum = data.reduce(function(sum, value){
-		    return sum + value;
-		  }, 0);
-
-		  var avg = sum / data.length;
-		  return avg;
-		}
+	//Get The Standard Deviation for the incoming array of value;
+	getSD(data)
+	{
+	    var m =this. _getMean(data);
+	    var result=Math.sqrt(data.reduce(function (sq, n) {
+	            return sq + Math.pow(n - m, 2);
+	        }, 0) / (data.length - 1));
+	    return this.roundTo(result,2);
+	};
+	_getMean(data)
+	{
+		 return data.reduce(function (a, b) {
+		        return Number(a) + Number(b);
+		    }) / data.length;
+	}
 }
