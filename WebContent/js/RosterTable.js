@@ -11,6 +11,7 @@ class RosterTable
 		this.totalHourCellIndex=34;
 		this.shiftStartCellIndex=3;
 		this.shiftRule=new ShiftRule();
+		this.utility=new Utility();
 		this.table=document.getElementById("rosterTable");
 		this.rosterFooter=document.getElementById("footer");
 		this.rosterBody=document.getElementById("rosterBody");
@@ -361,7 +362,26 @@ class RosterTable
 		}
 		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
 		cell.className="borderCell";
-		cell.colSpan=10;	
+		cell.colSpan=5;
+
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="borderCell";
+		
+		
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="borderCell";
+		
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="borderCell";
+		
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="borderCell";
+		
+
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="borderCell";
+
+
 	}
 	refresh(self,select)
 	{
@@ -398,7 +418,7 @@ class RosterTable
 		{
 			theCell.className="borderCell shiftCell";
 			if (theCell.cellIndex>=this.shiftStartCellIndex)
-				this.reCalculate(shiftRow);
+				this._reCalculate(shiftRow);
 		}
 		else
 		{
@@ -429,14 +449,14 @@ class RosterTable
 							break;
 				}
 				if (theCell.cellIndex>=this.shiftStartCellIndex)
-					this.reCalculate(shiftRow);
+					this._reCalculate(shiftRow);
 			}
 		}
 	}
-	reCalculate(shiftRow,shift)
+	_reCalculate(shiftRow,shift)
 	{
 		var i,shift;
-		var actualHour=0;
+		var actualHour=0,shiftCount,myShiftRow;
 		var aShiftCount=0,bShiftCount=0,cShiftCount=0,dShiftCount=0;
 		var totalCell,actualCell,thisMonthCell,thisMonthBalanceCell,lastMonthCell;
 		var aShiftCountCell,bShiftCountCell,cShiftCountCell,dShiftCountCell,noOfWorkingDayCell;
@@ -482,11 +502,15 @@ class RosterTable
 		thisMonthCell.textContent=Math.round((actualHour-totalCell.textContent)*100)/100;
 		thisMonthBalanceCell.textContent=Math.round((parseFloat(thisMonthCell.textContent)+parseFloat(lastMonthCell.textContent))*100)/100;
 		
+		//update total no. of varies shift value
 		aShiftCountCell.textContent=aShiftCount;
+		this._updateStandardDevValue(aShiftCountCell.cellIndex);
+		
 		bShiftCountCell.textContent=bShiftCount;
 		cShiftCountCell.textContent=cShiftCount;
 		dShiftCountCell.textContent=dShiftCount;
 		noOfWorkingDayCell.textContent=Math.round((aShiftCount+bShiftCount+cShiftCount+dShiftCount)*100)/100;
+		
 	}
 	initAutoPlanDropDown()
 	{
@@ -502,6 +526,34 @@ class RosterTable
 			$(autoPlanEndDateSelectBox).append("<option value="+i+">"+i+"</option>");
 		}
 		autoPlanEndDateSelectBox.options[i-2].selected=true;
+	}
+	_updateStandardDevValue(cellIndex)
+	{
+		
+		var shiftCount=[];
+		var rows=this.getAllShiftRow(),row;
+
+		console.log("cellIndex="+cellIndex);
+		for (var itoId in rows)
+		{
+			row=rows[itoId];
+			
+			if ((row.cells[cellIndex].textContent!="") &&(row.cells[cellIndex].textContent!="N.A."))
+			{	
+				shiftCount.push(parseInt(row.cells[cellIndex].textContent));
+				//	console.log(itoId+","+row.cells[cellIndex].outerHTML);
+				//shiftCount.push(parseInt(row.cells[cellIndex].textContent));
+			}
+		}
+		console.log("cellIndex="+cellIndex);
+		if (shiftCount.length>0)
+		{
+			console.log(shiftCount);
+			var vancantShiftRow=document.getElementById("vancantShift");
+			var value=this.utility.standardDeviation(shiftCount);
+			vancantShiftRow.cells[cellIndex-4].textContent=value;
+		}
+		console.log("++++++++++++++++++++++++++++++++");
 	}
 //----------------------------------------------------------------------------------------------------------------------------------	
 	clearAllShift()
