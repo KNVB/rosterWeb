@@ -54,8 +54,18 @@ public class DbOp implements DataStore
 	}
 
 	@Override
-	public void saveRoster() {
-		// TODO Auto-generated method stub
+	public void updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList) 
+	{
+		for (String itoId:iTORosterList.keySet())
+		{
+			System.out.println("itoId="+itoId);
+			System.out.println("lastMonthBalance="+iTORosterList.get(itoId).getLastMonthBalance());
+			for (Shift shift:iTORosterList.get(itoId).getShiftList())
+			{
+				System.out.println("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
+				System.out.println("===============================");						
+			}
+		}
 
 	}
 
@@ -256,5 +266,5 @@ public class DbOp implements DataStore
 	{
 		dbConn.close();
 		dbConn = null;
-	}
+	}	
 }

@@ -2,7 +2,7 @@ package com;
 
 import util.DataStore;
 import java.util.Hashtable;
-import java.util.GregorianCalendar;
+//import java.util.GregorianCalendar;
 
 
 /**
@@ -20,7 +20,7 @@ public class Roster {
 	{
 		
 	}
-	public Roster(int rosterYear,int rosterMonth) throws Exception
+	/*public Roster(int rosterYear,int rosterMonth) throws Exception
 	{
 		dataStore=Utility.getDataStore();
 		this.rosterYear=rosterYear;
@@ -29,6 +29,13 @@ public class Roster {
 		//iTORosterList=dataStore.getRoster(this.rosterYear, this.rosterMonth) ;
 		iTORosterList=dataStore.getRoster(this.rosterYear, this.rosterMonth) ;
 		dataStore.close();
+	}*/
+	public void load() throws Exception
+	{
+		dataStore=Utility.getDataStore();
+		iTORosterList=dataStore.getRoster(this.rosterYear, this.rosterMonth) ;
+		dataStore.close();
+		dataStore=null;
 	}
 	public int getRosterYear() {
 		return rosterYear;
@@ -61,8 +68,12 @@ public class Roster {
 
 	}
 
-	public void save(){
-
+	public void update() throws Exception
+	{
+		dataStore=Utility.getDataStore();
+		dataStore.updateRoster(this.rosterYear, this.rosterMonth,this.iTORosterList) ;
+		dataStore.close();
+		dataStore=null;
 	}
 
 }

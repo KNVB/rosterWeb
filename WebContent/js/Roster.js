@@ -16,20 +16,23 @@ class Roster
 		var shift,requirementShift,shiftDate;
 		var shiftRowList=this.rosterTable.getAllShiftRow();
 		var requirementRowList=this.rosterTable.getAllRequirementRow();
-		var itoRosterString="";
+		var itoRosterString="\"itorosterList\":{";
 		var rosterData ="{\"rosterYear\":"+this.rosterTable.year+",";
 		rosterData+="\"rosterMonth\":"+(this.rosterTable.month+1)+",";
+		
 		var itoId="ITO1_1999-01-01";
+		
 		//for (var itoId in this.itoList)
 		{
 			itoRosterString+="\""+itoId+"\":{\"shiftList\":[";
 			for (var index=this.rosterTable.shiftStartCellIndex;index<(this.rosterTable.shiftStartCellIndex+this.rosterTable.calendarList.length);index++)
 			{
 				shift=shiftRowList[itoId].cells[index].textContent;
-				shiftDate=new Date(this.rosterTable.year,this.rosterTable.month,index-2);
+				shiftDate=Date.UTC(this.rosterTable.year,this.rosterTable.month,index-2);
+				console.log(shiftDate.toString());
 				itoRosterString+="{\"itoId\":\""+itoId+"\",";
 				itoRosterString+="\"shift\":\""+shift+"\",";
-				itoRosterString+="\"shiftDate\":"+shiftDate.getTime();
+				itoRosterString+="\"shiftDate\":"+JSON.stringify(shiftDate);
 				itoRosterString+="},";
 			}
 
@@ -41,7 +44,8 @@ class Roster
 			itoRosterString+="\"lastMonthBalance\":"+lastMonthBalance;
 			itoRosterString+="},";
 		}
-		itoRosterString=itoRosterString.substring(0,itoRosterString.length-1);
+		itoRosterString=itoRosterString.substring(0,itoRosterString.length-1);		
+		itoRosterString+="}";
 		rosterData+=itoRosterString;
 		rosterData+="}";
 		console.log(rosterData);

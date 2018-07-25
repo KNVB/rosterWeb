@@ -2,7 +2,6 @@ package util;
 import com.ITO;
 import com.ITORoster;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 
 
@@ -15,12 +14,11 @@ import java.util.Hashtable;
 public interface DataStore {
 
 	public void saveITOInfo();
-
-	public void saveRoster();
-
 	public void updateITOInfo();
 	public Hashtable<String,ITO>getITOInfo(int year,int month);
 	public Hashtable<String,ITORoster> getRoster(int year,int month);
-	public void close()throws Exception;	
+	public void close()throws Exception;
+
+	public void updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList);	
 
 }
