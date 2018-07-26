@@ -1,25 +1,22 @@
-/**
- * 
- */
 class RosterTable
 {
 	constructor()
 	{
-		this.calendarList=null;	
-		this.utility=new Utility();
+		this.month=0;		
+		this.year=1970;
+		this.itoList=null;
+		this.rosterList=null;
+		this.calendarList=null;		
+		this.workingDayCount=0;
 		this.totalHourCellIndex=34;
 		this.shiftStartCellIndex=3;
 		this.shiftRule=new ShiftRule();
-		this.shiftAStdDev=0.0;
-		this.shiftBStdDev=0.0;
-		this.shiftCStdDev=0.0;
-		this.averageShiftStdDev=0.0;
+		this.utility=new Utility();
 		this.table=document.getElementById("rosterTable");
 		this.rosterFooter=document.getElementById("footer");
 		this.rosterBody=document.getElementById("rosterBody");
 		this.rosterHeader=document.getElementById("rosterHeader");
-				
-		this.englishMonthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];		
+		this.englishMonthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
 	}
 	init(year,month)
 	{
@@ -33,7 +30,7 @@ class RosterTable
 		var ito;
 		var requestParameters={"year":year,"month":month}; 
 		//console.log(requestParameters);
-		
+		var utility=new Utility()
 		return	jQuery.ajax({"url": "getRoster.jsp",
 			 			dataType: 'json',
 			 			data:requestParameters,
@@ -65,7 +62,7 @@ class RosterTable
 				 						$(self.rosterFooter).show();
 				 						
 			 						},
-			 			error:this.utility.showAjaxErrorMessage
+			 			error:utility.showAjaxErrorMessage
 					});
 	}
 	genRosterCaption()
@@ -115,7 +112,7 @@ class RosterTable
 		cell.className="underlineText alignCenter boldText";
 		monthSelect.className="underlineText rosterMonthSelect";
 		monthSelect.onchange=function(){
-			self._refresh(self,this);
+			self.refresh(self,this);
 		};
 		cell.append(document.createTextNode(this.year));
 		for (i=0;i<10;i++)
@@ -268,7 +265,7 @@ class RosterTable
 			requirementRow=this.rosterBody.insertRow(this.rosterBody.rows.length);
 			
 			shiftRow.id="shift_"+ito.itoId;
-			requirementRow.id="preferredShift_"+ito.itoId;
+			requirementRow.id="requirement_"+ito.itoId;
 			cell=shiftRow.insertCell(shiftRow.cells.length);
 			cell.className="alignLeft borderCell";
 			
@@ -276,7 +273,7 @@ class RosterTable
 			
 			cell=requirementRow.insertCell(requirementRow.cells.length);
 			cell.className="alignLeft borderCell";
-			cell.innerHTML="Preferred Shift";
+			cell.innerHTML="Requirement";
 			
 			for (i=0;i<2;i++)
 			{
@@ -386,6 +383,14 @@ class RosterTable
 		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
 		cell.className="borderCell";
 	}
+	refresh(self,select)
+	{
+		//console.log(self,select);
+		var month=parseInt(select.options[select.selectedIndex].value);
+		var year=parseInt(select.nextSibling.textContent);
+		//console.log(year,month);
+		self.init(year,month);
+	}
 	loadRosterData()
 	{
 		var i,cell,ito;
@@ -402,7 +407,7 @@ class RosterTable
 				$(cell).html(shiftList[i]).blur();
 			}
 		}
-	}	
+	}
 	updateValue(theCell)
 	{
 		var shiftRow=theCell.parentElement;
@@ -447,204 +452,6 @@ class RosterTable
 					this._reCalculate(shiftRow);
 			}
 		}
-	}
-	haveMissingShift()
-	{
-		var ito,itoId,j,cell,i;
-		var shift,shiftRow;
-		var haveMissingShift=false;
-		var shiftRowList=this.getAllShiftRow();
-		
-		for (i=this.shiftStartCellIndex;i<this.shiftStartCellIndex+this.calendarList.length;i++)
-		{
-			var essentialShift=this.shiftRule.getEssentialShift();
-			for (var itoId in shiftRowList)
-			{
-				shiftRow=shiftRowList[itoId];
-				ito=this.itoList[itoId];
-				cell=shiftRow.cells[i];
-				shift=cell.textContent;
-				if (shift!="")
-				{
-					if (ito.isValidShift(shift))
-					{
-						essentialShift=essentialShift.replace(shift,"");
-						if (shift=="b1")
-						{
-							essentialShift=essentialShift.replace("b","");
-						}
-					}
-					else	
-					{
-						alert("Invalid shift");
-						$(cell).addClass("errorRedBlackGround");
-						haveMissingShift=true;
-						break;
-					}	
-				}
-			}
-			document.getElementById("vancantShift").cells[i].innerHTML=essentialShift;
-			if (essentialShift!="")
-				haveMissingShift=true;
-			/*if (haveMissingShift)
-				break;*/
-		}		
-		return haveMissingShift;
-	}
-	haveDuplicateShift()
-	{
-		var ito,itoId,j,cell,i;
-		var shift,shiftRow;
-		var haveDuplicateShift=false;
-		var shiftRowList=this.getAllShiftRow();
-		for (i=this.shiftStartCellIndex;i<this.shiftStartCellIndex+this.calendarList.length;i++)
-		{
-			var tempResult=[],temp="";
-			for (var itoId in shiftRowList)
-			{
-				shiftRow=shiftRowList[itoId];
-				ito=this.itoList[itoId];
-				cell=shiftRow.cells[i];
-				shift=cell.textContent;
-				if (shift!="")  
-				{
-					if (ito.isValidShift(shift))
-					{	switch (shift)
-						{
-							case "a":
-							case "c":
-									if ($.inArray (shift,tempResult)>-1)
-									{
-										alert("Duplicate Shift Found");
-										$(cell).addClass("errorRedBlackGround");
-										haveDuplicateShift=true;
-										break;	
-									}
-									else
-										tempResult.push(shift);
-									break;
-							case "b":		
-							case "b1":
-									if (($.inArray ("b1",tempResult)>-1) || ($.inArray ("b",tempResult)>-1))
-									{
-										alert("Duplicate Shift Found");
-										$(cell).addClass("errorRedBlackGround");
-										haveDuplicateShift=true;
-										break;	
-									}
-									else
-										tempResult.push(shift);
-									break;
-						}
-					}
-					else
-					{
-						alert("Invalid shift");
-						$(cell).addClass("errorRedBlackGround");
-						haveDuplicateShift=true;
-						break;
-					}
-				}
-			}
-			if (haveDuplicateShift)
-				break;
-		}
-		return haveDuplicateShift;
-	}
-	haveBlackListedShiftPattern()
-	{
-		var self=this;
-		var ito,indices,endIndex;
-		var shiftRow,result=false;
-		var shiftRowList=this.getAllShiftRow();
-		var itoList=this.itoList;
-		for (var itoId in shiftRowList)
-		{
-			shiftRow=shiftRowList[itoId];
-			ito=itoList[itoId];
-			endIndex=this.shiftStartCellIndex+this.calendarList.length;
-			indices=this.shiftRule.getBlackListedShiftPatternIndex(shiftRow,endIndex,ito);
-			if (indices.length>0)
-			{
-				indices.forEach(function (index){
-									if (index<self.shiftStartCellIndex)
-										index=self.shiftStartCellIndex;
-									$(shiftRow.cells[index]).addClass("errorRedBlackGround");
-							});
-				/*for (var i=this.shiftStartCellIndex;i<endIndex;i++)
-				{
-					var cell=shiftRow.cells[i];
-					if ($.inArray (i,indices)>-1)
-						$(shiftRow.cells[i]).addClass("errorRedBlackGround");
-					else
-						$(shiftRow.cells[i]).blur();
-				}*/
-				//console.log(indices,shiftRow);
-				result=true;
-			}
-		}
-		return result;
-	}
-	clearAllShift()
-	{
-		var itoId,shiftRow,shiftRows=this.getAllShiftRow();
-		var vancantShiftRow=document.getElementById("vancantShift");
-		for (var itoId in shiftRows)
-		{
-			shiftRow=shiftRows[itoId];
-			for (var j=this.shiftStartCellIndex;j<this.totalHourCellIndex;j++)
-			{
-				$(shiftRow.cells[j]).html("").blur();
-				$(vancantShiftRow.cells[j]).html("");
-			}	
-		}
-	}
-	getAllShiftRow()
-	{
-		var result=[];
-		var shiftRow;
-		for (var itoId in this.itoList)
-		{
-			shiftRow=document.getElementById("shift_"+itoId);
-			result[itoId]=shiftRow;
-		}
-		return result;
-	}
-	getAllpreferredShiftRow()
-	{
-		var result=[];
-		var requirementRow;
-		for (var itoId in this.itoList)
-		{
-			requirementRow=document.getElementById("preferredShift_"+itoId);
-			result[itoId]=requirementRow;
-		}
-		return result;
-	}
-	initAutoPlanDropDown()
-	{
-		var i;
-		var autoPlannStartDateSelectBox=document.getElementById("autoPlannStartDate");
-		var autoPlanEndDateSelectBox=document.getElementById("autoPlanEndDate");
-		
-		$(autoPlannStartDateSelectBox).empty();
-		$(autoPlanEndDateSelectBox).empty();
-		for (i=1;i<=this.calendarList.length;i++)
-		{
-			$(autoPlannStartDateSelectBox).append("<option value="+i+">"+i+"</option>");
-			$(autoPlanEndDateSelectBox).append("<option value="+i+">"+i+"</option>");
-		}
-		autoPlanEndDateSelectBox.options[i-2].selected=true;
-	}
-//-----------------------------------------------------------------------------------------------------------
-// Private method
-	_refresh(self,select)
-	{
-		//console.log(self,select);
-		var month=parseInt(select.options[select.selectedIndex].value);
-		var year=parseInt(select.nextSibling.textContent);
-		//console.log(year,month);
-		self.init(year,month);
 	}
 	_reCalculate(shiftRow,shift)
 	{
@@ -710,13 +517,28 @@ class RosterTable
 		noOfWorkingDayCell.textContent=Math.round((aShiftCount+bShiftCount+cShiftCount+dShiftCount)*100)/100;
 		
 	}
+	initAutoPlanDropDown()
+	{
+		var i;
+		var autoPlannStartDateSelectBox=document.getElementById("autoPlannStartDate");
+		var autoPlanEndDateSelectBox=document.getElementById("autoPlanEndDate");
+		
+		$(autoPlannStartDateSelectBox).empty();
+		$(autoPlanEndDateSelectBox).empty();
+		for (i=1;i<=this.calendarList.length;i++)
+		{
+			$(autoPlannStartDateSelectBox).append("<option value="+i+">"+i+"</option>");
+			$(autoPlanEndDateSelectBox).append("<option value="+i+">"+i+"</option>");
+		}
+		autoPlanEndDateSelectBox.options[i-2].selected=true;
+	}
 	_updateStandardDevValue(shiftName,cellIndex)
 	{
 		
 		var shiftCount=[];
 		var rows=this.getAllShiftRow(),row;
 
-
+//		console.log("cellIndex="+cellIndex);
 		for (var itoId in rows)
 		{
 			row=rows[itoId];
@@ -724,22 +546,65 @@ class RosterTable
 			if ((row.cells[cellIndex].textContent!="") &&(row.cells[cellIndex].textContent!="N.A."))
 			{	
 				shiftCount.push(parseInt(row.cells[cellIndex].textContent));
+				//	console.log(itoId+","+row.cells[cellIndex].outerHTML);
+				//shiftCount.push(parseInt(row.cells[cellIndex].textContent));
 			}
 		}
-
+		//console.log("cellIndex="+cellIndex);
 		if (shiftCount.length>0)
 		{
+			//console.log(shiftCount);
+			//var vancantShiftRow=document.getElementById("vancantShift");
 			var value=this.utility.getSD(shiftCount);
-			//console.log(shiftCount,value);
-			eval("this.shift"+shiftName+"StdDev="+value);
-			document.getElementById("shift"+shiftName+"StdDev").textContent=this.utility.roundTo(value,2);
+			console.log(shiftCount,value);
+			document.getElementById("shift"+shiftName+"StdDev").textContent=value;
+			//vancantShiftRow.cells[cellIndex-4].textContent=value;
 		}
 		shiftCount=[];
-		shiftCount.push(this.shiftAStdDev);
-		shiftCount.push(this.shiftBStdDev);
-		shiftCount.push(this.shiftCStdDev);
-		this.averageShiftStdDev=this.utility.getMean(shiftCount);
-		document.getElementById("avgStdDev").textContent=this.utility.roundTo(this.averageShiftStdDev,2);
+		shiftCount.push(parseFloat(document.getElementById("shiftAStdDev").textContent));
+		shiftCount.push(parseFloat(document.getElementById("shiftBStdDev").textContent));
+		shiftCount.push(parseFloat(document.getElementById("shiftCStdDev").textContent));
+		document.getElementById("avgStdDev").textContent=this.utility.getMean(shiftCount);
 		//console.log("++++++++++++++++++++++++++++++++");
 	}
-}	
+//----------------------------------------------------------------------------------------------------------------------------------	
+	clearAllShift()
+	{
+		var itoId,shiftRow,shiftRows=this.getAllShiftRow();
+		var vancantShiftRow=document.getElementById("vancantShift");
+		for (var itoId in shiftRows)
+		{
+			shiftRow=shiftRows[itoId];
+			for (var j=this.shiftStartCellIndex;j<this.totalHourCellIndex;j++)
+			{
+				$(shiftRow.cells[j]).html("").blur();
+				$(vancantShiftRow.cells[j]).html("");
+			}	
+		}
+		
+		
+	}
+	getAllShiftRow()
+	{
+		var result=[];
+		var shiftRow;
+		for (var itoId in this.itoList)
+		{
+			shiftRow=document.getElementById("shift_"+itoId);
+			result[itoId]=shiftRow;
+		}
+		return result;
+	}
+	getAllRequirementRow()
+	{
+		var result=[];
+		var requirementRow;
+		for (var itoId in this.itoList)
+		{
+			requirementRow=document.getElementById("requirement_"+itoId);
+			result[itoId]=requirementRow;
+		}
+		return result;
+	}
+	
+}

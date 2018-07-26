@@ -21,38 +21,13 @@ MonthlyCalendar mc=cu.getMonthlyCalendar(now.get(Calendar.YEAR),now.get(Calendar
 		<script src="js/Calendar.js"></script>
 		<script src="js/ITO.js"></script>
 		<script src="js/ShiftRule.js"></script>
-		<script src="js/Roster.js"></script>
 		<script src="js/RosterTable.js"></script>
 		<script src="js/Utility.js"></script>
+		<script src="js/Roster.js"></script>
 		<script>
-			var rosterTable,roster;
 			$( document ).ready(function() {
-				rosterTable=new RosterTable()
-				rosterTable.init(<%=now.get(Calendar.YEAR)%>,<%=now.get(Calendar.MONTH)%>)
-				.done(function(){
-						roster=new Roster(rosterTable);
-						$(".findMissingShiftButton").on("click",function(){
-								roster.haveMissingShift();
-						});
-						$(".findDuplicateShiftButton").on("click",function(){
-								roster.haveDuplicateShift();
-						});
-						$(".checkAllButton").on("click",function(){
-							roster.validate();	
-						});
-						$(".autoPlannerButton").on("click",function(){
-							roster.autoAssign();
-						});						 
-						$(".clearAllButton").on("click",function(){
-							rosterTable.clearAllShift()
-						})
-						$(".saveRosterToDBButton").on("click",function(){
-							roster.saveAllData();
-						});
-				})
-				.fail(function(error){
-					alert("An error occur when retrieving roster data:"+data);	
-				})				
+				var roster=new Roster();
+				roster.init(<%=now.get(Calendar.YEAR)%>,<%=now.get(Calendar.MONTH)%>);
 			});
 		</script>
 	</head>

@@ -48,13 +48,12 @@ class Utility
 	//Get The Standard Deviation for the incoming array of value;
 	getSD(data)
 	{
-	    var m =this. _getMean(data);
-	    var result=Math.sqrt(data.reduce(function (sq, n) {
+	    var m =this.getMean(data);
+	    return Math.sqrt(data.reduce(function (sq, n) {
 	            return sq + Math.pow(n - m, 2);
 	        }, 0) / (data.length - 1));
-	    return this.roundTo(result,2);
 	};
-	_getMean(data)
+	getMean(data)
 	{
 		 return data.reduce(function (a, b) {
 		        return Number(a) + Number(b);
