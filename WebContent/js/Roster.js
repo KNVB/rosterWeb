@@ -33,7 +33,7 @@ class Roster
 				self.rosterTable.clearAllShift()
 			})
 			$(".saveRosterToDBButton").on("click",function(){
-				roster.saveAllData();
+				self.saveAllData();
 			});	
 		})
 		.fail(function(error){
@@ -65,7 +65,19 @@ class Roster
 		}
 		return result;
 	}
-	getShiftAStdDev()
+	saveAllData()
+	{
+		/*console.log(this.rosterTable.getAllShiftData());
+		console.log(this.rosterTable.getAllPreferredShiftData());*/
+		var iTOShiftData;
+		var allITOShiftData=this.rosterTable.getAllShiftData();
+		for (var itoId in allITOShiftData)
+		{
+			iTOShiftData=allITOShiftData[itoId];
+			console.log("ito id="+itoId+",shiftList="+iTOShiftData.shiftList.length);
+		}	
+	}
+/*	getShiftAStdDev()
 	{
 		return this.rosterTable.shiftAStdDev;
 	}
@@ -80,5 +92,5 @@ class Roster
 	getAverageShiftStdDev()
 	{
 		return this.rosterTable.averageShiftStdDev;
-	}
+	}*/
 }
