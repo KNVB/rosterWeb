@@ -281,11 +281,7 @@ class RosterTable
 			for (var index=this.shiftStartCellIndex;index<this.shiftStartCellIndex+this.calendarList.length;index++)
 			{
 				shift=shiftRowList[itoId].cells[index].textContent;
-				shiftDate=Date.UTC(this.year,this.month,index-2);
-				resultString+="{\"itoId\":\""+itoId+"\",";
-				resultString+="\"shift\":\""+shift+"\",";
-				resultString+="\"shiftDate\":"+JSON.stringify(shiftDate);
-				resultString+="},";
+				resultString+="\""+shift+"\",";
 			}
 			resultString=resultString.substring(0,resultString.length-1);
 			resultString+="]";
@@ -298,7 +294,7 @@ class RosterTable
 	getAllPreferredShiftData()
 	{
 		var resultString="{";
-		var preferredShift,shiftDate;
+		var preferredShift="",shiftDate;
 		var preferredShiftRowList=this._getAllPreferredShiftRow();
 		
 		for (var itoId in preferredShiftRowList)
@@ -308,16 +304,25 @@ class RosterTable
 			{
 				preferredShift=preferredShiftRowList[itoId].cells[index].textContent;
 				if (preferredShift!="")
-					resultString+=preferredShift;
-				resultString+=",";
+				{
+					resultString+="{\"shift\":\""+preferredShift+"\",";
+					resultString+="\"shiftDate\":"+(index-2);
+					resultString+="},";
+				}			
 			}
-			resultString=resultString.substring(0,resultString.length-1);
+			if (resultString.endsWith(","))
+				resultString=resultString.substring(0,resultString.length-1);
 			resultString+="]";
 			resultString+="},";
 		}
 		resultString=resultString.substring(0,resultString.length-1);
 		resultString+="}";
+//		console.log(resultString);
 		return JSON.parse(resultString);
+	}
+	getThisMonthBalance(itoId)
+	{
+		return parseFloat(document.getElementById(itoId +"_thisMonthBalance").textContent);
 	}
 //-----------------------------------------------------------------------------------------------------------
 // Private method
@@ -631,10 +636,26 @@ class RosterTable
 			cell=shiftRow.insertCell(shiftRow.cells.length);
 			cell.className="borderCell";
 			cell.textContent=itoRoster.lastMonthBalance;
+			cell.id=itoId +"_lastMonthBalance";
+			
 			cell=requirementRow.insertCell(requirementRow.cells.length);
 			cell.className="borderCell";
 			
-			for (i=0;i<7;i++)
+			cell=shiftRow.insertCell(shiftRow.cells.length);
+			cell.className="borderCell";
+			cell.id=itoId +"_thisMonthHourTotal";
+			
+			cell=requirementRow.insertCell(requirementRow.cells.length);
+			cell.className="borderCell";
+			
+			cell=shiftRow.insertCell(shiftRow.cells.length);
+			cell.className="borderCell";
+			cell.id=itoId +"_thisMonthBalance";
+			
+			cell=requirementRow.insertCell(requirementRow.cells.length);
+			cell.className="borderCell";
+
+			for (i=0;i<5;i++)
 			{
 				cell=shiftRow.insertCell(shiftRow.cells.length);
 				cell.className="borderCell";

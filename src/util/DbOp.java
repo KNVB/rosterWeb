@@ -59,12 +59,19 @@ public class DbOp implements DataStore
 		for (String itoId:iTORosterList.keySet())
 		{
 			System.out.println("itoId="+itoId);
-			System.out.println("lastMonthBalance="+iTORosterList.get(itoId).getLastMonthBalance());
+			System.out.println("balance="+iTORosterList.get(itoId).getBalance());
+			System.out.println("Shift List");
 			for (Shift shift:iTORosterList.get(itoId).getShiftList())
 			{
 				System.out.println("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
-				System.out.println("===============================");						
 			}
+			System.out.println("===============================");
+			System.out.println("Preferred Shift List");
+			for (Shift shift:iTORosterList.get(itoId).getPreferredShiftList())
+			{
+				System.out.println("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
+			}
+			System.out.println("===============================");
 		}
 
 	}
@@ -199,7 +206,7 @@ public class DbOp implements DataStore
 					}
 					itoId=rs.getString("ito_id");
 					itoRoster=new ITORoster();
-					itoRoster.setLastMonthBalance(rs.getFloat("balance"));
+					itoRoster.setBalance(rs.getFloat("balance"));
 					shiftList=new ArrayList<Shift>();
 					shift=new Shift();
 					shift.setItoId(itoId);

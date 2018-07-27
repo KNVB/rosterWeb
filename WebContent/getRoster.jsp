@@ -69,7 +69,7 @@ if(itoRosterList.size()>0)
 	for (String itoId:itoRosterList.keySet())
 	{
 		rosterString+="\""+itoId+"\":{";
-		rosterString+="\"lastMonthBalance\":"+itoRosterList.get(itoId).getLastMonthBalance()+",";
+		rosterString+="\"lastMonthBalance\":"+itoRosterList.get(itoId).getBalance()+",";
 		rosterString+="\"shiftList\":[";
 		for (Shift shift:itoRosterList.get(itoId).getShiftList())
 		{

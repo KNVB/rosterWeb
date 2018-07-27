@@ -5,19 +5,29 @@ import java.util.ArrayList;
 public class ITORoster 
 {
 	private ArrayList<Shift> shiftList;
-	private float lastMonthBalance;
-	
+	private ArrayList<Shift> preferredShiftList;
+	/**
+	/*
+	 * For retrieving data from database variable balance is referred to last month balance.
+	 * For update data to database variable balance is referred to this month balance
+	 **/	
+	private float balance;
+	public ArrayList<Shift> getPreferredShiftList() {
+		return preferredShiftList;
+	}
+	public void setPreferredShiftList(ArrayList<Shift> preferedShiftList) {
+		this.preferredShiftList = preferedShiftList;
+	}
 	public ArrayList<Shift> getShiftList() {
 		return shiftList;
 	}
-	public float getLastMonthBalance() {
-		return lastMonthBalance;
-	}
-
 	public void setShiftList(ArrayList<Shift> shiftList) {
 		this.shiftList = shiftList;
 	}
-	public void setLastMonthBalance(float lastMonthBalance) {
-		this.lastMonthBalance = lastMonthBalance;
+	public float getBalance() {
+		return balance;
+	}
+	public void setBalance(float balance) {
+		this.balance = balance;
 	}
 }

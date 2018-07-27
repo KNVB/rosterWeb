@@ -67,15 +67,65 @@ class Roster
 	}
 	saveAllData()
 	{
-		/*console.log(this.rosterTable.getAllShiftData());
-		console.log(this.rosterTable.getAllPreferredShiftData());*/
-		var iTOShiftData;
+		var shiftDate;
+		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
 		var allITOShiftData=this.rosterTable.getAllShiftData();
+		var allPreferredShiftData=this.rosterTable.getAllPreferredShiftData();
+		
+		var rosterData ="{\"rosterYear\":"+this.year+",";
+		rosterData+="\"rosterMonth\":"+(this.month+1)+",";
+		rosterData+="\"itorosterList\":{";
+		var itoId="ITO1_1999-01-01";
+		
+		
 		for (var itoId in allITOShiftData)
 		{
-			iTOShiftData=allITOShiftData[itoId];
-			console.log("ito id="+itoId+",shiftList="+iTOShiftData.shiftList.length);
-		}	
+			rosterData+="\""+itoId+"\":{\"shiftList\":[";
+			iTOShiftData=allITOShiftData[itoId].shiftList;
+			for (var i=0;i<iTOShiftData.length;i++)
+			{
+				shiftDate=Date.UTC(this.year,this.month,i);
+				rosterData+="{\"itoId\":\""+itoId+"\",";
+				rosterData+="\"shift\":\""+iTOShiftData[i]+"\",";
+				rosterData+="\"shiftDate\":"+JSON.stringify(shiftDate);
+				rosterData+="},";
+			}
+			rosterData=rosterData.substring(0,rosterData.length-1);
+			rosterData+="],";
+			rosterData+="\"preferredShiftList\":[";
+			preferredShiftData=allPreferredShiftData[itoId].preferredShiftList;
+			for (var i=0;i<preferredShiftData.length;i++)
+			{
+				iTOPreferredShiftData=preferredShiftData[i];
+				shiftDate=Date.UTC(this.year,this.month,iTOPreferredShiftData.shiftDate);
+				rosterData+="{\"itoId\":\""+itoId+"\",";
+				rosterData+="\"shift\":\""+iTOPreferredShiftData.shift+"\",";
+				rosterData+="\"shiftDate\":"+JSON.stringify(shiftDate);
+				rosterData+="},";
+			}
+			if (rosterData.endsWith(","))
+				rosterData=rosterData.substring(0,rosterData.length-1);
+			rosterData+="],";
+			rosterData+="\"balance\":"+this.rosterTable.getThisMonthBalance(itoId)+"},";
+			/*
+			console.log(allITOShiftData[itoId]);
+			console.log(allPreferredShiftData[itoId]);
+			console.log(this.rosterTable.getThisMonthBalance(itoId));
+			*/
+		}
+		rosterData=rosterData.substring(0,rosterData.length-1);
+		rosterData+="}}";
+		//console.log(rosterData);
+		jQuery.ajax({"url": "saveRosterData.jsp",
+			 dataType: 'text',
+			 data:rosterData,
+			 method:"POST",
+			 success:function(){
+				 		alert("All roster data are saved.");
+			 		 },	
+			 error:this.utility.showAjaxErrorMessage
+		});
+		
 	}
 /*	getShiftAStdDev()
 	{
