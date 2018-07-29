@@ -15,8 +15,10 @@ class Roster
 		var self=this;
 		this.year=year;
 		this.month=month;
+		console.log((new Date()).getTime());
 		this.rosterTable.init(year,month)
 		.done(function(){
+			console.log((new Date()).getTime());
 			$(".findMissingShiftButton").on("click",function(){
 				self.rosterTable.haveMissingShift();
 			});
