@@ -7,9 +7,8 @@ import java.util.Hashtable;
 import util.DataStore;
 
 /**
- * @author SITO3
+ * @author SITO3 created on 11-7-2018 09:32:32
  * @version 1.0
- * @created 11-7-2018 09:32:32
  */
 public class ITO {
 
@@ -54,7 +53,7 @@ public class ITO {
 	public Hashtable<String,ITO> getITOList(int year,int month) throws Exception
 	{
 		dataStore=Utility.getDataStore();
-		Hashtable<String,ITO> result=dataStore.getITOInfo(year,month);
+		Hashtable<String,ITO> result=dataStore.getITOList(year,month);
 		dataStore.close();
 		return result;
 	}	

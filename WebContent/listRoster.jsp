@@ -22,7 +22,7 @@ GregorianCalendar now=new GregorianCalendar();
 		</script>	
 	</head>
 	<body>
-		<table width="100%" border=0 id="rosterTable">
+		<table width="100%" border="0" id="rosterTable">
 					
 		</table>			
 	</body>

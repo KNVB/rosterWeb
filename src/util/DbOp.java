@@ -82,7 +82,7 @@ public class DbOp implements DataStore
 
 	}
 	@Override
-	public Hashtable<String, ITO> getITOInfo(int year, int month) {
+	public Hashtable<String, ITO> getITOList(int year, int month) {
 		
 		ITO ito=null;
 		int lastDay;

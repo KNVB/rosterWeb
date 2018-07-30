@@ -19,7 +19,6 @@ public class Utility
 		} 
         catch (Exception e) 
         {
-			// TODO Auto-generated catch block
         	throw new ExceptionInInitializerError(e);
 		}
     }

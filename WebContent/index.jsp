@@ -32,7 +32,7 @@ MonthlyCalendar mc=cu.getMonthlyCalendar(now.get(Calendar.YEAR),now.get(Calendar
 		</script>
 	</head>
 	<body>
-		<table  border=0 id="rosterTable">
+		<table  border="0" id="rosterTable">
 			<thead id="rosterHeader">
 			</thead>
 			<tbody id="rosterBody">

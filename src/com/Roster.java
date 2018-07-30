@@ -6,9 +6,8 @@ import java.util.Hashtable;
 
 
 /**
- * @author SITO3
+ * @author SITO3 created on 11-7-2018 09:32:32
  * @version 1.0
- * @created 11-7-2018 09:32:32
  */
 public class Roster {
 //	private GregorianCalendar rosterDate;
