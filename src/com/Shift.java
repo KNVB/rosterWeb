@@ -9,9 +9,9 @@ import java.util.GregorianCalendar;
  */
 public class Shift {
 
-	private String ito_id;
+	private String itoId;
 	private String shift;
-	private GregorianCalendar shift_date;
+	private GregorianCalendar shiftDate;
 
 	public Shift(){
 
@@ -19,11 +19,11 @@ public class Shift {
 
 	
 	public String getItoId() {
-		return ito_id;
+		return itoId;
 	}
 
 	public void setItoId(String ito_id) {
-		this.ito_id = ito_id;
+		this.itoId = ito_id;
 	}
 
 	public String getShift() {
@@ -35,10 +35,10 @@ public class Shift {
 	}
 
 	public GregorianCalendar getShiftDate() {
-		return shift_date;
+		return shiftDate;
 	}
 
 	public void setShiftDate(GregorianCalendar shift_date) {
-		this.shift_date = shift_date;
+		this.shiftDate = shift_date;
 	}
 }
