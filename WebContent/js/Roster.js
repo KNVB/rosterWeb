@@ -29,7 +29,7 @@ class Roster
 				self.validate();	
 			});
 			$(".autoPlannerButton").on("click",function(){
-				roster.autoAssign();
+				self.autoAssign();
 			});						 
 			$(".clearAllButton").on("click",function(){
 				self.rosterTable.clearAllShift()
@@ -41,6 +41,14 @@ class Roster
 		.fail(function(error){
 			alert("An error occur when retrieving roster data:"+data);	
 		})
+	}
+	autoAssign()
+	{
+		var startDate=parseInt($("#autoPlannStartDate").val());
+		var endDate=parseInt($("#autoPlanEndDate").val());
+		
+		if (this.rosterTable.haveInvalidPreferredShift(startDate,endDate))
+			alert("Invalid shift requirement detected");
 	}
 	validate()
 	{

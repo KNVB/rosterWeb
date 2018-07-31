@@ -12,7 +12,7 @@ class RosterTable
 		this.utility=new Utility();
 		this.totalHourCellIndex=34;
 		this.shiftStartCellIndex=3;
-		this.shiftRule=new ShiftRule();
+		this.rosterRule=new RosterRule();
 		this.averageShiftStdDev=0.0;
 		this.table=document.getElementById("rosterTable");
 		this.rosterFooter=document.getElementById("footer");
@@ -122,7 +122,7 @@ class RosterTable
 		
 		for (i=this.shiftStartCellIndex;i<this.shiftStartCellIndex+this.calendarList.length;i++)
 		{
-			var essentialShift=this.shiftRule.getEssentialShift();
+			var essentialShift=this.rosterRule.getEssentialShift();
 			for (var itoId in shiftRowList)
 			{
 				shiftRow=shiftRowList[itoId];
@@ -228,7 +228,7 @@ class RosterTable
 			shiftRow=shiftRowList[itoId];
 			ito=itoList[itoId];
 			endIndex=this.shiftStartCellIndex+this.calendarList.length;
-			indices=this.shiftRule.getBlackListedShiftPatternIndex(shiftRow,endIndex,ito);
+			indices=this.rosterRule.getBlackListedShiftPatternIndex(shiftRow,endIndex,ito);
 			
 			//if Black Listed Shift Pattern found in a shift row
 			if (indices.length>0)
@@ -251,6 +251,30 @@ class RosterTable
 			{
 				//reset all cell style in the shift row
 				$(shiftRow.cells).blur();  
+			}
+		}
+		return result;
+	}
+	haveInvalidPreferredShift(startDate,endDate)
+	{
+		var cell,ito,itoId;
+		var result=false,preferredShiftRow;
+		var preferredShiftRowList=this._getAllPreferredShiftRow();
+		
+		for (var itoId in preferredShiftRowList)
+		{
+			preferredShiftRow=preferredShiftRowList[itoId];
+			ito=this.itoList[itoId];
+			for(var i=startDate+2;i<=endDate+2;i++)
+			{
+				cell=preferredShiftRow.cells[i];
+				if (!ito.isValidPreferredShift(cell.textContent))
+				{	
+					$(cell).addClass("errorRedBlackGround");
+					result=true;
+				}
+				else
+					cell.className="borderCell shiftCell";
 			}
 		}
 		return result;
@@ -340,11 +364,11 @@ class RosterTable
 	_getAllPreferredShiftRow()
 	{
 		var result=[];
-		var requirementRow;
+		var preferredShiftRow;
 		for (var itoId in this.itoList)
 		{
-			requirementRow=document.getElementById("preferredShift_"+itoId);
-			result[itoId]=requirementRow;
+			preferredShiftRow=document.getElementById("preferredShift_"+itoId);
+			result[itoId]=preferredShiftRow;
 		}
 		return result;
 	}	
@@ -552,7 +576,7 @@ class RosterTable
 	{
 		var i,ito;
 		var self=this;
-		var shiftRow,requirementRow,vancantShiftRow,cell;
+		var shiftRow,preferredShiftRow,vancantShiftRow,cell;
 		var shiftList,itoRoster,columnCount;
 		$(this.rosterBody).empty();
 		for (var itoId in this.itoList)
@@ -560,16 +584,16 @@ class RosterTable
 			ito=this.itoList[itoId];
 			itoRoster=this.rosterList[itoId];
 			shiftRow=this.rosterBody.insertRow(this.rosterBody.rows.length);
-			requirementRow=this.rosterBody.insertRow(this.rosterBody.rows.length);
+			preferredShiftRow=this.rosterBody.insertRow(this.rosterBody.rows.length);
 			
 			shiftRow.id="shift_"+ito.itoId;
-			requirementRow.id="preferredShift_"+ito.itoId;
+			preferredShiftRow.id="preferredShift_"+ito.itoId;
 			cell=shiftRow.insertCell(shiftRow.cells.length);
 			cell.className="alignLeft borderCell";
 			
 			cell.innerHTML=ito.name+"<br>"+ito.postName+" Extn. 2458";
 			
-			cell=requirementRow.insertCell(requirementRow.cells.length);
+			cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 			cell.className="alignLeft borderCell";
 			cell.innerHTML="Preferred Shift";
 			
@@ -581,7 +605,7 @@ class RosterTable
 						{
 							self.updateValue(this);
 						});
-				cell=requirementRow.insertCell(requirementRow.cells.length);
+				cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 				cell.className="borderCell";
 			}
 			for (i=0;i<31;i++)
@@ -603,7 +627,7 @@ class RosterTable
 					 							break;
 					 				}
 								});
-				cell=requirementRow.insertCell(requirementRow.cells.length);
+				cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 				cell.className="borderCell shiftCell";
 				cell.contentEditable="true";
 				$(cell).keydown(function(event)
@@ -624,13 +648,13 @@ class RosterTable
 			cell.className="borderCell";
 			cell.textContent=Math.round(this.workingDayCount*ito.workingHourPerDay*100)/100;
 			
-			cell=requirementRow.insertCell(requirementRow.cells.length);
+			cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 			cell.className="borderCell";
 
 			cell=shiftRow.insertCell(shiftRow.cells.length);
 			cell.className="borderCell";
 			
-			cell=requirementRow.insertCell(requirementRow.cells.length);
+			cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 			cell.className="borderCell";
 
 			cell=shiftRow.insertCell(shiftRow.cells.length);
@@ -638,21 +662,21 @@ class RosterTable
 			cell.textContent=itoRoster.lastMonthBalance;
 			cell.id=itoId +"_lastMonthBalance";
 			
-			cell=requirementRow.insertCell(requirementRow.cells.length);
+			cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 			cell.className="borderCell";
 			
 			cell=shiftRow.insertCell(shiftRow.cells.length);
 			cell.className="borderCell";
 			cell.id=itoId +"_thisMonthHourTotal";
 			
-			cell=requirementRow.insertCell(requirementRow.cells.length);
+			cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 			cell.className="borderCell";
 			
 			cell=shiftRow.insertCell(shiftRow.cells.length);
 			cell.className="borderCell";
 			cell.id=itoId +"_thisMonthBalance";
 			
-			cell=requirementRow.insertCell(requirementRow.cells.length);
+			cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 			cell.className="borderCell";
 
 			for (i=0;i<5;i++)
@@ -660,7 +684,7 @@ class RosterTable
 				cell=shiftRow.insertCell(shiftRow.cells.length);
 				cell.className="borderCell";
 			
-				cell=requirementRow.insertCell(requirementRow.cells.length);
+				cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 				cell.className="borderCell";
 			}
 		}	
@@ -743,9 +767,9 @@ class RosterTable
 		for (i=this.shiftStartCellIndex;i<this.totalHourCellIndex;i++)
 		{
 			shift=shiftRow.cells[i].textContent;
-			if (this.shiftRule.shiftHour[shift]!=null)
+			if (this.rosterRule.shiftHourCount[shift]!=null)
 			{	
-				actualHour+=this.shiftRule.shiftHour[shift];
+				actualHour+=this.rosterRule.shiftHourCount[shift];
 				switch (shift)
 				{
 					case "a":

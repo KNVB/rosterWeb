@@ -20,7 +20,7 @@ MonthlyCalendar mc=cu.getMonthlyCalendar(now.get(Calendar.YEAR),now.get(Calendar
 		<script type="text/javascript" src="<%=request.getContextPath() %>/webjars/jquery/3.3.1/jquery.min.js"></script>
 		<script src="js/Calendar.js"></script>
 		<script src="js/ITO.js"></script>
-		<script src="js/ShiftRule.js"></script>
+		<script src="js/RosterRule.jsp"></script>
 		<script src="js/RosterTable.js"></script>
 		<script src="js/Utility.js"></script>
 		<script src="js/Roster.js"></script>

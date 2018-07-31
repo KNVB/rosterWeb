@@ -14,11 +14,11 @@ class ITO
 		//return (this.availableShift.includes(shift));
 		return ($.inArray (shift,this.availableShift)>-1)
 	}
-	isValidShiftRequirement(shiftRequirement)
+	isValidPreferredShift(preferredShift)
 	{
 		var self=this;
 		var isMatched=false;
-		switch (shiftRequirement)
+		switch (preferredShift)
 		{
 			case "":
 			case "o":
@@ -28,7 +28,7 @@ class ITO
 			default:
 					for (var i=0;i<this.availableShift.length;i++)
 					{
-						if ((this.availableShift[i]==shiftRequirement)|| (shiftRequirement==("n"+this.availableShift[i])))
+						if ((this.availableShift[i]==preferredShift)|| (preferredShift==("n"+this.availableShift[i])))
 						{	
 							isMatched=true;
 							break;

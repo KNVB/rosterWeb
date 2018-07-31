@@ -24,11 +24,11 @@ class ShiftRule
 		});
 		return result;
 	}
-	getITOAvailableShiftList(shiftRow,requirementShift,index,ito,thatShift)
+	getITOAvailableShiftList(shiftRow,preferredShift,index,ito,thatShift)
 	{
 		var result=[];
 		var self=this;
-		switch (requirementShift)
+		switch (preferredShift)
 		{
 			case "o":
 			case "d" : 
@@ -39,7 +39,7 @@ class ShiftRule
 						break;
 			default:
 					ito.availableShift.forEach(function(shift){
-						if (self.isThatShiftOkForAssign(shiftRow,requirementShift,index,ito,shift))
+						if (self._isThatShiftOkForAssign(shiftRow,preferredShift,index,ito,shift))
 						{
 							//console.log(ito.itoId,shift);
 							result.push(shift);
@@ -48,11 +48,11 @@ class ShiftRule
 		}
 		return result;
 	}
-	isThatShiftOkForAssign(shiftRow,requirementShift,index,ito,thatShift)
+	_isThatShiftOkForAssign(shiftRow,preferredShift,index,ito,thatShift)
 	{
 		var result=true;
 		
-		if (this.isConflictWithRequirementShift(requirementShift,thatShift))
+		if (this.isConflictWithPreferredShift(preferredShift,thatShift))
 		{
 //			console.log(ito.itoId+","+(index-2)+","+thatShift+",Conflict with requirement("+requirementShift+").");
 			result=false;
@@ -104,16 +104,16 @@ class ShiftRule
 		}	
 		return count;
 	}
-	isConflictWithRequirementShift(requirementShift,thatShift)
+	isConflictWithPreferredShift(preferredShift,thatShift)
 	{
 		var result=false;
-		if ((requirementShift=="")||(requirementShift==thatShift))
+		if ((preferredShift=="")||(preferredShift==thatShift))
 			return result;
 		else
 		{
-			if (requirementShift.startsWith("n"))
+			if (preferredShift.startsWith("n"))
 			{
-				if (requirementShift.indexOf(thatShift)>-1)
+				if (preferredShift.indexOf(thatShift)>-1)
 					result=true;
 			}	
 			else	

@@ -12,7 +12,8 @@ import java.util.GregorianCalendar;
 import java.util.Hashtable;
 
 import com.ITO;
-import com.ITORoster; 
+import com.ITORoster;
+import com.RosterRule;
 import com.Shift;
 import com.Utility;
 
@@ -148,7 +149,53 @@ public class DbOp implements DataStore
 		}
 		return result;
 	}
-
+	@Override
+	public Hashtable<String,ArrayList<String>> getRosterRule()
+	{
+		char escapChar=(char)27;
+		ResultSet rs = null;
+		
+		String ruleType=new String();
+		PreparedStatement stmt = null;
+		ArrayList <String>keyValue=null;
+		Hashtable<String,ArrayList<String>> result=new Hashtable<String,ArrayList<String>>();
+		sqlString ="select * from roster_rule order by rule_type,rule_key,rule_value";
+		try
+		{
+			stmt=dbConn.prepareStatement(sqlString);
+			rs=stmt.executeQuery();
+			while (rs.next())
+			{
+				if (rs.getString("rule_type").equals(ruleType))
+				{
+					keyValue.add(rs.getString("rule_key")+escapChar+rs.getString("rule_value"));
+					
+				}
+				else
+				{
+					if (keyValue!=null)
+					{
+						result.put(ruleType,keyValue);
+						ruleType=rs.getString("rule_type");
+					}
+					ruleType=rs.getString("rule_type");
+					keyValue=new ArrayList<String>();
+					keyValue.add(rs.getString("rule_key")+escapChar+rs.getString("rule_value"));
+				}
+			}
+			if (keyValue!=null)
+				result.put(ruleType, keyValue);
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		} 
+		finally 
+		{
+			releaseResource(rs, stmt);
+		}
+		return result;
+	}
 	@Override
 	public Hashtable<String, ITORoster> getRoster(int year, int month) 
 	{
@@ -164,6 +211,7 @@ public class DbOp implements DataStore
 		Hashtable<String, ITORoster> result=new  Hashtable<String, ITORoster>();
 		GregorianCalendar theLast2DayOfPreviousMonth=new GregorianCalendar(year,month,1);
 		GregorianCalendar theFirstDateOfTheMonth=new GregorianCalendar(year,month,1);
+	//	theLast2DayOfPreviousMonth.add(Calendar.DAY_OF_MONTH, -RosterRule.getMaxConsecutiveWorkingDay());
 		theLast2DayOfPreviousMonth.add(Calendar.DAY_OF_MONTH, -2);
 		lastDay=theFirstDateOfTheMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
@@ -171,6 +219,7 @@ public class DbOp implements DataStore
 		String startDateString=theLast2DayOfPreviousMonth.get(Calendar.YEAR)+"-"+(theLast2DayOfPreviousMonth.get(Calendar.MONTH)+1)+"-"+theLast2DayOfPreviousMonth.get(Calendar.DATE);
 		String endDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-"+lastDay;
 		
+		//System.out.println("startDateString="+startDateString);
 		sqlString ="select * from shift_record inner join last_month_balance ";
 		sqlString+="on shift_record.ito_id=last_month_balance.ito_id ";
 		sqlString+="where (shift_date between ? and ?) and shift_month=? ";
