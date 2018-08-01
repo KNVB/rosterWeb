@@ -112,7 +112,7 @@ GregorianCalendar now=new GregorianCalendar();
 			</tr>
 			<tr>	
 				<td colspan=34 style="text-align:center">	
-					<a class="exportButton">Export</a>
+					<a class="exportButton">Export to Excel File</a>
 					<a class="saveRosterToDBButton">Save all data to DB</a>
 				</td>
 				

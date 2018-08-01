@@ -141,7 +141,7 @@ class RosterTable
 					else	
 					{
 						alert("Invalid shift");
-						$(cell).addClass("errorRedBlackGround");
+						cell.className="borderCell alignCenter errorRedBlackGround";
 						haveMissingShift=true;
 						break;
 					}	
@@ -180,7 +180,7 @@ class RosterTable
 									if ($.inArray (shift,tempResult)>-1)
 									{
 										alert("Duplicate Shift Found");
-										$(cell).addClass("errorRedBlackGround");
+										cell.className="borderCell alignCenter errorRedBlackGround";
 										haveDuplicateShift=true;
 										break;	
 									}
@@ -192,7 +192,7 @@ class RosterTable
 									if (($.inArray ("b1",tempResult)>-1) || ($.inArray ("b",tempResult)>-1))
 									{
 										alert("Duplicate Shift Found");
-										$(cell).addClass("errorRedBlackGround");
+										cell.className="borderCell alignCenter errorRedBlackGround";
 										haveDuplicateShift=true;
 										break;	
 									}
@@ -203,9 +203,8 @@ class RosterTable
 					}
 					else
 					{
-						alert("Duplicated shift detected");
-						$(cell).className="borderCell alignCenter";
-						$(cell).addClass("errorRedBlackGround");
+						alert("Invalid shift detected");
+						cell.className="borderCell alignCenter errorRedBlackGround";
 						haveDuplicateShift=true;
 						break;
 					}
@@ -239,7 +238,7 @@ class RosterTable
 					
 					//if the cell index matched with Black Listed Shift Index
 					if ($.inArray (i,indices)>-1)
-						$(shiftRow.cells[i]).addClass("errorRedBlackGround");
+						shiftRow.cells[i].className="borderCell alignCenter errorRedBlackGround";
 					else
 					{	
 						$(shiftRow.cells[i]).blur(); //reset cell style 
@@ -270,7 +269,7 @@ class RosterTable
 				cell=preferredShiftRow.cells[i];
 				if (!ito.isValidPreferredShift(cell.textContent))
 				{	
-					$(cell).addClass("errorRedBlackGround");
+					cell.className="borderCell alignCenter errorRedBlackGround";
 					result=true;
 				}
 				else
