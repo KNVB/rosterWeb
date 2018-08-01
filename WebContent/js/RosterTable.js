@@ -203,7 +203,8 @@ class RosterTable
 					}
 					else
 					{
-						alert("Invalid shift");
+						alert("Duplicated shift detected");
+						$(cell).className="borderCell alignCenter";
 						$(cell).addClass("errorRedBlackGround");
 						haveDuplicateShift=true;
 						break;
