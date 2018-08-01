@@ -70,6 +70,20 @@
 	{
 		background-color:#ccffff;
 	}
+	.theRestCell
+	{
+		width: 70px;
+		max-width:70px;
+		white-space: pre-wrap;
+	  	word-break: break-all;
+	  	overflow: hidden;
+	  	padding:0;	
+	}
+	.vancantShift
+	{
+		color:#ff6600;
+		text-align:right!Important;
+	}
 	.findMissingShiftButton
 	{
 		/* background styles */
@@ -258,7 +272,19 @@
 		<thead id="rosterHeader">
 			<tr>
 				<td></td><td></td><td></td>
-				<td class="underlineText alignCenter" colspan="31">EMSTF Resident Support &amp; Computer Operation Support Services Team Roster</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+				<td class="underlineText alignCenter" colspan="31">
+					EMSTF Resident Support &amp; Computer Operation Support Services Team Roster
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr id="rosterMonthRow">
 				<td></td>
@@ -279,7 +305,17 @@
 						<option value="10">November</option>
 						<option value="11">December</option>
 					</select>2018
-				</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<td colspan="46"></td>
@@ -291,7 +327,48 @@
 				<td class="borderCell alignLeft">Days</td><td class="borderCell dateCell"></td><td class="borderCell dateCell"></td><td class="borderCell dateCell">W</td><td class="borderCell dateCell">Th</td><td class="borderCell dateCell">F</td><td class="borderCell weekend">S</td><td class="borderCell weekend">Su</td><td class="borderCell dateCell">M</td><td class="borderCell dateCell">T</td><td class="borderCell dateCell">W</td><td class="borderCell dateCell">Th</td><td class="borderCell dateCell">F</td><td class="borderCell weekend">S</td><td class="borderCell weekend">Su</td><td class="borderCell dateCell">M</td><td class="borderCell dateCell">T</td><td class="borderCell dateCell">W</td><td class="borderCell dateCell">Th</td><td class="borderCell dateCell">F</td><td class="borderCell weekend">S</td><td class="borderCell weekend">Su</td><td class="borderCell dateCell">M</td><td class="borderCell dateCell">T</td><td class="borderCell dateCell">W</td><td class="borderCell dateCell">Th</td><td class="borderCell dateCell">F</td><td class="borderCell weekend">S</td><td class="borderCell weekend">Su</td><td class="borderCell dateCell">M</td><td class="borderCell dateCell">T</td><td class="borderCell dateCell">W</td><td class="borderCell dateCell">Th</td><td class="borderCell dateCell">F</td><td class="alignCenter borderCell theRestCell" rowspan="2">Total<br>Hour</td><td class="borderCell alignCenter theRestCell" rowspan="2">Actual<br>Hour</td><td class="borderCell alignCenter" colspan="8">Hour Off Due</td>
 			</tr>
 			<tr>
-				<td class="borderCell alignLeft" style="padding:0">Resident Support<br>Team Members</td><td class="borderCell dateCell"></td><td class="borderCell dateCell"></td><td class="borderCell dateCell">1</td><td class="borderCell dateCell">2</td><td class="borderCell dateCell">3</td><td class="borderCell dateCell">4</td><td class="borderCell dateCell">5</td><td class="borderCell dateCell">6</td><td class="borderCell dateCell">7</td><td class="borderCell dateCell">8</td><td class="borderCell dateCell">9</td><td class="borderCell dateCell">10</td><td class="borderCell dateCell">11</td><td class="borderCell dateCell">12</td><td class="borderCell dateCell">13</td><td class="borderCell dateCell">14</td><td class="borderCell dateCell">15</td><td class="borderCell dateCell">16</td><td class="borderCell dateCell">17</td><td class="borderCell borderCell">18</td><td class="borderCell dateCell">19</td><td class="borderCell dateCell">20</td><td class="borderCell dateCell">21</td><td class="borderCell dateCell">22</td><td class="borderCell dateCell">23</td><td class="borderCell dateCell">24</td><td class="borderCell dateCell">25</td><td class="borderCell dateCell">26</td><td class="borderCell dateCell">27</td><td class="borderCell dateCell">28</td><td class="borderCell dateCell">29</td><td class="alignCenter borderCell dateCell">30</td><td class="alignCenter borderCell dateCell">31</td><td class="alignCenter borderCell theRestCell">Last<br>Month</td><td class="alignCenter borderCell theRestCell">This<br>Month</td><td class="alignCenter borderCell theRestCell">Total</td><td class="alignCenter borderCell theRestCell">Total No. of<br>A shift</td><td class="alignCenter borderCell theRestCell">Total No. of<br>Bx shift</td><td class="alignCenter borderCell theRestCell">Total No. of<br>C shift</td><td class="alignCenter borderCell theRestCell">Total No. of<br>Dx shift</td><td class="alignCenter borderCell theRestCell">No. of<br>working<br>day</td>
+				<td class="borderCell alignLeft" style="padding:0">Resident Support<br>Team Members</td>
+				<td class="borderCell dateCell"></td>
+				<td class="borderCell dateCell"></td>
+				<td class="borderCell dateCell">1</td>
+				<td class="borderCell dateCell">2</td>
+				<td class="borderCell dateCell">3</td>
+				<td class="borderCell dateCell">4</td>
+				<td class="borderCell dateCell">5</td>
+				<td class="borderCell dateCell">6</td>
+				<td class="borderCell dateCell">7</td>
+				<td class="borderCell dateCell">8</td>
+				<td class="borderCell dateCell">9</td>
+				<td class="borderCell dateCell">10</td>
+				<td class="borderCell dateCell">11</td>
+				<td class="borderCell dateCell">12</td>
+				<td class="borderCell dateCell">13</td>
+				<td class="borderCell dateCell">14</td>
+				<td class="borderCell dateCell">15</td>
+				<td class="borderCell dateCell">16</td>
+				<td class="borderCell dateCell">17</td>
+				<td class="borderCell dateCell">18</td>
+				<td class="borderCell dateCell">19</td>
+				<td class="borderCell dateCell">20</td>
+				<td class="borderCell dateCell">21</td>
+				<td class="borderCell dateCell">22</td>
+				<td class="borderCell dateCell">23</td>
+				<td class="borderCell dateCell">24</td>
+				<td class="borderCell dateCell">25</td>
+				<td class="borderCell dateCell">26</td>
+				<td class="borderCell dateCell">27</td>
+				<td class="borderCell dateCell">28</td>
+				<td class="borderCell dateCell">29</td>
+				<td class="alignCenter borderCell dateCell">30</td>
+				<td class="alignCenter borderCell dateCell">31</td>
+				<td class="alignCenter borderCell theRestCell">Last<br>Month</td>
+				<td class="alignCenter borderCell theRestCell">This<br>Month</td>
+				<td class="alignCenter borderCell theRestCell">Total</td>
+				<td class="alignCenter borderCell theRestCell">Total No. of<br>A shift</td>
+				<td class="alignCenter borderCell theRestCell">Total No. of<br>Bx shift</td>
+				<td class="alignCenter borderCell theRestCell">Total No. of<br>C shift</td>
+				<td class="alignCenter borderCell theRestCell">Total No. of<br>Dx shift</td>
+				<td class="alignCenter borderCell theRestCell">No. of<br>working<br>day</td>
 			</tr>
 		</thead>
 		<tbody id="rosterBody">
@@ -459,7 +536,105 @@
 				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
 				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
 			</tr>
-									
+			<tr id="shift_ITO4_1999-01-01">
+				<td class="alignLeft borderCell">HUEN Kwai-leung Andrew<br>ITO4 Extn. 2458</td>
+				<td class="borderCell alignCenter dateCell oShiftColor">O</td>
+				<td class="borderCell alignCenter dateCell dxShiftColor">d1</td>
+				<td class="borderCell alignCenter dateCell bShiftColor" contenteditable="true">b</td>
+				<td class="borderCell alignCenter dateCell cShiftColor" contenteditable="true">c</td>
+				<td class="borderCell alignCenter dateCell oShiftColor" contenteditable="true">O</td>
+				<td class="borderCell alignCenter dateCell bShiftColor" contenteditable="true">b</td>
+				<td class="borderCell alignCenter dateCell oShiftColor" contenteditable="true">O</td>
+				<td class="borderCell alignCenter dateCell bShiftColor" contenteditable="true">b</td>
+				<td class="borderCell alignCenter dateCell cShiftColor" contenteditable="true">c</td>
+				<td class="borderCell alignCenter dateCell oShiftColor" contenteditable="true">O</td>
+				<td class="borderCell alignCenter dateCell oShiftColor" contenteditable="true">O</td>
+				<td class="borderCell alignCenter dateCell dxShiftColor" contenteditable="true">d1</td>
+				<td class="borderCell alignCenter dateCell aShiftColor" contenteditable="true">a</td>
+				<td class="borderCell alignCenter dateCell bShiftColor" contenteditable="true">b</td>
+				<td class="borderCell alignCenter dateCell oShiftColor" contenteditable="true">O</td>
+				<td class="borderCell alignCenter dateCell oShiftColor" contenteditable="true">O</td>
+				<td class="borderCell alignCenter dateCell aShiftColor" contenteditable="true">a</td>
+				<td class="borderCell alignCenter dateCell cShiftColor" contenteditable="true">c</td>
+				<td class="borderCell alignCenter dateCell oShiftColor" contenteditable="true">O</td>
+				<td class="borderCell alignCenter dateCell oShiftColor" contenteditable="true">O</td>
+				<td class="borderCell alignCenter dateCell cShiftColor" contenteditable="true">c</td>
+				<td class="borderCell alignCenter dateCell oShiftColor" contenteditable="true">O</td>
+				<td class="borderCell alignCenter dateCell oShiftColor" contenteditable="true">O</td>
+				<td class="borderCell alignCenter dateCell aShiftColor" contenteditable="true">a</td>
+				<td class="borderCell alignCenter dateCell aShiftColor" contenteditable="true">a</td>
+				<td class="borderCell alignCenter dateCell dxShiftColor" contenteditable="true">d1</td>
+				<td class="borderCell alignCenter dateCell aShiftColor" contenteditable="true">a</td>
+				<td class="borderCell alignCenter dateCell cShiftColor" contenteditable="true">c</td>
+				<td class="borderCell alignCenter dateCell dxShiftColor" contenteditable="true">d1</td>
+				<td class="borderCell alignCenter dateCell dxShiftColor" contenteditable="true">d1</td>
+				<td class="borderCell alignCenter dateCell aShiftColor" contenteditable="true">a</td>
+				<td class="borderCell alignCenter dateCell cShiftColor" contenteditable="true">c</td>
+				<td class="borderCell alignCenter dateCell oShiftColor" contenteditable="true">O</td>
+				<td class="borderCell alignCenter">179.4</td>
+				<td class="borderCell alignCenter">173.5</td>
+				<td class="borderCell alignCenter" id="ITO4_1999-01-01_lastMonthBalance">4.65</td>
+				<td class="borderCell alignCenter" id="ITO4_1999-01-01_thisMonthHourTotal">-5.9</td>
+				<td class="borderCell alignCenter" id="ITO4_1999-01-01_thisMonthBalance">-1.25</td>
+				<td class="borderCell alignCenter">6</td>
+				<td class="borderCell alignCenter">4</td>
+				<td class="borderCell alignCenter">6</td>
+				<td class="borderCell alignCenter">4</td>
+				<td class="borderCell alignCenter">20</td>
+			</tr>
+			<tr id="preferredShift_ITO4_1999-01-01">
+				<td class="alignLeft borderCell">Preferred Shift</td>
+				<td class="borderCell"></td>
+				<td class="borderCell"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+				<td class="borderCell alignCenter dateCell" contenteditable="true"></td>
+			</tr>						
+			<tr id="vancantShift">
+				<td class="vancantShift borderCell">Vancant Shifts</td>
+				<td class="borderCell"></td><td class="borderCell"></td><td class="borderCell"></td>
+				<td class="borderCell"></td><td class="borderCell"></td><td class="borderCell"></td>
+				<td class="borderCell"></td><td class="borderCell"></td><td class="borderCell"></td>
+				<td class="borderCell"></td><td class="borderCell"></td><td class="borderCell"></td>
+				<td class="borderCell"></td><td class="borderCell"></td><td class="borderCell"></td>
+				<td class="borderCell"></td><td class="borderCell"></td><td class="borderCell"></td>
+				<td class="borderCell"></td><td class="borderCell"></td><td class="borderCell"></td>
+				<td class="borderCell"></td><td class="borderCell"></td><td class="borderCell"></td>
+				<td class="borderCell"></td><td class="borderCell"></td><td class="borderCell"></td>
+				<td class="borderCell"></td><td class="borderCell"></td><td class="borderCell"></td>
+				<td class="borderCell"></td><td class="borderCell"></td><td class="borderCell"></td>
+				<td class="borderCell" colspan="5"></td><td class="borderCell" id="shiftAStdDev">0.89</td>
+				<td class="borderCell" id="shiftBStdDev">1.48</td><td class="borderCell" id="shiftCStdDev">0.45</td>
+				<td class="borderCell" id="avgStdDev">0.94</td><td class="borderCell"></td>
+			</tr>									
 		</tbody>
 		<tfoot id="footer" class="footer">
 			<tr>
