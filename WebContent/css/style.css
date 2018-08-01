@@ -1,266 +1,269 @@
-body
-{
-	font-size:16;
-	font-family:Times New Roman;
-	//font-family:arial;
-}	
-table 
-{
-	border-spacing: 0;
-	border-collapse: collapse;
-	width:100%;
-}
-.autoPlannerButton {
-	background-color:#7d5d3b;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	border:1px solid #54381e;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	padding:16px 31px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #4d3534;
-}
-.autoPlannerButton:hover {
-	background-color:#634b30;
-}
-.autoPlannerButton:active {
-	position:relative;
-	top:1px;
-}
-
-.findMissingShiftButton {
-	background-color:#44c767;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	border:1px solid #18ab29;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	padding:16px 31px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #2f6627;
-}
-.findMissingShiftButton:hover {
-	background-color:#5cbf2a;
-}
-.findMissingShiftButton:active {
-	position:relative;
-	top:1px;
-}
-.findDuplicateShiftButton
-{
-	background-color:#7892c2;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	border:1px solid #4e6096;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	padding:16px 31px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #283966;
-}
-.findDuplicateShiftButton:hover {
-	background-color:#476e9e;
-}
-.findDuplicateShiftButton:active {
-	position:relative;
-	top:1px;
-}
-.checkAllButton
-{
-	background-color:#ffec64;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	border:1px solid #ffaa22;
-	display:inline-block;
-	cursor:pointer;
-	color:#333333;
-	padding:16px 31px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #ffee66;
-}
-.checkAllButton:hover {
-	background-color:#ffab23;
-}
-.checkAllButton:active {
-	position:relative;
-	top:1px;
-}
-
-.clearAllButton
-{
-	background-color:#ffc477;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	border:1px solid #eeb44f;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	padding:16px 31px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #cc9f52;
-}
-.clearAllButton:hover {
-	background-color:#fb9e25;
-}
-.clearAllButton:active {
-	position:relative;
-	top:1px;
-}
-.saveRosterToDBButton
-{
-	background-color:#c62d1f;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	border:1px solid #d02718;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	padding:16px 31px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #810e05;
-}
-.saveRosterToDBButton:hover
-{
-	background-color:#f24437;
-}
-.saveRosterToDBButton:active
-{
-	position:relative;
-	top:1px;
-}
-.exportButton
-{
-	background-color:#ff5bb0;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	border:1px solid #ee1eb5;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	padding:16px 31px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #c700067;
-}
-.exportButton:hover
-{
-	background-color:#ef027d;
-}
-.exportButton:active
-{
-	position:relative;
-	top:1px;
-}
-.borderCell
-{
-	border: 1px solid black;
-	text-align: center;
-}
-.dateCell
-{
-	font-size:15;
-	width:1.5%;
-}
-.dayCell
-{
-	font-size:12;
-	width:1.5%;
-}
-.alignCenter
-{
-	text-align: center;
-}
-.alignLeft
-{
-	text-align:left;
-}
-.underlineText
-{
-	font-weight: bold;
-	text-decoration: underline;
-}
-.rosterMonthSelect
-{
-	font-weight:bold;
-	border:none;
-	direction:rtl;
-}
-.boldText
-{
-	font-weight:bold;
-}
-.weekend
-{
-	color:red;
-}
-.shiftCell {
-  white-space: pre-wrap;
-  word-break: break-all;
-  width: 1.5%;
-  max-width: 1.5%;
-  overflow: hidden;
-}
-.aShiftColor
-{
-	background-color:#ff99cc;
-}
-.bShiftColor
-{ 
-	background-color:#ffffcc;
-}
-.cShiftColor
-{
-	background-color:#ccffcc;
-}
-.oShiftColor
-{
-	background-color:#ffffff;
-}
-.dxShiftColor
-{
-	background-color:#ccffff;
-}
-.sickLeaveColor
-{
-	background-color:#cc99ff;
-}
-.highlightCol
-{
-	background-color:yellow;
-}
-.errorRedBlackGround
-{
-	background-color:red;
-	animation: blinker 1s linear infinite;
-}
-@keyframes blinker {  
-  50% { opacity: 0; }
-}
-.vancantShift
-{
-	color:#ff6600;
-	text-align:right!Important;
-}
-.footer
-{
-	display:none;
-}
-.theRestCell
-{
-	width: 70px;
-	max-width:70px;
-	white-space: pre-wrap;
-  	word-break: break-all;
-  	overflow: hidden;
-  	padding:0;	
-}
+	table 
+	{
+		border-spacing: 0;
+		border-collapse: collapse;
+		width:100%;
+	//	border:1px solid #e0e0e0;
+	}
+	.alignCenter
+	{
+		text-align: center;
+	}
+	.alignLeft
+	{
+		text-align:left;
+	}
+	.underlineText
+	{
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	.rosterMonthSelect
+	{
+		font-weight:bold;
+		border:none;
+		direction:rtl;
+	}
+	.borderCell
+	{
+		border:1px solid #e0e0e0;
+	}
+	.dateCell
+	{
+		font-size:15;
+		width:25px;
+		max-width:25px;
+		text-align: center;
+		padding: 0px;
+	}	
+	.weekend
+	{
+		font-size:15;
+		width:25px;
+		max-width:25px;
+		text-align: center;
+		color:red;
+	}
+	.errorRedBlackGround
+	{
+		background-color:red;
+		animation: blinker 1s linear infinite;
+	}
+	@keyframes blinker {  
+	  50% { opacity: 0; }
+	}
+	.aShiftColor
+	{
+		background-color:#ff99cc;
+	}
+	.bShiftColor
+	{ 
+		background-color:#ffffcc;
+	}
+	.cShiftColor
+	{
+		background-color:#ccffcc;
+	}
+	.oShiftColor
+	{
+		background-color:#ffffff;
+	}
+	.dxShiftColor
+	{
+		background-color:#ccffff;
+	}
+	.theRestCell
+	{
+		width: 70px;
+		max-width:70px;
+		white-space: pre-wrap;
+	  	word-break: break-all;
+	  	overflow: hidden;
+	  	padding:0;	
+	}
+	.vancantShift
+	{
+		color:#ff6600;
+		text-align:right!Important;
+	}
+	.findMissingShiftButton
+	{
+		/* background styles */
+		position: relative;
+		display: inline-block;
+		padding: 10px 15px;
+		-moz-border-radius:28px;
+		-webkit-border-radius:28px;
+		border-radius:28px;
+		background-color: green; /*for compatibility with older browsers*/
+		background-image: linear-gradient(green,lightgreen);
+		box-shadow: 0px 1px 4px -2px #333;
+		text-shadow: 0px -1px #333;
+		/* text styles */
+		text-decoration: none;
+		color: #fff;
+		font-size: 20px;
+		font-family: sans-serif;
+		font-weight: 100;
+	}
+	
+	.findMissingShiftButton:hover
+	{
+		background: linear-gradient(#073,#0fa);
+	}
+	.findDuplicateShiftButton
+	{
+		/* background styles */
+		position: relative;
+		display: inline-block;
+		padding: 10px 15px;
+		-moz-border-radius:28px;
+		-webkit-border-radius:28px;
+		border-radius:28px;
+		background-color: blue; /*for compatibility with older browsers*/
+		background-image: linear-gradient(blue,lightblue);
+		box-shadow: 0px 1px 4px -2px #333;
+		text-shadow: 0px -1px #333;
+		/* text styles */
+		text-decoration: none;
+		color: #fff;
+		font-size: 20px;
+		font-family: sans-serif;
+		font-weight: 100;
+	}
+	.findDuplicateShiftButton:hover
+	{
+		background: linear-gradient(#1f4160,#1e3460);
+	}
+	.checkAllButton
+	{
+		/* background styles */
+		position: relative;
+		display: inline-block;
+		padding: 10px 15px;
+		-moz-border-radius:28px;
+		-webkit-border-radius:28px;
+		border-radius:28px;
+		background-color: purple; /*for compatibility with older browsers*/
+		background-image: linear-gradient(purple,lightpurple);
+		box-shadow: 0px 1px 4px -2px #333;
+		text-shadow: 0px -1px #333;
+		/* text styles */
+		text-decoration: none;
+		color: #fff;
+		font-size: 20px;
+		font-family: sans-serif;
+		font-weight: 100;
+	}
+	.checkAllButton:hover
+	{
+		background: linear-gradient(#663399,#7E329A);
+	}
+	.clearAllButton
+	{
+		position: relative;
+		display: inline-block;
+		padding: 10px 15px;
+		-moz-border-radius:28px;
+		-webkit-border-radius:28px;
+		border-radius:28px;
+		background-color: #FF8500; /*for compatibility with older browsers*/
+		background-image: linear-gradient(#FF8500,lightOrange);
+		box-shadow: 0px 1px 4px -2px #333;
+		text-shadow: 0px -1px #333;
+		/* text styles */
+		text-decoration: none;
+		color: #fff;
+		font-size: 20px;
+		font-family: sans-serif;
+		font-weight: 100;
+	}
+	.clearAllButton:hover
+	{
+		background: linear-gradient(#FF8500,#F7A80A);
+	}
+	.exportButton
+	{
+		position: relative;
+		display: inline-block;
+		padding: 10px 15px;
+		-moz-border-radius:28px;
+		-webkit-border-radius:28px;
+		border-radius:28px;
+		background-color: black; /*for compatibility with older browsers*/
+		background-image: linear-gradient(black,#6E685E);
+		box-shadow: 0px 1px 4px -2px #333;
+		text-shadow: 0px -1px #333;
+		/* text styles */
+		text-decoration: none;
+		color: #fff;
+		font-size: 20px;
+		font-family: sans-serif;
+		font-weight: 100;
+	}
+	.exportButton:hover
+	{
+		background: linear-gradient(#6E685E,black);
+	}
+	.saveRosterToDBButton
+	{
+		position: relative;
+		display: inline-block;
+		padding: 10px 15px;
+		-moz-border-radius:28px;
+		-webkit-border-radius:28px;
+		border-radius:28px;
+		background-color: red; /*for compatibility with older browsers*/
+		background-image: linear-gradient(red,lightred);
+		box-shadow: 0px 1px 4px -2px #333;
+		text-shadow: 0px -1px #333;
+		/* text styles */
+		text-decoration: none;
+		color: #fff;
+		font-size: 20px;
+		font-family: sans-serif;
+		font-weight: 100;
+	}
+	.saveRosterToDBButton:hover
+	{
+		background: linear-gradient(pink,red);
+	}	
+	.autoPlannerButton
+	{
+		position: relative;
+		display: inline-block;
+		padding: 10px 15px;
+		-moz-border-radius:28px;
+		-webkit-border-radius:28px;
+		border-radius:28px;
+		background-color: #8B4513 ; /*for compatibility with older browsers*/
+		background-image: linear-gradient(#8B4513,#A0522D);
+		box-shadow: 0px 1px 4px -2px #333;
+		text-shadow: 0px -1px #333;
+		/* text styles */
+		text-decoration: none;
+		color: #fff;
+		font-size: 20px;
+		font-family: sans-serif;
+		font-weight: 100;
+	}
+	.autoPlannerButton:hover
+	{
+		background: linear-gradient(#800000,#8B4513);
+	}	
+	.exportButton:after,
+	.clearAllButton:after,
+	.checkAllButton:after,
+	.autoPlannerButton:after,
+	.saveRosterToDBButton:after,
+	.findMissingShiftButton:after, 
+	.findDuplicateShiftButton:after	
+	{
+		content: '';
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		width: calc(100% - 4px);
+		height: 50%;
+		background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));
+	}
