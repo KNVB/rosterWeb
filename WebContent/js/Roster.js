@@ -16,7 +16,7 @@ class Roster
 		this.year=year;
 		this.month=month;
 		console.log((new Date()).getTime());
-		this.rosterTable.init(year,month)
+		this.rosterTable.init(year,month,this)
 		.done(function(){
 			console.log((new Date()).getTime());
 			$(".findMissingShiftButton").on("click",function(){
@@ -77,7 +77,6 @@ class Roster
 	}
 	saveAllData()
 	{
-		var shiftDate;
 		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
 		var allITOShiftData=this.rosterTable.getAllShiftData();
 		var allPreferredShiftData=this.rosterTable.getAllPreferredShiftData();
@@ -90,14 +89,14 @@ class Roster
 		
 		for (var itoId in allITOShiftData)
 		{
+			//console.log("ito_id="+itoId);
 			rosterData+="\""+itoId+"\":{\"shiftList\":[";
 			iTOShiftData=allITOShiftData[itoId].shiftList;
 			for (var i=0;i<iTOShiftData.length;i++)
 			{
-				shiftDate=Date.UTC(this.year,this.month,i);
 				rosterData+="{\"itoId\":\""+itoId+"\",";
 				rosterData+="\"shift\":\""+iTOShiftData[i]+"\",";
-				rosterData+="\"shiftDate\":"+JSON.stringify(shiftDate);
+				rosterData+="\"shiftDate\":"+Date.UTC(this.year,this.month,i+1);
 				rosterData+="},";
 			}
 			rosterData=rosterData.substring(0,rosterData.length-1);
@@ -107,10 +106,10 @@ class Roster
 			for (var i=0;i<preferredShiftData.length;i++)
 			{
 				iTOPreferredShiftData=preferredShiftData[i];
-				shiftDate=Date.UTC(this.year,this.month,iTOPreferredShiftData.shiftDate);
+				console.log(iTOPreferredShiftData.shiftDate);
 				rosterData+="{\"itoId\":\""+itoId+"\",";
 				rosterData+="\"shift\":\""+iTOPreferredShiftData.shift+"\",";
-				rosterData+="\"shiftDate\":"+JSON.stringify(shiftDate);
+				rosterData+="\"shiftDate\":"+Date.UTC(this.year,this.month,iTOPreferredShiftData.shiftDate);
 				rosterData+="},";
 			}
 			if (rosterData.endsWith(","))
@@ -118,9 +117,8 @@ class Roster
 			rosterData+="],";
 			rosterData+="\"balance\":"+this.rosterTable.getThisMonthBalance(itoId)+"},";
 			/*
-			console.log(allITOShiftData[itoId]);
-			console.log(allPreferredShiftData[itoId]);
 			console.log(this.rosterTable.getThisMonthBalance(itoId));
+			console.log("========================================");
 			*/
 		}
 		rosterData=rosterData.substring(0,rosterData.length-1);

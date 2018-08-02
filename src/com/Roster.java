@@ -67,12 +67,14 @@ public class Roster {
 
 	}
 
-	public void update() throws Exception
+	public boolean update() throws Exception
 	{
+		boolean result;
 		dataStore=Utility.getDataStore();
-		dataStore.updateRoster(this.rosterYear, this.rosterMonth,this.iTORosterList) ;
+		result=dataStore.updateRoster(this.rosterYear, this.rosterMonth,this.iTORosterList) ;
 		dataStore.close();
 		dataStore=null;
+		return result;
 	}
 
 }

@@ -55,26 +55,60 @@ public class DbOp implements DataStore
 	}
 
 	@Override
-	public void updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList) 
+	public boolean updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList) 
 	{
-		for (String itoId:iTORosterList.keySet())
-		{
-			System.out.println("itoId="+itoId);
-			System.out.println("balance="+iTORosterList.get(itoId).getBalance());
-			System.out.println("Shift List");
-			for (Shift shift:iTORosterList.get(itoId).getShiftList())
+		boolean result=true;
+		PreparedStatement stmt=null;
+		try
+		{	
+			for (String itoId:iTORosterList.keySet())
 			{
-				System.out.println("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
-			}
-			System.out.println("===============================");
-			System.out.println("Preferred Shift List");
-			for (Shift shift:iTORosterList.get(itoId).getPreferredShiftList())
-			{
-				System.out.println("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
-			}
-			System.out.println("===============================");
-		}
+				/*
+				System.out.println("===============================");
+				System.out.println("itoId="+itoId);
+				System.out.println("balance="+iTORosterList.get(itoId).getBalance());
+				System.out.println("Shift List:");
+				System.out.println("===============================");
+				*/
+				sqlString="replace into shift_record (ito_id,shift_date,shift,state) values (?,?,?,?)";
+				stmt=dbConn.prepareStatement(sqlString);
+				for (Shift shift:iTORosterList.get(itoId).getShiftList())
+				{
+					stmt.setString(1,itoId);
+					stmt.setDate(2,new java.sql.Date(shift.getShiftDate().getTime().getTime()));
+					stmt.setString(3,shift.getShift());
+					stmt.setString(4,"A");
+					stmt.executeUpdate();
+					stmt.clearParameters();
+			//		System.out.println("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
+				}
+				System.out.println("===============================");
+				System.out.println("Preferred Shift List:");
+				System.out.println("===============================");
+				sqlString="replace into preferred_shift (ito_id,preferred_shift,shift_date) values (?,?,?)";
+				stmt=dbConn.prepareStatement(sqlString);
 
+				for (Shift shift:iTORosterList.get(itoId).getPreferredShiftList())
+				{
+					stmt.setString(1,itoId);
+					stmt.setString(2,shift.getShift());
+					stmt.setDate(3,new java.sql.Date(shift.getShiftDate().getTime().getTime()));
+					stmt.executeUpdate();
+					stmt.clearParameters();
+					System.out.println("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
+				}
+			}
+		}
+		catch (SQLException e) 
+		{
+			result=false;
+			e.printStackTrace();
+		}
+		finally 
+		{
+			releaseResource(null, stmt);
+		}
+		return result;
 	}
 
 	@Override
@@ -92,14 +126,14 @@ public class DbOp implements DataStore
 		
 		PreparedStatement stmt = null;
 		ArrayList <String>blackListShiftPatternList=null;
-		
+		GregorianCalendar joinDate=new GregorianCalendar(),leaveDate=new GregorianCalendar();
 		GregorianCalendar theFirstDateOfTheMonth=new GregorianCalendar(year,month,1);
 		Hashtable<String,ITO> result=new Hashtable<String,ITO>();
 		lastDay=theFirstDateOfTheMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
 		String firstDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-1";
 		String endDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-"+lastDay;
 		
-		sqlString ="SELECT ito_info.ito_id,post_name,ito_name,available_shift,working_hour_per_day,black_list_pattern from ";
+		sqlString ="SELECT join_date,leave_date,ito_info.ito_id,post_name,ito_name,available_shift,working_hour_per_day,black_list_pattern from ";
 		sqlString+="ito_info inner join black_list_pattern ";
 		sqlString+="on ito_info.ito_id=black_list_pattern.ito_id ";
 		sqlString+="where join_date<? and leave_date >? ";
@@ -132,6 +166,10 @@ public class DbOp implements DataStore
 					ito.setPostName(rs.getString("post_name"));
 					ito.setItoName(rs.getString("ito_name"));
 					ito.setWorkingHourPerDay(rs.getFloat("working_hour_per_day"));
+					joinDate.setTime(rs.getDate("join_date"));
+					leaveDate.setTime(rs.getDate("leave_date"));;
+					ito.setJoinDate(joinDate);
+					ito.setLeaveDate(leaveDate);
 					ito.setAvailableShift(new ArrayList<String>(Arrays.asList(rs.getString("available_shift").split(","))));
 					result.put(ito.getPostName(), ito);
 				}
@@ -207,23 +245,30 @@ public class DbOp implements DataStore
 		GregorianCalendar shiftDate;
 		PreparedStatement stmt = null;
 		ArrayList <Shift>shiftList=null;
+		ArrayList<Shift> preferredShiftList=null;
 		
 		Hashtable<String, ITORoster> result=new  Hashtable<String, ITORoster>();
 		GregorianCalendar theLast2DayOfPreviousMonth=new GregorianCalendar(year,month,1);
 		GregorianCalendar theFirstDateOfTheMonth=new GregorianCalendar(year,month,1);
-	//	theLast2DayOfPreviousMonth.add(Calendar.DAY_OF_MONTH, -RosterRule.getMaxConsecutiveWorkingDay());
-		theLast2DayOfPreviousMonth.add(Calendar.DAY_OF_MONTH, -2);
+		theLast2DayOfPreviousMonth.add(Calendar.DAY_OF_MONTH, -RosterRule.getMaxConsecutiveWorkingDay());
+	//	theLast2DayOfPreviousMonth.add(Calendar.DAY_OF_MONTH, -2);
 		lastDay=theFirstDateOfTheMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
 		String shiftMonthString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-1";
 		String startDateString=theLast2DayOfPreviousMonth.get(Calendar.YEAR)+"-"+(theLast2DayOfPreviousMonth.get(Calendar.MONTH)+1)+"-"+theLast2DayOfPreviousMonth.get(Calendar.DATE);
 		String endDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-"+lastDay;
 		
-		//System.out.println("startDateString="+startDateString);
-		sqlString ="select * from shift_record inner join last_month_balance ";
-		sqlString+="on shift_record.ito_id=last_month_balance.ito_id ";
-		sqlString+="where (shift_date between ? and ?) and shift_month=? ";
-		sqlString+="order by shift_record.ito_id,shift_date";
+		/*
+		System.out.println("startDateString="+startDateString);
+		System.out.println("endDateString="+endDateString);
+		System.out.println("shiftMonthString="+shiftMonthString);
+		*/
+		
+		sqlString ="select shift_record.ito_id,shift_record.shift_date,shift,balance,preferred_shift from shift_record ";
+		sqlString+="inner join last_month_balance on shift_record.ito_id=last_month_balance.ito_id "; 
+		sqlString+="left join preferred_shift on shift_record.ito_id=preferred_shift.ito_id and (shift_record.shift_date=preferred_shift.shift_date) ";
+		sqlString+="where (shift_record.shift_date between ? and ?) and shift_month=? ";
+		sqlString+="order by shift_record.ito_id,shift_record.shift_date";
 		try
 		{
 			stmt=dbConn.prepareStatement(sqlString);
@@ -244,12 +289,22 @@ public class DbOp implements DataStore
 					shiftDate.setTime(rs.getDate("shift_date"));
 					shift.setShiftDate(shiftDate);
 					shiftList.add(shift);
+					if (rs.getString("preferred_shift")!=null)
+					{
+						shift=new Shift();
+						shift.setItoId(itoId);
+						shift.setShift(rs.getString("preferred_shift"));
+						shiftDate.setTime(rs.getDate("shift_date"));
+						shift.setShiftDate(shiftDate);
+						preferredShiftList.add(shift);
+					}
 				}
 				else
 				{
 					if (shiftList!=null)
 					{
 						itoRoster.setShiftList(shiftList);
+						itoRoster.setPreferredShiftList(preferredShiftList);
 						result.put(itoId,itoRoster);
 						itoId=rs.getString("ito_id");
 					}
@@ -257,17 +312,29 @@ public class DbOp implements DataStore
 					itoRoster=new ITORoster();
 					itoRoster.setBalance(rs.getFloat("balance"));
 					shiftList=new ArrayList<Shift>();
+					
 					shift=new Shift();
 					shift.setItoId(itoId);
 					shift.setShift(rs.getString("shift"));
 					shiftDate.setTime(rs.getDate("shift_date"));
 					shift.setShiftDate(shiftDate);
 					shiftList.add(shift);
+					preferredShiftList=new ArrayList<Shift>();
+					if (rs.getString("preferred_shift")!=null)
+					{
+						shift=new Shift();
+						shift.setItoId(itoId);
+						shift.setShift(rs.getString("preferred_shift"));
+						shiftDate.setTime(rs.getDate("shift_date"));
+						shift.setShiftDate(shiftDate);
+						preferredShiftList.add(shift);
+					}
 				}
 			}
 			if (shiftList!=null)
 			{	
 				itoRoster.setShiftList(shiftList);
+				itoRoster.setPreferredShiftList(preferredShiftList);
 				result.put(itoId,itoRoster);
 			}			
 		}

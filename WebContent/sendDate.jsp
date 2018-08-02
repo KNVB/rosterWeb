@@ -16,11 +16,12 @@ Server side date value:
 </div>
 
 <script>
-var shiftDate=new Date(2018,6,1);
+var time=Date.UTC(2018,6,1);
+var shiftDate=new Date(time);
 $("#clientSideDateValue").html("Client side date value:"+shiftDate.getFullYear()+"/"+shiftDate.getMonth()+"/"+shiftDate.getDate());
 itoRosterString="{\"itoId\":\"ITO1_1999-01-01\",";
 itoRosterString+="\"shift\":\"b\",";
-itoRosterString+="\"shiftDate\":"+JSON.stringify(shiftDate);
+itoRosterString+="\"shiftDate\":"+time;
 itoRosterString+="}";
 jQuery.ajax({"url": "saveShift.jsp",
 	 dataType: 'text',

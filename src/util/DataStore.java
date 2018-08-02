@@ -22,6 +22,6 @@ public interface DataStore {
 	public Hashtable<String,ArrayList<String>> getRosterRule();
 	public void close()throws Exception;
 
-	public void updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList);	
+	public boolean updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList);	
 
 }

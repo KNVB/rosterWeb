@@ -10,5 +10,6 @@
 	ITORoster itoRoster;
 	BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 	Roster roster=objectMapper.readValue(br.readLine(),Roster.class);
-	roster.update();
+	if (!roster.update())
+		response.sendError(500,"Update Roster Data Failure.");
 %>

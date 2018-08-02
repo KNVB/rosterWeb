@@ -7,6 +7,12 @@ class Utility
 	{
 		
 	}
+	getDateDiffInDay(date1,date2)
+	{
+		var time1=date1.UTC();
+		var time2=date2.UTC();
+		return (time1-time2)/86400000;
+	}
 	_getKeys(obj)
 	{
         var arr = new Array();

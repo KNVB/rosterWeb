@@ -5,30 +5,39 @@ class RosterTable
 {
 	constructor()
 	{
+		this.itoList=[];
+		this.rosterList=[];
+		this.year=1970;
+		this.month=1;
+		this.roster=null;
 		this.shiftAStdDev=0.0;
 		this.shiftBStdDev=0.0;
 		this.shiftCStdDev=0.0;
-		this.calendarList=null;	
+		this.calendarList=null;
+		
+		this.showNoOfPrevDate=2;
+		this.firstDate=new Date();
 		this.utility=new Utility();
 		this.totalHourCellIndex=34;
 		this.shiftStartCellIndex=3;
-		this.rosterRule=new RosterRule();
 		this.averageShiftStdDev=0.0;
+		
+		this.rosterRule=new RosterRule();
 		this.table=document.getElementById("rosterTable");
 		this.rosterFooter=document.getElementById("footer");
 		this.rosterBody=document.getElementById("rosterBody");
 		this.rosterHeader=document.getElementById("rosterHeader");
-				
 		this.englishMonthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];		
 	}
-	init(year,month)
+	init(year,month,roster)
 	{
 		var temp;
 		var self=this;
 		this.year=year;
 		this.month=month;
-		this.itoList=[];
-		this.rosterList=[];
+		this.roster=roster;
+		
+		this.firstDate=new Date(year,month,1);
 		$(this.rosterFooter).hide();
 		var ito;
 		var requestParameters={"year":year,"month":month}; 
@@ -39,32 +48,33 @@ class RosterTable
 			 			data:requestParameters,
 			 			success:function (requestResult)
 								{
+			 						this.itoList=[];
 			 						self.calendarList=requestResult.calendarList;
 			 						for (var itoId in requestResult.itoList)
 			 						{
 			 							temp=(requestResult.itoList[itoId]);
 			 							ito=new ITO();
-			 							ito.name=temp.name;
+			 							ito.name=temp.itoName;
 			 							ito.itoId=temp.itoId;
 			 							ito.postName=temp.postName;
 			 							ito.availableShift=temp.availableShift;
 			 							ito.workingHourPerDay=temp.workingHourPerDay;
 			 							ito.blackListShiftPatternList=temp.blackListShiftPatternList;
 			 							self.itoList[itoId]=ito;
-			 						}
+			 						}			 						
 			 						self.rosterList=requestResult.rosterList;
 			 						//$(self.table).empty();
-				 						self._genRosterCaption();
-				 						self._genRosterMonthRow();
-				 						self._genEmptyRow();
-				 						self._genRosterHeader();
-				 						self._genRosterBody();
-				 						self._loadRosterData();
+			 						self._genRosterCaption();
+			 						self._genRosterMonthRow();
+			 						self._genEmptyRow();
+			 						self._genRosterHeader();
+			 						self._genRosterBody();
+			 						self._loadRosterData();
+			 						
+			 						self._initAutoPlanDropDown();
+			 						$(self.rosterFooter).show();
 				 						
-				 						self._initAutoPlanDropDown();
-				 						$(self.rosterFooter).show();
-				 						
-			 						},
+		 						},
 			 			error:this.utility.showAjaxErrorMessage
 					});
 	}
@@ -417,6 +427,7 @@ class RosterTable
 			rosterMonthRow.insertCell(rosterMonthRow.cells.length);
 		}
 		var monthSelect=document.createElement("select");
+		monthSelect.id="selectRosterMonth";
 		cell=rosterMonthRow.insertCell(rosterMonthRow.cells.length);
 		cell.append(monthSelect);
 		
@@ -440,6 +451,18 @@ class RosterTable
 		{
 			rosterMonthRow.insertCell(rosterMonthRow.cells.length);
 		}
+	}
+	_refresh(self,select)
+	{
+		//console.log(self,select);
+		var month=parseInt(select.options[select.selectedIndex].value);
+		var year=parseInt(select.nextSibling.textContent);
+		console.log(year,month);
+		this.roster.year=year;
+		this.roster.month=month;
+
+		//console.log(year,month);
+		self.init(year,month,this.roster);
 	}
 	_genEmptyRow()
 	{
@@ -722,30 +745,42 @@ class RosterTable
 	}
 	_loadRosterData()
 	{
-		var i,cell,ito;
-		var shiftList,itoId,shiftRow;
+		var preferredShiftList,startIndex,cell,ito,diff;
+		var shiftList,itoId,shiftRow,shiftDate,shiftRecord,preferredShiftRow;
+		startIndex=this.rosterRule.maxConWorkingDay-this.showNoOfPrevDate;
+		diff=startIndex-1;
+		//var itoId="ITO1_1999-01-01";
 		for (var itoId in this.itoList)
 		{
 			ito=this.itoList[itoId];
 			shiftList=this.rosterList[itoId].shiftList;
-			
+			preferredShiftList=this.rosterList[itoId].preferredShiftList;
+			//console.log(shiftList);
 			shiftRow=document.getElementById("shift_"+ito.itoId);
-			for (i=0;i<shiftList.length;i++)
+			preferredShiftRow=document.getElementById("preferredShift_"+ito.itoId);
+			for (var i=1;i<shiftList.length;i++)
 			{
-				cell=shiftRow.cells[i+1];
-				$(cell).html(shiftList[i]).blur();
-			}
+				shiftRecord=shiftList[i+diff];
+//				console.log(i,i+diff,new Date(shiftRecord.shiftDate),shiftRecord.shiftDate,shiftRecord.shift);
+				cell=shiftRow.cells[i];
+				
+				shiftRecord=shiftList[i+diff];
+				if (shiftRecord!=null)
+				{	
+					$(cell).html(shiftRecord.shift).blur();
+				}
+			}	
+			for (var i=0;i<preferredShiftList.length;i++)
+			{
+				shiftRecord=preferredShiftList[i];
+				shiftDate=new Date(shiftRecord.shiftDate);
+				cell=preferredShiftRow.cells[shiftDate.getDate()+this.showNoOfPrevDate];
+				$(cell).html(shiftRecord.shift);
+				//console.log(shiftDate.getDate(),shiftRecord.shift);
+			}	
+			//console.log(this.rosterList[itoId].preferredShiftList);
 		}
 	}	
-	
-	_refresh(self,select)
-	{
-		//console.log(self,select);
-		var month=parseInt(select.options[select.selectedIndex].value);
-		var year=parseInt(select.nextSibling.textContent);
-		//console.log(year,month);
-		self.init(year,month);
-	}
 	_reCalculate(shiftRow,shift)
 	{
 		var i,shift;

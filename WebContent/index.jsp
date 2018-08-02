@@ -23,6 +23,7 @@ GregorianCalendar now=new GregorianCalendar();
 		$( document ).ready(function() {
 			var roster=new Roster();
 			roster.init(<%=now.get(Calendar.YEAR)%>,<%=now.get(Calendar.MONTH)%>);
+			//roster.init(2017,5);
 		});
 	</script>
 </head>
