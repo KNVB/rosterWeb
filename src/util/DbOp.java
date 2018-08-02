@@ -266,15 +266,21 @@ public class DbOp implements DataStore
 		
 		sqlString ="select shift_record.ito_id,shift_record.shift_date,shift,balance,preferred_shift from shift_record ";
 		sqlString+="inner join last_month_balance on shift_record.ito_id=last_month_balance.ito_id "; 
-		sqlString+="left join preferred_shift on shift_record.ito_id=preferred_shift.ito_id and (shift_record.shift_date=preferred_shift.shift_date) ";
+
+		sqlString+="left join preferred_shift on (preferred_shift.shift_date between ? and ?) and ";
+		sqlString+="shift_record.ito_id=preferred_shift.ito_id and ";
+		sqlString+="(shift_record.shift_date=preferred_shift.shift_date) ";
+		
 		sqlString+="where (shift_record.shift_date between ? and ?) and shift_month=? ";
 		sqlString+="order by shift_record.ito_id,shift_record.shift_date";
 		try
 		{
 			stmt=dbConn.prepareStatement(sqlString);
-			stmt.setString(1,startDateString);
+			stmt.setString(1,shiftMonthString);
 			stmt.setString(2,endDateString);
-			stmt.setString(3,shiftMonthString);
+			stmt.setString(3,startDateString);
+			stmt.setString(4,endDateString);
+			stmt.setString(5,shiftMonthString);
 			
 			rs=stmt.executeQuery();
 			while (rs.next())

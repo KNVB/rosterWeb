@@ -195,7 +195,10 @@ class RosterTable
 										break;	
 									}
 									else
+									{	
+										$(cell).blur();
 										tempResult.push(shift);
+									}
 									break;
 							case "b":		
 							case "b1":
@@ -207,7 +210,10 @@ class RosterTable
 										break;	
 									}
 									else
+									{	
+										$(cell).blur();
 										tempResult.push(shift);
+									}
 									break;
 						}
 					}
@@ -813,10 +819,10 @@ class RosterTable
 				}
 			}
 		}
-		actualCell.textContent=Math.round(actualHour*100)/100;
+		actualCell.textContent=this.utility.roundTo(actualHour,2);
 		
-		thisMonthCell.textContent=Math.round((actualHour-totalCell.textContent)*100)/100;
-		thisMonthBalanceCell.textContent=Math.round((parseFloat(thisMonthCell.textContent)+parseFloat(lastMonthCell.textContent))*100)/100;
+		thisMonthCell.textContent=this.utility.roundTo((parseFloat(actualHour)-parseFloat(totalCell.textContent)),2);
+		thisMonthBalanceCell.textContent=this.utility.roundTo((parseFloat(thisMonthCell.textContent)+parseFloat(lastMonthCell.textContent)),2);
 		
 		//update total no. of varies shift value
 		aShiftCountCell.textContent=aShiftCount;
@@ -830,7 +836,7 @@ class RosterTable
 		
 		dShiftCountCell.textContent=dShiftCount;
 		
-		noOfWorkingDayCell.textContent=Math.round((aShiftCount+bShiftCount+cShiftCount+dShiftCount)*100)/100;
+		noOfWorkingDayCell.textContent=(aShiftCount+bShiftCount+cShiftCount+dShiftCount);
 		
 	}
 	_updateStandardDevValue(shiftName,cellIndex)
@@ -878,11 +884,33 @@ class RosterTable
 				right = 39
 				down = 40
 				*/
+			
+						//handle left arrow key
+				case 37:event.preventDefault();
+						cell.previousSibling.focus();
+						break;
+		
+						//handle up arrow key
+				case 38:event.preventDefault();
+						var cellIndex=cell.cellIndex;
+						var thisRow=cell.parentElement;
+						var rowIndex=thisRow.rowIndex
+						var preRow=this.table.rows[rowIndex-1];
+						preRow.cells[cellIndex].focus();
+						break;
+						
+						//handle right arrow key
 				case 39:event.preventDefault();
 						cell.nextSibling.focus();
 						break;
-				case 37:event.preventDefault();
-						cell.previousSibling.focus();
+						
+						//handle down arrow key
+				case 40:event.preventDefault();
+						var cellIndex=cell.cellIndex;
+						var thisRow=cell.parentElement;
+						var rowIndex=thisRow.rowIndex
+						var nextRow=this.table.rows[rowIndex+1];
+						nextRow.cells[cellIndex].focus();
 						break;
 			}
 	}
