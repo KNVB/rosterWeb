@@ -641,26 +641,14 @@ class RosterTable
 						});
 				$(cell).keydown(function(event)
 								{
-					 				switch(event.which)
-					 				{
-					 					case 13:event.preventDefault();
-					 							this.blur();
-					 							//console.log("I am here.");
-					 							break;
-					 				}
+					 				self._inputCellKeyDownHandlder(event,this);
 								});
 				cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 				cell.className="borderCell alignCenter";
 				cell.contentEditable="true";
 				$(cell).keydown(function(event)
 						{
-			 				switch(event.which)
-			 				{
-			 					case 13:event.preventDefault();
-			 							this.blur();
-			 							//console.log("I am here.");
-			 							break;
-			 				}
+							self._inputCellKeyDownHandlder(event,this);
 						});
 				$(cell).on("blur",function(){
 					this.className="borderCell alignCenter";
@@ -874,5 +862,28 @@ class RosterTable
 		this.averageShiftStdDev=this.utility.getMean(shiftCount);
 		document.getElementById("avgStdDev").textContent=this.utility.roundTo(this.averageShiftStdDev,2);
 		//console.log("++++++++++++++++++++++++++++++++");
+	}
+	_inputCellKeyDownHandlder(event,cell)
+	{
+		switch(event.which)
+			{
+				//When Enter key is pressed
+				case 13:event.preventDefault();
+						cell.blur();
+						//console.log("I am here.");
+						break;
+				/*		
+				left = 37
+				up = 38
+				right = 39
+				down = 40
+				*/
+				case 39:event.preventDefault();
+						cell.nextSibling.focus();
+						break;
+				case 37:event.preventDefault();
+						cell.previousSibling.focus();
+						break;
+			}
 	}
 }	
