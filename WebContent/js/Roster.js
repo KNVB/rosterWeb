@@ -7,17 +7,21 @@ class Roster
 	{
 		this.month=0;	
 		this.year=1970;
+		this.itoList=[];
 		this.utility=new Utility();
 		this.rosterTable=new RosterTable();
+		this.rosterRule=this.rosterTable.rosterRule;
 	}
 	init(year,month)
 	{
 		var self=this;
 		this.year=year;
 		this.month=month;
+		
 		console.log((new Date()).getTime());
 		this.rosterTable.init(year,month,this)
 		.done(function(){
+			self.itoList=self.rosterTable.itoList;
 			console.log((new Date()).getTime());
 			$(".findMissingShiftButton").on("click",function(){
 				self.rosterTable.haveMissingShift();
@@ -44,11 +48,67 @@ class Roster
 	}
 	autoAssign()
 	{
+		var ito;
+		var result,shift;
+		var preferredShift;
+		var itoPreferredShift;
+		var resultantRoster=[];
+		var resultantShiftList;
+		var itoShiftList,itoShift;
+		var utility=new Utility(),diff;	
+		var itoPreviousShiftList,itoPreferredShiftList,essentialShiftTemp;
 		var startDate=parseInt($("#autoPlannStartDate").val());
 		var endDate=parseInt($("#autoPlanEndDate").val());
 		
 		if (this.rosterTable.haveInvalidPreferredShift(startDate,endDate))
 			alert("Invalid shift requirement detected");
+		else
+		{
+			itoPreferredShiftList=this.rosterTable.getPreferredShiftList(startDate,endDate);
+			var i=startDate;
+			//for (var i=startDate;i<=endDate;i++)
+			{
+				essentialShiftTemp=this.rosterRule.getEssentialShift()
+				this.itoList=utility.shuffleProperties(this.itoList);
+				
+				var itoId="ITO3_2017-10-18";
+				//for (var itoId in this.itoList)
+				{
+					itoPreferredShift=itoPreferredShiftList[itoId];
+					preferredShift=itoPreferredShift[i-1];
+					if (resultantRoster[itoId]==null)
+						resultantShiftList=[];
+					else
+						resultantShiftList=resultantRoster[itoId];
+					switch (preferredShift)
+					{
+						case "o":
+								resultantShiftList[i-startDate]="O";
+								break;
+						case "d" : 
+						case "d1":
+						case "d2":
+						case "d3":
+								resultantShiftList[i-startDate]=preferredShift;
+								break;
+						default:
+								//console.log(preferredShift);
+								result=this.rosterRule.getITOAvailableShiftList(i,itoId,preferredShift,resultantShiftList,this.rosterTable);
+								if (result.length==0)
+								{
+									resultantShiftList[i-startDate]="O";
+								}
+								else
+								{
+									
+								}	
+								break;
+					}			
+					resultantRoster[itoId]=resultantShiftList;
+				}
+			}
+			console.log(resultantRoster);
+		}
 	}
 	validate()
 	{

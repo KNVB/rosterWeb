@@ -60,7 +60,7 @@ class RosterTable
 			 							ito.postName=temp.postName;
 			 							ito.availableShift=temp.availableShift;
 			 							ito.workingHourPerDay=temp.workingHourPerDay;
-			 							ito.blackListShiftPatternList=temp.blackListShiftPatternList;
+			 							ito.blackListShiftPatternList=temp.blackListedShiftPattern;
 			 							self.itoList[itoId]=ito;
 			 						}			 						
 			 						self.rosterList=requestResult.rosterList;
@@ -244,8 +244,8 @@ class RosterTable
 			shiftRow=shiftRowList[itoId];
 			ito=itoList[itoId];
 			endIndex=this.shiftStartCellIndex+this.calendarList.length;
-			indices=this.rosterRule.getBlackListedShiftPatternIndex(shiftRow,endIndex,ito);
-			
+			indices=ito.getBlackListedShiftPatternIndex(this._getShiftPattern(shiftRow,endIndex));
+
 			//if Black Listed Shift Pattern found in a shift row
 			if (indices.length>0)
 			{
@@ -309,6 +309,73 @@ class RosterTable
 			}	
 		}
 	}
+	getPreviousShiftList(startDate,itoId)
+	{
+		var i,roster;
+		var itoShiftList=[];
+		
+		var shiftRowList=this._getAllShiftRow();
+		var startIndex=startDate-this.rosterRule.maxConWorkingDay;
+		var shiftList=[],shiftObj,shiftRow,cell,prevShiftStartIndex;
+		
+		//var itoId="ITO1_1999-01-01";
+		
+	//	for (var itoId in shiftRowList)
+		{
+			shiftList=[];
+			roster=this.rosterList[itoId];
+			shiftRow=shiftRowList[itoId];
+			if (startIndex<0)
+			{	
+				prevShiftStartIndex=this.rosterRule.maxConWorkingDay+startIndex;
+				for (i=prevShiftStartIndex;i<this.rosterRule.maxConWorkingDay;i++)
+				{
+					shiftObj=roster.shiftList[i];
+					shiftList.push(shiftObj.shift);
+					//console.log(itoId,new Date(shiftObj.shiftDate),shiftObj.shift);
+				}
+				for (i=0;i<startDate-1;i++)
+				{
+					cell=shiftRow.cells[i+this.shiftStartCellIndex];
+					shiftList.push(cell.textContent);
+				}	
+			}
+			else
+			{
+				for (i=startIndex;i<startDate-1;i++)
+				{
+					cell=shiftRow.cells[i+this.shiftStartCellIndex];
+					shiftList.push(cell.textContent);
+				}
+			}
+			//itoShiftList[itoId]=shiftList;
+			
+		}	
+		//console.log(itoShiftList);
+		return  shiftList;
+	}
+	getPreferredShiftList(startDate,endDate)
+	{
+		var cell;
+		var preferredShiftRow;
+		var preferredShiftRowList=this._getAllPreferredShiftRow();
+		var itoId="ITO1_1999-01-01";
+		var itoPreferredShiftList=[];
+		var preferredShiftList=[];
+		
+		for (var itoId in preferredShiftRowList)
+		{
+			preferredShiftList=[];
+			preferredShiftRow=preferredShiftRowList[itoId];
+			for (var i=startDate-1;i<endDate;i++)
+			{
+				cell=preferredShiftRow.cells[i+this.shiftStartCellIndex];
+				preferredShiftList.push(cell.textContent);
+			}
+			itoPreferredShiftList[itoId]=preferredShiftList;
+		}
+		return itoPreferredShiftList;
+	}
 	getAllShiftData()
 	{
 		var resultString="{";
@@ -366,6 +433,17 @@ class RosterTable
 	}
 //-----------------------------------------------------------------------------------------------------------
 // Private method
+	_getShiftPattern(shiftRow,endIndex)
+	{
+		var shiftPattern="",cell;
+		for (var i=1;i<endIndex;i++)
+		{
+			cell=shiftRow.cells[i];
+			shiftPattern+=cell.textContent+",";
+		}
+		shiftPattern=shiftPattern.substring(0,shiftPattern.length-1);
+		return shiftPattern;
+	}
 	_getAllShiftRow()
 	{
 		var result=[];
@@ -661,6 +739,9 @@ class RosterTable
 					
 					$(preferredCell).keydown(function(event){
 				 		self._inputCellKeyDownHandlder(event,this);
+					});
+					$(preferredCell).on("blur",function(){
+						this.className="borderCell alignCenter";
 					});
 				}	
 			
