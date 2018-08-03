@@ -327,7 +327,7 @@ class RosterTable
 			shiftRow=shiftRowList[itoId];
 			if (startIndex<0)
 			{	
-				prevShiftStartIndex=this.rosterRule.maxConWorkingDay+startIndex;
+				prevShiftStartIndex=this.rosterRule.maxConWorkingDay+startIndex-1;
 				for (i=prevShiftStartIndex;i<this.rosterRule.maxConWorkingDay;i++)
 				{
 					shiftObj=roster.shiftList[i];
@@ -342,7 +342,7 @@ class RosterTable
 			}
 			else
 			{
-				for (i=startIndex;i<startDate-1;i++)
+				for (i=startIndex-1;i<startDate-1;i++)
 				{
 					cell=shiftRow.cells[i+this.shiftStartCellIndex];
 					shiftList.push(cell.textContent);

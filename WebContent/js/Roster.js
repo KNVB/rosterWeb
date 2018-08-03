@@ -71,24 +71,29 @@ class Roster
 				essentialShiftTemp=this.rosterRule.getEssentialShift()
 				this.itoList=utility.shuffleProperties(this.itoList);
 				
-				var itoId="ITO3_2017-10-18";
-				//for (var itoId in this.itoList)
+				//var itoId="ITO6_1999-01-01";
+				//var itoId="ITO3_2017-10-18";
+				for (var itoId in this.itoList)
 				{
+					console.log(itoId);
 					itoPreferredShift=itoPreferredShiftList[itoId];
 					preferredShift=itoPreferredShift[i-1];
 					if (resultantRoster[itoId]==null)
 						resultantShiftList=[];
 					else
 						resultantShiftList=resultantRoster[itoId];
+
 					switch (preferredShift)
 					{
 						case "o":
+								console.log("O shift is assigned");
 								resultantShiftList[i-startDate]="O";
 								break;
 						case "d" : 
 						case "d1":
 						case "d2":
 						case "d3":
+								console.log(preferredShift+" shift is assigned");
 								resultantShiftList[i-startDate]=preferredShift;
 								break;
 						default:
@@ -100,14 +105,16 @@ class Roster
 								}
 								else
 								{
-									
+									console.log("available shift:"+result);
 								}	
 								break;
-					}			
-					resultantRoster[itoId]=resultantShiftList;
+					}
+					console.log("==============================================");
+					resultantRoster[itoId]=resultantShiftList;					
+					
 				}
 			}
-			console.log(resultantRoster);
+			//console.log(resultantRoster);
 		}
 	}
 	validate()

@@ -38,11 +38,13 @@ class RosterRule
 		var result=[];
 		var self=this;
 		var previousShiftList=rosterTable.getPreviousShiftList(index,itoId);
+		//console.log(itoId,previousShiftList);
+		
 		var ito=rosterTable.itoList[itoId];
 		ito.availableShift.forEach(function(shift){
 						if (self._isThatShiftOkForAssign(resultantShiftList,previousShiftList,preferredShift,index,ito,shift))
 						{
-							console.log(ito.itoId,shift);
+							//console.log(ito.itoId,shift);
 							result.push(shift);
 						}
 		});
@@ -52,19 +54,56 @@ class RosterRule
 	_isThatShiftOkForAssign(resultantShiftList,previousShiftList,preferredShift,index,ito,thatShift)
 	{
 		var result=true;
-		if (this._isConflictWithPreferredShift(preferredShift,thatShift))
+		if (this._getNoOfConWorkingDay(ito.itoId,previousShiftList,thatShift)>this.maxConWorkingDay)
 		{
+			console.log(ito.itoId+","+index+","+thatShift+", cause over the max. consecutive working day");
 			result=false;
-			//console.log(ito.itoId+","+index+","+thatShift+",Conflict with preferred("+preferredShift+").");
 		}
 		else
 		{
 			if (this._isThatShiftFormBlackListedShiftPattern(ito,previousShiftList,thatShift))
 			{
+				console.log(ito.itoId+","+index+","+thatShift+", form black list");
 				result=false;
 			}
-		}
+			else
+			{
+				if (this._isConflictWithPreferredShift(preferredShift,thatShift))
+				{
+					result=false;
+					//console.log(ito.itoId+","+index+","+thatShift+",Conflict with preferred("+preferredShift+").");
+				}
+			}			
+		}		
 		return result;		
+	}
+	_getNoOfConWorkingDay(itoId,previousShiftList,thatShift)
+	{
+		//console.log(previousShiftList,thatShift);
+		var count=0,finished=false;
+		var shiftList=previousShiftList;
+		shiftList.push(thatShift);
+		console.log(itoId,thatShift,previousShiftList,shiftList);
+		for (var i=0;i<shiftList.length;i++)
+		{
+			switch (shiftList[i])
+			{
+				case "":
+				case "O":
+				case "d" : 
+				case "d1":
+				case "d2":
+				case "d3":
+						finished=true;
+						break;
+				default:
+						count++;
+						break;		
+			}
+			if (finished)
+				break;
+		}
+		return count;
 	}
 	_isConflictWithPreferredShift(preferredShift,thatShift)
 	{
