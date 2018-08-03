@@ -5,23 +5,24 @@ class RosterTable
 {
 	constructor()
 	{
-		this.itoList=[];
-		this.rosterList=[];
-		this.year=1970;
 		this.month=1;
+		this.year=1970;
+		this.itoList=[];
 		this.roster=null;
+		this.rosterList=[];
+		
 		this.shiftAStdDev=0.0;
 		this.shiftBStdDev=0.0;
 		this.shiftCStdDev=0.0;
 		this.calendarList=null;
-		
+
 		this.showNoOfPrevDate=2;
 		this.firstDate=new Date();
 		this.utility=new Utility();
 		this.totalHourCellIndex=34;
 		this.shiftStartCellIndex=3;
 		this.averageShiftStdDev=0.0;
-		
+
 		this.rosterRule=new RosterRule();
 		this.table=document.getElementById("rosterTable");
 		this.rosterFooter=document.getElementById("footer");
@@ -604,7 +605,8 @@ class RosterTable
 	{
 		var i,ito;
 		var self=this;
-		var shiftRow,preferredShiftRow,vancantShiftRow,cell;
+		var cell,shiftCell,preferredCell;
+		var shiftRow,preferredShiftRow,vancantShiftRow;
 		var shiftList,itoRoster,columnCount;
 		$(this.rosterBody).empty();
 		for (var itoId in this.itoList)
@@ -638,27 +640,30 @@ class RosterTable
 			}
 			for (i=0;i<31;i++)
 			{
-				cell=shiftRow.insertCell(shiftRow.cells.length);
-				cell.className="borderCell alignCenter";
-				cell.contentEditable="true";
-				$(cell).on("blur",function()
-						{
-							self.updateValue(this);
-						});
-				$(cell).keydown(function(event)
-								{
-					 				self._inputCellKeyDownHandlder(event,this);
-								});
-				cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
-				cell.className="borderCell alignCenter";
-				cell.contentEditable="true";
-				$(cell).keydown(function(event)
-						{
-							self._inputCellKeyDownHandlder(event,this);
-						});
-				$(cell).on("blur",function(){
-					this.className="borderCell alignCenter";
-				});
+				shiftCell=shiftRow.insertCell(shiftRow.cells.length);
+				preferredCell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
+				
+				shiftCell.className="borderCell alignCenter";
+				preferredCell.className="borderCell alignCenter";
+				if (i<this.calendarList.length)
+				{
+					shiftCell.contentEditable="true";
+					preferredCell.contentEditable="true";
+					
+					$(shiftCell).on("blur",function(){
+						self.updateValue(this);
+					});
+					
+					
+					$(shiftCell).keydown(function(event){
+				 		self._inputCellKeyDownHandlder(event,this);
+					});
+					
+					$(preferredCell).keydown(function(event){
+				 		self._inputCellKeyDownHandlder(event,this);
+					});
+				}	
+			
 			}
 			cell=shiftRow.insertCell(shiftRow.cells.length);
 			cell.className="borderCell alignCenter";
