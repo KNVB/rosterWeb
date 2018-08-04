@@ -7,6 +7,7 @@ class RosterRule
 	constructor()
 	{
 		this.shiftHourCount=[];
+		this.utility=new Utility();
 <% 
 		Hashtable<String,Float>shiftHourCount=RosterRule.getShiftHourCount();
 
@@ -17,6 +18,7 @@ class RosterRule
 		
 		//maximum number of Consecutive working day
 		this.maxConWorkingDay=<%=RosterRule.getMaxConsecutiveWorkingDay()%>;
+//		this.maxConWorkingDay=5;
 		this.essentialShiftList=[];
 <% 
 		for (String shift:RosterRule.getEssentialShiftList())
@@ -38,7 +40,7 @@ class RosterRule
 		var result=[];
 		var self=this;
 		var previousShiftList=rosterTable.getPreviousShiftList(index,itoId);
-		//console.log(itoId,previousShiftList);
+		console.log(itoId,index,previousShiftList);
 		
 		var ito=rosterTable.itoList[itoId];
 		ito.availableShift.forEach(function(shift){
@@ -56,7 +58,7 @@ class RosterRule
 		var result=true;
 		if (this._getNoOfConWorkingDay(ito.itoId,previousShiftList,thatShift)>this.maxConWorkingDay)
 		{
-			console.log(ito.itoId+","+index+","+thatShift+", cause over the max. consecutive working day");
+		//	console.log(ito.itoId+","+index+","+thatShift+", cause over the max. consecutive working day");
 			result=false;
 		}
 		else
@@ -79,11 +81,9 @@ class RosterRule
 	}
 	_getNoOfConWorkingDay(itoId,previousShiftList,thatShift)
 	{
-		//console.log(previousShiftList,thatShift);
 		var count=0,finished=false;
-		var shiftList=previousShiftList;
+		var shiftList=this.utility.cloneArray(previousShiftList);
 		shiftList.push(thatShift);
-		console.log(itoId,thatShift,previousShiftList,shiftList);
 		for (var i=0;i<shiftList.length;i++)
 		{
 			switch (shiftList[i])
@@ -94,7 +94,7 @@ class RosterRule
 				case "d1":
 				case "d2":
 				case "d3":
-						finished=true;
+						count=0;
 						break;
 				default:
 						count++;
@@ -103,12 +103,16 @@ class RosterRule
 			if (finished)
 				break;
 		}
+		
+		//console.log(itoId,previousShiftList,shiftList,thatShift,count);
+		
 		return count;
 	}
 	_isConflictWithPreferredShift(preferredShift,thatShift)
 	{
 		var result=false;
-		if ((preferredShift=="")||(preferredShift==thatShift))
+		if (((typeof preferredShift)=="undefined") || (preferredShift=="")||(preferredShift==thatShift))
+		//if (((typeof preferredShift)=="undefined")||(preferredShift==thatShift))
 			return result;
 		else
 		{

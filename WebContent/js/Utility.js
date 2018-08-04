@@ -7,6 +7,15 @@ class Utility
 	{
 		
 	}
+	
+	//Clone Array only
+	cloneArray(inArray) 
+	{
+	 return inArray.map(value => {
+	    return (value);
+	    //console.log(after,obj);
+	  });
+	}	
 	getDateDiffInDay(date1,date2)
 	{
 		var time1=date1.UTC();

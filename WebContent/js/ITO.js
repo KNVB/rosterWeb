@@ -46,7 +46,7 @@ class ITO
 		for (var i in this.blackListShiftPatternList)
 		{
 			blackListShiftPattern=this.blackListShiftPatternList[i];
-		//	console.log(shiftPattern,blackListShiftPattern);
+			//console.log(this.itoId,shiftPattern,blackListShiftPattern);
 			myRe= new RegExp(blackListShiftPattern, 'gi');
 			while ((match = myRe.exec(shiftPattern))!=null)
 			{

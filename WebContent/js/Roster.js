@@ -55,7 +55,7 @@ class Roster
 		var resultantRoster=[];
 		var resultantShiftList;
 		var itoShiftList,itoShift;
-		var utility=new Utility(),diff;	
+		var utility=new Utility(),isAssigned,comparetor;	
 		var itoPreviousShiftList,itoPreferredShiftList,essentialShiftTemp;
 		var startDate=parseInt($("#autoPlannStartDate").val());
 		var endDate=parseInt($("#autoPlanEndDate").val());
@@ -66,7 +66,7 @@ class Roster
 		{
 			itoPreferredShiftList=this.rosterTable.getPreferredShiftList(startDate,endDate);
 			var i=startDate;
-			//for (var i=startDate;i<=endDate;i++)
+			for (var i=startDate;i<=endDate;i++)
 			{
 				essentialShiftTemp=this.rosterRule.getEssentialShift()
 				this.itoList=utility.shuffleProperties(this.itoList);
@@ -75,7 +75,7 @@ class Roster
 				//var itoId="ITO3_2017-10-18";
 				for (var itoId in this.itoList)
 				{
-					console.log(itoId);
+				//	console.log(itoId);
 					itoPreferredShift=itoPreferredShiftList[itoId];
 					preferredShift=itoPreferredShift[i-1];
 					if (resultantRoster[itoId]==null)
@@ -86,35 +86,62 @@ class Roster
 					switch (preferredShift)
 					{
 						case "o":
-								console.log("O shift is assigned");
+						//		console.log(i+" O shift is assigned");
 								resultantShiftList[i-startDate]="O";
 								break;
 						case "d" : 
 						case "d1":
 						case "d2":
 						case "d3":
-								console.log(preferredShift+" shift is assigned");
+						//		console.log(i+" "+preferredShift+" shift is assigned");
 								resultantShiftList[i-startDate]=preferredShift;
 								break;
 						default:
-								//console.log(preferredShift);
 								result=this.rosterRule.getITOAvailableShiftList(i,itoId,preferredShift,resultantShiftList,this.rosterTable);
-								if (result.length==0)
+								if ((essentialShiftTemp=="") || (result.length==0))
 								{
+									console.log(i+" O shift is assigned to "+itoId);
 									resultantShiftList[i-startDate]="O";
 								}
 								else
 								{
+								//	console.log(preferredShift);
 									console.log("available shift:"+result);
-								}	
+									isAssigned=false;
+									for (var j=0;j<result.length;j++)
+									{
+										switch (result[j])
+										{
+											case "b1":
+													comparetor="b";
+													break;
+											default:
+													comparetor=result[j];
+													break;
+										}
+								//		console.log(comparetor,result[j]);
+										if (essentialShiftTemp.indexOf(comparetor)>-1)
+										{
+											essentialShiftTemp=essentialShiftTemp.replace(comparetor,"");
+											console.log(i+" "+result[j]+" shift is assigned to "+itoId);
+											resultantShiftList[i-startDate]=result[j];
+											isAssigned=true;
+											break;
+										}	
+									}
+									if (!isAssigned)
+									{
+										console.log(i+" O shift is assigned to "+itoId);
+										resultantShiftList[i-startDate]="O";
+									}	
+								}
 								break;
 					}
-					console.log("==============================================");
-					resultantRoster[itoId]=resultantShiftList;					
-					
+					//console.log("==============================================");
+					resultantRoster[itoId]=resultantShiftList;
 				}
 			}
-			//console.log(resultantRoster);
+			console.log(resultantRoster);
 		}
 	}
 	validate()
