@@ -22,8 +22,8 @@ public class ITO {
 	private GregorianCalendar joinDate;
 	private GregorianCalendar leaveDate;
 
-	private ArrayList<String> availableShift;
-	private ArrayList<String> blackListedShiftPattern;
+	private ArrayList<String> availableShiftList;
+	private ArrayList<String> blackListedShiftPatternList;
 
 	
 	public ITO() throws InstantiationException, IllegalAccessException, ClassNotFoundException
@@ -100,13 +100,13 @@ public class ITO {
 	public void setPostName(String postName) {
 		this.postName = postName;
 	}
-	public ArrayList<String> getAvailableShift()
+	public ArrayList<String> getAvailableShiftList()
 	{ 
-		return this.availableShift;
+		return this.availableShiftList;
 	}
-	public void setAvailableShift(ArrayList<String> availableShift)
+	public void setAvailableShiftList(ArrayList<String> availableShift)
 	{
-		this.availableShift=availableShift;
+		this.availableShiftList=availableShift;
 	
 	}
 	public float getWorkingHourPerDay() {
@@ -116,11 +116,11 @@ public class ITO {
 	public void setWorkingHourPerDay(float workingHourPerDay) {
 		this.workingHourPerDay = workingHourPerDay;
 	}
-	public ArrayList<String> getBlackListedShiftPattern() {
-		return blackListedShiftPattern;
+	public ArrayList<String> getBlackListedShiftPatternList() {
+		return blackListedShiftPatternList;
 	}
 
-	public void setBlackListedShiftPattern(ArrayList<String> blackListedShiftPattern) {
-		this.blackListedShiftPattern = blackListedShiftPattern;
+	public void setBlackListedShiftPatternList(ArrayList<String> blackListedShiftPattern) {
+		this.blackListedShiftPatternList = blackListedShiftPattern;
 	}
 }

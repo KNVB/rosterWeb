@@ -154,7 +154,7 @@ public class DbOp implements DataStore
 				{
 					if (blackListShiftPatternList!=null)
 					{
-						ito.setBlackListedShiftPattern(blackListShiftPatternList);
+						ito.setBlackListedShiftPatternList(blackListShiftPatternList);
 						itoId=rs.getString("ito_id");
 						result.put(ito.getPostName(), ito);
 					}
@@ -170,11 +170,11 @@ public class DbOp implements DataStore
 					leaveDate.setTime(rs.getDate("leave_date"));;
 					ito.setJoinDate(joinDate);
 					ito.setLeaveDate(leaveDate);
-					ito.setAvailableShift(new ArrayList<String>(Arrays.asList(rs.getString("available_shift").split(","))));
+					ito.setAvailableShiftList(new ArrayList<String>(Arrays.asList(rs.getString("available_shift").split(","))));
 					result.put(ito.getPostName(), ito);
 				}
 			}
-			ito.setBlackListedShiftPattern(blackListShiftPatternList);
+			ito.setBlackListedShiftPatternList(blackListShiftPatternList);
 			result.put(ito.getPostName(), ito);
 		}
 		catch (Exception e) 
