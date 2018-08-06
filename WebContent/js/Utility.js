@@ -7,13 +7,12 @@ class Utility
 	{
 		
 	}
-	getRosterRule(obj,year,month)
+	getRosterRule(year,month)
 	{
 		var requestParameters={"year":year,"month":month}; 
-		jQuery.ajax({"url": "getRosterRule.jsp",
+		return jQuery.ajax({"url": "getRosterRule.jsp",
 					 dataType: 'json',
 					 data:requestParameters,
-					 success:obj.init,
 					 error:this.showAjaxErrorMessage
 		});
 	}
