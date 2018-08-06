@@ -27,7 +27,7 @@ class Roster
 			self.rosterRule.shiftHourCount=serverResponse.shiftHourCount;
 			
 			self.rosterTable.setRosterRule(self.rosterRule);
-			self.rosterTable.init(this.year,this.month);
+			self.rosterTable.init(self.year,self.month);
 			
 		})
 		.fail(function(){
