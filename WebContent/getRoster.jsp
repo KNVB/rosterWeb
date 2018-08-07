@@ -33,27 +33,38 @@ calendarString=calendarString.substring(0,calendarString.length()-1);
 calendarString+="]";
 resultString="{\"calendarList\":"+calendarString+",";
 Hashtable<String,ITO> itoList=ito.getITOList(year, month);
-String[] itoPostNameList = itoList.keySet().toArray(new String[0]);
+String[] itoIdList = itoList.keySet().toArray(new String[0]);
 
-Arrays.sort(itoPostNameList);
-for (String itoPostName:itoPostNameList)
+Arrays.sort(itoIdList);
+for (String itoId:itoIdList)
 {
-	ito=itoList.get(itoPostName);
-	itoString+="\""+ito.getItoId()+"\":";
-	itoString+=objectMapper.writeValueAsString(ito)+",";
+	ito=itoList.get(itoId);
+	itoString+="\""+ito.getItoId()+"\":{";
+	itoString+="\"itoName\":\""+ito.getItoName()+"\","; 
+	itoString+="\"postName\":\""+ito.getPostName()+"\",";
+	
+	itoString+="\"workingHourPerDay\":"+ito.getWorkingHourPerDay()+",";
+			
+	itoString+="\"joinDate\":"+objectMapper.writeValueAsString(ito.getJoinDate())+",";
+	itoString+="\"leaveDate\":"+objectMapper.writeValueAsString(ito.getLeaveDate())+",";
+	itoString+="\"availableShiftList\":"+objectMapper.writeValueAsString(ito.getAvailableShiftList())+",";
+	itoString+="\"blackListedShiftPatternList\":"+objectMapper.writeValueAsString(ito.getBlackListedShiftPatternList())+"},";
 }
 itoString=itoString.substring(0,itoString.length()-1);	
-resultString+="\"itoList\":{"+itoString+"},";
+resultString+="\"itoList\":{"+itoString+"},";	
+
 
 Hashtable<String,ITORoster> itoRosterList=roster.getITORosterList();
 if(itoRosterList.size()>0)
 {	
-	for (String itoId:itoRosterList.keySet())
+	for (String itoId:itoIdList)
 	{
 		rosterString+="\""+itoId+"\":{";
 		rosterString+="\"lastMonthBalance\":"+itoRosterList.get(itoId).getBalance()+",";
 		rosterString+="\"shiftList\":";
-		rosterString+=objectMapper.writeValueAsString(itoRosterList.get(itoId).getShiftList())+",";		
+		rosterString+=objectMapper.writeValueAsString(itoRosterList.get(itoId).getShiftList())+",";
+		rosterString+="\"previousMonthShiftList\":";
+		rosterString+=objectMapper.writeValueAsString(itoRosterList.get(itoId).getPreviousMonthShiftList())+",";
 		rosterString+="\"preferredShiftList\":";
 		rosterString+=objectMapper.writeValueAsString(itoRosterList.get(itoId).getPreferredShiftList());
 		rosterString+="},";
@@ -61,12 +72,13 @@ if(itoRosterList.size()>0)
 }
 else
 {
-	for (String itoPostName:itoPostNameList)
+	for (String itoId:itoIdList)
 	{
-		ito=itoList.get(itoPostName);
+		ito=itoList.get(itoId);
 		rosterString+="\""+ito.getItoId()+"\":{";
 		rosterString+="\"lastMonthBalance\":\"N.A.\",";
 		rosterString+="\"preferredShiftList\":[],";
+		rosterString+="\"previousMonthShiftList\":[],";
 		rosterString+="\"shiftList\":[]";
 		rosterString+="},";
 	}	

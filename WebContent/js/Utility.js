@@ -16,6 +16,15 @@ class Utility
 					 error:this.showAjaxErrorMessage
 		});
 	}
+	getRosterData(year,month)
+	{
+		var requestParameters={"year":year,"month":month}; 
+		return jQuery.ajax({"url": "getRoster.jsp",
+					 dataType: 'json',
+					 data:requestParameters,
+					 error:this.showAjaxErrorMessage
+		});
+	}
 	//Clone Array only
 	cloneArray(inArray) 
 	{

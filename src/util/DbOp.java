@@ -126,18 +126,23 @@ public class DbOp implements DataStore
 		
 		PreparedStatement stmt = null;
 		ArrayList <String>blackListShiftPatternList=null;
-		GregorianCalendar joinDate=new GregorianCalendar(),leaveDate=new GregorianCalendar();
+		GregorianCalendar joinDate,leaveDate;
 		GregorianCalendar theFirstDateOfTheMonth=new GregorianCalendar(year,month,1);
 		Hashtable<String,ITO> result=new Hashtable<String,ITO>();
 		lastDay=theFirstDateOfTheMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
 		String firstDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-1";
 		String endDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-"+lastDay;
+	
+		/*
+		System.out.println("startDateString="+firstDateString);
+		System.out.println("endDateString="+endDateString);
+		*/
 		
 		sqlString ="SELECT join_date,leave_date,ito_info.ito_id,post_name,ito_name,available_shift,working_hour_per_day,black_list_pattern from ";
 		sqlString+="ito_info inner join black_list_pattern ";
 		sqlString+="on ito_info.ito_id=black_list_pattern.ito_id ";
 		sqlString+="where join_date<? and leave_date >? ";
-		sqlString+="order by post_name";
+		sqlString+="order by ito_info.ito_id";
 		try
 		{
 			stmt=dbConn.prepareStatement(sqlString);
@@ -146,36 +151,36 @@ public class DbOp implements DataStore
 			rs=stmt.executeQuery();
 			while (rs.next())
 			{
-				if (rs.getString("ito_id").equals(itoId))
-				{
+				if (result.containsKey(rs.getString("ito_id")))
+				{	
+					ito=result.get(rs.getString("ito_id"));
+					blackListShiftPatternList=ito.getBlackListedShiftPatternList();
 					blackListShiftPatternList.add(rs.getString("black_list_pattern"));
+					ito.setBlackListedShiftPatternList(blackListShiftPatternList);
+					result.replace(ito.getItoId(), ito);
+//					System.out.println(rs.getString("ito_name")+","+ito.getJoinDate().get(Calendar.MONTH)+","+rs.getDate("join_date").getMonth());
 				}
 				else
 				{
-					if (blackListShiftPatternList!=null)
-					{
-						ito.setBlackListedShiftPatternList(blackListShiftPatternList);
-						itoId=rs.getString("ito_id");
-						result.put(ito.getPostName(), ito);
-					}
-					itoId=rs.getString("ito_id");
-					blackListShiftPatternList=new ArrayList<String>();
-					blackListShiftPatternList.add(rs.getString("black_list_pattern"));
 					ito=new ITO();
 					ito.setItoId(rs.getString("ito_id"));
 					ito.setPostName(rs.getString("post_name"));
 					ito.setItoName(rs.getString("ito_name"));
 					ito.setWorkingHourPerDay(rs.getFloat("working_hour_per_day"));
+					joinDate=new GregorianCalendar();
+					leaveDate=new GregorianCalendar();
 					joinDate.setTime(rs.getDate("join_date"));
-					leaveDate.setTime(rs.getDate("leave_date"));;
+					leaveDate.setTime(rs.getDate("leave_date"));
+					
 					ito.setJoinDate(joinDate);
 					ito.setLeaveDate(leaveDate);
 					ito.setAvailableShiftList(new ArrayList<String>(Arrays.asList(rs.getString("available_shift").split(","))));
-					result.put(ito.getPostName(), ito);
+					blackListShiftPatternList=new ArrayList<String>();
+					blackListShiftPatternList.add(rs.getString("black_list_pattern"));
+					ito.setBlackListedShiftPatternList(blackListShiftPatternList);
+					result.put(ito.getItoId(), ito);
 				}
 			}
-			ito.setBlackListedShiftPatternList(blackListShiftPatternList);
-			result.put(ito.getPostName(), ito);
 		}
 		catch (Exception e) 
 		{
@@ -246,7 +251,7 @@ public class DbOp implements DataStore
 		PreparedStatement stmt = null;
 		ArrayList <Shift>shiftList=null;
 		ArrayList<Shift> preferredShiftList=null;
-		
+		ArrayList<Shift> previousMonthShiftList=null;
 		Hashtable<String, ITORoster> result=new  Hashtable<String, ITORoster>();
 		GregorianCalendar theLast2DayOfPreviousMonth=new GregorianCalendar(year,month,1);
 		GregorianCalendar theFirstDateOfTheMonth=new GregorianCalendar(year,month,1);
@@ -286,63 +291,47 @@ public class DbOp implements DataStore
 			while (rs.next())
 			{
 				shiftDate=new GregorianCalendar();
-				
-				if (rs.getString("ito_id").equals(itoId))
-				{
-					shift=new Shift();
-					shift.setItoId(itoId);
-					shift.setShift(rs.getString("shift"));
-					shiftDate.setTime(rs.getDate("shift_date"));
-					shift.setShiftDate(shiftDate);
-					shiftList.add(shift);
-					if (rs.getString("preferred_shift")!=null)
-					{
-						shift=new Shift();
-						shift.setItoId(itoId);
-						shift.setShift(rs.getString("preferred_shift"));
-						shiftDate.setTime(rs.getDate("shift_date"));
-						shift.setShiftDate(shiftDate);
-						preferredShiftList.add(shift);
-					}
+				shift=new Shift();
+				shift.setShift(rs.getString("shift"));
+				shiftDate.setTime(rs.getDate("shift_date"));
+				shift.setShiftDate(shiftDate);
+				if (result.containsKey(rs.getString("ito_id")))
+				{	
+					itoRoster=result.get(rs.getString("ito_id"));
+					shiftList=itoRoster.getShiftList();
+					preferredShiftList=itoRoster.getPreferredShiftList();
+					previousMonthShiftList=itoRoster.getPreviousMonthShiftList();
 				}
 				else
 				{
-					if (shiftList!=null)
-					{
-						itoRoster.setShiftList(shiftList);
-						itoRoster.setPreferredShiftList(preferredShiftList);
-						result.put(itoId,itoRoster);
-						itoId=rs.getString("ito_id");
-					}
-					itoId=rs.getString("ito_id");
 					itoRoster=new ITORoster();
 					itoRoster.setBalance(rs.getFloat("balance"));
 					shiftList=new ArrayList<Shift>();
-					
+					preferredShiftList=new ArrayList<Shift>();
+					previousMonthShiftList=new ArrayList<Shift>();
+					result.put(rs.getString("ito_id"),itoRoster);
+				}
+				
+				if (theFirstDateOfTheMonth.get(Calendar.MONTH)==shiftDate.get(Calendar.MONTH))
+					shiftList.add(shift);
+				else
+					previousMonthShiftList.add(shift);
+				
+				if (rs.getString("preferred_shift")!=null)
+				{
 					shift=new Shift();
-					shift.setItoId(itoId);
-					shift.setShift(rs.getString("shift"));
+					shiftDate=new GregorianCalendar();
+				//	shift.setItoId(itoId);
+					shift.setShift(rs.getString("preferred_shift"));
 					shiftDate.setTime(rs.getDate("shift_date"));
 					shift.setShiftDate(shiftDate);
-					shiftList.add(shift);
-					preferredShiftList=new ArrayList<Shift>();
-					if (rs.getString("preferred_shift")!=null)
-					{
-						shift=new Shift();
-						shift.setItoId(itoId);
-						shift.setShift(rs.getString("preferred_shift"));
-						shiftDate.setTime(rs.getDate("shift_date"));
-						shift.setShiftDate(shiftDate);
-						preferredShiftList.add(shift);
-					}
+					preferredShiftList.add(shift);
 				}
-			}
-			if (shiftList!=null)
-			{	
+				itoRoster.setPreviousMonthShiftList(previousMonthShiftList);
 				itoRoster.setShiftList(shiftList);
 				itoRoster.setPreferredShiftList(preferredShiftList);
-				result.put(itoId,itoRoster);
-			}			
+				result.replace(rs.getString("ito_id"),itoRoster);
+			}
 		}
 		catch (Exception e) 
 		{

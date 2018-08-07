@@ -105,10 +105,10 @@ GregorianCalendar now=new GregorianCalendar();
 			</tr>													
 			<tr>
 				<td colspan=34 style="text-align:center">
-					<a class="findMissingShiftButton" href="#">Find Missing Shift</a>
-					<a class="findDuplicateShiftButton" href="#">Find Duplicate Shift</a>
-					<a class="checkAllButton" href="#">is it a valid roster?</a>
-					<a class="clearAllButton" href="#">Clear All Shift Data</a>
+					<a class="findMissingShiftButton">Find Missing Shift</a>
+					<a class="findDuplicateShiftButton">Find Duplicate Shift</a>
+					<a class="checkAllButton">is it a valid roster?</a>
+					<a class="clearAllButton">Clear All Shift Data</a>
 				</td>
 			</tr>
 			<tr>	

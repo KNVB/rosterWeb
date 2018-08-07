@@ -8,7 +8,7 @@ import java.util.GregorianCalendar;
  */
 public class Shift {
 
-	private String itoId;
+//	private String itoId;
 	private String shift;
 	private GregorianCalendar shiftDate;
 
@@ -17,13 +17,13 @@ public class Shift {
 	}		
 
 	
-	public String getItoId() {
+/*	public String getItoId() {
 		return itoId;
 	}
 
 	public void setItoId(String ito_id) {
 		this.itoId = ito_id;
-	}
+	}*/
 
 	public String getShift() {
 		return shift;
