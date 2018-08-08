@@ -11,6 +11,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.ITO;
 import com.ITORoster;
 import com.RosterRule;
@@ -30,6 +33,7 @@ public class DbOp implements DataStore
 	private String jdbcURL = new String("jdbc:");
 	private String sqlString;
 	
+	private static final Logger logger = LogManager.getLogger("DbOp");
 
 	/**
 	 * Database object,initialize db connection
@@ -63,13 +67,13 @@ public class DbOp implements DataStore
 		{	
 			for (String itoId:iTORosterList.keySet())
 			{
-				/*
-				System.out.println("===============================");
-				System.out.println("itoId="+itoId);
-				System.out.println("balance="+iTORosterList.get(itoId).getBalance());
-				System.out.println("Shift List:");
-				System.out.println("===============================");
-				*/
+				
+				logger.debug("===============================");
+				logger.debug("itoId="+itoId);
+				logger.debug("balance="+iTORosterList.get(itoId).getBalance());
+				logger.debug("Shift List:");
+				logger.debug("===============================");
+				
 				sqlString="replace into shift_record (ito_id,shift_date,shift,state) values (?,?,?,?)";
 				stmt=dbConn.prepareStatement(sqlString);
 				for (Shift shift:iTORosterList.get(itoId).getShiftList())
@@ -80,11 +84,11 @@ public class DbOp implements DataStore
 					stmt.setString(4,"A");
 					stmt.executeUpdate();
 					stmt.clearParameters();
-			//		System.out.println("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
+					logger.debug("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
 				}
-				System.out.println("===============================");
-				System.out.println("Preferred Shift List:");
-				System.out.println("===============================");
+				logger.debug("===============================");
+				logger.debug("Preferred Shift List:");
+				logger.debug("===============================");
 				sqlString="replace into preferred_shift (ito_id,preferred_shift,shift_date) values (?,?,?)";
 				stmt=dbConn.prepareStatement(sqlString);
 
@@ -95,7 +99,7 @@ public class DbOp implements DataStore
 					stmt.setDate(3,new java.sql.Date(shift.getShiftDate().getTime().getTime()));
 					stmt.executeUpdate();
 					stmt.clearParameters();
-					System.out.println("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
+					logger.debug("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
 				}
 			}
 		}
@@ -122,7 +126,6 @@ public class DbOp implements DataStore
 		ITO ito=null;
 		int lastDay;
 		ResultSet rs = null;
-		String itoId=new String();
 		
 		PreparedStatement stmt = null;
 		ArrayList <String>blackListShiftPatternList=null;
@@ -133,10 +136,10 @@ public class DbOp implements DataStore
 		String firstDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-1";
 		String endDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-"+lastDay;
 	
-		/*
-		System.out.println("startDateString="+firstDateString);
-		System.out.println("endDateString="+endDateString);
-		*/
+		
+		logger.debug("startDateString="+firstDateString);
+		logger.debug("endDateString="+endDateString);
+		
 		
 		sqlString ="SELECT join_date,leave_date,ito_info.ito_id,post_name,ito_name,available_shift,working_hour_per_day,black_list_pattern from ";
 		sqlString+="ito_info inner join black_list_pattern ";
@@ -158,7 +161,7 @@ public class DbOp implements DataStore
 					blackListShiftPatternList.add(rs.getString("black_list_pattern"));
 					ito.setBlackListedShiftPatternList(blackListShiftPatternList);
 					result.replace(ito.getItoId(), ito);
-//					System.out.println(rs.getString("ito_name")+","+ito.getJoinDate().get(Calendar.MONTH)+","+rs.getDate("join_date").getMonth());
+//					logger.debug(rs.getString("ito_name")+","+ito.getJoinDate().get(Calendar.MONTH)+","+rs.getDate("join_date").getMonth());
 				}
 				else
 				{
@@ -205,6 +208,7 @@ public class DbOp implements DataStore
 		sqlString ="select * from roster_rule order by rule_type,rule_key,rule_value";
 		try
 		{
+			logger.debug(sqlString);
 			stmt=dbConn.prepareStatement(sqlString);
 			rs=stmt.executeQuery();
 			while (rs.next())
@@ -246,7 +250,6 @@ public class DbOp implements DataStore
 		Shift shift=null;
 		ResultSet rs = null;
 		ITORoster itoRoster=null;
-		String itoId=new String();
 		GregorianCalendar shiftDate;
 		PreparedStatement stmt = null;
 		ArrayList <Shift>shiftList=null;
@@ -263,11 +266,11 @@ public class DbOp implements DataStore
 		String startDateString=theLast2DayOfPreviousMonth.get(Calendar.YEAR)+"-"+(theLast2DayOfPreviousMonth.get(Calendar.MONTH)+1)+"-"+theLast2DayOfPreviousMonth.get(Calendar.DATE);
 		String endDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-"+lastDay;
 		
-		/*
-		System.out.println("startDateString="+startDateString);
-		System.out.println("endDateString="+endDateString);
-		System.out.println("shiftMonthString="+shiftMonthString);
-		*/
+		
+		logger.debug("startDateString="+startDateString);
+		logger.debug("endDateString="+endDateString);
+		logger.debug("shiftMonthString="+shiftMonthString);
+		
 		
 		sqlString ="select shift_record.ito_id,shift_record.shift_date,shift,balance,preferred_shift from shift_record ";
 		sqlString+="inner join last_month_balance on shift_record.ito_id=last_month_balance.ito_id "; 

@@ -1,8 +1,20 @@
+/**
+ * 
+ */
 class Utility
 {
 	constructor()
 	{
 		
+	}
+	saveRosterData(rosterData)
+	{
+		return jQuery.ajax({"url": "saveRosterData.jsp",
+			 dataType: 'text',
+			 data:rosterData,
+			 method:"POST",
+			 error:this.showAjaxErrorMessage
+		});
 	}
 	getRosterRule(year,month)
 	{
@@ -88,4 +100,4 @@ class Utility
 		        return Number(a) + Number(b);
 		    }) / data.length;
 	}
-} 
+}

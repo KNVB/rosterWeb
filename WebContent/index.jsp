@@ -19,10 +19,11 @@ GregorianCalendar now=new GregorianCalendar();
 	<script src="js/RosterTable.js"></script>
 	<script src="js/Utility.js"></script>
 	<script src="js/Roster.js"></script>
+	<script src="js/RosterScheduler.js"></script>
 	<script>
 		$( document ).ready(function() {
-			var roster=new Roster();
-			roster.init(<%=now.get(Calendar.YEAR)%>,<%=now.get(Calendar.MONTH)%>);
+			var rosterScheduler=new RosterScheduler();
+			rosterScheduler.init(<%=now.get(Calendar.YEAR)%>,<%=now.get(Calendar.MONTH)%>);
 			//roster.init(2017,5);
 		});
 	</script>

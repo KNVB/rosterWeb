@@ -4,6 +4,9 @@ import util.DataStore;
 import java.util.Hashtable;
 //import java.util.GregorianCalendar;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * @author SITO3 created on 11-7-2018 09:32:32
@@ -13,7 +16,7 @@ public class Roster {
 //	private GregorianCalendar rosterDate;
 	private DataStore dataStore;
 	private int rosterYear,rosterMonth;
-
+	private static final Logger logger = LogManager.getLogger("Roster");
 	private Hashtable<String,ITORoster> iTORosterList;
 	public Roster()
 	{
@@ -31,10 +34,11 @@ public class Roster {
 	}*/
 	public void load() throws Exception
 	{
+		logger.info("Roster.load("+this.rosterYear+","+ this.rosterMonth+") is called");
 		dataStore=Utility.getDataStore();
 		iTORosterList=dataStore.getRoster(this.rosterYear, this.rosterMonth) ;
 		dataStore.close();
-		dataStore=null;
+		dataStore=null;		 
 	}
 	public int getRosterYear() {
 		return rosterYear;
@@ -74,6 +78,10 @@ public class Roster {
 		result=dataStore.updateRoster(this.rosterYear, this.rosterMonth,this.iTORosterList) ;
 		dataStore.close();
 		dataStore=null;
+		if (result)
+			logger.info("Roster is updated successfully.");
+		else
+			logger.info("Roster updated failure.");
 		return result;
 	}
 

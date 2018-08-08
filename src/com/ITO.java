@@ -1,9 +1,11 @@
 package com;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import util.DataStore;
 
@@ -25,7 +27,7 @@ public class ITO {
 
 	private ArrayList<String> availableShiftList;
 	private ArrayList<String> blackListedShiftPatternList;
-
+	private static final Logger logger = LogManager.getLogger("ITO");
 	
 	public ITO() throws InstantiationException, IllegalAccessException, ClassNotFoundException
 	{

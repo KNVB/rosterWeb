@@ -3,10 +3,14 @@ package com;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import util.DataStore;
 
 public class RosterRule 
 {
+	private static final Logger logger = LogManager.getLogger("RosterRule");
 	private static Hashtable<String,Float>shiftHourCount=new Hashtable<String,Float>();
 	
 	private static String essentialShiftList[];
@@ -19,6 +23,7 @@ public class RosterRule
 	        try 
 	        {
 				instance = new RosterRule();
+				logger.info("Roster Rule instantiated.");
 			} 
 	        catch (Exception e) 
 	        {

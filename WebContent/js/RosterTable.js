@@ -7,16 +7,20 @@ class RosterTable
 	{
 		this.month=1;
 		this.year=1970;
-	
+		this.rosterRule=null;
+		this.utility=utility;
+		this.shiftAStdDev=0.0;
+		this.shiftBStdDev=0.0;
+		this.shiftCStdDev=0.0;
 		this.calendarList=null;
+
 		this.showNoOfPrevDate=2;
 		this.firstDate=new Date();
-		this.utility=utility;
 		this.totalHourCellIndex=34;
 		this.shiftStartCellIndex=3;
 		this.averageShiftStdDev=0.0;
-
-		this.rosterRule=null;
+		this.allPreviousMonthShiftList=[];
+		
 		this.table=document.getElementById("rosterTable");
 		this.rosterFooter=document.getElementById("footer");
 		this.rosterBody=document.getElementById("rosterBody");
@@ -27,13 +31,13 @@ class RosterTable
 	{
 		this.rosterRule=rosterRule;
 	}
-	init(year,month,roster)
+	init(year,month,rosterScheduler)
 	{
 		this.year=year;
 		this.month=month;
 		$(this.rosterFooter).hide();
 		this._genRosterCaption();
-		this._genRosterMonthRow(roster);
+		this._genRosterMonthRow(rosterScheduler);
 		this._genEmptyRow();
 		this._genRosterHeader();
 		this._genRosterBody();
@@ -48,7 +52,7 @@ class RosterTable
 		//startIndex=this.rosterRule.maxConWorkingDay-this.showNoOfPrevDate;
 		
 		//var itoId="ITO1_1999-01-01";
-		
+		this.allPreviousMonthShiftList=[];
 		for (var itoId in this.itoList)
 		{
 			ito=this.itoList[itoId];
@@ -56,7 +60,7 @@ class RosterTable
 			preferredShiftList=rosterList[itoId].preferredShiftList;
 			previousMonthShiftList=rosterList[itoId].previousMonthShiftList;
 			previousMonthShiftListStartIndex=previousMonthShiftList.length-this.showNoOfPrevDate;
-			
+			this.allPreviousMonthShiftList[itoId]=previousMonthShiftList;
 			//console.log(previousMonthShiftListStartIndex,previousMonthShiftList.length,this.showNoOfPrevDate);
 			
 			shiftRow=document.getElementById("shift_"+itoId);
@@ -321,6 +325,49 @@ class RosterTable
 		resultString+="}";
 //		console.log(resultString);
 		return JSON.parse(resultString);
+	}
+	getPreviousShiftList(startDate,itoId)
+	{
+		var result=[];
+		var startIndex=startDate-this.rosterRule.maxConsecutiveWorkingDay;
+		var shiftDataList=this.getAllShiftData()[itoId].shiftList;
+		if (startIndex<1)
+		{
+			var previousMonthShiftList=this.allPreviousMonthShiftList[itoId];
+			startIndex=startDate-1;
+			for (var i=startIndex;i<this.rosterRule.maxConsecutiveWorkingDay;i++)
+			{
+				result.push(previousMonthShiftList[i].shift);
+			}
+		}
+		for (var i=0;i<startDate-1;i++)
+		{
+			result.push(shiftDataList[i]);
+		}	
+
+		return result;
+	}
+	getPreferredShiftList(startDate,endDate)
+	{
+		var cell;
+		var preferredShiftRow;
+		var preferredShiftRowList=this._getAllPreferredShiftRow();
+		var itoId="ITO1_1999-01-01";
+		var itoPreferredShiftList=[];
+		var preferredShiftList=[];
+		
+		for (var itoId in preferredShiftRowList)
+		{
+			preferredShiftList=[];
+			preferredShiftRow=preferredShiftRowList[itoId];
+			for (var i=startDate-1;i<endDate;i++)
+			{
+				cell=preferredShiftRow.cells[i+this.shiftStartCellIndex];
+				preferredShiftList[i]=(cell.textContent);
+			}
+			itoPreferredShiftList[itoId]=preferredShiftList;
+		}
+		return itoPreferredShiftList;
 	}
 	getThisMonthBalance(itoId)
 	{
@@ -628,7 +675,7 @@ class RosterTable
 		cell.colSpan=46;
 				
 	}
-	_genRosterMonthRow(roster)
+	_genRosterMonthRow(rosterScheduler)
 	{
 		var i,cell;
 		var rosterMonthRow;
@@ -660,7 +707,7 @@ class RosterTable
 			
 			var month=parseInt(this.options[this.selectedIndex].value);
 			var year=parseInt(this.nextSibling.textContent);
-			roster.init(year,month);
+			rosterScheduler.init(year,month);
 		};
 		cell.append(document.createTextNode(this.year));
 		for (i=0;i<10;i++)

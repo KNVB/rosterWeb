@@ -26,9 +26,9 @@ class ITO
 						isMatched=true;
 						break;
 			default:
-					for (var i=0;i<this.availableShift.length;i++)
+					for (var i=0;i<this.availableShiftList.length;i++)
 					{
-						if ((this.availableShift[i]==preferredShift)|| (preferredShift==("n"+this.availableShift[i])))
+						if ((this.availableShiftList[i]==preferredShift)|| (preferredShift==("n"+this.availableShiftList[i])))
 						{	
 							isMatched=true;
 							break;
