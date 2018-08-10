@@ -35,7 +35,7 @@ class RosterScheduler
 	}
 	init(year,month)
 	{
-		var self=this;
+		var self=this,itoCount=0;
 		this.year=year;
 		this.month=month;
 		this.utility.getRosterRule(year,month)
@@ -48,23 +48,27 @@ class RosterScheduler
 			self.utility.getRosterData(self.year,self.month)
 			.done(function(serverResponse){
 				var temp,ito;
+				self.itoList=[];
 				for (var itoId in serverResponse.itoList)
 					{
 						temp=(serverResponse.itoList[itoId]);
 						ito=new ITO();
 						ito.name=temp.itoName;
-						ito.itoId=temp.itoId;
+						ito.itoId=itoId;
 						ito.postName=temp.postName;
 						ito.availableShiftList=temp.availableShiftList;
 						ito.workingHourPerDay=temp.workingHourPerDay;
 						ito.blackListShiftPatternList=temp.blackListedShiftPatternList;
 						self.itoList[itoId]=ito;
+						itoCount++;
 					}
+				self.rosterRule.maxNoOfShiftPerMonth=Math.floor(serverResponse.calendarList.length/itoCount);
 				self.rosterTable.itoList=self.itoList;
 				self.rosterTable.setRosterRule(self.rosterRule);
 				self.rosterTable.calendarList=serverResponse.calendarList;
 				self.rosterTable.init(self.year,self.month,self);
 				self.rosterTable.loadRosterData(serverResponse.rosterList);
+				console.log(self.rosterRule.maxNoOfShiftPerMonth);
 			})
 			.fail(function(){
 				alert("Failed to get Roster Data.");
@@ -181,48 +185,98 @@ class RosterScheduler
 	{
 		var ito,essentialShiftTemp;
 		var resultantRoster=[],resultantShiftList=[];
-		var preferredShiftList,previousShiftList,startIndex,preferredShift;
+		var iTOAvailableShiftList,isAssigned,comparetor,dateIndex;
+		var preferredShiftList,previousShiftList,startIndex,preferredShift,allPreviousShiftList;
 		preferredShiftList=this.rosterTable.getPreferredShiftList(startDate,endDate);
-		
-		for (var i=startDate;i<=endDate;i++)
+		allPreviousShiftList=this.rosterTable.getPreviousShiftList(startDate,this.itoList);
+		for (dateIndex=startDate;dateIndex<=endDate;dateIndex++)
 		{
+			//console.log("Day "+dateIndex);
 			essentialShiftTemp=this.rosterRule.getEssentialShift()
 			this.itoList=this.utility.shuffleProperties(this.itoList);
-			console.log("Day "+i);
 			for (var itoId in this.itoList)
 			{
 				ito=this.itoList[itoId];
-				previousShiftList=this.rosterTable.getPreviousShiftList(startDate,itoId);
 				if (resultantRoster[itoId]==null)
 					resultantShiftList=[];
 				else
 					resultantShiftList=resultantRoster[itoId];
-				
-				console.log("ito name:"+ito.name);
-				//console.log("previousShiftList:"+previousShiftList);
-				//console.log("preferredShiftList:"+preferredShiftList[itoId][i]);
-				if (typeof preferredShiftList[itoId][i-1]=="undefined")
+				previousShiftList=allPreviousShiftList[itoId];
+				if (typeof preferredShiftList[itoId][dateIndex-1]=="undefined")
 					preferredShift="";
 				else		
-					preferredShift=preferredShiftList[itoId][i-1];
+					preferredShift=preferredShiftList[itoId][dateIndex-1];
+				
+				//console.log("ito name:"+ito.name);
+				//console.log("previousShiftList:"+previousShiftList);
+				//console.log("preferredShift:"+preferredShift);
 				switch (preferredShift)
 				{
 					case "o":
-							console.log(i+" O shift is assigned");
-							resultantShiftList[i-startDate]="O";
+					//		console.log(" O shift is assigned on day "+dateIndex);
+							resultantShiftList[dateIndex-startDate]="O";
+							previousShiftList.shift();
+							previousShiftList.push("O");
 							break;
 					case "d" : 
 					case "d1":
 					case "d2":
 					case "d3":
-							console.log(preferredShift+" shift is assigned on "+i);
-							resultantShiftList[i-startDate]=preferredShift;
+						//	console.log(preferredShift+" shift is assigned on day "+dateIndex);
+							resultantShiftList[dateIndex-startDate]=preferredShift;
+							previousShiftList.shift();
+							previousShiftList.push(preferredShift);
 							break;
 					default:
-							
-				}
-				console.log("========================================");	
+							iTOAvailableShiftList=this.rosterRule.getITOAvailableShiftList(dateIndex,ito,preferredShift,previousShiftList,resultantShiftList);
+							if ((essentialShiftTemp=="") || (iTOAvailableShiftList.length==0))
+							{
+							//	console.log("O shift is assigned on day "+dateIndex);
+								resultantShiftList[dateIndex-startDate]="O";
+								previousShiftList.shift();
+								previousShiftList.push("O");
+							}
+							else
+							{
+							//	console.log("available shift:"+iTOAvailableShiftList);
+								isAssigned=false;
+								for (var j=0;j<iTOAvailableShiftList.length;j++)
+								{
+									switch (iTOAvailableShiftList[j])
+									{
+										case "b1":
+												comparetor="b";
+												break;
+										default:
+												comparetor=iTOAvailableShiftList[j];
+												break;
+									}
+							//		console.log(comparetor,result[j]);
+									if (essentialShiftTemp.indexOf(comparetor)>-1)
+									{
+										essentialShiftTemp=essentialShiftTemp.replace(comparetor,"");
+								//		console.log(iTOAvailableShiftList[j]+" shift is assigned on day "+dateIndex);
+										resultantShiftList[dateIndex-startDate]=iTOAvailableShiftList[j];
+										previousShiftList.shift();
+										previousShiftList.push(iTOAvailableShiftList[j]);
+										isAssigned=true;
+										break;
+									}	
+								}
+								if (!isAssigned)
+								{
+								//	console.log(" O shift is assigned on day "+dateIndex);
+									resultantShiftList[dateIndex-startDate]="O";
+									previousShiftList.shift();
+									previousShiftList.push("O");
+								}	
+							}
+							break;
+				}			
+				//console.log("========================================");
+				resultantRoster[itoId]=resultantShiftList;
 			}
-		}	
+		}
+		console.log(resultantRoster);
 	}
 }

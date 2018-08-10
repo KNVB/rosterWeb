@@ -57,6 +57,7 @@ class ITO
 					index.push(temp.match(commaPattern).length+1);
 			}	
 		}
+		//console.log(this.itoId,shiftPattern,index);
 		return index;
 	}
 }

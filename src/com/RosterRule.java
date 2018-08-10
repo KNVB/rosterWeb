@@ -16,7 +16,6 @@ public class RosterRule
 	private static String essentialShiftList[];
 	
 	private static int maxConsecutiveWorkingDay;
-	
 	private static RosterRule instance;
 	 static 
 	    {

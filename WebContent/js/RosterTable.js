@@ -49,9 +49,7 @@ class RosterTable
 		var preferredShiftList,startIndex,cell,ito,diff;
 		var previousMonthShiftList,previousMonthShiftListStartIndex;
 		var shiftList,itoId,shiftRow,shiftDate,shiftRecord,preferredShiftRow;
-		//startIndex=this.rosterRule.maxConWorkingDay-this.showNoOfPrevDate;
-		
-		//var itoId="ITO1_1999-01-01";
+	
 		this.allPreviousMonthShiftList=[];
 		for (var itoId in this.itoList)
 		{
@@ -326,26 +324,31 @@ class RosterTable
 //		console.log(resultString);
 		return JSON.parse(resultString);
 	}
-	getPreviousShiftList(startDate,itoId)
+	getPreviousShiftList(startDate,itoList)
 	{
 		var result=[];
+		var shiftDataList,resultList=[];
 		var startIndex=startDate-this.rosterRule.maxConsecutiveWorkingDay;
-		var shiftDataList=this.getAllShiftData()[itoId].shiftList;
-		if (startIndex<1)
+		for (var itoId in itoList)
 		{
-			var previousMonthShiftList=this.allPreviousMonthShiftList[itoId];
-			startIndex=startDate-1;
-			for (var i=startIndex;i<this.rosterRule.maxConsecutiveWorkingDay;i++)
+			result=[];
+			shiftDataList=this.getAllShiftData()[itoId].shiftList;
+			if (startIndex<1)
 			{
-				result.push(previousMonthShiftList[i].shift);
+				var previousMonthShiftList=this.allPreviousMonthShiftList[itoId];
+				startIndex=startDate-1;
+				for (var i=startIndex;i<this.rosterRule.maxConsecutiveWorkingDay;i++)
+				{
+					result.push(previousMonthShiftList[i].shift);
+				}
 			}
-		}
-		for (var i=0;i<startDate-1;i++)
-		{
-			result.push(shiftDataList[i]);
+			for (var i=0;i<startDate-1;i++)
+			{
+				result.push(shiftDataList[i]);
+			}
+			resultList[itoId]=result;
 		}	
-
-		return result;
+		return resultList;
 	}
 	getPreferredShiftList(startDate,endDate)
 	{
