@@ -94,6 +94,7 @@ class Utility
 	            return sq + Math.pow(n - m, 2);
 	        }, 0) / (data.length - 1));
 	};
+	//Get the mean value for the incoming array of value;
 	getMean(data)
 	{
 		 return data.reduce(function (a, b) {

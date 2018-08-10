@@ -37,31 +37,48 @@ class RosterRule
 	_isThatShiftOkForAssign(resultantShiftList,previousShiftList,preferredShift,index,ito,thatShift)
 	{
 		var result=true;
-		//console.log(ito.itoId,this._getNoOfConWorkingDay(ito,previousShiftList,thatShift),this.maxConsecutiveWorkingDay)
-		if (this._getNoOfConWorkingDay(ito,previousShiftList,thatShift)>this.maxConsecutiveWorkingDay)
+//		console.log(ito.itoId+","+index+","+thatShift+","+this._getTotalNoOfThatShiftAssigned(resultantShiftList,thatShift));
+		if (this._getTotalNoOfThatShiftAssigned(resultantShiftList,thatShift)==this.maxNoOfShiftPerMonth)
 		{
-			//console.log(ito.itoId+","+index+","+thatShift+", cause over the max. consecutive working day");
+	//		console.log(ito.itoId+","+index+","+thatShift+", cause over the max. no. of "+thatShift+" shift assigned in a month");
 			result=false;
 		}
 		else
 		{
-			if (this._isThatShiftFormBlackListedShiftPattern(ito,previousShiftList,thatShift))
+			if (this._getNoOfConsecutiveWorkingDay(ito,previousShiftList,thatShift)>this.maxConsecutiveWorkingDay)
 			{
-			//	console.log(ito.itoId+","+index+","+thatShift+", form black list");
+				//console.log(ito.itoId+","+index+","+thatShift+", cause over the max. consecutive working day");
 				result=false;
 			}
 			else
 			{
-				if (this._isConflictWithPreferredShift(preferredShift,thatShift))
+				if (this._isThatShiftFormBlackListedShiftPattern(ito,previousShiftList,thatShift))
 				{
+//					console.log(ito.itoId+","+index+","+thatShift+", form black list");
 					result=false;
-				//	console.log(ito.itoId+","+index+","+thatShift+",conflict with preferred("+preferredShift+").");
 				}
-			}			
-		}		
-		return result;		
+				else
+				{
+					if (this._isConflictWithPreferredShift(preferredShift,thatShift))
+					{
+						result=false;
+						//	console.log(ito.itoId+","+index+","+thatShift+",conflict with preferred("+preferredShift+").");
+					}	
+				}	
+			}	
+		}
+		return result;
 	}
-	_getNoOfConWorkingDay(ito,previousShiftList,thatShift)
+	_getTotalNoOfThatShiftAssigned(resultantShiftList,thatShift)
+	{
+		var count=0;
+		resultantShiftList.forEach(function(shift){
+			if (shift==thatShift)
+				count++;
+		});
+		return count;
+	}
+	_getNoOfConsecutiveWorkingDay(ito,previousShiftList,thatShift)
 	{
 		var count=0,finished=false;
 		var shiftList=this.utility.cloneArray(previousShiftList);

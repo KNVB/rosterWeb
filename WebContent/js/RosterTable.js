@@ -44,6 +44,22 @@ class RosterTable
 		this._initAutoPlanDropDown();
 		$(this.rosterFooter).show();
 	}
+	loadRoster(startDate,finalRoster)
+	{
+		var row,cell,thisITOShiftList;
+		for (var itoId in finalRoster.rosterData)
+		{
+			row=document.getElementById("shift_"+itoId);
+			thisITOShiftList=finalRoster.rosterData[itoId];
+			for (var dateIndex=0;dateIndex<thisITOShiftList.length;dateIndex++)
+			{
+				cell=row.cells[startDate+this.showNoOfPrevDate+dateIndex];
+				$(cell).html(thisITOShiftList[dateIndex]).blur();
+			}
+		}
+		this.haveMissingShift();
+		alert("Done");
+	}
 	loadRosterData(rosterList)
 	{
 		var preferredShiftList,startIndex,cell,ito,diff;

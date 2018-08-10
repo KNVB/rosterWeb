@@ -27,7 +27,7 @@ class RosterScheduler
 			self.autoAssign();
 		});						 
 		$(".clearAllButton").on("click",function(){
-			self.rosterTable.clearAllShift()
+			self.rosterTable.clearAllShift();
 		})
 		$(".saveRosterToDBButton").on("click",function(){
 			self.saveAllData();
@@ -68,7 +68,7 @@ class RosterScheduler
 				self.rosterTable.calendarList=serverResponse.calendarList;
 				self.rosterTable.init(self.year,self.month,self);
 				self.rosterTable.loadRosterData(serverResponse.rosterList);
-				console.log(self.rosterRule.maxNoOfShiftPerMonth);
+			//	console.log(self.rosterRule.maxNoOfShiftPerMonth);
 			})
 			.fail(function(){
 				alert("Failed to get Roster Data.");
@@ -176,7 +176,22 @@ class RosterScheduler
 				alert("Invalid shift requirement detected");
 			else
 			{
-				this._genRoster(startDate,endDate);
+				var finalRoster;
+				var roster,tempAverageSD,lowestAverageSD=100.0;
+				for (var i=0;i<100;i++)
+				{
+					var roster=new Roster(this._genRoster(startDate,endDate),this.utility,this.rosterRule);
+					tempAverageSD=(roster.averageShiftStdDev);
+					if (tempAverageSD<lowestAverageSD)
+					{
+						finalRoster=roster;
+						lowestAverageSD=tempAverageSD;
+					}	
+				}
+				console.log(lowestAverageSD);
+				console.log(finalRoster);
+				//this.rosterTable.clearAllShift();
+				this.rosterTable.loadRoster(startDate,finalRoster);
 			}	
 		}		
 	}
@@ -192,7 +207,7 @@ class RosterScheduler
 		for (dateIndex=startDate;dateIndex<=endDate;dateIndex++)
 		{
 			//console.log("Day "+dateIndex);
-			essentialShiftTemp=this.rosterRule.getEssentialShift()
+			essentialShiftTemp=this.rosterRule.getEssentialShift();
 			this.itoList=this.utility.shuffleProperties(this.itoList);
 			for (var itoId in this.itoList)
 			{
@@ -239,6 +254,7 @@ class RosterScheduler
 							else
 							{
 							//	console.log("available shift:"+iTOAvailableShiftList);
+							//	console.log(itoId+","+resultantShiftList);
 								isAssigned=false;
 								for (var j=0;j<iTOAvailableShiftList.length;j++)
 								{
@@ -277,6 +293,6 @@ class RosterScheduler
 				resultantRoster[itoId]=resultantShiftList;
 			}
 		}
-		console.log(resultantRoster);
+		return(resultantRoster);
 	}
 }
