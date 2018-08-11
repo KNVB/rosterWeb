@@ -180,8 +180,9 @@ class RosterScheduler
 				var roster,tempAverageSD,lowestAverageSD=100.0;
 				for (var i=0;i<100;i++)
 				{
-					var roster=new Roster(this._genRoster(startDate,endDate),this.utility,this.rosterRule);
-					tempAverageSD=(roster.averageShiftStdDev);
+					roster=new Roster(this._genRoster(startDate,endDate),this.utility,this.rosterRule,endDate-startDate+1);
+					//tempAverageSD=(roster.averageShiftStdDev);
+					tempAverageSD=(roster.missingShiftCount);
 					if (tempAverageSD<lowestAverageSD)
 					{
 						finalRoster=roster;
