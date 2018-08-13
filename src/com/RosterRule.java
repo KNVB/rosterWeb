@@ -7,14 +7,27 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import util.DataStore;
-
+/**
+ * It denote a set of roster rules.
+ * All parameters are read from DataStore object
+ */
 public class RosterRule 
 {
 	private static final Logger logger = LogManager.getLogger("RosterRule");
+	
+	/**
+	 * It stores the shift to hour count mapping
+	 */
 	private static Hashtable<String,Float>shiftHourCount=new Hashtable<String,Float>();
 	
+	/**
+	 * It stores the essential shift of every day
+	 */
 	private static String essentialShiftList[];
-	
+
+	/**
+	 * It stores the maximum no. of consecutive working day
+	 */
 	private static int maxConsecutiveWorkingDay;
 	private static RosterRule instance;
 	 static 
@@ -65,14 +78,26 @@ public class RosterRule
 		tempString=temp[1];
 		essentialShiftList=tempString.split(",");
 	}
+	/**
+	 * Get the maximum no.of consecutive working day
+	 * @return the maximum no. of consecutive working day
+	 */
 	public static int getMaxConsecutiveWorkingDay()
 	{
 		return maxConsecutiveWorkingDay;
 	}
+	/**
+	 * Get the shift to hour count mapping
+	 * @return the shift to hour count mapping
+	 */
 	public static Hashtable<String, Float> getShiftHourCount() 
 	{
 		return shiftHourCount;
 	}
+	/**
+	 * Get the Essential Shift List
+	 * @return the Essential Shift List
+	 */
 	public static String[] getEssentialShiftList() 
 	{
 		return essentialShiftList;

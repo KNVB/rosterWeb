@@ -189,7 +189,8 @@ class RosterScheduler
 						lowestAverageSD=tempAverageSD;
 					}	
 				}
-				console.log(lowestAverageSD);
+				//console.log("The lowest average SD="+lowestAverageSD);
+				console.log("The lowest missing shift="+lowestAverageSD);
 				console.log(finalRoster);
 				//this.rosterTable.clearAllShift();
 				this.rosterTable.loadRoster(startDate,finalRoster);

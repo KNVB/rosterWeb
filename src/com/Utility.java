@@ -9,7 +9,7 @@ public class Utility
 {
 	private static Utility instance;
 	private static String configFile = "META-INF/config.properties";
-	private static PropertyResourceBundle bundle ; ;
+	private static PropertyResourceBundle bundle ;
 	// Singleton initialiser
     static 
     {
@@ -56,11 +56,23 @@ public class Utility
     public static Utility getInstance() {
         return instance;
     }
+    /**
+     * Get DataStore implementation class.
+     * @return DataStore object
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     */
     public static DataStore getDataStore() throws InstantiationException, IllegalAccessException, ClassNotFoundException
     {
     	DataStore dataStore= (DataStore)Class.forName(bundle.getString("DataStoreImplementationClassName")).newInstance();
     	return dataStore;
     }
+    /**
+     * Get Parameter value from the configuration file.
+     * @param parameterName
+     * @return value
+     */
     public static String getParameterValue(String parameterName)
     {
     	return bundle.getString(parameterName);

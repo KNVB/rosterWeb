@@ -19,7 +19,11 @@ import com.ITORoster;
 import com.RosterRule;
 import com.Shift;
 import com.Utility;
-
+/**
+ * It is an implementation class of DataStore interface
+ * @author SITO3
+ *
+ */
 public class DbOp implements DataStore 
 {
 	private Connection dbConn = null;
@@ -57,7 +61,7 @@ public class DbOp implements DataStore
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
 	public boolean updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList) 
 	{
@@ -120,7 +124,10 @@ public class DbOp implements DataStore
 		// TODO Auto-generated method stub
 
 	}
-	@Override
+	/**
+	 * Get a list of ITO object 
+	 * @return itoId to ITO object mapping 
+	 */
 	public Hashtable<String, ITO> getITOList(int year, int month) {
 		
 		ITO ito=null;
