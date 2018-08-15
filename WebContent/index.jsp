@@ -44,12 +44,45 @@ GregorianCalendar now=new GregorianCalendar();
 				<td colspan=13 class="aShiftColor">	
 					a : 0800H - 1700H
 				</td>
-				<td colspan="21" rowspan=10 align="center">
-					Auto Planning Start From:
-					<select id="autoPlannStartDate"></select>
-					to
-					<select id="autoPlanEndDate"></select>
-					<a class="autoPlannerButton">Auto Planner</a>	
+				<td colspan="21" rowspan=10>
+					<div style="text-align:center">
+						Auto Planning Start From:
+						<select id="autoPlannStartDate"></select>
+						to
+						<select id="autoPlanEndDate"></select>
+						<a class="autoPlannerButton">Auto Planner</a>
+					</div>
+					<div style="padding-left:10px;display:none" id="genResult">
+						<table border=0 style="width:50%;">
+							<tr>
+								<td>Standard Deviation:</td>
+							</tr>
+							<tr id="theLowestSD">
+								<td>1</td>
+							</tr>
+							<tr id="secLowestSD">
+								<td>1</td>
+							</tr>
+							<tr id="thirdLowestSD">
+								<td >1</td>
+							</tr>
+							<tr>
+								<td><br></td>
+							</tr>
+							<tr>
+								<td>Missing shift Count:</td>
+							</tr>
+							<tr id="theLowestMissingShiftCount">
+								<td>1</td>
+							</tr>
+							<tr id="theSecLowestMissingShiftCount">
+								<td>1</td>
+							</tr>
+							<tr id="theThirdLowestMissingShiftCount">
+								<td>1</td>
+							</tr>						
+						</table>
+					</div>	
 				</td>
 				<td colspan="11" rowspan="20">
 				</td>
