@@ -46,7 +46,7 @@ class RosterTable
 		this._initAutoPlanDropDown();
 		$(this.rosterFooter).show();
 	}
-	loadRoster(startDate,finalRoster)
+	loadRoster(finalRoster)
 	{
 		var row,cell,thisITOShiftList;
 		for (var itoId in finalRoster.rosterData)
@@ -55,7 +55,7 @@ class RosterTable
 			thisITOShiftList=finalRoster.rosterData[itoId];
 			for (var dateIndex=0;dateIndex<thisITOShiftList.length;dateIndex++)
 			{
-				cell=row.cells[startDate+this.showNoOfPrevDate+dateIndex];
+				cell=row.cells[finalRoster.startDate+this.showNoOfPrevDate+dateIndex];
 				$(cell).html(thisITOShiftList[dateIndex]).blur();
 			}
 		}
@@ -442,7 +442,15 @@ class RosterTable
 	hideGenResultTable()
 	{
 		$(this.genResultTable).hide();
-	}	
+	}
+	getAutoPlanStartDate()
+	{
+		return parseInt($("#autoPlannStartDate").val());
+	}
+	getAutoPlanEndDate()
+	{
+		return parseInt($("#autoPlanEndDate").val());
+	}
 //----------------------------------------------------------------------------------------
 	// Private method
 	_getShiftPattern(shiftRow,endIndex)

@@ -3,8 +3,9 @@
  */
 class Roster
 {
-	constructor(rosterData,utility,rosterRule,rosterDataLength)
+	constructor(startDate,rosterData,utility,rosterRule,rosterDataLength)
 	{
+		this.startDate=startDate;
 		this.rosterData=rosterData;
 		this.shiftAStdDev=0.0;
 		this.shiftBStdDev=0.0;
@@ -42,11 +43,16 @@ class Roster
 		}
 		for (var itoId in rosterData)
 		{
-			shiftAData.push(this.shiftACount[itoId]);
-			shiftBData.push(this.shiftBCount[itoId]);
-			shiftCData.push(this.shiftCCount[itoId]);
+			if (this.shiftACount[itoId]!=null)
+				shiftAData.push(this.shiftACount[itoId]);
+			
+			if (this.shiftBCount[itoId]!=null)
+				shiftBData.push(this.shiftBCount[itoId]);
+			
+			if (this.shiftCCount[itoId]!=null)
+				shiftCData.push(this.shiftCCount[itoId]);
 		}
-		
+		console.log(shiftAData,shiftBData,shiftCData);
 		this.shiftAStdDev=utility.getSD(shiftAData);
 		this.shiftBStdDev=utility.getSD(shiftBData);
 		this.shiftCStdDev=utility.getSD(shiftCData);

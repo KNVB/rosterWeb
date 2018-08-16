@@ -169,8 +169,8 @@ class RosterScheduler
 	}
 	autoAssign()
 	{
-		var startDate=parseInt($("#autoPlannStartDate").val());
-		var endDate=parseInt($("#autoPlanEndDate").val());
+		var startDate=this.rosterTable.getAutoPlanStartDate();
+		var endDate=this.rosterTable.getAutoPlanEndDate();
 		if (startDate>endDate)
 			alert("Invalid start date or end date selection");
 		else
@@ -187,8 +187,8 @@ class RosterScheduler
 				this.theLowestMissingShiftRosters=[];
 				this.loadingScreen.show();
 				setTimeout(() => {
-					  for (var i = 0; i < 100; i++) {
-						roster=new Roster(this._genRoster(startDate,endDate),this.utility,this.rosterRule,endDate-startDate+1);
+					  for (var i = 0; i < 1; i++) {
+						roster=new Roster(startDate,this._genRoster(startDate,endDate),this.utility,this.rosterRule,endDate-startDate+1);
 			    		this.theLowestSDRosters.push(roster);
 			    		this.theLowestSDRosters.sort(this._sortBySD);
 			    		if (this.theLowestSDRosters.length==4)
