@@ -9,10 +9,12 @@ class RosterScheduler
 		this.month=0;	
 		this.year=1970;
 		this.itoList=[];
-		this.rosterRule=null;
 		
+		this.rosterRule=null;
 		this.utility=new Utility();
 		this.rosterTable=new RosterTable(this.utility);
+		this.loadingScreen=new MyLoadingScreen({imgPath:"img/icon.gif"});
+		
 		//console.log((new Date()).getTime());
 		$(".findMissingShiftButton").on("click",function(){
 			self.rosterTable.haveMissingShift();
@@ -44,6 +46,8 @@ class RosterScheduler
 			self.rosterRule.essentialShiftList=serverResponse.essentialShiftList;
 			self.rosterRule.maxConsecutiveWorkingDay=serverResponse.maxConsecutiveWorkingDay;
 			self.rosterRule.shiftHourCount=serverResponse.shiftHourCount;
+			
+			
 			
 			self.utility.getRosterData(self.year,self.month)
 			.done(function(serverResponse){
@@ -167,7 +171,6 @@ class RosterScheduler
 	{
 		var startDate=parseInt($("#autoPlannStartDate").val());
 		var endDate=parseInt($("#autoPlanEndDate").val());
-		
 		if (startDate>endDate)
 			alert("Invalid start date or end date selection");
 		else
@@ -176,28 +179,88 @@ class RosterScheduler
 				alert("Invalid shift requirement detected");
 			else
 			{
-				var finalRoster;
+				var self=this;
+				var finalRoster,tempArray,tempRoster;
 				var roster,tempAverageSD,lowestAverageSD=100.0;
-				for (var i=0;i<100;i++)
-				{
-					roster=new Roster(this._genRoster(startDate,endDate),this.utility,this.rosterRule,endDate-startDate+1);
-					//tempAverageSD=(roster.averageShiftStdDev);
-					tempAverageSD=(roster.missingShiftCount);
-					if (tempAverageSD<lowestAverageSD)
-					{
-						finalRoster=roster;
-						lowestAverageSD=tempAverageSD;
-					}	
-				}
-				//console.log("The lowest average SD="+lowestAverageSD);
+				 
+				this.theLowestSDRosters=[];
+				this.theLowestMissingShiftRosters=[];
+				this.loadingScreen.show();
+				setTimeout(() => {
+					  for (var i = 0; i < 100; i++) {
+						roster=new Roster(this._genRoster(startDate,endDate),this.utility,this.rosterRule,endDate-startDate+1);
+			    		this.theLowestSDRosters.push(roster);
+			    		this.theLowestSDRosters.sort(this._sortBySD);
+			    		if (this.theLowestSDRosters.length==4)
+			    		{	
+		    				this.theLowestSDRosters.splice(3,1);
+			    		}
+			    		this.theLowestMissingShiftRosters.push(roster);
+			    		this.theLowestMissingShiftRosters.sort(this._sortByMissingShift);
+			    		if (this.theLowestMissingShiftRosters.length==4)
+			    		{	
+			    			this.theLowestMissingShiftRosters.splice(3,1);
+			    		}
+			    		//this.theLowestSDRosters[roster.averageShiftStdDev]=roster;
+				       	//this.theLowestMissingShiftRosters[roster.missingShiftCount]=roster;
+					  }
+					  this.loadingScreen.hide();
+					  this.rosterTable.setLowestSDData(this.theLowestSDRosters);
+					  this.rosterTable.setMissingShiftData(this.theLowestMissingShiftRosters);
+					  this.rosterTable.showGenResultTable();
+					}, 50);
+				
+				/*console.log("The lowest average SD="+lowestAverageSD);
 				console.log("The lowest missing shift="+lowestAverageSD);
 				console.log(finalRoster);
 				//this.rosterTable.clearAllShift();
-				this.rosterTable.loadRoster(startDate,finalRoster);
+				this.rosterTable.loadRoster(startDate,finalRoster);*/
 			}	
-		}		
+		}
 	}
 //--------------------------------------------------------------------------------------------------------------------------
+	_sortByMissingShift(a,b)
+	{
+		let comparison = 0;
+		if (a.missingShiftCount>b.missingShiftCount)
+			comparison = 1;
+		else
+		{
+			if (b.missingShiftCount>a.missingShiftCount)
+				comparison = -1;
+			else
+			{
+				if (a.averageShiftStdDev>b.averageShiftStdDev)
+					comparison = 1;
+				else
+				{
+					if (b.averageShiftStdDev>a.averageShiftStdDev)
+						comparison = -1;
+				}	
+			}	
+		}	
+		return comparison;
+	}
+	_sortBySD(a,b)
+	{
+		let comparison = 0;
+		if (a.averageShiftStdDev>b.averageShiftStdDev)
+			comparison = 1;
+		else
+		{
+			if (b.averageShiftStdDev>a.averageShiftStdDev)
+				comparison = -1;
+			else
+			{
+				if (a.missingShiftCount>b.missingShiftCount)
+					comparison = 1;
+				else
+					if (b.missingShiftCount>a.missingShiftCount)
+						comparison = -1;
+			}	
+		}	
+		return comparison;
+	}
 	_genRoster(startDate,endDate)
 	{
 		var ito,essentialShiftTemp;

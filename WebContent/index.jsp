@@ -13,11 +13,14 @@ GregorianCalendar now=new GregorianCalendar();
 	<meta charset="UTF-8">
 	<title>Roster Scheduling</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/MyModal.css">
 	<script type="text/javascript" src="<%=request.getContextPath() %>/webjars/jquery/3.3.1/jquery.min.js"></script>
 	<script src="js/ITO.js"></script>
 	<script src="js/RosterRule.js"></script>
 	<script src="js/RosterTable.js"></script>
-	<script src="js/Utility.js"></script>
+	<script src="js/util/Utility.js"></script>
+	<script src="js/util/MyModal.js"></script>
+	<script src="js/util/MyLoadingScreen.js"></script>
 	<script src="js/Roster.js"></script>
 	<script src="js/RosterScheduler.js"></script>
 	<script>
@@ -53,18 +56,21 @@ GregorianCalendar now=new GregorianCalendar();
 						<a class="autoPlannerButton">Auto Planner</a>
 					</div>
 					<div style="padding-left:10px;display:none" id="genResult">
-						<table border=0 style="width:50%;">
+						<table border=0 >
 							<tr>
 								<td>Standard Deviation:</td>
 							</tr>
 							<tr id="theLowestSD">
 								<td>1</td>
+								<td>1</td>
 							</tr>
-							<tr id="secLowestSD">
+							<tr id="secondLowestSD">
+								<td>1</td>
 								<td>1</td>
 							</tr>
 							<tr id="thirdLowestSD">
 								<td >1</td>
+								<td>1</td>
 							</tr>
 							<tr>
 								<td><br></td>
@@ -74,11 +80,14 @@ GregorianCalendar now=new GregorianCalendar();
 							</tr>
 							<tr id="theLowestMissingShiftCount">
 								<td>1</td>
+								<td>1</td>
 							</tr>
-							<tr id="theSecLowestMissingShiftCount">
+							<tr id="theSecondLowestMissingShiftCount">
+								<td>1</td>
 								<td>1</td>
 							</tr>
 							<tr id="theThirdLowestMissingShiftCount">
+								<td>1</td>
 								<td>1</td>
 							</tr>						
 						</table>

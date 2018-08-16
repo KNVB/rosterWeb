@@ -24,7 +24,9 @@ class RosterTable
 		this.table=document.getElementById("rosterTable");
 		this.rosterFooter=document.getElementById("footer");
 		this.rosterBody=document.getElementById("rosterBody");
+		this.genResultTable=document.getElementById("genResult");
 		this.rosterHeader=document.getElementById("rosterHeader");
+		
 		this.englishMonthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];		
 	}
 	setRosterRule(rosterRule)
@@ -391,6 +393,55 @@ class RosterTable
 	getThisMonthBalance(itoId)
 	{
 		return parseFloat(document.getElementById(itoId +"_thisMonthBalance").textContent);
+	}
+	setLowestSDData(lowestSDData)
+	{
+		var firstRow=document.getElementById("theLowestSD");
+		var cell=firstRow.cells[0];
+		cell.innerHTML="SD:"+lowestSDData[0].averageShiftStdDev;
+		cell=firstRow.cells[1];
+		cell.innerHTML="Missing shift count:"+lowestSDData[0].missingShiftCount;
+		
+		var secondRow=document.getElementById("secondLowestSD");
+		cell=secondRow.cells[0];
+		cell.innerHTML="SD:"+lowestSDData[1].averageShiftStdDev;
+		cell=secondRow.cells[1];
+		cell.innerHTML="Missing shift count:"+lowestSDData[1].missingShiftCount;
+		
+		var thirdRow=document.getElementById("thirdLowestSD");
+		cell=thirdRow.cells[0];
+		cell.innerHTML="SD:"+lowestSDData[2].averageShiftStdDev;
+		cell=thirdRow.cells[1];
+		cell.innerHTML="Missing shift count:"+lowestSDData[2].missingShiftCount;
+	}
+	setMissingShiftData(missingShiftData)
+	{
+		var firstRow=document.getElementById("theLowestMissingShiftCount");
+		var cell=firstRow.cells[0];
+		cell.innerHTML="Missing shift count:"+missingShiftData[0].missingShiftCount;
+		cell=firstRow.cells[1];
+		cell.innerHTML="SD:"+missingShiftData[0].averageShiftStdDev;
+		
+		var secondRow=document.getElementById("theSecondLowestMissingShiftCount");
+		cell=secondRow.cells[0];
+		cell.innerHTML="Missing shift count:"+missingShiftData[1].missingShiftCount;
+		cell=secondRow.cells[1];
+		cell.innerHTML="SD:"+missingShiftData[1].averageShiftStdDev;
+		
+		var thirdRow=document.getElementById("theThirdLowestMissingShiftCount");
+		cell=thirdRow.cells[0];
+		cell.innerHTML="Missing shift count:"+missingShiftData[2].missingShiftCount;
+		cell=thirdRow.cells[1];
+		cell.innerHTML="SD:"+missingShiftData[2].averageShiftStdDev;
+		
+	}
+	showGenResultTable()
+	{
+		$(this.genResultTable).show();
+	}
+	hideGenResultTable()
+	{
+		$(this.genResultTable).hide();
 	}	
 //----------------------------------------------------------------------------------------
 	// Private method

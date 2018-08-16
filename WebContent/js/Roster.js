@@ -50,7 +50,7 @@ class Roster
 		this.shiftAStdDev=utility.getSD(shiftAData);
 		this.shiftBStdDev=utility.getSD(shiftBData);
 		this.shiftCStdDev=utility.getSD(shiftCData);
-		this.averageShiftStdDev=utility.getMean([this.shiftAStdDev,this.shiftBStdDev,this.shiftCStdDev]);
+		this.averageShiftStdDev=utility.roundTo(utility.getMean([this.shiftAStdDev,this.shiftBStdDev,this.shiftCStdDev]),3);
 		
 	}
 	_calShiftCount(shift,itoId)
