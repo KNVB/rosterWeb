@@ -43,21 +43,26 @@ class Roster
 		}
 		for (var itoId in rosterData)
 		{
-			if (this.shiftACount[itoId]!=null)
+			if (this.shiftACount[itoId]==null)
+				shiftAData.push(0);
+			else	
 				shiftAData.push(this.shiftACount[itoId]);
 			
-			if (this.shiftBCount[itoId]!=null)
+			if (this.shiftBCount[itoId]==null)
+				shiftBData.push(0);
+			else	
 				shiftBData.push(this.shiftBCount[itoId]);
 			
-			if (this.shiftCCount[itoId]!=null)
+			if (this.shiftCCount[itoId]==null)
+				shiftCData.push(0);
+			else	
 				shiftCData.push(this.shiftCCount[itoId]);
 		}
-		console.log(shiftAData,shiftBData,shiftCData);
+		
 		this.shiftAStdDev=utility.getSD(shiftAData);
 		this.shiftBStdDev=utility.getSD(shiftBData);
 		this.shiftCStdDev=utility.getSD(shiftCData);
 		this.averageShiftStdDev=utility.roundTo(utility.getMean([this.shiftAStdDev,this.shiftBStdDev,this.shiftCStdDev]),3);
-		
 	}
 	_calShiftCount(shift,itoId)
 	{

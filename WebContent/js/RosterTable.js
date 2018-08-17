@@ -3,8 +3,9 @@
  */
 class RosterTable
 {
-	constructor(utility)
+	constructor(utility,rosterScheduler)
 	{
+		var self=this;
 		this.month=1;
 		this.year=1970;
 		this.rosterRule=null;
@@ -27,7 +28,51 @@ class RosterTable
 		this.genResultTable=document.getElementById("genResult");
 		this.rosterHeader=document.getElementById("rosterHeader");
 		
-		this.englishMonthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];		
+		this.englishMonthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+		
+		$(".findMissingShiftButton").on("click",function(){
+			self.haveMissingShift();
+		});
+		$(".findDuplicateShiftButton").on("click",function(){
+			self.haveDuplicateShift();
+		});
+		$(".clearAllButton").on("click",function(){
+			self.clearAllShift();
+		});
+		
+		$(".checkAllButton").on("click",function(){
+			rosterScheduler.validate();	
+		});
+		
+		$(".autoPlannerButton").on("click",function(){
+			rosterScheduler.autoAssign();
+		});
+		
+		$(".saveRosterToDBButton").on("click",function(){
+			rosterScheduler.saveAllData();
+		});
+		
+		
+		$("#theLowestSD").on("click",function(){
+			rosterScheduler.loadLowestSDRoster(0);
+		});
+		$("#secondLowestSD").on("click",function(){
+			rosterScheduler.loadLowestSDRoster(1);
+		});
+		$("#thirdLowestSD").on("click",function(){
+			rosterScheduler.loadLowestSDRoster(2);
+		});
+		
+		$("#theLowestMissingShiftCount").on("click",function(){
+			rosterScheduler.loadMissingShiftRoster(0);
+		});
+		$("#theSecondLowestMissingShiftCount").on("click",function(){
+			rosterScheduler.loadMissingShiftRoster(1);
+		});
+		$("#theThirdLowestMissingShiftCount").on("click",function(){
+			rosterScheduler.loadMissingShiftRoster(2);
+		});
+		
 	}
 	setRosterRule(rosterRule)
 	{
@@ -373,7 +418,7 @@ class RosterTable
 		var cell;
 		var preferredShiftRow;
 		var preferredShiftRowList=this._getAllPreferredShiftRow();
-		var itoId="ITO1_1999-01-01";
+		//var itoId="ITO1_1999-01-01";
 		var itoPreferredShiftList=[];
 		var preferredShiftList=[];
 		
@@ -402,17 +447,37 @@ class RosterTable
 		cell=firstRow.cells[1];
 		cell.innerHTML="Missing shift count:"+lowestSDData[0].missingShiftCount;
 		
+		
 		var secondRow=document.getElementById("secondLowestSD");
 		cell=secondRow.cells[0];
-		cell.innerHTML="SD:"+lowestSDData[1].averageShiftStdDev;
-		cell=secondRow.cells[1];
-		cell.innerHTML="Missing shift count:"+lowestSDData[1].missingShiftCount;
-		
+		if (lowestSDData.length>1)
+		{
+			cell.innerHTML="SD:"+lowestSDData[1].averageShiftStdDev;
+			cell=secondRow.cells[1];
+			cell.innerHTML="Missing shift count:"+lowestSDData[1].missingShiftCount;
+		}
+		else
+		{
+			cell.innerHTML="SD:N.A.";
+			cell=secondRow.cells[1];
+			cell.innerHTML="Missing shift count:N.A.";
+		}
+			
+	
 		var thirdRow=document.getElementById("thirdLowestSD");
 		cell=thirdRow.cells[0];
-		cell.innerHTML="SD:"+lowestSDData[2].averageShiftStdDev;
-		cell=thirdRow.cells[1];
-		cell.innerHTML="Missing shift count:"+lowestSDData[2].missingShiftCount;
+		if (lowestSDData.length>2)
+		{
+			cell.innerHTML="SD:"+lowestSDData[2].averageShiftStdDev;
+			cell=thirdRow.cells[1];
+			cell.innerHTML="Missing shift count:"+lowestSDData[2].missingShiftCount;
+		}
+		else
+		{
+			cell.innerHTML="SD:N.A.";
+			cell=thirdRow.cells[1];
+			cell.innerHTML="Missing shift count:N.A.";
+		}
 	}
 	setMissingShiftData(missingShiftData)
 	{
@@ -424,16 +489,33 @@ class RosterTable
 		
 		var secondRow=document.getElementById("theSecondLowestMissingShiftCount");
 		cell=secondRow.cells[0];
-		cell.innerHTML="Missing shift count:"+missingShiftData[1].missingShiftCount;
-		cell=secondRow.cells[1];
-		cell.innerHTML="SD:"+missingShiftData[1].averageShiftStdDev;
-		
+		if (missingShiftData.length>1)
+		{
+			cell.innerHTML="Missing shift count:"+missingShiftData[1].missingShiftCount;
+			cell=secondRow.cells[1];
+			cell.innerHTML="SD:"+missingShiftData[1].averageShiftStdDev;
+		}
+		else
+		{
+			cell.innerHTML="Missing shift count:N.A.";
+			cell=secondRow.cells[1];
+			cell.innerHTML="SD:N.A.";
+		}
+
 		var thirdRow=document.getElementById("theThirdLowestMissingShiftCount");
 		cell=thirdRow.cells[0];
-		cell.innerHTML="Missing shift count:"+missingShiftData[2].missingShiftCount;
-		cell=thirdRow.cells[1];
-		cell.innerHTML="SD:"+missingShiftData[2].averageShiftStdDev;
-		
+		if (missingShiftData.length>2)
+		{
+			cell.innerHTML="Missing shift count:"+missingShiftData[2].missingShiftCount;
+			cell=thirdRow.cells[1];
+			cell.innerHTML="SD:"+missingShiftData[2].averageShiftStdDev;
+		}
+		else
+		{
+			cell.innerHTML="Missing shift count:N.A.";
+			cell=thirdRow.cells[1];
+			cell.innerHTML="SD:N.A.";
+		}	
 	}
 	showGenResultTable()
 	{

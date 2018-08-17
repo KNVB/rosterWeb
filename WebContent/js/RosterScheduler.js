@@ -12,28 +12,22 @@ class RosterScheduler
 		
 		this.rosterRule=null;
 		this.utility=new Utility();
-		this.rosterTable=new RosterTable(this.utility);
+		this.rosterTable=new RosterTable(this.utility,this);
 		this.loadingScreen=new MyLoadingScreen({imgPath:"img/icon.gif"});
 		
 		//console.log((new Date()).getTime());
-		$(".findMissingShiftButton").on("click",function(){
-			self.rosterTable.haveMissingShift();
-		});
-		$(".findDuplicateShiftButton").on("click",function(){
-			self.rosterTable.haveDuplicateShift();
-		});
+		/*
 		$(".checkAllButton").on("click",function(){
 			self.validate();	
 		});
+		
 		$(".autoPlannerButton").on("click",function(){
 			self.autoAssign();
-		});						 
-		$(".clearAllButton").on("click",function(){
-			self.rosterTable.clearAllShift();
-		})
+		});
+		
 		$(".saveRosterToDBButton").on("click",function(){
 			self.saveAllData();
-		});			
+		});*/			
 	}
 	init(year,month)
 	{
@@ -113,6 +107,7 @@ class RosterScheduler
 	}
 	saveAllData()
 	{
+		var dataReadyForUpdate=true;
 		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
 		var allITOShiftData=this.rosterTable.getAllShiftData();
 		var allPreferredShiftData=this.rosterTable.getAllPreferredShiftData();
@@ -152,6 +147,8 @@ class RosterScheduler
 				rosterData=rosterData.substring(0,rosterData.length-1);
 			rosterData+="],";
 			rosterData+="\"balance\":"+this.rosterTable.getThisMonthBalance(itoId)+"},";
+			if (isNaN(this.rosterTable.getThisMonthBalance(itoId)))
+				dataReadyForUpdate=false;
 			/*
 			console.log(this.rosterTable.getThisMonthBalance(itoId));
 			console.log("========================================");
@@ -159,13 +156,20 @@ class RosterScheduler
 		}
 		rosterData=rosterData.substring(0,rosterData.length-1);
 		rosterData+="}}";
-		this.utility.saveRosterData(rosterData)
-		.done(function(serverResponse){
-			alert("All roster data are saved.");
-		})
-		.fail(function(){
-			alert("Save roster data failure.");
-		});
+		if (dataReadyForUpdate)
+		{
+			this.utility.saveRosterData(rosterData)
+			.done(function(serverResponse){
+				alert("All roster data are saved.");
+			})
+			.fail(function(){
+				alert("Save roster data failure.");
+			});
+		}	
+		else	
+		{
+			alert("Data not complete for update.");		
+		}
 	}
 	autoAssign()
 	{
@@ -187,7 +191,7 @@ class RosterScheduler
 				this.theLowestMissingShiftRosters=[];
 				this.loadingScreen.show();
 				setTimeout(() => {
-					  for (var i = 0; i < 1; i++) {
+					  for (var i = 0; i < 100; i++) {
 						roster=new Roster(startDate,this._genRoster(startDate,endDate),this.utility,this.rosterRule,endDate-startDate+1);
 			    		this.theLowestSDRosters.push(roster);
 			    		this.theLowestSDRosters.sort(this._sortBySD);
@@ -217,6 +221,14 @@ class RosterScheduler
 				this.rosterTable.loadRoster(startDate,finalRoster);*/
 			}	
 		}
+	}
+	loadLowestSDRoster(seq)
+	{
+		this.rosterTable.loadRoster(this.theLowestSDRosters[seq]);
+	}
+	loadMissingShiftRoster(seq)
+	{
+		this.rosterTable.loadRoster(this.theLowestMissingShiftRosters[seq]);
 	}
 //--------------------------------------------------------------------------------------------------------------------------
 	_sortByMissingShift(a,b)

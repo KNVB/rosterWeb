@@ -277,4 +277,13 @@
 	.footer
 	{
 		display:none;
-	}	
+	}
+	tr#theLowestSD:hover,
+	tr#secondLowestSD:hover,
+	tr#thirdLowestSD:hover,
+	tr#theLowestMissingShiftCount:hover,
+	tr#theSecondLowestMissingShiftCount:hover,
+	tr#theThirdLowestMissingShiftCount:hover
+	{
+		cursor: pointer;
+	}
