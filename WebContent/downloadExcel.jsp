@@ -1,0 +1,127 @@
+<%@ page trimDirectiveWhitespaces="true" %>
+<%@ page contentType="applicaton/octet-stream" %>
+<%@ page import="util.calendar.*"%>
+<%@ page import="com.Utility"%>
+
+<%@ page import="java.io.File"%>
+<%@ page import="java.io.FileInputStream"%>
+<%@ page import="java.io.FileOutputStream"%>
+<%@ page import="java.io.IOException"%>
+<%@ page import="java.nio.file.Files"%>
+<%@ page import="java.nio.file.StandardCopyOption"%>
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.Calendar"%>
+<%@ page import="java.util.GregorianCalendar"%>
+<%@ page import="java.util.HashMap"%>
+
+<%@ page import="org.apache.poi.hssf.util.HSSFColor"%>
+<%@ page import="org.apache.poi.ss.usermodel.BorderStyle"%>
+<%@ page import="org.apache.poi.ss.usermodel.CellCopyPolicy"%>
+<%@ page import="org.apache.poi.ss.usermodel.CellStyle"%>
+<%@ page import="org.apache.poi.ss.usermodel.HorizontalAlignment"%>
+<%@ page import="org.apache.poi.ss.util.CellRangeAddress"%>
+<%@ page import="org.apache.poi.xssf.usermodel.XSSFCell"%>
+<%@ page import="org.apache.poi.xssf.usermodel.XSSFConditionalFormatting"%>
+<%@ page import="org.apache.poi.xssf.usermodel.XSSFFont"%>
+<%@ page import="org.apache.poi.xssf.usermodel.XSSFRow"%>
+<%@ page import="org.apache.poi.xssf.usermodel.XSSFSheet"%>
+<%@ page import="org.apache.poi.xssf.usermodel.XSSFSheetConditionalFormatting"%>
+<%@ page import="org.apache.poi.xssf.usermodel.XSSFWorkbook"%>
+
+<%
+	String inputFilePath=Utility.getParameterValue("inputExcelFilePath");
+	String outputFilePath=Utility.getParameterValue("outputExcelFilePath");
+	
+	File inputFile=new File(inputFilePath);
+	File outputFile=new File(outputFilePath);
+	String monthName;
+	
+	try 
+	{
+		Files.copy(inputFile.toPath(), outputFile.toPath(),StandardCopyOption.REPLACE_EXISTING);
+		XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(outputFile));
+		XSSFSheet sheet1 = workbook.getSheet("sheet1");
+		XSSFSheet sheet2 = workbook.getSheet("sheet2");
+	    XSSFSheetConditionalFormatting sheet1cf = sheet1.getSheetConditionalFormatting(); 
+        XSSFSheetConditionalFormatting sheet2cf = sheet2.getSheetConditionalFormatting(); 
+			
+        
+        XSSFCell cell=sheet1.getRow(1).getCell(1);
+		HashMap <Integer,String>weekdayNames=new HashMap<Integer,String>();
+        Calendar calendar = new GregorianCalendar(); 			
+		monthName=sheet2.getRow(calendar.get(Calendar.MONTH)).getCell(0).getStringCellValue()+" "+calendar.get(Calendar.YEAR);
+		cell.setCellValue(monthName);
+    	weekdayNames.put(Calendar.SUNDAY, "Su");
+    	weekdayNames.put(Calendar.MONDAY,"M");
+    	weekdayNames.put(Calendar.TUESDAY,"T");
+    	weekdayNames.put(Calendar.WEDNESDAY,"W");
+    	weekdayNames.put(Calendar.THURSDAY,"Th");
+    	weekdayNames.put(Calendar.FRIDAY,"F");
+    	weekdayNames.put(Calendar.SATURDAY,"S");   	
+    	
+			
+		CalendarUtility calendarUtility=new CalendarUtility();
+        MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+        CellStyle style = workbook.createCellStyle();
+        XSSFFont font = workbook.createFont();
+        
+        font.setFontHeightInPoints((short) 12);
+        font.setFontName("Times New Roman");
+        font.setColor(HSSFColor.HSSFColorPredefined.RED.getIndex());
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setFont(font);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        for (int i=1;i<=mc.length;i++)
+		{
+        	MyCalendar myCalendar=mc.getMonthlyCalendar().get(i);
+        	cell=sheet1.getRow(3).getCell(i);
+        	if (myCalendar.isPublicHoliday())
+        	{	
+        		cell.setCellValue("PH");
+        	}
+        	cell=sheet1.getRow(4).getCell(i);
+        	if (myCalendar.isPublicHoliday())
+        	{
+        		cell.setCellStyle(style);
+        	}
+        	cell.setCellValue(weekdayNames.get(myCalendar.getDayOfWeek()));
+        	cell=sheet1.getRow(5).getCell(i);
+        	cell.setCellValue(i);
+		} 			
+			
+			
+		sheet1.shiftRows(6, 6, 1);
+		
+		XSSFRow sourceRow=sheet2.getRow(12);
+		List<XSSFRow> sourceRows=new ArrayList<XSSFRow>();
+		CellCopyPolicy cellCopyPolicy=new CellCopyPolicy();
+		sourceRows.add(sourceRow);
+		
+		sheet1.copyRows(sourceRows, 6,cellCopyPolicy);
+		
+		cell=sheet1.getRow(6).getCell(1);
+		cell.setCellValue("a");
+		for (int idx = 0; idx < sheet2cf.getNumConditionalFormattings(); idx++) 
+        {
+			XSSFConditionalFormatting cf = sheet2cf.getConditionalFormattingAt(idx);
+        	CellRangeAddress[]ranges=cf.getFormattingRanges();
+        	ranges[0].setFirstRow(6);
+        	ranges[0].setLastRow(6);
+        	cf.setFormattingRanges(ranges);
+        	sheet1cf.addConditionalFormatting(cf);
+        }
+		workbook.write(new FileOutputStream(outputFile));
+		response.setHeader("Content-length", Long.toString(outputFile.length()));
+		response.setHeader("Content-Disposition", "attachment; filename=download.xlsx");
+		workbook.write(response.getOutputStream());
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
+		workbook.close();
+	}
+	catch (IOException e) 
+	{
+		e.printStackTrace();
+	}
+%>		
