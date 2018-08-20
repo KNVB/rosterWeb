@@ -33,7 +33,7 @@ public class ITO {
 	 */
 	private DataStore dataStore;
 	/**
-	 * The no. of working hour per day for the specified ITO.
+	 * The total no. of working hour per day for the specified ITO.
 	 */
 	private float workingHourPerDay;
 	/**
@@ -176,14 +176,14 @@ public class ITO {
 		this.availableShiftList=availableShiftList;
 	}
 	/**
-	 * Get the no. of working hour per day for the specified ITO.
+	 * Get the total no. of working hour per day for the specified ITO.
 	 * @return the no. of working hour per day for the specified ITO.
 	 */
 	public float getWorkingHourPerDay() {
 		return workingHourPerDay;
 	}
 	/**
-	 * Set the no. of working hour per day for the specified ITO.
+	 * Set the total no. of working hour per day for the specified ITO.
 	 * @param workingHourPerDay the no. of working hour per day for the specified ITO.
 	 */
 	public void setWorkingHourPerDay(float workingHourPerDay) {
