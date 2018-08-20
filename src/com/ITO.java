@@ -52,7 +52,7 @@ public class ITO {
 	 * The black listed shift pattern list of the specified ITO.	
 	 */
 	private ArrayList<String> blackListedShiftPatternList;
-	private static final Logger logger = LogManager.getLogger("ITO");
+	private static final Logger logger = LogManager.getLogger(Class.class.getSimpleName());
 	
 	public ITO() throws InstantiationException, IllegalAccessException, ClassNotFoundException
 	{

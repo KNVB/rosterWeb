@@ -7,20 +7,7 @@ public class ITORoster
 	private ArrayList<Shift> shiftList;
 	private ArrayList<Shift> preferredShiftList;
 	private ArrayList<Shift> previousMonthShiftList;
-	
-	
-	/**
-	 * The name of the specified ITO.
-	 */
-	private String itoName;
-	/**
-	 * The post name of the specified ITO
-	 */
-	private String postName;
-	/**
-	 * The total no. of working hour per day for the specified ITO.
-	 */
-	private float workingHourPerDay;
+
 	/**
 	 * For retrieving data from database variable balance is referred to last month balance.
 	 * For update data to database variable balance is referred to this month balance
@@ -81,47 +68,5 @@ public class ITORoster
 	 */
 	public void setBalance(float balance) {
 		this.balance = balance;
-	}
-	/**
-	 * Get the total no. of working hour per day for the specified ITO.
-	 * @return the no. of working hour per day for the specified ITO.
-	 */
-	public float getWorkingHourPerDay() {
-		return workingHourPerDay;
-	}
-	/**
-	 * Set the total no. of working hour per day for the specified ITO.
-	 * @param workingHourPerDay the no. of working hour per day for the specified ITO.
-	 */
-	public void setWorkingHourPerDay(float workingHourPerDay) {
-		this.workingHourPerDay = workingHourPerDay;
-	}
-	/**
-	 * Get the post name of the specified ITO.
-	 * @return the post name of the specified ITO.
-	 */
-	public String getPostName() {
-		return postName;
-	}
-	/**
-	 * Set the post name of the specified ITO.
-	 * @param postName the post name of the specified ITO.
-	 */
-	public void setPostName(String postName) {
-		this.postName = postName;
-	}
-	/**
-	 * Get the name of the specified ITO.
-	 * @return the name of the specified ITO.
-	 */
-	public String getItoName() {
-		return itoName;
-	}
-	/**
-	 * Set the name of the specified ITO.
-	 * @param itoName the name of the specified ITO.
-	 */
-	public void setItoName(String itoName) {
-		this.itoName = itoName;
-	}
+	}	
 }
