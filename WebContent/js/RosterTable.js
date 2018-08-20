@@ -370,15 +370,11 @@ class RosterTable
 			for (var index=this.shiftStartCellIndex;index<this.shiftStartCellIndex+this.calendarList.length;index++)
 			{
 				preferredShift=preferredShiftRowList[itoId].cells[index].textContent;
-				if (preferredShift!="")
-				{
-					resultString+="{\"shift\":\""+preferredShift+"\",";
-					resultString+="\"shiftDate\":"+(index-2);
-					resultString+="},";
-				}			
+				resultString+="{\"shift\":\""+preferredShift+"\",";
+				resultString+="\"shiftDate\":"+(index-2);
+				resultString+="},";
 			}
-			if (resultString.endsWith(","))
-				resultString=resultString.substring(0,resultString.length-1);
+			resultString=resultString.substring(0,resultString.length-1);
 			resultString+="]";
 			resultString+="},";
 		}

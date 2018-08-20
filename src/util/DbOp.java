@@ -66,17 +66,31 @@ public class DbOp implements DataStore
 	public boolean updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList) 
 	{
 		boolean result=true;
+		ResultSet rs = null;
 		PreparedStatement stmt=null;
 		try
 		{	
+			GregorianCalendar rosterMonth=new GregorianCalendar(year,month,1);
+			rosterMonth.add(Calendar.MONTH, 1);
+			dbConn.setAutoCommit(false);
+			logger.info("Update roster data transaction start.");
+			logger.debug("===============================");
 			for (String itoId:iTORosterList.keySet())
 			{
-				
-				logger.debug("===============================");
 				logger.debug("itoId="+itoId);
 				logger.debug("balance="+iTORosterList.get(itoId).getBalance());
+				logger.debug("Roster Month="+rosterMonth.get(Calendar.YEAR)+"/"+rosterMonth.get(Calendar.MONTH)+"/"+rosterMonth.get(Calendar.DAY_OF_MONTH));
 				logger.debug("Shift List:");
 				logger.debug("===============================");
+				
+				sqlString="replace into last_month_balance (ito_id,shift_month,balance) values (?,?,?)";
+				stmt=dbConn.prepareStatement(sqlString);
+				stmt.setString(1,itoId);
+				stmt.setDate(2,new java.sql.Date(rosterMonth.getTime().getTime()));
+				stmt.setFloat(3, iTORosterList.get(itoId).getBalance());
+				stmt.executeUpdate();
+				stmt.clearParameters();
+				stmt.close();
 				
 				sqlString="replace into shift_record (ito_id,shift_date,shift,state) values (?,?,?,?)";
 				stmt=dbConn.prepareStatement(sqlString);
@@ -90,25 +104,54 @@ public class DbOp implements DataStore
 					stmt.clearParameters();
 					logger.debug("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
 				}
+				stmt.close();
 				logger.debug("===============================");
 				logger.debug("Preferred Shift List:");
 				logger.debug("===============================");
-				sqlString="replace into preferred_shift (ito_id,preferred_shift,shift_date) values (?,?,?)";
-				stmt=dbConn.prepareStatement(sqlString);
-
 				for (Shift shift:iTORosterList.get(itoId).getPreferredShiftList())
 				{
-					stmt.setString(1,itoId);
-					stmt.setString(2,shift.getShift());
-					stmt.setDate(3,new java.sql.Date(shift.getShiftDate().getTime().getTime()));
-					stmt.executeUpdate();
-					stmt.clearParameters();
-					logger.debug("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
+					if (shift.getShift().equals(""))
+					{
+						sqlString="delete from preferred_shift where ito_id=? and shift_date=?";
+						stmt=dbConn.prepareStatement(sqlString);
+						stmt.setString(1,itoId);
+						stmt.setDate(2,new java.sql.Date(shift.getShiftDate().getTime().getTime()));
+						stmt.executeUpdate();
+						stmt.clearParameters();
+						logger.debug("remove preferred shift ("+shift.getShift()+") on shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH));
+					}
+					else
+					{
+						sqlString="replace into preferred_shift (ito_id,preferred_shift,shift_date) values (?,?,?)";
+						stmt=dbConn.prepareStatement(sqlString);
+						stmt.setString(1,itoId);
+						stmt.setString(2,shift.getShift());
+						stmt.setDate(3,new java.sql.Date(shift.getShiftDate().getTime().getTime()));
+						stmt.executeUpdate();
+						stmt.clearParameters();
+						logger.debug("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
+					}
 				}
+				logger.debug("===============================");
+				dbConn.commit();
+				logger.info(itoId+" roster data update completed.");
 			}
 		}
 		catch (SQLException e) 
 		{
+			try 
+			{
+				if (dbConn!=null)
+				{	
+					dbConn.rollback();
+					logger.info("Update roster data transaction rollbacked");
+				}
+			}
+			catch (SQLException e1) 
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			result=false;
 			e.printStackTrace();
 		}

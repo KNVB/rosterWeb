@@ -8,16 +8,17 @@
                             result=null;
                             switch (logEvent.getLevel())
                             {
+                                case org.apache.logging.log4j.Level.DEBUG:
                                 case org.apache.logging.log4j.Level.INFO:result=logEvent.getLevel();
                                                                          break;
-                                case org.apache.logging.log4j.Level.DEBUG:
+                                
                                 default:result=null;                                            
                             }
                             result;
                             ]]>
                         </Script>
                         <PatternMatch key="DEBUG" pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %l - %msg%n"/>
-                        <PatternMatch key="INFO" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n"/>
+                        <PatternMatch key="INFO" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %l %msg%n"/>
                     </ScriptPatternSelector>
                 </PatternLayout>
             </Console> 

@@ -107,13 +107,12 @@ class RosterScheduler
 	}
 	saveAllData()
 	{
-		var dataReadyForUpdate=true;
 		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
 		var allITOShiftData=this.rosterTable.getAllShiftData();
 		var allPreferredShiftData=this.rosterTable.getAllPreferredShiftData();
 		
 		var rosterData ="{\"rosterYear\":"+this.year+",";
-		rosterData+="\"rosterMonth\":"+(this.month+1)+",";
+		rosterData+="\"rosterMonth\":"+(this.month)+",";
 		rosterData+="\"itorosterList\":{";
 		var itoId="ITO1_1999-01-01";
 		
@@ -146,9 +145,11 @@ class RosterScheduler
 			if (rosterData.endsWith(","))
 				rosterData=rosterData.substring(0,rosterData.length-1);
 			rosterData+="],";
-			rosterData+="\"balance\":"+this.rosterTable.getThisMonthBalance(itoId)+"},";
+			
 			if (isNaN(this.rosterTable.getThisMonthBalance(itoId)))
-				dataReadyForUpdate=false;
+				rosterData+="\"balance\":0},";
+			else
+				rosterData+="\"balance\":"+this.rosterTable.getThisMonthBalance(itoId)+"},";
 			/*
 			console.log(this.rosterTable.getThisMonthBalance(itoId));
 			console.log("========================================");
@@ -156,20 +157,15 @@ class RosterScheduler
 		}
 		rosterData=rosterData.substring(0,rosterData.length-1);
 		rosterData+="}}";
-		if (dataReadyForUpdate)
-		{
-			this.utility.saveRosterData(rosterData)
-			.done(function(serverResponse){
-				alert("All roster data are saved.");
-			})
-			.fail(function(){
-				alert("Save roster data failure.");
-			});
-		}	
-		else	
-		{
-			alert("Data not complete for update.");		
-		}
+		
+		this.utility.saveRosterData(rosterData)
+		.done(function(serverResponse){
+			alert("All roster data are saved.");
+		})
+		.fail(function(){
+			alert("Save roster data failure.");
+		});
+		
 	}
 	autoAssign()
 	{
