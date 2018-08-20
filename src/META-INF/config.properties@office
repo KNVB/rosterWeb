@@ -5,3 +5,5 @@ dbName=operator_roster
 dbUserName=operator
 dbUserPwd=f5P@ssword
 jdbcDriver = com.mysql.jdbc.Driver
+inputExcelFilePath=D:\\Inetpub\\wwwroot\\roster-sample\\template.xlsx
+outputExcelFilePath=D:\\Inetpub\\wwwroot\\roster-sample\\output.xlsx
