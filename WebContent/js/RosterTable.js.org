@@ -48,9 +48,6 @@ class RosterTable
 			rosterScheduler.autoAssign();
 		});
 		
-		$(".exportButton").on("click",function(){
-			rosterScheduler.exportRosterToExcel();
-		});
 		$(".saveRosterToDBButton").on("click",function(){
 			rosterScheduler.saveAllData();
 		});
@@ -341,11 +338,50 @@ class RosterTable
 	}
 	getAllShiftData()
 	{
-		return this._getShiftRowData(this._getAllShiftRow());
+		var resultString="{";
+		var shift,shiftDate;
+		var shiftRowList=this._getAllShiftRow();
+		
+		for (var itoId in shiftRowList)
+		{
+			resultString+="\""+itoId+"\":{\"shiftList\":[";
+			for (var index=this.shiftStartCellIndex;index<this.shiftStartCellIndex+this.calendarList.length;index++)
+			{
+				shift=shiftRowList[itoId].cells[index].textContent;
+				resultString+="\""+shift+"\",";
+			}
+			resultString=resultString.substring(0,resultString.length-1);
+			resultString+="]";
+			resultString+="},";
+		}
+		resultString=resultString.substring(0,resultString.length-1);
+		resultString+="}";
+		return JSON.parse(resultString);
 	}
 	getAllPreferredShiftData()
 	{
-		return this._getShiftRowData(this._getAllPreferredShiftRow());
+		var resultString="{";
+		var preferredShift="",shiftDate;
+		var preferredShiftRowList=this._getAllPreferredShiftRow();
+		
+		for (var itoId in preferredShiftRowList)
+		{
+			resultString+="\""+itoId+"\":{\"preferredShiftList\":[";
+			for (var index=this.shiftStartCellIndex;index<this.shiftStartCellIndex+this.calendarList.length;index++)
+			{
+				preferredShift=preferredShiftRowList[itoId].cells[index].textContent;
+				resultString+="{\"shift\":\""+preferredShift+"\",";
+				resultString+="\"shiftDate\":"+(index-2);
+				resultString+="},";
+			}
+			resultString=resultString.substring(0,resultString.length-1);
+			resultString+="]";
+			resultString+="},";
+		}
+		resultString=resultString.substring(0,resultString.length-1);
+		resultString+="}";
+//		console.log(resultString);
+		return JSON.parse(resultString);
 	}
 	getPreviousShiftList(startDate,itoList)
 	{
@@ -398,10 +434,6 @@ class RosterTable
 	getThisMonthBalance(itoId)
 	{
 		return parseFloat(document.getElementById(itoId +"_thisMonthBalance").textContent);
-	}
-	getLastMonthBalance(itoId)
-	{
-		return parseFloat(document.getElementById(itoId +"_lastMonthBalance").textContent);
 	}
 	setLowestSDData(lowestSDData)
 	{
@@ -498,28 +530,7 @@ class RosterTable
 		return parseInt($("#autoPlanEndDate").val());
 	}
 //----------------------------------------------------------------------------------------
-// Private method
-	_getShiftRowData(shiftRowList)
-	{
-		var result={};
-		var shiftList={};
-		var shift,shiftType,shiftDate;
-		for (var itoId in shiftRowList)
-		{
-			shiftList=[];
-			for (var index=this.shiftStartCellIndex;index<this.shiftStartCellIndex+this.calendarList.length;index++)
-			{
-				shift={};
-				shiftType=shiftRowList[itoId].cells[index].textContent;
-				shiftDate=Date.UTC(this.year,this.month,(index-2));
-				shift["shift"]=shiftType;
-				shift["shiftDate"]=shiftDate;
-				shiftList.push(shift);
-			}
-			result[itoId]=shiftList;
-		}
-		return result;
-	}
+	// Private method
 	_getShiftPattern(shiftRow,endIndex)
 	{
 		var shiftPattern="",cell;

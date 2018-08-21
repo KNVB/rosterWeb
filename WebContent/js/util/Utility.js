@@ -7,11 +7,20 @@ class Utility
 	{
 		
 	}
+	exportRosterToExcel(rosterData)
+	{
+		return jQuery.ajax({"url": "exportRosterToExcel.jsp",
+			 dataType: 'text',
+			 data:JSON.stringify(rosterData),
+			 method:"POST",
+			 error:this.showAjaxErrorMessage
+		});
+	}
 	saveRosterData(rosterData)
 	{
 		return jQuery.ajax({"url": "saveRosterData.jsp",
 			 dataType: 'text',
-			 data:rosterData,
+			 data:JSON.stringify(rosterData),
 			 method:"POST",
 			 error:this.showAjaxErrorMessage
 		});
@@ -48,22 +57,6 @@ class Utility
 		var time2=date2.UTC();
 		return (time1-time2)/86400000;
 	}
-	_getKeys(obj)
-	{
-        var arr = new Array();
-        for (var key in obj)
-            arr.push(key);
-        return arr;
-    }	
-	_shuffle(arr)
-    {
-    	for (var i = 0; i < arr.length; i++){
-            var a = arr[i];
-            var b = Math.floor(Math.random() * arr.length);
-            arr[i] = arr[b];
-            arr[b] = a;
-        }
-    }
 	shuffleProperties(obj)
 	{
 		var new_obj = {};
@@ -101,4 +94,21 @@ class Utility
 		        return Number(a) + Number(b);
 		    }) / data.length;
 	}
+//------------------------------------------------------------------------------------------------------------------------------------	
+	_getKeys(obj)
+	{
+        var arr = new Array();
+        for (var key in obj)
+            arr.push(key);
+        return arr;
+    }	
+	_shuffle(arr)
+    {
+    	for (var i = 0; i < arr.length; i++){
+            var a = arr[i];
+            var b = Math.floor(Math.random() * arr.length);
+            arr[i] = arr[b];
+            arr[b] = a;
+        }
+    }
 }

@@ -14,7 +14,20 @@ class RosterScheduler
 		this.utility=new Utility();
 		this.rosterTable=new RosterTable(this.utility,this);
 		this.loadingScreen=new MyLoadingScreen({imgPath:"img/icon.gif"});
-	
+		
+		//console.log((new Date()).getTime());
+		/*
+		$(".checkAllButton").on("click",function(){
+			self.validate();	
+		});
+		
+		$(".autoPlannerButton").on("click",function(){
+			self.autoAssign();
+		});
+		
+		$(".saveRosterToDBButton").on("click",function(){
+			self.saveAllData();
+		});*/			
 	}
 	init(year,month)
 	{
@@ -27,6 +40,8 @@ class RosterScheduler
 			self.rosterRule.essentialShiftList=serverResponse.essentialShiftList;
 			self.rosterRule.maxConsecutiveWorkingDay=serverResponse.maxConsecutiveWorkingDay;
 			self.rosterRule.shiftHourCount=serverResponse.shiftHourCount;
+			
+			
 			
 			self.utility.getRosterData(self.year,self.month)
 			.done(function(serverResponse){
@@ -90,49 +105,58 @@ class RosterScheduler
 		}
 		return result;
 	}
-	exportRosterToExcel()
-	{
-		var rosterData={};
-		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
-		var allITOShiftData=this.rosterTable.getAllShiftData();
-		rosterData["rosterYear"]=this.year;
-		rosterData["rosterMonth"]=this.month;
-		rosterData["itorosterList"]={};
-		for (var itoId in this.itoList)
-		{
-			iTOShiftData={};
-			iTOShiftData["shiftList"]=allITOShiftData[itoId];
-			if (isNaN(this.rosterTable.getLastMonthBalance(itoId)))
-				iTOShiftData["balance"]=0;
-			else
-				iTOShiftData["balance"]=this.rosterTable.getLastMonthBalance(itoId);
-			rosterData["itorosterList"][itoId]=iTOShiftData;
-		}
-		this.utility.exportRosterToExcel(rosterData)
-		.fail(function(){
-			alert("Export roster data to excel failure.");
-		});
-	}
 	saveAllData()
 	{
-		var rosterData={};
 		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
 		var allITOShiftData=this.rosterTable.getAllShiftData();
 		var allPreferredShiftData=this.rosterTable.getAllPreferredShiftData();
-		rosterData["rosterYear"]=this.year;
-		rosterData["rosterMonth"]=this.month;
-		rosterData["itorosterList"]={};
-		for (var itoId in this.itoList)
+		
+		var rosterData ="{\"rosterYear\":"+this.year+",";
+		rosterData+="\"rosterMonth\":"+(this.month)+",";
+		rosterData+="\"itorosterList\":{";
+		var itoId="ITO1_1999-01-01";
+		
+		
+		for (var itoId in allITOShiftData)
 		{
-			iTOShiftData={};
-			iTOShiftData["shiftList"]=allITOShiftData[itoId];
-			iTOShiftData["preferredShiftList"]=allPreferredShiftData[itoId];
+			//console.log("ito_id="+itoId);
+			rosterData+="\""+itoId+"\":{\"shiftList\":[";
+			iTOShiftData=allITOShiftData[itoId].shiftList;
+			for (var i=0;i<iTOShiftData.length;i++)
+			{
+				rosterData+="{";
+				rosterData+="\"shift\":\""+iTOShiftData[i]+"\",";
+				rosterData+="\"shiftDate\":"+Date.UTC(this.year,this.month,i+1);
+				rosterData+="},";
+			}
+			rosterData=rosterData.substring(0,rosterData.length-1);
+			rosterData+="],";
+			rosterData+="\"preferredShiftList\":[";
+			preferredShiftData=allPreferredShiftData[itoId].preferredShiftList;
+			for (var i=0;i<preferredShiftData.length;i++)
+			{
+				iTOPreferredShiftData=preferredShiftData[i];
+			//	console.log(iTOPreferredShiftData.shiftDate);
+				rosterData+="{";
+				rosterData+="\"shift\":\""+iTOPreferredShiftData.shift+"\",";
+				rosterData+="\"shiftDate\":"+Date.UTC(this.year,this.month,iTOPreferredShiftData.shiftDate);
+				rosterData+="},";
+			}
+			if (rosterData.endsWith(","))
+				rosterData=rosterData.substring(0,rosterData.length-1);
+			rosterData+="],";
+			
 			if (isNaN(this.rosterTable.getThisMonthBalance(itoId)))
-				iTOShiftData["balance"]=0;
+				rosterData+="\"balance\":0},";
 			else
-				iTOShiftData["balance"]=this.rosterTable.getThisMonthBalance(itoId);
-			rosterData["itorosterList"][itoId]=iTOShiftData;
+				rosterData+="\"balance\":"+this.rosterTable.getThisMonthBalance(itoId)+"},";
+			/*
+			console.log(this.rosterTable.getThisMonthBalance(itoId));
+			console.log("========================================");
+			*/
 		}
+		rosterData=rosterData.substring(0,rosterData.length-1);
+		rosterData+="}}";
 		
 		this.utility.saveRosterData(rosterData)
 		.done(function(serverResponse){
@@ -141,6 +165,7 @@ class RosterScheduler
 		.fail(function(){
 			alert("Save roster data failure.");
 		});
+		
 	}
 	autoAssign()
 	{

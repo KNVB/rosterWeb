@@ -1,11 +1,13 @@
 package com;
 
-import util.DataStore;
+import java.io.OutputStream;
 import java.util.Hashtable;
-//import java.util.GregorianCalendar;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import util.DataStore;
+import util.ExcelExporter;
 
 
 /**
@@ -83,9 +85,35 @@ public class Roster {
 	/**
 	 * Export roster data to an excel file.
 	 */
-	public void export()
+	public void exportToExcel()
 	{
-
+		logger.info("Roster.exportToExcel("+this.rosterYear+","+ this.rosterMonth+") is called");
+		try {
+			
+			ITO ito=new ITO();
+			String inputFilePath=Utility.getParameterValue("inputExcelFilePath");
+			String outputFilePath=Utility.getParameterValue("outputExcelFilePath");
+			Hashtable<String,ITO> itoList=ito.getITOList(this.rosterYear, this.rosterMonth);
+	        ExcelExporter excelExporter=new ExcelExporter(this.rosterYear, this.rosterMonth);
+	        excelExporter.setSampleExcelFilePath(inputFilePath);
+	        excelExporter.setTempOutputExcelFilePath(outputFilePath);
+	        excelExporter.setITOList(itoList);
+	        excelExporter.setITORosterList(this.iTORosterList);
+	        excelExporter.export();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	/**
 	 * It update roster data by DataStore object
