@@ -109,6 +109,9 @@ class RosterScheduler
 			rosterData["itorosterList"][itoId]=iTOShiftData;
 		}
 		this.utility.exportRosterToExcel(rosterData)
+		.done(function(){
+			alert("Export roster data to execel successfully.");
+		})
 		.fail(function(){
 			alert("Export roster data to excel failure.");
 		});

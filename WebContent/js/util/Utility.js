@@ -10,10 +10,21 @@ class Utility
 	exportRosterToExcel(rosterData)
 	{
 		return jQuery.ajax({"url": "exportRosterToExcel.jsp",
-			 dataType: 'text',
-			 data:JSON.stringify(rosterData),
-			 method:"POST",
-			 error:this.showAjaxErrorMessage
+			data:JSON.stringify(rosterData),
+			method:"POST",
+			dataType: 'binary',
+			xhrFields: {
+		            responseType: 'blob'
+		        },
+			success: function (data) {
+			    var a = document.createElement('a');
+			    var url = window.URL.createObjectURL(data);
+			    a.href = url;
+			    a.download = 'myfile.pdf';
+			    a.click();
+			    window.URL.revokeObjectURL(url);
+			},   
+			error:this.showAjaxErrorMessage			 
 		});
 	}
 	saveRosterData(rosterData)

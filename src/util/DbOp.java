@@ -66,7 +66,6 @@ public class DbOp implements DataStore
 	public boolean updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList) 
 	{
 		boolean result=true;
-		ResultSet rs = null;
 		PreparedStatement stmt=null;
 		try
 		{	
@@ -149,7 +148,6 @@ public class DbOp implements DataStore
 			}
 			catch (SQLException e1) 
 			{
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			result=false;

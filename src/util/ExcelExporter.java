@@ -4,11 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -19,17 +18,16 @@ import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.util.CellRangeAddress;
+
 import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFConditionalFormatting;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFSheetConditionalFormatting;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ITO;
 import com.ITORoster;
+import com.Shift;
 
 import util.calendar.CalendarUtility;
 import util.calendar.MonthlyCalendar;
@@ -53,11 +51,10 @@ public class ExcelExporter
 		this.monthlyCalendar=calendarUtility.getMonthlyCalendar(this.rosterYear, this.rosterMonth);
 	}
 	public void setSampleExcelFilePath(String inputFilePath) {
-		// TODO Auto-generated method stub
 		this.sampleExcelFilePath=inputFilePath;
 	}
 	public void setTempOutputExcelFilePath(String outputFilePath) {
-		// TODO Auto-generated method stub
+		
 		this.tempOutputExcelFilePath=outputFilePath;
 	}
 	public void setITOList(Hashtable<String, ITO> itoList) {
@@ -69,8 +66,10 @@ public class ExcelExporter
 	public void export() throws IOException 
 	{
 		ITO ito;
-		int startRow=6,endRow=6;
+		int i,startRowNum=6,noOfWorkingDay=0;
+		short destRowHeight;
 		String itoId,weekDayName;
+		ArrayList<Shift> shiftList;
 		XSSFCell cell;
 		File inputFile=new File(this.sampleExcelFilePath);
 		File outputFile=new File(this.tempOutputExcelFilePath);
@@ -79,8 +78,6 @@ public class ExcelExporter
 		XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(outputFile));
 		XSSFSheet sheet1 = workbook.getSheet("sheet1");
 		XSSFSheet sheet2 = workbook.getSheet("sheet2");
-	    XSSFSheetConditionalFormatting sheet1cf = sheet1.getSheetConditionalFormatting(); 
-        XSSFSheetConditionalFormatting sheet2cf = sheet2.getSheetConditionalFormatting();
         
         //Set the roster Month value
         XSSFCell rosterMonthCell=sheet1.getRow(1).getCell(1);
@@ -100,22 +97,25 @@ public class ExcelExporter
         style.setBorderRight(BorderStyle.THIN);
         
         //Print the calendar for the specified roster month
-        for (int i=1;i<=this.monthlyCalendar.length;i++)
+        for (i=1;i<=this.monthlyCalendar.length;i++)
 		{
+        	noOfWorkingDay++;
         	MyCalendar myCalendar=this.monthlyCalendar.getMonthlyCalendar().get(i);
         	weekDayName=calendarUtility.weekDayNames.get(myCalendar.getDayOfWeek());
         	logger.debug("i="+i+",is PH="+myCalendar.isPublicHoliday());
         	cell=sheet1.getRow(3).getCell(i);
-        	
-        	
         	if (myCalendar.isPublicHoliday())
         	{	
         		cell.setCellValue("PH");
         	}
         	cell=sheet1.getRow(4).getCell(i);
-        	if (myCalendar.isPublicHoliday()||(weekDayName.equals("Su"))||(weekDayName.equals("S")))
+        	if (myCalendar.isPublicHoliday())
         	{
         		cell.setCellStyle(style);
+        	}
+        	if (weekDayName.equals("S")||weekDayName.equals("Su")||myCalendar.isPublicHoliday())
+        	{
+        		noOfWorkingDay--;
         	}
         	cell.setCellValue(weekDayName);
         	cell=sheet1.getRow(5).getCell(i);
@@ -123,24 +123,36 @@ public class ExcelExporter
 		}
         
         //Prepare for copy rows from sheet2 to sheet1
-        XSSFRow sourceRow=sheet2.getRow(12);
+		String[] itoIdList = this.itoList.keySet().toArray(new String[0]);
+		Arrays.sort(itoIdList);
+		
+        XSSFRow sourceRow=sheet2.getRow(12),destRow;
 		List<XSSFRow> sourceRows=new ArrayList<XSSFRow>();
 		CellCopyPolicy cellCopyPolicy=new CellCopyPolicy();
 		sourceRows.add(sourceRow);        
-        Enumeration<String> itoIds=this.itoList.keys();
+        destRowHeight=sheet1.getRow(startRowNum-1).getHeight();
         
-    	sheet1.shiftRows(6, 6, 1);
-    	sheet1.copyRows(sourceRows, 6,cellCopyPolicy);
-    
-		cell=sheet1.getRow(6).getCell(1);
-		cell.setCellValue("0");
-	
-		sheet1.shiftRows(8, 8, 1);
-    	sheet1.copyRows(sourceRows, 7,cellCopyPolicy);
-    
-		cell=sheet1.getRow(7).getCell(1);
-		cell.setCellValue("1");
-		
+		for (i=0;i<itoIdList.length;i++)
+		{
+			itoId=itoIdList[i];
+			ito=this.itoList.get(itoId);		
+			sheet1.shiftRows(startRowNum+i, sheet1.getLastRowNum(), 1);
+			sheet1.copyRows(sourceRows, startRowNum+i,cellCopyPolicy);
+			destRow=sheet1.getRow(startRowNum+i);
+			destRow.setHeight(destRowHeight);
+			cell=destRow.getCell(0);
+			cell.setCellValue(ito.getItoName()+"\n"+ito.getPostName()+" Extn. 2458");
+			shiftList=iTORosterList.get(itoId).getShiftList();
+			for (int j=1;j<=this.monthlyCalendar.length;j++)
+			{
+				cell=destRow.getCell(j);
+				cell.setCellValue(shiftList.get(j-1).getShift());
+			}
+			cell=destRow.getCell(32);
+			cell.setCellValue(ito.getWorkingHourPerDay()*noOfWorkingDay);
+			cell=destRow.getCell(34);
+			cell.setCellValue(iTORosterList.get(itoId).getBalance());
+		}
         workbook.write(new FileOutputStream(this.tempOutputExcelFilePath));
         workbook.close();
 	}
