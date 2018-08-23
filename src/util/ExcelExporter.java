@@ -109,7 +109,7 @@ public class ExcelExporter
         		cell.setCellValue("PH");
         	}
         	cell=sheet1.getRow(4).getCell(i);
-        	if (myCalendar.isPublicHoliday())
+        	if (weekDayName.equals("S")||weekDayName.equals("Su")||myCalendar.isPublicHoliday())
         	{
         		cell.setCellStyle(style);
         	}

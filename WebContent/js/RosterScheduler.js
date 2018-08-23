@@ -86,6 +86,10 @@ class RosterScheduler
 					alert("Black list shift found!");
 					result=false;
 				}
+				else
+				{
+					alert("This roster is valid.");
+				}	
 			}
 		}
 		return result;

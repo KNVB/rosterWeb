@@ -108,7 +108,6 @@ class RosterTable
 			}
 		}
 		this.haveMissingShift();
-		alert("Done");
 	}
 	loadRosterData(rosterList)
 	{
