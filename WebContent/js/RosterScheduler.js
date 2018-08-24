@@ -114,7 +114,7 @@ class RosterScheduler
 		}
 		this.utility.exportRosterToExcel(rosterData)
 		.done(function(){
-			alert("Export roster data to execel successfully.");
+			alert("Export roster data to excel successfully.");
 		})
 		.fail(function(){
 			alert("Export roster data to excel failure.");

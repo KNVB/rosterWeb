@@ -16,14 +16,14 @@ class Utility
 			xhrFields: {
 		            responseType: 'blob'
 		        },
-			success: function (data) {
-			    var a = document.createElement('a');
-			    var url = window.URL.createObjectURL(data);
-			    a.href = url;
-			    a.download = 'myfile.pdf';
-			    a.click();
-			    window.URL.revokeObjectURL(url);
-			},   
+			success:function(blob, status, request){
+						  var fileName=(request.getResponseHeader("Content-Disposition"));
+						  fileName=fileName.substr(fileName.indexOf("filename=")+"filename=".length);
+					      var link=document.createElement('a');
+					      link.href=window.URL.createObjectURL(blob);
+					      link.download=fileName;
+					      link.click();
+					 },   
 			error:this.showAjaxErrorMessage			 
 		});
 	}

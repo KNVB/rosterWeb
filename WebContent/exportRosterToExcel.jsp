@@ -8,17 +8,22 @@
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper"%>  
 <%@ page import="org.apache.poi.xssf.usermodel.XSSFWorkbook"%>  
 <%
+	int length = 0;
+	byte[] buffer = new byte[1024];
 	ObjectMapper objectMapper = new ObjectMapper();
+	ServletOutputStream so = response.getOutputStream();	
 	BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 	Roster roster=objectMapper.readValue(br.readLine(),Roster.class);
 	roster.exportToExcel();
 	File outputFile=new File(Utility.getParameterValue("outputExcelFilePath"));
-	XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(outputFile));
+	BufferedInputStream bis=new BufferedInputStream(new FileInputStream(outputFile));
 	response.setContentLengthLong(outputFile.length());
-	//response.setHeader("Content-length", Long.toString(outputFile.length()));
-	response.setHeader("Content-Disposition", "attachment; filename="+(roster.getRosterYear()%100)*10+roster.getRosterMonth()+".xlsx");
-	workbook.write(response.getOutputStream());
-	response.getOutputStream().flush();
-	response.getOutputStream().close();
-	workbook.close();
+	response.setHeader("Content-Disposition", "attachment; filename="+((roster.getRosterYear()%100)*100+roster.getRosterMonth()+1)+".xlsx");
+	while ((bis!=null) && ((length=bis.read(buffer))!=-1))
+	{
+		so.write(buffer,0,length);
+	}
+	so.flush();
+	so.close();
+	bis.close();
 %>	
