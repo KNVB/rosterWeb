@@ -17,12 +17,17 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ComparisonOperator;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFConditionalFormattingRule;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFPatternFormatting;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFSheetConditionalFormatting;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ITO;
@@ -68,13 +73,17 @@ public class ExcelExporter
 		ITO ito;
 		int i,startRowNum=6,noOfWorkingDay=0;
 		short destRowHeight;
-		String itoId,weekDayName;
+		String itoId,weekDayName,rangeString;
 		ArrayList<Shift> shiftList;
+		
 		XSSFCell cell;
+		XSSFColor bgColor;
+		XSSFPatternFormatting fillPattern;
+		
 		File inputFile=new File(this.sampleExcelFilePath);
 		File outputFile=new File(this.tempOutputExcelFilePath);
-		
 		Files.copy(inputFile.toPath(), outputFile.toPath(),StandardCopyOption.REPLACE_EXISTING);
+		
 		XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(outputFile));
 		XSSFSheet sheet1 = workbook.getSheet("sheet1");
 		XSSFSheet sheet2 = workbook.getSheet("sheet2");
@@ -153,6 +162,41 @@ public class ExcelExporter
 			cell=destRow.getCell(34);
 			cell.setCellValue(iTORosterList.get(itoId).getBalance());
 		}
+		rangeString="b"+(startRowNum+1)+":af"+(startRowNum+i);
+		XSSFSheetConditionalFormatting sheet1cf = sheet1.getSheetConditionalFormatting(); 
+		CellRangeAddress[] sheet1Range = {CellRangeAddress.valueOf(rangeString)};
+		XSSFConditionalFormattingRule aShiftRule = sheet1cf.createConditionalFormattingRule(ComparisonOperator.EQUAL,"\"a\"");
+		XSSFConditionalFormattingRule cShiftRule = sheet1cf.createConditionalFormattingRule(ComparisonOperator.EQUAL,"\"c\"");
+		XSSFConditionalFormattingRule oShiftRule = sheet1cf.createConditionalFormattingRule(ComparisonOperator.EQUAL,"\"O\"");
+		
+		XSSFConditionalFormattingRule bxShiftRule = sheet1cf.createConditionalFormattingRule("SEARCH(\"b\","+rangeString+")");
+		XSSFConditionalFormattingRule dxShiftRule = sheet1cf.createConditionalFormattingRule("SEARCH(\"d\","+rangeString+")");
+
+		fillPattern = aShiftRule.createPatternFormatting();
+		bgColor = new XSSFColor(new java.awt.Color(255, 153, 204));
+		fillPattern.setFillBackgroundColor(bgColor);
+		sheet1cf.addConditionalFormatting(sheet1Range, aShiftRule);
+
+		fillPattern = bxShiftRule.createPatternFormatting();
+		bgColor = new XSSFColor(new java.awt.Color(255, 255, 204));
+		fillPattern.setFillBackgroundColor(bgColor);
+		sheet1cf.addConditionalFormatting(sheet1Range, bxShiftRule);
+		
+		bgColor = new XSSFColor(new java.awt.Color(204,255,204)); 
+		fillPattern = cShiftRule.createPatternFormatting();
+		fillPattern.setFillBackgroundColor(bgColor);
+		sheet1cf.addConditionalFormatting(sheet1Range, cShiftRule);
+		
+		bgColor = new XSSFColor(new java.awt.Color(204,255,255));
+		fillPattern = dxShiftRule.createPatternFormatting();
+		fillPattern.setFillBackgroundColor(bgColor);
+		sheet1cf.addConditionalFormatting(sheet1Range, dxShiftRule);
+		
+		bgColor = new XSSFColor(new java.awt.Color(255,255,255));
+		fillPattern =oShiftRule.createPatternFormatting();
+		fillPattern.setFillBackgroundColor(bgColor);
+		sheet1cf.addConditionalFormatting(sheet1Range, oShiftRule);
+		
         workbook.write(new FileOutputStream(this.tempOutputExcelFilePath));
         workbook.close();
 	}
