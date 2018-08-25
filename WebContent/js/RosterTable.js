@@ -364,9 +364,12 @@ class RosterTable
 					result.push(previousMonthShiftList[i].shift);
 				}
 			}
-			for (var i=0;i<startDate-1;i++)
+			if (shiftDataList!=null)
 			{
-				result.push(shiftDataList[i]);
+				for (var i=0;i<startDate-1;i++)
+				{
+					result.push(shiftDataList[i]);
+				}
 			}
 			resultList[itoId]=result;
 		}	
