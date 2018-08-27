@@ -112,6 +112,8 @@ class RosterScheduler
 				iTOShiftData["balance"]=this.rosterTable.getLastMonthBalance(itoId);
 			rosterData["itorosterList"][itoId]=iTOShiftData;
 		}
+		rosterData["vacancyShiftData"]=this.rosterTable.getVacancyShiftData();
+		//console.log(this.rosterTable.getVacancyShiftData());
 		this.utility.exportRosterToExcel(rosterData)
 		.done(function(){
 			alert("Export roster data to excel successfully.");
@@ -140,7 +142,6 @@ class RosterScheduler
 				iTOShiftData["balance"]=this.rosterTable.getThisMonthBalance(itoId);
 			rosterData["itorosterList"][itoId]=iTOShiftData;
 		}
-		
 		this.utility.saveRosterData(rosterData)
 		.done(function(serverResponse){
 			alert("All roster data are saved.");

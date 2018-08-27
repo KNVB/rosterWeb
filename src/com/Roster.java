@@ -1,5 +1,5 @@
 package com;
-
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,8 +17,10 @@ import util.ExcelExporter;
 public class Roster {
 	private DataStore dataStore;
 	private int rosterYear,rosterMonth;
-	private static final Logger logger = LogManager.getLogger("Roster");
+	private ArrayList<String> vacancyShiftData;
 	private Hashtable<String,ITORoster> iTORosterList;
+	private static final Logger logger = LogManager.getLogger("Roster");
+	
 	public Roster()
 	{
 		
@@ -80,7 +82,20 @@ public class Roster {
 	{
 		this.iTORosterList=iTORosterList;
 	}
-
+	/**
+	 * It returns vacant shift row.
+	 * @return
+	 */
+	public ArrayList<String> getVacancyShiftData() {
+		return vacancyShiftData;
+	}
+	/**
+	 * It set vacant shift row
+	 * @param vacantShiftRow
+	 */
+	public void setVacancyShiftData(ArrayList<String> vacantShiftData) {
+		this.vacancyShiftData = vacantShiftData;
+	}
 	/**
 	 * Export roster data to an excel file.
 	 */
@@ -98,6 +113,7 @@ public class Roster {
 	        excelExporter.setTempOutputExcelFilePath(outputFilePath);
 	        excelExporter.setITOList(itoList);
 	        excelExporter.setITORosterList(this.iTORosterList);
+	        excelExporter.setVancancyShiftData(this.vacancyShiftData);
 	        excelExporter.export();
 		} catch (InstantiationException e) {
 			

@@ -151,6 +151,7 @@ class RosterTable
 				//console.log(shiftDate.getDate(),shiftRecord.shift);
 			}	
 		}
+		this.haveMissingShift();
 	}
 	haveMissingShift()
 	{
@@ -345,6 +346,17 @@ class RosterTable
 	getAllPreferredShiftData()
 	{
 		return this._getShiftRowData(this._getAllPreferredShiftRow());
+	}
+	getVacancyShiftData()
+	{
+		var cell,result=[];
+		var vacancyRow=document.getElementById("vancantShift");
+		for (var i=0;i<this.calendarList.length;i++)
+		{
+			cell=vacancyRow.cells[this.shiftStartCellIndex+i];
+			result.push(cell.textContent);
+		}
+		return result;
 	}
 	getPreviousShiftList(startDate,itoList)
 	{
@@ -1085,5 +1097,5 @@ class RosterTable
 			result[itoId]=preferredShiftRow;
 		}
 		return result;
-	}	
+	}		
 }	

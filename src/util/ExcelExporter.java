@@ -42,6 +42,7 @@ public class ExcelExporter
 {
 	private MonthlyCalendar monthlyCalendar;
 	private int rosterYear,rosterMonth;
+	private ArrayList<String> vacancyShiftData;
 	private CalendarUtility calendarUtility=new CalendarUtility();
     
 	private String sampleExcelFilePath,tempOutputExcelFilePath;
@@ -67,6 +68,10 @@ public class ExcelExporter
 	}	
 	public void setITORosterList(Hashtable<String, ITORoster> iTORosterList) {
 		this.iTORosterList=iTORosterList;		
+	}
+	public void setVancancyShiftData(ArrayList<String>vacancyShiftData)
+	{
+		this.vacancyShiftData=vacancyShiftData;
 	}
 	public void export() throws IOException 
 	{
@@ -135,7 +140,7 @@ public class ExcelExporter
 		String[] itoIdList = this.itoList.keySet().toArray(new String[0]);
 		Arrays.sort(itoIdList);
 		
-        XSSFRow sourceRow=sheet2.getRow(12),destRow;
+        XSSFRow sourceRow=sheet2.getRow(12),destRow,vancancyShiftRow;
 		List<XSSFRow> sourceRows=new ArrayList<XSSFRow>();
 		CellCopyPolicy cellCopyPolicy=new CellCopyPolicy();
 		sourceRows.add(sourceRow);        
@@ -161,6 +166,12 @@ public class ExcelExporter
 			cell.setCellValue(ito.getWorkingHourPerDay()*noOfWorkingDay);
 			cell=destRow.getCell(34);
 			cell.setCellValue(iTORosterList.get(itoId).getBalance());
+		}
+		vancancyShiftRow=sheet1.getRow(startRowNum+i);
+		for (int j=1;j<=this.monthlyCalendar.length;j++)
+		{
+			cell=vancancyShiftRow.getCell(j);
+			cell.setCellValue(this.vacancyShiftData.get(j-1));
 		}
 		rangeString="b"+(startRowNum+1)+":af"+(startRowNum+i);
 		XSSFSheetConditionalFormatting sheet1cf = sheet1.getSheetConditionalFormatting(); 
