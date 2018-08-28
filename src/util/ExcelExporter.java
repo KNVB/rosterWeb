@@ -168,10 +168,10 @@ public class ExcelExporter
 			cell.setCellValue(iTORosterList.get(itoId).getBalance());
 		}
 		vancancyShiftRow=sheet1.getRow(startRowNum+i);
-		for (int j=1;j<=this.monthlyCalendar.length;j++)
+		for (int j=0;j<this.monthlyCalendar.length;j++)
 		{
-			cell=vancancyShiftRow.getCell(j);
-			cell.setCellValue(this.vacancyShiftData.get(j-1));
+			cell=vancancyShiftRow.getCell(j+1);
+			cell.setCellValue(this.vacancyShiftData.get(j));
 		}
 		rangeString="b"+(startRowNum+1)+":af"+(startRowNum+i);
 		XSSFSheetConditionalFormatting sheet1cf = sheet1.getSheetConditionalFormatting(); 
