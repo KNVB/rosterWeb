@@ -120,23 +120,28 @@ class RosterTable
 		{
 			ito=this.itoList[itoId];
 			shiftList=rosterList[itoId].shiftList;
-			preferredShiftList=rosterList[itoId].preferredShiftList;
-			previousMonthShiftList=rosterList[itoId].previousMonthShiftList;
-			previousMonthShiftListStartIndex=previousMonthShiftList.length-this.showNoOfPrevDate;
-			this.allPreviousMonthShiftList[itoId]=previousMonthShiftList;
-			//console.log(previousMonthShiftListStartIndex,previousMonthShiftList.length,this.showNoOfPrevDate);
-			
 			shiftRow=document.getElementById("shift_"+itoId);
 			preferredShiftRow=document.getElementById("preferredShift_"+itoId);
-			startIndex=1;
-			cell=document.getElementById(itoId +"_lastMonthBalance");
-			cell.textContent=rosterList[itoId].lastMonthBalance;
-			for (var i=previousMonthShiftListStartIndex;i<previousMonthShiftList.length;i++)
+
+			preferredShiftList=rosterList[itoId].preferredShiftList;
+			previousMonthShiftList=rosterList[itoId].previousMonthShiftList;
+			if (previousMonthShiftList.length>this.showNoOfPrevDate)
 			{
-				cell=shiftRow.cells[startIndex++];
-				$(cell).html(previousMonthShiftList[i].shift).blur();
+				previousMonthShiftListStartIndex=previousMonthShiftList.length-this.showNoOfPrevDate;
+				this.allPreviousMonthShiftList[itoId]=previousMonthShiftList;
+				//console.log(previousMonthShiftListStartIndex,previousMonthShiftList.length,this.showNoOfPrevDate);
+				
+				startIndex=1;
+				cell=document.getElementById(itoId +"_lastMonthBalance");
+				cell.textContent=rosterList[itoId].lastMonthBalance;
+				
+				//console.log(previousMonthShiftListStartIndex,previousMonthShiftList.length);
+				for (var i=previousMonthShiftListStartIndex;i<previousMonthShiftList.length;i++)
+				{
+					cell=shiftRow.cells[startIndex++];
+					$(cell).html(previousMonthShiftList[i].shift).blur();
+				}
 			}
-			
 			for (var i=0;i<shiftList.length;i++)
 			{
 				cell=shiftRow.cells[startIndex++];
