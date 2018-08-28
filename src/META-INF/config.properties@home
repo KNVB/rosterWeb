@@ -5,5 +5,5 @@ dbName=roster
 dbUserName=cstsang
 dbUserPwd=30Dec2010
 jdbcDriver = com.mysql.jdbc.Driver
-inputExcelFilePath=G:\\workspace\\template.xlsx
-outputExcelFilePath=G:\\workspace\\output.xlsx
+#inputExcelFilePath=G:\\workspace\\template.xlsx
+#outputExcelFilePath=G:\\workspace\\output.xlsx
