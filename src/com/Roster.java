@@ -99,14 +99,12 @@ public class Roster {
 	/**
 	 * Export roster data to an excel file.
 	 */
-	public void exportToExcel()
+	public void exportToExcel(String inputFilePath,String outputFilePath)
 	{
 		logger.info("Roster.exportToExcel("+this.rosterYear+","+ this.rosterMonth+") is called");
 		try {
 			
 			ITO ito=new ITO();
-			String inputFilePath=Utility.getParameterValue("inputExcelFilePath");
-			String outputFilePath=Utility.getParameterValue("outputExcelFilePath");
 			Hashtable<String,ITO> itoList=ito.getITOList(this.rosterYear, this.rosterMonth);
 	        ExcelExporter excelExporter=new ExcelExporter(this.rosterYear, this.rosterMonth);
 	        excelExporter.setSampleExcelFilePath(inputFilePath);

@@ -10,12 +10,17 @@
 <%
 	int length = 0;
 	byte[] buffer = new byte[1024];
+	String inputFilePath,outputFilePath;
 	ObjectMapper objectMapper = new ObjectMapper();
+	
 	ServletOutputStream so = response.getOutputStream();	
+	ServletContext context = request.getServletContext();
 	BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 	Roster roster=objectMapper.readValue(br.readLine(),Roster.class);
-	roster.exportToExcel();
-	File outputFile=new File(Utility.getParameterValue("outputExcelFilePath"));
+	inputFilePath=context.getRealPath("/template/template.xlsx");
+	outputFilePath=context.getRealPath("/template/output.xlsx");
+	roster.exportToExcel(inputFilePath,outputFilePath);
+	File outputFile=new File(outputFilePath);
 	BufferedInputStream bis=new BufferedInputStream(new FileInputStream(outputFile));
 	response.setContentLengthLong(outputFile.length());
 	response.setHeader("Content-Disposition", "attachment; filename="+((roster.getRosterYear()%100)*100+roster.getRosterMonth()+1)+".xlsx");

@@ -169,6 +169,13 @@ class RosterScheduler
 				this.theLowestSDRosters=[];
 				this.theLowestMissingShiftRosters=[];
 				this.loadingScreen.show();
+				
+				/*
+				 * 
+				 * It looks like _genRoster is blocking the browser, and not giving it any resources to re-render/repaint until the loop is completed. 
+				 * One possibility would be to run the loop after giving the browser a few ms to render the .loading
+				 * https://stackoverflow.com/questions/51869613/create-an-loading-screen-for-long-calculation?noredirect=1#comment90691880_51869613
+				 */
 				setTimeout(() => {
 					  for (var i = 0; i < 100; i++) {
 						roster=new Roster(startDate,this._genRoster(startDate,endDate),this.utility,this.rosterRule,endDate-startDate+1);
@@ -184,20 +191,12 @@ class RosterScheduler
 			    		{	
 			    			this.theLowestMissingShiftRosters.splice(3,1);
 			    		}
-			    		//this.theLowestSDRosters[roster.averageShiftStdDev]=roster;
-				       	//this.theLowestMissingShiftRosters[roster.missingShiftCount]=roster;
 					  }
 					  this.loadingScreen.hide();
 					  this.rosterTable.setLowestSDData(this.theLowestSDRosters);
 					  this.rosterTable.setMissingShiftData(this.theLowestMissingShiftRosters);
 					  this.rosterTable.showGenResultTable();
 					}, 50);
-				
-				/*console.log("The lowest average SD="+lowestAverageSD);
-				console.log("The lowest missing shift="+lowestAverageSD);
-				console.log(finalRoster);
-				//this.rosterTable.clearAllShift();
-				this.rosterTable.loadRoster(startDate,finalRoster);*/
 			}	
 		}
 	}

@@ -168,7 +168,7 @@ public class ExcelExporter
 			cell.setCellValue(iTORosterList.get(itoId).getBalance());
 		}
 		vancancyShiftRow=sheet1.getRow(startRowNum+i);
-		for (int j=0;j<this.monthlyCalendar.length;j++)
+		for (int j=0;j<this.vacancyShiftData.size();j++)
 		{
 			cell=vancancyShiftRow.getCell(j+1);
 			cell.setCellValue(this.vacancyShiftData.get(j));
