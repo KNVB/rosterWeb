@@ -158,6 +158,124 @@ class RosterTable
 		}
 		this.haveMissingShift();
 	}
+	loadYearlyRosterStatisticData(yearlyRosterStatisticData)
+	{
+		var month;
+		var statisticTable=document.createElement("table");
+		var theCell=document.getElementById("yearlyStatistic");
+		var row=statisticTable.insertRow(statisticTable.rows.length);
+		var aShiftTotal,bxShiftTotal,cShiftTotal,dxShiftTotal,oShiftTotal,allShiftTotal;
+		var cell,aShiftTotalCell,bxShiftTotalCell,cShiftTotalCell,dxShiftTotalCell,oShiftTotalCell,allShiftTotalCell;
+		statisticTable.style.width="500px";
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="ITO";
+		cell.className="borderCell alignCenter smallFont";
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="a";
+		cell.className="borderCell alignCenter smallFont";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="bx";
+		cell.className="borderCell alignCenter smallFont";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="c";
+		cell.className="borderCell alignCenter smallFont";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="dx";
+		cell.className="borderCell alignCenter smallFont";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="O";
+		cell.className="borderCell alignCenter smallFont";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="total";
+		cell.className="borderCell alignCenter smallFont";
+		
+		for (var itoId in yearlyRosterStatisticData)
+		{
+			month=1;
+			var itoYearlyStatistic= yearlyRosterStatisticData[itoId];
+			row=statisticTable.insertRow(statisticTable.rows.length);
+			cell=row.insertCell(row.cells.length);
+			cell.className="borderCell alignCenter smallFont";
+			cell.innerHTML=itoYearlyStatistic.itoPostName;
+			
+			aShiftTotalCell=row.insertCell(row.cells.length);
+			aShiftTotalCell.className="borderCell alignCenter smallFont";
+			
+			bxShiftTotalCell=row.insertCell(row.cells.length);
+			bxShiftTotalCell.className="borderCell alignCenter smallFont";
+			
+			cShiftTotalCell=row.insertCell(row.cells.length);
+			cShiftTotalCell.className="borderCell alignCenter smallFont";
+			
+			dxShiftTotalCell=row.insertCell(row.cells.length);
+			dxShiftTotalCell.className="borderCell alignCenter smallFont";
+			
+			oShiftTotalCell=row.insertCell(row.cells.length);
+			oShiftTotalCell.className="borderCell alignCenter smallFont";
+			
+			allShiftTotalCell=row.insertCell(row.cells.length);
+			allShiftTotalCell.className="borderCell alignCenter smallFont";
+			
+			aShiftTotal=0;bxShiftTotal=0;cShiftTotal=0;
+			dxShiftTotal=0;oShiftTotal=0;allShiftTotal=0;
+			for (var j=0;j<itoYearlyStatistic.itoMonthlyStatisticList.length;j++)
+			{
+				row=statisticTable.insertRow(statisticTable.rows.length);
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter smallFont";
+				cell.innerHTML=month++;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter smallFont";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].ashiftTotal;
+				aShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].ashiftTotal;
+				allShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].ashiftTotal;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter smallFont";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].bxShiftTotal;
+				bxShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].bxShiftTotal;
+				allShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].bxShiftTotal;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter smallFont";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].cshiftTotal;
+				cShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].cshiftTotal;
+				allShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].cshiftTotal;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter smallFont";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].dxShiftTotal;
+				dxShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].dxShiftTotal;
+				allShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].dxShiftTotal;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter smallFont";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].oshiftTotal;
+				oShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].oshiftTotal;
+				allShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].oshiftTotal;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter smallFont";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].monthlyTotal;
+			}
+			aShiftTotalCell.innerHTML=aShiftTotal;
+			bxShiftTotalCell.innerHTML=bxShiftTotal;
+			cShiftTotalCell.innerHTML=cShiftTotal;
+			dxShiftTotalCell.innerHTML=dxShiftTotal;
+			oShiftTotalCell.innerHTML=oShiftTotal;
+			allShiftTotalCell.innerHTML=allShiftTotal;
+		}
+		
+		$(theCell).empty();
+		$(theCell).append(statisticTable);
+		
+	}
 	haveMissingShift()
 	{
 		var ito,itoId,j,cell,i;

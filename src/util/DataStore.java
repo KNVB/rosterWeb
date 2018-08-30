@@ -1,6 +1,7 @@
 package util;
 import com.ITO;
 import com.ITORoster;
+import com.rosterStatistic.ITOYearlyStatistic;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -48,7 +49,7 @@ public interface DataStore {
 	 */
 	public boolean updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList);	
 	
-	public Hashtable<String,String>getRosterStatistic(int year,int month);
+	public Hashtable<String,ITOYearlyStatistic>getYearlyRosterStatistic(int year,int month);
 	/**
 	 * Close the DataStore
 	 * @throws Exception

@@ -7,6 +7,15 @@ class Utility
 	{
 		
 	}
+	getYearlyRosterStatistic(year,month)
+	{
+		var requestParameters={"year":year,"month":month};
+		return jQuery.ajax({"url": "getYearlyRosterStatistic.jsp",
+			 dataType: 'json',
+			 data:requestParameters,
+			 error:this.showAjaxErrorMessage
+		});
+	}
 	exportRosterToExcel(rosterData)
 	{
 		return jQuery.ajax({"url": "exportRosterToExcel.jsp",

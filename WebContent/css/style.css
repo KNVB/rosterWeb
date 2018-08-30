@@ -30,7 +30,7 @@
 	}
 	.dateCell
 	{
-		font-size:15;
+		font-size:15px;
 		width:25px;
 		max-width:25px;
 		text-align: center;
@@ -38,7 +38,7 @@
 	}	
 	.weekend
 	{
-		font-size:15;
+		font-size:15px;
 		width:25px;
 		max-width:25px;
 		text-align: center;
@@ -287,3 +287,7 @@
 	{
 		cursor: pointer;
 	}
+	.smallFont
+	{
+		font-size:15px;
+	}	

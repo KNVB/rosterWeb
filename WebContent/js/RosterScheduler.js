@@ -51,6 +51,11 @@ class RosterScheduler
 				self.rosterTable.calendarList=serverResponse.calendarList;
 				self.rosterTable.init(self.year,self.month,self);
 				self.rosterTable.loadRosterData(serverResponse.rosterList);
+				
+				self.utility.getYearlyRosterStatistic(self.year,self.month)
+				.done(function(serverResponse){
+					self.rosterTable.loadYearlyRosterStatisticData(serverResponse);
+				});
 			//	console.log(self.rosterRule.maxNoOfShiftPerMonth);
 			})
 			.fail(function(){

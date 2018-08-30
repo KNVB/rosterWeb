@@ -19,6 +19,8 @@ import com.ITORoster;
 import com.RosterRule;
 import com.Shift;
 import com.Utility;
+import com.rosterStatistic.ITOYearlyStatistic;
+import com.rosterStatistic.MonthlyStatistic;
 /**
  * It is an implementation class of DataStore interface
  * @author SITO3
@@ -394,22 +396,72 @@ public class DbOp implements DataStore
 		}
 		return result;
 	}
-	public Hashtable<String,String>getRosterStatistic(int year,int month)
+	public Hashtable<String,ITOYearlyStatistic>getYearlyRosterStatistic(int year, int month)
 	{
-		Hashtable<String,String> result=new  Hashtable<String, String>();
-		sqlString="select a.ito_id,";
-		sqlString=sqlString+"	sum(case when shift ='a' then 1 else 0 end) as a,";
-		sqlString=sqlString+"	sum(case when shift ='b' or shift ='b1' then 1 else 0 end) as b,";
-		sqlString=sqlString+"	sum(case when shift ='c' then 1 else 0 end) as c,";
-		sqlString=sqlString+"	sum(case when shift ='d' or shift='d1'  then 1 else 0 end) as d,";
-		sqlString=sqlString+"	sum(case when shift ='O' then 1 else 0 end) as o,";
-		sqlString=sqlString+"	year(shift_date) as y,";
-		sqlString=sqlString+"	month(shift_date) m ";
+		int lastDay;
+		ResultSet rs = null;
+		PreparedStatement stmt = null;
+		MonthlyStatistic monthlyStatistic =null;
+		ITOYearlyStatistic iTOYearlyStatistic=null;
+		GregorianCalendar theFirstDateOfTheMonth=new GregorianCalendar(year,month,1);
+		lastDay=theFirstDateOfTheMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
+		String startDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-1";
+		String endDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-"+lastDay;
+		
+		Hashtable<String,ITOYearlyStatistic> result=new  Hashtable<String, ITOYearlyStatistic>();
+		sqlString="select a.ito_id,b.post_name,";
+		sqlString=sqlString+"			sum(case when shift ='a' then 1 else 0 end) as a,";
+		sqlString=sqlString+"			sum(case when shift ='b' or shift ='b1' then 1 else 0 end) as b,";
+		sqlString=sqlString+"			sum(case when shift ='c' then 1 else 0 end) as c,";
+		sqlString=sqlString+"			sum(case when shift ='d' or shift='d1'  then 1 else 0 end) as d,";
+		sqlString=sqlString+"			sum(case when shift ='O' then 1 else 0 end) as o,";
+		sqlString=sqlString+"			year(shift_date) as y,";
+		sqlString=sqlString+"			month(shift_date) m ";
 		sqlString=sqlString+"from ";
 		sqlString=sqlString+"shift_record a inner join ito_info b ";
-		sqlString=sqlString+"on a.ITO_ID =b.ito_id and b.leave_date > now() ";
-		sqlString=sqlString+"group by a.ito_id,year(shift_date),month(shift_date) ";
-		sqlString=sqlString+"having y="+ year+" and m="+(month+1);
+		sqlString=sqlString+"on join_date<? and ";
+		sqlString=sqlString+"   leave_date>? and ";
+		sqlString=sqlString+"   year(shift_date)=? and ";
+		sqlString=sqlString+"   month(shift_date) <=? and ";
+		sqlString=sqlString+"   a.ITO_ID =b.ito_id ";
+		sqlString=sqlString+"group by a.ito_id,year(shift_date),month(shift_date)";
+		try
+		{
+			stmt=dbConn.prepareStatement(sqlString);
+			stmt.setString(1,startDateString);
+			stmt.setString(2,endDateString);
+			stmt.setInt(3,year);
+			stmt.setInt(4,(theFirstDateOfTheMonth.get(Calendar.MONTH)+1));
+			rs=stmt.executeQuery();
+			while (rs.next())
+			{
+				if (result.containsKey(rs.getString("ito_id")))
+				{
+					iTOYearlyStatistic=result.remove(rs.getString("ito_id"));
+				}
+				else
+				{
+					iTOYearlyStatistic=new ITOYearlyStatistic();
+					iTOYearlyStatistic.setItoPostName(rs.getString("post_name"));
+				}
+				monthlyStatistic =new MonthlyStatistic();
+				monthlyStatistic.setAShiftTotal(rs.getInt("a"));
+				monthlyStatistic.setBxShiftTotal(rs.getInt("b"));
+				monthlyStatistic.setCShiftTotal(rs.getInt("c"));
+				monthlyStatistic.setDxShiftTotal(rs.getInt("d"));
+				monthlyStatistic.setOShiftTotal(rs.getInt("o"));
+				iTOYearlyStatistic.addITOMonthlyStatistic(monthlyStatistic);
+				result.put(rs.getString("ito_id"),iTOYearlyStatistic);
+			}
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		} 
+		finally 
+		{
+			releaseResource(rs, stmt);
+		}
 		return result;
 	}
 	/**
