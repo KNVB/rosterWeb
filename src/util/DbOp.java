@@ -394,7 +394,24 @@ public class DbOp implements DataStore
 		}
 		return result;
 	}
-	
+	public Hashtable<String,String>getRosterStatistic(int year,int month)
+	{
+		Hashtable<String,String> result=new  Hashtable<String, String>();
+		sqlString="select a.ito_id,";
+		sqlString=sqlString+"	sum(case when shift ='a' then 1 else 0 end) as a,";
+		sqlString=sqlString+"	sum(case when shift ='b' or shift ='b1' then 1 else 0 end) as b,";
+		sqlString=sqlString+"	sum(case when shift ='c' then 1 else 0 end) as c,";
+		sqlString=sqlString+"	sum(case when shift ='d' or shift='d1'  then 1 else 0 end) as d,";
+		sqlString=sqlString+"	sum(case when shift ='O' then 1 else 0 end) as o,";
+		sqlString=sqlString+"	year(shift_date) as y,";
+		sqlString=sqlString+"	month(shift_date) m ";
+		sqlString=sqlString+"from ";
+		sqlString=sqlString+"shift_record a inner join ito_info b ";
+		sqlString=sqlString+"on a.ITO_ID =b.ito_id and b.leave_date > now() ";
+		sqlString=sqlString+"group by a.ito_id,year(shift_date),month(shift_date) ";
+		sqlString=sqlString+"having y="+ year+" and m="+(month+1);
+		return result;
+	}
 	/**
 	 * Release resource for 
 	 * @param r ResultSet object

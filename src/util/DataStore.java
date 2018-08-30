@@ -47,6 +47,8 @@ public interface DataStore {
 	 * @return if update success, it return true else return false
 	 */
 	public boolean updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList);	
+	
+	public Hashtable<String,String>getRosterStatistic(int year,int month);
 	/**
 	 * Close the DataStore
 	 * @throws Exception
