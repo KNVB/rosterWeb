@@ -298,7 +298,7 @@
 				case "mouseout"		:this._mouseOutEventHandler(cell);
 									 break;				
 				case "mouseup"		:this._mouseUpEventHandler(cell);
-									 break;				
+									 break;
 			}
 		}
 //===========================================================================
@@ -306,10 +306,13 @@
 		_clickEventHandler(theCell)
 		{
 			console.log("on click event triggered.");
+			theCell.contentEditable=true;
+			theCell.focus();
 		}
 		_selectStartEventHandler(theCell)
 		{
 			var row=theCell.parentElement;
+			theCell.contentEditable=false;
 			this.selectCurrentRowIndex=row.rowIndex;	
 			this.selectCurrentCellIndex=theCell.cellIndex;
 			this.selectPreviousRowIndex=row.rowIndex;
