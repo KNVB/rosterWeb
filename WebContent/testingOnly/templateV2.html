@@ -272,7 +272,13 @@
 	{
 		constructor()
 		{
-			this.inSelectMode=false;	
+			this.inSelectMode=false;
+			this.selectCurrentRowIndex;	
+			this.selectCurrentCellIndex;				
+			this.selectPreviousRowIndex;	
+			this.selectPreviousCellIndex;
+			this.selectStartRowIndex;	
+			this.selectStartCellIndex;	
 		}
 		handleEvent(cell,event)
 		{
@@ -304,15 +310,23 @@
 		_selectStartEventHandler(theCell)
 		{
 			var row=theCell.parentElement;
-			console.log("rowIndex="+row.rowIndex+",cellIndex="+theCell.cellIndex+" on select start triggered.");
+			this.selectCurrentRowIndex=row.rowIndex;	
+			this.selectCurrentCellIndex=theCell.cellIndex;
+			this.selectPreviousRowIndex=row.rowIndex;
+			this.selectPreviousCellIndex=theCell.cellIndex;
+			this.selectStartRowIndex=row.rowIndex;	
+			this.selectStartCellIndex=theCell.cellIndex;
 			this.inSelectMode=true;
+			console.log("PreviousRowIndex="+this.selectPreviousRowIndex+",PreviousCellIndex="+this.selectPreviousCellIndex+",rowIndex="+row.rowIndex+",cellIndex="+theCell.cellIndex+" on select start triggered.");
 		}
 		_mouseOverEventHandler(theCell)
 		{
 			if (this.inSelectMode)
 			{	
 				var row=theCell.parentElement;
-				console.log("rowIndex="+row.rowIndex+",cellIndex="+theCell.cellIndex+" on mouseover triggered.");
+				console.log("StartRowIndex="+this.selectStartRowIndex+",StartCellIndex="+this.selectStartCellIndex+",PreviousRowIndex="+this.selectPreviousRowIndex+",PreviousCellIndex="+this.selectPreviousCellIndex+",rowIndex="+row.rowIndex+",cellIndex="+theCell.cellIndex+" on mouseover triggered.");
+				this.selectCurrentRowIndex=row.rowIndex;	
+				this.selectCurrentCellIndex=theCell.cellIndex;
 			}
 		}
 		_mouseOutEventHandler(theCell)		
@@ -320,7 +334,9 @@
 			if (this.inSelectMode)
 			{	
 				var row=theCell.parentElement;
-				console.log("rowIndex="+row.rowIndex+",cellIndex="+theCell.cellIndex+" on mouseout triggered.");
+				this.selectPreviousRowIndex=row.rowIndex;
+				this.selectPreviousCellIndex=theCell.cellIndex;
+				console.log("StartRowIndex="+this.selectStartRowIndex+",StartCellIndex="+this.selectStartCellIndex+",PreviousRowIndex="+this.selectPreviousRowIndex+",PreviousCellIndex="+this.selectPreviousCellIndex+",rowIndex="+row.rowIndex+",cellIndex="+theCell.cellIndex+" on mouseover triggered.");
 			}
 		}
 		_mouseUpEventHandler(theCell)
