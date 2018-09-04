@@ -1,3 +1,4 @@
+const UP=1,DOWN=2,RIGHT=3,LEFT=4,SAME_LEVEL=0;
 class ShiftCellEventHandler
 {
 	constructor(table)
@@ -79,23 +80,143 @@ class ShiftCellEventHandler
 	_mouseEnterEventHandler(theCell,rowIndex,cellIndex)
 	{
 		var positionString=rowIndex+"_"+cellIndex;
+		var startCellHorizontalDirection,startCellVerticalDirection;
+		var horizontalActionDirection,verticalActionDirection; //Expand or contract direction
 		if (this.inSelectMode)
 		{
 			console.log("mouse enter event triggered.positionString="+positionString);
 			console.log(positionString in this.selectedCell);
+			var action={}
+			if (rowIndex<this.selectPreviousRowIndex)
+				action["verticalActionDirection"]=UP;
+			else
+				if (rowIndex>this.selectPreviousRowIndex)
+					action["verticalActionDirection"]=DOWN;
+				else
+					action["verticalActionDirection"]=SAME_LEVEL;
+			if (cellIndex<this.selectPreviousCellIndex)
+				action["horizontalActionDirection"]=LEFT;
+			else
+				if (cellIndex>this.selectPreviousCellIndex)
+					action["horizontalActionDirection"]=RIGHT;
+				else
+					action["horizontalActionDirection"]=SAME_LEVEL;
+			if (this.selectStartRowIndex<rowIndex)
+				action["startCellVerticalDirection"]=UP;
+			else
+				if (this.selectStartRowIndex>rowIndex)
+					action["startCellVerticalDirection"]=DOWN;
+				else
+					action["startCellVerticalDirection"]=SAME_LEVEL;
+				
+			if (this.selectStartCellIndex<cellIndex)
+				action["startCellHorizontalDirection"]=LEFT;
+			else
+				if (this.selectStartCellInde>cellIndex)
+					action["startCellHorizontalDirection"]=RIGHT;
+				else
+					action["startCellHorizontalDirection"]=SAME_LEVEL;
 			if (positionString in this.selectedCell)
 			{
-				this._contractSelect(theCell,rowIndex,cellIndex);
+			//	this._contractSelect(theCell,rowIndex,cellIndex);
 			}	
 			else
 			{
-				this._normalExpand(theCell,rowIndex,cellIndex);
+				this._expandSelect(action,theCell,rowIndex,cellIndex);
+				/*	this._normalExpand(theCell,rowIndex,cellIndex);*/
 				this.selectedCell[positionString]=theCell;
 			}
 
 		}
 	}
-	_contractSelect(theCell,rowIndex,cellIndex)
+	_expandSelect(action,theCell,rowIndex,cellIndex)
+	{
+		var previousPositionString=this.selectPreviousRowIndex+"_"+this.selectPreviousCellIndex;
+		var previousClickedCell= this.selectedCell[previousPositionString];
+		//console.log(action,theCell,rowIndex,cellIndex);
+		switch(action["verticalActionDirection"])
+		{
+			case UP: $(theCell).addClass("selectCellBorderTop");
+					 $(previousClickedCell).removeClass("selectCellBorderTop");
+					 if ((action["startCellHorizontalDirection"]!=SAME_LEVEL)&& (action["startCellVerticalDirection"]!=SAME_LEVEL))
+					 {
+						 for (var tempPositionString in this.selectedCell)
+						 {
+								previousClickedCell= this.selectedCell[tempPositionString];
+								$(previousClickedCell).removeClass("selectCellBorderTop");
+						 }
+					 }
+					 break;
+			case DOWN:
+						$(theCell).addClass("selectCellBorderBottom");
+						$(previousClickedCell).removeClass("selectCellBorderBottom");
+						if ((action["startCellHorizontalDirection"]!=SAME_LEVEL)&& (action["startCellVerticalDirection"]!=SAME_LEVEL))
+						{
+							for (var tempPositionString in this.selectedCell)
+							{
+								previousClickedCell= this.selectedCell[tempPositionString];
+								$(previousClickedCell).removeClass("selectCellBorderBottom");
+							}
+						}
+						break;
+			case SAME_LEVEL:
+							if ((action["startCellHorizontalDirection"]!=SAME_LEVEL)&& (action["startCellVerticalDirection"]!=SAME_LEVEL))
+							{
+								if (action["startCellVerticalDirection"]==UP)
+									$(theCell).addClass("selectCellBorderBottom");
+								else
+									$(theCell).addClass("selectCellBorderTop");
+							}
+							else
+							{
+								$(theCell).addClass("selectCellBorderBottom");
+								$(theCell).addClass("selectCellBorderTop");
+							}
+							break;
+		}
+		switch (action["horizontalActionDirection"])
+		{
+			case LEFT:	$(theCell).addClass("selectCellBorderLeft");
+						$(previousClickedCell).removeClass("selectCellBorderLeft");
+						if ((action["startCellHorizontalDirection"]!=SAME_LEVEL)&& (action["startCellVerticalDirection"]!=SAME_LEVEL))
+						{
+							for (var tempPositionString in this.selectedCell)
+							{
+								previousClickedCell= this.selectedCell[tempPositionString];
+								$(previousClickedCell).removeClass("selectCellBorderLeft");
+							}
+						} 
+						break;
+			case RIGHT:
+						$(theCell).addClass("selectCellBorderRight");
+						$(previousClickedCell).removeClass("selectCellBorderRight");
+						if ((action["startCellHorizontalDirection"]!=SAME_LEVEL)&& (action["startCellVerticalDirection"]!=SAME_LEVEL))
+						{
+							for (var tempPositionString in this.selectedCell)
+							{
+								previousClickedCell= this.selectedCell[tempPositionString];
+								$(previousClickedCell).removeClass("selectCellBorderRight");
+							}
+						}
+						break;
+						
+			case SAME_LEVEL:
+				if ((action["startCellHorizontalDirection"]!=SAME_LEVEL)&& (action["startCellVerticalDirection"]!=SAME_LEVEL))
+				{
+					if (action["startCellHorizontalDirection"]==LEFT)
+						$(theCell).addClass("selectCellBorderRight");
+					else
+						$(theCell).addClass("selectCellBorderLeft");
+				}
+				else
+				{
+					$(theCell).addClass("selectCellBorderRight");
+					$(theCell).addClass("selectCellBorderLeft");
+				}
+				break;			
+		}
+	}
+/*	_contractSelect(theCell,rowIndex,cellIndex)
 	{
 		var previousPositionString=this.selectPreviousRowIndex+"_"+this.selectPreviousCellIndex;
 		var previousClickedCell= this.selectedCell[previousPositionString];
@@ -237,7 +358,7 @@ class ShiftCellEventHandler
 			}	
 		}
 		
-	}
+	}*/
 	_mouseUpEventHandler(theCell)
 	{
 		this.inSelectMode=false;
