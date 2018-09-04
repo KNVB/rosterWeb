@@ -89,8 +89,8 @@ class ShiftCellEventHandler
 			}	
 			else
 			{
+				this._normalExpand(theCell,rowIndex,cellIndex);
 				this.selectedCell[positionString]=theCell;
-				this._expandSelect(theCell,rowIndex,cellIndex);
 			}
 
 		}
@@ -142,8 +142,9 @@ class ShiftCellEventHandler
 		$(previousClickedCell).removeClass("selectCellBorderBottom");
 		$(previousClickedCell).removeClass("selectCellBorderLeft");
 		delete this.selectedCell[previousPositionString];
-	}
-	_expandSelect(theCell,rowIndex,cellIndex)
+	}	
+	
+	_normalExpand(theCell,rowIndex,cellIndex)
 	{
 		var previousPositionString=this.selectPreviousRowIndex+"_"+this.selectPreviousCellIndex;
 		var previousClickedCell= this.selectedCell[previousPositionString];
@@ -151,6 +152,14 @@ class ShiftCellEventHandler
 		{
 			$(theCell).addClass("selectCellBorderTop");
 			$(previousClickedCell).removeClass("selectCellBorderTop");
+			if((this.selectStartRowIndex!=rowIndex) && (this.selectStartCellIndex!=cellIndex))
+			{
+				for (var tempPositionString in this.selectedCell)
+				{
+					previousClickedCell= this.selectedCell[tempPositionString];
+					$(previousClickedCell).removeClass("selectCellBorderTop");
+				}
+			}	
 		}
 		else
 		{
@@ -158,17 +167,43 @@ class ShiftCellEventHandler
 			{
 				$(theCell).addClass("selectCellBorderBottom");
 				$(previousClickedCell).removeClass("selectCellBorderBottom");
+				if((this.selectStartRowIndex!=rowIndex) && (this.selectStartCellIndex!=cellIndex))
+				{
+					for (var tempPositionString in this.selectedCell)
+					{
+						previousClickedCell= this.selectedCell[tempPositionString];
+						$(previousClickedCell).removeClass("selectCellBorderBottom");
+					}
+				}
 			}
 			else
 			{
-				$(theCell).addClass("selectCellBorderTop");
-				$(theCell).addClass("selectCellBorderBottom");
+				if((this.selectStartRowIndex!=rowIndex) && (this.selectStartCellIndex!=cellIndex))
+				{
+					if (this.selectStartRowIndex<rowIndex)
+						$(theCell).addClass("selectCellBorderBottom");
+					else
+						$(theCell).addClass("selectCellBorderTop");
+				}
+				else
+				{
+					$(theCell).addClass("selectCellBorderBottom");
+					$(theCell).addClass("selectCellBorderTop");
+				}
 			}	
 		}
 		if (cellIndex<this.selectPreviousCellIndex)
 		{
 			$(theCell).addClass("selectCellBorderLeft");
 			$(previousClickedCell).removeClass("selectCellBorderLeft");
+			if((this.selectStartRowIndex!=rowIndex) && (this.selectStartCellIndex!=cellIndex))
+			{
+				for (var tempPositionString in this.selectedCell)
+				{
+					previousClickedCell= this.selectedCell[tempPositionString];
+					$(previousClickedCell).removeClass("selectCellBorderLeft");
+				}
+			}
 		}
 		else
 		{
@@ -176,13 +211,32 @@ class ShiftCellEventHandler
 			{
 				$(theCell).addClass("selectCellBorderRight");
 				$(previousClickedCell).removeClass("selectCellBorderRight");
+				if((this.selectStartRowIndex!=rowIndex) && (this.selectStartCellIndex!=cellIndex))
+				{
+					for (var tempPositionString in this.selectedCell)
+					{
+						previousClickedCell= this.selectedCell[tempPositionString];
+						$(previousClickedCell).removeClass("selectCellBorderRight");
+					}
+				}
 			}
 			else
 			{
-				$(theCell).addClass("selectCellBorderLeft");
-				$(theCell).addClass("selectCellBorderRight");
+				if((this.selectStartRowIndex!=rowIndex) && (this.selectStartCellIndex!=cellIndex))
+				{
+					if (this.selectStartCellIndex<cellIndex)
+						$(theCell).addClass("selectCellBorderRight");
+					else
+						$(theCell).addClass("selectCellBorderLeft");
+				}
+				else
+				{
+					$(theCell).addClass("selectCellBorderRight");
+					$(theCell).addClass("selectCellBorderLeft");
+				}
 			}	
 		}
+		
 	}
 	_mouseUpEventHandler(theCell)
 	{
