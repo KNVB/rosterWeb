@@ -9,44 +9,45 @@ class ShiftCellEventHandler
 		this.selectStartRowIndex=-1;	
 		this.selectStartCellIndex=-1;
 	}
-	handleEvent(cell,event)
+	handleEvent(object,event)
 	{
+		var row;
 		event.stopPropagation();
-		
-		var row=cell.parentElement;
+		if (object.tagName=="TD")
+			row=object.parentElement;
 		
 		//console.log(event);
 		switch(event.type)
 		{
-			case "click"		:this._clickEventHandler(cell);
+			case "click"		:this._clickEventHandler(object);
 								 break;
 								 
-			case "keydown"		:this._keyDownHandlder(cell,event);
+			case "keydown"		:this._keyDownHandlder(event);
 								 break;
 								 
-			case "keyup"		:this._keyUpHandler(cell,event);
+			case "keyup"		:this._keyUpHandler(object,event);
 								 break;
 								 
 			case "mousedown"	:event.preventDefault();
-								 this._mouseDownEventHandler(cell,row.rowIndex,cell.cellIndex);
+								 this._mouseDownEventHandler(object,row.rowIndex,object.cellIndex);
 								 break;
 								 
 			case "mouseout"		:event.preventDefault();
-								 this._mouseOutEventHandler(cell,row.rowIndex,cell.cellIndex);
+								 this._mouseOutEventHandler(object,row.rowIndex,object.cellIndex);
 			  					 break;
 			  					 
 		    case "mouseenter"	:event.preventDefault();
-		                         this._mouseEnterEventHandler(cell,row.rowIndex,cell.cellIndex);
+		                         this._mouseEnterEventHandler(object,row.rowIndex,object.cellIndex);
 								 break;
 								 
 			case "mouseup"		:event.preventDefault();
-								 this._mouseUpEventHandler(cell);
+								 this._mouseUpEventHandler(object);
 								 break;
 		}
 	}
 //===========================================================================
 //		Private Method
-	_keyDownHandlder(object,event)
+	_keyDownHandlder(event)
 	{
 		/*		
 		left = 37
@@ -55,103 +56,172 @@ class ShiftCellEventHandler
 		down = 40
 		enter =13
 		*/
-		var tempCell,cell;
-		if ($(event.target).hasClass("shiftCell"))
+		var object=event.target,cell,tempCell;
+		switch(object.tagName)
 		{
-			var rowIndex,cellIndex;
-			cell=event.target;
-			rowIndex=cell.parentElement.rowIndex;
-			cellIndex=cell.cellIndex;
-		
-			console.log(rowIndex,cellIndex);
-			if ((!event.shiftKey) &&(!event.ctrlKey))
-			{	
-				switch (event.which)
-				{
-					case 13://When Enter key is pressed
-					case 40://handle down arrow key
-							event.preventDefault();
-							tempCell=this._getCell(rowIndex+1,cellIndex);
-							if ($(tempCell).hasClass("shiftCell"))
-							{
-								cell.contentEditable=false;
-								$(tempCell).mousedown();
-								$(tempCell).mouseup();
-								tempCell.click();
-							}
-							else
-							{
-								cell.contentEditable=true;
-								cell.focus();
-							}
-							break;
-							
-					case 37://handle left arrow key
-							event.preventDefault();
-							tempCell=$(cell).prev()[0];
-							if ($(tempCell).hasClass("shiftCell"))
-							{
-								cell.contentEditable=false;
-								$(tempCell).mousedown();
-								$(tempCell).mouseup();
-								tempCell.click();
-							}
-							else
-							{
-								cell.contentEditable=true;
-								cell.focus();
-							}
-							break;
+			case "BODY":switch(event.which)
+						{
+							case 46:
+									this._deleteSelectedData();
+									break;
+							case 37://handle left arrow key
+									event.preventDefault();
+									if (this.inSelectMode)
+									{
+										cell=this._getCell(this.selectPreviousRowIndex,this.selectPreviousCellIndex);
+										tempCell=$(cell).prev()[0];
+										if ($(tempCell).hasClass("shiftCell"))
+										{
+											if (event.shiftKey)
+											{
+												this.inSelectMode=true;
+												$(cell).mouseout();
+												$(tempCell).mouseenter();
+											}
+											else	
+											{
+												cell.contentEditable=false;
+												$(tempCell).mousedown();
+												$(tempCell).mouseup();											
+											}
+										}
+									}
+									break;		
+						}	
+			case "TD":	var rowIndex,cellIndex;
+						cell=event.target;
+						console.log(object);
+						rowIndex=cell.parentElement.rowIndex;
+						cellIndex=cell.cellIndex;
 					
-					case 38://handle up arrow key
-							event.preventDefault();
-							tempCell=this._getCell(rowIndex-1,cellIndex);
-							if ($(tempCell).hasClass("shiftCell"))
-							{
-								cell.contentEditable=false;
-								$(tempCell).mousedown();
-								$(tempCell).mouseup();
-								tempCell.click();
-							}
-							else
-							{
-								cell.contentEditable=true;
-								cell.focus();
-							}						
-							break;
-					case 39://handle right arrow key
-							event.preventDefault();
-							tempCell=$(cell).next()[0];
-							if ($(tempCell).hasClass("shiftCell"))
-							{
-								cell.contentEditable=false;
-								$(tempCell).mousedown();
-								$(tempCell).mouseup();
-								tempCell.click();
-							}
-							else
-							{
-								cell.contentEditable=true;
-								cell.focus();
-							}
-							break
-				}
-			}
-			else
-			{
-				if (event.shiftKey)
-				{
-					console.log(event.which);
-				}	
-			}	
-		}	
-		else
-		{
-			if (event.which==46) //Delete key is pressed
-			{
-				this._deleteSelectedData();
-			}	 
-		}	
+						console.log(rowIndex,cellIndex);
+						switch (event.which)
+						{
+							case 13://When Enter key is pressed
+									event.preventDefault();
+									tempCell=this._getCell(rowIndex+1,cellIndex);
+									if ($(tempCell).hasClass("shiftCell"))
+									{
+										cell.contentEditable=false;
+										$(tempCell).mousedown();
+										$(tempCell).mouseup();
+										tempCell.click();
+									}
+									else
+									{
+										cell.contentEditable=true;
+										cell.focus();
+									}
+									break;
+							case 37://handle left arrow key
+									event.preventDefault();
+									tempCell=$(cell).prev()[0];
+									if ($(tempCell).hasClass("shiftCell"))
+									{
+										if (event.shiftKey)
+										{
+											this.inSelectMode=true;
+											$(cell).mouseout();
+											$(tempCell).mouseenter();
+										}
+										else	
+										{
+											cell.contentEditable=false;
+											$(tempCell).mousedown();
+											$(tempCell).mouseup();											
+										}
+									}
+									else
+									{
+										cell.contentEditable=true;
+										cell.focus();
+									}
+									break;
+							case 38://handle up arrow key
+									event.preventDefault();
+									tempCell=this._getCell(rowIndex-1,cellIndex);
+									if ($(tempCell).hasClass("shiftCell"))
+									{
+										if (event.shiftKey)
+										{
+											this.inSelectMode=true;
+											$(cell).mouseout();
+											$(tempCell).mouseenter();
+											tempCell.click();
+										}
+										else	
+										{
+											cell.contentEditable=false;
+											$(tempCell).mousedown();
+											$(tempCell).mouseup();
+											tempCell.click();
+										}
+									}
+									else
+									{
+										cell.contentEditable=true;
+										cell.focus();
+									}						
+									break;
+							case 39://handle right arrow key
+									event.preventDefault();
+									tempCell=$(cell).next()[0];
+									if ($(tempCell).hasClass("shiftCell"))
+									{
+										if (event.shiftKey)
+										{
+											this.inSelectMode=true;
+											$(cell).mouseout();
+											$(tempCell).mouseenter();
+											tempCell.click();
+										}
+										else	
+										{
+											cell.contentEditable=false;
+											$(tempCell).mousedown();
+											$(tempCell).mouseup();
+											tempCell.click();
+										}
+									}
+									else
+									{
+										cell.contentEditable=true;
+										cell.focus();
+									}
+									break
+										
+							case 40://handle down arrow key
+									event.preventDefault();
+									tempCell=this._getCell(rowIndex+1,cellIndex);
+									if ($(tempCell).hasClass("shiftCell"))
+									{
+										cell.contentEditable=false;
+										if (event.shiftKey)
+										{
+											this.inSelectMode=true;
+											$(cell).mouseout();
+											$(tempCell).mouseenter();
+											tempCell.click();
+										}
+										else	
+										{
+											$(tempCell).mousedown();
+											$(tempCell).mouseup();
+											tempCell.click();
+										}
+									}
+									else
+									{
+										cell.contentEditable=true;
+										cell.focus();
+									}
+									break;
+						}
+						
+						break;
+			 
+		}
+		//console.log(event.target.tagName,event.which,event.shiftKey,event.ctrlKey);
 	}
 	_keyUpHandler(cell,event)
 	{
@@ -233,7 +303,7 @@ class ShiftCellEventHandler
 					minY=this.selectStartRowIndex;
 				}	
 			}
-			console.log("minX="+minX+",minY="+minY+",maxX="+maxX+",maxY="+maxY+",startRowIndex="+this.selectStartRowIndex+",startCellIndex="+this.selectStartCellIndex);
+			console.log("mouse enter event triggered minX="+minX+",minY="+minY+",maxX="+maxX+",maxY="+maxY+",startRowIndex="+this.selectStartRowIndex+",startCellIndex="+this.selectStartCellIndex);
 			cell=this._getCell(minY,minX);
 			$(cell).addClass("selectCellBorderTop");
 			$(cell).addClass("selectCellBorderLeft");
@@ -277,6 +347,7 @@ class ShiftCellEventHandler
 	_deleteSelectedData()
 	{
 		var minX,maxX,minY,maxY,cell,i,j;
+		
 		if ((this.selectStartRowIndex>0) || (this.selectStartCellIndex>0))
 		{
 			if (this.selectPreviousRowIndex<0)
@@ -320,14 +391,17 @@ class ShiftCellEventHandler
 				}	
 			}
 			console.log("minX="+minX+",minY="+minY+",maxX="+maxX+",maxY="+maxY+",startRowIndex="+this.selectStartRowIndex+",startCellIndex="+this.selectStartCellIndex);
-			for (i=minY;i<=maxY;i++)
-			{
-				for (j=minX;j<=maxX;j++)
+			if ((minX!=maxX)||(minY!=maxY))
+			{	
+				for (i=minY;i<=maxY;i++)
 				{
-					cell=this._getCell(i,j);
-					cell.innerHTML="";
-				}	
-			}	
+					for (j=minX;j<=maxX;j++)
+					{
+						cell=this._getCell(i,j);
+						cell.innerHTML="";
+					}	
+				}
+			}
 		}	
 	}
 	_clearPreviousBorder()
