@@ -62,8 +62,7 @@ class ShiftCellEventHandler
 		{
 			var positionString=rowIndex+"_"+cellIndex;
 			//console.log("mouse enter event triggered.positionString="+positionString);
-			this.selectPreviousRowIndex=rowIndex;	
-			this.selectPreviousCellIndex=cellIndex;
+			
 			this._clearPreviousBorder();
 			if (this.selectStartCellIndex>cellIndex)
 			{
@@ -134,7 +133,8 @@ class ShiftCellEventHandler
 				cell=this._getCell(maxY,i);
 				$(cell).addClass("selectCellBorderBottom");
 			}	
-			
+			this.selectPreviousRowIndex=rowIndex;	
+			this.selectPreviousCellIndex=cellIndex;
 		}	
 	}	
 	_mouseUpEventHandler(theCell)
