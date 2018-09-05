@@ -285,7 +285,7 @@
 			event.stopPropagation();
 			event.preventDefault();
 			//var row=cell.parentElement;
-			console.log(this,cell,event.type);
+			//console.log(this,cell,event.type);
 			
 			switch(event.type)
 			{
@@ -299,10 +299,16 @@
 									 break;				
 				case "mouseup"		:this._mouseUpEventHandler(cell);
 									 break;
+				case "keydown"		:this._keyDownHandlder(event,cell);
+									 break;
 			}
 		}
 //===========================================================================
 //		Private Method
+		_keyDownHandlder(event,theCell,rowIndex,cellIndex)
+		{
+			console.log(event.shiftKey,event.ctrlKey,event.which);
+		}
 		_clickEventHandler(theCell)
 		{
 			console.log("on click event triggered.");
@@ -354,6 +360,7 @@
 	}
 	$( document ).ready(function(){
 		var cellEventHandler=new CellEventHandler();
+		
 		$("td.shiftCell").click(function(){
 			cellEventHandler.handleEvent(this,event);
 		});
@@ -367,6 +374,9 @@
 			cellEventHandler.handleEvent(this,event);
 		});
 		$("td.shiftCell").mouseup(function(){
+			cellEventHandler.handleEvent(this,event);
+		});
+		$("body").keydown(function(event){
 			cellEventHandler.handleEvent(this,event);
 		});
 	});

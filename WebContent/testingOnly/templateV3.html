@@ -9,25 +9,26 @@
 	<script>
 	$( document ).ready(function(){
 		var shiftCellEventHandler=new ShiftCellEventHandler(document.getElementById("rosterTable"));
-		$("td.shiftCell").click(function(event){
+		$("td.shiftCell").click(function(){
 			shiftCellEventHandler.handleEvent(this,event);
-			//console.log("on click event triggered.");
 		});
 		$("td.shiftCell").mousedown(function(event){
 			shiftCellEventHandler.handleEvent(this,event);
-			
 		});
 		$("td.shiftCell").mouseenter(function(event){
 			shiftCellEventHandler.handleEvent(this,event);
-		//	console.log("mouseenter event triggered.");
 		});
 		$("td.shiftCell").mouseout(function(event){
 			shiftCellEventHandler.handleEvent(this,event);
-			//console.log("mouseout event triggered.");
 		});
 		$("td.shiftCell").mouseup(function(event){
 			shiftCellEventHandler.handleEvent(this,event);
-			//console.log("mouseup event triggered.");
+		});
+		$("body").keydown(function(event){
+			shiftCellEventHandler.handleEvent(this,event);
+		});
+		$("td.shiftCell").keyup(function(event){
+			shiftCellEventHandler.handleEvent(this,event);
 		});
 	});
 	</script>
@@ -453,7 +454,7 @@
 				<td class="borderCell alignCenter dataCell bShiftColor shiftCell">b1</td>
 				<td class="borderCell alignCenter dataCell bShiftColor shiftCell">b1</td>
 				<td class="borderCell alignCenter dataCell dxShiftColor shiftCell">d</td>
-				<td class="borderCell alignCenter" rowspan=2>207</td>
+				<td class="borderCell alignCenter " rowspan=2>207</td>
 				<td class="borderCell alignCenter"  rowspan=2>194.5</td>
 				<td class="borderCell alignCenter" id="ITO3_2017-10-18_lastMonthBalance" rowspan=2>13.25</td>
 				<td class="borderCell alignCenter" id="ITO3_2017-10-18_thisMonthHourTotal" rowspan=2>-12.5</td>
