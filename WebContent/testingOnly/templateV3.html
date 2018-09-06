@@ -8,28 +8,7 @@
 	<script src="ShiftCellEventHandler.js"></script>
 	<script>
 	$( document ).ready(function(){
-		var shiftCellEventHandler=new ShiftCellEventHandler(document.getElementById("rosterTable"));
-		$("td.shiftCell").dblclick(function(){
-			shiftCellEventHandler.handleEvent(this,event);
-		});
-		$("td.shiftCell").mousedown(function(event){
-			shiftCellEventHandler.handleEvent(this,event);
-		});
-		$("td.shiftCell").mouseenter(function(event){
-			shiftCellEventHandler.handleEvent(this,event);
-		});
-		$("td.shiftCell").mouseout(function(event){
-			shiftCellEventHandler.handleEvent(this,event);
-		});
-		$("td.shiftCell").mouseup(function(event){
-			shiftCellEventHandler.handleEvent(this,event);
-		});
-		$("body").keydown(function(event){
-			shiftCellEventHandler.handleEvent(this,event);
-		});
-		$("body").keyup(function(event){
-			shiftCellEventHandler.handleEvent(this,event);
-		});
+		var shiftCellEventHandler=new ShiftCellEventHandler(document.getElementById("rosterTable"),"shiftCell");
 	});
 	</script>
 </head>
