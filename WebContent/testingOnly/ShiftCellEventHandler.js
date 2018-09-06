@@ -15,228 +15,42 @@ class ShiftCellEventHandler
 		event.stopPropagation();
 		if (object.tagName=="TD")
 			row=object.parentElement;
-		
-		//console.log(event);
 		switch(event.type)
 		{
-			case "click"		:this._clickEventHandler(object);
-								 break;
-								 
-			case "keydown"		:this._keyDownHandlder(event);
-								 break;
-								 
-			case "keyup"		:this._keyUpHandler(object,event);
-								 break;
-								 
 			case "mousedown"	:event.preventDefault();
 								 this._mouseDownEventHandler(object,row.rowIndex,object.cellIndex);
 								 break;
-								 
+			case "mouseenter"	:event.preventDefault();
+            					this._mouseEnterEventHandler(object,row.rowIndex,object.cellIndex);
+            					break;
 			case "mouseout"		:event.preventDefault();
-								 this._mouseOutEventHandler(object,row.rowIndex,object.cellIndex);
-			  					 break;
-			  					 
-		    case "mouseenter"	:event.preventDefault();
-		                         this._mouseEnterEventHandler(object,row.rowIndex,object.cellIndex);
-								 break;
-								 
+		 						this._mouseOutEventHandler(object,row.rowIndex,object.cellIndex);
+		 						break;
 			case "mouseup"		:event.preventDefault();
 								 this._mouseUpEventHandler(object);
 								 break;
-		}
+			case "dblclick"		:event.preventDefault();
+								 this._dblClickEventHandler(object);
+								 break;
+			default				:console.log(event.type);
+								 break;
+		}						 
 	}
-//===========================================================================
-//		Private Method
-	_keyDownHandlder(event)
+	_dblClickEventHandler(theCell)
 	{
-		/*		
-		left = 37
-		up = 38
-		right = 39
-		down = 40
-		enter =13
-		*/
-		var object=event.target,cell,tempCell;
-		switch(object.tagName)
-		{
-			case "BODY":switch(event.which)
-						{
-							case 46:
-									this._deleteSelectedData();
-									break;
-							case 37://handle left arrow key
-									event.preventDefault();
-									if (this.inSelectMode)
-									{
-										cell=this._getCell(this.selectPreviousRowIndex,this.selectPreviousCellIndex);
-										tempCell=$(cell).prev()[0];
-										if ($(tempCell).hasClass("shiftCell"))
-										{
-											if (event.shiftKey)
-											{
-												this.inSelectMode=true;
-												$(cell).mouseout();
-												$(tempCell).mouseenter();
-											}
-											else	
-											{
-												cell.contentEditable=false;
-												$(tempCell).mousedown();
-												$(tempCell).mouseup();											
-											}
-										}
-									}
-									break;		
-						}	
-			case "TD":	var rowIndex,cellIndex;
-						cell=event.target;
-						console.log(object);
-						rowIndex=cell.parentElement.rowIndex;
-						cellIndex=cell.cellIndex;
-					
-						console.log(rowIndex,cellIndex);
-						switch (event.which)
-						{
-							case 13://When Enter key is pressed
-									event.preventDefault();
-									tempCell=this._getCell(rowIndex+1,cellIndex);
-									if ($(tempCell).hasClass("shiftCell"))
-									{
-										cell.contentEditable=false;
-										$(tempCell).mousedown();
-										$(tempCell).mouseup();
-										tempCell.click();
-									}
-									else
-									{
-										cell.contentEditable=true;
-										cell.focus();
-									}
-									break;
-							case 37://handle left arrow key
-									event.preventDefault();
-									tempCell=$(cell).prev()[0];
-									if ($(tempCell).hasClass("shiftCell"))
-									{
-										if (event.shiftKey)
-										{
-											this.inSelectMode=true;
-											$(cell).mouseout();
-											$(tempCell).mouseenter();
-										}
-										else	
-										{
-											cell.contentEditable=false;
-											$(tempCell).mousedown();
-											$(tempCell).mouseup();											
-										}
-									}
-									else
-									{
-										cell.contentEditable=true;
-										cell.focus();
-									}
-									break;
-							case 38://handle up arrow key
-									event.preventDefault();
-									tempCell=this._getCell(rowIndex-1,cellIndex);
-									if ($(tempCell).hasClass("shiftCell"))
-									{
-										if (event.shiftKey)
-										{
-											this.inSelectMode=true;
-											$(cell).mouseout();
-											$(tempCell).mouseenter();
-											tempCell.click();
-										}
-										else	
-										{
-											cell.contentEditable=false;
-											$(tempCell).mousedown();
-											$(tempCell).mouseup();
-											tempCell.click();
-										}
-									}
-									else
-									{
-										cell.contentEditable=true;
-										cell.focus();
-									}						
-									break;
-							case 39://handle right arrow key
-									event.preventDefault();
-									tempCell=$(cell).next()[0];
-									if ($(tempCell).hasClass("shiftCell"))
-									{
-										if (event.shiftKey)
-										{
-											this.inSelectMode=true;
-											$(cell).mouseout();
-											$(tempCell).mouseenter();
-											tempCell.click();
-										}
-										else	
-										{
-											cell.contentEditable=false;
-											$(tempCell).mousedown();
-											$(tempCell).mouseup();
-											tempCell.click();
-										}
-									}
-									else
-									{
-										cell.contentEditable=true;
-										cell.focus();
-									}
-									break
-										
-							case 40://handle down arrow key
-									event.preventDefault();
-									tempCell=this._getCell(rowIndex+1,cellIndex);
-									if ($(tempCell).hasClass("shiftCell"))
-									{
-										cell.contentEditable=false;
-										if (event.shiftKey)
-										{
-											this.inSelectMode=true;
-											$(cell).mouseout();
-											$(tempCell).mouseenter();
-											tempCell.click();
-										}
-										else	
-										{
-											$(tempCell).mousedown();
-											$(tempCell).mouseup();
-											tempCell.click();
-										}
-									}
-									else
-									{
-										cell.contentEditable=true;
-										cell.focus();
-									}
-									break;
-						}
-						
-						break;
-			 
-		}
-		//console.log(event.target.tagName,event.which,event.shiftKey,event.ctrlKey);
-	}
-	_keyUpHandler(cell,event)
-	{
-		console.log(event.key,"key up")
-		this.inSelectMode=false;
-	}
-	_clickEventHandler(theCell)
-	{
-		console.log("on click event triggered.");
+		console.log("on dblClick event triggered.");
 		theCell.contentEditable=true;
 		theCell.focus();
 	}
 	_mouseDownEventHandler(theCell,rowIndex,cellIndex)
 	{
+		var previousCell;
 		this._clearPreviousBorder(rowIndex,cellIndex);
+		if (this.selectPreviousRowIndex>0)
+		{
+			previousCell=this._getCell(this.selectPreviousRowIndex,this.selectPreviousCellIndex);
+			previousCell.blur();
+		}
 		$(theCell).addClass("selectCellBorderRight");
 		$(theCell).addClass("selectCellBorderTop");
 		$(theCell).addClass("selectCellBorderBottom");
@@ -245,7 +59,51 @@ class ShiftCellEventHandler
 		console.log("selectStartRowIndex="+this.selectStartRowIndex+",selectStartCellIndex="+this.selectStartCellIndex);
 		this.selectStartRowIndex=rowIndex;	
 		this.selectStartCellIndex=cellIndex;
+		
 		this.inSelectMode=true;
+	}
+	_mouseEnterEventHandler(theCell,rowIndex,cellIndex)
+	{
+		var borderCoordindate,cell,i;
+		if (this.inSelectMode)
+		{
+			this._clearPreviousBorder();
+			borderCoordindate=this._getBorderCoordinate(rowIndex,cellIndex);
+			cell=this._getCell(borderCoordindate.minY,borderCoordindate.minX);
+			$(cell).addClass("selectCellBorderTop");
+			$(cell).addClass("selectCellBorderLeft");
+			
+			cell=this._getCell(borderCoordindate.minY,borderCoordindate.maxX);
+			$(cell).addClass("selectCellBorderTop");
+			$(cell).addClass("selectCellBorderRight");
+			
+			cell=this._getCell(borderCoordindate.maxY,borderCoordindate.minX);
+			$(cell).addClass("selectCellBorderBottom");
+			$(cell).addClass("selectCellBorderLeft");
+
+			cell=this._getCell(borderCoordindate.maxY,borderCoordindate.maxX);
+			$(cell).addClass("selectCellBorderBottom");
+			$(cell).addClass("selectCellBorderRight");
+			
+			for (i=borderCoordindate.minY+1;i<borderCoordindate.maxY;i++)
+			{
+				cell=this._getCell(i,borderCoordindate.minX);
+				$(cell).addClass("selectCellBorderLeft");
+
+				cell=this._getCell(i,borderCoordindate.maxX);
+				$(cell).addClass("selectCellBorderRight");
+			}
+			for (i=borderCoordindate.minX+1;i<borderCoordindate.maxX;i++)
+			{
+				cell=this._getCell(borderCoordindate.minY,i);
+				$(cell).addClass("selectCellBorderTop");
+				
+				cell=this._getCell(borderCoordindate.maxY,i);
+				$(cell).addClass("selectCellBorderBottom");
+			}
+			this.selectPreviousRowIndex=rowIndex;	
+			this.selectPreviousCellIndex=cellIndex;		
+		}
 	}
 	_mouseOutEventHandler(theCell,rowIndex,cellIndex)
 	{
@@ -258,155 +116,13 @@ class ShiftCellEventHandler
 			this.selectPreviousCellIndex=cellIndex;
 		}
 	}
-	_mouseEnterEventHandler(theCell,rowIndex,cellIndex)
-	{
-		var minX,maxX,minY,maxY,cell,i;
-		if (this.inSelectMode)
-		{
-			var positionString=rowIndex+"_"+cellIndex;
-			//console.log("mouse enter event triggered.positionString="+positionString);
-			
-			this._clearPreviousBorder();
-			if (this.selectStartCellIndex>cellIndex)
-			{
-				minX=cellIndex;
-				maxX=this.selectStartCellIndex;
-			}
-			else
-			{
-				if (this.selectStartCellIndex<cellIndex)
-				{
-					maxX=cellIndex;
-					minX=this.selectStartCellIndex;
-				}
-				else
-				{
-					maxX=cellIndex;
-					minX=cellIndex;
-				}	
-			}	
-			if (this.selectStartRowIndex<rowIndex)	
-			{
-				minY=this.selectStartRowIndex;
-				maxY=rowIndex;
-			}
-			else
-			{
-				if (this.selectStartRowIndex>rowIndex)	
-				{
-					minY=rowIndex;
-					maxY=this.selectStartRowIndex;
-				}
-				else
-				{
-					maxY=this.selectStartRowIndex;
-					minY=this.selectStartRowIndex;
-				}	
-			}
-			console.log("mouse enter event triggered minX="+minX+",minY="+minY+",maxX="+maxX+",maxY="+maxY+",startRowIndex="+this.selectStartRowIndex+",startCellIndex="+this.selectStartCellIndex);
-			cell=this._getCell(minY,minX);
-			$(cell).addClass("selectCellBorderTop");
-			$(cell).addClass("selectCellBorderLeft");
-			
-			cell=this._getCell(minY,maxX);
-			$(cell).addClass("selectCellBorderTop");
-			$(cell).addClass("selectCellBorderRight");
-			
-			cell=this._getCell(maxY,minX);
-			$(cell).addClass("selectCellBorderBottom");
-			$(cell).addClass("selectCellBorderLeft");
-
-			cell=this._getCell(maxY,maxX);
-			$(cell).addClass("selectCellBorderBottom");
-			$(cell).addClass("selectCellBorderRight");
-			
-			for (i=minY+1;i<maxY;i++)
-			{
-				cell=this._getCell(i,minX);
-				$(cell).addClass("selectCellBorderLeft");
-
-				cell=this._getCell(i,maxX);
-				$(cell).addClass("selectCellBorderRight");
-			}
-			for (i=minX+1;i<maxX;i++)
-			{
-				cell=this._getCell(minY,i);
-				$(cell).addClass("selectCellBorderTop");
-				
-				cell=this._getCell(maxY,i);
-				$(cell).addClass("selectCellBorderBottom");
-			}
-			this.selectPreviousRowIndex=rowIndex;	
-			this.selectPreviousCellIndex=cellIndex;		
-		}	
-	}	
 	_mouseUpEventHandler(theCell)
 	{
 		this.inSelectMode=false;
 	}
-	_deleteSelectedData()
-	{
-		var minX,maxX,minY,maxY,cell,i,j;
-		
-		if ((this.selectStartRowIndex>0) || (this.selectStartCellIndex>0))
-		{
-			if (this.selectPreviousRowIndex<0)
-				this.selectPreviousRowIndex=this.selectStartRowIndex;
-			if (this.selectPreviousCellIndex<0)
-				this.selectPreviousCellIndex=this.selectStartCellIndex;
-			if (this.selectStartCellIndex>this.selectPreviousCellIndex)
-			{
-				minX=this.selectPreviousCellIndex;
-				maxX=this.selectStartCellIndex;
-			}
-			else
-			{
-				if (this.selectStartCellIndex<this.selectPreviousCellIndex)
-				{
-					maxX=this.selectPreviousCellIndex;
-					minX=this.selectStartCellIndex;
-				}
-				else
-				{
-					maxX=this.selectStartCellIndex;
-					minX=this.selectStartCellIndex;
-				}	
-			}	
-			if (this.selectStartRowIndex<this.selectPreviousRowIndex)	
-			{
-				minY=this.selectStartRowIndex;
-				maxY=this.selectPreviousRowIndex;
-			}
-			else
-			{
-				if (this.selectStartRowIndex>this.selectPreviousRowIndex)	
-				{
-					minY=this.selectPreviousRowIndex;
-					maxY=this.selectStartRowIndex;
-				}
-				else
-				{
-					maxY=this.selectStartRowIndex;
-					minY=this.selectStartRowIndex;
-				}	
-			}
-			console.log("minX="+minX+",minY="+minY+",maxX="+maxX+",maxY="+maxY+",startRowIndex="+this.selectStartRowIndex+",startCellIndex="+this.selectStartCellIndex);
-			if ((minX!=maxX)||(minY!=maxY))
-			{	
-				for (i=minY;i<=maxY;i++)
-				{
-					for (j=minX;j<=maxX;j++)
-					{
-						cell=this._getCell(i,j);
-						cell.innerHTML="";
-					}	
-				}
-			}
-		}	
-	}
 	_clearPreviousBorder()
 	{
-		var minX,maxX,minY,maxY,cell,i,j;
+		var borderCoordindate,cell,i,j;
 		console.log("===========================================");
 		console.log("startRowIndex="+this.selectStartRowIndex+",startCellIndex="+this.selectStartCellIndex);
 		console.log("previousRowIndex="+this.selectPreviousRowIndex+",previousCellIndex="+this.selectPreviousCellIndex);
@@ -416,46 +132,11 @@ class ShiftCellEventHandler
 				this.selectPreviousRowIndex=this.selectStartRowIndex;
 			if (this.selectPreviousCellIndex<0)
 				this.selectPreviousCellIndex=this.selectStartCellIndex;
-			if (this.selectStartCellIndex>this.selectPreviousCellIndex)
+			borderCoordindate=this._getBorderCoordinate(this.selectPreviousRowIndex,this.selectPreviousCellIndex)
+			console.log("minX="+borderCoordindate.minX+",minY="+borderCoordindate.minY+",maxX="+borderCoordindate.maxX+",maxY="+borderCoordindate.maxY+",startRowIndex="+this.selectStartRowIndex+",startCellIndex="+this.selectStartCellIndex);
+			for (i=borderCoordindate.minY;i<=borderCoordindate.maxY;i++)
 			{
-				minX=this.selectPreviousCellIndex;
-				maxX=this.selectStartCellIndex;
-			}
-			else
-			{
-				if (this.selectStartCellIndex<this.selectPreviousCellIndex)
-				{
-					maxX=this.selectPreviousCellIndex;
-					minX=this.selectStartCellIndex;
-				}
-				else
-				{
-					maxX=this.selectStartCellIndex;
-					minX=this.selectStartCellIndex;
-				}	
-			}	
-			if (this.selectStartRowIndex<this.selectPreviousRowIndex)	
-			{
-				minY=this.selectStartRowIndex;
-				maxY=this.selectPreviousRowIndex;
-			}
-			else
-			{
-				if (this.selectStartRowIndex>this.selectPreviousRowIndex)	
-				{
-					minY=this.selectPreviousRowIndex;
-					maxY=this.selectStartRowIndex;
-				}
-				else
-				{
-					maxY=this.selectStartRowIndex;
-					minY=this.selectStartRowIndex;
-				}	
-			}
-			console.log("minX="+minX+",minY="+minY+",maxX="+maxX+",maxY="+maxY+",startRowIndex="+this.selectStartRowIndex+",startCellIndex="+this.selectStartCellIndex);
-			for (i=minY;i<=maxY;i++)
-			{
-				for (j=minX;j<=maxX;j++)
+				for (j=borderCoordindate.minX;j<=borderCoordindate.maxX;j++)
 				{
 					cell=this._getCell(i,j);
 					$(cell).removeClass("selectCellBorderRight");   
@@ -467,10 +148,51 @@ class ShiftCellEventHandler
 		}
 		console.log("===========================================");
 	}
+	_getBorderCoordinate(rowIndex,cellIndex)
+	{
+		var result={};
+		if (this.selectStartCellIndex>cellIndex)
+		{
+			result["minX"]=cellIndex;
+			result["maxX"]=this.selectStartCellIndex;
+		}
+		else
+		{
+			if (this.selectStartCellIndex<cellIndex)
+			{
+				result["maxX"]=cellIndex;
+				result["minX"]=this.selectStartCellIndex;
+			}
+			else
+			{
+				result["maxX"]=cellIndex;
+				result["minX"]=cellIndex;
+			}	
+		}	
+		if (this.selectStartRowIndex<rowIndex)	
+		{
+			result["minY"]=this.selectStartRowIndex;
+			result["maxY"]=rowIndex;
+		}
+		else
+		{
+			if (this.selectStartRowIndex>rowIndex)	
+			{
+				result["minY"]=rowIndex;
+				result["maxY"]=this.selectStartRowIndex;
+			}
+			else
+			{
+				result["maxY"]=this.selectStartRowIndex;
+				result["minY"]=this.selectStartRowIndex;
+			}	
+		}
+		return result;
+	}
 	_getCell(rowIndex,cellIndex)
 	{
 		var row=this.table.rows[rowIndex];
 		var cell=row.cells[cellIndex];
 		return cell;
 	}
-}
+}	

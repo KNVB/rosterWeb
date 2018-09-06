@@ -9,7 +9,7 @@
 	<script>
 	$( document ).ready(function(){
 		var shiftCellEventHandler=new ShiftCellEventHandler(document.getElementById("rosterTable"));
-		$("td.shiftCell").click(function(){
+		$("td.shiftCell").dblclick(function(){
 			shiftCellEventHandler.handleEvent(this,event);
 		});
 		$("td.shiftCell").mousedown(function(event){
