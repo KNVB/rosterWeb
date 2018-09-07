@@ -111,6 +111,14 @@ table#rosterTable
 	font-size:15px;
 	width:60px;
 }
+.errorRedBlackGround
+{
+	background-color:red;
+	animation: blinker 1s linear infinite;
+}
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
 .aShiftColor
 {
 	background-color:#ff99cc;

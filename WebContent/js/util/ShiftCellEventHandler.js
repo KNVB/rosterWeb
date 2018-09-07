@@ -446,6 +446,7 @@ class ShiftCellEventHandler
 				{
 					cell=this._getCell(i,j);
 					cell.innerHTML="";
+					$(cell).blur();
 				}	
 			}
 		}

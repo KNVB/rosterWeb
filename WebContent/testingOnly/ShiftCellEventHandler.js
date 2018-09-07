@@ -445,7 +445,7 @@ class ShiftCellEventHandler
 				for (j=this.borderCoordindate.minX;j<=this.borderCoordindate.maxX;j++)
 				{
 					cell=this._getCell(i,j);
-					cell.innerHTML="";
+					cell.textContent="";
 				}	
 			}
 		}

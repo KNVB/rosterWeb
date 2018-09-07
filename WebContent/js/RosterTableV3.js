@@ -90,6 +90,7 @@ class RosterTable
 		this._genRosterBody();
 		this._initAutoPlanDropDown();
 		$(this.rosterFooter).show();
+		this.shiftCellEventHandler=new ShiftCellEventHandler(this.table,"shiftCell");
 	}
 	loadRoster(finalRoster)
 	{
@@ -126,13 +127,11 @@ class RosterTable
 			{
 				previousMonthShiftListStartIndex=previousMonthShiftList.length-this.showNoOfPrevDate;
 				this.allPreviousMonthShiftList[itoId]=previousMonthShiftList;
-				//console.log(previousMonthShiftListStartIndex,previousMonthShiftList.length,this.showNoOfPrevDate);
 				
 				startIndex=1;
 				cell=document.getElementById(itoId +"_lastMonthBalance");
 				cell.textContent=rosterList[itoId].lastMonthBalance;
 				
-				//console.log(previousMonthShiftListStartIndex,previousMonthShiftList.length);
 				for (var i=previousMonthShiftListStartIndex;i<previousMonthShiftList.length;i++)
 				{
 					cell=shiftRow.cells[startIndex++];
@@ -155,7 +154,517 @@ class RosterTable
 		}
 		this.haveMissingShift();
 	}
+	loadYearlyRosterStatisticData(yearlyRosterStatisticData)
+	{
+		var month;
+		var statisticTable=document.createElement("table");
+		var theCell=document.getElementById("yearlyStatistic");
+		var row=statisticTable.insertRow(statisticTable.rows.length);
+		var aShiftTotal,bxShiftTotal,cShiftTotal,dxShiftTotal,oShiftTotal,allShiftTotal;
+		var cell,aShiftTotalCell,bxShiftTotalCell,cShiftTotalCell,dxShiftTotalCell,oShiftTotalCell,allShiftTotalCell;
+		statisticTable.style.width="500px";
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="ITO";
+		cell.className="borderCell alignCenter";
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="a";
+		cell.className="borderCell alignCenter";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="bx";
+		cell.className="borderCell alignCenter";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="c";
+		cell.className="borderCell alignCenter";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="dx";
+		cell.className="borderCell alignCenter";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="O";
+		cell.className="borderCell alignCenter";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.innerHTML="total";
+		cell.className="borderCell alignCenter";
+		
+		for (var itoId in yearlyRosterStatisticData)
+		{
+			month=1;
+			var itoYearlyStatistic= yearlyRosterStatisticData[itoId];
+			row=statisticTable.insertRow(statisticTable.rows.length);
+			cell=row.insertCell(row.cells.length);
+			cell.className="borderCell alignCenter";
+			cell.innerHTML=itoYearlyStatistic.itoPostName;
+			
+			aShiftTotalCell=row.insertCell(row.cells.length);
+			aShiftTotalCell.className="borderCell alignCenter";
+			
+			bxShiftTotalCell=row.insertCell(row.cells.length);
+			bxShiftTotalCell.className="borderCell alignCenter";
+			
+			cShiftTotalCell=row.insertCell(row.cells.length);
+			cShiftTotalCell.className="borderCell alignCenter";
+			
+			dxShiftTotalCell=row.insertCell(row.cells.length);
+			dxShiftTotalCell.className="borderCell alignCenter";
+			
+			oShiftTotalCell=row.insertCell(row.cells.length);
+			oShiftTotalCell.className="borderCell alignCenter";
+			
+			allShiftTotalCell=row.insertCell(row.cells.length);
+			allShiftTotalCell.className="borderCell alignCenter";
+			
+			aShiftTotal=0;bxShiftTotal=0;cShiftTotal=0;
+			dxShiftTotal=0;oShiftTotal=0;allShiftTotal=0;
+			for (var j=0;j<itoYearlyStatistic.itoMonthlyStatisticList.length;j++)
+			{
+				row=statisticTable.insertRow(statisticTable.rows.length);
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter";
+				cell.innerHTML=month++;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].ashiftTotal;
+				aShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].ashiftTotal;
+				allShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].ashiftTotal;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].bxShiftTotal;
+				bxShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].bxShiftTotal;
+				allShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].bxShiftTotal;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].cshiftTotal;
+				cShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].cshiftTotal;
+				allShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].cshiftTotal;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].dxShiftTotal;
+				dxShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].dxShiftTotal;
+				allShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].dxShiftTotal;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].oshiftTotal;
+				oShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].oshiftTotal;
+				allShiftTotal+=itoYearlyStatistic.itoMonthlyStatisticList[j].oshiftTotal;
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter";
+				cell.innerHTML=itoYearlyStatistic.itoMonthlyStatisticList[j].monthlyTotal;
+			}
+			aShiftTotalCell.innerHTML=aShiftTotal;
+			bxShiftTotalCell.innerHTML=bxShiftTotal;
+			cShiftTotalCell.innerHTML=cShiftTotal;
+			dxShiftTotalCell.innerHTML=dxShiftTotal;
+			oShiftTotalCell.innerHTML=oShiftTotal;
+			allShiftTotalCell.innerHTML=allShiftTotal;
+		}
+		
+		$(theCell).empty();
+		$(theCell).append(statisticTable);
+		
+	}
+
+	haveBlackListedShiftPattern()
+	{
+		var self=this;
+		var ito,indices,endIndex;
+		var shiftRow,result=false;
+		var shiftRowList=this._getAllShiftRow();
+		var itoList=this.itoList;
+		for (var itoId in shiftRowList)
+		{
+			shiftRow=shiftRowList[itoId];
+			ito=itoList[itoId];
+			endIndex=this.shiftStartCellIndex+this.calendarList.length;
+			indices=ito.getBlackListedShiftPatternIndex(this._getShiftPattern(shiftRow,endIndex));
+
+			//if Black Listed Shift Pattern found in a shift row
+			if (indices.length>0)
+			{
+				for (var i=this.shiftStartCellIndex;i<endIndex;i++)
+				{
+					var cell=shiftRow.cells[i];
+					
+					//if the cell index matched with Black Listed Shift Index
+					if ($.inArray (i,indices)>-1)
+						shiftRow.cells[i].className="borderCell alignCenter errorRedBlackGround";
+					else
+					{	
+						$(shiftRow.cells[i]).blur(); //reset cell style 
+					}
+				}
+				result=true;
+			}
+			else
+			{
+				//reset all cell style in the shift row
+				$(shiftRow.cells).blur();  
+			}
+		}
+		return result;
+	}
+	haveDuplicateShift()
+	{
+		var ito,itoId,j,cell,i;
+		var shift,shiftRow;
+		var haveDuplicateShift=false;
+		var shiftRowList=this._getAllShiftRow();
+		for (i=this.shiftStartCellIndex;i<this.shiftStartCellIndex+this.calendarList.length;i++)
+		{
+			var tempResult=[],temp="";
+			for (var itoId in shiftRowList)
+			{
+				shiftRow=shiftRowList[itoId];
+				ito=this.itoList[itoId];
+				cell=shiftRow.cells[i];
+				shift=cell.textContent;
+				if (shift!="")  
+				{
+					if (ito.isValidShift(shift))
+					{	switch (shift)
+						{
+							case "a":
+							case "c":
+									if ($.inArray (shift,tempResult)>-1)
+									{
+										alert("Duplicate Shift Found");
+										cell.className="borderCell alignCenter errorRedBlackGround";
+										haveDuplicateShift=true;
+										break;	
+									}
+									else
+									{	
+										$(cell).blur();
+										tempResult.push(shift);
+									}
+									break;
+							case "b":		
+							case "b1":
+									if (($.inArray ("b1",tempResult)>-1) || ($.inArray ("b",tempResult)>-1))
+									{
+										alert("Duplicate Shift Found");
+										cell.className="borderCell alignCenter errorRedBlackGround";
+										haveDuplicateShift=true;
+										break;	
+									}
+									else
+									{	
+										$(cell).blur();
+										tempResult.push(shift);
+									}
+									break;
+						}
+					}
+					else
+					{
+						alert("Invalid shift detected");
+						cell.className="borderCell alignCenter errorRedBlackGround";
+						haveDuplicateShift=true;
+						break;
+					}
+				}
+			}
+			if (haveDuplicateShift)
+				break;
+		}
+		return haveDuplicateShift;
+	}
+	haveInvalidPreferredShift(startDate,endDate)
+	{
+		var cell,ito,itoId;
+		var result=false,preferredShiftRow;
+		var preferredShiftRowList=this._getAllPreferredShiftRow();
+		
+		for (var itoId in preferredShiftRowList)
+		{
+			preferredShiftRow=preferredShiftRowList[itoId];
+			ito=this.itoList[itoId];
+			for(var i=startDate+2;i<=endDate+2;i++)
+			{
+				cell=preferredShiftRow.cells[i];
+				if (!ito.isValidPreferredShift(cell.textContent))
+				{	
+					cell.className="borderCell alignCenter errorRedBlackGround";
+					result=true;
+				}
+				else
+					cell.className="borderCell alignCenter";
+			}
+		}
+		return result;
+	}
+	haveMissingShift()
+	{
+		var ito,itoId,j,cell,i;
+		var shift,shiftRow;
+		var haveMissingShift=false;
+		var shiftRowList=this._getAllShiftRow();
+		
+		for (i=this.shiftStartCellIndex;i<this.shiftStartCellIndex+this.calendarList.length;i++)
+		{
+			var essentialShift=this.rosterRule.getEssentialShift();
+			for (var itoId in shiftRowList)
+			{
+				shiftRow=shiftRowList[itoId];
+				ito=this.itoList[itoId];
+				cell=shiftRow.cells[i];
+				shift=cell.textContent;
+				if (shift!="")
+				{
+					if (ito.isValidShift(shift))
+					{
+						essentialShift=essentialShift.replace(shift,"");
+						if (shift=="b1")
+						{
+							essentialShift=essentialShift.replace("b","");
+						}
+					}
+					else	
+					{
+						alert("Invalid shift");
+						cell.className="borderCell alignCenter shiftCell errorRedBlackGround";
+						haveMissingShift=true;
+						break;
+					}	
+				}
+			}
+			document.getElementById("vancantShift").cells[i].innerHTML=essentialShift;
+			if (essentialShift!="")
+				haveMissingShift=true;
+			/*if (haveMissingShift)
+				break;*/
+		}		
+		return haveMissingShift;
+	}
+	clearAllShift()
+	{
+		var itoId,shiftRow,shiftRows=this._getAllShiftRow();
+		var vancantShiftRow=document.getElementById("vancantShift");
+		for (var itoId in shiftRows)
+		{
+			shiftRow=shiftRows[itoId];
+			for (var j=this.shiftStartCellIndex;j<this.totalHourCellIndex;j++)
+			{
+				$(shiftRow.cells[j]).html("").blur();
+				$(vancantShiftRow.cells[j]).html("");
+			}	
+		}
+	}
+	getAllShiftData()
+	{
+		return this._getShiftRowData(this._getAllShiftRow());
+	}
+	getAllPreferredShiftData()
+	{
+		return this._getShiftRowData(this._getAllPreferredShiftRow());
+	}
+	getVacancyShiftData()
+	{
+		var cell,result=[];
+		var vacancyRow=document.getElementById("vancantShift");
+		for (var i=0;i<this.calendarList.length;i++)
+		{
+			cell=vacancyRow.cells[this.shiftStartCellIndex+i];
+			result.push(cell.textContent);
+		}
+		return result;
+	}
+	getPreviousShiftList(startDate,itoList)
+	{
+		var result=[];
+		var shiftDataList,resultList=[];
+		var startIndex=startDate-this.rosterRule.maxConsecutiveWorkingDay;
+		for (var itoId in itoList)
+		{
+			result=[];
+			shiftDataList=this.getAllShiftData()[itoId].shiftList;
+			if (startIndex<1)
+			{
+				var previousMonthShiftList=this.allPreviousMonthShiftList[itoId];
+				startIndex=startDate-1;
+				for (var i=startIndex;i<this.rosterRule.maxConsecutiveWorkingDay;i++)
+				{
+					result.push(previousMonthShiftList[i].shift);
+				}
+			}
+			if (shiftDataList!=null)
+			{
+				for (var i=0;i<startDate-1;i++)
+				{
+					result.push(shiftDataList[i]);
+				}
+			}
+			resultList[itoId]=result;
+		}	
+		return resultList;
+	}
+	getPreferredShiftList(startDate,endDate)
+	{
+		var cell;
+		var preferredShiftRow;
+		var preferredShiftRowList=this._getAllPreferredShiftRow();
+		//var itoId="ITO1_1999-01-01";
+		var itoPreferredShiftList=[];
+		var preferredShiftList=[];
+		
+		for (var itoId in preferredShiftRowList)
+		{
+			preferredShiftList=[];
+			preferredShiftRow=preferredShiftRowList[itoId];
+			for (var i=startDate-1;i<endDate;i++)
+			{
+				cell=preferredShiftRow.cells[i+this.shiftStartCellIndex];
+				preferredShiftList[i]=(cell.textContent);
+			}
+			itoPreferredShiftList[itoId]=preferredShiftList;
+		}
+		return itoPreferredShiftList;
+	}
+	getThisMonthBalance(itoId)
+	{
+		return parseFloat(document.getElementById(itoId +"_thisMonthBalance").textContent);
+	}
+	getLastMonthBalance(itoId)
+	{
+		return parseFloat(document.getElementById(itoId +"_lastMonthBalance").textContent);
+	}
+	setLowestSDData(lowestSDData)
+	{
+		var firstRow=document.getElementById("theLowestSD");
+		var cell=firstRow.cells[0];
+		cell.innerHTML="SD:"+lowestSDData[0].averageShiftStdDev;
+		cell=firstRow.cells[1];
+		cell.innerHTML="Missing shift count:"+lowestSDData[0].missingShiftCount;
+		
+		
+		var secondRow=document.getElementById("secondLowestSD");
+		cell=secondRow.cells[0];
+		if (lowestSDData.length>1)
+		{
+			cell.innerHTML="SD:"+lowestSDData[1].averageShiftStdDev;
+			cell=secondRow.cells[1];
+			cell.innerHTML="Missing shift count:"+lowestSDData[1].missingShiftCount;
+		}
+		else
+		{
+			cell.innerHTML="SD:N.A.";
+			cell=secondRow.cells[1];
+			cell.innerHTML="Missing shift count:N.A.";
+		}
+			
+	
+		var thirdRow=document.getElementById("thirdLowestSD");
+		cell=thirdRow.cells[0];
+		if (lowestSDData.length>2)
+		{
+			cell.innerHTML="SD:"+lowestSDData[2].averageShiftStdDev;
+			cell=thirdRow.cells[1];
+			cell.innerHTML="Missing shift count:"+lowestSDData[2].missingShiftCount;
+		}
+		else
+		{
+			cell.innerHTML="SD:N.A.";
+			cell=thirdRow.cells[1];
+			cell.innerHTML="Missing shift count:N.A.";
+		}
+	}
+	setMissingShiftData(missingShiftData)
+	{
+		var firstRow=document.getElementById("theLowestMissingShiftCount");
+		var cell=firstRow.cells[0];
+		cell.innerHTML="Missing shift count:"+missingShiftData[0].missingShiftCount;
+		cell=firstRow.cells[1];
+		cell.innerHTML="SD:"+missingShiftData[0].averageShiftStdDev;
+		
+		var secondRow=document.getElementById("theSecondLowestMissingShiftCount");
+		cell=secondRow.cells[0];
+		if (missingShiftData.length>1)
+		{
+			cell.innerHTML="Missing shift count:"+missingShiftData[1].missingShiftCount;
+			cell=secondRow.cells[1];
+			cell.innerHTML="SD:"+missingShiftData[1].averageShiftStdDev;
+		}
+		else
+		{
+			cell.innerHTML="Missing shift count:N.A.";
+			cell=secondRow.cells[1];
+			cell.innerHTML="SD:N.A.";
+		}
+
+		var thirdRow=document.getElementById("theThirdLowestMissingShiftCount");
+		cell=thirdRow.cells[0];
+		if (missingShiftData.length>2)
+		{
+			cell.innerHTML="Missing shift count:"+missingShiftData[2].missingShiftCount;
+			cell=thirdRow.cells[1];
+			cell.innerHTML="SD:"+missingShiftData[2].averageShiftStdDev;
+		}
+		else
+		{
+			cell.innerHTML="Missing shift count:N.A.";
+			cell=thirdRow.cells[1];
+			cell.innerHTML="SD:N.A.";
+		}	
+	}
+	showGenResultTable()
+	{
+		$(this.genResultTable).show();
+	}
+	hideGenResultTable()
+	{
+		$(this.genResultTable).hide();
+	}
+	getAutoPlanStartDate()
+	{
+		return parseInt($("#autoPlannStartDate").val());
+	}
+	getAutoPlanEndDate()
+	{
+		return parseInt($("#autoPlanEndDate").val());
+	}
+
 //-----------------------------------------------------------------------------------------------------------------------------
+	_getShiftRowData(shiftRowList)
+	{
+		var result={};
+		var shiftList={};
+		var shift,shiftType,shiftDate;
+		for (var itoId in shiftRowList)
+		{
+			shiftList=[];
+			for (var index=this.shiftStartCellIndex;index<this.shiftStartCellIndex+this.calendarList.length;index++)
+			{
+				shift={};
+				shiftType=shiftRowList[itoId].cells[index].textContent;
+				shiftDate=Date.UTC(this.year,this.month,(index-2));
+				shift["shift"]=shiftType;
+				shift["shiftDate"]=shiftDate;
+				shiftList.push(shift);
+			}
+			result[itoId]=shiftList;
+		}
+		return result;
+	}
+	_getShiftPattern(shiftRow,endIndex)
+	{
+		var shiftPattern="",cell;
+		for (var i=1;i<endIndex;i++)
+		{
+			cell=shiftRow.cells[i];
+			shiftPattern+=cell.textContent+",";
+		}
+		shiftPattern=shiftPattern.substring(0,shiftPattern.length-1);
+		return shiftPattern;
+	}
 	_initAutoPlanDropDown()
 	{
 		var i;
@@ -233,10 +742,10 @@ class RosterTable
 					
 					$(preferredCell).keydown(function(event){
 				 		self._inputCellKeyDownHandlder(event,this);
-					});
+					});*/
 					$(preferredCell).on("blur",function(){
 						this.className="borderCell alignCenter";
-					});*/
+					});
 				}	
 			}
 			cell=shiftRow.insertCell(shiftRow.cells.length);
@@ -282,8 +791,42 @@ class RosterTable
 				cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 				cell.className="borderCell alignCenter";
 			}
-		}	
-	}		
+		}
+		vancantShiftRow=this.rosterBody.insertRow(this.rosterBody.rows.length);
+		vancantShiftRow.id="vancantShift";
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="vancantShift borderCell";
+		cell.textContent="Vancant Shifts";
+		for (i=0;i<33;i++)
+		{
+			cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+			cell.className="borderCell dataCell";
+		}
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="borderCell dataCell";
+		cell.colSpan=5;
+		
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="borderCell dataCell";
+		cell.id="shiftAStdDev";
+		
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="borderCell dataCell";
+		cell.id="shiftBStdDev";
+		
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="borderCell dataCell";
+		cell.id="shiftCStdDev";
+		
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="borderCell dataCell";
+		cell.id="avgStdDev";
+		
+		cell=vancantShiftRow.insertCell(vancantShiftRow.cells.length);
+		cell.className="borderCell";
+
+	}
+//-------------------------------------------------------------------------------------------	
 	_genRosterHeader()
 	{
 		var i,cell,holidayCell,daysCell,datesCell;
@@ -637,5 +1180,26 @@ class RosterTable
 		document.getElementById("avgStdDev").textContent=this.utility.roundTo(this.averageShiftStdDev,2);
 		//console.log("++++++++++++++++++++++++++++++++");
 	}
-	
+	_getAllShiftRow()
+	{
+		var result=[];
+		var shiftRow;
+		for (var itoId in this.itoList)
+		{
+			shiftRow=document.getElementById("shift_"+itoId);
+			result[itoId]=shiftRow;
+		}
+		return result;
+	}
+	_getAllPreferredShiftRow()
+	{
+		var result=[];
+		var preferredShiftRow;
+		for (var itoId in this.itoList)
+		{
+			preferredShiftRow=document.getElementById("preferredShift_"+itoId);
+			result[itoId]=preferredShiftRow;
+		}
+		return result;
+	}	
 }
