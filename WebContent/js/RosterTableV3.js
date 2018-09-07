@@ -222,10 +222,11 @@ class RosterTable
 					preferredCell.contentEditable="true";
 					shiftCell.className+=" shiftCell";
 					preferredCell.className+=" shiftCell";
-					/*
+					
 					$(shiftCell).on("blur",function(){
 						self._updateValue(this);
 					});
+					/*
 					$(shiftCell).keydown(function(event){
 				 		self._inputCellKeyDownHandlder(event,this);
 					});
