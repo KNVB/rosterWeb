@@ -12,12 +12,12 @@ GregorianCalendar now=new GregorianCalendar();
 	<head>
 		<meta charset="UTF-8">
 		<title>Roster Scheduling</title>
-		<link rel="stylesheet" type="text/css" href="css/v3.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
 		<link rel="stylesheet" type="text/css" href="css/MyModal.css">
 		<script type="text/javascript" src="<%=request.getContextPath() %>/webjars/jquery/3.3.1/jquery.min.js"></script>
 		<script src="js/ITO.js"></script>
 		<script src="js/RosterRule.js"></script>
-		<script src="js/RosterTableV3.js"></script>
+		<script src="js/RosterTable.js"></script>
 		<script src="js/util/Utility.js"></script>
 		<script src="js/util/MyModal.js"></script>
 		<script src="js/util/MyLoadingScreen.js"></script>
