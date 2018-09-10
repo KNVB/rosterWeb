@@ -95,7 +95,7 @@ GregorianCalendar now=new GregorianCalendar();
 						</div>	
 					</td>
 					<td colspan="11" rowspan="13">
-						<div id="yearlyStatistic">
+						<div id="yearlyStatistic" style="height:450px;overflow-y:scroll">
 						</div>
 					</td>
 				</tr>	

@@ -50,6 +50,7 @@ class ShiftCellEventHandler
 		event.stopPropagation();
 		if (object.tagName=="TD")
 			row=object.parentElement;
+		
 		switch(event.type)
 		{
 			case "keydown"		:this._keyDownHandlder(event);
@@ -79,7 +80,6 @@ class ShiftCellEventHandler
 	{
  		switch (event.which)
 		{
-			
  			case  9://handle shift key
  					this._handleTabKeyEvent(event);
  					break;
@@ -170,6 +170,7 @@ class ShiftCellEventHandler
 	_handleArrowKeyEvent(event,yIndex,xIndex)
 	{
 		var object=event.target,cell,tempCell;
+		console.log(event.tagName);
 		switch(object.tagName)
 		{
 			case "BODY"	:
@@ -232,6 +233,7 @@ class ShiftCellEventHandler
 						break;
 		}	
 	}
+
 	_handleBodyKeyDownEvent()
 	{
 		var cell;
@@ -407,22 +409,27 @@ class ShiftCellEventHandler
 							if((this.clipBoard["fromRowIndex"]!=this.selectStartRowIndex)||
 								(this.clipBoard["fromCellIndex"]!=this.selectStartCellIndex))
 							{
-								var x,y,cell;
+								this.inSelectMode=true;
+								var x,y,cell=this._getCell(this.selectStartRowIndex,this.selectStartCellIndex);
 								for (y=0;y<this.clipBoard["data"].length;y++)
 								{
 									for (x=0;x<this.clipBoard["data"][y].length;x++)
 									{
 										try
 										{
+											$(cell).mouseout();
 											cell=this._getCell(this.selectStartRowIndex+y,this.selectStartCellIndex+x);
 											cell.textContent=this.clipBoard["data"][y][x];
+											$(cell).blur();
+											$(cell).mouseenter();
 										}
 										catch (err)
 										{
 											
 										}
 									}	
-								}	
+								}
+								this.inSelectMode=false;
 							}	
 						}	
 						break;

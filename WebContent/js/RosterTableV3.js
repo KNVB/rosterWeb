@@ -163,6 +163,8 @@ class RosterTable
 		var aShiftTotal,bxShiftTotal,cShiftTotal,dxShiftTotal,oShiftTotal,allShiftTotal;
 		var cell,aShiftTotalCell,bxShiftTotalCell,cShiftTotalCell,dxShiftTotalCell,oShiftTotalCell,allShiftTotalCell;
 		statisticTable.style.width="500px";
+		statisticTable.style.borderCollapse="collapse";
+		
 		cell=row.insertCell(row.cells.length);
 		cell.innerHTML="ITO";
 		cell.className="borderCell alignCenter";
@@ -744,7 +746,7 @@ class RosterTable
 				 		self._inputCellKeyDownHandlder(event,this);
 					});*/
 					$(preferredCell).on("blur",function(){
-						this.className="borderCell alignCenter";
+						this.className="borderCell alignCenter shiftCell";
 					});
 				}	
 			}
@@ -880,14 +882,14 @@ class RosterTable
 				{
 					case "S":
 					case "Su":
-							daysCell.className+=" weekend";
+							daysCell.className+=" phCell";
 							this.workingDayCount--;
 							break;
 					default:
 							if (this.calendarList[i].isHoliday)
 							{
 								holidayCell.textContent="PH";
-								daysCell.className+=" weekend";
+								daysCell.className+=" phCell";
 								this.workingDayCount--;
 							}
 							break;
@@ -1058,7 +1060,7 @@ class RosterTable
 			var ito=this.itoList[itoId];
 			if (ito.isValidShift(shift))
 			{
-				theCell.className="borderCell alignCenter";
+				theCell.className="borderCell alignCenter shiftCell";
 				switch (shift)
 				{
 					case "a":
