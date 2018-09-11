@@ -1,0 +1,9 @@
+DataStoreImplementationClassName = util.DbOp
+dbServerName=bmetis2
+dbms=mysql
+dbName=operator_roster
+dbUserName=cstsang
+dbUserPwd=30Dec2010
+jdbcDriver = com.mysql.jdbc.Driver
+#inputExcelFilePath=D:\\Inetpub\\wwwroot\\roster-sample\\template.xlsx
+#outputExcelFilePath=D:\\Inetpub\\wwwroot\\roster-sample\\output.xlsx
