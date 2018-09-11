@@ -10,6 +10,15 @@ table#rosterTable
 	//border-collapse: collapse; //It hit the chrome bug
 	width:1635px;
 }
+thead tr+tr+tr td:first-child,
+tbody td:first-child
+{
+	border-left:1px solid #e0e0e0;
+}
+tbody tr:last-child td
+{
+	border-bottom:1px solid #e0e0e0;
+}
 .alignCenter
 {
 	text-align: center;
@@ -44,7 +53,8 @@ table#rosterTable
 }
 .borderCell
 {
-	border:1px solid #e0e0e0;
+	border-top:1px solid #e0e0e0;
+	border-right:1px solid #e0e0e0;
 }
 .dataCell
 {
