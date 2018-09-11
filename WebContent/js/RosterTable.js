@@ -699,15 +699,15 @@ class RosterTable
 			
 			shiftRow.id="shift_"+itoId;
 			preferredShiftRow.id="preferredShift_"+itoId;
+
 			cell=shiftRow.insertCell(shiftRow.cells.length);
-			
 			cell.className="borderCell alignLeft";
 			cell.innerHTML=ito.name+"<br>"+ito.postName+" Extn. 2458";
 			
 			cell=preferredShiftRow.insertCell(preferredShiftRow.cells.length);
 			cell.className="alignLeft borderCell";
 			cell.innerHTML="Preferred Shift";
-			
+
 			for (i=0;i<this.showNoOfPrevDate;i++)
 			{
 				cell=shiftRow.insertCell(shiftRow.cells.length);
@@ -737,14 +737,6 @@ class RosterTable
 					$(shiftCell).on("blur",function(){
 						self._updateValue(this);
 					});
-					/*
-					$(shiftCell).keydown(function(event){
-				 		self._inputCellKeyDownHandlder(event,this);
-					});
-					
-					$(preferredCell).keydown(function(event){
-				 		self._inputCellKeyDownHandlder(event,this);
-					});*/
 					$(preferredCell).on("blur",function(){
 						this.className="borderCell alignCenter shiftCell";
 					});
