@@ -23,324 +23,38 @@ class ShiftCellEventHandler
 			selectionString="td."+targetCellClassName;
 		}
 		$(selectionString).dblclick(function(){
-			self._handleEvent(this,event);
+			self._handleAllEvent(this,event);
 		});
 		$(selectionString).mousedown(function(event){
-			self._handleEvent(this,event);
+			self._handleAllEvent(this,event);
 		});
 		$(selectionString).mouseenter(function(event){
-			self._handleEvent(this,event);
+			self._handleAllEvent(this,event);
 		});
 		$(selectionString).mouseout(function(event){
-			self._handleEvent(this,event);
+			self._handleAllEvent(this,event);
 		});
 		$("body").mouseup(function(event){
-			self._handleEvent(this,event);
+			self._handleAllEvent(this,event);
 		});
 		$("body").keydown(function(event){
-			self._handleEvent(this,event);
+			self._handleAllEvent(this,event);
 		});
 		$("body").keyup(function(event){
-			self._handleEvent(this,event);
+			self._handleAllEvent(this,event);
 		});
 	}
-	_handleEvent(object,event)
+//=========================================================================================================================	
+	_clearAllSelectionState()
 	{
-		var row;
-		event.stopPropagation();
-		if (object.tagName=="TD")
-			row=object.parentElement;
-		
-		switch(event.type)
-		{
-			case "keydown"		:this._keyDownHandlder(event);
-								break;
-			case "keyup"		:this._keyUpHandler(event);
-								break
-			case "mousedown"	:event.preventDefault();
-								this._mouseDownEventHandler(object,row.rowIndex,object.cellIndex);
-								break;
-			case "mouseenter"	:event.preventDefault();
-            					this._mouseEnterEventHandler(object,row.rowIndex,object.cellIndex);
-            					break;
-			case "mouseout"		:event.preventDefault();
-		 						this._mouseOutEventHandler(object,row.rowIndex,object.cellIndex);
-		 						break;
-			case "mouseup"		:event.preventDefault();
-								this._mouseUpEventHandler(object);
-								break;
-			case "dblclick"		:event.preventDefault();
-								this._dblClickEventHandler(object);
-								break;
-			default				:console.log(event.type);
-								break;
-		}						 
-	}
-	_keyDownHandlder(event)
-	{
- 		switch (event.which)
-		{
- 			case  9://handle shift key
- 					this._handleTabKeyEvent(event);
- 					break;
-			case 13://When Enter key is pressed
-					this._handleEnterKeyEvent(event);
-					break;
-			
-			case 16://handle shift key
-			case 17://handle Ctrl key
-					break;	
-			case 27://handle "Esc" key event
-					this.clipBoard={};
-					this._clearAllSelectState();
-					break;
-			case 37://handle left arrow key
-					this._handleArrowKeyEvent(event,0,-1);
-					break;
-			case 38://handle up arrow key
-					this._handleArrowKeyEvent(event,-1,0);
-					break;
-			case 39://handle right arrow key
-					this._handleArrowKeyEvent(event,0,1);
-					break;
-			case 40://handle down arrow key
-					this._handleArrowKeyEvent(event,1,0);
-					break;
-			case 46://handle delete key
-					this._deleteSelectedData();
-					break;
-			case 67://handle "C" key event
-					if (event.ctrlKey)
-						this._copySelectedData();
-					break;
-			case 86://handle "V" key event
-					if (event.ctrlKey)
-						this._pasteSelectedData(event);
-					break;
-			default:
-					this._handleBodyKeyDownEvent();
-					break;		
-		}
-	}
-	_handleTabKeyEvent(event)
-	{
-		var object=event.target,cell,tempCell=null,row,rowIndex,cellIndex;
-		switch(object.tagName)
-		{
-			case "TD"	:
-			case "BODY"	:
-						event.preventDefault();
-						if ((this.selectPreviousRowIndex>-1) ||(this.selectStartRowIndex>-1))
-						{
-							if (this.selectPreviousRowIndex==-1)
-							{
-								cell=this._getCell(this.selectStartRowIndex,this.selectStartCellIndex);
-							}
-							else
-							{
-								cell=this._getCell(this.selectPreviousRowIndex,this.selectPreviousCellIndex);
-							}
-							row=cell.parentElement;
-							rowIndex=row.rowIndex;
-							cellIndex=cell.cellIndex;
-							if (event.shiftKey)
-							{
-								if (cellIndex>0)
-								{
-									tempCell=this._getCell(rowIndex,cellIndex-1);
-								}	
-							}
-							else
-							{
-								if (row.cells.length>(cellIndex+1))
-								{
-									tempCell=this._getCell(rowIndex,cellIndex+1);
-								}	
-							}
-							if ((tempCell!=null)&& this._isTargetCell(tempCell))
-							{
-								if ((this.borderCoordindate.maxX==this.borderCoordindate.minX) && (this.borderCoordindate.maxY==this.borderCoordindate.minY))
-									this._switchCell(cell,tempCell);
-							}	
-						}
-						break;
-									
-		}
-	}
-	_handleArrowKeyEvent(event,yIndex,xIndex)
-	{
-		var object=event.target,cell,tempCell;
-		console.log(event.tagName);
-		switch(object.tagName)
-		{
-			case "BODY"	:
-				        event.preventDefault();
-						if ((this.selectPreviousRowIndex>-1) ||(this.selectStartRowIndex>-1))
-						{
-							if (this.selectPreviousRowIndex==-1)
-							{
-								cell=this._getCell(this.selectStartRowIndex,this.selectStartCellIndex);
-							}
-							else
-							{
-								cell=this._getCell(this.selectPreviousRowIndex,this.selectPreviousCellIndex);
-							}
-							if (cell.cellIndex>0)
-							{
-								tempCell=this._getCell(cell.parentElement.rowIndex+yIndex,cell.cellIndex+xIndex);
-								if (this._isTargetCell(tempCell))
-								{
-									if (event.shiftKey)
-										this._selectCell(cell,tempCell);
-									else
-										this._switchCell(cell,tempCell);
-								}
-							}	
-						}
-						break;	 
-		}
-	}
-	_handleEnterKeyEvent(event)
-	{
-		var object=event.target,cell,tempCell;
-		switch(object.tagName)
-		{
-			case "BODY"	:
-						event.preventDefault();
-						if (this.borderCoordindate!=null)
-						{
-							if ((this.borderCoordindate.maxX==this.borderCoordindate.minX) && (this.borderCoordindate.maxY==this.borderCoordindate.minY))
-							{
-								if (this.table.rows.length>(this.borderCoordindate.maxY+1))
-								{
-									cell=this._getCell(this.borderCoordindate.maxY,this.borderCoordindate.maxX);
-									tempCell=this._getCell(this.borderCoordindate.maxY+1,this.borderCoordindate.maxX);
-									this._switchCell(cell,tempCell);
-								}	
-							}
-						}
-						break;
-			case "TD"	:
-						if (this._isTargetCell(object))
-						{
-							cell=event.target;
-							if (this.table.rows.length>(cell.parentElement.rowIndex+1))
-							{
-								tempCell=this._getCell(cell.parentElement.rowIndex+1,cell.cellIndex);
-								this._switchCell(cell,tempCell);
-							}	
-						}
-						break;
-		}	
-	}
-
-	_handleBodyKeyDownEvent()
-	{
-		var cell;
-		
-		if (this.borderCoordindate!=null)
-		{
-			if ((this.borderCoordindate.maxX==this.borderCoordindate.minX) && (this.borderCoordindate.maxY==this.borderCoordindate.minY))
-			{
-				cell=this._getCell(this.borderCoordindate.maxY,this.borderCoordindate.maxX);
-				this._dblClickEventHandler(cell);              
-			}	
-		}	
-	}
-	_keyUpHandler(event)
-	{
-		if (event.key=="Shift")
-		{
-			this.inSelectMode=false;
-		}	
-	}
-	_dblClickEventHandler(theCell)
-	{
-		console.log("on dblClick event triggered.");
-		theCell.contentEditable=true;
-		theCell.focus();
-	}
-	_mouseDownEventHandler(theCell,rowIndex,cellIndex)
-	{
-		var previousCell;
-		this._clearPreviousBorder();
-		if (this.selectPreviousRowIndex>0)
-		{
-			previousCell=this._getCell(this.selectPreviousRowIndex,this.selectPreviousCellIndex);
-			previousCell.blur();
-		}
-		$(theCell).addClass("selectCellBorderRight");
-		$(theCell).addClass("selectCellBorderTop");
-		$(theCell).addClass("selectCellBorderBottom");
-		$(theCell).addClass("selectCellBorderLeft");
-		console.log("mouse down event triggered.positionString="+(rowIndex+"_"+cellIndex));
-		console.log("selectStartRowIndex="+this.selectStartRowIndex+",selectStartCellIndex="+this.selectStartCellIndex);
-		this.selectStartRowIndex=rowIndex;	
-		this.selectStartCellIndex=cellIndex;
-		this.selectPreviousRowIndex=-1;
-		this.selectPreviousCellIndex=-1;
-		this.borderCoordindate=this._getBorderCoordinate(rowIndex,cellIndex);
-		this.inSelectMode=true;
-	}
-	_mouseEnterEventHandler(theCell,rowIndex,cellIndex)
-	{
-		var cell,i;
-		if (this.inSelectMode)
-		{
-			this._clearPreviousBorder();
-			this.borderCoordindate=this._getBorderCoordinate(rowIndex,cellIndex);
-			cell=this._getCell(this.borderCoordindate.minY,this.borderCoordindate.minX);
-			$(cell).addClass("selectCellBorderTop");
-			$(cell).addClass("selectCellBorderLeft");
-			
-			cell=this._getCell(this.borderCoordindate.minY,this.borderCoordindate.maxX);
-			$(cell).addClass("selectCellBorderTop");
-			$(cell).addClass("selectCellBorderRight");
-			
-			cell=this._getCell(this.borderCoordindate.maxY,this.borderCoordindate.minX);
-			$(cell).addClass("selectCellBorderBottom");
-			$(cell).addClass("selectCellBorderLeft");
-
-			cell=this._getCell(this.borderCoordindate.maxY,this.borderCoordindate.maxX);
-			$(cell).addClass("selectCellBorderBottom");
-			$(cell).addClass("selectCellBorderRight");
-			
-			for (i=this.borderCoordindate.minY+1;i<this.borderCoordindate.maxY;i++)
-			{
-				cell=this._getCell(i,this.borderCoordindate.minX);
-				$(cell).addClass("selectCellBorderLeft");
-
-				cell=this._getCell(i,this.borderCoordindate.maxX);
-				$(cell).addClass("selectCellBorderRight");
-			}
-			for (i=this.borderCoordindate.minX+1;i<this.borderCoordindate.maxX;i++)
-			{
-				cell=this._getCell(this.borderCoordindate.minY,i);
-				$(cell).addClass("selectCellBorderTop");
-				
-				cell=this._getCell(this.borderCoordindate.maxY,i);
-				$(cell).addClass("selectCellBorderBottom");
-			}
-			this.selectPreviousRowIndex=rowIndex;	
-			this.selectPreviousCellIndex=cellIndex;		
-		}
-	}
-	_mouseOutEventHandler(theCell,rowIndex,cellIndex)
-	{
-		var positionString=rowIndex+"_"+cellIndex;
-		if (this.inSelectMode)
-		{	
-			console.log("mouse out event triggered.positionString="+positionString);
-			theCell.contentEditable=false;
-			this.selectPreviousRowIndex=rowIndex;	
-			this.selectPreviousCellIndex=cellIndex;
-		}
-	}
-	_mouseUpEventHandler(theCell)
-	{
+		this._clearPreviousSelection();
 		this.inSelectMode=false;
+		this.selectPreviousRowIndex=-1;	
+		this.selectPreviousCellIndex=-1;
+		this.selectStartRowIndex=-1;	
+		this.selectStartCellIndex=-1;
 	}
-	_clearPreviousBorder()
+	_clearPreviousSelection()
 	{
 		var cell,i,j;
 		console.log("===========================================");
@@ -397,46 +111,7 @@ class ShiftCellEventHandler
 			}
 			this.clipBoard["data"]=data;
 		}	
-	}
-	_pasteSelectedData(event)
-	{
-		var object=event.target,cell,tempCell;
-		switch(object.tagName)
-		{
-			case "BODY":
-						if ((this.selectStartRowIndex>0) || (this.selectStartCellIndex>0))
-						{
-							if((this.clipBoard["fromRowIndex"]!=this.selectStartRowIndex)||
-								(this.clipBoard["fromCellIndex"]!=this.selectStartCellIndex))
-							{
-								this.inSelectMode=true;
-								var x,y,cell=this._getCell(this.selectStartRowIndex,this.selectStartCellIndex);
-								for (y=0;y<this.clipBoard["data"].length;y++)
-								{
-									for (x=0;x<this.clipBoard["data"][y].length;x++)
-									{
-										try
-										{
-											$(cell).mouseout();
-											cell=this._getCell(this.selectStartRowIndex+y,this.selectStartCellIndex+x);
-											cell.textContent=this.clipBoard["data"][y][x];
-											$(cell).blur();
-											$(cell).mouseenter();
-										}
-										catch (err)
-										{
-											
-										}
-									}	
-								}
-								this.inSelectMode=false;
-							}	
-						}	
-						break;
-			default:this.clipBoard="";
-					break
-		}
-	}
+	}	
 	_deleteSelectedData()
 	{
 		var i,j,cell;
@@ -458,14 +133,54 @@ class ShiftCellEventHandler
 			}
 		}
 	}
-	_clearAllSelectState()
+	_enableEditMode(theCell)
 	{
-		this._clearPreviousBorder();
-		this.inSelectMode=false;
-		this.selectPreviousRowIndex=-1;	
-		this.selectPreviousCellIndex=-1;
-		this.selectStartRowIndex=-1;	
-		this.selectStartCellIndex=-1;
+		theCell.contentEditable=true;
+		theCell.focus();
+	}
+	_enterCell(theCell,rowIndex,cellIndex)
+	{
+		var cell,i;
+		if (this.inSelectMode)
+		{
+			this._clearPreviousSelection();
+			this.borderCoordindate=this._getBorderCoordinate(rowIndex,cellIndex);
+			cell=this._getCell(this.borderCoordindate.minY,this.borderCoordindate.minX);
+			$(cell).addClass("selectCellBorderTop");
+			$(cell).addClass("selectCellBorderLeft");
+			
+			cell=this._getCell(this.borderCoordindate.minY,this.borderCoordindate.maxX);
+			$(cell).addClass("selectCellBorderTop");
+			$(cell).addClass("selectCellBorderRight");
+			
+			cell=this._getCell(this.borderCoordindate.maxY,this.borderCoordindate.minX);
+			$(cell).addClass("selectCellBorderBottom");
+			$(cell).addClass("selectCellBorderLeft");
+
+			cell=this._getCell(this.borderCoordindate.maxY,this.borderCoordindate.maxX);
+			$(cell).addClass("selectCellBorderBottom");
+			$(cell).addClass("selectCellBorderRight");
+			
+			for (i=this.borderCoordindate.minY+1;i<this.borderCoordindate.maxY;i++)
+			{
+				cell=this._getCell(i,this.borderCoordindate.minX);
+				$(cell).addClass("selectCellBorderLeft");
+
+				cell=this._getCell(i,this.borderCoordindate.maxX);
+				$(cell).addClass("selectCellBorderRight");
+			}
+			for (i=this.borderCoordindate.minX+1;i<this.borderCoordindate.maxX;i++)
+			{
+				cell=this._getCell(this.borderCoordindate.minY,i);
+				$(cell).addClass("selectCellBorderTop");
+				
+				cell=this._getCell(this.borderCoordindate.maxY,i);
+				$(cell).addClass("selectCellBorderBottom");
+			}
+			this.selectPreviousRowIndex=rowIndex;	
+			this.selectPreviousCellIndex=cellIndex;		
+		}
+
 	}
 	_getBorderCoordinate(rowIndex,cellIndex)
 	{
@@ -513,7 +228,180 @@ class ShiftCellEventHandler
 		var row=this.table.rows[rowIndex];
 		var cell=row.cells[cellIndex];
 		return cell;
+	}	
+	_handleAllEvent(object,event)
+	{
+		var row;
+		event.stopPropagation();
+		if (object.tagName=="TD")
+			row=object.parentElement;
+		
+		switch(event.type)
+		{
+			case "dblclick"		:event.preventDefault();
+								console.log("on dblClick event triggered.");
+								this._enableEditMode(object);
+								break;
+								
+			case "keydown"		:this._keyDownHandlder(event);
+								break;
+								
+			case "keyup"		:
+								if (event.key=="Shift")
+								{
+									this._selectionEnd();
+								}
+								break
+								
+			case "mousedown"	:event.preventDefault();
+								console.log("mouse down event triggered.positionString="+(row.rowIndex+"_"+object.cellIndex));
+								console.log("selectStartRowIndex="+this.selectStartRowIndex+",selectStartCellIndex="+this.selectStartCellIndex);
+								this._selectionStart(object,row.rowIndex,object.cellIndex);
+								break;
+								
+			case "mouseenter"	:event.preventDefault();
+								this._enterCell(object,row.rowIndex,object.cellIndex);
+								break;	
+								
+			case "mouseout"		:event.preventDefault();
+								if (this.inSelectMode)
+									console.log("mouse out event triggered.positionString="+(row.rowIndex+"_"+object.cellIndex));
+								this._leaveCell(object,row.rowIndex,object.cellIndex);
+								break;
+								
+			case "mouseup"		:event.preventDefault();
+								this._selectionEnd();
+								break;
+								
+			default				:console.log(event.type);
+								break;
+		}						 
 	}
+
+	_handleArrowKeyEvent(event,yIndex,xIndex)
+	{
+		var object=event.target,cell,tempCell;
+		console.log(object.tagName);
+		switch(object.tagName)
+		{
+			case "BODY"	:
+				        event.preventDefault();
+						if ((this.selectPreviousRowIndex>-1) ||(this.selectStartRowIndex>-1))
+						{
+							if (this.selectPreviousRowIndex==-1)
+							{
+								cell=this._getCell(this.selectStartRowIndex,this.selectStartCellIndex);
+							}
+							else
+							{
+								cell=this._getCell(this.selectPreviousRowIndex,this.selectPreviousCellIndex);
+							}
+							if (cell.cellIndex>0)
+							{
+								tempCell=this._getCell(cell.parentElement.rowIndex+yIndex,cell.cellIndex+xIndex);
+								if (this._isTargetCell(tempCell))
+								{
+									if (event.shiftKey)
+										this._selectCell(cell,tempCell);
+									else
+										this._switchCell(cell,tempCell);
+								}
+							}	
+						}
+						break;	 
+		}
+	}
+	_handleBodyKeyDownEvent()
+	{
+		var cell;
+		
+		if (this.borderCoordindate!=null)
+		{
+			if ((this.borderCoordindate.maxX==this.borderCoordindate.minX) && (this.borderCoordindate.maxY==this.borderCoordindate.minY))
+			{
+				cell=this._getCell(this.borderCoordindate.maxY,this.borderCoordindate.maxX);
+				this._enableEditMode(cell);              
+			}	
+		}	
+	}
+	_handleEnterKeyEvent(event)
+	{
+		var object=event.target,cell,tempCell;
+		switch(object.tagName)
+		{
+			case "BODY"	:
+						event.preventDefault();
+						if (this.borderCoordindate!=null)
+						{
+							if ((this.borderCoordindate.maxX==this.borderCoordindate.minX) && (this.borderCoordindate.maxY==this.borderCoordindate.minY))
+							{
+								if (this.table.rows.length>(this.borderCoordindate.maxY+1))
+								{
+									cell=this._getCell(this.borderCoordindate.maxY,this.borderCoordindate.maxX);
+									tempCell=this._getCell(this.borderCoordindate.maxY+1,this.borderCoordindate.maxX);
+									this._switchCell(cell,tempCell);
+								}	
+							}
+						}
+						break;
+			case "TD"	:
+						if (this._isTargetCell(object))
+						{
+							cell=event.target;
+							if (this.table.rows.length>(cell.parentElement.rowIndex+1))
+							{
+								tempCell=this._getCell(cell.parentElement.rowIndex+1,cell.cellIndex);
+								this._switchCell(cell,tempCell);
+							}	
+						}
+						break;
+		}	
+	}
+	_handleTabKeyEvent(event)
+	{
+		var object=event.target,cell,tempCell=null,row,rowIndex,cellIndex;
+		switch(object.tagName)
+		{
+			case "TD"	:
+			case "BODY"	:
+						event.preventDefault();
+						if ((this.selectPreviousRowIndex>-1) ||(this.selectStartRowIndex>-1))
+						{
+							if (this.selectPreviousRowIndex==-1)
+							{
+								cell=this._getCell(this.selectStartRowIndex,this.selectStartCellIndex);
+							}
+							else
+							{
+								cell=this._getCell(this.selectPreviousRowIndex,this.selectPreviousCellIndex);
+							}
+							row=cell.parentElement;
+							rowIndex=row.rowIndex;
+							cellIndex=cell.cellIndex;
+							if (event.shiftKey)
+							{
+								if (cellIndex>0)
+								{
+									tempCell=this._getCell(rowIndex,cellIndex-1);
+								}	
+							}
+							else
+							{
+								if (row.cells.length>(cellIndex+1))
+								{
+									tempCell=this._getCell(rowIndex,cellIndex+1);
+								}	
+							}
+							if ((tempCell!=null)&& this._isTargetCell(tempCell))
+							{
+								if ((this.borderCoordindate.maxX==this.borderCoordindate.minX) && (this.borderCoordindate.maxY==this.borderCoordindate.minY))
+									this._switchCell(cell,tempCell);
+							}	
+						}
+						break;
+									
+		}
+	}	
 	_isTargetCell(object)
 	{
 		var result=false;
@@ -531,16 +419,140 @@ class ShiftCellEventHandler
 		}
 		return result;
 	}
+	_keyDownHandlder(event)
+	{
+		switch (event.which)
+		{
+			case  9://handle shift key
+					this._handleTabKeyEvent(event);
+					break;
+			case 13://When Enter key is pressed
+					this._handleEnterKeyEvent(event);
+					break;
+			case 16://handle shift key
+			case 17://handle Ctrl key
+					break;	
+			case 27://handle "Esc" key event
+					this.clipBoard={};
+					this._clearAllSelectionState();
+					break;
+			case 37://handle left arrow key
+					this._handleArrowKeyEvent(event,0,-1);
+					break;
+			case 38://handle up arrow key
+					this._handleArrowKeyEvent(event,-1,0);
+					break;
+			case 39://handle right arrow key
+					this._handleArrowKeyEvent(event,0,1);
+					break;
+			case 40://handle down arrow key
+					this._handleArrowKeyEvent(event,1,0);
+					break;
+			case 46://handle delete key
+					this._deleteSelectedData();
+					break;
+			case 67://handle "C" key event
+					if (event.ctrlKey)
+						this._copySelectedData();
+					break;
+			case 86://handle "V" key event
+					if (event.ctrlKey)
+						this._pasteSelectedData(event);
+					break;		
+			default:
+					this._handleBodyKeyDownEvent();
+					break;		
+		}
+	}
+	_leaveCell(theCell,rowIndex,cellIndex)
+	{
+		if (this.inSelectMode)
+		{	
+			theCell.contentEditable=false;
+			this.selectPreviousRowIndex=rowIndex;	
+			this.selectPreviousCellIndex=cellIndex;
+		}
+	}
+	_pasteSelectedData(event)
+	{
+		var object=event.target,cell,tempCell;
+		switch(object.tagName)
+		{
+			case "BODY":
+						if ((this.selectStartRowIndex>0) || (this.selectStartCellIndex>0))
+						{
+							if((this.clipBoard["fromRowIndex"]!=this.selectStartRowIndex)||
+								(this.clipBoard["fromCellIndex"]!=this.selectStartCellIndex))
+							{
+								this.inSelectMode=true;
+								var x,y,cell=this._getCell(this.selectStartRowIndex,this.selectStartCellIndex);
+								for (y=0;y<this.clipBoard["data"].length;y++)
+								{
+									for (x=0;x<this.clipBoard["data"][y].length;x++)
+									{
+										try
+										{
+											//$(cell).mouseout();
+											var row=cell.parentElement;
+											this._leaveCell(cell,row.rowIndex,cell.cellIndex);
+											cell=this._getCell(this.selectStartRowIndex+y,this.selectStartCellIndex+x);
+											cell.textContent=this.clipBoard["data"][y][x];
+											$(cell).blur();
+											row=cell.parentElement;											
+											this._enterCell(cell,row.rowIndex,cell.cellIndex);
+										}
+										catch (err)
+										{
+											
+										}
+									}	
+								}
+								this.inSelectMode=false;
+							}	
+						}	
+						break;
+			default:this.clipBoard="";
+					break
+		}
+	}
+	
 	_selectCell(cell,tempCell)
 	{
+		var row=cell.parentElement;
 		this.inSelectMode=true;
-		$(cell).mouseout();
-		$(tempCell).mouseenter();
+		this._leaveCell(cell,row.rowIndex,cell.cellIndex);
+		row=tempCell.parentElement;
+		this._enterCell(tempCell,row.rowIndex,tempCell.cellIndex);
+	}
+	_selectionEnd()
+	{
+		this.inSelectMode=false;
+	}
+	_selectionStart(theCell,rowIndex,cellIndex)
+	{
+		var previousCell;
+		this._clearPreviousSelection();
+		if (this.selectPreviousRowIndex>0)
+		{
+			previousCell=this._getCell(this.selectPreviousRowIndex,this.selectPreviousCellIndex);
+			previousCell.blur();
+		}
+		$(theCell).addClass("selectCellBorderRight");
+		$(theCell).addClass("selectCellBorderTop");
+		$(theCell).addClass("selectCellBorderBottom");
+		$(theCell).addClass("selectCellBorderLeft");
+		this.selectStartRowIndex=rowIndex;	
+		this.selectStartCellIndex=cellIndex;
+		this.selectPreviousRowIndex=-1;
+		this.selectPreviousCellIndex=-1;
+		this.borderCoordindate=this._getBorderCoordinate(rowIndex,cellIndex);
+		this.inSelectMode=true;
 	}
 	_switchCell(cell,tempCell)
 	{
+		var row=tempCell.parentElement;
 		cell.contentEditable=false;
-		$(tempCell).mousedown();
-		$(tempCell).mouseup();
-	}
+		this._selectionStart(tempCell,row.rowIndex,tempCell.cellIndex);
+		this._selectionEnd();
+	}	
 }	
