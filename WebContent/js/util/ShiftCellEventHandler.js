@@ -317,7 +317,7 @@ class ShiftCellEventHandler
 		
 		if (this.borderCoordindate!=null)
 		{
-			if ((this.borderCoordindate.maxX==this.borderCoordindate.minX) && (this.borderCoordindate.maxY==this.borderCoordindate.minY))
+			if (this._isSingleCellSelectionRange())
 			{
 				cell=this._getCell(this.borderCoordindate.maxY,this.borderCoordindate.maxX);
 				this._enableEditMode(cell);              
@@ -333,7 +333,7 @@ class ShiftCellEventHandler
 						event.preventDefault();
 						if (this.borderCoordindate!=null)
 						{
-							if ((this.borderCoordindate.maxX==this.borderCoordindate.minX) && (this.borderCoordindate.maxY==this.borderCoordindate.minY))
+							if (this._isSingleCellSelectionRange())
 							{
 								if (this.table.rows.length>(this.borderCoordindate.maxY+1))
 								{
@@ -394,14 +394,18 @@ class ShiftCellEventHandler
 							}
 							if ((tempCell!=null)&& this._isTargetCell(tempCell))
 							{
-								if ((this.borderCoordindate.maxX==this.borderCoordindate.minX) && (this.borderCoordindate.maxY==this.borderCoordindate.minY))
+								if (this._isSingleCellSelectionRange())
 									this._switchCell(cell,tempCell);
 							}	
 						}
 						break;
 									
 		}
-	}	
+	}
+	_isSingleCellSelectionRange()
+	{
+		return ((this.borderCoordindate.maxX==this.borderCoordindate.minX) && (this.borderCoordindate.maxY==this.borderCoordindate.minY));
+	}
 	_isTargetCell(object)
 	{
 		var result=false;
@@ -431,6 +435,7 @@ class ShiftCellEventHandler
 					break;
 			case 16://handle shift key
 			case 17://handle Ctrl key
+			case 18://handle alt key	
 					break;	
 			case 27://handle "Esc" key event
 					this.clipBoard={};
