@@ -1,18 +1,23 @@
 <html>
 	<body>
 		<script>
+			const privName = Symbol();
 			class Happy
 			{
 				constructor()
 				{
 				}
-				_leo()
+				leo()
 				{
-					console.log("ff");
+					this[privName]();
+				}
+				[privName]() 
+				{
+				  console.log("in priv");
 				}
 			}		
 			var h=new Happy();
-			h._leo();
+			h.leo();
 		</script>
 	</body>
 </html>	
