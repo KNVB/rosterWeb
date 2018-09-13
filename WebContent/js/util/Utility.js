@@ -7,15 +7,14 @@ class Utility
 	{
 		
 	}
-	getYearlyRosterStatistic(year,month)
+	//Clone Array only
+	cloneArray(inArray) 
 	{
-		var requestParameters={"year":year,"month":month};
-		return jQuery.ajax({"url": "getYearlyRosterStatistic.jsp",
-			 dataType: 'json',
-			 data:requestParameters,
-			 error:this.showAjaxErrorMessage
-		});
-	}
+	 return inArray.map(value => {
+	    return (value);
+	    //console.log(after,obj);
+	  });
+	}	
 	exportRosterToExcel(rosterData)
 	{
 		return jQuery.ajax({"url": "exportRosterToExcel.jsp",
@@ -35,15 +34,19 @@ class Utility
 					 },   
 			error:this.showAjaxErrorMessage			 
 		});
-	}
-	saveRosterData(rosterData)
+	}	
+	getDateDiffInDay(date1,date2)
 	{
-		return jQuery.ajax({"url": "saveRosterData.jsp",
-			 dataType: 'text',
-			 data:JSON.stringify(rosterData),
-			 method:"POST",
-			 error:this.showAjaxErrorMessage
-		});
+		var time1=date1.UTC();
+		var time2=date2.UTC();
+		return (time1-time2)/86400000;
+	}
+	//Get the mean value for the incoming array of value;
+	getMean(data)
+	{
+		 return data.reduce(function (a, b) {
+		        return Number(a) + Number(b);
+		    }) / data.length;
 	}
 	getRosterRule(year,month)
 	{
@@ -63,19 +66,44 @@ class Utility
 					 error:this.showAjaxErrorMessage
 		});
 	}
-	//Clone Array only
-	cloneArray(inArray) 
+	//Get The Standard Deviation for the incoming array of value;
+	getSD(data)
 	{
-	 return inArray.map(value => {
-	    return (value);
-	    //console.log(after,obj);
-	  });
-	}	
-	getDateDiffInDay(date1,date2)
+	    var m =this.getMean(data);
+	    return Math.sqrt(data.reduce(function (sq, n) {
+	            return sq + Math.pow(n - m, 2);
+	        }, 0) / (data.length - 1));
+	};
+	
+	getYearlyRosterStatistic(year,month)
 	{
-		var time1=date1.UTC();
-		var time2=date2.UTC();
-		return (time1-time2)/86400000;
+		var requestParameters={"year":year,"month":month};
+		return jQuery.ajax({"url": "getYearlyRosterStatistic.jsp",
+			 dataType: 'json',
+			 data:requestParameters,
+			 error:this.showAjaxErrorMessage
+		});
+	}
+	saveRosterData(rosterData)
+	{
+		return jQuery.ajax({"url": "saveRosterData.jsp",
+			 dataType: 'text',
+			 data:JSON.stringify(rosterData),
+			 method:"POST",
+			 error:this.showAjaxErrorMessage
+		});
+	}
+	roundTo(theValue,decPlace)
+	{
+		var result=theValue*Math.pow(10,decPlace);
+		result=Math.round(result);
+		result=result/Math.pow(10,decPlace);
+		return result;
+	}
+	
+	showAjaxErrorMessage(jqXHR, textStatus, errorThrown)
+	{
+		console.log(jqXHR,textStatus);
 	}
 	shuffleProperties(obj)
 	{
@@ -87,33 +115,7 @@ class Utility
             new_obj[keys[key]] = obj[keys[key]];
         }
         return new_obj;	
-	}
-	showAjaxErrorMessage(jqXHR, textStatus, errorThrown)
-	{
-		console.log(jqXHR,textStatus);
-	}
-	roundTo(theValue,decPlace)
-	{
-		var result=theValue*Math.pow(10,decPlace);
-		result=Math.round(result);
-		result=result/Math.pow(10,decPlace);
-		return result;
-	}
-	//Get The Standard Deviation for the incoming array of value;
-	getSD(data)
-	{
-	    var m =this.getMean(data);
-	    return Math.sqrt(data.reduce(function (sq, n) {
-	            return sq + Math.pow(n - m, 2);
-	        }, 0) / (data.length - 1));
-	};
-	//Get the mean value for the incoming array of value;
-	getMean(data)
-	{
-		 return data.reduce(function (a, b) {
-		        return Number(a) + Number(b);
-		    }) / data.length;
-	}
+	}	
 //------------------------------------------------------------------------------------------------------------------------------------	
 	_getKeys(obj)
 	{

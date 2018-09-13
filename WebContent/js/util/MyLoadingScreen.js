@@ -17,12 +17,12 @@ class MyLoadingScreen
 		this.defaults["contentDom"]=image;	
 		this.defaults["modalWidth"]="auto";
 	}
-	show()
-	{
-		this.myModal=$.MyModal(this.defaults);
-	}
 	hide()
 	{
 		this.myModal.close();
 	}
+	show()
+	{
+		this.myModal=$.MyModal(this.defaults);
+	}	
 }

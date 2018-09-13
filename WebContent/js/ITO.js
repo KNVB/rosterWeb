@@ -9,6 +9,29 @@ class ITO
 		this.availableShiftList;
 		this.blackListShiftPatternList;
 	}
+	getBlackListedShiftPatternIndex(shiftPattern)
+	{
+		var myRe,temp;
+		var index=new Array(),match;
+		var blackListShiftPattern,commaPattern = /,/g;
+		
+		for (var i in this.blackListShiftPatternList)
+		{
+			blackListShiftPattern=this.blackListShiftPatternList[i];
+			//console.log(this.itoId,shiftPattern,blackListShiftPattern);
+			myRe= new RegExp(blackListShiftPattern, 'gi');
+			while ((match = myRe.exec(shiftPattern))!=null)
+			{
+				temp=shiftPattern.substring(0, match.index);
+				if (temp=="")
+					index.push(1);
+				else
+					index.push(temp.match(commaPattern).length+1);
+			}	
+		}
+		//console.log(this.itoId,shiftPattern,index);
+		return index;
+	}
 	isValidShift(shift)
 	{
 		//return (this.availableShift.includes(shift));
@@ -36,28 +59,5 @@ class ITO
 					}
 		}
 		return isMatched;
-	}
-	getBlackListedShiftPatternIndex(shiftPattern)
-	{
-		var myRe,temp;
-		var index=new Array(),match;
-		var blackListShiftPattern,commaPattern = /,/g;
-		
-		for (var i in this.blackListShiftPatternList)
-		{
-			blackListShiftPattern=this.blackListShiftPatternList[i];
-			//console.log(this.itoId,shiftPattern,blackListShiftPattern);
-			myRe= new RegExp(blackListShiftPattern, 'gi');
-			while ((match = myRe.exec(shiftPattern))!=null)
-			{
-				temp=shiftPattern.substring(0, match.index);
-				if (temp=="")
-					index.push(1);
-				else
-					index.push(temp.match(commaPattern).length+1);
-			}	
-		}
-		//console.log(this.itoId,shiftPattern,index);
-		return index;
 	}
 }

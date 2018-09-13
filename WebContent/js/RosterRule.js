@@ -34,6 +34,91 @@ class RosterRule
 		return result;
 	}
 //----------------------------------------------------------------------------------------------------------------------------------	
+	_getNoOfConsecutiveWorkingDay(ito,previousShiftList,thatShift)
+	{
+		var count=0,finished=false;
+		var shiftList=this.utility.cloneArray(previousShiftList);
+		shiftList.push(thatShift);
+		for (var i=0;i<shiftList.length;i++)
+		{
+			switch (shiftList[i])
+			{
+				case "":
+				case "O":
+				case "d" : 
+				case "d1":
+				case "d2":
+				case "d3":
+						count=0;
+						break;
+				default:
+						count++;
+						break;		
+			}
+			if (finished)
+				break;
+		}
+		
+		//console.log(ito.itoId,previousShiftList,shiftList,thatShift,count);
+		
+		return count;
+	}
+	_getTotalNoOfThatShiftAssigned(resultantShiftList,thatShift)
+	{
+		var count=0;
+		resultantShiftList.forEach(function(shift){
+			if (shift==thatShift)
+				count++;
+		});
+		return count;
+	}
+	_isConflictWithPreferredShift(preferredShift,thatShift)
+	{
+		var result=false;
+		if (((typeof preferredShift)=="undefined") || (preferredShift=="")||(preferredShift==thatShift))
+		//if (((typeof preferredShift)=="undefined")||(preferredShift==thatShift))
+			return result;
+		else
+		{
+			if (preferredShift.startsWith("n"))
+			{
+				if (preferredShift.indexOf(thatShift)>-1)
+					result=true;
+			}	
+			else	
+			{	
+				switch (thatShift)
+				{
+					case "O":
+					case "d" : 
+					case "d1":
+					case "d2":
+					case "d3":
+							break;
+					default:
+							result=true;
+							break;
+				}
+				
+				
+			}
+		}
+		return result;
+	}
+	_isThatShiftFormBlackListedShiftPattern(ito,previousShiftList,thatShift)
+	{
+		var shiftPattern="",indices=[];
+		previousShiftList.forEach(function(shift){
+			shiftPattern+=shift+",";
+		});
+		shiftPattern+=thatShift;
+		indices=ito.getBlackListedShiftPatternIndex(shiftPattern);
+		if (indices.length>0)
+			return true;
+		else
+			return false;	
+	}
+	
 	_isThatShiftOkForAssign(resultantShiftList,previousShiftList,preferredShift,index,ito,thatShift)
 	{
 		var result=true;
@@ -69,88 +154,5 @@ class RosterRule
 		}
 		return result;
 	}
-	_getTotalNoOfThatShiftAssigned(resultantShiftList,thatShift)
-	{
-		var count=0;
-		resultantShiftList.forEach(function(shift){
-			if (shift==thatShift)
-				count++;
-		});
-		return count;
-	}
-	_getNoOfConsecutiveWorkingDay(ito,previousShiftList,thatShift)
-	{
-		var count=0,finished=false;
-		var shiftList=this.utility.cloneArray(previousShiftList);
-		shiftList.push(thatShift);
-		for (var i=0;i<shiftList.length;i++)
-		{
-			switch (shiftList[i])
-			{
-				case "":
-				case "O":
-				case "d" : 
-				case "d1":
-				case "d2":
-				case "d3":
-						count=0;
-						break;
-				default:
-						count++;
-						break;		
-			}
-			if (finished)
-				break;
-		}
-		
-		//console.log(ito.itoId,previousShiftList,shiftList,thatShift,count);
-		
-		return count;
-	}
-	_isThatShiftFormBlackListedShiftPattern(ito,previousShiftList,thatShift)
-	{
-		var shiftPattern="",indices=[];
-		previousShiftList.forEach(function(shift){
-			shiftPattern+=shift+",";
-		});
-		shiftPattern+=thatShift;
-		indices=ito.getBlackListedShiftPatternIndex(shiftPattern);
-		if (indices.length>0)
-			return true;
-		else
-			return false;	
-	}
-	_isConflictWithPreferredShift(preferredShift,thatShift)
-	{
-		var result=false;
-		if (((typeof preferredShift)=="undefined") || (preferredShift=="")||(preferredShift==thatShift))
-		//if (((typeof preferredShift)=="undefined")||(preferredShift==thatShift))
-			return result;
-		else
-		{
-			if (preferredShift.startsWith("n"))
-			{
-				if (preferredShift.indexOf(thatShift)>-1)
-					result=true;
-			}	
-			else	
-			{	
-				switch (thatShift)
-				{
-					case "O":
-					case "d" : 
-					case "d1":
-					case "d2":
-					case "d3":
-							break;
-					default:
-							result=true;
-							break;
-				}
-				
-				
-			}
-		}
-		return result;
-	}
+
 }

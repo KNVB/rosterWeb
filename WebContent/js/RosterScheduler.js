@@ -16,6 +16,84 @@ class RosterScheduler
 		this.loadingScreen=new MyLoadingScreen({imgPath:"img/icon.gif"});
 	
 	}
+	autoAssign()
+	{
+		var startDate=this.rosterTable.getAutoPlanStartDate();
+		var endDate=this.rosterTable.getAutoPlanEndDate();
+		if (startDate>endDate)
+			alert("Invalid start date or end date selection");
+		else
+		{	
+			if (this.rosterTable.haveInvalidPreferredShift(startDate,endDate))
+				alert("Invalid shift requirement detected");
+			else
+			{
+				var self=this;
+				var finalRoster,tempArray,tempRoster;
+				var roster,tempAverageSD,lowestAverageSD=100.0;
+				 
+				this.theLowestSDRosters=[];
+				this.theLowestMissingShiftRosters=[];
+				this.loadingScreen.show();
+				
+				/*
+				 * 
+				 * It looks like _genRoster is blocking the browser, and not giving it any resources to re-render/repaint until the loop is completed. 
+				 * One possibility would be to run the loop after giving the browser a few ms to render the .loading
+				 * https://stackoverflow.com/questions/51869613/create-an-loading-screen-for-long-calculation?noredirect=1#comment90691880_51869613
+				 */
+				setTimeout(() => {
+					  for (var i = 0; i < 100; i++) {
+						roster=new Roster(startDate,this._genRoster(startDate,endDate),this.utility,this.rosterRule,endDate-startDate+1);
+			    		this.theLowestSDRosters.push(roster);
+			    		this.theLowestSDRosters.sort(this._sortBySD);
+			    		if (this.theLowestSDRosters.length==4)
+			    		{	
+		    				this.theLowestSDRosters.splice(3,1);
+			    		}
+			    		this.theLowestMissingShiftRosters.push(roster);
+			    		this.theLowestMissingShiftRosters.sort(this._sortByMissingShift);
+			    		if (this.theLowestMissingShiftRosters.length==4)
+			    		{	
+			    			this.theLowestMissingShiftRosters.splice(3,1);
+			    		}
+					  }
+					  this.loadingScreen.hide();
+					  this.rosterTable.setLowestSDData(this.theLowestSDRosters);
+					  this.rosterTable.setMissingShiftData(this.theLowestMissingShiftRosters);
+					  this.rosterTable.showGenResultTable();
+					}, 50);
+			}	
+		}
+	}
+	exportRosterToExcel()
+	{
+		var rosterData={};
+		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
+		var allITOShiftData=this.rosterTable.getAllShiftData();
+		rosterData["rosterYear"]=this.year;
+		rosterData["rosterMonth"]=this.month;
+		rosterData["itorosterList"]={};
+		for (var itoId in this.itoList)
+		{
+			iTOShiftData={};
+			iTOShiftData["shiftList"]=allITOShiftData[itoId];
+			if (isNaN(this.rosterTable.getLastMonthBalance(itoId)))
+				iTOShiftData["balance"]=0;
+			else
+				iTOShiftData["balance"]=this.rosterTable.getLastMonthBalance(itoId);
+			rosterData["itorosterList"][itoId]=iTOShiftData;
+		}
+		rosterData["vacancyShiftData"]=this.rosterTable.getVacancyShiftData();
+		//console.log(this.rosterTable.getVacancyShiftData());
+		this.utility.exportRosterToExcel(rosterData)
+		.done(function(){
+			alert("Export roster data to excel successfully.");
+		})
+		.fail(function(){
+			alert("Export roster data to excel failure.");
+		});
+	}
 	init(year,month)
 	{
 		var self=this,itoCount=0;
@@ -70,62 +148,13 @@ class RosterScheduler
 
 		//this.rosterRule=new RosterRule(this.utility,year,month)
 	}
-	validate()
+	loadLowestSDRoster(seq)
 	{
-		var result=true;
-		if (this.rosterTable.haveMissingShift())
-		{	
-			alert("Missing shift found!");
-			result=false;
-		}
-		else
-		{	
-			if (this.rosterTable.haveDuplicateShift())
-			{	
-				result=false;
-			}
-			else
-			{	
-				if (this.rosterTable.haveBlackListedShiftPattern())
-				{	
-					alert("Black list shift found!");
-					result=false;
-				}
-				else
-				{
-					alert("This roster is valid.");
-				}	
-			}
-		}
-		return result;
+		this.rosterTable.loadRoster(this.theLowestSDRosters[seq]);
 	}
-	exportRosterToExcel()
+	loadMissingShiftRoster(seq)
 	{
-		var rosterData={};
-		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
-		var allITOShiftData=this.rosterTable.getAllShiftData();
-		rosterData["rosterYear"]=this.year;
-		rosterData["rosterMonth"]=this.month;
-		rosterData["itorosterList"]={};
-		for (var itoId in this.itoList)
-		{
-			iTOShiftData={};
-			iTOShiftData["shiftList"]=allITOShiftData[itoId];
-			if (isNaN(this.rosterTable.getLastMonthBalance(itoId)))
-				iTOShiftData["balance"]=0;
-			else
-				iTOShiftData["balance"]=this.rosterTable.getLastMonthBalance(itoId);
-			rosterData["itorosterList"][itoId]=iTOShiftData;
-		}
-		rosterData["vacancyShiftData"]=this.rosterTable.getVacancyShiftData();
-		//console.log(this.rosterTable.getVacancyShiftData());
-		this.utility.exportRosterToExcel(rosterData)
-		.done(function(){
-			alert("Export roster data to excel successfully.");
-		})
-		.fail(function(){
-			alert("Export roster data to excel failure.");
-		});
+		this.rosterTable.loadRoster(this.theLowestMissingShiftRosters[seq]);
 	}
 	saveAllData()
 	{
@@ -155,107 +184,36 @@ class RosterScheduler
 			alert("Save roster data failure.");
 		});
 	}
-	autoAssign()
+	validate()
 	{
-		var startDate=this.rosterTable.getAutoPlanStartDate();
-		var endDate=this.rosterTable.getAutoPlanEndDate();
-		if (startDate>endDate)
-			alert("Invalid start date or end date selection");
+		var result=true;
+		if (this.rosterTable.haveMissingShift())
+		{	
+			alert("Missing shift found!");
+			result=false;
+		}
 		else
 		{	
-			if (this.rosterTable.haveInvalidPreferredShift(startDate,endDate))
-				alert("Invalid shift requirement detected");
+			if (this.rosterTable.haveDuplicateShift())
+			{	
+				result=false;
+			}
 			else
-			{
-				var self=this;
-				var finalRoster,tempArray,tempRoster;
-				var roster,tempAverageSD,lowestAverageSD=100.0;
-				 
-				this.theLowestSDRosters=[];
-				this.theLowestMissingShiftRosters=[];
-				this.loadingScreen.show();
-				
-				/*
-				 * 
-				 * It looks like _genRoster is blocking the browser, and not giving it any resources to re-render/repaint until the loop is completed. 
-				 * One possibility would be to run the loop after giving the browser a few ms to render the .loading
-				 * https://stackoverflow.com/questions/51869613/create-an-loading-screen-for-long-calculation?noredirect=1#comment90691880_51869613
-				 */
-				setTimeout(() => {
-					  for (var i = 0; i < 100; i++) {
-						roster=new Roster(startDate,this._genRoster(startDate,endDate),this.utility,this.rosterRule,endDate-startDate+1);
-			    		this.theLowestSDRosters.push(roster);
-			    		this.theLowestSDRosters.sort(this._sortBySD);
-			    		if (this.theLowestSDRosters.length==4)
-			    		{	
-		    				this.theLowestSDRosters.splice(3,1);
-			    		}
-			    		this.theLowestMissingShiftRosters.push(roster);
-			    		this.theLowestMissingShiftRosters.sort(this._sortByMissingShift);
-			    		if (this.theLowestMissingShiftRosters.length==4)
-			    		{	
-			    			this.theLowestMissingShiftRosters.splice(3,1);
-			    		}
-					  }
-					  this.loadingScreen.hide();
-					  this.rosterTable.setLowestSDData(this.theLowestSDRosters);
-					  this.rosterTable.setMissingShiftData(this.theLowestMissingShiftRosters);
-					  this.rosterTable.showGenResultTable();
-					}, 50);
-			}	
-		}
-	}
-	loadLowestSDRoster(seq)
-	{
-		this.rosterTable.loadRoster(this.theLowestSDRosters[seq]);
-	}
-	loadMissingShiftRoster(seq)
-	{
-		this.rosterTable.loadRoster(this.theLowestMissingShiftRosters[seq]);
-	}
-//--------------------------------------------------------------------------------------------------------------------------
-	_sortByMissingShift(a,b)
-	{
-		let comparison = 0;
-		if (a.missingShiftCount>b.missingShiftCount)
-			comparison = 1;
-		else
-		{
-			if (b.missingShiftCount>a.missingShiftCount)
-				comparison = -1;
-			else
-			{
-				if (a.averageShiftStdDev>b.averageShiftStdDev)
-					comparison = 1;
+			{	
+				if (this.rosterTable.haveBlackListedShiftPattern())
+				{	
+					alert("Black list shift found!");
+					result=false;
+				}
 				else
 				{
-					if (b.averageShiftStdDev>a.averageShiftStdDev)
-						comparison = -1;
+					alert("This roster is valid.");
 				}	
-			}	
-		}	
-		return comparison;
-	}
-	_sortBySD(a,b)
-	{
-		let comparison = 0;
-		if (a.averageShiftStdDev>b.averageShiftStdDev)
-			comparison = 1;
-		else
-		{
-			if (b.averageShiftStdDev>a.averageShiftStdDev)
-				comparison = -1;
-			else
-			{
-				if (a.missingShiftCount>b.missingShiftCount)
-					comparison = 1;
-				else
-					if (b.missingShiftCount>a.missingShiftCount)
-						comparison = -1;
-			}	
-		}	
-		return comparison;
-	}
+			}
+		}
+		return result;
+	}	
+//--------------------------------------------------------------------------------------------------------------------------
 	_genRoster(startDate,endDate)
 	{
 		var ito,essentialShiftTemp;
@@ -355,4 +313,47 @@ class RosterScheduler
 		}
 		return(resultantRoster);
 	}
+	_sortByMissingShift(a,b)
+	{
+		let comparison = 0;
+		if (a.missingShiftCount>b.missingShiftCount)
+			comparison = 1;
+		else
+		{
+			if (b.missingShiftCount>a.missingShiftCount)
+				comparison = -1;
+			else
+			{
+				if (a.averageShiftStdDev>b.averageShiftStdDev)
+					comparison = 1;
+				else
+				{
+					if (b.averageShiftStdDev>a.averageShiftStdDev)
+						comparison = -1;
+				}	
+			}	
+		}	
+		return comparison;
+	}
+	_sortBySD(a,b)
+	{
+		let comparison = 0;
+		if (a.averageShiftStdDev>b.averageShiftStdDev)
+			comparison = 1;
+		else
+		{
+			if (b.averageShiftStdDev>a.averageShiftStdDev)
+				comparison = -1;
+			else
+			{
+				if (a.missingShiftCount>b.missingShiftCount)
+					comparison = 1;
+				else
+					if (b.missingShiftCount>a.missingShiftCount)
+						comparison = -1;
+			}	
+		}	
+		return comparison;
+	}
+
 }
