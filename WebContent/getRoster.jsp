@@ -14,7 +14,7 @@ Roster roster=new Roster();
 roster.setRosterYear(year);
 roster.setRosterMonth(month);
 roster.load();
-Hashtable<Integer,String>weekDayNames=new Hashtable<Integer,String>();
+//Hashtable<Integer,String>weekDayNames=new Hashtable<Integer,String>();
 CalendarUtility calendarUtility=new CalendarUtility();
 MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(year, month);
 Hashtable<Integer,MyCalendar> myCalendarList=mc.getMonthlyCalendar();
