@@ -63,6 +63,40 @@ public class DbOp implements DataStore
 		// TODO Auto-generated method stub
 
 	}
+	@Override
+	public void test() 
+	{
+		PreparedStatement stmt=null;
+		try
+		{	
+			sqlString="insert into testing (f1) values (?)";
+			stmt=dbConn.prepareStatement(sqlString);
+			stmt.setString(1,"2018-09-14");
+			stmt.executeUpdate();
+			stmt.close();
+		}
+		catch (SQLException e) 
+		{
+			try 
+			{
+				if (dbConn!=null)
+				{	
+					dbConn.rollback();
+					logger.info("Update roster data transaction rollbacked");
+				}
+			}
+			catch (SQLException e1) 
+			{
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		finally 
+		{
+			releaseResource(null, stmt);
+		}
+
+	}	
 	
 	@Override
 	public boolean updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList) 
@@ -504,5 +538,6 @@ public class DbOp implements DataStore
 	{
 		dbConn.close();
 		dbConn = null;
-	}	
+	}
+
 }
