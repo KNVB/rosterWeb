@@ -1,44 +1,324 @@
+<%@ page trimDirectiveWhitespaces="true"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="com.*"%>    
 <%@ page import="util.*"%>
 <%@ page import="util.calendar.*" %>
+<%@ page import="java.util.*"%>
 <%@ page import="java.util.Calendar"%>
 <%@ page import="java.util.GregorianCalendar" %>
 <%
-int i=0;
+int i=0,year,month;
+int showNoOfPrevDate=2,noOfWorkingDay=0;
+float actualWorkingHour;
+String className=new String();
 GregorianCalendar now=new GregorianCalendar();
+year=now.get(Calendar.YEAR);
+month=now.get(Calendar.MONTH);
+ITO ito=new ITO();
+ITORoster iTORoster;
+Roster roster=new Roster();
+roster.setRosterYear(year);
+roster.setRosterMonth(month);
+roster.load();
+Hashtable<Integer,String>weekDayNames=new Hashtable<Integer,String>();
+CalendarUtility calendarUtility=new CalendarUtility();
+MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(year,month);
+Hashtable<Integer,MyCalendar> myCalendarList=mc.getMonthlyCalendar();
+MyCalendar myCalendar;
 %>
 <html>
 	<head>
 		<meta charset="UTF-8">
 		<title>Roster Scheduling</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<link rel="stylesheet" type="text/css" href="css/MyModal.css">
 		<script type="text/javascript" src="<%=request.getContextPath() %>/webjars/jquery/3.3.1/jquery.min.js"></script>
-		<script src="js/ITO.js"></script>
-		<script src="js/RosterRule.js"></script>
-		<script src="js/RosterTable.js"></script>
-		<script src="js/util/Utility.js"></script>
-		<script src="js/util/MyModal.js"></script>
-		<script src="js/util/MyLoadingScreen.js"></script>
-		<script src="js/util/ShiftCellEventHandler.js"></script>
-		<script src="js/Roster.js"></script>
-		<script src="js/RosterScheduler.js"></script>
-		<script>
-			$( document ).ready(function() {
-				var rosterScheduler=new RosterScheduler();
-				rosterScheduler.init(<%=now.get(Calendar.YEAR)%>,<%=now.get(Calendar.MONTH)%>);
-				//roster.init(2017,5);
-			});
-		</script>
 	</head>
 	<body>
 		<table border="0" id="rosterTable">
 			<thead id="rosterHeader">
+				<tr>
+					<td class="nameCell"></td>
+					<td colspan="2"></td>
+					<td class="alignCenter titleCell underlineText" colspan="31">
+						EMSTF Resident Support &amp; Computer Operation Support Services Team Roster
+					</td>
+					<td class="totalHourCell"><br></td>
+					<td class="actualHourCell"><br></td>
+					<td class="lastMonthCell"><br></td>
+					<td class="thisMonthCell"><br></td>
+					<td class="totalCell"><br></td>
+					<td class="totalNoOfCell"><br></td>
+					<td class="totalNoOfCell"><br></td>
+					<td class="totalNoOfCell"><br></td>
+					<td class="totalNoOfCell"><br></td><td class="noOfWorkingDay"><br></td>
+				</tr>
+				<tr id="rosterMonthRow">
+					<td class="nameCell">
+					</td><td colspan="2"></td>
+					<td colspan="31" class="underlineText alignCenter rosterMonthSelectCell">
+						<select id="selectRosterMonth" class="underlineText rosterMonthSelect">
+							<option <%=((now.get(Calendar.MONTH)==Calendar.JANUARY)?"selected":"")%> value="0">January</option>
+							<option <%=((now.get(Calendar.MONTH)==Calendar.FEBRUARY)?"selected":"")%> value="1">February</option>
+							<option <%=((now.get(Calendar.MONTH)==Calendar.MARCH)?"selected":"")%> value="2">March</option>
+							<option <%=((now.get(Calendar.MONTH)==Calendar.APRIL)?"selected":"")%> value="3">April</option>
+							<option <%=((now.get(Calendar.MONTH)==Calendar.MAY)?"selected":"")%> value="4">May</option>
+							<option <%=((now.get(Calendar.MONTH)==Calendar.JUNE)?"selected":"")%> value="5">June</option>
+							<option <%=((now.get(Calendar.MONTH)==Calendar.JULY)?"selected":"")%> value="6">July</option>
+							<option <%=((now.get(Calendar.MONTH)==Calendar.AUGUST)?"selected":"")%> value="7">August</option>
+							<option <%=((now.get(Calendar.MONTH)==Calendar.SEPTEMBER)?"selected":"")%> value="8">September</option>
+							<option <%=((now.get(Calendar.MONTH)==Calendar.OCTOBER)?"selected":"")%> value="9">October</option>
+							<option <%=((now.get(Calendar.MONTH)==Calendar.NOVEMBER)?"selected":"")%> value="10">November</option>
+							<option <%=((now.get(Calendar.MONTH)==Calendar.DECEMBER)?"selected":"")%> value="11">December</option>
+						</select>2018
+					</td>
+					<td colspan="10"></td>
+				</tr>
+				<tr>
+					<td colspan="44">
+						<br>
+					</td>
+				</tr>
+				<tr>
+					<td class="nameCell borderCell">Holiday</td>
+<%				for (i=0;i<showNoOfPrevDate;i++)
+				{
+					out.println("<td class=\"dataCell alignCenter borderCell\"></td>");
+				}
+				for (i=0;i<31;i++)
+				{
+ 					if (i< myCalendarList.size())
+					{
+						myCalendar= myCalendarList.get(i+1);
+						if (myCalendar.isPublicHoliday())
+						{
+							out.println("<td class=\"dataCell alignCenter borderCell phCell\">PH</td>");	
+						}
+						else
+						{
+							out.println("<td class=\"dataCell alignCenter borderCell phCell\"></td>");
+						}
+					}
+					else
+					{
+						out.println("<td class=\"dataCell alignCenter borderCell phCell\"></td>");
+					}
+				}%>	
+					<td class="borderCell" colspan="10"></td>				
+				</tr>
+				<tr>
+					<td class="nameCell borderCell">Days</td>
+<%				for (i=0;i<showNoOfPrevDate;i++)
+				{
+					out.println("<td class=\"dataCell alignCenter borderCell\"></td>");
+				}
+				for (i=0;i<31;i++)
+				{
+					className="dataCell alignCenter borderCell";
+					if (i< myCalendarList.size())
+					{
+						myCalendar= myCalendarList.get(i+1);
+						if (myCalendar.isPublicHoliday()||
+							(myCalendar.getDayOfWeek()==Calendar.SATURDAY)||
+							(myCalendar.getDayOfWeek()==Calendar.SUNDAY))
+						{
+							className+=" phCell";	
+						}
+						else
+							noOfWorkingDay++;
+						switch (myCalendar.getDayOfWeek())
+						{
+							case Calendar.FRIDAY:out.println("<td class=\""+className+"\">F</td>");
+												break;
+							case Calendar.MONDAY:out.println("<td class=\""+className+"\">M</td>");
+													break;
+							case Calendar.SATURDAY:out.println("<td class=\""+className+"\">S</td>");
+													break;
+							case Calendar.SUNDAY:out.println("<td class=\""+className+"\">Su</td>");
+												 break;
+							case Calendar.TUESDAY:out.println("<td class=\""+className+"\">T</td>");
+												break;
+							case Calendar.THURSDAY:out.println("<td class=\""+className+"\">Th</td>");
+												break;
+							case Calendar.WEDNESDAY:out.println("<td class=\""+className+"\">W</td>");
+												break;
+												 
+						}
+					}
+					else
+						out.println("<td class=\""+className+"\"></td>");
+				}%>
+					<td class="alignCenter borderCell" rowspan="2">Total<br>Hour</td>
+					<td class="alignCenter borderCell" rowspan="2">Actual<br>Hour</td>
+					<td class="alignCenter borderCell" colspan="8">Hour Off Due</td>					
+				</tr>
+				<tr>
+					<td class="nameCell borderCell">Resident Support<br>Team Members</td>
+<%				for (i=0;i<showNoOfPrevDate;i++)
+				{
+					out.println("<td class=\"dataCell alignCenter borderCell\"></td>");
+				}
+				for (i=0;i<31;i++)
+				{
+					if (i< myCalendarList.size())
+					{
+						out.println("<td class=\"dataCell alignCenter borderCell\">"+(i+1)+"</td>");
+					}
+					else
+						out.println("<td class=\"dataCell alignCenter borderCell\"></td>");	
+				}%>
+					<td class="alignCenter borderCell">Last<br>Month</td>
+					<td class="alignCenter borderCell">This<br>Month</td>
+					<td class="alignCenter borderCell">Total</td>
+					<td class="alignCenter borderCell">Total No. of<br>A shift</td>
+					<td class="alignCenter borderCell">Total No. of<br>Bx shift</td>
+					<td class="alignCenter borderCell">Total No. of<br>C shift</td>
+					<td class="alignCenter borderCell">Total No. of<br>Dx shift</td>
+					<td class="alignCenter borderCell">No. of<br>working<br>day</td>
+				</tr>
 			</thead>
 			<tbody id="rosterBody">
+<%		Hashtable<String,ITORoster> itoRosterList=roster.getITORosterList();
+		Hashtable<String,ITO> itoList=ito.getITOList(year,month);
+		String[] itoIdList = itoList.keySet().toArray(new String[0]);
+		Arrays.sort(itoIdList);
+		if(itoRosterList.size()>0)
+		{
+			float thisMonthBalance,thisMonthHourTotal,totalHour;
+			int aShiftCount,bxShiftCount,cShiftCount,dxShiftCount,totalNoOfWorkingDay;
+			Shift shift;
+			ArrayList<Shift> shiftList;             
+			ArrayList<Shift> preferredShiftList;    
+			ArrayList<Shift> previousMonthShiftList;
+			Hashtable <Integer,String> preferredShift; 
+			int previousMonthShiftListStartIndex;
+			for (String itoId:itoIdList)
+			{
+				ito=itoList.get(itoId);
+				actualWorkingHour=0.0f;
+				aShiftCount=0;
+				bxShiftCount=0;
+				cShiftCount=0;
+				dxShiftCount=0;
+				totalHour=noOfWorkingDay*ito.getWorkingHourPerDay();
+				preferredShift=new Hashtable <Integer,String>();
+				out.println("<tr id=\"shift_"+itoId+"\">");
+				out.println("<td class=\"borderCell alignLeft\">"+ito.getItoName()+"<br>"+itoId+" Extn. 2458</td>");
+				
+				previousMonthShiftList=itoRosterList.get(itoId).getPreviousMonthShiftList();
+				previousMonthShiftListStartIndex=previousMonthShiftList.size()-showNoOfPrevDate;
+				
+				for (i=previousMonthShiftListStartIndex;i<previousMonthShiftList.size();i++)
+				{
+					className="dataCell alignCenter borderCell";
+					shift=previousMonthShiftList.get(i);
+					switch(shift.getShift())
+					{
+						case "a":
+								className+=" aShiftColor";
+								break;	
+						case "b":
+						case "b1":
+								className+=" bShiftColor";
+								break;
+						case "c":
+								className+=" cShiftColor";
+								break;
+						case "d":
+						case "d1":
+						case "d2":
+						case "d3":
+								className+=" dxShiftColor";
+								break;
+						case "O":
+								className+=" oShiftColor";
+								break;
+					}
+					out.println("<td class=\""+className+"\">"+shift.getShift()+"</td>");
+				}
+				shiftList=itoRosterList.get(itoId).getShiftList();
+				for (i=0;i<31;i++)
+				{	
+					className="borderCell alignCenter";
+					if (i< myCalendarList.size())
+					{
+						shift=shiftList.get(i);
+						className+=" shiftCell";
+						switch(shift.getShift())
+						{
+							case "a":
+									aShiftCount++;
+									className+=" aShiftColor";
+									break;	
+							case "b":
+							case "b1":
+									bxShiftCount++;
+									className+=" bShiftColor";
+									break;
+							case "c":
+									cShiftCount++;
+									className+=" cShiftColor";
+									break;
+							case "d":
+							case "d1":
+							case "d2":
+							case "d3":
+									dxShiftCount++;
+									className+=" dxShiftColor";
+									break;
+							case "O":
+									className+=" oShiftColor";
+									break;
+						}
+						actualWorkingHour+=RosterRule.getShiftHourCount().get(shift.getShift());
+						out.println("<td class=\""+className+"\">"+shift.getShift()+"</td>");
+					}
+					else
+						out.println("<td class=\""+className+"\"></td>");
+				}
+				thisMonthHourTotal=totalHour-actualWorkingHour;
+				thisMonthBalance=thisMonthHourTotal+itoRosterList.get(itoId).getBalance();
+				out.println("<td class=\"borderCell alignCenter\">"+totalHour+"</td>");
+				out.println("<td class=\"borderCell alignCenter\">"+actualWorkingHour+"</td>");
+				out.println("<td class=\"borderCell alignCenter\" id=\""+itoId+"_lastMonthBalance\">"+itoRosterList.get(itoId).getBalance()+"</td>");
+				out.println("<td class=\"borderCell alignCenter\" id=\""+itoId+"_thisMonthHourTotal\">"+ Math.round(thisMonthHourTotal*100.0)/100.0+"</td>");
+				out.println("<td class=\"borderCell alignCenter\" id=\""+itoId+"_thisMonthBalance\">"+Math.round(thisMonthBalance*100.0)/100.0+"</td>");
+				
+				
+				out.println("<td class=\"borderCell alignCenter\">"+aShiftCount+"</td>");
+				out.println("<td class=\"borderCell alignCenter\">"+bxShiftCount+"</td>");
+				out.println("<td class=\"borderCell alignCenter\">"+cShiftCount+"</td>");
+				out.println("<td class=\"borderCell alignCenter\">"+dxShiftCount+"</td>");
+				
+				totalNoOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
+				out.println("<td class=\"borderCell alignCenter\">"+totalNoOfWorkingDay+"</td>");
+				out.println("</tr>");
+			}
+		}
+		else
+		{
+			for (String itoId:itoIdList)
+			{
+				ito=itoList.get(itoId);
+				out.println("<tr id=\"shift_"+itoId+"\">");
+				out.println("<td class=\"borderCell alignLeft\">"+ito.getItoName()+"<br>"+itoId+" Extn. 2458</td>");
+				for (i=0;i<showNoOfPrevDate;i++)
+				{
+					out.println("<td class=\"dataCell alignCenter borderCell\"></td>");
+				}
+				for (i=0;i<31;i++)
+				{
+					out.println("<td class=\"borderCell alignCenter shiftCell\"></td>");
+				}
+				for (i=0;i<10;i++)
+				{
+					out.println("<td class=\"borderCell alignCenter\"></td>");
+				}
+				out.println("</tr>");
+			}
+		}%>			
 			</tbody>
-			<tfoot id="footer">
+			<tfoot>
 				<tr>
 					<td colspan="44">
 						<br>
@@ -48,57 +328,7 @@ GregorianCalendar now=new GregorianCalendar();
 					<td colspan=13 class="aShiftColor">	
 						a : 0800H - 1700H
 					</td>
-					<td colspan="20" rowspan=10>
-						<div style="text-align:center">
-							Auto Planning Start From:
-							<select id="autoPlannStartDate"></select>
-							to
-							<select id="autoPlanEndDate"></select>
-							<a class="autoPlannerButton">Auto Planner</a>
-						</div>
-						<div style="padding-left:10px;display:none" id="genResult">
-							<table border=0 >
-								<tr>
-									<td>Standard Deviation:</td>
-								</tr>
-								<tr id="theLowestSD">
-									<td>1</td>
-									<td>1</td>
-								</tr>
-								<tr id="secondLowestSD">
-									<td>1</td>
-									<td>1</td>
-								</tr>
-								<tr id="thirdLowestSD">
-									<td >1</td>
-									<td>1</td>
-								</tr>
-								<tr>
-									<td><br></td>
-								</tr>
-								<tr>
-									<td>Missing shift Count:</td>
-								</tr>
-								<tr id="theLowestMissingShiftCount">
-									<td>1</td>
-									<td>1</td>
-								</tr>
-								<tr id="theSecondLowestMissingShiftCount">
-									<td>1</td>
-									<td>1</td>
-								</tr>
-								<tr id="theThirdLowestMissingShiftCount">
-									<td>1</td>
-									<td>1</td>
-								</tr>						
-							</table>
-						</div>	
-					</td>
-					<td colspan="11" rowspan="13">
-						<div id="yearlyStatistic" style="height:450px;overflow-y:scroll">
-						</div>
-					</td>
-				</tr>	
+				</tr>
 				<tr>
 					<td colspan=13 class="bShiftColor">	
 						b : 1630H - 2215H
@@ -148,22 +378,8 @@ GregorianCalendar now=new GregorianCalendar();
 					<td colspan="33">
 						<br>
 					</td>
-				</tr>													
-				<tr>
-					<td colspan=33 style="text-align:center">
-						<a class="findMissingShiftButton">Find Missing Shift</a>
-						<a class="findDuplicateShiftButton">Find Duplicate Shift</a>
-						<a class="checkAllButton">is it a valid roster?</a>
-						<a class="clearAllButton">Clear All Shift Data</a>
-					</td>
-				</tr>
-				<tr>	
-					<td colspan=33 style="text-align:center">	
-						<a class="exportButton">Export to Excel File</a>
-						<a class="saveRosterToDBButton">Save all data to DB</a>
-					</td>
-				</tr>									
-			</tfoot>			
-		</table>			
+				</tr>						
+			</tfoot>
+		</table>
 	</body>
-</html>	
+</html>		
