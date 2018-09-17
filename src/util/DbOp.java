@@ -63,41 +63,7 @@ public class DbOp implements DataStore
 		// TODO Auto-generated method stub
 
 	}
-	@Override
-	public void test() 
-	{
-		PreparedStatement stmt=null;
-		try
-		{	
-			sqlString="insert into testing (f1) values (?)";
-			stmt=dbConn.prepareStatement(sqlString);
-			stmt.setString(1,"2018-09-14");
-			stmt.executeUpdate();
-			stmt.close();
-		}
-		catch (SQLException e) 
-		{
-			try 
-			{
-				if (dbConn!=null)
-				{	
-					dbConn.rollback();
-					logger.info("Update roster data transaction rollbacked");
-				}
-			}
-			catch (SQLException e1) 
-			{
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
-		finally 
-		{
-			releaseResource(null, stmt);
-		}
-
-	}	
-	
+		
 	@Override
 	public boolean updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList) 
 	{
@@ -129,7 +95,7 @@ public class DbOp implements DataStore
 				
 				sqlString="replace into shift_record (ito_id,shift_date,shift,state) values (?,?,?,?)";
 				stmt=dbConn.prepareStatement(sqlString);
-				for (Shift shift:iTORosterList.get(itoId).getShiftList())
+/*				for (Shift shift:iTORosterList.get(itoId).getShiftList())
 				{
 					stmt.setString(1,itoId);
 					stmt.setDate(2,new java.sql.Date(shift.getShiftDate().getTime().getTime()));
@@ -169,7 +135,7 @@ public class DbOp implements DataStore
 				}
 				logger.debug("===============================");
 				dbConn.commit();
-				logger.info(itoId+" roster data update completed.");
+				logger.info(itoId+" roster data update completed.");*/
 			}
 		}
 		catch (SQLException e) 
@@ -336,14 +302,13 @@ public class DbOp implements DataStore
 		ITORoster itoRoster=null;
 		GregorianCalendar shiftDate;
 		PreparedStatement stmt = null;
-		ArrayList <Shift>shiftList=null;
-		ArrayList<Shift> preferredShiftList=null;
+		Hashtable <Integer,String>shiftList=null;
+		Hashtable<Integer,String> preferredShiftList=null;
 		ArrayList<Shift> previousMonthShiftList=null;
 		Hashtable<String, ITORoster> result=new  Hashtable<String, ITORoster>();
 		GregorianCalendar theLast2DayOfPreviousMonth=new GregorianCalendar(year,month,1);
 		GregorianCalendar theFirstDateOfTheMonth=new GregorianCalendar(year,month,1);
 		theLast2DayOfPreviousMonth.add(Calendar.DAY_OF_MONTH, -RosterRule.getMaxConsecutiveWorkingDay());
-	//	theLast2DayOfPreviousMonth.add(Calendar.DAY_OF_MONTH, -2);
 		lastDay=theFirstDateOfTheMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
 		String shiftMonthString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-1";
@@ -378,9 +343,10 @@ public class DbOp implements DataStore
 			while (rs.next())
 			{
 				shiftDate=new GregorianCalendar();
+				shiftDate.setTime(rs.getDate("shift_date"));
 				shift=new Shift();
 				shift.setShift(rs.getString("shift"));
-				shiftDate.setTime(rs.getDate("shift_date"));
+				
 				shift.setShiftDate(shiftDate);
 				if (result.containsKey(rs.getString("ito_id")))
 				{	
@@ -393,26 +359,22 @@ public class DbOp implements DataStore
 				{
 					itoRoster=new ITORoster();
 					itoRoster.setBalance(rs.getFloat("balance"));
-					shiftList=new ArrayList<Shift>();
-					preferredShiftList=new ArrayList<Shift>();
+					shiftList=new Hashtable<Integer,String>();
+					preferredShiftList=new Hashtable<Integer,String>();
 					previousMonthShiftList=new ArrayList<Shift>();
 					result.put(rs.getString("ito_id"),itoRoster);
 				}
 				
 				if (theFirstDateOfTheMonth.get(Calendar.MONTH)==shiftDate.get(Calendar.MONTH))
-					shiftList.add(shift);
+					shiftList.put(shiftDate.get(Calendar.DAY_OF_MONTH),rs.getString("shift"));
 				else
 					previousMonthShiftList.add(shift);
 				
 				if (rs.getString("preferred_shift")!=null)
 				{
-					shift=new Shift();
 					shiftDate=new GregorianCalendar();
-				//	shift.setItoId(itoId);
-					shift.setShift(rs.getString("preferred_shift"));
 					shiftDate.setTime(rs.getDate("shift_date"));
-					shift.setShiftDate(shiftDate);
-					preferredShiftList.add(shift);
+					preferredShiftList.put(shiftDate.get(Calendar.DAY_OF_MONTH),rs.getString("preferred_shift"));
 				}
 				itoRoster.setPreviousMonthShiftList(previousMonthShiftList);
 				itoRoster.setShiftList(shiftList);

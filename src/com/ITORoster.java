@@ -1,11 +1,11 @@
 package com;
-
+import java.util.Hashtable;
 import java.util.ArrayList;
 
 public class ITORoster 
 {
-	private ArrayList<Shift> shiftList;
-	private ArrayList<Shift> preferredShiftList;
+	private Hashtable<Integer,String> shiftList;
+	private Hashtable<Integer,String> preferredShiftList;
 	private ArrayList<Shift> previousMonthShiftList;
 
 	/**
@@ -31,28 +31,28 @@ public class ITORoster
 	 * Get Preferred shift list
 	 * @return Preferred shift list
 	 */
-	public ArrayList<Shift> getPreferredShiftList() {
+	public Hashtable<Integer,String> getPreferredShiftList() {
 		return preferredShiftList;
 	}
 	/**
 	 * Set Preferred shift list
 	 * @param preferedShiftList Preferred shift list
 	 */
-	public void setPreferredShiftList(ArrayList<Shift> preferedShiftList) {
+	public void setPreferredShiftList(Hashtable<Integer,String> preferedShiftList) {
 		this.preferredShiftList = preferedShiftList;
 	}
 	/**
 	 * Get Shift list
 	 * @return Shift list
 	 */
-	public ArrayList<Shift> getShiftList() {
+	public Hashtable<Integer,String> getShiftList() {
 		return shiftList;
 	}
 	/**
 	 * Set Shift list
 	 * @param shiftList Shift list
 	 */
-	public void setShiftList(ArrayList<Shift> shiftList) {
+	public void setShiftList(Hashtable<Integer,String> shiftList) {
 		this.shiftList = shiftList;
 	}
 	/**

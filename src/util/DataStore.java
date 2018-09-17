@@ -50,7 +50,7 @@ public interface DataStore {
 	public boolean updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList);	
 	
 	public Hashtable<String,ITOYearlyStatistic>getYearlyRosterStatistic(int year,int month);
-	public void test();
+	
 	/**
 	 * Close the DataStore
 	 * @throws Exception
