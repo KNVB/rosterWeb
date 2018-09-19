@@ -248,6 +248,7 @@ div#yearlyStatistic
 	background: linear-gradient(#663399,#7E329A);
 	cursor: pointer;
 }
+
 .clearAllButton
 {
 	position: relative;
@@ -359,4 +360,15 @@ div#yearlyStatistic
 	width: calc(100% - 4px);
 	height: 50%;
 	background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));
+}
+.highlight
+{
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffc477), color-stop(1, #fb9e25));
+	background:-moz-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:-webkit-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:-o-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:-ms-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:linear-gradient(to bottom, #ffc477 5%, #fb9e25 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc477', endColorstr='#fb9e25',GradientType=0);
+	background-color:#ffc477;
 }

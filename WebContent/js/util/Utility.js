@@ -64,6 +64,18 @@ class Utility
 	            return sq + Math.pow(n - m, 2);
 	        }, 0) / (data.length - 1));
 	};
+	printPreviousMonthShiftCell(shiftType)
+	{
+		var className="alignCenter borderCell";
+		className+=" "+utility.getShiftCssClassName(shiftType);
+		document.write("<td class=\""+className+"\">"+shiftType+"</td>");
+	}
+	printShiftCell(shiftType)
+	{
+		var className="alignCenter borderCell shiftCell";
+		className+=" "+utility.getShiftCssClassName(shiftType);
+		document.write("<td class=\""+className+"\">"+shiftType+"</td>");
+	}
 	roundTo(theValue,decPlace)
 	{
 		var result=theValue*Math.pow(10,decPlace);

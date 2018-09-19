@@ -17,13 +17,13 @@ class RosterTable
 		this.weekdayRow=document.getElementById("weekdayRow");
 		this.holidayRow=document.getElementById("holidayRow");
 		this.dateRow=document.getElementById("dateRow");
+		this.shiftCellEventHandler=new ShiftCellEventHandler(this,"shiftCell");
 	}
 	refresh(rosterList)
 	{
-		var shiftCellEventHandler;
 		this._refreshRosterHeader();
 		this._rebuildRosterBody();
-		shiftCellEventHandler=new ShiftCellEventHandler(this,"shiftCell");
+		this.shiftCellEventHandler=new ShiftCellEventHandler(this,"shiftCell");
 		this._refreshRosterData(rosterList);
 	}
 	setRosterRule(rosterRule)
@@ -123,7 +123,10 @@ class RosterTable
 			for (i=1;i<=31;i++)
 			{
 				cell=shiftRow.insertCell(shiftRow.cells.length);
-				cell.className="borderCell alignCenter shiftCell";
+				if (this.calendarList[i-1]==null)
+					cell.className="borderCell alignCenter";
+				else	
+					cell.className="borderCell alignCenter shiftCell";
 			}
 			
 			cell=shiftRow.insertCell(shiftRow.cells.length);
