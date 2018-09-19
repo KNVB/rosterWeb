@@ -1,8 +1,8 @@
 class Utility
 {
-	constructor()
+	constructor(jspPath)
 	{
-		
+		this.jspPath=jspPath;
 	}
 	getShiftCssClassName(shiftType)
 	{
@@ -41,7 +41,7 @@ class Utility
 	getRosterData(year,month)
 	{
 		var requestParameters={"year":year,"month":month}; 
-		return jQuery.ajax({"url": "getRoster.jsp",
+		return jQuery.ajax({"url": this.jspPath+"getRoster.jsp",
 					 dataType: 'json',
 					 data:requestParameters,
 					 error:this.showAjaxErrorMessage
@@ -50,7 +50,7 @@ class Utility
 	getRosterRule(year,month)
 	{
 		var requestParameters={"year":year,"month":month}; 
-		return jQuery.ajax({"url": "getRosterRule.jsp",
+		return jQuery.ajax({"url": this.jspPath+"getRosterRule.jsp",
 					 dataType: 'json',
 					 data:requestParameters,
 					 error:this.showAjaxErrorMessage

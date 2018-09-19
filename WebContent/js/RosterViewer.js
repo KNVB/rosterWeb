@@ -1,9 +1,9 @@
 class RosterViewer
 {
-	constructor()
+	constructor(utility)
 	{
-		this.utility=new Utility();
-		this.rosterTable=new RosterTable(this.utility);
+		this.utility=utility;
+		this.rosterTable=new RosterTable(utility);
 		var self=this;
 		var monthSelect=document.getElementById("selectRosterMonth");
 		
