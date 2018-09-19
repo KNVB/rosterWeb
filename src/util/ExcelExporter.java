@@ -156,12 +156,12 @@ public class ExcelExporter
 			destRow.setHeight(destRowHeight);
 			cell=destRow.getCell(0);
 			cell.setCellValue(ito.getItoName()+"\n"+ito.getPostName()+" Extn. 2458");
-			shiftList=iTORosterList.get(itoId).getShiftList();
+			/*shiftList=iTORosterList.get(itoId).getShiftList();
 			for (int j=1;j<=this.monthlyCalendar.length;j++)
 			{
 				cell=destRow.getCell(j);
 				cell.setCellValue(shiftList.get(j-1).getShift());
-			}
+			}*/
 			cell=destRow.getCell(32);
 			cell.setCellValue(ito.getWorkingHourPerDay()*noOfWorkingDay);
 			cell=destRow.getCell(34);

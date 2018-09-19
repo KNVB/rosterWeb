@@ -2,8 +2,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="com.*"%>    
+<%@ page import="com.rosterStatistic.ITOYearlyStatistic"%>
+
 <%@ page import="util.*"%>
 <%@ page import="util.calendar.*" %>
+
 <%@ page import="java.util.*"%>
 <%@ page import="java.util.Calendar"%>
 <%@ page import="java.util.GregorianCalendar" %>
@@ -19,11 +22,13 @@ month=now.get(Calendar.MONTH);
 //month=9;
 ITO ito=new ITO();
 ITORoster itoRoster;
-CalendarUtility calendarUtility=new CalendarUtility();
-Hashtable<String,ITORoster> itoRosterList;
-Hashtable<String,ITO> itoList=ito.getITOList(year,month);
-Hashtable<Integer,MyCalendar> myCalendarList;
+ITOYearlyStatistic iTOYearlyStatistic;
 
+CalendarUtility calendarUtility=new CalendarUtility();
+Hashtable<String,ITO> itoList=ito.getITOList(year,month);
+Hashtable<String,ITORoster> itoRosterList;
+Hashtable<Integer,MyCalendar> myCalendarList;
+Hashtable<String,ITOYearlyStatistic> yearlyRosterStatistic;
 MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(year,month);
 MyCalendar myCalendar;
 myCalendarList=mc.getMonthlyCalendar();
@@ -35,23 +40,28 @@ roster.setRosterYear(year);
 roster.setRosterMonth(month);
 roster.load();
 itoRosterList=roster.getITORosterList();
+yearlyRosterStatistic=roster.getYearlyStatistic(year, month);
 %>
 <html>
 	<head>
 		<meta charset="UTF-8">
 		<title>Roster Scheduling</title>
-		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/style.css">
 		<script type="text/javascript" src="<%=request.getContextPath() %>/webjars/jquery/3.3.1/jquery.min.js"></script>
-		<script src="js/ITO.js"></script>
-		<script src="js/RosterRule.js"></script>
+		<script src="<%=request.getContextPath()%>/js/ITO.js"></script>
+		<script src="<%=request.getContextPath()%>/js/RosterRule.js"></script>
+		<script src="<%=request.getContextPath()%>/js/RosterViewer.js"></script>
+		<script src="<%=request.getContextPath()%>/js/util/ShiftCellEventHandler.js"></script>
+		<script src="<%=request.getContextPath()%>/js/util/Utility.js"></script>
+		
+		<script src="js/util/MyModal.js"></script>
+		<script src="js/util/MyLoadingScreen.js"></script>
 		<script src="js/RosterTable.js"></script>
-		<script src="js/RosterViewer.js"></script>
-		<script src="js/util/ShiftCellEventHandler.js"></script>
-		<script src="js/util/Utility.js"></script>
+		<script src="js/RosterScheduler.js"></script>
 		<script>
 			var utility=new Utility("<%=request.getContextPath() %>/middleware/");
 			$( document ).ready(function() {
-				var rosterViewer=new RosterViewer(utility);
+				var rosterScheduler=new RosterScheduler(utility);
 			});
 		</script>
 	</head>
@@ -206,11 +216,17 @@ itoRosterList=roster.getITORosterList();
 			for (String itoId:itoIdList)
 			{
 				ito=itoList.get(itoId);
-				out.println("<tr id=\"shift_"+itoId+"\">");
-				out.println("<td class=\"borderCell alignLeft\">"+ito.getItoName()+"<br>"+ito.getPostName()+" Extn. 2458</td>");
 				itoRoster=itoRosterList.get(itoId);
 				if (itoRoster!=null)
 				{
+					out.println("<tr id=\"shift_"+itoId+"\">");
+					out.println("<td class=\"borderCell alignLeft\">"+ito.getItoName()+"<br>"+ito.getPostName()+" Extn. 2458</td>");
+					aShiftCount=0;
+					bxShiftCount=0;
+					cShiftCount=0;
+					dxShiftCount=0;
+					actualWorkingHour=0.0f;
+					totalHour=(noOfWorkingDay*ito.getWorkingHourPerDay());
 					startIndex=itoRoster.getPreviousMonthShiftList().size()-showNoOfPrevDate;
 					for (i=startIndex;i<itoRoster.getPreviousMonthShiftList().size();i++)
 					{
@@ -276,16 +292,67 @@ itoRosterList=roster.getITORosterList();
 						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_dxShiftCount\">"+dxShiftCount+"</td>");
 						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_noOfWoringDay\">"+(aShiftCount+bxShiftCount+cShiftCount+dxShiftCount)+"</td>");
 					}
+					out.println("</tr>");
+					out.println("<tr id=\"preferredShift_"+itoId+"\">");
+					out.println("<td class=\"borderCell alignLeft\">Preferred Shift</td>");
+					for (i=0;i<showNoOfPrevDate;i++)
+					{
+						out.println("<td class=\"alignCenter borderCell\"></td>");
+					}
+					if (itoRoster.getPreferredShiftList().isEmpty())
+					{
+						for (i=0;i<31;i++)
+						{
+							out.println("<td class=\"alignCenter borderCell\"></td>");
+						}
+					}
+					else
+					{
+						for (i=0;i<31;i++)
+						{
+							shiftType=itoRoster.getPreferredShiftList().get(i+1);
+							if (shiftType==null)
+							{
+								out.println("<td class=\"alignCenter borderCell shiftCell\"></td>");
+							}
+							else
+							{
+								out.println("<td class=\"alignCenter borderCell shiftCell\">"+shiftType+"</td>");
+							}
+						}
+					}
+					out.println("<td class=\"borderCell alignCenter\" colspan=\"10\"></td>");
+					out.println("</tr>");
 				}
 				else
 				{
+					out.println("<tr id=\"shift_"+itoId+"\">");
+					out.println("<td class=\"borderCell alignLeft\">"+ito.getItoName()+"<br>"+ito.getPostName()+" Extn. 2458</td>");
 					for (i=0;i<(41+showNoOfPrevDate);i++)
 					{
 						out.println("<td class=\"alignCenter borderCell\"></td>");
-					}					
+					}
+					out.println("</tr>");
+					out.println("<tr id=\"preferredShift_"+itoId+"\">");
+					out.println("<td class=\"borderCell alignLeft\">Preferred Shift</td>");
+					for (i=0;i<33;i++)
+					{
+						out.println("<td class=\"alignCenter borderCell\"></td>");
+					}
+					out.println("<td class=\"alignCenter borderCell\" colspan=\"10\"></td>");
+					out.println("</tr>");
 				}
-				out.println("</tr>");
-			}	
+			}
+			
+			out.println("<tr id=\"vancantShift\">");
+			out.println("<td class=\"vancantShift borderCell\">Vancant Shifts</td>");
+			out.println("<td class=\"alignCenter borderCell\"></td>");
+			for (i=0;i<32;i++)
+			{
+				out.println("<td class=\"alignCenter borderCell\"></td>");
+			}
+			out.println("<td class=\"alignCenter borderCell\" colspan=\"10\"></td>");
+			out.println("</tr>");
 %>
 			
 			</tbody>
@@ -299,6 +366,76 @@ itoRosterList=roster.getITORosterList();
 					<td colspan=13 class="aShiftColor">	
 						a : 0800H - 1700H
 					</td>
+					<td colspan="20" rowspan=10>
+						<div style="text-align:center">
+							Auto Planning Start From:
+							<select id="autoPlannStartDate">
+<% 							for (i=1 ;i<=myCalendarList.size();i++)
+							{
+								out.println("<option value="+i+">"+i+"</option>");									
+							}%>	
+							</select>
+							to
+							<select id="autoPlanEndDate">
+<% 							for (i=1 ;i<=myCalendarList.size();i++)
+							{
+								if (i==myCalendarList.size())
+									out.println("<option value="+i+" selected>"+i+"</option>");
+								else									
+									out.println("<option value="+i+">"+i+"</option>");									
+							}%>								
+							</select>
+							<a class="autoPlannerButton">Auto Planner</a>
+						</div>
+						<div style="padding-left:10px;display:none" id="genResult">
+							<table border=0 >
+								<tr>
+									<td>Standard Deviation:</td>
+								</tr>
+								<tr id="theLowestSD">
+									<td>1</td>
+									<td>1</td>
+								</tr>
+								<tr id="secondLowestSD">
+									<td>1</td>
+									<td>1</td>
+								</tr>
+								<tr id="thirdLowestSD">
+									<td >1</td>
+									<td>1</td>
+								</tr>
+								<tr>
+									<td><br></td>
+								</tr>
+								<tr>
+									<td>Missing shift Count:</td>
+								</tr>
+								<tr id="theLowestMissingShiftCount">
+									<td>1</td>
+									<td>1</td>
+								</tr>
+								<tr id="theSecondLowestMissingShiftCount">
+									<td>1</td>
+									<td>1</td>
+								</tr>
+								<tr id="theThirdLowestMissingShiftCount">
+									<td>1</td>
+									<td>1</td>
+								</tr>						
+							</table>
+						</div>	
+					</td>
+					<td colspan="11" rowspan="13">
+						<div id="yearlyStatistic">
+<%						out.println("<table style=\"width:500px\";borderCollapse=\"collapse\"");
+						for (String itoId:itoIdList)
+						{
+							iTOYearlyStatistic= yearlyRosterStatistic.get(itoId);
+						}
+						out.println("</table>");%>						
+						</div>
+					</td>
+					
 				</tr>
 				<tr>
 					<td colspan=13 class="bShiftColor">	
@@ -349,7 +486,21 @@ itoRosterList=roster.getITORosterList();
 					<td colspan="33">
 						<br>
 					</td>
-				</tr>						
+				</tr>
+				<tr>
+					<td colspan=33 style="text-align:center">
+						<a class="findMissingShiftButton">Find Missing Shift</a>
+						<a class="findDuplicateShiftButton">Find Duplicate Shift</a>
+						<a class="checkAllButton">is it a valid roster?</a>
+						<a class="clearAllButton">Clear All Shift Data</a>
+					</td>
+				</tr>
+				<tr>	
+					<td colspan=33 style="text-align:center">	
+						<a class="exportButton">Export to Excel File</a>
+						<a class="saveRosterToDBButton">Save all data to DB</a>
+					</td>
+				</tr>												
 			</tfoot>
 		</table>					
 	</body>

@@ -8,33 +8,20 @@
 <%@ page import="java.util.Calendar"%>
 <%@ page import="java.util.GregorianCalendar" %>
 <%
-int i=0,year,month,startIndex;
+int i=0,year,month;
 int showNoOfPrevDate=2,noOfWorkingDay=0;
-
-
+float actualWorkingHour;
+String className=new String();
 GregorianCalendar now=new GregorianCalendar();
 year=now.get(Calendar.YEAR);
 month=now.get(Calendar.MONTH);
 //year=2018;
-//month=9;
+//month=10;
 ITO ito=new ITO();
-ITORoster itoRoster;
 CalendarUtility calendarUtility=new CalendarUtility();
-Hashtable<String,ITORoster> itoRosterList;
-Hashtable<String,ITO> itoList=ito.getITOList(year,month);
-Hashtable<Integer,MyCalendar> myCalendarList;
-
 MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(year,month);
+Hashtable<Integer,MyCalendar> myCalendarList=mc.getMonthlyCalendar();
 MyCalendar myCalendar;
-myCalendarList=mc.getMonthlyCalendar();
-String className=new String();
-String[] itoIdList = itoList.keySet().toArray(new String[0]);
-Arrays.sort(itoIdList);
-Roster roster=new Roster();
-roster.setRosterYear(year);
-roster.setRosterMonth(month);
-roster.load();
-itoRosterList=roster.getITORosterList();
 %>
 <html>
 	<head>
@@ -49,11 +36,11 @@ itoRosterList=roster.getITORosterList();
 		<script src="js/util/ShiftCellEventHandler.js"></script>
 		<script src="js/util/Utility.js"></script>
 		<script>
-			var utility=new Utility("<%=request.getContextPath() %>/middleware/");
 			$( document ).ready(function() {
-				var rosterViewer=new RosterViewer(utility);
+				var rosterViewer=new RosterViewer();
+				rosterViewer.reloadRosterData(<%=year%>,<%=month%>);
 			});
-		</script>
+		</script>	
 	</head>
 	<body>
 		<table border="0" id="rosterTable">
@@ -199,95 +186,29 @@ itoRosterList=roster.getITORosterList();
 				</tr>
 			</thead>
 			<tbody id="rosterBody">
-<%			
-			float actualWorkingHour, thisMonthBalance,thisMonthHourTotal,totalHour;
-			int aShiftCount,bxShiftCount,cShiftCount,dxShiftCount,totalNoOfWorkingDay;
-			String shiftType;
+<%	
+			Hashtable<String,ITO> itoList=ito.getITOList(year,month);
+			String[] itoIdList = itoList.keySet().toArray(new String[0]);
 			for (String itoId:itoIdList)
 			{
 				ito=itoList.get(itoId);
 				out.println("<tr id=\"shift_"+itoId+"\">");
 				out.println("<td class=\"borderCell alignLeft\">"+ito.getItoName()+"<br>"+ito.getPostName()+" Extn. 2458</td>");
-				itoRoster=itoRosterList.get(itoId);
-				if (itoRoster!=null)
+				for (i=0;i<showNoOfPrevDate;i++)
 				{
-					startIndex=itoRoster.getPreviousMonthShiftList().size()-showNoOfPrevDate;
-					for (i=startIndex;i<itoRoster.getPreviousMonthShiftList().size();i++)
-					{
-						out.println("<script>utility.printPreviousMonthShiftCell(\""+itoRoster.getPreviousMonthShiftList().get(i).getShift()+"\");</script>");
-					}
-					if (itoRoster.getShiftList().isEmpty())
-					{
-						for (i=0;i<41;i++)
-						{
-							out.println("<td class=\"alignCenter borderCell\"></td>");
-						}
-					}
-					else
-					{
-						aShiftCount=0;
-						bxShiftCount=0;
-						cShiftCount=0;
-						dxShiftCount=0;
-						actualWorkingHour=0.0f;
-						totalHour=(noOfWorkingDay*ito.getWorkingHourPerDay());
-						for (i=0;i<31;i++)
-						{
-							if (i< myCalendarList.size())
-							{
-								shiftType=itoRoster.getShiftList().get(i+1);
-								out.println("<script>utility.printShiftCell(\""+shiftType+"\");</script>");
-								switch(shiftType)
-								{
-									case "a":
-											aShiftCount++;
-											break;
-									case "b":
-									case "b1":
-											bxShiftCount++;
-											break;
-									case "c":
-											cShiftCount++;
-											break;
-									case "d":
-									case "d1":
-									case "d2":
-									case "d3":
-											dxShiftCount++;
-											break;		
-								}
-								actualWorkingHour+=RosterRule.getShiftHourCount().get(shiftType);
-							}
-							else
-							{
-								out.println("<td class=\"alignCenter borderCell\"></td>");
-							}
-						}
-						thisMonthHourTotal=actualWorkingHour-totalHour;
-						thisMonthBalance=thisMonthHourTotal+itoRoster.getBalance();
-						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_totalHour\">"+totalHour+"</td>");
-						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_actualHour\">"+(actualWorkingHour)+"</td>");
-						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_lastMonthBalance\">"+itoRoster.getBalance()+"</td>");
-						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_thisMonthHourTotal\"><script>document.write(utility.roundTo("+thisMonthHourTotal+",2));</script></td>");
-						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_thisMonthBalance\"><script>document.write(utility.roundTo("+thisMonthBalance+",2));</script></td>");
-						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_aShiftCount\">"+aShiftCount+"</td>");
-						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_bxShiftCount\">"+bxShiftCount+"</td>");
-						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_cShiftCount\">"+cShiftCount+"</td>");
-						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_dxShiftCount\">"+dxShiftCount+"</td>");
-						out.println("<td class=\"alignCenter borderCell\" id=\""+itoId+"_noOfWoringDay\">"+(aShiftCount+bxShiftCount+cShiftCount+dxShiftCount)+"</td>");
-					}
+					out.println("<td class=\"dataCell alignCenter borderCell\"></td>");
 				}
-				else
+				for (i=0;i<31;i++)
 				{
-					for (i=0;i<(41+showNoOfPrevDate);i++)
-					{
-						out.println("<td class=\"alignCenter borderCell\"></td>");
-					}					
+					out.println("<td class=\"borderCell alignCenter shiftCell\"></td>");
+				}
+				for (i=0;i<10;i++)
+				{
+					out.println("<td class=\"borderCell alignCenter\"></td>");
 				}
 				out.println("</tr>");
-			}	
+			}
 %>
-			
 			</tbody>
 			<tfoot>
 				<tr>
@@ -351,6 +272,6 @@ itoRosterList=roster.getITORosterList();
 					</td>
 				</tr>						
 			</tfoot>
-		</table>					
+		</table>
 	</body>
 </html>		
