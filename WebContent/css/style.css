@@ -10,7 +10,7 @@ table#rosterTable
 	//border-collapse: collapse; //It hit the chrome bug
 	width:1635px;
 }
-thead tr+tr+tr td:first-child,
+thead tr+tr+tr+tr td:first-child,
 tbody td:first-child
 {
 	border-left:1px solid #e0e0e0;
