@@ -1,4 +1,4 @@
-package util.servlet;
+package util.servlet.admin;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,7 +33,7 @@ public class RosterScheduler extends HttpServlet {
 	private Hashtable<String,ITO> itoList;
 	private Hashtable<String,ITORoster> itoRosterList;
 	private Hashtable<Integer,MyCalendar> myCalendarList;
-	private Hashtable<String,ITOYearlyStatistic> yearlyRosterStatistic;
+
 	private MyCalendar myCalendar;
 	private String className=new String();
     /**
@@ -56,12 +56,10 @@ public class RosterScheduler extends HttpServlet {
 	{
 		PrintWriter out=response.getWriter();
 		response.setContentType("text/html; charset=UTF-8");
-
-		//startIndex;
-
 		GregorianCalendar now=new GregorianCalendar();
 		year=now.get(Calendar.YEAR);
 		month=now.get(Calendar.MONTH);
+		Hashtable<String,ITOYearlyStatistic> yearlyRosterStatistic;
 		//year=2018;
 		//month=9;
 		ITO ito;
@@ -80,19 +78,19 @@ public class RosterScheduler extends HttpServlet {
 			roster.load();
 			itoRosterList=roster.getITORosterList();
 			yearlyRosterStatistic=roster.getYearlyStatistic(year, month);
+			String[] itoIdList = itoList.keySet().toArray(new String[0]);
+			Arrays.sort(itoIdList);
 			printHeader(request, out);
-			printBody(out);
-			printFooter(out);
+			printBody(out,itoIdList);
+			printFooter(out,yearlyRosterStatistic,itoIdList);
 		} 
 		catch (Exception e) 
 		{
 			e.printStackTrace();
 		}
 	}
-	private void printBody(PrintWriter out)
+	private void printBody(PrintWriter out,String[] itoIdList )
 	{
-		String[] itoIdList = itoList.keySet().toArray(new String[0]);
-		Arrays.sort(itoIdList);
 		out.println("			<tbody id=\"rosterBody\">");
 		for (String itoId:itoIdList)
 		{
@@ -128,7 +126,7 @@ public class RosterScheduler extends HttpServlet {
 		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_dxShiftCount\"></td>");
 		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_noOfWoringDay\"></td>");
 	}
-	private void printFooter(PrintWriter out)
+	private void printFooter(PrintWriter out,Hashtable<String,ITOYearlyStatistic> yearlyRosterStatistic,String[] itoIdList)
 	{
 		out.println("			<tfoot>");
 		out.println("				<tr>");
@@ -201,62 +199,7 @@ public class RosterScheduler extends HttpServlet {
 		out.println("					</td>");
 		out.println("					<td colspan=\"11\" rowspan=\"13\">");
 		out.println("						<div id=\"yearlyStatistic\">");
-		out.println("							<table style=\"width:500px;borderCollapse:collapse\">");
-		out.println("								<tr>");
-		out.println("									<td class=\"borderCell alignCenter\">ITO</td>");
-		out.println("									<td class=\"borderCell alignCenter\">a</td>");
-		out.println("									<td class=\"borderCell alignCenter\">bx</td>");
-		out.println("									<td class=\"borderCell alignCenter\">c</td>");
-		out.println("									<td class=\"borderCell alignCenter\">dx</td>");
-		out.println("									<td class=\"borderCell alignCenter\">O</td>");
-		out.println("									<td class=\"borderCell alignCenter\">total</td>");
-		out.println("								</tr>");
-		String[] itoIdList = itoList.keySet().toArray(new String[0]);
-		Arrays.sort(itoIdList);
-		MonthlyStatistic monthlyStatistic; 
-		String statisticBodyHTML="";
-		ITOYearlyStatistic iTOYearlyStatistic;
-		int aShiftTotal,bxShiftTotal,cShiftTotal,dxShiftTotal,oShiftTotal,allShiftTotal;
-		for (String itoId:itoIdList)
-		{
-			iTOYearlyStatistic= yearlyRosterStatistic.get(itoId);
-			month=1;
-			aShiftTotal=0;bxShiftTotal=0;cShiftTotal=0;
-			dxShiftTotal=0;oShiftTotal=0;allShiftTotal=0;
-			statisticBodyHTML="";
-			for (i=0;i<iTOYearlyStatistic.getITOMonthlyStatisticList().size();i++)
-			{
-				monthlyStatistic=iTOYearlyStatistic.getITOMonthlyStatisticList().get(i);
-				statisticBodyHTML+="								<tr>\n";
-				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+(month++)+"</td>\n";
-				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getAShiftTotal()+"</td>\n";
-				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getBxShiftTotal()+"</td>\n";
-				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getCShiftTotal()+"</td>\n";
-				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getDxShiftTotal()+"</td>\n";
-				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getOShiftTotal()+"</td>\n";
-				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getMonthlyTotal()+"</td>\n";
-				statisticBodyHTML+="								</tr>\n";
-				
-				aShiftTotal+=monthlyStatistic.getAShiftTotal();
-				bxShiftTotal+=monthlyStatistic.getBxShiftTotal();
-				cShiftTotal+=monthlyStatistic.getCShiftTotal();
-				dxShiftTotal+=monthlyStatistic.getDxShiftTotal();
-				oShiftTotal+=monthlyStatistic.getOShiftTotal();
-
-				allShiftTotal+=monthlyStatistic.getMonthlyTotal();
-			}
-			out.println("								<tr>");
-			out.println("									<td class=\"borderCell alignCenter\">"+iTOYearlyStatistic.getItoPostName()+"</td>");
-			out.println("									<td class=\"borderCell alignCenter\">"+aShiftTotal+"</td>");
-			out.println("									<td class=\"borderCell alignCenter\">"+bxShiftTotal+"</td>");
-			out.println("									<td class=\"borderCell alignCenter\">"+cShiftTotal+"</td>");
-			out.println("									<td class=\"borderCell alignCenter\">"+dxShiftTotal+"</td>");
-			out.println("									<td class=\"borderCell alignCenter\">"+oShiftTotal+"</td>");
-			out.println("									<td class=\"borderCell alignCenter\">"+allShiftTotal+"</td>");
-			out.println("								</tr>");
-			out.println(statisticBodyHTML);
-		}
-		out.println("							</table>");
+		printYearlyStatistic(out, yearlyRosterStatistic,itoIdList);
 		out.println("						</div>");
 		out.println("					</td>");
 		out.println("				</tr>");
@@ -625,5 +568,64 @@ public class RosterScheduler extends HttpServlet {
 		}
 		out.println("					<td class=\"alignCenter borderCell\" colspan=\"10\"></td>");
 		out.println("				</tr>");
+	}
+	private void printYearlyStatistic(PrintWriter out,Hashtable<String,ITOYearlyStatistic> yearlyRosterStatistic,String[]itoIdList)
+	{
+		out.println("							<table style=\"width:500px;borderCollapse:collapse\">");
+		out.println("								<tr>");
+		out.println("									<td class=\"borderCell alignCenter\">ITO</td>");
+		out.println("									<td class=\"borderCell alignCenter\">a</td>");
+		out.println("									<td class=\"borderCell alignCenter\">bx</td>");
+		out.println("									<td class=\"borderCell alignCenter\">c</td>");
+		out.println("									<td class=\"borderCell alignCenter\">dx</td>");
+		out.println("									<td class=\"borderCell alignCenter\">O</td>");
+		out.println("									<td class=\"borderCell alignCenter\">total</td>");
+		out.println("								</tr>");
+	
+		MonthlyStatistic monthlyStatistic; 
+		String statisticBodyHTML="";
+		ITOYearlyStatistic iTOYearlyStatistic;
+		int aShiftTotal,bxShiftTotal,cShiftTotal,dxShiftTotal,oShiftTotal,allShiftTotal;
+		for (String itoId:itoIdList)
+		{
+			iTOYearlyStatistic= yearlyRosterStatistic.get(itoId);
+			month=1;
+			aShiftTotal=0;bxShiftTotal=0;cShiftTotal=0;
+			dxShiftTotal=0;oShiftTotal=0;allShiftTotal=0;
+			statisticBodyHTML="";
+			for (i=0;i<iTOYearlyStatistic.getITOMonthlyStatisticList().size();i++)
+			{
+				monthlyStatistic=iTOYearlyStatistic.getITOMonthlyStatisticList().get(i);
+				statisticBodyHTML+="								<tr>\n";
+				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+(month++)+"</td>\n";
+				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getAShiftTotal()+"</td>\n";
+				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getBxShiftTotal()+"</td>\n";
+				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getCShiftTotal()+"</td>\n";
+				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getDxShiftTotal()+"</td>\n";
+				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getOShiftTotal()+"</td>\n";
+				statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getMonthlyTotal()+"</td>\n";
+				statisticBodyHTML+="								</tr>\n";
+				
+				aShiftTotal+=monthlyStatistic.getAShiftTotal();
+				bxShiftTotal+=monthlyStatistic.getBxShiftTotal();
+				cShiftTotal+=monthlyStatistic.getCShiftTotal();
+				dxShiftTotal+=monthlyStatistic.getDxShiftTotal();
+				oShiftTotal+=monthlyStatistic.getOShiftTotal();
+
+				allShiftTotal+=monthlyStatistic.getMonthlyTotal();
+			}
+			out.println("								<tr>");
+			out.println("									<td class=\"borderCell alignCenter\">"+iTOYearlyStatistic.getItoPostName()+"</td>");
+			out.println("									<td class=\"borderCell alignCenter\">"+aShiftTotal+"</td>");
+			out.println("									<td class=\"borderCell alignCenter\">"+bxShiftTotal+"</td>");
+			out.println("									<td class=\"borderCell alignCenter\">"+cShiftTotal+"</td>");
+			out.println("									<td class=\"borderCell alignCenter\">"+dxShiftTotal+"</td>");
+			out.println("									<td class=\"borderCell alignCenter\">"+oShiftTotal+"</td>");
+			out.println("									<td class=\"borderCell alignCenter\">"+allShiftTotal+"</td>");
+			out.println("								</tr>");
+			out.println(statisticBodyHTML);
+		}
+		out.println("							</table>");
+
 	}
 }
