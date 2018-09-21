@@ -18,4 +18,14 @@
 		<servlet-name>RosterScheduler</servlet-name>
 		<url-pattern>/rosterScheduler</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>RosterViewer</servlet-name>
+		<servlet-class>util.servlet.user.RosterViewer</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RosterViewer</servlet-name>
+		<url-pattern>/rosterViewer</url-pattern>
+	</servlet-mapping>
+	
 </web-app>
