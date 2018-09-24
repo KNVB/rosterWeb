@@ -4,7 +4,7 @@ class RosterScheduler extends  RosterViewer
 	{
 		super(rosterSchedulerUtility);
 		this.loadingScreen=new MyLoadingScreen({imgPath:"img/icon.gif"});
-		
+		this.rosterSchedulerUtility=rosterSchedulerUtility;
 	}
 	reloadRosterData(year,month)
 	{
@@ -17,7 +17,7 @@ class RosterScheduler extends  RosterViewer
 	}
 	refreshRosterTable()
 	{
-		this.rosterTable=new RosterSchedulerTable(rosterSchedulerUtility);
+		this.rosterTable=new RosterSchedulerTable(this.rosterSchedulerUtility);
 		this.rosterTable.refresh();
 	}
 }
