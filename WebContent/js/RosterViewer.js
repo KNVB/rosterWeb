@@ -2,10 +2,11 @@ class RosterViewer
 {
 	constructor(utility)
 	{
+		this.itoList=[];
+		this.rosterTable;
 		this.utility=utility;
 		var self=this;
 		var monthSelect=document.getElementById("selectRosterMonth");
-		self.itoList=[];
 		monthSelect.onchange=function(){
 			var month=parseInt(this.options[this.selectedIndex].value);
 			var year=parseInt(this.nextSibling.textContent);
@@ -66,6 +67,12 @@ class RosterViewer
 	}
 	refreshRosterTable()
 	{
-		console.log("viewer");
+		this.rosterTable=new RosterTable(this.utility);
+		rosterTable.calendarList=this.calendarList;
+		rosterTable.rosterList=this.RosterList;
+		rosterTable.rosterMonth=this.rosterMonth;;
+		rosterTable.rosterRule=this.rosterRule;
+		rosterTable.rosterYear=this.rosterYear;
+		rosterTable.refresh();
 	}
 }

@@ -5,8 +5,8 @@ class RosterSchedulerTable extends RosterTable
 		super(utility);
 	}
 	
-	updateValue(theCell)
+	refresh()
 	{
-		
+		super.refresh();
 	}
 }	

@@ -1,23 +1,23 @@
 class RosterScheduler extends  RosterViewer
 {
-	constructor(utility)
+	constructor(rosterSchedulerUtility)
 	{
-		super(utility);
+		super(rosterSchedulerUtility);
 		this.loadingScreen=new MyLoadingScreen({imgPath:"img/icon.gif"});
 		
 	}
 	reloadRosterData(year,month)
 	{
-		return new Promise((resolve, reject) => {
-			super.reloadRosterData(year,month).then(function (){
-				resolve();
-				
-			});
-			
+		var self=this;
+		super.reloadRosterData(year,month).then(function (){
+				self.refreshRosterTable();	
 		});
+			
+		
 	}
 	refreshRosterTable()
 	{
-		console.log("scheduler");
+		this.rosterTable=new RosterSchedulerTable(rosterSchedulerUtility);
+		this.rosterTable.refresh();
 	}
 }

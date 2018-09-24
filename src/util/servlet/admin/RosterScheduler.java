@@ -93,13 +93,14 @@ public class RosterScheduler extends RosterViewer {
 		super.printIncludedJavascript(request, out);
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/MyModal.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/MyLoadingScreen.js\"></script>");
+		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/RosterSchedulerUtility.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterSchedulerTable.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterScheduler.js\"></script>");
 	}
 	protected void printOnDomReadyFunction(HttpServletRequest request,PrintWriter out) 
 	{
 		out.println("\t\t<script>");
-		out.println("\t\t\tvar utility=new Utility(\""+request.getContextPath()+"/middleware/\");");
+		out.println("\t\t\tvar utility=new RosterSchedulerUtility(\""+request.getContextPath()+"/middleware/\");");
 		out.println("\t\t\tvar aShiftStdDev,bShiftStdDev,cShiftStdDev;");
 		out.println("\t\t\t$( document ).ready(function() {");
 		out.println("\t\t\t\tvar rosterScheduler=new RosterScheduler(utility);");
