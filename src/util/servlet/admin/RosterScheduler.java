@@ -84,30 +84,16 @@ public class RosterScheduler extends RosterViewer {
 		out.println("						</div>");
 
 	}
-	protected void printRosterSchedulerButton(PrintWriter out)
+	protected void printHTMLTitle(PrintWriter out)
 	{
-		out.println("				<tr>");
-		out.println("					<td colspan=33 style=\"text-align:center\">");
-		out.println("						<a class=\"findMissingShiftButton\">Find Missing Shift</a>");
-		out.println("						<a class=\"findDuplicateShiftButton\">Find Duplicate Shift</a>");
-		out.println("						<a class=\"checkAllButton\">is it a valid roster?</a>");
-		out.println("						<a class=\"clearAllButton\">Clear All Shift Data</a>");
-		out.println("					</td>");
-		out.println("				</tr>");
-		out.println("				<tr>");
-		out.println("					<td colspan=33 style=\"text-align:center\">");
-		out.println("						<a class=\"exportButton\">Export to Excel File</a>");
-		out.println("						<a class=\"saveRosterToDBButton\">Save all data to DB</a>");
-		out.println("					</td>");
-		out.println("				</tr>");												
-
+		out.println("\t\t<title>RosterScheduler</title>");
 	}
 	protected void printIncludedJavascript(HttpServletRequest request,PrintWriter out)
 	{
 		super.printIncludedJavascript(request, out);
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/MyModal.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/MyLoadingScreen.js\"></script>");
-		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterTable.js\"></script>");
+		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterSchedulerTable.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterScheduler.js\"></script>");
 	}
 	protected void printOnDomReadyFunction(HttpServletRequest request,PrintWriter out) 
@@ -153,10 +139,24 @@ public class RosterScheduler extends RosterViewer {
 			out.println("					<td class=\"alignCenter borderCell\" ></td>");		
 			out.println("				</tr>");
 		}
-	}
-	protected void printHTMLTitle(PrintWriter out)
+	}	
+	protected void printRosterSchedulerButton(PrintWriter out)
 	{
-		out.println("\t\t<title>RosterScheduler</title>");
+		out.println("				<tr>");
+		out.println("					<td colspan=33 style=\"text-align:center\">");
+		out.println("						<a class=\"findMissingShiftButton\">Find Missing Shift</a>");
+		out.println("						<a class=\"findDuplicateShiftButton\">Find Duplicate Shift</a>");
+		out.println("						<a class=\"checkAllButton\">is it a valid roster?</a>");
+		out.println("						<a class=\"clearAllButton\">Clear All Shift Data</a>");
+		out.println("					</td>");
+		out.println("				</tr>");
+		out.println("				<tr>");
+		out.println("					<td colspan=33 style=\"text-align:center\">");
+		out.println("						<a class=\"exportButton\">Export to Excel File</a>");
+		out.println("						<a class=\"saveRosterToDBButton\">Save all data to DB</a>");
+		out.println("					</td>");
+		out.println("				</tr>");												
+
 	}
 	protected void printVacantShiftRow(PrintWriter out)
 	{
