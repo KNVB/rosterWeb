@@ -1,6 +1,8 @@
 package util.servlet.admin;
 
 import com.ITORoster;
+import com.RosterRule;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rosterStatistic.ITOYearlyStatistic;
 import com.rosterStatistic.MonthlyStatistic;
 
@@ -106,18 +108,36 @@ public class RosterScheduler extends RosterViewer {
 		super.genIncludedJavascript(request);
 		htmlHeader.add("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/SchedulerShiftCellEventHandler.js\"></script>");
 		htmlHeader.add("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/RosterSchedulerUtility.js\"></script>");
+		htmlHeader.add("\t\t<script src=\""+request.getContextPath()+"/admin/js/ITO.js\"></script>");
+		htmlHeader.add("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterRule.js\"></script>");
 		htmlHeader.add("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterSchedulerTable.js\"></script>");
 	}
 	@Override
 	protected void genOnDomReadyFunction(HttpServletRequest request)
 	{
-		htmlHeader.add("\t\t<script>");
-		htmlHeader.add("\t\t\tvar utility=new RosterSchedulerUtility(\""+request.getContextPath()+"/middleware/\");");
-		htmlHeader.add("\t\t\t$( document ).ready(function() {");
-		htmlHeader.add("\t\t\t\tvar rosterSchedulerTable=new RosterSchedulerTable(utility);");
-		htmlHeader.add("\t\t\t\tvar schedulerhiftCellEventHandler=new SchedulerShiftCellEventHandler(rosterSchedulerTable,\"shiftCell\");");
-		htmlHeader.add("\t\t\t});");
-		htmlHeader.add("\t\t</script>");
+		ObjectMapper objectMapper = new ObjectMapper();
+		String tempString;
+		try
+		{
+			htmlHeader.add("\t\t<script>");
+			htmlHeader.add("\t\t\tvar utility=new RosterSchedulerUtility(\""+request.getContextPath()+"/middleware/\");");
+			htmlHeader.add("\t\t\t$( document ).ready(function() {");
+			htmlHeader.add("\t\t\t\tvar rosterRule=new RosterRule(utility);");
+			tempString=objectMapper.writeValueAsString(RosterRule.getEssentialShiftList());
+			tempString=tempString.replaceAll("\\\\","").replaceAll("\"\"","\"");
+			htmlHeader.add("\t\t\t\trosterRule.essentialShiftList="+tempString+";");              
+			htmlHeader.add("\t\t\t\trosterRule.maxConsecutiveWorkingDay="+RosterRule.getMaxConsecutiveWorkingDay()+";");  
+			htmlHeader.add("\t\t\t\trosterRule.shiftHourCount="+objectMapper.writeValueAsString(RosterRule.getShiftHourCount())+";");                      
+			htmlHeader.add("\t\t\t\tvar rosterSchedulerTable=new RosterSchedulerTable(utility);");
+			htmlHeader.add("\t\t\t\tvar schedulerhiftCellEventHandler=new SchedulerShiftCellEventHandler(rosterSchedulerTable,\"shiftCell\");");
+			htmlHeader.add("\t\t\t\trosterSchedulerTable.rosterRule=rosterRule;");
+			htmlHeader.add("\t\t\t});");
+			htmlHeader.add("\t\t</script>");
+		}
+		catch (Exception err)
+		{
+			err.printStackTrace();
+		}
 	}
 	@Override
 	protected void genRosterBody()
