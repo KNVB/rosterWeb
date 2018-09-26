@@ -27,10 +27,30 @@ import util.calendar.MyCalendar;
 public class RosterViewer extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	protected int showNoOfPrevDate=2;
+	protected int showNoOfPrevDate=2,noOfWorkingDay;
+	protected int rosterMonth,rosterYear;
+
+	protected Hashtable<String,ITO> itoList;
+	protected Hashtable<String,ITORoster> itoRosterList;
+	protected Hashtable<Integer,MyCalendar> myCalendarList;
+	
+	protected MyCalendar myCalendar;
+	protected Roster roster;
+	protected String[] itoIdList ;
+	
 	protected ArrayList<Integer>aShiftData; 
 	protected ArrayList<Integer>bShiftData;
 	protected ArrayList<Integer>cShiftData;
+	protected ArrayList<String> htmlHeader; 
+	protected ArrayList<String> rosterBodyHtml;
+	protected ArrayList<String> rosterCaptionHtml;
+	protected ArrayList<String> rosterDateRowHtml;
+	protected ArrayList<String> rosterFooterHtml;
+	
+	protected ArrayList<String> rosterHolidayRowHtml;
+	protected ArrayList<String> rosterMonthRowHtml;
+	protected ArrayList<String> rosterWeekdayRowHtml;
+	
 	public RosterViewer()
 	{
 		super();
@@ -47,243 +67,235 @@ public class RosterViewer extends HttpServlet
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		PrintWriter out=response.getWriter();
-		response.setContentType("text/html; charset=UTF-8");
-		out.println("<html>");
-		printHTMLHeader(request,out);
-		printHTMLBody(request,out);
-		out.println("</html>");
-	}
-	private void printEmptyRow(PrintWriter out,String itoId)
-	{
-		int i;
-		for (i=0;i<showNoOfPrevDate;i++)
-		{
-			out.println("					<td class=\"alignCenter borderCell\"></td>");
-		}
-		printEmptyShiftRow(out, itoId);
-	}
-	protected void printEmptyShiftRow(PrintWriter out,String itoId)
-	{
-		for (int i=0;i<31;i++)
-		{
-			out.println("					<td class=\"shiftCell alignCenter borderCell\"></td>");
-		}
-		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_totalHour\"></td>");
-		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_actualHour\"></td>");
-		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_lastMonthBalance\"></td>");
-		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_thisMonthHourTotal\"></td>");
-		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_thisMonthBalance\"></td>");
-		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_aShiftCount\"></td>");
-		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_bxShiftCount\"></td>");
-		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_cShiftCount\"></td>");
-		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_dxShiftCount\"></td>");
-		out.println("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_noOfWoringDay\"></td>");
-	}
-	protected void printAutoScheduler(PrintWriter out,Hashtable<Integer,MyCalendar> myCalendarList)
-	{
-		
-	}
-	protected void printAutoSchedulerResult(PrintWriter out)
-	{
-		
-	}
-	protected void printHTMLBody(HttpServletRequest request,PrintWriter out)
-	{
-		out.println("\t<body>");
-		printRosterTable(request,out);
-		out.println("\t</body>");
-	}
-	protected void printHTMLHeader(HttpServletRequest request,PrintWriter out)
-	{
-		out.println("\t<head>");
-		out.println("\t\t<meta charset=\"UTF-8\">");
-		printHTMLTitle(out);
-		printIncludedCSS(request,out);
-		printIncludedJavascript(request,out);
-		printOnDomReadyFunction(request,out);
-		out.println("\t</head>");
-	}
-	protected void printHTMLTitle(PrintWriter out)
-	{
-		out.println("\t\t<title>RosterViewer</title>");
-	}
-	protected void printIncludedCSS(HttpServletRequest request,PrintWriter out)
-	{
-		out.println("\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\">");
-	}
-	protected void printIncludedJavascript(HttpServletRequest request,PrintWriter out)
-	{
-		out.println("\t\t<script type=\"text/javascript\" src=\""+request.getContextPath()+"/webjars/jquery/3.3.1/jquery.min.js\"></script>");
-		out.println("\t\t<script src=\"js/ITO.js\"></script>");
-		out.println("\t\t<script src=\"js/RosterRule.js\"></script>");
-		out.println("\t\t<script src=\"js/RosterTable.js\"></script>");
-		out.println("\t\t<script src=\"js/RosterViewer.js\"></script>");
-		out.println("\t\t<script src=\"js/util/ShiftCellEventHandler.js\"></script>");
-		out.println("\t\t<script src=\"js/util/Utility.js\"></script>");
-	}
-	protected void printITORoster(PrintWriter out,Hashtable<Integer, MyCalendar> myCalendarList, Hashtable<String, ITORoster> itoRosterList, Hashtable<String, ITO> itoList, String[] itoIdList, int noOfWorkingDay)
-	{
+		GregorianCalendar now=new GregorianCalendar();
+		htmlHeader=new ArrayList<String>();            
+		rosterBodyHtml=new ArrayList<String>();        
+		rosterCaptionHtml=new ArrayList<String>();     
+		rosterDateRowHtml=new ArrayList<String>();     
+		rosterFooterHtml=new ArrayList<String>();      
+		                                               
+		rosterHolidayRowHtml=new ArrayList<String>();  
+		rosterMonthRowHtml=new ArrayList<String>();    
+		rosterWeekdayRowHtml=new ArrayList<String>();
+		noOfWorkingDay=0;
 		try
 		{
-			aShiftData=new ArrayList<Integer>(); 
-			bShiftData=new ArrayList<Integer>(); 
-			cShiftData=new ArrayList<Integer>(); 
-			for (String itoId:itoIdList)
-			{
-				printShiftRow(out,myCalendarList,itoRosterList.get(itoId),itoList.get(itoId), noOfWorkingDay);
-				printPreferredShiftRow(out,itoRosterList.get(itoId),itoList.get(itoId));
-			}
-			printVacantShiftRow(out);
+			rosterYear=Integer.parseInt(request.getParameter("year"));
+			rosterMonth=Integer.parseInt(request.getParameter("month"));
+		}
+		catch  (NumberFormatException nfe)
+		{
+			rosterYear=now.get(Calendar.YEAR);
+			rosterMonth=now.get(Calendar.MONTH);
+		}		
+		getData();
+		genHTMLHeader(request);
+		genHTMLBody();
+		outputResult(out,response);
+	}
+	protected void getData() 
+	{
+		ITO ito;
+		roster=new Roster();
+		CalendarUtility calendarUtility=new CalendarUtility();
+		MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(rosterYear,rosterMonth);
+		myCalendarList=mc.getMonthlyCalendar();
+		try
+		{
+			ito=new ITO();
+			itoList=ito.getITOList(rosterYear,rosterMonth);
+			itoIdList = itoList.keySet().toArray(new String[0]);
+			Arrays.sort(itoIdList);
+			
+			roster.setRosterYear(rosterYear);
+			roster.setRosterMonth(rosterMonth);
+			roster.load();
+			itoRosterList=roster.getITORosterList();
 		}
 		catch (Exception err)
 		{
 			err.printStackTrace();
-		}		
-	}
-	protected void printOnDomReadyFunction(HttpServletRequest request,PrintWriter out) 
-	{
-		out.println("\t\t<script>");
-		out.println("\t\t\tvar utility=new Utility(\""+request.getContextPath()+"/middleware/\");");
-		out.println("\t\t\t$( document ).ready(function() {");
-		out.println("\t\t\t\tvar rosterViewer=new RosterViewer(utility);");
-		out.println("\t\t\t});");
-
-		out.println("\t\t</script>");
-	}
-	protected void printPrevDateHeaderCell(PrintWriter out)
-	{
-		for (int i=0;i<showNoOfPrevDate;i++)
-		{
-			out.println("					<td class=\"dataCell alignCenter borderCell\"></td>");
 		}
 	}
-	protected void printPreferredShiftRow(PrintWriter out, ITORoster itoRoster,ITO ito)
+	protected void genEmptyRow(ArrayList<String> container,String itoId)
 	{
+		int i;
+		for (i=0;i<showNoOfPrevDate;i++)
+		{
+			container.add("					<td class=\"alignCenter borderCell\"></td>");
+		}
+		genEmptyShiftRow(container, itoId);
 	}
-	protected void printRosterBody(HttpServletRequest request, PrintWriter out,
-			Hashtable<Integer, MyCalendar> myCalendarList,Hashtable<String,ITO> itoList, Hashtable<String,ITORoster> itoRosterList,String[] itoIdList, int noOfWorkingDay) 
+	protected void genEmptyShiftRow(ArrayList<String> container,String itoId)
 	{
-			
-			
-				out.println("\t\t\t<tbody id=\"rosterBody\">");
-				printITORoster(out,myCalendarList,itoRosterList,itoList,itoIdList,noOfWorkingDay);
-				out.println("\t\t\t</tbody>");
-						
+		for (int i=0;i<31;i++)
+		{
+			if (i< myCalendarList.size())
+				container.add("					<td class=\"shiftCell alignCenter borderCell\"></td>");
+			else
+				container.add("					<td class=\"alignCenter borderCell\"></td>");
+		}
+		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_totalHour\"></td>");
+		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_actualHour\"></td>");
+		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_lastMonthBalance\"></td>");
+		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_thisMonthHourTotal\"></td>");
+		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_thisMonthBalance\"></td>");
+		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_aShiftCount\"></td>");
+		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_bxShiftCount\"></td>");
+		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_cShiftCount\"></td>");
+		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_dxShiftCount\"></td>");
+		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_noOfWoringDay\"></td>");
+	}	
+	protected void genHTMLHeader(HttpServletRequest request)
+	{
+		htmlHeader.add("\t\t<meta charset=\"UTF-8\">");
+		genHTMLTitle();
+		genIncludedCSS();
+		genIncludedJavascript(request);
+		genOnDomReadyFunction(request);
 	}
-	protected void printRosterFooter(PrintWriter out,Hashtable<Integer,MyCalendar> myCalendarList,Roster roster,String[] itoIdList,int year,int month)
+	protected void genHTMLTitle()
 	{
-		out.println("			<tfoot>");
-		out.println("				<tr>");
-		out.println("					<td colspan=\"44\">");
-		out.println("						<br>");
-		out.println("					</td>");
-		out.println("				</tr>");
-		out.println("				<tr>");
-		out.println("					<td colspan=13 class=\"aShiftColor\">");	
-		out.println("					a : 0800H - 1700H");
-		out.println("					</td>");
-		out.println("					<td colspan=\"20\" rowspan=10>");
-		printAutoScheduler(out, myCalendarList);
-		printAutoSchedulerResult(out);
-		out.println("					</td>");
-		out.println("					<td colspan=\"11\" rowspan=\"23\">");
-		printYearlyStatistic(out,roster,itoIdList,year,month);
-		out.println("					</td>");
-		out.println("				</tr>");
-		out.println("				<tr>");
-		out.println("					<td colspan=13 class=\"bShiftColor\">");	
-		out.println("						b : 1630H - 2215H");
-		out.println("					</td>");
-		out.println("				</tr>");
-		out.println("				<tr>");
-		out.println("					<td colspan=13 class=\"bShiftColor\">");
-		out.println("						b1: 1500H - 2215H");
-		out.println("					</td>");
-		out.println("				</tr>");
-		out.println("				<tr>");
-		out.println("					<td colspan=13 class=\"cShiftColor\">");
-		out.println("						c : 2145H - 0830H (the next day)");
-		out.println("					</td>");			
-		out.println("				</tr>");
-		out.println("				<tr>");
-		out.println("					<td colspan=13 class=\"dxShiftColor\">");
-		out.println("						d : 0800H - 1800H (on weekdays)");
-		out.println("					</td>");
-		out.println("				</tr>");
-		out.println("				<tr>");
-		out.println("					<td colspan=13 class=\"dxShiftColor\">");
-		out.println("						d1 : 0800H - 1700H (on weekdays)");
-		out.println("					</td>");
-		out.println("				</tr>");
-		out.println("				<tr>");
-		out.println("					<td colspan=13 class=\"dxShiftColor\">");
-		out.println("						d2 : 0900H - 1800H (on weekdays)");
-		out.println("					</td>");				
-		out.println("				</tr>");
-		out.println("				<tr>");
-		out.println("					<td colspan=13 class=\"dxShiftColor\">");
-		out.println("						d3 : 0800H - 1648H (on weekdays)");
-		out.println("					</td>");
-		out.println("				</tr>");
-		out.println("				<tr>");
-		out.println("					<td colspan=13 class=\"sickLeaveColor\">");
-		out.println("						s : sick leave standby");
-		out.println("					</td>");
-		out.println("				</tr>");
-		out.println("				<tr>");
-		out.println("					<td colspan=13 class=\"oShiftColor\">");
-		out.println("						O : dayoff");
-		out.println("					</td>");
-		out.println("				</tr>");							
-		printRosterSchedulerButton(out);
-		out.println("			</tfoot>");
+		htmlHeader.add("\t\t<title>RosterViewer</title>");
 	}
-	protected int printRosterHeader(HttpServletRequest request,PrintWriter out,Hashtable<Integer,MyCalendar> myCalendarList,int year,int month)
+	protected void genIncludedCSS()
 	{
-		int i,noOfWorkingDay=0;
-		MyCalendar myCalendar;
-		String className;
-		out.println("\t\t\t<thead id=\"rosterHeader\">");
-		out.println("				<tr>");
-		out.println("					<td class=\"nameCell\"></td>");
-		out.println("					<td colspan=\"2\"></td>");
-		out.println("					<td class=\"alignCenter titleCell underlineText\" colspan=\"31\">");
-		out.println("						EMSTF Resident Support &amp; Computer Operation Support Services Team Roster");
-		out.println("					</td>");
-		out.println("					<td class=\"totalHourCell\"><br></td>");
-		out.println("					<td class=\"actualHourCell\"><br></td>");
-		out.println("					<td class=\"lastMonthCell\"><br></td>");
-		out.println("					<td class=\"thisMonthCell\"><br></td>");
-		out.println("					<td class=\"totalCell\"><br></td>");
-		out.println("					<td class=\"totalNoOfCell\"><br></td>");
-		out.println("					<td class=\"totalNoOfCell\"><br></td>");
-		out.println("					<td class=\"totalNoOfCell\"><br></td>");
-		out.println("					<td class=\"totalNoOfCell\"><br></td><td class=\"noOfWorkingDay\"><br></td>");
-		out.println("				</tr>");
-		out.println("				<tr id=\"rosterMonthRow\">");
-		out.println("					<td class=\"nameCell\">");
-		out.println("					</td><td colspan=\"2\"></td>");
-		out.println("					<td colspan=\"31\" class=\"underlineText alignCenter rosterMonthSelectCell\">");
-		out.println("						<select id=\"selectRosterMonth\" class=\"underlineText rosterMonthSelect\">");
-		out.println("							<option "+((month==Calendar.JANUARY)?"selected":"")+" value=\""+Calendar.JANUARY+"\">January</option>");
-		out.println("							<option "+((month==Calendar.FEBRUARY)?"selected":"")+" value=\""+Calendar.FEBRUARY+"\">February</option>");
-		out.println("							<option "+((month==Calendar.MARCH)?"selected":"")+" value=\""+Calendar.MARCH+"\">March</option>");
-		out.println("							<option "+((month==Calendar.APRIL)?"selected":"")+" value=\""+Calendar.APRIL+"\">April</option>");
-		out.println("							<option "+((month==Calendar.MAY)?"selected":"")+" value=\""+Calendar.MAY+"\">May</option>");
-		out.println("							<option "+((month==Calendar.JUNE)?"selected":"")+" value=\""+Calendar.JUNE+"\">June</option>");
-		out.println("							<option "+((month==Calendar.JULY)?"selected":"")+" value=\""+Calendar.JULY+"\">July</option>");
-		out.println("							<option "+((month==Calendar.AUGUST)?"selected":"")+" value=\""+Calendar.AUGUST+"\">August</option>");
-		out.println("							<option "+((month==Calendar.SEPTEMBER)?"selected":"")+" value=\""+Calendar.SEPTEMBER+"\">September</option>");
-		out.println("							<option "+((month==Calendar.OCTOBER)?"selected":"")+" value=\""+Calendar.OCTOBER+"\">October</option>");
-		out.println("							<option "+((month==Calendar.NOVEMBER)?"selected":"")+" value=\""+Calendar.NOVEMBER+"\">November</option>");
-		out.println("							<option "+((month==Calendar.DECEMBER)?"selected":"")+" value=\""+Calendar.DECEMBER+"\">December</option>");
-		out.println("						</select>"+year);
-		out.println("					</td>");
-		out.println("					<td colspan=\"10\"></td>");
-		out.println("				</tr>");
-		out.println("				<tr id=\"holidayRow\">");
-		out.println("					<td class=\"nameCell borderCell\">Holiday</td>");
-		printPrevDateHeaderCell(out);
+		htmlHeader.add("\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\">");
+	}
+	protected void genIncludedJavascript(HttpServletRequest request)
+	{
+		htmlHeader.add("\t\t<script type=\"text/javascript\" src=\""+request.getContextPath()+"/webjars/jquery/3.3.1/jquery.min.js\"></script>");
+		htmlHeader.add("\t\t<script src=\"js/RosterTable.js\"></script>");
+		htmlHeader.add("\t\t<script src=\"js/util/ShiftCellEventHandler.js\"></script>");
+		htmlHeader.add("\t\t<script src=\"js/util/Utility.js\"></script>");
+	}
+	protected void genHTMLBody()
+	{
+		genRosterTable();
+	}	
+	protected void genOnDomReadyFunction(HttpServletRequest request)
+	{
+		htmlHeader.add("\t\t<script>");
+		htmlHeader.add("\t\t\tvar utility=new Utility(\""+request.getContextPath()+"/middleware/\");");
+		htmlHeader.add("\t\t\t$( document ).ready(function() {");
+		htmlHeader.add("\t\t\t\tvar rosterTable=new RosterTable(utility);");
+		htmlHeader.add("\t\t\t\tvar shiftCellEventHandler=new ShiftCellEventHandler(rosterTable,\"shiftCell\");");
+		htmlHeader.add("\t\t\t});");
+		htmlHeader.add("\t\t</script>");
+	}
+	protected Hashtable<String,ArrayList<String>> genITORosterRowList()
+	{
+		ArrayList<String> shiftList;
+		float actualWorkingHour, thisMonthBalance,thisMonthHourTotal,totalHour;
+		Hashtable<String,ArrayList<String>>iTORosterRowHtml=new Hashtable<String,ArrayList<String>>();
+		int startIndex,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount,i;
+		ITO ito;
+		ITORoster itoRoster;
+		String shiftType;
+		aShiftData=new ArrayList<Integer>();
+		bShiftData=new ArrayList<Integer>();
+		cShiftData=new ArrayList<Integer>();
+		for (String itoId :itoIdList)
+		{
+			ito=itoList.get(itoId);
+			itoRoster=itoRosterList.get(itoId);
+			shiftList=new ArrayList<String>();
+			totalHour=(noOfWorkingDay*ito.getWorkingHourPerDay());
+			shiftList.add("					<td class=\"borderCell alignLeft\">"+ito.getItoName()+"<br>"+ito.getPostName()+" Extn. 2458</td>");
+			if (itoRoster==null)
+			{
+				genEmptyRow(shiftList,ito.getItoId());
+				aShiftData.add(0);
+				bShiftData.add(0);
+				cShiftData.add(0);
+			}
+			else
+			{
+				startIndex=itoRoster.getPreviousMonthShiftList().size()-showNoOfPrevDate;
+				for (i=startIndex;i<itoRoster.getPreviousMonthShiftList().size();i++)
+				{
+					shiftList.add("					\t<script>utility.printPreviousMonthShiftCell(\""+itoRoster.getPreviousMonthShiftList().get(i).getShift()+"\");</script>");
+				}
+				if (itoRoster.getShiftList().isEmpty())
+				{
+					genEmptyShiftRow(shiftList,ito.getItoId());
+					aShiftData.add(0);
+					bShiftData.add(0);
+					cShiftData.add(0);
+				}
+				else
+				{
+					aShiftCount=0;
+					bxShiftCount=0;
+					cShiftCount=0;
+					dxShiftCount=0;
+					actualWorkingHour=0.0f;
+					for (i=0;i<31;i++)
+					{
+						if (i< myCalendarList.size())
+						{
+							shiftType=itoRoster.getShiftList().get(i+1);
+							shiftList.add("					\t<script>utility.printShiftCell(\""+shiftType+"\");</script>");
+							switch(shiftType)
+							{
+								case "a":
+										aShiftCount++;
+										break;
+								case "b":
+								case "b1":
+										bxShiftCount++;
+										break;
+								case "c":
+										cShiftCount++;
+										break;
+								case "d":
+								case "d1":
+								case "d2":
+								case "d3":
+										dxShiftCount++;
+										break;		
+							}
+							actualWorkingHour+=RosterRule.getShiftHourCount().get(shiftType);
+						}
+						else
+						{
+							shiftList.add("					<td class=\"alignCenter borderCell\"></td>");
+						}
+					}
+					thisMonthHourTotal=actualWorkingHour-totalHour;
+					thisMonthBalance=thisMonthHourTotal+itoRoster.getBalance();
+					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_totalHour\">"+totalHour+"</td>");
+					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_actualHour\">"+(actualWorkingHour)+"</td>");
+					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_lastMonthBalance\">"+itoRoster.getBalance()+"</td>");
+					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_thisMonthHourTotal\"><script>document.write(utility.roundTo("+thisMonthHourTotal+",2));</script></td>");
+					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_thisMonthBalance\"><script>document.write(utility.roundTo("+thisMonthBalance+",2));</script></td>");
+					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_aShiftCount\">"+aShiftCount+"</td>");
+					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_bxShiftCount\">"+bxShiftCount+"</td>");
+					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_cShiftCount\">"+cShiftCount+"</td>");
+					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_dxShiftCount\">"+dxShiftCount+"</td>");
+					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_noOfWoringDay\">"+(aShiftCount+bxShiftCount+cShiftCount+dxShiftCount)+"</td>");
+					aShiftData.add(aShiftCount); 
+					bShiftData.add(bxShiftCount); 
+					cShiftData.add(cShiftCount); 
+				}
+			}
+			iTORosterRowHtml.put(itoId, shiftList);
+		}
+		return iTORosterRowHtml;
+	}
+	protected void genRosterHeader()
+	{
+		genRosterCaptionRow();
+		genRosterMonthRow();
+		genRosterHolidayRow();
+		genRosterWeekdayRow();
+		genRosterDateRow();
+	}
+	protected void genRosterHolidayRow()
+	{
+		int i;
+		rosterHolidayRowHtml.add("					<td class=\"nameCell borderCell\">Holiday</td>");
+		genPrevDateHeaderCell(rosterHolidayRowHtml);
 		for (i=0;i<31;i++)
 		{
 			if (i< myCalendarList.size())
@@ -291,24 +303,179 @@ public class RosterViewer extends HttpServlet
 				myCalendar= myCalendarList.get(i+1);
 				if (myCalendar.isPublicHoliday())
 				{
-					out.println("					<td class=\"dataCell alignCenter borderCell phCell\">PH</td>");	
+					rosterHolidayRowHtml.add("					<td class=\"dataCell alignCenter borderCell phCell\">PH</td>");	
 				}
 				else
 				{
-					out.println("					<td class=\"dataCell alignCenter borderCell phCell\"></td>");
+					rosterHolidayRowHtml.add("					<td class=\"dataCell alignCenter borderCell phCell\"></td>");
 				}
 			}
 			else
 			{
-				out.println("					<td class=\"dataCell alignCenter borderCell phCell\"></td>");
+				rosterHolidayRowHtml.add("					<td class=\"dataCell alignCenter borderCell phCell\"></td>");
 			}
 		}
-		out.println("					<td class=\"borderCell\" colspan=\"10\"></td>");				
-		out.println("				</tr>");
-		out.println("				</tr>");
-		out.println("				<tr id=\"weekdayRow\">");
-		out.println("					<td class=\"nameCell borderCell\">Days</td>");
-		printPrevDateHeaderCell(out);
+		rosterHolidayRowHtml.add("					<td class=\"borderCell\" colspan=\"10\"></td>");			
+	}	
+	protected void genRosterBody()
+	{
+		ArrayList<String>shiftList;
+		Hashtable<String,ArrayList<String>>iTORosterRowHtml=genITORosterRowList();
+		for (String itoId :itoIdList)
+		{
+			rosterBodyHtml.add("				<tr id=\"shift_"+itoId+"\">");
+			shiftList=iTORosterRowHtml.get(itoId);
+			rosterBodyHtml.addAll(shiftList);
+			rosterBodyHtml.add("				</tr>");
+		}		
+	}
+	protected void genRosterCaptionRow()
+	{
+		rosterCaptionHtml.add("					<td class=\"nameCell\"></td>");
+		rosterCaptionHtml.add("					<td colspan=\"2\"></td>");
+		rosterCaptionHtml.add("					<td class=\"alignCenter titleCell underlineText\" colspan=\"31\">");
+		rosterCaptionHtml.add("						EMSTF Resident Support &amp; Computer Operation Support Services Team Roster");
+		rosterCaptionHtml.add("					</td>");
+		rosterCaptionHtml.add("					<td class=\"totalHourCell\"><br></td>");
+		rosterCaptionHtml.add("					<td class=\"actualHourCell\"><br></td>");
+		rosterCaptionHtml.add("					<td class=\"lastMonthCell\"><br></td>");
+		rosterCaptionHtml.add("					<td class=\"thisMonthCell\"><br></td>");
+		rosterCaptionHtml.add("					<td class=\"totalCell\"><br></td>");
+		rosterCaptionHtml.add("					<td class=\"totalNoOfCell\"><br></td>");
+		rosterCaptionHtml.add("					<td class=\"totalNoOfCell\"><br></td>");
+		rosterCaptionHtml.add("					<td class=\"totalNoOfCell\"><br></td>");
+		rosterCaptionHtml.add("					<td class=\"totalNoOfCell\"><br></td><td class=\"noOfWorkingDay\"><br></td>");
+	}
+	protected void genRosterDateRow()
+	{
+		int i;
+		rosterDateRowHtml.add("					<td class=\"nameCell borderCell\">Resident Support<br>Team Members</td>");
+		genPrevDateHeaderCell(rosterDateRowHtml);
+		for (i=0;i<31;i++)
+		{
+			if (i< myCalendarList.size())
+			{
+				rosterDateRowHtml.add("					<td class=\"dataCell alignCenter borderCell\">"+(i+1)+"</td>");
+			}
+			else
+				rosterDateRowHtml.add("					<td class=\"dataCell alignCenter borderCell\"></td>");	
+		}
+		rosterDateRowHtml.add("					<td class=\"alignCenter borderCell\">Last<br>Month</td>");
+		rosterDateRowHtml.add("					<td class=\"alignCenter borderCell\">This<br>Month</td>");
+		rosterDateRowHtml.add("					<td class=\"alignCenter borderCell\">Total</td>");
+		rosterDateRowHtml.add("					<td class=\"alignCenter borderCell\">Total No. of<br>A shift</td>");
+		rosterDateRowHtml.add("					<td class=\"alignCenter borderCell\">Total No. of<br>Bx shift</td>");
+		rosterDateRowHtml.add("					<td class=\"alignCenter borderCell\">Total No. of<br>C shift</td>");
+		rosterDateRowHtml.add("					<td class=\"alignCenter borderCell\">Total No. of<br>Dx shift</td>");
+		rosterDateRowHtml.add("					<td class=\"alignCenter borderCell\">No. of<br>working<br>day</td>");
+	}
+	protected void genRosterFooter()
+	{
+		rosterFooterHtml.add("				<tr>");
+		rosterFooterHtml.add("					<td colspan=\"44\">");
+		rosterFooterHtml.add("						<br>");
+		rosterFooterHtml.add("					</td>");
+		rosterFooterHtml.add("				</tr>");
+		rosterFooterHtml.add("				<tr>");
+		rosterFooterHtml.add("					<td colspan=13 class=\"aShiftColor\">");	
+		rosterFooterHtml.add("					a : 0800H - 1700H");
+		rosterFooterHtml.add("					</td>");
+		rosterFooterHtml.add("					<td colspan=\"20\" rowspan=10>");
+		rosterFooterHtml.add("					</td>");
+		rosterFooterHtml.add("					<td colspan=\"11\" rowspan=\"23\">");
+		rosterFooterHtml.add("					</td>");
+		rosterFooterHtml.add("				</tr>");
+		rosterFooterHtml.add("				<tr>");
+		rosterFooterHtml.add("					<td colspan=13 class=\"bShiftColor\">");	
+		rosterFooterHtml.add("						b : 1630H - 2215H");
+		rosterFooterHtml.add("					</td>");
+		rosterFooterHtml.add("				</tr>");
+		rosterFooterHtml.add("				<tr>");
+		rosterFooterHtml.add("					<td colspan=13 class=\"bShiftColor\">");
+		rosterFooterHtml.add("						b1: 1500H - 2215H");
+		rosterFooterHtml.add("					</td>");
+		rosterFooterHtml.add("				</tr>");
+		rosterFooterHtml.add("				<tr>");
+		rosterFooterHtml.add("					<td colspan=13 class=\"cShiftColor\">");
+		rosterFooterHtml.add("						c : 2145H - 0830H (the next day)");
+		rosterFooterHtml.add("					</td>");			
+		rosterFooterHtml.add("				</tr>");
+		rosterFooterHtml.add("				<tr>");
+		rosterFooterHtml.add("					<td colspan=13 class=\"dxShiftColor\">");
+		rosterFooterHtml.add("						d : 0800H - 1800H (on weekdays)");
+		rosterFooterHtml.add("					</td>");
+		rosterFooterHtml.add("				</tr>");
+		rosterFooterHtml.add("				<tr>");
+		rosterFooterHtml.add("					<td colspan=13 class=\"dxShiftColor\">");
+		rosterFooterHtml.add("						d1 : 0800H - 1700H (on weekdays)");
+		rosterFooterHtml.add("					</td>");
+		rosterFooterHtml.add("				</tr>");
+		rosterFooterHtml.add("				<tr>");
+		rosterFooterHtml.add("					<td colspan=13 class=\"dxShiftColor\">");
+		rosterFooterHtml.add("						d2 : 0900H - 1800H (on weekdays)");
+		rosterFooterHtml.add("					</td>");				
+		rosterFooterHtml.add("				</tr>");
+		rosterFooterHtml.add("				<tr>");
+		rosterFooterHtml.add("					<td colspan=13 class=\"dxShiftColor\">");
+		rosterFooterHtml.add("						d3 : 0800H - 1648H (on weekdays)");
+		rosterFooterHtml.add("					</td>");
+		rosterFooterHtml.add("				</tr>");
+		rosterFooterHtml.add("				<tr>");
+		rosterFooterHtml.add("					<td colspan=13 class=\"sickLeaveColor\">");
+		rosterFooterHtml.add("						s : sick leave standby");
+		rosterFooterHtml.add("					</td>");
+		rosterFooterHtml.add("				</tr>");
+		rosterFooterHtml.add("				<tr>");
+		rosterFooterHtml.add("					<td colspan=13 class=\"oShiftColor\">");
+		rosterFooterHtml.add("						O : dayoff");
+		rosterFooterHtml.add("					</td>");
+		rosterFooterHtml.add("				</tr>");		
+	}
+	protected void genRosterMonthRow()
+	{
+		rosterMonthRowHtml.add("					<td class=\"nameCell\">");
+		rosterMonthRowHtml.add("					</td>");
+		rosterMonthRowHtml.add("					<td colspan=\"2\"></td>");
+		rosterMonthRowHtml.add("					<td colspan=\"31\" class=\"underlineText alignCenter rosterMonthSelectCell\">");
+		rosterMonthRowHtml.add("						<form method=\"post\">");
+		rosterMonthRowHtml.add("						\t<select id=\"selectRosterMonth\" name=\"month\" class=\"underlineText rosterMonthSelect\" onchange=\"this.form.submit()\">");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.JANUARY)?"selected":"")+" value=\""+Calendar.JANUARY+"\">January</option>");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.FEBRUARY)?"selected":"")+" value=\""+Calendar.FEBRUARY+"\">February</option>");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.MARCH)?"selected":"")+" value=\""+Calendar.MARCH+"\">March</option>");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.APRIL)?"selected":"")+" value=\""+Calendar.APRIL+"\">April</option>");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.MAY)?"selected":"")+" value=\""+Calendar.MAY+"\">May</option>");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.JUNE)?"selected":"")+" value=\""+Calendar.JUNE+"\">June</option>");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.JULY)?"selected":"")+" value=\""+Calendar.JULY+"\">July</option>");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.AUGUST)?"selected":"")+" value=\""+Calendar.AUGUST+"\">August</option>");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.SEPTEMBER)?"selected":"")+" value=\""+Calendar.SEPTEMBER+"\">September</option>");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.OCTOBER)?"selected":"")+" value=\""+Calendar.OCTOBER+"\">October</option>");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.NOVEMBER)?"selected":"")+" value=\""+Calendar.NOVEMBER+"\">November</option>");
+		rosterMonthRowHtml.add("						\t	<option "+((rosterMonth==Calendar.DECEMBER)?"selected":"")+" value=\""+Calendar.DECEMBER+"\">December</option>");
+		rosterMonthRowHtml.add("						\t</select>"+rosterYear);
+		rosterMonthRowHtml.add("						\t<input type=\"hidden\" name=\"year\" value=\""+rosterYear+"\">");
+		rosterMonthRowHtml.add("						</form>");
+		rosterMonthRowHtml.add("					</td>");
+		rosterMonthRowHtml.add("					<td colspan=\"10\"></td>");
+	}
+	private void genRosterTable()
+	{
+		genRosterHeader();
+		genRosterBody();
+		genRosterFooter();
+	}
+	protected void genPrevDateHeaderCell(ArrayList<String> container)
+	{
+		for (int i=0;i<showNoOfPrevDate;i++)
+		{
+			container.add("					<td class=\"dataCell alignCenter borderCell\"></td>");
+		}
+	}
+	protected void genRosterWeekdayRow()
+	{
+		int i;
+		String className;
+		rosterWeekdayRowHtml.add("					<td class=\"nameCell borderCell\">Days</td>");
+		genPrevDateHeaderCell(rosterWeekdayRowHtml);
 		for (i=0;i<31;i++)
 		{
 			className="dataCell alignCenter borderCell";
@@ -325,192 +492,90 @@ public class RosterViewer extends HttpServlet
 					noOfWorkingDay++;
 				switch (myCalendar.getDayOfWeek())
 				{
-					case Calendar.FRIDAY:out.println("					<td class=\""+className+"\">F</td>");
+					case Calendar.FRIDAY:rosterWeekdayRowHtml.add("					<td class=\""+className+"\">F</td>");
 										break;
-					case Calendar.MONDAY:out.println("					<td class=\""+className+"\">M</td>");
+					case Calendar.MONDAY:rosterWeekdayRowHtml.add("					<td class=\""+className+"\">M</td>");
 											break;
-					case Calendar.SATURDAY:out.println("					<td class=\""+className+"\">S</td>");
+					case Calendar.SATURDAY:rosterWeekdayRowHtml.add("					<td class=\""+className+"\">S</td>");
 											break;
-					case Calendar.SUNDAY:out.println("					<td class=\""+className+"\">Su</td>");
+					case Calendar.SUNDAY:rosterWeekdayRowHtml.add("					<td class=\""+className+"\">Su</td>");
 										 break;
-					case Calendar.TUESDAY:out.println("					<td class=\""+className+"\">T</td>");
+					case Calendar.TUESDAY:rosterWeekdayRowHtml.add("					<td class=\""+className+"\">T</td>");
 										break;
-					case Calendar.THURSDAY:out.println("					<td class=\""+className+"\">Th</td>");
+					case Calendar.THURSDAY:rosterWeekdayRowHtml.add("					<td class=\""+className+"\">Th</td>");
 										break;
-					case Calendar.WEDNESDAY:out.println("					<td class=\""+className+"\">W</td>");
+					case Calendar.WEDNESDAY:rosterWeekdayRowHtml.add("					<td class=\""+className+"\">W</td>");
 										break;
 										 
 				}
 			}
 			else
-				out.println("					<td class=\""+className+"\"></td>");
+				rosterWeekdayRowHtml.add("					<td class=\""+className+"\"></td>");
 		}
-		out.println("					<td class=\"alignCenter borderCell\" rowspan=\"2\">Total<br>Hour</td>");
-		out.println("					<td class=\"alignCenter borderCell\" rowspan=\"2\">Actual<br>Hour</td>");
-		out.println("					<td class=\"alignCenter borderCell\" colspan=\"8\">Hour Off Due</td>");					
+		rosterWeekdayRowHtml.add("					<td class=\"alignCenter borderCell\" rowspan=\"2\">Total<br>Hour</td>");
+		rosterWeekdayRowHtml.add("					<td class=\"alignCenter borderCell\" rowspan=\"2\">Actual<br>Hour</td>");
+		rosterWeekdayRowHtml.add("					<td class=\"alignCenter borderCell\" colspan=\"8\">Hour Off Due</td>");		
+		
+	}
+	protected void outputResult(PrintWriter out,HttpServletResponse response)
+	{
+		int i;
+		response.setContentType("text/html; charset=UTF-8");
+		out.println("<html>");
+		out.println("\t<head>");
+		for (i=0;i<htmlHeader.size();i++)
+		{
+			out.println(htmlHeader.get(i));
+		}
+		out.println("\t</head>");
+		out.println("\t<body>");
+		out.println("\t\t<table border=\"0\" id=\"rosterTable\">");
+		out.println("\t\t\t<thead id=\"rosterHeader\">");
+		out.println("				<tr>");
+		for (i=0;i<rosterCaptionHtml.size();i++)
+		{	
+			out.println(rosterCaptionHtml.get(i));
+		}
+		out.println("				</tr>");
+		out.println("				<tr id=\"rosterMonthRow\">");
+		for (i=0;i<rosterMonthRowHtml.size();i++)
+		{	
+			out.println(rosterMonthRowHtml.get(i));
+		}
+		out.println("				</tr>");
+		out.println("				<tr id=\"holidayRow\">");
+		for (i=0;i<rosterHolidayRowHtml.size();i++)
+		{	
+			out.println(rosterHolidayRowHtml.get(i));
+		}
+		out.println("				</tr>");
+		out.println("				<tr id=\"weekdayRow\">");
+		for (i=0;i<rosterWeekdayRowHtml.size();i++)
+		{
+			out.println(rosterWeekdayRowHtml.get(i));
+		}
 		out.println("				</tr>");
 		out.println("				<tr id=\"dateRow\">");
-		out.println("					<td class=\"nameCell borderCell\">Resident Support<br>Team Members</td>");
-		printPrevDateHeaderCell(out);
-		for (i=0;i<31;i++)
+		for (i=0;i<rosterDateRowHtml.size();i++)
 		{
-			if (i< myCalendarList.size())
-			{
-				out.println("					<td class=\"dataCell alignCenter borderCell\">"+(i+1)+"</td>");
-			}
-			else
-				out.println("					<td class=\"dataCell alignCenter borderCell\"></td>");	
+			out.println(rosterDateRowHtml.get(i));
 		}
-		out.println("					<td class=\"alignCenter borderCell\">Last<br>Month</td>");
-		out.println("					<td class=\"alignCenter borderCell\">This<br>Month</td>");
-		out.println("					<td class=\"alignCenter borderCell\">Total</td>");
-		out.println("					<td class=\"alignCenter borderCell\">Total No. of<br>A shift</td>");
-		out.println("					<td class=\"alignCenter borderCell\">Total No. of<br>Bx shift</td>");
-		out.println("					<td class=\"alignCenter borderCell\">Total No. of<br>C shift</td>");
-		out.println("					<td class=\"alignCenter borderCell\">Total No. of<br>Dx shift</td>");
-		out.println("					<td class=\"alignCenter borderCell\">No. of<br>working<br>day</td>");
 		out.println("				</tr>");
 		out.println("\t\t\t</thead>");
-		return noOfWorkingDay;
-	}
-	protected void printRosterSchedulerButton(PrintWriter out)
-	{
-		
-	}
-	protected void printRosterTable(HttpServletRequest request,PrintWriter out)
-	{
-		CalendarUtility calendarUtility=new CalendarUtility();
-		GregorianCalendar now=new GregorianCalendar();
-		int month=now.get(Calendar.MONTH);
-		int noOfWorkingDay;
-		int year=now.get(Calendar.YEAR);
-		MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(year,month);
-		Hashtable<Integer,MyCalendar> myCalendarList=mc.getMonthlyCalendar();
-		Hashtable<String,ITORoster> itoRosterList;
-		Hashtable<String,ITO> itoList;
-		
-		ITO ito;
-					
-		Roster roster=new Roster();
-		try
+		out.println("\t\t\t<tbody>");
+		for (i=0;i<rosterBodyHtml.size();i++)
 		{
-			ito=new ITO();
-			itoList=ito.getITOList(year,month);
-			roster.setRosterYear(year);
-			roster.setRosterMonth(month);
-			
-			String[] itoIdList ;
-	
-			itoIdList = itoList.keySet().toArray(new String[0]);
-			Arrays.sort(itoIdList);
-	
-			roster.load();
-			itoRosterList=roster.getITORosterList();
-	
-			
-			out.println("\t\t<table border=\"0\" id=\"rosterTable\">");
-			noOfWorkingDay=printRosterHeader(request,out,myCalendarList,year,month);
-			printRosterBody(request,out,myCalendarList,itoList,itoRosterList,itoIdList,noOfWorkingDay);
-			printRosterFooter(out,myCalendarList,roster,itoIdList,year,month);
-			out.println("\t\t</table>");
-			roster=null;
+			out.println(rosterBodyHtml.get(i));
 		}
-		catch (Exception err)
+		out.println("\t\t\t</tbody>");
+		out.println("			<tfoot>");
+		for (i=0;i<rosterFooterHtml.size();i++)
 		{
-			err.printStackTrace();
+			out.println(rosterFooterHtml.get(i));
 		}
-	}
-	protected void printVacantShiftRow(PrintWriter out)
-	{
-		
-	}
-	protected void printShiftRow(PrintWriter out, Hashtable<Integer,MyCalendar> myCalendarList, ITORoster itoRoster,ITO ito,int noOfWorkingDay) 
-	{
-		float actualWorkingHour, thisMonthBalance,thisMonthHourTotal,totalHour;
-		int startIndex,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount,i;
-
-		String shiftType;
-
-		totalHour=(noOfWorkingDay*ito.getWorkingHourPerDay());
-
-		out.println("				<tr id=\"shift_"+ito.getItoId()+"\">");
-		out.println("					<td class=\"borderCell alignLeft\">"+ito.getItoName()+"<br>"+ito.getPostName()+" Extn. 2458</td>");
-		if (itoRoster==null)
-		{
-			printEmptyRow(out,ito.getItoId());
-		}
-		else
-		{
-			startIndex=itoRoster.getPreviousMonthShiftList().size()-showNoOfPrevDate;
-			for (i=startIndex;i<itoRoster.getPreviousMonthShiftList().size();i++)
-			{
-				out.println("					\t<script>utility.printPreviousMonthShiftCell(\""+itoRoster.getPreviousMonthShiftList().get(i).getShift()+"\");</script>");
-			}
-			if (itoRoster.getShiftList().isEmpty())
-			{
-				printEmptyShiftRow(out, ito.getItoId());
-			}
-			else
-			{
-				aShiftCount=0;
-				bxShiftCount=0;
-				cShiftCount=0;
-				dxShiftCount=0;
-				actualWorkingHour=0.0f;
-				for (i=0;i<31;i++)
-				{
-					if (i< myCalendarList.size())
-					{
-						shiftType=itoRoster.getShiftList().get(i+1);
-						out.println("					\t<script>utility.printShiftCell(\""+shiftType+"\");</script>");
-						switch(shiftType)
-						{
-							case "a":
-									aShiftCount++;
-									break;
-							case "b":
-							case "b1":
-									bxShiftCount++;
-									break;
-							case "c":
-									cShiftCount++;
-									break;
-							case "d":
-							case "d1":
-							case "d2":
-							case "d3":
-									dxShiftCount++;
-									break;		
-						}
-						actualWorkingHour+=RosterRule.getShiftHourCount().get(shiftType);
-					}
-					else
-					{
-						out.println("					<td class=\"alignCenter borderCell\"></td>");
-					}
-				}
-				thisMonthHourTotal=actualWorkingHour-totalHour;
-				thisMonthBalance=thisMonthHourTotal+itoRoster.getBalance();
-				out.println("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_totalHour\">"+totalHour+"</td>");
-				out.println("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_actualHour\">"+(actualWorkingHour)+"</td>");
-				out.println("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_lastMonthBalance\">"+itoRoster.getBalance()+"</td>");
-				out.println("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_thisMonthHourTotal\"><script>document.write(utility.roundTo("+thisMonthHourTotal+",2));</script></td>");
-				out.println("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_thisMonthBalance\"><script>document.write(utility.roundTo("+thisMonthBalance+",2));</script></td>");
-				out.println("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_aShiftCount\">"+aShiftCount+"</td>");
-				out.println("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_bxShiftCount\">"+bxShiftCount+"</td>");
-				out.println("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_cShiftCount\">"+cShiftCount+"</td>");
-				out.println("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_dxShiftCount\">"+dxShiftCount+"</td>");
-				out.println("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_noOfWoringDay\">"+(aShiftCount+bxShiftCount+cShiftCount+dxShiftCount)+"</td>");
-				aShiftData.add(aShiftCount); 
-				bShiftData.add(bxShiftCount); 
-				cShiftData.add(cShiftCount); 
-			}
-		}
-		out.println("				</tr>");		
-		
-	}
-	protected void printYearlyStatistic(PrintWriter out,Roster roster,String[]itoIdList,int year,int month)
-	{
-		
+		out.println("			</tfoot>");
+		out.println("\t\t</table>");
+		out.println("\t</body>");
+		out.println("</html>");
 	}
 }

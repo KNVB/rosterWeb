@@ -18,7 +18,7 @@ class RosterTable
 		this.weekdayRow=document.getElementById("weekdayRow");
 		this.workingDayCount;
 	}
-	refresh()
+	/*refresh()
 	{
 		this._refreshRosterHeader();
 		this._rebuildRosterBody();
@@ -75,6 +75,6 @@ class RosterTable
 			$(weekdayCell).removeClass("phCell");
 			dateCell.textContent="";
 		}
-	}
+	}*/
 	
 }
