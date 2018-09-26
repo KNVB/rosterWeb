@@ -37,25 +37,7 @@ class Utility
 		 return data.reduce(function (a, b) {
 		        return Number(a) + Number(b);
 		    }) / data.length;
-	}	
-	getRosterData(year,month)
-	{
-		var requestParameters={"year":year,"month":month}; 
-		return jQuery.ajax({"url": this.jspPath+"getRoster.jsp",
-					 dataType: 'json',
-					 data:requestParameters,
-					 error:this.showAjaxErrorMessage
-		});
 	}
-	getRosterRule(year,month)
-	{
-		var requestParameters={"year":year,"month":month}; 
-		return jQuery.ajax({"url": this.jspPath+"getRosterRule.jsp",
-					 dataType: 'json',
-					 data:requestParameters,
-					 error:this.showAjaxErrorMessage
-		});
-	}	
 	//Get The Standard Deviation for the incoming array of value;
 	getSD(data)
 	{

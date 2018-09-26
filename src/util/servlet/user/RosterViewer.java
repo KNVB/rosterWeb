@@ -150,7 +150,7 @@ public class RosterViewer extends HttpServlet
 	{
 		htmlHeader.add("\t\t<meta charset=\"UTF-8\">");
 		genHTMLTitle();
-		genIncludedCSS();
+		genIncludedCSS(request);
 		genIncludedJavascript(request);
 		genOnDomReadyFunction(request);
 	}
@@ -158,16 +158,16 @@ public class RosterViewer extends HttpServlet
 	{
 		htmlHeader.add("\t\t<title>RosterViewer</title>");
 	}
-	protected void genIncludedCSS()
+	protected void genIncludedCSS(HttpServletRequest request)
 	{
-		htmlHeader.add("\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\">");
+		htmlHeader.add("\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\""+request.getContextPath()+"/css/style.css\">");
 	}
 	protected void genIncludedJavascript(HttpServletRequest request)
 	{
 		htmlHeader.add("\t\t<script type=\"text/javascript\" src=\""+request.getContextPath()+"/webjars/jquery/3.3.1/jquery.min.js\"></script>");
-		htmlHeader.add("\t\t<script src=\"js/RosterTable.js\"></script>");
-		htmlHeader.add("\t\t<script src=\"js/util/ShiftCellEventHandler.js\"></script>");
-		htmlHeader.add("\t\t<script src=\"js/util/Utility.js\"></script>");
+		htmlHeader.add("\t\t<script src=\""+request.getContextPath()+"/js/RosterTable.js\"></script>");
+		htmlHeader.add("\t\t<script src=\""+request.getContextPath()+"/js/util/ShiftCellEventHandler.js\"></script>");
+		htmlHeader.add("\t\t<script src=\""+request.getContextPath()+"/js/util/Utility.js\"></script>");
 	}
 	protected void genHTMLBody()
 	{

@@ -7,6 +7,7 @@ import com.rosterStatistic.MonthlyStatistic;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import javax.servlet.http.HttpServletRequest;
 
 import util.servlet.user.RosterViewer;
 
@@ -15,21 +16,8 @@ import util.servlet.user.RosterViewer;
  */
 public class RosterScheduler extends RosterViewer {
 	private static final long serialVersionUID = 1L;
-	
 	private Hashtable<String,ITOYearlyStatistic> yearlyRosterStatistic;
-	
-	protected void getData() 
-	{
-		super.getData();
-		try
-		{
-			yearlyRosterStatistic=roster.getYearlyStatistic(rosterYear, rosterMonth);
-		}
-		catch (Exception err)
-		{
-			err.printStackTrace();
-		}
-	}
+
 	private void genAutoPlannerResult(ArrayList<String>container)
 	{
 		container.add("						<div style=\"padding-left:10px;display:none\" id=\"genResult\">");
@@ -94,10 +82,44 @@ public class RosterScheduler extends RosterViewer {
 		container.add("							<a class=\"autoPlannerButton\">Auto Planner</a>");		
 		container.add("						</div>");
 	}
+	@Override
+	protected void getData() 
+	{
+		super.getData();
+		try
+		{
+			yearlyRosterStatistic=roster.getYearlyStatistic(rosterYear, rosterMonth);
+		}
+		catch (Exception err)
+		{
+			err.printStackTrace();
+		}
+	}
+	@Override
 	protected void genHTMLTitle()
 	{
 		htmlHeader.add("\t\t<title>RosterScheduler</title>");
+	}	
+	@Override
+	protected void genIncludedJavascript(HttpServletRequest request)
+	{
+		super.genIncludedJavascript(request);
+		htmlHeader.add("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/SchedulerShiftCellEventHandler.js\"></script>");
+		htmlHeader.add("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/RosterSchedulerUtility.js\"></script>");
+		htmlHeader.add("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterSchedulerTable.js\"></script>");
 	}
+	@Override
+	protected void genOnDomReadyFunction(HttpServletRequest request)
+	{
+		htmlHeader.add("\t\t<script>");
+		htmlHeader.add("\t\t\tvar utility=new RosterSchedulerUtility(\""+request.getContextPath()+"/middleware/\");");
+		htmlHeader.add("\t\t\t$( document ).ready(function() {");
+		htmlHeader.add("\t\t\t\tvar rosterSchedulerTable=new RosterSchedulerTable(utility);");
+		htmlHeader.add("\t\t\t\tvar schedulerhiftCellEventHandler=new SchedulerShiftCellEventHandler(rosterSchedulerTable,\"shiftCell\");");
+		htmlHeader.add("\t\t\t});");
+		htmlHeader.add("\t\t</script>");
+	}
+	@Override
 	protected void genRosterBody()
 	{
 		ArrayList<String>shiftList;
@@ -117,6 +139,7 @@ public class RosterScheduler extends RosterViewer {
 		}
 		genVacantShiftRow();
 	}
+	@Override
 	protected void genRosterFooter()
 	{
 		rosterFooterHtml.add("				<tr>");

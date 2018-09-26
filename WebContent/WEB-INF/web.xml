@@ -16,7 +16,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>RosterScheduler</servlet-name>
-		<url-pattern>/rosterScheduler</url-pattern>
+		<url-pattern>/admin/rosterScheduler</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>RosterViewer</servlet-name>
