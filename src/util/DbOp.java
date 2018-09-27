@@ -409,7 +409,7 @@ public class DbOp implements DataStore
 		sqlString=sqlString+"			sum(case when shift ='a' then 1 else 0 end) as a,";
 		sqlString=sqlString+"			sum(case when shift ='b' or shift ='b1' then 1 else 0 end) as b,";
 		sqlString=sqlString+"			sum(case when shift ='c' then 1 else 0 end) as c,";
-		sqlString=sqlString+"			sum(case when shift ='d' or shift='d1'  then 1 else 0 end) as d,";
+		sqlString=sqlString+"			sum(case when shift ='d' or shift='d1' or shift='d2' or shift='d3' then 1 else 0 end) as d,";
 		sqlString=sqlString+"			sum(case when shift ='O' then 1 else 0 end) as o,";
 		sqlString=sqlString+"			year(shift_date) as y,";
 		sqlString=sqlString+"			month(shift_date) m ";
