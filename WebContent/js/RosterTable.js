@@ -2,7 +2,6 @@ class RosterTable
 {
 	constructor(utility)
 	{
-		this.calendarList;
 		this.dateRow=document.getElementById("dateRow");
 		this.holidayRow=document.getElementById("holidayRow");
 		this.rosterBody=document.getElementById("rosterBody");
@@ -12,11 +11,10 @@ class RosterTable
 		this.rosterMonth;
 		this.rosterRule;
 		this.rosterYear;
-		this.showNoOfPrevDate=2;
 		this.table=document.getElementById("rosterTable");
 		this.utility=utility;
 		this.weekdayRow=document.getElementById("weekdayRow");
-		this.workingDayCount;
+		
 	}
 	/*refresh()
 	{

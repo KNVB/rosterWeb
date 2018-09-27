@@ -1,8 +1,7 @@
 class Utility
 {
-	constructor(jspPath)
+	constructor()
 	{
-		this.jspPath=jspPath;
 	}
 	getShiftCssClassName(shiftType)
 	{
