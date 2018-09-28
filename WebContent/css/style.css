@@ -123,7 +123,7 @@ tbody tr:last-child td
 }
 .errorRedBlackGround
 {
-	background-color:red;
+	background-color:red!important;
 	animation: blinker 1s linear infinite;
 }
 @keyframes blinker {  

@@ -345,7 +345,7 @@ public class DbOp implements DataStore
 				shiftDate=new GregorianCalendar();
 				shiftDate.setTime(rs.getDate("shift_date"));
 				shift=new Shift();
-				shift.setShift(rs.getString("shift"));
+				shift.setShiftType(rs.getString("shift"));
 				
 				shift.setShiftDate(shiftDate);
 				if (result.containsKey(rs.getString("ito_id")))

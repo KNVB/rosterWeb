@@ -53,7 +53,7 @@ class Utility
 	}
 	printShiftCell(shiftType)
 	{
-		var className="alignCenter borderCell shiftCell";
+		var className="alignCenter borderCell cursorCell";
 		className+=" "+utility.getShiftCssClassName(shiftType);
 		document.write("<td class=\""+className+"\">"+shiftType+"</td>");
 	}

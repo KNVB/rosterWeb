@@ -1,6 +1,6 @@
 class RosterSchedulerTable extends RosterTable
 {
-	constructor(utility)
+	constructor(utility,rosterScheduler)
 	{
 		super(utility);
 		
@@ -58,7 +58,7 @@ class RosterSchedulerTable extends RosterTable
 		$(".shiftCell").on("blur",function(){
 			self._updateValue(this);
 		});
-		var schedulerhiftCellEventHandler=new SchedulerShiftCellEventHandler(this,"shiftCell");
+		var schedulerhiftCellEventHandler=new SchedulerShiftCellEventHandler(this,"cursorCell");
 	}
 /*=================
  * Public method  *
@@ -78,34 +78,164 @@ class RosterSchedulerTable extends RosterTable
 			$(this.vancantShiftRow.cells[cells[i].cellIndex]).html("");
 		}
 	}
+	haveBlackListedShiftPattern()
+	{
+		var cell;
+		var firstIndex;
+		var i,indices,ito,lastIndex;
+		var result=false;
+		var shiftRow;
+		var shiftRows=this._getAllShiftRow();
+		for (var itoId in shiftRows)
+		{
+			shiftRow=shiftRows[itoId];
+			cell=$(shiftRow).children(".shiftCell:last")[0];
+			lastIndex=cell.cellIndex;
+			ito=this.itoList[itoId];
+			
+			indices=ito.getBlackListedShiftPatternIndex(this._getShiftPattern(shiftRow,lastIndex+this.showNoOfPrevDate));
+			//console.log(itoId+"|"+indices.length+"|"+ito.blackListShiftPatternList+"|"+this._getShiftPattern(shiftRow,lastIndex+this.showNoOfPrevDate));
+			$(shiftRow).children(".shiftCell").removeClass("errorRedBlackGround");
+			
+			if (indices.length>0)
+			{
+				for (i=0;i<indices.length;i++)
+				{
+					$(shiftRow.cells[indices[i]]).addClass("errorRedBlackGround");
+				}
+				 result=true;
+			}
+			else
+			{
+				//reset all cell style in the shift row
+				$(shiftRow).children(".shiftCell").blur();  
+			}
+		}
+		return result;
+	}
 	haveDuplicateShift()
 	{
+		var cell;
+		var firstIndex,haveDuplicateShift=false;
+		var i,ito,lastIndex;
+		var shiftRow,shiftRows,shiftType;
+		var tempResult=[],temp="";
+
+		shiftRows=this._getAllShiftRow();
+		cell=$("td.shiftCell:first")[0];
+		firstIndex=cell.cellIndex;
 		
+		cell=$("td.shiftCell:last")[0];
+		lastIndex=cell.cellIndex;
+		haveDuplicateShift=false;
+		for (i=firstIndex;i<=lastIndex;i++)
+		{
+			tempResult=[];
+			for (var itoId in shiftRows)
+			{
+				shiftRow=shiftRows[itoId];
+				ito=this.itoList[itoId];
+				cell=shiftRow.cells[i];
+				shiftType=cell.textContent;
+				if (shiftType!="")
+				{
+					if (ito.isValidShift(shiftType))
+					{
+						switch (shiftType)
+						{
+							case "a"	:
+							case "c"	:
+										if ($.inArray (shiftType,tempResult)>-1)
+										{
+											alert("Duplicate Shift Found");
+											$(cell).addClass("errorRedBlackGround");
+											haveDuplicateShift=true;
+											break;	
+										}
+										else
+										{	
+											$(cell).blur();
+											$(cell).removeClass("errorRedBlackGround");
+											tempResult.push(shiftType);
+										}
+										break;
+							case "b"	:		
+							case "b1"	:
+										if (($.inArray ("b1",tempResult)>-1) || ($.inArray ("b",tempResult)>-1))
+										{
+											alert("Duplicate Shift Found");
+											$(cell).addClass("errorRedBlackGround");
+											haveDuplicateShift=true;
+											break;	
+										}
+										else
+										{	
+											$(cell).blur();
+											$(cell).removeClass("errorRedBlackGround");
+											tempResult.push(shiftType);
+										}
+										break;		
+							}
+					}
+					else
+					{
+						alert("Invalid shift detected");
+						$(cell).addClass("errorRedBlackGround");
+						haveDuplicateShift=true;
+						break;
+					}	
+				}
+			}
+		}
 	}
 	haveMissingShift()
 	{
-		var cells,essentialShift;
-		var i,shift;
+		var cell,essentialShift;
+		var firstIndex,haveMissingShift=false;
+		var i,ito,shiftType,lastIndex;
 		var shiftCells;
 		var shiftRow;
 		var shiftRows=this._getAllShiftRow();
-		cells=$("td.shiftCell");
-		for (i=0;i<cells.length;i++)
-		{
-			shiftRow=cells[i].parentElement;
-			console.log(shiftRow.id+","+cells[i].cellIndex);
-		}	
-		/*for (var itoId in shiftRows)
-		{
-			shiftRow=shiftRows[itoId];
-			essentialShift=this.rosterRule.getEssentialShift();
-			cells=$(shiftRow).children("td.shiftCell");
-			for (i=0;i<cells.length;i++)
-			{
-				console.log(itoId+","+cells[i].cellIndex);
-			}	
-		}*/	
+
+		cell=$("td.shiftCell:first")[0];
+		firstIndex=cell.cellIndex;
 		
+		cell=$("td.shiftCell:last")[0];
+		lastIndex=cell.cellIndex;
+		
+		for (i=firstIndex;i<=lastIndex;i++)
+		{
+			essentialShift=this.rosterRule.getEssentialShift();
+			for (var itoId in shiftRows)
+			{
+				shiftRow=shiftRows[itoId];
+				ito=this.itoList[itoId];
+				cell=shiftRow.cells[i];
+				shiftType=cell.textContent;
+				if (shiftType!="")
+				{
+					if (ito.isValidShift(shiftType))
+					{
+						essentialShift=essentialShift.replace(shiftType,"");
+						if (shiftType=="b1")
+						{
+							essentialShift=essentialShift.replace("b","");
+						}
+					}
+					else	
+					{
+						alert("Invalid shift");
+						cell.className="borderCell alignCenter shiftCell errorRedBlackGround";
+						haveMissingShift=true;
+						break;
+					}	
+				}
+			}
+			this.vancantShiftRow.cells[i].textContent=essentialShift;
+			if (essentialShift!="")
+				haveMissingShift=true;
+		}
+		return haveMissingShift;
 	}
 /*=================
  * Private method  *
@@ -121,6 +251,17 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return result;
 	}
+	_getShiftPattern(shiftRow,endIndex)
+	{
+		var shiftPattern="",cell;
+		for (var i=1;i<endIndex;i++)
+		{
+			cell=shiftRow.cells[i];
+			shiftPattern+=cell.textContent+",";
+		}
+		shiftPattern=shiftPattern.substring(0,shiftPattern.length-1);
+		return shiftPattern;
+	}
 	_updateValue(theCell)
 	{
 		var shiftRow=theCell.parentElement;
@@ -130,7 +271,7 @@ class RosterSchedulerTable extends RosterTable
 		
 		if (shift=="")
 		{
-			theCell.className="borderCell alignCenter shiftCell";
+			theCell.className="borderCell alignCenter cursorCell shiftCell";
 			this._reCalculate(shiftRow,itoId);
 		}
 		else
@@ -138,7 +279,7 @@ class RosterSchedulerTable extends RosterTable
 			var ito=this.itoList[itoId];
 			if (ito.isValidShift(shift))
 			{
-				theCell.className="borderCell alignCenter shiftCell";
+				theCell.className="borderCell alignCenter cursorCell shiftCell";
 				switch (shift)
 				{
 					case "a":

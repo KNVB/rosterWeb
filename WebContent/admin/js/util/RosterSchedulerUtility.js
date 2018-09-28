@@ -4,6 +4,26 @@ class RosterSchedulerUtility extends Utility
 	{
 		super();
 	}
+	exportRosterToExcel(rosterData)
+	{
+		return jQuery.ajax({"url": "exportRosterToExcel.jsp",
+			data:JSON.stringify(rosterData),
+			method:"POST",
+			dataType: 'binary',
+			xhrFields: {
+		            responseType: 'blob'
+		        },
+			success:function(blob, status, request){
+						  var fileName=(request.getResponseHeader("Content-Disposition"));
+						  fileName=fileName.substr(fileName.indexOf("filename=")+"filename=".length);
+					      var link=document.createElement('a');
+					      link.href=window.URL.createObjectURL(blob);
+					      link.download=fileName;
+					      link.click();
+					 },   
+			error:this.showAjaxErrorMessage			 
+		});
+	}
 	getRosterData(year,month)
 	{
 		var requestParameters={"year":year,"month":month}; 
@@ -29,6 +49,21 @@ class RosterSchedulerUtility extends Utility
 					 dataType: 'json',
 					 data:requestParameters,
 					 error:this.showAjaxErrorMessage
+		});
+	}
+	printShiftCell(shiftType)
+	{
+		var className="alignCenter borderCell cursorCell shiftCell";
+		className+=" "+utility.getShiftCssClassName(shiftType);
+		document.write("<td class=\""+className+"\">"+shiftType+"</td>");
+	}
+	saveRosterData(rosterData)
+	{
+		return jQuery.ajax({"url": "saveRosterData.jsp",
+			 dataType: 'text',
+			 data:JSON.stringify(rosterData),
+			 method:"POST",
+			 error:this.showAjaxErrorMessage
 		});
 	}
 }

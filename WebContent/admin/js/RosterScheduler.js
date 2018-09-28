@@ -8,7 +8,7 @@ class RosterScheduler
 		this.rosterMonth=month;
 		this.rosterRule;
 		this.rosterSchedulerUtility=rosterSchedulerUtility;
-		this.rosterSchedulerTable=new RosterSchedulerTable(rosterSchedulerUtility);
+		this.rosterSchedulerTable=new RosterSchedulerTable(rosterSchedulerUtility,this);
 		this.rosterYear=year;
 		
 		this.rosterSchedulerUtility.getRosterRule(year,month)
@@ -42,6 +42,91 @@ class RosterScheduler
 		})
 		.fail(function(){
 			alert("RosterRule initialization failure.");
-		});;
-	}	
+		});
+	}
+	exportRosterToExcel()
+	{
+		var rosterData={};
+		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
+		var allITOShiftData=this.rosterSchedulerTable.getAllShiftData();
+		rosterData["rosterYear"]=this.rosterYear;
+		rosterData["rosterMonth"]=this.rosterMonth;
+		rosterData["itorosterList"]={};
+		for (var itoId in this.itoList)
+		{
+			iTOShiftData={};
+			iTOShiftData["shiftList"]=allITOShiftData[itoId];
+			if (isNaN(this.rosterSchedulerTable.getLastMonthBalance(itoId)))
+				iTOShiftData["balance"]=0;
+			else
+				iTOShiftData["balance"]=this.rosterSchedulerTable.getLastMonthBalance(itoId);
+			rosterData["itorosterList"][itoId]=iTOShiftData;
+		}
+		rosterData["vacancyShiftData"]=this.rosterSchedulerTable.getVacancyShiftData();
+		//console.log(this.rosterTable.getVacancyShiftData());
+		this.utility.exportRosterToExcel(rosterData)
+		.done(function(){
+			alert("Export roster data to excel successfully.");
+		})
+		.fail(function(){
+			alert("Export roster data to excel failure.");
+		});
+	}
+	saveAllData()
+	{
+		var rosterData={};
+		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
+		var allITOShiftData=this.rosterSchedulerTable.getAllShiftData();
+		var allPreferredShiftData=this.rosterSchedulerTable.getAllPreferredShiftData();
+		rosterData["rosterYear"]=this.year;
+		rosterData["rosterMonth"]=this.month;
+		rosterData["itorosterList"]={};
+		for (var itoId in this.itoList)
+		{
+			iTOShiftData={};
+			iTOShiftData["shiftList"]=allITOShiftData[itoId];
+			iTOShiftData["preferredShiftList"]=allPreferredShiftData[itoId];
+			if (isNaN(this.rosterSchedulerTable.getThisMonthBalance(itoId)))
+				iTOShiftData["balance"]=0;
+			else
+				iTOShiftData["balance"]=this.rosterSchedulerTable.getThisMonthBalance(itoId);
+			rosterData["itorosterList"][itoId]=iTOShiftData;
+		}
+		this.utility.saveRosterData(rosterData)
+		.done(function(serverResponse){
+			alert("All roster data are saved.");
+		})
+		.fail(function(){
+			alert("Save roster data failure.");
+		});
+	}
+	validate()
+	{
+		var result=true;
+		if (this.rosterSchedulerTable.haveMissingShift())
+		{	
+			alert("Missing shift found!");
+			result=false;
+		}
+		else
+		{	
+			if (this.rosterSchedulerTable.haveDuplicateShift())
+			{	
+				result=false;
+			}
+			else
+			{	
+				if (this.rosterSchedulerTable.haveBlackListedShiftPattern())
+				{	
+					alert("Black list shift found!");
+					result=false;
+				}
+				else
+				{
+					alert("This roster is valid.");
+				}	
+			}
+		}
+		return result;
+	}
 }

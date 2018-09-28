@@ -3,12 +3,12 @@ class ShiftCellEventHandler
 	constructor(rosterTable,targetCellClassName)
 	{
 		var self=this;
-		var selectionString="td."+targetCellClassName;
+		this.selectionString="td."+targetCellClassName;
 		this.rosterTable=rosterTable;
 		/*$(selectionString).on("blur",function(){
 			self.rosterTable.updateValue(this);
 		});*/
-		$(selectionString).mouseover(function(){
+		$(this.selectionString).mouseover(function(){
 			var theCell=this;
 			var row=theCell.parentElement;
 			var dateRow=self.rosterTable.dateRow;
@@ -18,7 +18,7 @@ class ShiftCellEventHandler
 			cell=row.cells[0];
 			$(cell).addClass("highlight");
 		});
-		$(selectionString).mouseout(function(){
+		$(this.selectionString).mouseout(function(){
 			var theCell=this;
 			var row=theCell.parentElement;
 			var dateRow=self.rosterTable.dateRow;

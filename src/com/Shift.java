@@ -11,8 +11,8 @@ public class Shift {
 
 //	private String itoId;
 	
-	/**The assigned shift*/
-	private String shift;
+	/**The assigned shift type*/
+	private String shiftType;
 	
 	/**The date of assigned shift*/
 	private GregorianCalendar shiftDate;
@@ -30,18 +30,18 @@ public class Shift {
 		this.itoId = ito_id;
 	}*/
 	/**
-	 * Get the assigned shift
-	 * @return the assigned shift
+	 * Get the assigned shift type
+	 * @return the assigned shift type
 	 */
-	public String getShift() {
-		return shift;
+	public String getShiftType() {
+		return shiftType;
 	}
 	/**
-	 * Set the assigned shift
-	 * @param shift The assigned shift
+	 * Set the assigned shift type
+	 * @param shift The assigned shift type
 	 */
-	public void setShift(String shift) {
-		this.shift = shift;
+	public void setShiftType(String shift) {
+		this.shiftType = shift;
 	}
 	/**
 	 * Get the date of assigned shift
