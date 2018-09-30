@@ -214,7 +214,7 @@ itoRosterList=roster.getITORosterList();
 					startIndex=itoRoster.getPreviousMonthShiftList().size()-showNoOfPrevDate;
 					for (i=startIndex;i<itoRoster.getPreviousMonthShiftList().size();i++)
 					{
-						out.println("<script>utility.printPreviousMonthShiftCell(\""+itoRoster.getPreviousMonthShiftList().get(i).getShift()+"\");</script>");
+						out.println("<script>utility.printPreviousMonthShiftCell(\""+itoRoster.getPreviousMonthShiftList().get(i).getShiftType()+"\");</script>");
 					}
 					if (itoRoster.getShiftList().isEmpty())
 					{
