@@ -95,7 +95,14 @@ public class DbOp implements DataStore
 				stmt.executeUpdate();
 				stmt.clearParameters();
 				stmt.close();
-				
+
+				sqlString="delete from shift_record where ito_id=? and month(shift_date)=? and year(shift_date)=?";
+				stmt=dbConn.prepareStatement(sqlString);
+				stmt.setString(1,itoId);
+				stmt.setInt(2,month);
+				stmt.setInt(3,year);
+				stmt.executeUpdate();
+				stmt.close();
 				
 				sqlString="replace into shift_record (ito_id,shift_date,shift,state) values (?,?,?,?)";
 				shiftList=iTORosterList.get(itoId).getShiftList();
