@@ -121,10 +121,11 @@ public class DbOp implements DataStore
 				calendarObj.set(Calendar.YEAR, year);
 				calendarObj.set(Calendar.MONTH,month);
 				calendarObj.set(Calendar.DAY_OF_MONTH,1);
-				sqlString="delete from preferred_shift where ito_id=? and shift_date=?";
+				sqlString="delete from preferred_shift where ito_id=? and month(shift_date)=? and year(shift_date)=?";
 				stmt=dbConn.prepareStatement(sqlString);
 				stmt.setString(1,itoId);
-				stmt.setDate(2,new java.sql.Date(calendarObj.getTime().getTime()));
+				stmt.setInt(2,month);
+				stmt.setInt(3,year);
 				stmt.executeUpdate();
 				stmt.close();
 				
