@@ -1,30 +1,40 @@
 package com;
 import java.util.Hashtable;
-import java.util.ArrayList;
 
 public class ITORoster 
 {
 	private Hashtable<Integer,String> shiftList;
 	private Hashtable<Integer,String> preferredShiftList;
-	private ArrayList<Shift> previousMonthShiftList;
+	private Hashtable<Integer,String> previousMonthShiftList;
 
 	/**
 	 * For retrieving data from database variable balance is referred to last month balance.
 	 * For update data to database variable balance is referred to this month balance
 	 */	
 	private float balance;
+	
+	private int previousMonthEndDay;
+	
+	public int getPreviousMonthEndDay()
+	{
+		return previousMonthEndDay;
+	}
+	public void setPreviousMonthEndDay(int previousMonthEndDay)
+	{
+		this.previousMonthEndDay=previousMonthEndDay;
+	}
 	/**
 	 * Get Previous Month Shift list(Not whole month shift list, the size of the shift list depends on RosterRule.getMaxConsecutiveWorkingDay() value).
 	 * @return the previous month shift list
 	 */
-	public ArrayList<Shift> getPreviousMonthShiftList() {
+	public Hashtable<Integer,String> getPreviousMonthShiftList() {
 		return previousMonthShiftList;
 	}
 	/**
 	 * Set Previous Month Shift list(Not whole month shift list, the length of the shift list depends on RosterRule.getMaxConsecutiveWorkingDay() value).
 	 * @param previousMonthShiftList Previous Month Shift list
 	 */
-	public void setPreviousMonthShiftList(ArrayList<Shift> previousMonthShiftList) {
+	public void setPreviousMonthShiftList(Hashtable<Integer,String> previousMonthShiftList) {
 		this.previousMonthShiftList = previousMonthShiftList;
 	}
 	/**

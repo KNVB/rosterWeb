@@ -33,8 +33,10 @@ class RosterScheduler
 					ito.blackListShiftPatternList=temp.blackListedShiftPatternList;
 					self.itoList[itoId]=ito;
 				}
-				self.rosterSchedulerTable.rosterRule=self.rosterRule;	
 				self.rosterSchedulerTable.itoList=self.itoList;
+				self.rosterSchedulerTable.rosterMonth=self.rosterMonth;
+				self.rosterSchedulerTable.rosterRule=self.rosterRule;
+				self.rosterSchedulerTable.rosterYear=self.rosterYear;
 			})
 			.fail(function(serverResponse){
 				alert("ITO list initialization failure.");
@@ -64,7 +66,7 @@ class RosterScheduler
 		}
 		rosterData["vacancyShiftData"]=this.rosterSchedulerTable.getVacancyShiftData();
 		//console.log(this.rosterTable.getVacancyShiftData());
-		this.utility.exportRosterToExcel(rosterData)
+		this.rosterSchedulerUtility.exportRosterToExcel(rosterData)
 		.done(function(){
 			alert("Export roster data to excel successfully.");
 		})
@@ -78,8 +80,8 @@ class RosterScheduler
 		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
 		var allITOShiftData=this.rosterSchedulerTable.getAllShiftData();
 		var allPreferredShiftData=this.rosterSchedulerTable.getAllPreferredShiftData();
-		rosterData["rosterYear"]=this.year;
-		rosterData["rosterMonth"]=this.month;
+		rosterData["rosterYear"]=this.rosterYear;
+		rosterData["rosterMonth"]=this.rosterMonth;
 		rosterData["itorosterList"]={};
 		for (var itoId in this.itoList)
 		{
@@ -92,7 +94,7 @@ class RosterScheduler
 				iTOShiftData["balance"]=this.rosterSchedulerTable.getThisMonthBalance(itoId);
 			rosterData["itorosterList"][itoId]=iTOShiftData;
 		}
-		this.utility.saveRosterData(rosterData)
+		this.rosterSchedulerUtility.saveRosterData(rosterData)
 		.done(function(serverResponse){
 			alert("All roster data are saved.");
 		})

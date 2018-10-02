@@ -32,7 +32,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ITO;
 import com.ITORoster;
-import com.Shift;
 
 import util.calendar.CalendarUtility;
 import util.calendar.MonthlyCalendar;
@@ -79,8 +78,7 @@ public class ExcelExporter
 		int i,startRowNum=6,noOfWorkingDay=0;
 		short destRowHeight;
 		String itoId,weekDayName,rangeString;
-		ArrayList<Shift> shiftList;
-		
+			
 		XSSFCell cell;
 		XSSFColor bgColor;
 		XSSFPatternFormatting fillPattern;

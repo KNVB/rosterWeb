@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 import com.ITO;
 import com.ITORoster;
 import com.RosterRule;
-import com.Shift;
 import com.Utility;
 import com.rosterStatistic.ITOYearlyStatistic;
 import com.rosterStatistic.MonthlyStatistic;
@@ -68,74 +68,88 @@ public class DbOp implements DataStore
 	public boolean updateRoster(int year,int month,Hashtable<String,ITORoster> iTORosterList) 
 	{
 		boolean result=true;
+		Hashtable<Integer,String> shiftList;
 		PreparedStatement stmt=null;
 		try
 		{	
-			GregorianCalendar rosterMonth=new GregorianCalendar(year,month,1);
-			rosterMonth.add(Calendar.MONTH, 1);
+			GregorianCalendar calendarObj=new GregorianCalendar();
+			GregorianCalendar balanceCalendar=new GregorianCalendar(year,month,1);
+			balanceCalendar.add(Calendar.MONTH, 1);
 			dbConn.setAutoCommit(false);
+			
 			logger.info("Update roster data transaction start.");
 			logger.debug("===============================");
+			logger.debug("year="+year+",month="+month);
 			for (String itoId:iTORosterList.keySet())
 			{
 				logger.debug("itoId="+itoId);
 				logger.debug("balance="+iTORosterList.get(itoId).getBalance());
-				logger.debug("Roster Month="+rosterMonth.get(Calendar.YEAR)+"/"+rosterMonth.get(Calendar.MONTH)+"/"+rosterMonth.get(Calendar.DAY_OF_MONTH));
-				logger.debug("Shift List:");
+				logger.debug("Roster Month="+calendarObj.get(Calendar.YEAR)+"/"+calendarObj.get(Calendar.MONTH)+"/"+calendarObj.get(Calendar.DAY_OF_MONTH));
 				logger.debug("===============================");
 				
 				sqlString="replace into last_month_balance (ito_id,shift_month,balance) values (?,?,?)";
 				stmt=dbConn.prepareStatement(sqlString);
 				stmt.setString(1,itoId);
-				stmt.setDate(2,new java.sql.Date(rosterMonth.getTime().getTime()));
+				stmt.setDate(2,new java.sql.Date(balanceCalendar.getTime().getTime()));
 				stmt.setFloat(3, iTORosterList.get(itoId).getBalance());
 				stmt.executeUpdate();
 				stmt.clearParameters();
 				stmt.close();
 				
+				
 				sqlString="replace into shift_record (ito_id,shift_date,shift,state) values (?,?,?,?)";
+				shiftList=iTORosterList.get(itoId).getShiftList();
+				Set<Integer> dateList =shiftList.keySet();
+				for (Integer date:dateList)
+				{
+					calendarObj.set(Calendar.YEAR, year);
+					calendarObj.set(Calendar.MONTH,month);
+					calendarObj.set(Calendar.DAY_OF_MONTH,date);
+					
+					if (!shiftList.get(date).equals(""))
+					{
+						stmt=dbConn.prepareStatement(sqlString);
+						stmt.setString(1,itoId);
+						stmt.setDate(2,new java.sql.Date(calendarObj.getTime().getTime()));
+						stmt.setString(3,shiftList.get(date));
+						stmt.setString(4,"A");	
+						stmt.executeUpdate();
+						stmt.close();
+					}
+				}
+				
+				calendarObj.set(Calendar.YEAR, year);
+				calendarObj.set(Calendar.MONTH,month);
+				calendarObj.set(Calendar.DAY_OF_MONTH,1);
+				sqlString="delete from preferred_shift where ito_id=? and shift_date=?";
 				stmt=dbConn.prepareStatement(sqlString);
-/*				for (Shift shift:iTORosterList.get(itoId).getShiftList())
-				{
-					stmt.setString(1,itoId);
-					stmt.setDate(2,new java.sql.Date(shift.getShiftDate().getTime().getTime()));
-					stmt.setString(3,shift.getShift());
-					stmt.setString(4,"A");
-					stmt.executeUpdate();
-					stmt.clearParameters();
-					logger.debug("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
-				}
+				stmt.setString(1,itoId);
+				stmt.setDate(2,new java.sql.Date(calendarObj.getTime().getTime()));
+				stmt.executeUpdate();
 				stmt.close();
-				logger.debug("===============================");
-				logger.debug("Preferred Shift List:");
-				logger.debug("===============================");
-				for (Shift shift:iTORosterList.get(itoId).getPreferredShiftList())
+				
+				shiftList=iTORosterList.get(itoId).getPreferredShiftList();
+				dateList =shiftList.keySet();
+				sqlString="replace into preferred_shift (ito_id,preferred_shift,shift_date) values (?,?,?)";
+				
+				for (Integer date:dateList)
 				{
-					if (shift.getShift().equals(""))
+					calendarObj.set(Calendar.YEAR, year);
+					calendarObj.set(Calendar.MONTH,month);
+					calendarObj.set(Calendar.DAY_OF_MONTH,date);
+					
+					if (!shiftList.get(date).equals(""))
 					{
-						sqlString="delete from preferred_shift where ito_id=? and shift_date=?";
 						stmt=dbConn.prepareStatement(sqlString);
 						stmt.setString(1,itoId);
-						stmt.setDate(2,new java.sql.Date(shift.getShiftDate().getTime().getTime()));
+						stmt.setString(2,shiftList.get(date));
+						stmt.setDate(3,new java.sql.Date(calendarObj.getTime().getTime()));
 						stmt.executeUpdate();
-						stmt.clearParameters();
-						logger.debug("remove preferred shift ("+shift.getShift()+") on shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH));
-					}
-					else
-					{
-						sqlString="replace into preferred_shift (ito_id,preferred_shift,shift_date) values (?,?,?)";
-						stmt=dbConn.prepareStatement(sqlString);
-						stmt.setString(1,itoId);
-						stmt.setString(2,shift.getShift());
-						stmt.setDate(3,new java.sql.Date(shift.getShiftDate().getTime().getTime()));
-						stmt.executeUpdate();
-						stmt.clearParameters();
-						logger.debug("shift date:"+shift.getShiftDate().get(Calendar.DAY_OF_MONTH)+"/"+shift.getShiftDate().get(Calendar.MONTH)+",shift:"+shift.getShift());
+						stmt.close();
 					}
 				}
-				logger.debug("===============================");
 				dbConn.commit();
-				logger.info(itoId+" roster data update completed.");*/
+				logger.info(itoId+" roster data update completed.");
 			}
 		}
 		catch (SQLException e) 
@@ -294,92 +308,103 @@ public class DbOp implements DataStore
 		return result;
 	}
 	@Override
-	public Hashtable<String, ITORoster> getRoster(int year, int month) 
+	public Hashtable<String, ITORoster> getRoster(int year, int month, String[] itoIdList) 
 	{
-		int lastDay;
-		Shift shift=null;
+		int lastDayOfThisMonth;
+		
 		ResultSet rs = null;
 		ITORoster itoRoster=null;
-		GregorianCalendar shiftDate;
 		PreparedStatement stmt = null;
-		Hashtable <Integer,String>shiftList=null;
-		Hashtable<Integer,String> preferredShiftList=null;
-		ArrayList<Shift> previousMonthShiftList=null;
+		Hashtable <Integer,String>shiftList=new Hashtable<Integer,String>();
+		Hashtable<Integer,String> preferredShiftList=new Hashtable<Integer,String>();
+		Hashtable<Integer,String> previousMonthShiftList=new Hashtable<Integer,String>();
 		Hashtable<String, ITORoster> result=new  Hashtable<String, ITORoster>();
-		GregorianCalendar theLast2DayOfPreviousMonth=new GregorianCalendar(year,month,1);
-		GregorianCalendar theFirstDateOfTheMonth=new GregorianCalendar(year,month,1);
-		theLast2DayOfPreviousMonth.add(Calendar.DAY_OF_MONTH, -RosterRule.getMaxConsecutiveWorkingDay());
-		lastDay=theFirstDateOfTheMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
-		
-		String shiftMonthString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-1";
-		String startDateString=theLast2DayOfPreviousMonth.get(Calendar.YEAR)+"-"+(theLast2DayOfPreviousMonth.get(Calendar.MONTH)+1)+"-"+theLast2DayOfPreviousMonth.get(Calendar.DATE);
-		String endDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-"+lastDay;
-		
-		
-		logger.debug("startDateString="+startDateString);
-		logger.debug("endDateString="+endDateString);
-		logger.debug("shiftMonthString="+shiftMonthString);
-		
-		
-		sqlString ="select shift_record.ito_id,shift_record.shift_date,shift,balance,preferred_shift from shift_record ";
-		sqlString+="inner join last_month_balance on shift_record.ito_id=last_month_balance.ito_id "; 
 
-		sqlString+="left join preferred_shift on (preferred_shift.shift_date between ? and ?) and ";
-		sqlString+="shift_record.ito_id=preferred_shift.ito_id and ";
-		sqlString+="(shift_record.shift_date=preferred_shift.shift_date) ";
+		GregorianCalendar previousMonthShiftEndDate=new GregorianCalendar(year,month,1);
+		GregorianCalendar previousMonthShiftStartDate=new GregorianCalendar(year,month,1);
 		
-		sqlString+="where (shift_record.shift_date between ? and ?) and shift_month=? ";
-		sqlString+="order by shift_record.ito_id,shift_record.shift_date";
+		GregorianCalendar thisMonthShiftStartDate=new GregorianCalendar(year,month,1);
+		
+		previousMonthShiftStartDate.add(Calendar.DAY_OF_MONTH, -RosterRule.getMaxConsecutiveWorkingDay());
+		previousMonthShiftEndDate.add(Calendar.DAY_OF_MONTH, -1);
+		
+		lastDayOfThisMonth=thisMonthShiftStartDate.getActualMaximum(Calendar.DAY_OF_MONTH);
+		
+		String previousMonthShiftStartDateString=previousMonthShiftStartDate.get(Calendar.YEAR)+"-"+(previousMonthShiftStartDate.get(Calendar.MONTH)+1)+"-"+previousMonthShiftStartDate.get(Calendar.DAY_OF_MONTH);
+		String previousMonthShiftEndDateString=previousMonthShiftEndDate.get(Calendar.YEAR)+"-"+ (previousMonthShiftEndDate.get(Calendar.MONTH)+1)+"-"+previousMonthShiftEndDate.get(Calendar.DAY_OF_MONTH);
+		String thisMonthShiftEndDateString=thisMonthShiftStartDate.get(Calendar.YEAR)+"-"+(thisMonthShiftStartDate.get(Calendar.MONTH)+1)+"-"+lastDayOfThisMonth;
+		String thisMonthShiftStartDateString=thisMonthShiftStartDate.get(Calendar.YEAR)+"-"+(thisMonthShiftStartDate.get(Calendar.MONTH)+1)+"-1";
+		
+		logger.debug("previousMonthShiftStartDateString="+previousMonthShiftStartDateString);
+		logger.debug("previousMonthShiftEndDateString  ="+previousMonthShiftEndDateString);
+		logger.debug("thisMonthShiftEndDateString      ="+thisMonthShiftEndDateString);
+		logger.debug("thisMonthShiftStartDateString    ="+thisMonthShiftStartDateString);
+		
+		
 		try
 		{
-			stmt=dbConn.prepareStatement(sqlString);
-			stmt.setString(1,shiftMonthString);
-			stmt.setString(2,endDateString);
-			stmt.setString(3,startDateString);
-			stmt.setString(4,endDateString);
-			stmt.setString(5,shiftMonthString);
-			
-			rs=stmt.executeQuery();
-			while (rs.next())
+			for (String itoId :itoIdList)
 			{
-				shiftDate=new GregorianCalendar();
-				shiftDate.setTime(rs.getDate("shift_date"));
-				shift=new Shift();
-				shift.setShiftType(rs.getString("shift"));
-				
-				shift.setShiftDate(shiftDate);
-				if (result.containsKey(rs.getString("ito_id")))
-				{	
-					itoRoster=result.get(rs.getString("ito_id"));
-					shiftList=itoRoster.getShiftList();
-					preferredShiftList=itoRoster.getPreferredShiftList();
-					previousMonthShiftList=itoRoster.getPreviousMonthShiftList();
-				}
-				else
-				{
-					itoRoster=new ITORoster();
+				itoRoster=new ITORoster();
+				sqlString ="select balance from last_month_balance where ito_Id=? and shift_month=?";
+				stmt=dbConn.prepareStatement(sqlString);
+				stmt.setString(1,itoId);
+				stmt.setString(2,thisMonthShiftStartDateString);
+				rs=stmt.executeQuery();
+				if (rs.next())
 					itoRoster.setBalance(rs.getFloat("balance"));
-					shiftList=new Hashtable<Integer,String>();
-					preferredShiftList=new Hashtable<Integer,String>();
-					previousMonthShiftList=new ArrayList<Shift>();
-					result.put(rs.getString("ito_id"),itoRoster);
-				}
-				
-				if (theFirstDateOfTheMonth.get(Calendar.MONTH)==shiftDate.get(Calendar.MONTH))
-					shiftList.put(shiftDate.get(Calendar.DAY_OF_MONTH),rs.getString("shift"));
 				else
-					previousMonthShiftList.add(shift);
+					itoRoster.setBalance(0);
+				stmt.close();
+				rs.close();
 				
-				if (rs.getString("preferred_shift")!=null)
-				{
-					shiftDate=new GregorianCalendar();
-					shiftDate.setTime(rs.getDate("shift_date"));
-					preferredShiftList.put(shiftDate.get(Calendar.DAY_OF_MONTH),rs.getString("preferred_shift"));
+				previousMonthShiftList=new Hashtable<Integer,String>();
+				sqlString ="select day(shift_date) as d,shift from shift_record where ito_Id=? and (shift_record.shift_date between ? and ?)";
+				stmt=dbConn.prepareStatement(sqlString);
+				stmt.setString(1,itoId);
+				stmt.setString(2,previousMonthShiftStartDateString);
+				stmt.setString(3,previousMonthShiftEndDateString);
+				rs=stmt.executeQuery();
+				while (rs.next())
+				{	
+					previousMonthShiftList.put(rs.getInt(1), rs.getString("shift"));
 				}
+				stmt.close();
+				rs.close();
+				logger.debug("itoId="+itoId+",previousMonthShiftList.size()="+previousMonthShiftList.size());
+				itoRoster.setPreviousMonthEndDay(previousMonthShiftEndDate.get(Calendar.DAY_OF_MONTH));
 				itoRoster.setPreviousMonthShiftList(previousMonthShiftList);
+				
+				shiftList=new Hashtable<Integer,String>();
+				stmt=dbConn.prepareStatement(sqlString);
+				stmt.setString(1,itoId);
+				stmt.setString(2,thisMonthShiftStartDateString);
+				stmt.setString(3,thisMonthShiftEndDateString);
+				rs=stmt.executeQuery();
+				while (rs.next())
+				{	
+					shiftList.put(rs.getInt(1), rs.getString("shift"));
+				}
+				stmt.close();
+				rs.close();
 				itoRoster.setShiftList(shiftList);
+				logger.debug("itoId="+itoId+",shiftList.size()="+shiftList.size());
+				
+				preferredShiftList=new Hashtable<Integer,String>();
+				sqlString="select day(shift_date) as d,preferred_shift from preferred_shift where ito_id=? and (preferred_shift.shift_date between ? and ?)";
+				stmt=dbConn.prepareStatement(sqlString);
+				stmt.setString(1,itoId);
+				stmt.setString(2,thisMonthShiftStartDateString);
+				stmt.setString(3,thisMonthShiftEndDateString);
+				rs=stmt.executeQuery();
+				while (rs.next())
+				{
+					preferredShiftList.put(rs.getInt(1), rs.getString("preferred_shift"));
+				}
+				stmt.close();
+				rs.close();
 				itoRoster.setPreferredShiftList(preferredShiftList);
-				result.replace(rs.getString("ito_id"),itoRoster);
+				result.put(itoId,itoRoster);
 			}
 		}
 		catch (Exception e) 

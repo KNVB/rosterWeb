@@ -3,13 +3,16 @@ class RosterSchedulerTable extends RosterTable
 	constructor(utility,rosterScheduler)
 	{
 		super(utility);
-		
 		var self=this;
 		this.itoList=[];
+		this.rosterMonth;
 		this.rosterRule;
-		this.workingDayCount;
+		this.rosterYear;
 		this.showNoOfPrevDate=2;
 		this.vancantShiftRow=document.getElementById("vancantShift");
+		this.workingDayCount;
+		
+		
 		$(".findMissingShiftButton").on("click",function(){
 			self.haveMissingShift();
 		});
@@ -77,6 +80,19 @@ class RosterSchedulerTable extends RosterTable
 		{
 			$(this.vancantShiftRow.cells[cells[i].cellIndex]).html("");
 		}
+	}
+	getAllShiftData()
+	{
+		return this._getShiftRowData(this._getAllShiftRow());
+	}
+	getAllPreferredShiftData()
+	{
+		return this._getShiftRowData(this._getAllPreferredShiftRow());
+	}
+	getThisMonthBalance(itoId)
+	{
+		//console.log($("#"+itoId +"_thisMonthBalance").text());
+		return parseFloat(document.getElementById(itoId +"_thisMonthBalance").textContent);
 	}
 	haveBlackListedShiftPattern()
 	{
@@ -237,6 +253,7 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return haveMissingShift;
 	}
+	
 /*=================
  * Private method  *
  *=================*/
@@ -251,6 +268,17 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return result;
 	}
+	_getAllPreferredShiftRow()
+	{
+		var result=[];
+		var preferredShiftRow;
+		for (var itoId in this.itoList)
+		{
+			preferredShiftRow=document.getElementById("preferredShift_"+itoId);
+			result[itoId]=preferredShiftRow;
+		}
+		return result;
+	}	
 	_getShiftPattern(shiftRow,endIndex)
 	{
 		var shiftPattern="",cell;
@@ -261,6 +289,27 @@ class RosterSchedulerTable extends RosterTable
 		}
 		shiftPattern=shiftPattern.substring(0,shiftPattern.length-1);
 		return shiftPattern;
+	}
+	_getShiftRowData(shiftRowList)
+	{
+		var result={};
+		var cellList;
+		var shiftDate,shiftList;
+		var shiftObj,shiftRow,shiftType;
+		for (var itoId in shiftRowList)
+		{
+			shiftRow=shiftRowList[itoId];
+			cellList=$(shiftRow).children(".cursorCell");
+			shiftList={};
+			for (var i=0;i<cellList.length;i++)
+			{
+				shiftObj={};
+				shiftType=cellList[i].textContent;
+				shiftList[cellList[i].cellIndex-this.showNoOfPrevDate]=shiftType;
+			}
+			result[itoId]=shiftList;
+		}
+		return result;
 	}
 	_updateValue(theCell)
 	{

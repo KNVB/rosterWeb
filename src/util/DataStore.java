@@ -27,12 +27,13 @@ public interface DataStore {
 	 */
 	public Hashtable<String,ITO>getITOList(int year,int month);
 	/**
-	 * Get the roster data for the specified month and year
+	 * Get the roster data for the specified ITO Ids,month and year
 	 * @param year
 	 * @param month
+	 * @param itoIdList
 	 * @return roster data
 	 */
-	public Hashtable<String,ITORoster> getRoster(int year,int month);
+	public Hashtable<String,ITORoster> getRoster(int year,int month,String[] itoIdList);
 	
 	/**
 	 * Reading roster rules from data store

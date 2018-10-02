@@ -13,12 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.ITO;
 import com.ITORoster;
 import com.Roster;
 import com.RosterRule;
-import com.rosterStatistic.ITOYearlyStatistic;
-import com.rosterStatistic.MonthlyStatistic;
+import com.Utility;
 
 import util.calendar.CalendarUtility;
 import util.calendar.MonthlyCalendar;
@@ -35,8 +37,7 @@ public class RosterViewer extends HttpServlet
 	protected Hashtable<String,ITO> itoList;
 	protected Hashtable<String,ITORoster> itoRosterList;
 	protected Hashtable<Integer,MyCalendar> myCalendarList;
-	private Hashtable<String,ITOYearlyStatistic> yearlyRosterStatistic;
-	
+		
 	protected MyCalendar myCalendar;
 	protected Roster roster;
 	protected String[] itoIdList ;
@@ -53,10 +54,11 @@ public class RosterViewer extends HttpServlet
 	protected ArrayList<String> rosterHolidayRowHtml;
 	protected ArrayList<String> rosterMonthRowHtml;
 	protected ArrayList<String> rosterWeekdayRowHtml;
-	
+	private static final Logger logger = LogManager.getLogger("RosterViewer");
 	public RosterViewer()
 	{
 		super();
+		
 	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -109,12 +111,12 @@ public class RosterViewer extends HttpServlet
 			itoList=ito.getITOList(rosterYear,rosterMonth);
 			itoIdList = itoList.keySet().toArray(new String[0]);
 			Arrays.sort(itoIdList);
-			
+			roster.setITOIdList(itoIdList);
 			roster.setRosterYear(rosterYear);
 			roster.setRosterMonth(rosterMonth);
 			roster.load();
 			itoRosterList=roster.getITORosterList();
-			yearlyRosterStatistic=roster.getYearlyStatistic(rosterYear, rosterMonth);
+			
 		}
 		catch (Exception err)
 		{
@@ -139,7 +141,7 @@ public class RosterViewer extends HttpServlet
 			else
 				container.add("					<td class=\"alignCenter borderCell\"></td>");
 		}
-		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_totalHour\"></td>");
+	/*	container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_totalHour\"></td>");
 		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_actualHour\"></td>");
 		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_lastMonthBalance\"></td>");
 		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_thisMonthHourTotal\"></td>");
@@ -148,7 +150,7 @@ public class RosterViewer extends HttpServlet
 		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_bxShiftCount\"></td>");
 		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_cShiftCount\"></td>");
 		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_dxShiftCount\"></td>");
-		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_noOfWoringDay\"></td>");
+		container.add("					<td class=\"alignCenter borderCell\" id=\""+itoId+"_noOfWoringDay\"></td>");*/
 	}	
 	protected void genHTMLHeader(HttpServletRequest request)
 	{
@@ -190,7 +192,7 @@ public class RosterViewer extends HttpServlet
 	protected Hashtable<String,ArrayList<String>> genITORosterRowList()
 	{
 		ArrayList<String> shiftList;
-		float actualWorkingHour, thisMonthBalance,thisMonthHourTotal,totalHour;
+		float actualWorkingHour, thisMonthBalance,thisMonthHourTotal ,totalHour;
 		Hashtable<String,ArrayList<String>>iTORosterRowHtml=new Hashtable<String,ArrayList<String>>();
 		int startIndex,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount,i;
 		ITO ito;
@@ -203,86 +205,83 @@ public class RosterViewer extends HttpServlet
 		{
 			ito=itoList.get(itoId);
 			itoRoster=itoRosterList.get(itoId);
+			
 			shiftList=new ArrayList<String>();
 			totalHour=(noOfWorkingDay*ito.getWorkingHourPerDay());
 			shiftList.add("					<td class=\"borderCell alignLeft\">"+ito.getItoName()+"<br>"+ito.getPostName()+" Extn. 2458</td>");
-			if (itoRoster==null)
+		
+			startIndex=itoRoster.getPreviousMonthEndDay()-showNoOfPrevDate;
+			for (i=startIndex+1;i<=itoRoster.getPreviousMonthEndDay();i++)
 			{
-				genEmptyRow(shiftList,ito.getItoId());
+				shiftList.add("					\t<script>utility.printPreviousMonthShiftCell(\""+itoRoster.getPreviousMonthShiftList().get(i)+"\");</script>");
+			}
+			aShiftCount=0;
+			bxShiftCount=0;
+			cShiftCount=0;
+			dxShiftCount=0;
+			actualWorkingHour=0.0f;
+			thisMonthHourTotal=0.0f;
+			thisMonthBalance=0.0f;
+			if (itoRoster.getShiftList().isEmpty())
+			{
+				genEmptyShiftRow(shiftList,ito.getItoId());
 				aShiftData.add(0);
 				bShiftData.add(0);
 				cShiftData.add(0);
 			}
 			else
 			{
-				startIndex=itoRoster.getPreviousMonthShiftList().size()-showNoOfPrevDate;
-				for (i=startIndex;i<itoRoster.getPreviousMonthShiftList().size();i++)
+				for (i=0;i<31;i++)
 				{
-					shiftList.add("					\t<script>utility.printPreviousMonthShiftCell(\""+itoRoster.getPreviousMonthShiftList().get(i).getShiftType()+"\");</script>");
-				}
-				if (itoRoster.getShiftList().isEmpty())
-				{
-					genEmptyShiftRow(shiftList,ito.getItoId());
-					aShiftData.add(0);
-					bShiftData.add(0);
-					cShiftData.add(0);
-				}
-				else
-				{
-					aShiftCount=0;
-					bxShiftCount=0;
-					cShiftCount=0;
-					dxShiftCount=0;
-					actualWorkingHour=0.0f;
-					for (i=0;i<31;i++)
+					if (i< myCalendarList.size())
 					{
-						if (i< myCalendarList.size())
+						shiftType=itoRoster.getShiftList().get(i+1);
+						shiftList.add("					\t<script>utility.printShiftCell(\""+shiftType+"\");</script>");
+						switch(shiftType)
 						{
-							shiftType=itoRoster.getShiftList().get(i+1);
-							shiftList.add("					\t<script>utility.printShiftCell(\""+shiftType+"\");</script>");
-							switch(shiftType)
-							{
-								case "a":
-										aShiftCount++;
-										break;
-								case "b":
-								case "b1":
-										bxShiftCount++;
-										break;
-								case "c":
-										cShiftCount++;
-										break;
-								case "d":
-								case "d1":
-								case "d2":
-								case "d3":
-										dxShiftCount++;
-										break;		
-							}
-							actualWorkingHour+=RosterRule.getShiftHourCount().get(shiftType);
+							case "a":
+									aShiftCount++;
+									break;
+							case "b":
+							case "b1":
+									bxShiftCount++;
+									break;
+							case "c":
+									cShiftCount++;
+									break;
+							case "d":
+							case "d1":
+							case "d2":
+							case "d3":
+									dxShiftCount++;
+									break;		
 						}
-						else
-						{
-							shiftList.add("					<td class=\"alignCenter borderCell\"></td>");
-						}
+						actualWorkingHour+=RosterRule.getShiftHourCount().get(shiftType);
 					}
-					thisMonthHourTotal=actualWorkingHour-totalHour;
-					thisMonthBalance=thisMonthHourTotal+itoRoster.getBalance();
-					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_totalHour\">"+totalHour+"</td>");
-					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_actualHour\">"+(actualWorkingHour)+"</td>");
-					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_lastMonthBalance\">"+itoRoster.getBalance()+"</td>");
-					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_thisMonthHourTotal\"><script>document.write(utility.roundTo("+thisMonthHourTotal+",2));</script></td>");
-					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_thisMonthBalance\"><script>document.write(utility.roundTo("+thisMonthBalance+",2));</script></td>");
-					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_aShiftCount\">"+aShiftCount+"</td>");
-					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_bxShiftCount\">"+bxShiftCount+"</td>");
-					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_cShiftCount\">"+cShiftCount+"</td>");
-					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_dxShiftCount\">"+dxShiftCount+"</td>");
-					shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_noOfWoringDay\">"+(aShiftCount+bxShiftCount+cShiftCount+dxShiftCount)+"</td>");
-					aShiftData.add(aShiftCount); 
-					bShiftData.add(bxShiftCount); 
-					cShiftData.add(cShiftCount); 
+					else
+					{
+						shiftList.add("					<td class=\"alignCenter borderCell\"></td>");
+					}
 				}
+				
+				
+				aShiftData.add(aShiftCount); 
+				bShiftData.add(bxShiftCount); 
+				cShiftData.add(cShiftCount);
 			}
+			thisMonthHourTotal=actualWorkingHour-totalHour;
+			thisMonthBalance=thisMonthHourTotal+itoRoster.getBalance();
+			shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_totalHour\">"+Utility.roundTo(totalHour,2)+"</td>");
+			shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_actualHour\">"+Utility.roundTo(actualWorkingHour,2)+"</td>");
+			shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_lastMonthBalance\">"+Utility.roundTo(itoRoster.getBalance(),2)+"</td>");
+			shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_thisMonthHourTotal\">"+Utility.roundTo(thisMonthHourTotal,2)+"</td>");
+			shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_thisMonthBalance\">"+Utility.roundTo(thisMonthBalance,2)+"</td>");
+			
+			shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_aShiftCount\">"+aShiftCount+"</td>");
+			shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_bxShiftCount\">"+bxShiftCount+"</td>");
+			shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_cShiftCount\">"+cShiftCount+"</td>");
+			shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_dxShiftCount\">"+dxShiftCount+"</td>");
+			shiftList.add("					<td class=\"alignCenter borderCell\" id=\""+ito.getItoId()+"_noOfWoringDay\">"+(aShiftCount+bxShiftCount+cShiftCount+dxShiftCount)+"</td>");
 			iTORosterRowHtml.put(itoId, shiftList);
 		}
 		return iTORosterRowHtml;
@@ -385,7 +384,6 @@ public class RosterViewer extends HttpServlet
 		rosterFooterHtml.add("					a : 0800H - 1700H");
 		rosterFooterHtml.add("					</td>");
 		rosterFooterHtml.add("					<td colspan=\"31\" rowspan=10>");
-		genYearlyStatistic(rosterFooterHtml);
 		rosterFooterHtml.add("					</td>");
 		rosterFooterHtml.add("				</tr>");
 		rosterFooterHtml.add("				<tr>");
@@ -518,76 +516,6 @@ public class RosterViewer extends HttpServlet
 		rosterWeekdayRowHtml.add("					<td class=\"alignCenter borderCell\" rowspan=\"2\">Total<br>Hour</td>");
 		rosterWeekdayRowHtml.add("					<td class=\"alignCenter borderCell\" rowspan=\"2\">Actual<br>Hour</td>");
 		rosterWeekdayRowHtml.add("					<td class=\"alignCenter borderCell\" colspan=\"8\">Hour Off Due</td>");		
-		
-	}
-	protected void genYearlyStatistic(ArrayList<String>container)
-	{
-		MonthlyStatistic monthlyStatistic; 
-		String statisticBodyHTML="";
-		ITOYearlyStatistic iTOYearlyStatistic;
-		int aShiftTotal,bxShiftTotal,cShiftTotal,dxShiftTotal,oShiftTotal,allShiftTotal,i,month;
-		
-		container.add("						<div id=\"yearlyStatistic\" style=\"height:450px;overflow-y:scroll\">");
-		container.add("							<table style=\"width:500px;borderCollapse:collapse\">");
-		container.add("								<tr>");
-		container.add("									<td class=\"borderCell alignCenter\">ITO</td>");
-		container.add("									<td class=\"borderCell alignCenter\">a</td>");
-		container.add("									<td class=\"borderCell alignCenter\">bx</td>");
-		container.add("									<td class=\"borderCell alignCenter\">c</td>");
-		container.add("									<td class=\"borderCell alignCenter\">dx</td>");
-		container.add("									<td class=\"borderCell alignCenter\">O</td>");
-		container.add("									<td class=\"borderCell alignCenter\">total</td>");
-		container.add("								</tr>");
-		
-		try
-		{
-			for (String itoId:itoIdList)
-			{
-				iTOYearlyStatistic= yearlyRosterStatistic.get(itoId);
-				month=1;
-				aShiftTotal=0;bxShiftTotal=0;cShiftTotal=0;
-				dxShiftTotal=0;oShiftTotal=0;allShiftTotal=0;
-				statisticBodyHTML="";
-				for (i=0;i<iTOYearlyStatistic.getITOMonthlyStatisticList().size();i++)
-				{
-					monthlyStatistic=iTOYearlyStatistic.getITOMonthlyStatisticList().get(i);
-					statisticBodyHTML+="								<tr>\n";
-					statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+(month++)+"</td>\n";
-					statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getAShiftTotal()+"</td>\n";
-					statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getBxShiftTotal()+"</td>\n";
-					statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getCShiftTotal()+"</td>\n";
-					statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getDxShiftTotal()+"</td>\n";
-					statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getOShiftTotal()+"</td>\n";
-					statisticBodyHTML+="									<td class=\"borderCell alignCenter\">"+monthlyStatistic.getMonthlyTotal()+"</td>\n";
-					statisticBodyHTML+="								</tr>\n";
-					
-					aShiftTotal+=monthlyStatistic.getAShiftTotal();
-					bxShiftTotal+=monthlyStatistic.getBxShiftTotal();
-					cShiftTotal+=monthlyStatistic.getCShiftTotal();
-					dxShiftTotal+=monthlyStatistic.getDxShiftTotal();
-					oShiftTotal+=monthlyStatistic.getOShiftTotal();
-
-					allShiftTotal+=monthlyStatistic.getMonthlyTotal();
-				}
-				container.add("								<tr>");
-				container.add("									<td class=\"borderCell alignCenter\">"+iTOYearlyStatistic.getItoPostName()+"</td>");
-				container.add("									<td class=\"borderCell alignCenter\">"+aShiftTotal+"</td>");
-				container.add("									<td class=\"borderCell alignCenter\">"+bxShiftTotal+"</td>");
-				container.add("									<td class=\"borderCell alignCenter\">"+cShiftTotal+"</td>");
-				container.add("									<td class=\"borderCell alignCenter\">"+dxShiftTotal+"</td>");
-				container.add("									<td class=\"borderCell alignCenter\">"+oShiftTotal+"</td>");
-				container.add("									<td class=\"borderCell alignCenter\">"+allShiftTotal+"</td>");
-				container.add("								</tr>");
-				container.add(statisticBodyHTML);
-			}
-
-		}
-		catch (Exception err)
-		{
-			err.printStackTrace();
-		}
-		container.add("							</table>");
-		container.add("						</div>");
 		
 	}
 	protected void outputResult(PrintWriter out,HttpServletResponse response)

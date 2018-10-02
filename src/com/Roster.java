@@ -21,6 +21,7 @@ public class Roster {
 	private int rosterYear,rosterMonth;
 	private ArrayList<String> vacancyShiftData;
 	private Hashtable<String,ITORoster> iTORosterList;
+	private String[] itoIdList;
 	private static final Logger logger = LogManager.getLogger("Roster");
 	
 	public Roster()
@@ -35,7 +36,7 @@ public class Roster {
 	{
 		logger.info("Roster.load("+this.rosterYear+","+ this.rosterMonth+") is called");
 		dataStore=Utility.getDataStore();
-		iTORosterList=dataStore.getRoster(this.rosterYear, this.rosterMonth) ;
+		iTORosterList=dataStore.getRoster(this.rosterYear, this.rosterMonth,this.itoIdList) ;
 		dataStore.close();
 		dataStore=null;		 
 	}
@@ -67,7 +68,10 @@ public class Roster {
 	public void setRosterMonth(int rosterMonth) {
 		this.rosterMonth = rosterMonth;
 	}
-
+	public void setITOIdList(String[] itoIdList)
+	{
+		this.itoIdList=itoIdList;
+	}
 	/**
 	 * It returns ITORoster object for the specified roster year and month.
 	 * @return ITORoster 

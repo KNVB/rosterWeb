@@ -59,6 +59,7 @@ class RosterSchedulerUtility extends Utility
 	}
 	saveRosterData(rosterData)
 	{
+		console.log(rosterData);
 		return jQuery.ajax({"url": "saveRosterData.jsp",
 			 dataType: 'text',
 			 data:JSON.stringify(rosterData),

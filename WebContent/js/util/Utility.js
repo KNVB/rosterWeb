@@ -49,14 +49,17 @@ class Utility
 	{
 		var className="alignCenter borderCell";
 		className+=" "+utility.getShiftCssClassName(shiftType);
-		document.write("<td class=\""+className+"\">"+shiftType+"</td>");
+		if (shiftType=="null")
+			document.write("<td class=\""+className+"\"></td>");
+		else	
+			document.write("<td class=\""+className+"\">"+shiftType+"</td>");
 	}
 	printShiftCell(shiftType)
 	{
 		var className="alignCenter borderCell cursorCell";
 		className+=" "+utility.getShiftCssClassName(shiftType);
 		document.write("<td class=\""+className+"\">"+shiftType+"</td>");
-	}
+	}	
 	roundTo(theValue,decPlace)
 	{
 		var result=theValue*Math.pow(10,decPlace);
