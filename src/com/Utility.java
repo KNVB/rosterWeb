@@ -84,7 +84,7 @@ public class Utility
     {
     	return bundle.getString(parameterName);
     }
-    public static String getRosterListJSON(int year,int month)throws Exception
+ /*   public static String getRosterListJSON(int year,int month)throws Exception
     {
     	String resultString=new String();
     	ITO ito=new ITO();
@@ -180,5 +180,5 @@ public class Utility
     	resultJSON+=",";
     	resultJSON+="\"maxConsecutiveWorkingDay\":"+RosterRule.getMaxConsecutiveWorkingDay()+"}";
     	return resultJSON;
-    }
+    }*/
 }
