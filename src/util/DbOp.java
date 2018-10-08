@@ -253,12 +253,13 @@ public class DbOp implements DataStore {
 				rs.close();
 				itoRoster.setShiftList(shiftList);
 				
-				sqlString ="SELECT post_name,ito_name from ito_info where ito_id=?";
+				sqlString ="SELECT working_hour_per_day,post_name,ito_name from ito_info where ito_id=?";
 				stmt=dbConn.prepareStatement(sqlString);
 				stmt.setString(1,itoId);
 				rs=stmt.executeQuery();
 				while (rs.next())
 				{
+					itoRoster.setITOWorkingHourPerDay(rs.getFloat("working_hour_per_day"));
 					itoRoster.setITOName(rs.getString("ito_name"));
 					itoRoster.setITOPostName(rs.getString("post_name"));
 				}

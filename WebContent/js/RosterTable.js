@@ -1,78 +1,165 @@
 class RosterTable
 {
-	constructor(utility)
+	constructor()
 	{
+		this.aShiftData=[];
+		this.bShiftData=[];
+		this.cShiftData=[];
 		this.dateRow=document.getElementById("dateRow");
 		this.holidayRow=document.getElementById("holidayRow");
+		this.itoIdList=[];
+		this.itoRosterList={};
+		this.noOfWorkingDay=0;
+		this.showNoOfPrevDate=2;
 		this.rosterBody=document.getElementById("rosterBody");
-		this.rosterFooter=document.getElementById("footer");
+		this.rosterFooter=document.getElementById("rosterFooter");
 		this.rosterHeader=document.getElementById("rosterHeader");
-		this.rosterList;
-		this.rosterMonth;
-		this.rosterRule;
-		this.rosterYear;
 		this.table=document.getElementById("rosterTable");
-		this.utility=utility;
+		this.shiftHourCount={};
+		this.utility=new Utility();
 		this.weekdayRow=document.getElementById("weekdayRow");
+	}
+	showRosterData()
+	{
+		var actualWorkingHour, aShiftCount;
+		var bxShiftCount;
+		var cell,cShiftCount;
+		var dxShiftCount,endIndex,i,itoRoster;
+		var row,self=this,shiftType,shiftTypeList,startIndex=0;
+		var thisMonthBalance,thisMonthHourTotal ,totalHour;
 		
-	}
-	/*refresh()
-	{
-		this._refreshRosterHeader();
-		this._rebuildRosterBody();
-	}
-//=========================================================================================================	
-	_rebuildRosterBody()
-	{
-		$(this.rosterBody).empty();
-	}
-	_refreshRosterHeader()
-	{
-		var i,cell,holidayCell,weekdayCell,dateCell;
-		this.workingDayCount=this.calendarList.length;
-		for (i=0;i<this.calendarList.length;i++)
-		{
-			holidayCell=this.holidayRow.cells[i+this.showNoOfPrevDate+1];
-			weekdayCell=this.weekdayRow.cells[i+this.showNoOfPrevDate+1];
-			dateCell=this.dateRow.cells[i+this.showNoOfPrevDate+1];
-			if (this.calendarList[i].isHoliday)
+		this.itoIdList.forEach(function(itoId){
+			
+			aShiftCount=0;bxShiftCount=0;cShiftCount=0;dxShiftCount=0;
+			actualWorkingHour=0.0;thisMonthHourTotal=0.0;thisMonthBalance=0.0;
+			itoRoster=self.itoRosterList[itoId];
+			//console.log(itoRoster);
+			totalHour=itoRoster.itoworkingHourPerDay*self.noOfWorkingDay;
+			row=self.rosterBody.insertRow(self.rosterBody.rows.length);
+			cell=row.insertCell(row.cells.length);
+			cell.className="borderCell alignLeft";
+			cell.innerHTML=itoRoster.itoname+"<br>"+itoRoster.itopostname+" Extn. 2458";
+			if ($.isEmptyObject(itoRoster.previousMonthShiftList))
 			{
-				holidayCell.textContent="PH";
+				startIndex=0;
+				endIndex=self.showNoOfPrevDate;
 			}	
 			else
 			{
-				holidayCell.textContent="";
+				startIndex=Object.keys(itoRoster.previousMonthShiftList).length-self.showNoOfPrevDate+1;
+				endIndex=Object.keys(itoRoster.previousMonthShiftList).length+1;
 			}
-			switch (this.calendarList[i].weekday)
+			for (i=startIndex;i<endIndex;i++)
 			{
-				case "S":
-				case "Su":
-						this.workingDayCount--;
-						weekdayCell.className+=" phCell";
-						break;
-				default:
-						if (this.calendarList[i].isHoliday)
-						{	
-							this.workingDayCount--;
-							weekdayCell.className+=" phCell";
+				cell=row.insertCell(row.cells.length);
+				cell.className="alignCenter borderCell";
+				if (itoRoster.previousMonthShiftList[i]!=null)
+				{
+					shiftType=itoRoster.previousMonthShiftList[i];
+					cell.textContent=shiftType
+					$(cell).addClass(self.utility.getShiftCssClassName(shiftType));
+				}
+			}
+			for (i=0;i<31;i++)
+			{
+				cell=row.insertCell(row.cells.length);
+				cell.className="alignCenter borderCell cursorCell";
+				if (itoRoster.shiftList[i+1]!=null)
+				{
+					shiftType=itoRoster.shiftList[i+1];
+					cell.textContent=shiftType;
+					$(cell).addClass(self.utility.getShiftCssClassName(shiftType));
+					shiftTypeList=shiftType.split("\+");
+					shiftTypeList.forEach(function(shiftType){
+						switch(shiftType)
+						{
+							case "a":
+									aShiftCount++;
+									break;
+							case "b":
+							case "b1":
+									bxShiftCount++;
+									break;
+							case "c":
+									cShiftCount++;
+									break;
+							case "d":
+							case "d1":
+							case "d2":
+							case "d3":
+									dxShiftCount++;
+									break;		
 						}
-						else	
-							$(weekdayCell).removeClass("phCell");
-						break
-			}			
-			weekdayCell.textContent=this.calendarList[i].weekday;
-			dateCell.textContent=i+1;
-		}
-		for (i=this.calendarList.length;i<31;i++)
-		{
-			holidayCell=this.holidayRow.cells[i+this.showNoOfPrevDate+1];
-			weekdayCell=this.weekdayRow.cells[i+this.showNoOfPrevDate+1];
-			dateCell=this.dateRow.cells[i+this.showNoOfPrevDate+1];
-			holidayCell.textContent="";
-			weekdayCell.textContent="";
-			$(weekdayCell).removeClass("phCell");
-			dateCell.textContent="";
-		}
-	}*/
-	
+						actualWorkingHour+=self.shiftHourCount[shiftType];
+						//console.log(i+1,shiftType,self.shiftHourCount[shiftType]);
+					});
+				}	
+			}
+			//console.log(actualWorkingHour,totalHour);
+			thisMonthHourTotal=actualWorkingHour-totalHour;
+			thisMonthBalance=thisMonthHourTotal+itoRoster.balance;
+			cell=row.insertCell(row.cells.length);
+			cell.id=itoId+"_totalHour";
+			cell.className="alignCenter borderCell";
+			cell.textContent=self.utility.roundTo(totalHour,2);
+			
+			cell=row.insertCell(row.cells.length);
+			cell.id=itoId+"_actualHour";
+			cell.className="alignCenter borderCell";
+			cell.textContent=self.utility.roundTo(actualWorkingHour,2);
+			
+			cell=row.insertCell(row.cells.length);
+			cell.id=itoId+"_lastMonthBalance";
+			cell.className="alignCenter borderCell";
+			cell.textContent=self.utility.roundTo(itoRoster.balance,2);
+			
+			cell=row.insertCell(row.cells.length);
+			cell.id=itoId+"_thisMonthHourTotal";
+			cell.className="alignCenter borderCell";
+			cell.textContent=self.utility.roundTo(thisMonthHourTotal,2);
+			
+			cell=row.insertCell(row.cells.length);
+			cell.id=itoId+"_thisMonthBalance";
+			cell.className="alignCenter borderCell";
+			cell.textContent=self.utility.roundTo(thisMonthBalance,2);
+			
+			cell=row.insertCell(row.cells.length);
+			cell.id=itoId+"_aShiftCount";
+			cell.className="alignCenter borderCell";
+			cell.textContent=aShiftCount;
+
+			cell=row.insertCell(row.cells.length);
+			cell.id=itoId+"_bxShiftCount";
+			cell.className="alignCenter borderCell";
+			cell.textContent=bxShiftCount;
+
+			cell=row.insertCell(row.cells.length);
+			cell.id=itoId+"_cShiftCount";
+			cell.className="alignCenter borderCell";
+			cell.textContent=cShiftCount;
+
+			cell=row.insertCell(row.cells.length);
+			cell.id=itoId+"_dxShiftCount";
+			cell.className="alignCenter borderCell";
+			cell.textContent=dxShiftCount;
+
+			cell=row.insertCell(row.cells.length);
+			cell.id=itoId+"_noOfWoringDay";
+			cell.className="alignCenter borderCell";
+			cell.textContent=(dxShiftCount+cShiftCount+bxShiftCount+aShiftCount);
+			
+			if ($.isEmptyObject(itoRoster.shiftList))
+			{
+				self.aShiftData.push(0);
+				self.bShiftData.push(0);
+				self.cShiftData.push(0);
+			}	
+			else
+			{
+				self.aShiftData.push(aShiftCount); 
+				self.bShiftData.push(bxShiftCount); 
+				self.cShiftData.push(cShiftCount);
+			}	
+		});
+	}
 }
