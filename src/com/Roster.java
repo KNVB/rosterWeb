@@ -1,4 +1,6 @@
 package com;
+import com.rosterStatistic.ITOYearlyStatistic;
+
 import java.util.Hashtable;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,5 +24,13 @@ public class Roster
 		Hashtable<String,ITORoster>iTORosterList=dataStore.getRoster(year, month, itoIdList);
 		dataStore.close();
 		return iTORosterList;
+	}
+	public Hashtable<String,ITOYearlyStatistic> getYearlyStatistic(int year,int month)throws Exception
+	{
+		Hashtable<String,ITOYearlyStatistic> result;
+		dataStore=Utility.getDataStore();
+		result=dataStore.getYearlyRosterStatistic(year,month);
+		dataStore.close();
+		return result;
 	}
 }

@@ -138,7 +138,7 @@ public class RosterViewer extends HttpServlet {
 	}
 	protected void printHTMLTitle(PrintWriter out)
 	{
-		out.println(getIndentation()+"<title>RosterViewer</title>");
+		out.println(getIndentation()+"<title>Roster Viewer</title>");
 	}
 	protected void printIncludedCSS(PrintWriter out,HttpServletRequest request)
 	{
@@ -165,7 +165,7 @@ public class RosterViewer extends HttpServlet {
 			out.println(getIndentation()+"rosterTable.noOfWorkingDay="+noOfWorkingDay+";");
 			out.println(getIndentation()+"rosterTable.itoRosterList="+objectMapper.writeValueAsString(itoRosterList)+";");
 			out.println(getIndentation()+"rosterTable.shiftHourCount="+objectMapper.writeValueAsString(RosterRule.getShiftHourCount())+";");
-			out.println(getIndentation()+"rosterTable.showRosterData();");
+			out.println(getIndentation()+"rosterTable.show();");
 			out.println(getIndentation()+"var shiftCellEventHandler=new ShiftCellEventHandler(rosterTable,\"cursorCell\");");
 			htmlIndentation--;
 			out.println(getIndentation()+"});");
@@ -222,14 +222,14 @@ public class RosterViewer extends HttpServlet {
 		htmlIndentation++;
 		out.println(getIndentation()+"<select id=\"selectRosterMonth\" name=\"month\" class=\"underlineText rosterMonthSelect\" onchange=\"this.form.submit()\">");
 		htmlIndentation++;
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.JANUARY)?"selected":"")+"value=\""+Calendar.JANUARY+"\">January</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.FEBRUARY)?"selected":"")+"value=\""+Calendar.FEBRUARY+"\">February</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.MARCH)?"selected":"")+"value=\""+Calendar.MARCH+"\">March</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.APRIL)?"selected":"")+"value=\""+Calendar.APRIL+"\">April</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.MAY)?"selected":"")+"value=\""+Calendar.MAY+"\">May</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.JUNE)?"selected":"")+"value=\""+Calendar.JUNE+"\">June</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.JULY)?"selected":"")+"value=\""+Calendar.JULY+"\">July</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.AUGUST)?"selected":"")+"value=\""+Calendar.AUGUST+"\">August</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.JANUARY)?"selected ":"")+"value=\""+Calendar.JANUARY+"\">January</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.FEBRUARY)?"selected ":"")+"value=\""+Calendar.FEBRUARY+"\">February</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.MARCH)?"selected ":"")+"value=\""+Calendar.MARCH+"\">March</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.APRIL)?"selected ":"")+"value=\""+Calendar.APRIL+"\">April</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.MAY)?"selected ":"")+"value=\""+Calendar.MAY+"\">May</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.JUNE)?"selected ":"")+"value=\""+Calendar.JUNE+"\">June</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.JULY)?"selected ":"")+"value=\""+Calendar.JULY+"\">July</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.AUGUST)?"selected ":"")+"value=\""+Calendar.AUGUST+"\">August</option>");
 		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.SEPTEMBER)?"selected ":"")+"value=\""+Calendar.SEPTEMBER+"\">September</option>");
 		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.OCTOBER)?"selected ":"")+"value=\""+Calendar.OCTOBER+"\">October</option>");
 		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.NOVEMBER)?"selected ":"")+"value=\""+Calendar.NOVEMBER+"\">November</option>");

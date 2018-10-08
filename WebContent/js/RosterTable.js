@@ -14,12 +14,22 @@ class RosterTable
 		this.rosterBody=document.getElementById("rosterBody");
 		this.rosterFooter=document.getElementById("rosterFooter");
 		this.rosterHeader=document.getElementById("rosterHeader");
+		this.rosterRowList={};
 		this.table=document.getElementById("rosterTable");
 		this.shiftHourCount={};
 		this.utility=new Utility();
 		this.weekdayRow=document.getElementById("weekdayRow");
 	}
-	showRosterData()
+	show()
+	{
+		var self=this;
+		this.genRosterRowList();
+		this.itoIdList.forEach(function(itoId){
+			var row=self.rosterRowList[itoId];
+			self.rosterBody.append(row);
+		});
+	}
+	genRosterRowList()
 	{
 		var actualWorkingHour, aShiftCount;
 		var bxShiftCount;
@@ -35,7 +45,8 @@ class RosterTable
 			itoRoster=self.itoRosterList[itoId];
 			//console.log(itoRoster);
 			totalHour=itoRoster.itoworkingHourPerDay*self.noOfWorkingDay;
-			row=self.rosterBody.insertRow(self.rosterBody.rows.length);
+			//row=self.rosterBody.insertRow(self.rosterBody.rows.length);
+			row=document.createElement("tr");
 			cell=row.insertCell(row.cells.length);
 			cell.className="borderCell alignLeft";
 			cell.innerHTML=itoRoster.itoname+"<br>"+itoRoster.itopostname+" Extn. 2458";
@@ -147,7 +158,7 @@ class RosterTable
 			cell.id=itoId+"_noOfWoringDay";
 			cell.className="alignCenter borderCell";
 			cell.textContent=(dxShiftCount+cShiftCount+bxShiftCount+aShiftCount);
-			
+			self.rosterRowList[itoId]=row;
 			if ($.isEmptyObject(itoRoster.shiftList))
 			{
 				self.aShiftData.push(0);
