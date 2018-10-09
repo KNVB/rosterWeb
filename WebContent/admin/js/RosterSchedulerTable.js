@@ -806,18 +806,26 @@ class RosterSchedulerTable extends RosterTable
 		cell.append(autoSchedulerResultDiv);
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		cell=row.insertCell(row.cells.length);
-		cell.colSpan=33;
-		cell.style.textAlign="center";
+		cell.colSpan=13;
+		//cell.style.textAlign="center";
 		cell.innerHTML ="<a class=\"findMissingShiftButton\">Find Missing Shift</a>&nbsp;&nbsp;";
-		cell.innerHTML+="<a class=\"findDuplicateShiftButton\">Find Duplicate Shift</a>&nbsp;&nbsp;"; 
+		cell.innerHTML+="<a class=\"findDuplicateShiftButton\">Find Duplicate Shift</a>&nbsp;&nbsp;";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=20;
+		//cell.style.textAlign="center";
 		cell.innerHTML+="<a class=\"checkAllButton\">is it a valid roster?</a>&nbsp;&nbsp;";
 		cell.innerHTML+="<a class=\"clearAllButton\">Clear All Shift Data</a>";
 		
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		cell=row.insertCell(row.cells.length);
-		cell.colSpan=33;
+		cell.colSpan=13;
 		cell.style.textAlign="center";
-		cell.innerHTML ="<br><a class=\"exportButton\">Export to Excel File</a>&nbsp;&nbsp;";
+		cell.innerHTML ="<a class=\"exportButton\">Export to Excel File</a>&nbsp;&nbsp;";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=20;
+		cell.style.textAlign="center";
 		cell.innerHTML+="<a class=\"saveRosterToDBButton\">Save all data to DB</a>";		
 	}
 	_updateStandardDevValue(shiftName,cellIndex)

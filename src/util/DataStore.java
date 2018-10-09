@@ -55,12 +55,19 @@ public interface DataStore {
 	 * @return
 	 */
 	public Hashtable<String,ITOYearlyStatistic>getYearlyRosterStatistic(int year,int month);
-	
+	/**
+	 * Update roster data to data store
+	 * @param rosterYear
+	 * @param rosterMonth
+	 * @param roster
+	 * @return boolean
+	 */
+	public boolean updateRoster(int rosterYear, int rosterMonth, Roster roster);
 	/**
 	 * Close the DataStore
 	 * @throws Exception
 	 */
 	public void close()throws Exception;
-	public boolean updateRoster(int rosterYear, int rosterMonth, Roster roster);
+	
 
 }

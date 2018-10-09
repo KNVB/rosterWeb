@@ -365,7 +365,7 @@ public class RosterViewer extends HttpServlet {
 		out.println(getIndentation()+"a : 0800H - 1700H");
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");
-		out.println(getIndentation()+"<td colspan=\"20\" rowspan=20 id=\"autoScheduler\" style=\"vertical-align:top\">");
+		out.println(getIndentation()+"<td colspan=\"20\" rowspan=10 id=\"autoScheduler\" style=\"vertical-align:top\">");
 		out.println(getIndentation()+"</td>");
 		out.println(getIndentation()+"<td colspan=\"11\" rowspan=20 id=\"yearlyStat\" style=\"vertical-align:top\">");
 		out.println(getIndentation()+"</td>");
