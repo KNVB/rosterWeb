@@ -168,7 +168,6 @@ public class RosterViewer extends HttpServlet {
 			out.println(getIndentation()+"rosterTable.noOfWorkingDay="+noOfWorkingDay+";");
 			out.println(getIndentation()+"rosterTable.itoRosterList="+objectMapper.writeValueAsString(itoRosterList)+";");
 			out.println(getIndentation()+"rosterTable.rosterRule=rosterRule;");
-			//out.println(getIndentation()+"rosterTable.shiftHourCount="+objectMapper.writeValueAsString(RosterRule.getShiftHourCount())+";");
 			out.println(getIndentation()+"rosterTable.show();");
 			out.println(getIndentation()+"var shiftCellEventHandler=new ShiftCellEventHandler(rosterTable,\"cursorCell\");");
 			htmlIndentation--;

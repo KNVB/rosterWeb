@@ -66,26 +66,27 @@ public class RosterScheduler extends RosterViewer
 			
 			out.println(getIndentation()+"var rosterScheduler=new RosterScheduler();");
 			out.println(getIndentation()+"rosterScheduler.itoList={};");
+			out.println(getIndentation()+"rosterScheduler.monthEndDate="+myCalendarList.size()+";");
+			out.println(getIndentation()+"rosterScheduler.noOfWorkingDay="+noOfWorkingDay+";");
+			out.println(getIndentation()+"rosterScheduler.rosterRule=rosterRule;");
 			for (String itoId : itoIdList)
 			{
 				ito=itoList.get(itoId);
 				out.println(getIndentation()+"ito=new ITO();");
 				out.println(getIndentation()+"ito.itoId=\""+itoId+"\";");
 				out.println(getIndentation()+"ito.name=\""+ito.getITOName()+"\";");
-				out.println(getIndentation()+"ito.postName=\""+ito.getITOName()+"\";");
+				out.println(getIndentation()+"ito.postName=\""+ito.getPostName()+"\";");
 				out.println(getIndentation()+"ito.workingHourPerDay="+ito.getWorkingHourPerDay()+";");
 				out.println(getIndentation()+"ito.availableShiftList="+objectMapper.writeValueAsString(ito.getAvailableShiftList())+";");
 				out.println(getIndentation()+"ito.blackListShiftPatternList="+objectMapper.writeValueAsString(ito.getBlackListedShiftPatternList())+";");
 				out.println(getIndentation()+"rosterScheduler.itoList[ito.itoId]=ito;");
+				out.println();
 			}
+			
 			out.println(getIndentation()+"rosterScheduler.itoIdList="+objectMapper.writeValueAsString(itoIdList)+";");
 			out.println(getIndentation()+"rosterScheduler.itoRosterList="+objectMapper.writeValueAsString(itoRosterList)+";");
-			out.println(getIndentation()+"rosterScheduler.monthEndDate="+myCalendarList.size()+";");
-			out.println(getIndentation()+"rosterScheduler.noOfWorkingDay="+noOfWorkingDay+";");
 			out.println(getIndentation()+"rosterScheduler.preferredShiftList="+objectMapper.writeValueAsString(preferredShiftList)+";");
-			out.println(getIndentation()+"rosterScheduler.rosterRule=rosterRule;");
 			out.println(getIndentation()+"rosterScheduler.yearlyStatistic="+objectMapper.writeValueAsString(yearlyRosterStatistic)+";");
-			
 			out.println(getIndentation()+"rosterScheduler.show();");
 			//out.println(getIndentation()+"var schedulerShiftCellEventHandler=new SchedulerShiftCellEventHandler(rosterSchedulerTable,\"cursorCell\");");
 			htmlIndentation--;

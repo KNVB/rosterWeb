@@ -50,7 +50,7 @@ class RosterTable
 			row.id="shift_"+itoId;
 			cell=row.insertCell(row.cells.length);
 			cell.className="borderCell alignLeft";
-			cell.innerHTML=itoRoster.itoname+"<br>"+itoRoster.itopostname+" Extn. 2458";
+			cell.innerHTML=itoRoster.itoname+"<br>"+itoRoster.itopostName+" Extn. 2458";
 			if ($.isEmptyObject(itoRoster.previousMonthShiftList))
 			{
 				startIndex=0;
