@@ -41,7 +41,7 @@ public class ExcelExporter
 {
 	private MonthlyCalendar monthlyCalendar;
 	private int rosterYear,rosterMonth;
-	private ArrayList<String> vacancyShiftData;
+	private ArrayList<String> vacantShiftData;
 	private CalendarUtility calendarUtility=new CalendarUtility();
     
 	private String sampleExcelFilePath,tempOutputExcelFilePath;
@@ -69,9 +69,9 @@ public class ExcelExporter
 	public void setITORosterList(Hashtable<String, ITORoster> iTORosterList) {
 		this.iTORosterList=iTORosterList;		
 	}
-	public void setVacancyShiftData(ArrayList<String>vacancyShiftData)
+	public void setVacantShiftData(ArrayList<String>vacantShiftData)
 	{
-		this.vacancyShiftData=vacancyShiftData;
+		this.vacantShiftData=vacantShiftData;
 	}
 	public void export() throws IOException 
 	{
@@ -167,10 +167,10 @@ public class ExcelExporter
 			cell.setCellValue(iTORosterList.get(itoId).getBalance());
 		}
 		vancancyShiftRow=sheet1.getRow(startRowNum+i);
-		for (int j=0;j<this.vacancyShiftData.size();j++)
+		for (int j=0;j<this.vacantShiftData.size();j++)
 		{
 			cell=vancancyShiftRow.getCell(j+1);
-			cell.setCellValue(this.vacancyShiftData.get(j));
+			cell.setCellValue(this.vacantShiftData.get(j));
 		}
 		rangeString="b"+(startRowNum+1)+":af"+(startRowNum+i);
 		XSSFSheetConditionalFormatting sheet1cf = sheet1.getSheetConditionalFormatting(); 

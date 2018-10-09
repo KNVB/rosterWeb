@@ -2,6 +2,7 @@ package util;
 
 import com.ITO;
 import com.ITORoster;
+import com.Roster;
 import com.RosterRule;
 import com.Utility;
 import com.rosterStatistic.ITOYearlyStatistic;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -342,6 +344,10 @@ public class DbOp implements DataStore {
 		String endDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-"+lastDay;
 		
 		Hashtable<String,ITOYearlyStatistic> result=new  Hashtable<String, ITOYearlyStatistic>();
+		logger.debug("startDateString="+startDateString);
+		logger.debug("endDateString="+endDateString);
+		logger.debug("year="+year);
+		logger.debug("month="+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1));
 		sqlString="select a.ito_id,b.post_name,";
 		sqlString=sqlString+"			sum(case when shift ='a' then 1 else 0 end) as a,";
 		sqlString=sqlString+"			sum(case when shift ='b' or shift ='b1' then 1 else 0 end) as b,";
@@ -394,6 +400,133 @@ public class DbOp implements DataStore {
 		finally 
 		{
 			releaseResource(rs, stmt);
+		}
+		return result;
+	}
+	@Override
+	public boolean updateRoster(int year,int month,Roster roster) 
+	{
+		boolean result=true;
+		Hashtable<Integer,String> shiftList;
+		PreparedStatement stmt=null;
+		try
+		{	
+			GregorianCalendar calendarObj=new GregorianCalendar();
+			GregorianCalendar balanceCalendar=new GregorianCalendar(year,month,1);
+			Hashtable<String,ITORoster>iTORosterList=roster.getITORosterList();
+			Hashtable<String,Hashtable<Integer,String>>iTOPreferredShiftList=roster.getITOPreferredShiftList();
+			balanceCalendar.add(Calendar.MONTH, 1);
+			dbConn.setAutoCommit(false);
+			
+			logger.info("Update roster data transaction start.");
+			logger.debug("===============================");
+			logger.debug("year="+year+",month="+month);
+			for (String itoId:iTORosterList.keySet())
+			{
+				logger.debug("itoId="+itoId);
+				logger.debug("balance="+iTORosterList.get(itoId).getBalance());
+				logger.debug("Roster Month="+calendarObj.get(Calendar.YEAR)+"/"+calendarObj.get(Calendar.MONTH)+"/"+calendarObj.get(Calendar.DAY_OF_MONTH));
+				logger.debug("===============================");
+				
+				
+				sqlString="replace into last_month_balance (ito_id,shift_month,balance) values (?,?,?)";
+				stmt=dbConn.prepareStatement(sqlString);
+				stmt.setString(1,itoId);
+				stmt.setDate(2,new java.sql.Date(balanceCalendar.getTime().getTime()));
+				stmt.setFloat(3, iTORosterList.get(itoId).getBalance());
+				stmt.executeUpdate();
+				stmt.clearParameters();
+				stmt.close();
+
+				sqlString="delete from shift_record where ito_id=? and month(shift_date)=? and year(shift_date)=?";
+				stmt=dbConn.prepareStatement(sqlString);
+				stmt.setString(1,itoId);
+				stmt.setInt(2,month+1);
+				stmt.setInt(3,year);
+				stmt.executeUpdate();
+				stmt.close();
+				
+				logger.debug("Shift List:");
+				sqlString="replace into shift_record (ito_id,shift_date,shift,state) values (?,?,?,?)";
+				shiftList=iTORosterList.get(itoId).getShiftList();
+				Set<Integer> dateList =shiftList.keySet();
+				for (Integer date:dateList)
+				{
+					calendarObj.set(Calendar.YEAR, year);
+					calendarObj.set(Calendar.MONTH,month);
+					calendarObj.set(Calendar.DAY_OF_MONTH,date);
+					
+					if (!shiftList.get(date).equals(""))
+					{
+						logger.debug(itoId+","+date+","+shiftList.get(date));
+						stmt=dbConn.prepareStatement(sqlString);
+						stmt.setString(1,itoId);
+						stmt.setDate(2,new java.sql.Date(calendarObj.getTime().getTime()));
+						stmt.setString(3,shiftList.get(date));
+						stmt.setString(4,"A");	
+						stmt.executeUpdate();
+						stmt.close();
+					}
+				}
+				
+				calendarObj.set(Calendar.YEAR, year);
+				calendarObj.set(Calendar.MONTH,month);
+				calendarObj.set(Calendar.DAY_OF_MONTH,1);
+				sqlString="delete from preferred_shift where ito_id=? and month(shift_date)=? and year(shift_date)=?";
+				stmt=dbConn.prepareStatement(sqlString);
+				stmt.setString(1,itoId);
+				stmt.setInt(2,month+1);
+				stmt.setInt(3,year);
+				stmt.executeUpdate();
+				stmt.close();
+				
+				shiftList=iTOPreferredShiftList.get(itoId);
+				dateList =shiftList.keySet();
+				sqlString="replace into preferred_shift (ito_id,preferred_shift,shift_date) values (?,?,?)";
+				logger.debug("===============================");
+				logger.debug("Preferred Shift List:");
+				for (Integer date:dateList)
+				{
+					calendarObj.set(Calendar.YEAR, year);
+					calendarObj.set(Calendar.MONTH,month);
+					calendarObj.set(Calendar.DAY_OF_MONTH,date);
+					
+					if (!shiftList.get(date).equals(""))
+					{
+						logger.debug(itoId+","+date+","+shiftList.get(date));
+						stmt=dbConn.prepareStatement(sqlString);
+						stmt.setString(1,itoId);
+						stmt.setString(2,shiftList.get(date));
+						stmt.setDate(3,new java.sql.Date(calendarObj.getTime().getTime()));
+						stmt.executeUpdate();
+						stmt.close();
+					}
+				}
+				dbConn.commit();
+				logger.debug("===============================");
+				logger.info(itoId+" roster data update completed.");
+			}
+		}
+		catch (SQLException e) 
+		{
+			try 
+			{
+				if (dbConn!=null)
+				{	
+					dbConn.rollback();
+					logger.info("Update roster data transaction rollbacked");
+				}
+			}
+			catch (SQLException e1) 
+			{
+				e1.printStackTrace();
+			}
+			result=false;
+			e.printStackTrace();
+		}
+		finally 
+		{
+			releaseResource(null, stmt);
 		}
 		return result;
 	}

@@ -1,6 +1,7 @@
 package util;
 import com.ITO;
 import com.ITORoster;
+import com.Roster;
 import com.rosterStatistic.ITOYearlyStatistic;
 
 import java.util.ArrayList;
@@ -60,5 +61,6 @@ public interface DataStore {
 	 * @throws Exception
 	 */
 	public void close()throws Exception;
+	public boolean updateRoster(int rosterYear, int rosterMonth, Roster roster);
 
 }

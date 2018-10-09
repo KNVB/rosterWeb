@@ -395,3 +395,13 @@ div#yearlyStatistic
 	align-items: center;
   	justify-content: center;
 }	
+.yearlyStatisticReportDiv
+{
+	height:390px;
+	overflow-y:scroll
+}
+table#yearlyStatisticTable
+{
+	width:500px;
+	border-collapse:collapse
+}

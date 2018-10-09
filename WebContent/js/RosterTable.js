@@ -14,9 +14,9 @@ class RosterTable
 		this.rosterBody=document.getElementById("rosterBody");
 		this.rosterFooter=document.getElementById("rosterFooter");
 		this.rosterHeader=document.getElementById("rosterHeader");
+		this.rosterRule;
 		this.rosterRowList={};
 		this.table=document.getElementById("rosterTable");
-		this.shiftHourCount={};
 		this.utility=new Utility();
 		this.weekdayRow=document.getElementById("weekdayRow");
 	}
@@ -47,6 +47,7 @@ class RosterTable
 			totalHour=itoRoster.itoworkingHourPerDay*self.noOfWorkingDay;
 			//row=self.rosterBody.insertRow(self.rosterBody.rows.length);
 			row=document.createElement("tr");
+			row.id="shift_"+itoId;
 			cell=row.insertCell(row.cells.length);
 			cell.className="borderCell alignLeft";
 			cell.innerHTML=itoRoster.itoname+"<br>"+itoRoster.itopostname+" Extn. 2458";
@@ -79,6 +80,7 @@ class RosterTable
 				{
 					shiftType=itoRoster.shiftList[i+1];
 					cell.textContent=shiftType;
+					$(cell).addClass("shiftCell");
 					$(cell).addClass(self.utility.getShiftCssClassName(shiftType));
 					shiftTypeList=shiftType.split("\+");
 					shiftTypeList.forEach(function(shiftType){
@@ -101,7 +103,7 @@ class RosterTable
 									dxShiftCount++;
 									break;		
 						}
-						actualWorkingHour+=self.shiftHourCount[shiftType];
+						actualWorkingHour+=self.rosterRule.shiftHourCount[shiftType];
 						//console.log(i+1,shiftType,self.shiftHourCount[shiftType]);
 					});
 				}	
@@ -172,5 +174,16 @@ class RosterTable
 				self.cShiftData.push(cShiftCount);
 			}	
 		});
+	}
+	getRosterMonth()
+	{
+		var dropDownBox=document.getElementById("selectRosterMonth");
+		var result=dropDownBox.options[dropDownBox.selectedIndex].value;
+		return result;
+	}
+	getRosterYear()
+	{
+		var rosterYear=document.getElementById("selectRosterYear");
+		return rosterYear.value;
 	}
 }

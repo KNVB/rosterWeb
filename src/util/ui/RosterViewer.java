@@ -147,6 +147,7 @@ public class RosterViewer extends HttpServlet {
 	protected void printIncludedJavascript(PrintWriter out,HttpServletRequest request)
 	{
 		out.println(getIndentation()+"<script type=\"text/javascript\" src=\""+request.getContextPath()+"/webjars/jquery/3.3.1/jquery.min.js\"></script>");
+		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/js/RosterRule.js\"></script>");
 		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/js/RosterTable.js\"></script>");
 		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/js/util/ShiftCellEventHandler.js\"></script>");
 		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/js/util/Utility.js\"></script>");
@@ -160,11 +161,14 @@ public class RosterViewer extends HttpServlet {
 			
 			out.println(getIndentation()+"$( document ).ready(function() {");
 			htmlIndentation++;
+			out.println(getIndentation()+"var rosterRule=new RosterRule();");
+			out.println(getIndentation()+"rosterRule.shiftHourCount="+objectMapper.writeValueAsString(RosterRule.getShiftHourCount())+";");
 			out.println(getIndentation()+"var rosterTable=new RosterTable();");
 			out.println(getIndentation()+"rosterTable.itoIdList="+objectMapper.writeValueAsString(itoIdList)+";");
 			out.println(getIndentation()+"rosterTable.noOfWorkingDay="+noOfWorkingDay+";");
 			out.println(getIndentation()+"rosterTable.itoRosterList="+objectMapper.writeValueAsString(itoRosterList)+";");
-			out.println(getIndentation()+"rosterTable.shiftHourCount="+objectMapper.writeValueAsString(RosterRule.getShiftHourCount())+";");
+			out.println(getIndentation()+"rosterTable.rosterRule=rosterRule;");
+			//out.println(getIndentation()+"rosterTable.shiftHourCount="+objectMapper.writeValueAsString(RosterRule.getShiftHourCount())+";");
 			out.println(getIndentation()+"rosterTable.show();");
 			out.println(getIndentation()+"var shiftCellEventHandler=new ShiftCellEventHandler(rosterTable,\"cursorCell\");");
 			htmlIndentation--;
@@ -236,7 +240,7 @@ public class RosterViewer extends HttpServlet {
 		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.DECEMBER)?"selected ":"")+"value=\""+Calendar.DECEMBER+"\">December</option>");
 		htmlIndentation--;
 		out.println(getIndentation()+"</select>"+rosterYear);
-		out.println(getIndentation()+"<input type=\"hidden\" name=\"year\" value=\""+rosterYear+"\">");
+		out.println(getIndentation()+"<input id=\"selectRosterYear\" type=\"hidden\" name=\"year\" value=\""+rosterYear+"\">");
 		htmlIndentation--;
 		out.println(getIndentation()+"</form>");
 		htmlIndentation--;
@@ -362,9 +366,9 @@ public class RosterViewer extends HttpServlet {
 		out.println(getIndentation()+"a : 0800H - 1700H");
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");
-		out.println(getIndentation()+"<td colspan=\"20\" rowspan=10 id=\"autoScheduler\">");
+		out.println(getIndentation()+"<td colspan=\"20\" rowspan=20 id=\"autoScheduler\" style=\"vertical-align:top\">");
 		out.println(getIndentation()+"</td>");
-		out.println(getIndentation()+"<td colspan=\"11\" rowspan=10 id=\"yearlyStat\">");
+		out.println(getIndentation()+"<td colspan=\"11\" rowspan=20 id=\"yearlyStat\" style=\"vertical-align:top\">");
 		out.println(getIndentation()+"</td>");
 	
 		htmlIndentation--;
