@@ -35,12 +35,12 @@ class RosterSchedulerTable extends RosterTable
 			$(this.vacantShiftRow.cells[cells[i].cellIndex]).html("");
 		}
 	}
-	clearSelectedRegion(borderCoordindate)
+	clearSelectedRegion(selectedRegionCoordinate)
 	{
 		var cell,i,j;
-		for (i=borderCoordindate.minY;i<=borderCoordindate.maxY;i++)
+		for (i=selectedRegionCoordinate.minY;i<=selectedRegionCoordinate.maxY;i++)
 		{
-			for (j=borderCoordindate.minX;j<=borderCoordindate.maxX;j++)
+			for (j=selectedRegionCoordinate.minX;j<=selectedRegionCoordinate.maxX;j++)
 			{
 				cell=this.getCell(i,j);
 				this.disableEditMode(cell);
@@ -51,9 +51,9 @@ class RosterSchedulerTable extends RosterTable
 			}	
 		}
 	}
-	copyData(borderCoordindate)
+	copyData(selectRegionCoordinate)
 	{
-		document.execCommand('copy');
+		//document.execCommand('copy');
 	}
 	disableEditMode(theCell)
 	{
@@ -461,6 +461,44 @@ class RosterSchedulerTable extends RosterTable
 	{
 		$(this.genResultTable).show();
 	}
+	updateSelectedRegion(selectedRegionCoordinate)
+	{
+		var cell,i;
+		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.minX);
+		$(cell).addClass("selectCellBorderTop");
+		$(cell).addClass("selectCellBorderLeft");
+		
+		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.maxX);
+		$(cell).addClass("selectCellBorderTop");
+		$(cell).addClass("selectCellBorderRight");
+		
+		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.minX);
+		$(cell).addClass("selectCellBorderBottom");
+		$(cell).addClass("selectCellBorderLeft");
+
+		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.maxX);
+		$(cell).addClass("selectCellBorderBottom");
+		$(cell).addClass("selectCellBorderRight");
+		
+		for (i=selectedRegionCoordinate.minY+1;i<selectedRegionCoordinate.maxY;i++)
+		{
+			cell=this.getCell(i,selectedRegionCoordinate.minX);
+			$(cell).addClass("selectCellBorderLeft");
+
+			cell=this.getCell(i,selectedRegionCoordinate.maxX);
+			$(cell).addClass("selectCellBorderRight");
+		}
+		for (i=selectedRegionCoordinate.minX+1;i<selectedRegionCoordinate.maxX;i++)
+		{
+			cell=this.getCell(selectedRegionCoordinate.minY,i);
+			$(cell).addClass("selectCellBorderTop");
+			
+			cell=this.getCell(selectedRegionCoordinate.maxY,i);
+			$(cell).addClass("selectCellBorderBottom");
+		}
+		
+	}
+
 	updateValue(theCell)
 	{
 		var shiftRow=theCell.parentElement;

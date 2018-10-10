@@ -40,11 +40,11 @@ public class RosterScheduler extends RosterViewer
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/LoadingScreen.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/SchedulerShiftCellEventHandler.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/RosterSchedulerUtility.js\"></script>");
-		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/BorderCoordinate.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/ITO.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/Roster.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterScheduler.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterSchedulerTable.js\"></script>");
+		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/SelectedRegionCoordinate.js\"></script>");
 	}
 	@Override
 	protected void printOnDomReadyFunction(PrintWriter out)

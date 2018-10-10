@@ -5,7 +5,7 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 		super(rosterSchedulerTable,targetCellClassName);
 		var self=this;
 		
-		this.borderCoordindate=null;
+		this.selectedRegionCoordinate=null;
 		this.isFirstSelect=false;
 		this.inSelectMode=false;
 		this.selectPreviousRowIndex=-1;	
@@ -14,12 +14,11 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 		this.selectStartCellIndex=-1;
 		this.table=rosterSchedulerTable.table;
 		$("body").on("copy",function(){
-			if (self.borderCoordindate!=null)
-			{
-				self.rosterTable.copyData(self.borderCoordindate);
-			}
 			event.stopPropagation();
-			event.preventDefault();
+			if (self.selectRegionCoordindate!=null)
+			{
+				self.rosterTable.copyData(self.selectRegionCoordindate);
+			}
 		});
 		$("body").on("paste", function(){
 			//console.log("Paste event");
@@ -27,17 +26,23 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 			event.stopPropagation();
 			event.preventDefault();
 		});
-		$(this.selectionString).dblclick(function(){
-			self._handleEvent(this,event);
+		$(this.selectionString).dblclick(function(event){
+			self._handleMouseEvent(this,event);
 		});
 		$(this.selectionString).mousedown(function(event){
-			self._handleEvent(this,event);
+			self._handleMouseEvent(this,event);
+		});
+		$(this.selectionString).mouseenter(function(event){
+			self._handleMouseEvent(this,event);
+		});
+		$(this.selectionString).mouseout(function(event){
+			self._handleMouseEvent(this,event);
 		});
 		$("body").mouseup(function(event){
-			self._handleEvent(this,event);
+			self._handleMouseEvent(this,event);
 		});
 		$("body").keydown(function(event){
-			self._handleEvent(this,event);
+			self._handleKeyDownEvent(event);
 		});
 		window.addEventListener("focus",function(event){
 			
@@ -66,9 +71,9 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 				this.selectPreviousRowIndex=this.selectStartRowIndex;
 			if (this.selectPreviousCellIndex<0)
 				this.selectPreviousCellIndex=this.selectStartCellIndex;
-			this.borderCoordindate=this._getBorderCoordinate(this.selectPreviousRowIndex,this.selectPreviousCellIndex);
-			console.log("minX="+this.borderCoordindate.minX+",minY="+this.borderCoordindate.minY+",maxX="+this.borderCoordindate.maxX+",maxY="+this.borderCoordindate.maxY+",startRowIndex="+this.selectStartRowIndex+",startCellIndex="+this.selectStartCellIndex);
-			this.rosterTable.clearSelectedRegion(this.borderCoordindate);
+			this.selectedRegionCoordinate=this._getSelectedRegionCoordinate(this.selectPreviousRowIndex,this.selectPreviousCellIndex);
+			console.log("minX="+this.selectedRegionCoordinate.minX+",minY="+this.selectedRegionCoordinate.minY+",maxX="+this.selectedRegionCoordinate.maxX+",maxY="+this.selectedRegionCoordinate.maxY+",startRowIndex="+this.selectStartRowIndex+",startCellIndex="+this.selectStartCellIndex);
+			this.rosterTable.clearSelectedRegion(this.selectedRegionCoordinate);
 		}
 		console.log("===========================================");
 	}
@@ -76,9 +81,9 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 	{
 		this.inSelectMode=false;
 	}
-	_getBorderCoordinate(rowIndex,cellIndex)
+	_getSelectedRegionCoordinate(rowIndex,cellIndex)
 	{
-		var result=new BorderCoordinate();
+		var result=new SelectedRegionCoordinate();
 		if (this.selectStartCellIndex>cellIndex)
 		{
 			result.minX=cellIndex;
@@ -119,67 +124,27 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 	}
 	_handleArrowKeyEvent(event,yIndex,xIndex)
 	{
-		if (this.borderCoordindate!=null)
+		if (this.selectedRegionCoordinate!=null)
 		{
-			var cell=this.rosterTable.getCell(this.borderCoordindate.minY,this.borderCoordindate.minX);
+			var cell=this.rosterTable.getCell(this.selectedRegionCoordinate.minY,this.selectedRegionCoordinate.minX);
 			var tempY,tempX;
 			
 			//if (cell!==document.activeElement)
 			if (this.isFirstSelect)
 			{
-				tempY=this.borderCoordindate.minY+yIndex;
-				tempX=this.borderCoordindate.minX+xIndex;
+				tempY=this.selectedRegionCoordinate.minY+yIndex;
+				tempX=this.selectedRegionCoordinate.minX+xIndex;
 				cell=this.rosterTable.getCell(tempY,tempX);
 				if ($(cell).hasClass("cursorCell"))
 				{
-					this._selectCell(cell);
+					this._selectCell(cell,tempY,tempX);
 				}	
 			}
 		}
 	}
-	_handleEvent(object,event)
+	_handleKeyDownEvent(event)
 	{
-		var row;
 		event.stopPropagation();
-		switch(event.type)
-		{
-			case "dblclick"		:
-								event.preventDefault();
-								this.isFirstSelect=false;
-								this.rosterTable.enableEditMode(object);
-								break;
-			case "keydown"		:								
-								this._keyDownHandlder(event);
-								break;						
-			case "mousedown"	:
-								event.preventDefault();
-								this._selectCell(object);
-								break;
-			case "mouseup"		:
-								event.preventDefault();
-								this._endSelection(object);
-								break;					
-		}
-	}
-	_handleTabKeyEvent(event)
-	{
-		if (this.borderCoordindate!=null)
-		{
-			var cell=this.rosterTable.getCell(this.borderCoordindate.minY,this.borderCoordindate.minX);
-			var tempY,tempX;
-			if (event.shiftKey)
-				tempX=this.borderCoordindate.minX-1;
-			else
-				tempX=this.borderCoordindate.minX+1;
-			cell=this.rosterTable.getCell(this.borderCoordindate.minY,tempX);
-			if ($(cell).hasClass("cursorCell"))
-			{
-				this._selectCell(cell);
-			}
-		}
-	}
-	_keyDownHandlder(event)
-	{
 		switch (event.which)
 		{
 			case  9://handle tab key
@@ -213,9 +178,9 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 					}	
 					else	
 					{
-						if (this.borderCoordindate!=null)
+						if (this.selectedRegionCoordinate!=null)
 						{
-							var cell=this.rosterTable.getCell(this.borderCoordindate.minY,this.borderCoordindate.minX);
+							var cell=this.rosterTable.getCell(this.selectedRegionCoordinate.minY,this.selectedRegionCoordinate.minX);
 							if (cell!==document.activeElement)
 							{
 								this.rosterTable.enableEditMode(cell);
@@ -227,18 +192,85 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 		}
 		
 	}
-	_selectCell(theCell)
+	_handleMouseEvent(object,event)
+	{
+		var row;
+		event.stopPropagation();
+		if (object.tagName=="TD")
+			row=object.parentElement;
+		switch(event.type)
+		{
+			case "dblclick"		:
+								event.preventDefault();
+								this.isFirstSelect=false;
+								this.rosterTable.enableEditMode(object);
+								break;
+			case "mousedown"	:
+								event.preventDefault();
+								this._selectCell(object,row.rowIndex,object.cellIndex);
+								break;
+			case "mouseenter"	:event.preventDefault();
+								this._updateSelectedRegion(object,row.rowIndex,object.cellIndex);
+								break;
+			case "mouseout"		:
+								event.preventDefault();
+								this._updatePreviousSelectedCoordinate(object,row.rowIndex,object.cellIndex);
+								break;
+			case "mouseup"		:
+								event.preventDefault();
+								this._endSelection(object);
+								break;					
+		}
+	}
+	_handleTabKeyEvent(event)
+	{
+		if (this.selectedRegionCoordinate!=null)
+		{
+			console.log(this.selectedRegionCoordinate.minY,this.selectedRegionCoordinate.minX);
+			var tempY,tempX;
+			if (event.shiftKey)
+				tempX=this.selectedRegionCoordinate.minX-1;
+			else
+				tempX=this.selectedRegionCoordinate.minX+1;
+			var cell=this.rosterTable.getCell(this.selectedRegionCoordinate.minY,tempX);
+			if ($(cell).hasClass("cursorCell"))
+			{
+				this._selectCell(cell,this.selectedRegionCoordinate.minY,tempX);
+			}
+		}
+	}
+	_selectCell(theCell,rowIndex,cellIndex)
 	{
 		var row=theCell.parentElement;
 		this._clearSelectedRegion();
 		theCell.focus();
-		this.selectStartRowIndex=row.rowIndex;	
-		this.selectStartCellIndex=theCell.cellIndex;
+		this.selectStartRowIndex=rowIndex;	
+		this.selectStartCellIndex=cellIndex;
 		this.selectPreviousRowIndex=-1;
 		this.selectPreviousCellIndex=-1;
-		this.borderCoordindate=this._getBorderCoordinate(row.rowIndex,theCell.cellIndex);
+		this.selectedRegionCoordinate=this._getSelectedRegionCoordinate(rowIndex,cellIndex);
 		this.rosterTable.selectCell(theCell);
 		this.inSelectMode=true;
 		this.isFirstSelect=true;
+	}
+	_updatePreviousSelectedCoordinate(theCell,rowIndex,cellIndex)
+	{
+		if (this.inSelectMode)
+		{
+			theCell.contentEditable=false;
+			this.selectPreviousRowIndex=rowIndex;	
+			this.selectPreviousCellIndex=cellIndex;
+		}
+	}
+	_updateSelectedRegion(theCell,rowIndex,cellIndex)
+	{
+		if (this.inSelectMode)
+		{
+			this._clearSelectedRegion();
+			this.selectedRegionCoordinate=this._getSelectedRegionCoordinate(rowIndex,cellIndex);
+			this.rosterTable.updateSelectedRegion(this.selectedRegionCoordinate);
+			this.selectPreviousRowIndex=rowIndex;	
+			this.selectPreviousCellIndex=cellIndex;	
+		}		
 	}
 }

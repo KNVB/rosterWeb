@@ -1,4 +1,4 @@
-class BorderCoordinate
+class SelectedRegionCoordinate
 {
 	constructor()
 	{
