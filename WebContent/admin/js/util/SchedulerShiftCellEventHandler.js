@@ -13,6 +13,14 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 		this.selectStartRowIndex=-1;	
 		this.selectStartCellIndex=-1;
 		this.table=rosterSchedulerTable.table;
+		$("body").on("copy",function(){
+			if (self.borderCoordindate!=null)
+			{
+				self.rosterTable.copyData(self.borderCoordindate);
+			}
+			event.stopPropagation();
+			event.preventDefault();
+		});
 		$("body").on("paste", function(){
 			//console.log("Paste event");
 			console.log(window.clipboardData);

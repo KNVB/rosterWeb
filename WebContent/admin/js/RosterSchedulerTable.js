@@ -51,6 +51,10 @@ class RosterSchedulerTable extends RosterTable
 			}	
 		}
 	}
+	copyData(borderCoordindate)
+	{
+		document.execCommand('copy');
+	}
 	disableEditMode(theCell)
 	{
 		theCell.contentEditable=false;
