@@ -40,8 +40,9 @@ public class RosterScheduler extends RosterViewer
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/LoadingScreen.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/SchedulerShiftCellEventHandler.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/RosterSchedulerUtility.js\"></script>");
+		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/BorderCoordinate.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/ITO.js\"></script>");
-	//	out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/Roster.js\"></script>");
+		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/Roster.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterScheduler.js\"></script>");
 		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterSchedulerTable.js\"></script>");
 	}
@@ -63,7 +64,7 @@ public class RosterScheduler extends RosterViewer
 			out.println(getIndentation()+"rosterRule.essentialShiftList="+essentialShiftList+";");
 			out.println(getIndentation()+"rosterRule.maxConsecutiveWorkingDay="+objectMapper.writeValueAsString(RosterRule.getMaxConsecutiveWorkingDay())+";");
 			out.println(getIndentation()+"rosterRule.shiftHourCount="+objectMapper.writeValueAsString(RosterRule.getShiftHourCount())+";");
-			
+			out.println(getIndentation()+"rosterRule.utility=new RosterSchedulerUtility();");
 			out.println(getIndentation()+"var rosterScheduler=new RosterScheduler();");
 			out.println(getIndentation()+"rosterScheduler.itoList={};");
 			out.println(getIndentation()+"rosterScheduler.monthEndDate="+myCalendarList.size()+";");

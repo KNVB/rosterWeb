@@ -20,15 +20,6 @@ class RosterTable
 		this.utility=new Utility();
 		this.weekdayRow=document.getElementById("weekdayRow");
 	}
-	show()
-	{
-		var self=this;
-		this.genRosterRowList();
-		this.itoIdList.forEach(function(itoId){
-			var row=self.rosterRowList[itoId];
-			self.rosterBody.append(row);
-		});
-	}
 	genRosterRowList()
 	{
 		var actualWorkingHour, aShiftCount;
@@ -185,5 +176,33 @@ class RosterTable
 	{
 		var rosterYear=document.getElementById("selectRosterYear");
 		return rosterYear.value;
+	}
+	markCoorindate(theCell)
+	{
+		var row=theCell.parentElement;
+		var dateRow=this.dateRow;
+		var cell=dateRow.cells[theCell.cellIndex];
+		$(cell).addClass("highlight");
+		
+		cell=row.cells[0];
+		$(cell).addClass("highlight");
+	}
+	unMarkCoorindate(theCell)
+	{
+		var row=theCell.parentElement;
+		var dateRow=this.dateRow;
+		var cell=dateRow.cells[theCell.cellIndex];
+		$(cell).removeClass("highlight");
+		cell=row.cells[0];
+		$(cell).removeClass("highlight");
+	}
+	show()
+	{
+		var self=this;
+		this.genRosterRowList();
+		this.itoIdList.forEach(function(itoId){
+			var row=self.rosterRowList[itoId];
+			self.rosterBody.append(row);
+		});
 	}
 }

@@ -9,7 +9,7 @@ class RosterRule
 		this.maxNoOfShiftPerMonth;
 		this.maxConsecutiveWorkingDay;
 		this.shiftHourCount=[];
-		this.utility=new Utility();
+		this.utility;
 	}
 	getEssentialShift()
 	{

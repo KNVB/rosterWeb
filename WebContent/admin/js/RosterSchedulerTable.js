@@ -3,12 +3,12 @@ class RosterSchedulerTable extends RosterTable
 	constructor()
 	{
 		super();
+		this.genResultTable;
 		this.itoList={};
 		this.monthEndDate;
 		this.preferredShiftList;
 		this.preferredShiftRowList={};
 		this.utility=new RosterSchedulerUtility();
-		
 		this.vacantShiftRow;
 		this.yearlyStatistic;
 		
@@ -35,6 +35,32 @@ class RosterSchedulerTable extends RosterTable
 			$(this.vacantShiftRow.cells[cells[i].cellIndex]).html("");
 		}
 	}
+	clearSelectedRegion(borderCoordindate)
+	{
+		var cell,i,j;
+		for (i=borderCoordindate.minY;i<=borderCoordindate.maxY;i++)
+		{
+			for (j=borderCoordindate.minX;j<=borderCoordindate.maxX;j++)
+			{
+				cell=this.getCell(i,j);
+				this.disableEditMode(cell);
+				$(cell).removeClass("selectCellBorderRight");   
+				$(cell).removeClass("selectCellBorderTop");     
+				$(cell).removeClass("selectCellBorderBottom");  
+				$(cell).removeClass("selectCellBorderLeft");    
+			}	
+		}
+	}
+	disableEditMode(theCell)
+	{
+		theCell.contentEditable=false;
+		theCell.blur();
+	}
+	enableEditMode(theCell)
+	{
+		theCell.contentEditable=true;
+		theCell.focus();
+	}	
 	getAllPreferredShiftData()
 	{
 		return this._getShiftRowData(this._getAllPreferredShiftRow(),1,this.monthEndDate);
@@ -50,10 +76,24 @@ class RosterSchedulerTable extends RosterTable
 	getAutoPlanStartDate()
 	{
 		return parseInt($("#autoPlannStartDate").val());
-	}	
+	}
+	getCell(rowIndex,cellIndex)
+	{
+		var row=this.table.rows[rowIndex];
+		var cell=row.cells[cellIndex];
+		return cell;
+	}
 	getLastMonthBalance(itoId)
 	{
 		return parseFloat(document.getElementById(itoId +"_lastMonthBalance").textContent);
+	}
+	getPreferredShiftList(startDate,endDate)
+	{
+		return this._getShiftRowData(this._getAllPreferredShiftRow(),startDate,endDate);
+	}
+	getShiftList(startDate,endDate)
+	{
+		return this._getShiftRowData(this._getAllShiftRow(),startDate,endDate);
 	}
 	getThisMonthBalance(itoId)
 	{
@@ -287,6 +327,111 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return haveMissingShift;
 	}
+	hideGenResultTable()
+	{
+		$(this.genResultTable).hide();
+	}
+	loadRoster(finalRoster)
+	{
+		var row,cell,thisITOShiftList;
+		for (var itoId in finalRoster.rosterData)
+		{
+			row=document.getElementById("shift_"+itoId);
+			thisITOShiftList=finalRoster.rosterData[itoId];
+			for (var dateIndex=0;dateIndex<thisITOShiftList.length;dateIndex++)
+			{
+				cell=row.cells[finalRoster.startDate+this.showNoOfPrevDate+dateIndex];
+				$(cell).html(thisITOShiftList[dateIndex]).blur();
+			}
+		}
+		this.haveMissingShift();
+	}
+	selectCell(theCell)
+	{
+		theCell.focus();
+		$(theCell).addClass("selectCellBorderRight");
+		$(theCell).addClass("selectCellBorderTop");
+		$(theCell).addClass("selectCellBorderBottom");
+		$(theCell).addClass("selectCellBorderLeft");
+	}
+	setLowestSDData(lowestSDData)
+	{
+		var firstRow=document.getElementById("theLowestSD");
+		var cell=firstRow.cells[0];
+		cell.innerHTML="SD:"+lowestSDData[0].averageShiftStdDev;
+		cell=firstRow.cells[1];
+		cell.innerHTML="Missing shift count:"+lowestSDData[0].missingShiftCount;
+		
+		
+		var secondRow=document.getElementById("secondLowestSD");
+		cell=secondRow.cells[0];
+		if (lowestSDData.length>1)
+		{
+			cell.innerHTML="SD:"+lowestSDData[1].averageShiftStdDev;
+			cell=secondRow.cells[1];
+			cell.innerHTML="Missing shift count:"+lowestSDData[1].missingShiftCount;
+		}
+		else
+		{
+			cell.innerHTML="SD:N.A.";
+			cell=secondRow.cells[1];
+			cell.innerHTML="Missing shift count:N.A.";
+		}
+			
+	
+		var thirdRow=document.getElementById("thirdLowestSD");
+		cell=thirdRow.cells[0];
+		if (lowestSDData.length>2)
+		{
+			cell.innerHTML="SD:"+lowestSDData[2].averageShiftStdDev;
+			cell=thirdRow.cells[1];
+			cell.innerHTML="Missing shift count:"+lowestSDData[2].missingShiftCount;
+		}
+		else
+		{
+			cell.innerHTML="SD:N.A.";
+			cell=thirdRow.cells[1];
+			cell.innerHTML="Missing shift count:N.A.";
+		}
+	}
+	setMissingShiftData(missingShiftData)
+	{
+		var firstRow=document.getElementById("theLowestMissingShiftCount");
+		var cell=firstRow.cells[0];
+		cell.innerHTML="Missing shift count:"+missingShiftData[0].missingShiftCount;
+		cell=firstRow.cells[1];
+		cell.innerHTML="SD:"+missingShiftData[0].averageShiftStdDev;
+		
+		var secondRow=document.getElementById("theSecondLowestMissingShiftCount");
+		cell=secondRow.cells[0];
+		if (missingShiftData.length>1)
+		{
+			cell.innerHTML="Missing shift count:"+missingShiftData[1].missingShiftCount;
+			cell=secondRow.cells[1];
+			cell.innerHTML="SD:"+missingShiftData[1].averageShiftStdDev;
+		}
+		else
+		{
+			cell.innerHTML="Missing shift count:N.A.";
+			cell=secondRow.cells[1];
+			cell.innerHTML="SD:N.A.";
+		}
+
+		var thirdRow=document.getElementById("theThirdLowestMissingShiftCount");
+		cell=thirdRow.cells[0];
+		if (missingShiftData.length>2)
+		{
+			cell.innerHTML="Missing shift count:"+missingShiftData[2].missingShiftCount;
+			cell=thirdRow.cells[1];
+			cell.innerHTML="SD:"+missingShiftData[2].averageShiftStdDev;
+		}
+		else
+		{
+			cell.innerHTML="Missing shift count:N.A.";
+			cell=thirdRow.cells[1];
+			cell.innerHTML="SD:N.A.";
+		}	
+	}
 	show()
 	{
 		var row,self=this;
@@ -305,8 +450,12 @@ class RosterSchedulerTable extends RosterTable
 
 		self.rosterBody.append(this.vacantShiftRow);
 		self.yearStatisticCell.append(yearlyStatisticReportDiv);
-		
+		this.genResultTable=document.getElementById("genResult");
 		var schedulerShiftCellEventHandler=new SchedulerShiftCellEventHandler(this,"cursorCell");
+	}
+	showGenResultTable()
+	{
+		$(this.genResultTable).show();
 	}
 	updateValue(theCell)
 	{
@@ -315,6 +464,7 @@ class RosterSchedulerTable extends RosterTable
 		var shift=theCell.textContent;
 		var ito=this.itoList[itoId];
 		
+		theCell.contentEditable=false;
 		if (shift=="")
 		{
 			theCell.className="borderCell alignCenter cursorCell shiftCell";
@@ -607,7 +757,7 @@ class RosterSchedulerTable extends RosterTable
 			result[itoId]=shiftRow;
 		});
 		return result;
-	}
+	}	
 	_getShiftPattern(shiftRow,endIndex)
 	{
 		var shiftPattern="",cell;
@@ -709,7 +859,7 @@ class RosterSchedulerTable extends RosterTable
 	_showButtons()
 	{
 		var autoSchedulerDiv,autoSchedulerResultDiv,autoSchedulerResultTable,autoSchedulerResultCell,autoSchedulerResultRow;
-		var i,cell,select,row;
+		var i,cell,select,row,buttonTable;
 		
 		autoSchedulerDiv=document.createElement("div");
 		autoSchedulerDiv.style.textAlign="center";
@@ -742,6 +892,7 @@ class RosterSchedulerTable extends RosterTable
 		cell.append(autoSchedulerDiv);
 		
 		autoSchedulerResultDiv=document.createElement("div");
+		autoSchedulerResultDiv.id="genResult";
 		autoSchedulerResultDiv.style.paddingLeft="10px";
 		autoSchedulerResultDiv.style.display="none";
 		autoSchedulerResultTable=document.createElement("table");
@@ -806,27 +957,40 @@ class RosterSchedulerTable extends RosterTable
 		cell.append(autoSchedulerResultDiv);
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		cell=row.insertCell(row.cells.length);
-		cell.colSpan=13;
-		//cell.style.textAlign="center";
-		cell.innerHTML ="<a class=\"findMissingShiftButton\">Find Missing Shift</a>&nbsp;&nbsp;";
-		cell.innerHTML+="<a class=\"findDuplicateShiftButton\">Find Duplicate Shift</a>&nbsp;&nbsp;";
-		
+		cell.colSpan=33;
+		buttonTable=document.createElement("table");
+		//buttonTable.setAttribute("border","1");
+		buttonTable.style.width="100%";
+		buttonTable.style.borderSpacing="10px";
+		cell.append(buttonTable);
+		row=buttonTable.insertRow(buttonTable.rows.length);
 		cell=row.insertCell(row.cells.length);
-		cell.colSpan=20;
-		//cell.style.textAlign="center";
-		cell.innerHTML+="<a class=\"checkAllButton\">is it a valid roster?</a>&nbsp;&nbsp;";
-		cell.innerHTML+="<a class=\"clearAllButton\">Clear All Shift Data</a>";
-		
-		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
-		cell=row.insertCell(row.cells.length);
-		cell.colSpan=13;
 		cell.style.textAlign="center";
-		cell.innerHTML ="<a class=\"exportButton\">Export to Excel File</a>&nbsp;&nbsp;";
+		cell.innerHTML ="<a class=\"findMissingShiftButton\">Find Missing Shift</a>";
 		
 		cell=row.insertCell(row.cells.length);
-		cell.colSpan=20;
 		cell.style.textAlign="center";
-		cell.innerHTML+="<a class=\"saveRosterToDBButton\">Save all data to DB</a>";		
+		cell.innerHTML ="<a class=\"findDuplicateShiftButton\">Find Duplicate Shift</a>";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.style.textAlign="center";
+		cell.innerHTML ="<a class=\"checkAllButton\">is it a valid roster?</a>";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.style.textAlign="center";
+		cell.innerHTML ="<a class=\"clearAllButton\">Clear All Shift Data</a>";
+		
+		row=buttonTable.insertRow(buttonTable.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=2;
+		cell.style.textAlign="center";
+		cell.innerHTML ="<a class=\"exportButton\">Export to Excel File</a>";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=2;
+		cell.style.textAlign="center";
+		cell.innerHTML ="<a class=\"saveRosterToDBButton\">Save all data to DB</a>";
+		
 	}
 	_updateStandardDevValue(shiftName,cellIndex)
 	{
