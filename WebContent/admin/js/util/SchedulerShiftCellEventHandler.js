@@ -15,14 +15,15 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 		this.table=rosterSchedulerTable.table;
 		$("body").on("copy",function(){
 			event.stopPropagation();
-			if (self.selectRegionCoordindate!=null)
+			console.log("Copy event");
+			if (self.selectedRegionCoordinate!=null)
 			{
 				self.rosterTable.copyData(self.selectRegionCoordindate);
 			}
 		});
 		$("body").on("paste", function(){
-			//console.log("Paste event");
-			console.log(window.clipboardData);
+			console.log("Paste event");
+			//console.log(window.clipboardData);
 			event.stopPropagation();
 			event.preventDefault();
 		});
@@ -207,6 +208,7 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 								break;
 			case "mousedown"	:
 								event.preventDefault();
+								this.inSelectMode=true;
 								this._selectCell(object,row.rowIndex,object.cellIndex);
 								break;
 			case "mouseenter"	:event.preventDefault();
@@ -250,7 +252,6 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 		this.selectPreviousCellIndex=-1;
 		this.selectedRegionCoordinate=this._getSelectedRegionCoordinate(rowIndex,cellIndex);
 		this.rosterTable.selectCell(theCell);
-		this.inSelectMode=true;
 		this.isFirstSelect=true;
 	}
 	_updatePreviousSelectedCoordinate(theCell,rowIndex,cellIndex)

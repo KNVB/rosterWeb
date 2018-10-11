@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<style>
+			::selection {
+			  background: none; /* WebKit/Blink Browsers */
+			}
+			::-moz-selection {
+			  background: none; /* Gecko Browsers */
+			}
+		</style>
+		<title>Select and Copy</title>
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script>
+			/*$( document ).ready(function() {
+				$("body").on("copy",function(){
+					event.stopPropagation();
+					var range=document.createRange();
+					var selection = window.getSelection();
+					var table=document.getElementById("dataTable");
+					var startNode=document.getElementById("c11");
+					var endNode=document.getElementById("c13");
+					range.setStart(startNode, 0);
+					range.setEnd(endNode, 0);
+					console.log(selection.addRange(range));
+				});
+			});*/
+			function copyData()
+			{
+				var range=document.createRange();
+				var selection = window.getSelection();
+				var table=document.getElementById("dataTable");
+				var startNode=document.getElementById("c11");
+				var endNode=document.getElementById("c23");
+				range.setStart(startNode, 0);
+				range.setEnd(endNode, 1);
+				selection.addRange(range);
+				console.log(document.execCommand('copy'));
+			}
+		</script>
+	</head>
+	<body>
+		<table border="1" id="dataTable">
+			<tr>
+				<td id="c11">1_1</td>
+				<td id="c12">1_2</td>
+				<td id="c13">1_3</td>
+			</tr>
+			<tr>
+				<td id="c21">2_1</td>
+				<td id="c22">2_2</td>
+				<td id="c23">2_3</td>
+			</tr>
+			<tr>
+				<td id="c31">3_1</td>
+				<td id="c32">3_2</td>
+				<td id="c33">3_3</td>
+			</tr>
+		</table>
+		<button onclick="copyData()">Copy</button>
+	</body>
+</html>

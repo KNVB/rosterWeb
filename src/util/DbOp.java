@@ -181,6 +181,7 @@ public class DbOp implements DataStore {
 	@Override
 	public Hashtable<String, ITORoster> getRoster(int year, int month, String[] itoIdList) {
 		int lastDayOfThisMonth;
+		String temp;
 		ResultSet rs = null;
 		ITORoster itoRoster=null;
 		PreparedStatement stmt = null;
@@ -250,7 +251,12 @@ public class DbOp implements DataStore {
 				rs=stmt.executeQuery();
 				while (rs.next())
 				{	
-					shiftList.put(rs.getInt(1), rs.getString("shift"));
+					temp=rs.getString("shift");
+					if (shiftList.containsKey(rs.getInt("d")))
+					{
+						temp=shiftList.get(rs.getInt("d"))+"+"+temp;
+					}
+					shiftList.put(rs.getInt("d"), temp);
 				}
 				stmt.close();
 				rs.close();
@@ -407,6 +413,7 @@ public class DbOp implements DataStore {
 	public boolean updateRoster(int year,int month,Roster roster) 
 	{
 		boolean result=true;
+		String[]temp;
 		Hashtable<Integer,String> shiftList;
 		PreparedStatement stmt=null;
 		try
@@ -459,13 +466,18 @@ public class DbOp implements DataStore {
 					if (!shiftList.get(date).equals(""))
 					{
 						logger.debug(itoId+","+date+","+shiftList.get(date));
-						stmt=dbConn.prepareStatement(sqlString);
-						stmt.setString(1,itoId);
-						stmt.setDate(2,new java.sql.Date(calendarObj.getTime().getTime()));
-						stmt.setString(3,shiftList.get(date));
-						stmt.setString(4,"A");	
-						stmt.executeUpdate();
-						stmt.close();
+						temp=shiftList.get(date).split("\\+");
+						for (String shiftType : temp )
+						{
+							stmt=dbConn.prepareStatement(sqlString);
+							stmt.setString(1,itoId);
+							stmt.setDate(2,new java.sql.Date(calendarObj.getTime().getTime()));
+							
+							stmt.setString(3,shiftType);
+							stmt.setString(4,"A");	
+							stmt.executeUpdate();
+							stmt.close();
+						}
 					}
 				}
 				

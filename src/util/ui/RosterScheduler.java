@@ -37,14 +37,15 @@ public class RosterScheduler extends RosterViewer
 	protected void printIncludedJavascript(PrintWriter out,HttpServletRequest request)
 	{
 		super.printIncludedJavascript(out, request);
-		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/LoadingScreen.js\"></script>");
-		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/SchedulerShiftCellEventHandler.js\"></script>");
-		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/util/RosterSchedulerUtility.js\"></script>");
-		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/ITO.js\"></script>");
-		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/Roster.js\"></script>");
-		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterScheduler.js\"></script>");
-		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/RosterSchedulerTable.js\"></script>");
-		out.println("\t\t<script src=\""+request.getContextPath()+"/admin/js/SelectedRegionCoordinate.js\"></script>");
+		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/admin/js/util/LoadingScreen.js\"></script>");
+		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/admin/js/util/SchedulerShiftCellEventHandler.js\"></script>");
+		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/admin/js/util/SelectedRegionCoordinate.js\"></script>");
+		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/admin/js/util/RosterSchedulerUtility.js\"></script>");
+		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/admin/js/ITO.js\"></script>");
+		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/admin/js/Roster.js\"></script>");
+		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/admin/js/RosterScheduler.js\"></script>");
+		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/admin/js/RosterSchedulerTable.js\"></script>");
+		
 	}
 	@Override
 	protected void printOnDomReadyFunction(PrintWriter out)

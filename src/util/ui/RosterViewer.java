@@ -134,6 +134,7 @@ public class RosterViewer extends HttpServlet {
 		printHTMLTitle(out);
 		printIncludedCSS(out,request);
 		printIncludedJavascript(out,request);
+		htmlIndentation--;
 		out.println(getIndentation()+"</head>");
 	}
 	protected void printHTMLTitle(PrintWriter out)

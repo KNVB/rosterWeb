@@ -51,8 +51,9 @@ class RosterSchedulerTable extends RosterTable
 			}	
 		}
 	}
-	copyData(selectRegionCoordinate)
+	copyData(selectedRegionCoordinate)
 	{
+		console.log("copy roster table data");
 		//document.execCommand('copy');
 	}
 	disableEditMode(theCell)
@@ -286,11 +287,11 @@ class RosterSchedulerTable extends RosterTable
 	{
 		var cell,essentialShift;
 		var firstIndex,haveMissingShift=false;
-		var i,ito,shiftType,lastIndex;
-		var shiftCells;
-		var shiftRow;
+		var i,ito,lastIndex;
+		var self=this;
+		var shiftCells,shiftRow;
 		var shiftRows=this._getAllShiftRow();
-
+		var shiftTypeList;
 		cell=$("td.shiftCell:first")[0];
 		firstIndex=cell.cellIndex;
 		
@@ -305,25 +306,29 @@ class RosterSchedulerTable extends RosterTable
 				shiftRow=shiftRows[itoId];
 				ito=this.itoList[itoId];
 				cell=shiftRow.cells[i];
-				shiftType=cell.textContent;
-				if (shiftType!="")
-				{
-					if (ito.isValidShift(shiftType))
+				shiftTypeList=cell.textContent.split("\+");
+				shiftTypeList.forEach(function(shiftType){
+					if (shiftType!="")
 					{
-						essentialShift=essentialShift.replace(shiftType,"");
-						if (shiftType=="b1")
+						if (ito.isValidShift(shiftType))
 						{
-							essentialShift=essentialShift.replace("b","");
+							essentialShift=essentialShift.replace(shiftType,"");
+							if (shiftType=="b1")
+							{
+								essentialShift=essentialShift.replace("b","");
+							}
 						}
-					}
-					else	
-					{
-						alert("Invalid shift");
-						cell.className="borderCell alignCenter shiftCell errorRedBlackGround";
-						haveMissingShift=true;
-						break;
-					}	
-				}
+						else	
+						{
+							alert("Invalid shift");
+							cell.className="borderCell alignCenter shiftCell errorRedBlackGround";
+							haveMissingShift=true;
+							return
+						}	
+					}					
+				});
+				if (haveMissingShift)
+					break;
 			}
 			this.vacantShiftRow.cells[i].textContent=essentialShift;
 			if (essentialShift!="")
@@ -835,7 +840,7 @@ class RosterSchedulerTable extends RosterTable
 	}
 	_reCalculate(shiftRow,itoId)
 	{
-		var i,shift;
+		var i,shiftTypeList,self=this;
 		var actualHour=0,shiftCount,myShiftRow;
 		var aShiftCount=0,bShiftCount=0,cShiftCount=0,dShiftCount=0;
 		var totalHourCell,actualHourCell,thisMonthTotalCell,thisMonthBalanceCell,lastMonthBalanceCell;
@@ -854,30 +859,32 @@ class RosterSchedulerTable extends RosterTable
 		
 		for (i=0;i<shiftCells.length;i++)
 		{
-			shift=shiftCells[i].textContent;
-			if (this.rosterRule.shiftHourCount[shift]!=null)
-			{	
-				actualHour+=this.rosterRule.shiftHourCount[shift];
-				switch (shift)
-				{
-					case "a":
-							aShiftCount++;
-							break;	
-					case "b":
-					case "b1":
-							bShiftCount++;
-							break;
-					case "c":
-							cShiftCount++;
-							break;
-					case "d":
-					case "d1":
-					case "d2":
-					case "d3":
-							dShiftCount++;
-							break;					
+			shiftTypeList=shiftCells[i].textContent.split("\+");
+			shiftTypeList.forEach(function(shift){
+				if (self.rosterRule.shiftHourCount[shift]!=null)
+				{	
+					actualHour+=self.rosterRule.shiftHourCount[shift];
+					switch (shift)
+					{
+						case "a":
+								aShiftCount++;
+								break;	
+						case "b":
+						case "b1":
+								bShiftCount++;
+								break;
+						case "c":
+								cShiftCount++;
+								break;
+						case "d":
+						case "d1":
+						case "d2":
+						case "d3":
+								dShiftCount++;
+								break;					
+					}
 				}
-			}
+			});
 		}
 		actualHourCell.textContent=this.utility.roundTo(actualHour,2);
 		

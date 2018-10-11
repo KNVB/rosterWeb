@@ -32,10 +32,21 @@ class ITO
 		//console.log(this.itoId,shiftPattern,index);
 		return index;
 	}
-	isValidShift(shift)
+	isValidShift(shiftListString)
 	{
+		var self=this;
+		var result=true;
+		var shiftList=shiftListString.split("\+");
+		shiftList.forEach(function(shift){
+			if ($.inArray (shift,self.availableShiftList)==-1)
+			{
+				result=false;
+			}	
+		});
+		return result;
 		//return (this.availableShift.includes(shift));
-		return ($.inArray (shift,this.availableShiftList)>-1)
+		
+		//return ($.inArray (shift,this.availableShiftList)>-1)
 	}
 	isValidPreferredShift(preferredShift)
 	{
