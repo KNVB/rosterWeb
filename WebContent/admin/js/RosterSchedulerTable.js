@@ -35,6 +35,22 @@ class RosterSchedulerTable extends RosterTable
 			$(this.vacantShiftRow.cells[cells[i].cellIndex]).html("");
 		}
 	}
+	clearCopiedRegion(copiedRegionCoordinate)
+	{
+		var cell,i,j;
+		for (i=copiedRegionCoordinate.minY;i<=copiedRegionCoordinate.maxY;i++)
+		{
+			for (j=copiedRegionCoordinate.minX;j<=copiedRegionCoordinate.maxX;j++)
+			{
+				cell=this.getCell(i,j);
+				this.disableEditMode(cell);
+				$(cell).removeClass("copyCellBorderTop");
+				$(cell).removeClass("copyCellBorderLeft");
+				$(cell).removeClass("copyCellBorderRight");
+				$(cell).removeClass("copyCellBorderBottom");
+			}	
+		}
+	}
 	clearSelectedRegion(selectedRegionCoordinate)
 	{
 		var cell,i,j;
@@ -47,15 +63,10 @@ class RosterSchedulerTable extends RosterTable
 				$(cell).removeClass("selectCellBorderRight");   
 				$(cell).removeClass("selectCellBorderTop");     
 				$(cell).removeClass("selectCellBorderBottom");  
-				$(cell).removeClass("selectCellBorderLeft");    
+				$(cell).removeClass("selectCellBorderLeft");
 			}	
 		}
-	}
-	copyData(selectedRegionCoordinate)
-	{
-		console.log("copy roster table data");
-		//document.execCommand('copy');
-	}
+	}	
 	disableEditMode(theCell)
 	{
 		theCell.contentEditable=false;
@@ -363,6 +374,42 @@ class RosterSchedulerTable extends RosterTable
 		$(theCell).addClass("selectCellBorderBottom");
 		$(theCell).addClass("selectCellBorderLeft");
 	}
+	setCopiedRegion(selectedRegionCoordinate)
+	{
+		var cell,i;
+		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.minX);
+		$(cell).addClass("copyCellBorderTop");
+		$(cell).addClass("copyCellBorderLeft");
+		
+		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.maxX);
+		$(cell).addClass("copyCellBorderTop");
+		$(cell).addClass("copyCellBorderRight");
+		
+		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.minX);
+		$(cell).addClass("copyCellBorderBottom");
+		$(cell).addClass("copyCellBorderLeft");
+
+		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.maxX);
+		$(cell).addClass("copyCellBorderBottom");
+		$(cell).addClass("copyCellBorderRight");
+		
+		for (i=selectedRegionCoordinate.minY+1;i<selectedRegionCoordinate.maxY;i++)
+		{
+			cell=this.getCell(i,selectedRegionCoordinate.minX);
+			$(cell).addClass("copyCellBorderLeft");
+
+			cell=this.getCell(i,selectedRegionCoordinate.maxX);
+			$(cell).addClass("copyCellBorderRight");
+		}
+		for (i=selectedRegionCoordinate.minX+1;i<selectedRegionCoordinate.maxX;i++)
+		{
+			cell=this.getCell(selectedRegionCoordinate.minY,i);
+			$(cell).addClass("copyCellBorderTop");
+			
+			cell=this.getCell(selectedRegionCoordinate.maxY,i);
+			$(cell).addClass("copyCellBorderBottom");
+		}
+	}
 	setLowestSDData(lowestSDData)
 	{
 		var firstRow=document.getElementById("theLowestSD");
@@ -441,32 +488,7 @@ class RosterSchedulerTable extends RosterTable
 			cell.innerHTML="SD:N.A.";
 		}	
 	}
-	show()
-	{
-		var row,self=this;
-		var yearlyStatisticReportDiv;
-		super.genRosterRowList();
-		self._showButtons();
-		self._genPreferredShiftRowList();
-		self._genVacantShiftRow();
-		yearlyStatisticReportDiv=self._genYearlyStatisticReport();
-		this.itoIdList.forEach(function(itoId){
-			row=self.rosterRowList[itoId];
-			self.rosterBody.append(row);
-			row=self.preferredShiftRowList[itoId];
-			self.rosterBody.append(row);
-		});
-
-		self.rosterBody.append(this.vacantShiftRow);
-		self.yearStatisticCell.append(yearlyStatisticReportDiv);
-		this.genResultTable=document.getElementById("genResult");
-		var schedulerShiftCellEventHandler=new SchedulerShiftCellEventHandler(this,"cursorCell");
-	}
-	showGenResultTable()
-	{
-		$(this.genResultTable).show();
-	}
-	updateSelectedRegion(selectedRegionCoordinate)
+	setSelectedRegion(selectedRegionCoordinate)
 	{
 		var cell,i;
 		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.minX);
@@ -502,6 +524,31 @@ class RosterSchedulerTable extends RosterTable
 			$(cell).addClass("selectCellBorderBottom");
 		}
 		
+	}
+	show()
+	{
+		var row,self=this;
+		var yearlyStatisticReportDiv;
+		super.genRosterRowList();
+		self._showButtons();
+		self._genPreferredShiftRowList();
+		self._genVacantShiftRow();
+		yearlyStatisticReportDiv=self._genYearlyStatisticReport();
+		this.itoIdList.forEach(function(itoId){
+			row=self.rosterRowList[itoId];
+			self.rosterBody.append(row);
+			row=self.preferredShiftRowList[itoId];
+			self.rosterBody.append(row);
+		});
+
+		self.rosterBody.append(this.vacantShiftRow);
+		self.yearStatisticCell.append(yearlyStatisticReportDiv);
+		this.genResultTable=document.getElementById("genResult");
+		var schedulerShiftCellEventHandler=new SchedulerShiftCellEventHandler(this,"cursorCell");
+	}
+	showGenResultTable()
+	{
+		$(this.genResultTable).show();
 	}
 
 	updateValue(theCell)

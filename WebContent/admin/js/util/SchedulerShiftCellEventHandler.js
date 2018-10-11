@@ -4,28 +4,30 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 	{
 		super(rosterSchedulerTable,targetCellClassName);
 		var self=this;
-		
-		this.selectedRegionCoordinate=null;
+		this.copiedRegionCoordinate=null;
 		this.isFirstSelect=false;
 		this.inSelectMode=false;
+		this.selectedRegionCoordinate=null;
 		this.selectPreviousRowIndex=-1;	
 		this.selectPreviousCellIndex=-1;
 		this.selectStartRowIndex=-1;	
 		this.selectStartCellIndex=-1;
 		this.table=rosterSchedulerTable.table;
-		$("body").on("copy",function(){
+		$("body").on("copy",function(event){
+			event.preventDefault();
 			event.stopPropagation();
 			console.log("Copy event");
 			if (self.selectedRegionCoordinate!=null)
 			{
-				self.rosterTable.copyData(self.selectRegionCoordindate);
+				self._copyDataToClipboard(event);
 			}
 		});
-		$("body").on("paste", function(){
+		$("body").on("paste", function(event){
 			console.log("Paste event");
 			//console.log(window.clipboardData);
 			event.stopPropagation();
 			event.preventDefault();
+			self._pasteDataFromClipboard(event);
 		});
 		$(this.selectionString).dblclick(function(event){
 			self._handleMouseEvent(this,event);
@@ -77,6 +79,39 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 			this.rosterTable.clearSelectedRegion(this.selectedRegionCoordinate);
 		}
 		console.log("===========================================");
+	}
+	_copyDataToClipboard(event)
+	{
+		var cell;
+		var clipboard=event.originalEvent.clipboardData;
+		var dataRow=[],dataRowList=[];
+		
+		console.log(this.copiedRegionCoordinate==null);
+		if (this.copiedRegionCoordinate==null)
+			this.copiedRegionCoordinate=new SelectedRegionCoordinate();
+		else
+			this.rosterTable.clearCopiedRegion(this.copiedRegionCoordinate);
+		
+		this.copiedRegionCoordinate.minX=this.selectedRegionCoordinate.minX;
+		this.copiedRegionCoordinate.maxX=this.selectedRegionCoordinate.maxX;
+		this.copiedRegionCoordinate.minY=this.selectedRegionCoordinate.minY;
+		this.copiedRegionCoordinate.maxY=this.selectedRegionCoordinate.maxY;
+		this.rosterTable.clearSelectedRegion(this.selectedRegionCoordinate);
+		this.rosterTable.setCopiedRegion(this.selectedRegionCoordinate);
+		
+		for (var y=this.selectedRegionCoordinate.minY;y<=this.selectedRegionCoordinate.maxY;y++)
+		{
+			dataRow=[];
+			for (var x=this.selectedRegionCoordinate.minX;x<=this.selectedRegionCoordinate.maxX;x++)
+			{
+				cell=this.rosterTable.getCell(y,x);
+				dataRow.push(cell.textContent);
+			}
+			dataRowList.push(dataRow);
+		}
+		//console.log(JSON.stringify(dataRowList));
+		clipboard.clearData();
+		clipboard.setData("application/json",JSON.stringify(dataRowList));
 	}
 	_endSelection(theCell)
 	{
@@ -241,6 +276,14 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 			}
 		}
 	}
+	_pasteDataFromClipboard(event)
+	{
+		var cell;
+		var clipboard=event.originalEvent.clipboardData;
+		var dataRowList=JSON.parse(clipboard.getData("application/json"));
+		
+		console.log(dataRowList,dataRowList.length);
+	}
 	_selectCell(theCell,rowIndex,cellIndex)
 	{
 		var row=theCell.parentElement;
@@ -269,7 +312,7 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 		{
 			this._clearSelectedRegion();
 			this.selectedRegionCoordinate=this._getSelectedRegionCoordinate(rowIndex,cellIndex);
-			this.rosterTable.updateSelectedRegion(this.selectedRegionCoordinate);
+			this.rosterTable.setSelectedRegion(this.selectedRegionCoordinate);
 			this.selectPreviousRowIndex=rowIndex;	
 			this.selectPreviousCellIndex=cellIndex;	
 		}		
