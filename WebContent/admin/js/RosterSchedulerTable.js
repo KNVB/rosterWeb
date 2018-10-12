@@ -361,7 +361,10 @@ class RosterSchedulerTable extends RosterTable
 			}
 			this.vacantShiftRow.cells[i].textContent=essentialShift;
 			if (essentialShift!="")
+			{	
 				haveMissingShift=true;
+				break;
+			}
 		}
 		return haveMissingShift;
 	}
