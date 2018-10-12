@@ -40,17 +40,17 @@ Hashtable<String,ITO> itoList=ito.getITOList(rosterYear,rosterMonth);
 MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(rosterYear,rosterMonth);
 Hashtable<Integer,MyCalendar>myCalendarList=mc.getMonthlyCalendar();
 ObjectMapper objectMapper = new ObjectMapper();
-PreferredShift preferredShift=new PreferredShift();
+//PreferredShift preferredShift=new PreferredShift();
 
 itoIdList = itoList.keySet().toArray(new String[0]);
 Arrays.sort(itoIdList);
-itoRosterList=roster.getRoster(rosterYear,rosterMonth, itoIdList);
-allPreferredShiftList=preferredShift.getPreferredShiftList(rosterYear,rosterMonth, itoIdList);
+//itoRosterList=roster.getRoster(rosterYear,rosterMonth, itoIdList);
+//allPreferredShiftList=preferredShift.getPreferredShiftList(rosterYear,rosterMonth, itoIdList);
 out.println("<hr>");
 out.println(objectMapper.writeValueAsString(myCalendarList)+"<br>");
-out.println(objectMapper.writeValueAsString(itoRosterList)+"<br>");
+//out.println(objectMapper.writeValueAsString(itoRosterList)+"<br>");
 
-out.println(objectMapper.writeValueAsString(allPreferredShiftList)+"<br>");
+//out.println(objectMapper.writeValueAsString(allPreferredShiftList)+"<br>");
 out.println("<hr>");
 %>
 </body>

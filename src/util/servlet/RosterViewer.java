@@ -1,4 +1,4 @@
-package util.ui;
+package util.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;

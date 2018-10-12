@@ -11,21 +11,33 @@
     <welcome-file>rosterViewer</welcome-file>
   </welcome-file-list>
   <servlet>
-		<servlet-name>RosterScheduler</servlet-name>
-		<servlet-class>util.ui.RosterScheduler</servlet-class>
-		<load-on-startup>1</load-on-startup>
+    <servlet-name>RosterScheduler</servlet-name>
+    <servlet-class>util.servlet.RosterScheduler</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-		<servlet-name>RosterScheduler</servlet-name>
-		<url-pattern>/admin/rosterScheduler</url-pattern>
+    <servlet-name>RosterScheduler</servlet-name>
+    <url-pattern>/admin/rosterScheduler</url-pattern>
   </servlet-mapping>
   <servlet>
-		<servlet-name>RosterViewer</servlet-name>
-		<servlet-class>util.ui.RosterViewer</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>RosterViewer</servlet-name>
-		<url-pattern>/rosterViewer</url-pattern>
-	</servlet-mapping>
+    <servlet-name>RosterViewer</servlet-name>
+    <servlet-class>util.servlet.RosterViewer</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RosterViewer</servlet-name>
+    <url-pattern>/rosterViewer</url-pattern>
+  </servlet-mapping>
+  <filter>
+  	<filter-name>Admin</filter-name>
+  	<filter-class>util.servlet.AdminFilter</filter-class>
+  		<init-param>
+			<param-name>login_page</param-name>
+			<param-value>/timeOut.jsp</param-value>
+		</init-param>
+  </filter>
+  <filter-mapping>
+	<filter-name>Admin</filter-name>
+	<url-pattern>/admin/*</url-pattern>
+  </filter-mapping>	
 </web-app>
