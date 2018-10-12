@@ -21,7 +21,7 @@ public class RosterScheduler extends RosterViewer
 		try 
 		{
 			yearlyRosterStatistic=roster.getYearlyStatistic();
-			preferredShiftList=roster.getPreferredShiftList(itoIdList);
+			preferredShiftList=roster.getITOPreferredShiftList(itoIdList);
 		} 
 		catch (Exception e) 
 		{
