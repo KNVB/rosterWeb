@@ -17,10 +17,7 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 			event.preventDefault();
 			event.stopPropagation();
 			console.log("Copy event");
-			if (self.selectedRegionCoordinate!=null)
-			{
-				self._copyDataToClipboard(event);
-			}
+			self._copyDataToClipboard(event);
 		});
 		$("body").on("paste", function(event){
 			console.log("Paste event");
@@ -82,36 +79,24 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 	}
 	_copyDataToClipboard(event)
 	{
-		var cell;
 		var clipboard=event.originalEvent.clipboardData;
-		var dataRow=[],dataRowList=[];
-		
-		console.log(this.copiedRegionCoordinate==null);
-		if (this.copiedRegionCoordinate==null)
-			this.copiedRegionCoordinate=new SelectedRegionCoordinate();
-		else
-			this.rosterTable.clearCopiedRegion(this.copiedRegionCoordinate);
-		
-		this.copiedRegionCoordinate.minX=this.selectedRegionCoordinate.minX;
-		this.copiedRegionCoordinate.maxX=this.selectedRegionCoordinate.maxX;
-		this.copiedRegionCoordinate.minY=this.selectedRegionCoordinate.minY;
-		this.copiedRegionCoordinate.maxY=this.selectedRegionCoordinate.maxY;
-		this.rosterTable.clearSelectedRegion(this.selectedRegionCoordinate);
-		this.rosterTable.setCopiedRegion(this.selectedRegionCoordinate);
-		
-		for (var y=this.selectedRegionCoordinate.minY;y<=this.selectedRegionCoordinate.maxY;y++)
-		{
-			dataRow=[];
-			for (var x=this.selectedRegionCoordinate.minX;x<=this.selectedRegionCoordinate.maxX;x++)
-			{
-				cell=this.rosterTable.getCell(y,x);
-				dataRow.push(cell.textContent);
-			}
-			dataRowList.push(dataRow);
-		}
-		//console.log(JSON.stringify(dataRowList));
-		clipboard.clearData();
-		clipboard.setData("application/json",JSON.stringify(dataRowList));
+		if (this.selectedRegionCoordinate!=null)
+		{	
+			console.log(this.copiedRegionCoordinate==null);
+
+			if (this.copiedRegionCoordinate==null)
+				this.copiedRegionCoordinate=new SelectedRegionCoordinate();
+			else
+				this.rosterTable.clearCopiedRegion(this.copiedRegionCoordinate);
+			
+			this.copiedRegionCoordinate.minX=this.selectedRegionCoordinate.minX;
+			this.copiedRegionCoordinate.maxX=this.selectedRegionCoordinate.maxX;
+			this.copiedRegionCoordinate.minY=this.selectedRegionCoordinate.minY;
+			this.copiedRegionCoordinate.maxY=this.selectedRegionCoordinate.maxY;
+			
+			clipboard.clearData();
+			clipboard.setData("text/plain",JSON.stringify(this.rosterTable.getDataForCopy(this.selectedRegionCoordinate)));
+		}	
 	}
 	_endSelection(theCell)
 	{
@@ -280,9 +265,12 @@ class SchedulerShiftCellEventHandler extends ShiftCellEventHandler
 	{
 		var cell;
 		var clipboard=event.originalEvent.clipboardData;
-		var dataRowList=JSON.parse(clipboard.getData("application/json"));
+		var dataRowList=JSON.parse(clipboard.getData("text/plain"));
 		
-		console.log(dataRowList,dataRowList.length);
+		if ((this.selectedRegionCoordinate!=null) && (this.copiedRegionCoordinate!=null))
+		{	
+			this.rosterTable.pasteDataFromClipboard(this.selectedRegionCoordinate,this.copiedRegionCoordinate,dataRowList);
+		}
 	}
 	_selectCell(theCell,rowIndex,cellIndex)
 	{

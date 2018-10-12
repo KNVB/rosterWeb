@@ -32,39 +32,11 @@ public class ITORoster
 		return balance;
 	}
 	/**
-	 * Set balance value(For retrieving data from database variable balance is referred to last month balance.<br>For update data to database variable balance is referred to this month balance) 
-	 * @param balance 
-	 */
-	public void setBalance(float balance) {
-		this.balance = balance;
-	}
-	/**
-	 * Get Shift list
-	 * @return Shift list
-	 */
-	public Hashtable<Integer, String> getShiftList() {
-		return shiftList;
-	}
-	/**
-	 * Set Shift list
-	 * @param shiftList Shift list
-	 */
-	public void setShiftList(Hashtable<Integer, String> shiftList) {
-		this.shiftList = shiftList;
-	}
-	/**
 	 * Get the name of the specified ITO.
 	 * @return the name of the specified ITO.
 	 */
 	public String getITOName() {
 		return itoName;
-	}
-	/**
-	 * Set the name of the specified ITO.
-	 * @param itoName the name of the specified ITO.
-	 */
-	public void setITOName(String itoName) {
-		this.itoName = itoName;
 	}
 	/**
 	 * Get the post name of the specified ITO.
@@ -74,11 +46,11 @@ public class ITORoster
 		return itoPostName;
 	}
 	/**
-	 * Set the post name of the specified ITO.
-	 * @param postName the post name of the specified ITO.
+	 * Get the total no. of working hour per day for the specified ITO.
+	 * @return the no. of working hour per day for the specified ITO.
 	 */
-	public void setITOPostName(String itoPostName) {
-		this.itoPostName = itoPostName;
+	public float getITOWorkingHourPerDay() {
+		return workingHourPerDay;
 	}
 	/**
 	 * Get Previous Month Shift list(Not whole month shift list, the size of the shift list depends on RosterRule.getMaxConsecutiveWorkingDay() value).
@@ -88,19 +60,52 @@ public class ITORoster
 		return previousMonthShiftList;
 	}
 	/**
+	 * Get Shift list
+	 * @return Shift list
+	 */
+	public Hashtable<Integer, String> getShiftList() {
+		return shiftList;
+	}
+	/**
+	 * Set balance value(For retrieving data from database variable balance is referred to last month balance.<br>For update data to database variable balance is referred to this month balance) 
+	 * @param balance 
+	 */
+	public void setBalance(float balance) {
+		this.balance = balance;
+	}
+	
+	/**
+	 * Set Shift list
+	 * @param shiftList Shift list
+	 */
+	public void setShiftList(Hashtable<Integer, String> shiftList) {
+		this.shiftList = shiftList;
+	}
+	
+	/**
+	 * Set the name of the specified ITO.
+	 * @param itoName the name of the specified ITO.
+	 */
+	public void setITOName(String itoName) {
+		this.itoName = itoName;
+	}
+	
+	/**
+	 * Set the post name of the specified ITO.
+	 * @param itoPostName the post name of the specified ITO.
+	 */
+	public void setITOPostName(String itoPostName) {
+		this.itoPostName = itoPostName;
+	}
+	
+	/**
 	 * Set Previous Month Shift list(Not whole month shift list, the length of the shift list depends on RosterRule.getMaxConsecutiveWorkingDay() value).
 	 * @param previousMonthShiftList Previous Month Shift list
 	 */
 	public void setPreviousMonthShiftList(Hashtable<Integer, String> previousMonthShiftList) {
 		this.previousMonthShiftList = previousMonthShiftList;
 	}
-	/**
-	 * Get the total no. of working hour per day for the specified ITO.
-	 * @return the no. of working hour per day for the specified ITO.
-	 */
-	public float getITOWorkingHourPerDay() {
-		return workingHourPerDay;
-	}
+	
 	/**
 	 * Set the total no. of working hour per day for the specified ITO.
 	 * @param workingHourPerDay the no. of working hour per day for the specified ITO.

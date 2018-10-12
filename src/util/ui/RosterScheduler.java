@@ -1,7 +1,7 @@
 package util.ui;
 
 import com.ITO;
-import com.PreferredShift;
+
 import com.RosterRule;
 import com.rosterStatistic.ITOYearlyStatistic;
 
@@ -18,11 +18,10 @@ public class RosterScheduler extends RosterViewer
 	protected void getData() 
 	{
 		super.getData();
-		PreferredShift preferredShift=new PreferredShift();
 		try 
 		{
-			yearlyRosterStatistic=roster.getYearlyStatistic(rosterYear, rosterMonth);
-			preferredShiftList=preferredShift.getPreferredShiftList(rosterYear, rosterMonth, itoIdList);
+			yearlyRosterStatistic=roster.getYearlyStatistic();
+			preferredShiftList=roster.getPreferredShiftList(itoIdList);
 		} 
 		catch (Exception e) 
 		{

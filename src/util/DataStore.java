@@ -34,7 +34,7 @@ public interface DataStore {
 	 * @param itoIdList
 	 * @return roster data
 	 */
-	public Hashtable<String,ITORoster> getRoster(int year,int month,String[] itoIdList);
+	public Hashtable<String,ITORoster> getITORosterList(int year,int month,String[] itoIdList);
 	/**
 	 * Get the Preferred Shift List for the specified ITO Ids,year and month
 	 * @param year
@@ -52,7 +52,7 @@ public interface DataStore {
 	 * Get yearly roster statistic for the specified year and month
 	 * @param year
 	 * @param month
-	 * @return
+	 * @return result
 	 */
 	public Hashtable<String,ITOYearlyStatistic>getYearlyRosterStatistic(int year,int month);
 	/**

@@ -91,7 +91,7 @@ public class RosterViewer extends HttpServlet {
 	protected void getData() 
 	{
 		ITO ito;
-		roster=new Roster();
+		roster=new Roster(rosterYear,rosterMonth);
 		CalendarUtility calendarUtility=new CalendarUtility();
 		MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(rosterYear,rosterMonth);
 		
@@ -102,7 +102,7 @@ public class RosterViewer extends HttpServlet {
 			itoList=ito.getITOList(rosterYear,rosterMonth);
 			itoIdList = itoList.keySet().toArray(new String[0]);
 			Arrays.sort(itoIdList);
-			itoRosterList=roster.getRoster(rosterYear,rosterMonth, itoIdList);
+			itoRosterList=roster.getITORosterList(itoIdList);
 		}
 		catch (Exception err)
 		{

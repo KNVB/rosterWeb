@@ -179,7 +179,7 @@ public class DbOp implements DataStore {
 		return result;
 	}
 	@Override
-	public Hashtable<String, ITORoster> getRoster(int year, int month, String[] itoIdList) {
+	public Hashtable<String, ITORoster> getITORosterList(int year, int month, String[] itoIdList) {
 		int lastDayOfThisMonth;
 		String temp;
 		ResultSet rs = null;

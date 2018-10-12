@@ -24,6 +24,11 @@ public class Roster
 	{
 		
 	}
+	public Roster(int year,int month)
+	{
+		rosterYear=year;
+		rosterMonth=month;
+	}
 	/**
 	 * Export roster data to an excel file.
 	 */
@@ -54,23 +59,121 @@ public class Roster
 			
 			e.printStackTrace();
 		}
-		
 	}
-	public Hashtable<String, ITORoster> getRoster(int year, int month, String[] itoIdList) throws Exception
+	/**
+	 * It return a list of preferred shift for specified ITO ids
+	 * @return iTOPreferredShiftList
+	 */
+	public Hashtable<String,Hashtable<Integer,String>> getITOPreferredShiftList()
 	{
-		logger.info("Roster.getRoster("+year+","+ month+") is called");
+		return iTOPreferredShiftList;
+	}
+	/**
+	 * It returns ITORoster object for the specified roster year and month.
+	 * @return ITORoster 
+	 */
+	public Hashtable<String,ITORoster>getITORosterList()
+	{
+		return iTORosterList;
+	}
+	/**
+	 * It generates a list of ITO roster for specified ITO ids
+	 * @param itoIdList
+	 * @return iTORosterList
+	 * @throws Exception
+	 */
+	public Hashtable<String, ITORoster> getITORosterList(String[] itoIdList) throws Exception
+	{
+		logger.info("Roster.getRoster("+this.rosterYear+","+ this.rosterMonth+") is called");
 		dataStore=Utility.getDataStore();
-		Hashtable<String,ITORoster>iTORosterList=dataStore.getRoster(year, month, itoIdList);
+		Hashtable<String,ITORoster>iTORosterList=dataStore.getITORosterList(this.rosterYear,this.rosterMonth, itoIdList);
 		dataStore.close();
 		return iTORosterList;
 	}
-	public Hashtable<String,ITOYearlyStatistic> getYearlyStatistic(int year,int month)throws Exception
+	/**
+	 * It generates a list of preferred shift for specified ITO ids
+	 * @param itoIdList
+	 * @return iTOPreferredShiftList
+	 * @throws Exception
+	 */
+	public Hashtable<String,Hashtable<Integer,String>>getITOPreferredShiftList(String[] itoIdList) throws Exception
+	{
+		logger.info("PreferredShift.getPreferredShiftList("+this.rosterYear+","+ this.rosterMonth+") is called");
+		dataStore=Utility.getDataStore();
+		iTOPreferredShiftList=dataStore.getPreferredShiftList(this.rosterYear,this.rosterMonth, itoIdList);
+		dataStore.close();
+		return iTOPreferredShiftList;
+	}
+	/**
+	 * It returns roster month.
+	 * @return roster month
+	 */
+	public int getRosterMonth() {
+		return rosterMonth;
+	}
+	/**
+	 * It returns roster year.
+	 * @return roster year
+	 */
+	public int getRosterYear() {
+		return rosterYear;
+	}
+	/**
+	 * It returns vacant shift row.
+	 * @return vacancyShiftData
+	 */
+	public ArrayList<String> getVacantShiftData() {
+		return vacantShiftData;
+	}
+	/**
+	 * It generate a yearly statistic
+	 * @return return
+	 * @throws Exception
+	 */
+	public Hashtable<String,ITOYearlyStatistic> getYearlyStatistic()throws Exception
 	{
 		Hashtable<String,ITOYearlyStatistic> result;
 		dataStore=Utility.getDataStore();
-		result=dataStore.getYearlyRosterStatistic(year,month);
+		result=dataStore.getYearlyRosterStatistic(this.rosterYear,this.rosterMonth);
 		dataStore.close();
 		return result;
+	}
+	/**
+	 * It sets a list of ITO Preferred shift for the specified roster year and month.
+	 * @param iTOPreferredShiftList List of ITO Preferred shift
+	 */
+	public void setITOPreferredShiftList(Hashtable<String,Hashtable<Integer,String>> iTOPreferredShiftList)
+	{
+		this.iTOPreferredShiftList=iTOPreferredShiftList;
+	}	
+	/**
+	 * It sets a list of ITORoster object for the specified roster year and month.
+	 * @param iTORosterList List of ITORoster object 
+	 */
+	public void setITORosterList(Hashtable<String,ITORoster>iTORosterList)
+	{
+		this.iTORosterList=iTORosterList;
+	}
+	/**
+	 * It set roster month.
+	 * @param rosterMonth The roster month
+	 */
+	public void setRosterMonth(int rosterMonth) {
+		this.rosterMonth = rosterMonth;
+	}
+	/**
+	 * It set roster year.
+	 * @param rosterYear The roster year
+	 */
+	public void setRosterYear(int rosterYear) {
+		this.rosterYear = rosterYear;
+	}	
+	/**
+	 * It set vacant shift row
+	 * @param vacancyShiftData
+	 */
+	public void setVacantShiftData(ArrayList<String> vacancyShiftData) {
+		this.vacantShiftData = vacancyShiftData;
 	}
 	/**
 	 * It update roster data by DataStore object
@@ -88,71 +191,5 @@ public class Roster
 		else
 			logger.info("Roster updated failure.");
 		return result;
-	}	
-	/**
-	 * It returns roster year.
-	 * @return roster year
-	 */
-	public int getRosterYear() {
-		return rosterYear;
-	}
-	/**
-	 * It returns roster month.
-	 * @return roster month
-	 */
-	public int getRosterMonth() {
-		return rosterMonth;
-	}
-	/**
-	 * It set roster year.
-	 * @param rosterYear The roster year
-	 */
-	public void setRosterYear(int rosterYear) {
-		this.rosterYear = rosterYear;
-	}
-	/**
-	 * It set roster month.
-	 * @param rosterMonth The roster month
-	 */
-	public void setRosterMonth(int rosterMonth) {
-		this.rosterMonth = rosterMonth;
-	}
-	/**
-	 * It returns ITORoster object for the specified roster year and month.
-	 * @return ITORoster 
-	 */
-	public Hashtable<String,ITORoster>getITORosterList()
-	{
-		return iTORosterList;
-	}
-	/**
-	 * It sets ITORoster object for the specified roster year and month.
-	 * @param iTORosterList List of ITORoster object 
-	 */
-	public void setITORosterList(Hashtable<String,ITORoster>iTORosterList)
-	{
-		this.iTORosterList=iTORosterList;
-	}
-	public Hashtable<String,Hashtable<Integer,String>> getITOPreferredShiftList()
-	{
-		return iTOPreferredShiftList;
-	}
-	public void setITOPreferredShiftList(Hashtable<String,Hashtable<Integer,String>> iTOPreferredShiftList)
-	{
-		this.iTOPreferredShiftList=iTOPreferredShiftList;
-	}
-	/**
-	 * It returns vacant shift row.
-	 * @return vacancyShiftData
-	 */
-	public ArrayList<String> getVacantShiftData() {
-		return vacantShiftData;
-	}
-	/**
-	 * It set vacant shift row
-	 * @param vacancyShiftData
-	 */
-	public void setVacantShiftData(ArrayList<String> vacancyShiftData) {
-		this.vacantShiftData = vacancyShiftData;
 	}
 }

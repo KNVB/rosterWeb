@@ -66,7 +66,7 @@ class RosterSchedulerTable extends RosterTable
 				$(cell).removeClass("selectCellBorderLeft");
 			}	
 		}
-	}	
+	}
 	disableEditMode(theCell)
 	{
 		theCell.contentEditable=false;
@@ -98,6 +98,24 @@ class RosterSchedulerTable extends RosterTable
 		var row=this.table.rows[rowIndex];
 		var cell=row.cells[cellIndex];
 		return cell;
+	}
+	getDataForCopy(selectedRegionCoordinate)
+	{
+		var cell;
+		var dataRow=[],dataRowList=[];
+		this.clearSelectedRegion(selectedRegionCoordinate);
+		this.setCopiedRegion(selectedRegionCoordinate);
+		for (var y=selectedRegionCoordinate.minY;y<=selectedRegionCoordinate.maxY;y++)
+		{
+			dataRow=[];
+			for (var x=selectedRegionCoordinate.minX;x<=selectedRegionCoordinate.maxX;x++)
+			{
+				cell=this.getCell(y,x);
+				dataRow.push(cell.textContent);
+			}
+			dataRowList.push(dataRow);
+		}
+		return dataRowList;
 	}
 	getLastMonthBalance(itoId)
 	{
@@ -365,6 +383,24 @@ class RosterSchedulerTable extends RosterTable
 			}
 		}
 		this.haveMissingShift();
+	}
+	pasteDataFromClipboard(selectedRegionCoordinate,copiedRegionCoordinate,dataRowList)
+	{
+		var cell;
+		var self=this,x,y;
+		
+		x=selectedRegionCoordinate.minX;
+		y=selectedRegionCoordinate.minY;
+		
+		dataRowList.forEach(function(dataRow){
+			x=selectedRegionCoordinate.minX;
+			dataRow.forEach(function(value){
+				cell=self.getCell(y,x++);
+				$(cell).text(value).blur();
+			});
+			y++;
+		});
+		this.clearCopiedRegion(copiedRegionCoordinate);
 	}
 	selectCell(theCell)
 	{
