@@ -113,12 +113,7 @@ public class RosterViewer extends HttpServlet {
 	{
 		out.println(getIndentation()+"<body>");
 		htmlIndentation++;
-		out.println(getIndentation()+"<table border=\"0\" id=\"rosterTable\">");
-		printRosterTableHeader(out);
-		printRosterTableBody(out);
-		printRosterTableFooter(out);
-		htmlIndentation--;
-		out.println(getIndentation()+"</table>");
+		printRosterTable(out);
 		htmlIndentation--;
 		printOnDomReadyFunction(out);
 		out.println(getIndentation()+"</body>");
@@ -345,6 +340,15 @@ public class RosterViewer extends HttpServlet {
 		out.println(getIndentation()+"</tr>");
 		htmlIndentation--;
 		out.println(getIndentation()+"</thead>");
+	}
+	private void printRosterTable(PrintWriter out)
+	{
+		out.println(getIndentation()+"<table border=\"0\" id=\"rosterTable\">");
+		printRosterTableHeader(out);
+		printRosterTableBody(out);
+		printRosterTableFooter(out);
+		htmlIndentation--;
+		out.println(getIndentation()+"</table>");
 	}
 	private void printRosterTableBody(PrintWriter out)
 	{

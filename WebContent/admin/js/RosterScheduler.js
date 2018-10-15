@@ -49,7 +49,7 @@ class RosterScheduler
 				 * https://stackoverflow.com/questions/51869613/create-an-loading-screen-for-long-calculation?noredirect=1#comment90691880_51869613
 				 */
 				setTimeout(() => {
-						for (var i=0;i<10;i++)
+						for (var i=0;i<100;i++)
 						{	
 							this._genRoster(startDate,endDate);
 							roster=new Roster(startDate,this._genRoster(startDate,endDate),this.rosterSchedulerUtility,this.rosterRule,endDate-startDate+1);
