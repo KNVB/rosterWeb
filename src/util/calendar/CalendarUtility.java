@@ -1,6 +1,7 @@
 package util.calendar;
 import java.util.Calendar;
 import java.util.Hashtable;
+import java.util.TimeZone;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 /**
@@ -249,9 +250,14 @@ import java.util.GregorianCalendar;
 		inYear=inCalendarObj.get(Calendar.YEAR);
 		inMonth=inCalendarObj.get(Calendar.MONTH);
 		inDate=inCalendarObj.get(Calendar.DAY_OF_MONTH);
+		
 		GregorianCalendar ref=new GregorianCalendar(1900,0,31);
+		ref.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 		offset=inCalendarObj.getTime().getTime();
+		System.out.println("offset0="+offset);
+		System.out.println("getTime="+ref.getTime().getTime());
 		offset=(offset-ref.getTime().getTime())/86400000L;
+		System.out.println("offset1="+offset);
 		for(i=1900; i<2100 && offset>0; i++) 
 		{ 
 			temp=lYearDays(i); 
@@ -627,10 +633,11 @@ import java.util.GregorianCalendar;
 		//int year=2017,month=4;//
 		//int year=2015,month=3;//復活節清明節overlap
 		//int year=2013,month=3;//復活節撗跨3,4月
-		int year=2018,month=3;
+		int year=2018,month=8;
 		CalendarUtility cu=new CalendarUtility();
-		GregorianCalendar now=new GregorianCalendar(year,month,14);
+		//GregorianCalendar now=new GregorianCalendar(year,month,14);
 		//GregorianCalendar now=new GregorianCalendar(2017,7,7);//節氣=立秋
+		GregorianCalendar now=new GregorianCalendar(2018,8,1);
 		LunarCalendar lc=cu.getLunarCalendar(now);
 		GregorianCalendar easterDate=cu.getEasterDateByYear(year);
 		System.out.println("Solar Date="+now.get(Calendar.YEAR)+"/"+(1+now.get(Calendar.MONTH))+"/"+now.get(Calendar.DAY_OF_MONTH));
