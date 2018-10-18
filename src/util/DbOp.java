@@ -38,11 +38,10 @@ public class DbOp implements DataStore {
 	/**
 	 * Database object,initialize db connection
 	 * 
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws Exception
+	 * @throws SQLException if a database access error occurs or the url is null
+	 * @throws ClassNotFoundException the exception that was raised while loading the class
+	 * @throws IllegalAccessException the exception that was raised while reflecting the class
+	 * @throws InstantiationException the exception that was raised while instantiating the class
 	 */	
 	public DbOp() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
@@ -569,7 +568,7 @@ public class DbOp implements DataStore {
 	}
 	/**
 	 * Close db connection
-	 * @throws Exception
+	 * @throws Exception if a data store access error occurs
 	 */
 	@Override
 	public void close() throws Exception 

@@ -59,24 +59,15 @@ public class ITO {
 		
 	}
 
-	/**
-	 * 
-	 * @exception Throwable
-	 */
-	public void finalize()
-	  throws Throwable{
-
-	}
-
 	public void add(){
 
 	}
 	/**
 	 * Get ITO Information List
-	 * @param year
-	 * @param month
+	 * @param year year
+	 * @param month month
 	 * @return A list of ITO object order by post name.
-	 * @throws Exception
+	 * @throws Exception the exception that was raised when retrieving ito data from data store
 	 */
 	public Hashtable<String,ITO> getITOList(int year,int month) throws Exception
 	{

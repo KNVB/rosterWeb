@@ -31,6 +31,8 @@ public class Roster
 	}
 	/**
 	 * Export roster data to an excel file.
+	 * @param inputFilePath input file path
+	 * @param outputFilePath output file path
 	 */
 	public void exportToExcel(String inputFilePath,String outputFilePath)
 	{
@@ -78,9 +80,9 @@ public class Roster
 	}
 	/**
 	 * It generates a list of ITO roster for specified ITO ids
-	 * @param itoIdList
+	 * @param itoIdList ITO ids list
 	 * @return iTORosterList
-	 * @throws Exception
+	 * @throws Exception the exception that was raised while get ITO roster from data store
 	 */
 	public Hashtable<String, ITORoster> getITORosterList(String[] itoIdList) throws Exception
 	{
@@ -92,9 +94,9 @@ public class Roster
 	}
 	/**
 	 * It generates a list of preferred shift for specified ITO ids
-	 * @param itoIdList
+	 * @param itoIdList ITO Id list
 	 * @return iTOPreferredShiftList
-	 * @throws Exception
+	 * @throws Exception the exception that was raised while get ITO Preferred shift from data store
 	 */
 	public Hashtable<String,Hashtable<Integer,String>>getITOPreferredShiftList(String[] itoIdList) throws Exception
 	{
@@ -127,8 +129,8 @@ public class Roster
 	}
 	/**
 	 * It generate a yearly statistic
-	 * @return return
-	 * @throws Exception
+	 * @return return the yearly statistic
+	 * @throws Exception the exception that was raised while get yearly statistic from data store
 	 */
 	public Hashtable<String,ITOYearlyStatistic> getYearlyStatistic()throws Exception
 	{
@@ -170,14 +172,15 @@ public class Roster
 	}	
 	/**
 	 * It set vacant shift row
-	 * @param vacancyShiftData
+	 * @param vacantShiftData the vacant shift row data
 	 */
-	public void setVacantShiftData(ArrayList<String> vacancyShiftData) {
-		this.vacantShiftData = vacancyShiftData;
-	}
+	public void setVacantShiftData(ArrayList<String> vacantShiftData) {
+		this.vacantShiftData = vacantShiftData;
+	}	
 	/**
-	 * It update roster data by DataStore object
-	 * @throws Exception
+	 *  It update roster data by DataStore object
+	 * @return It indicate whether update success or not
+	 * @throws Exception the exception that was raised while updating roster data to data store
 	 */
 	public boolean update() throws Exception
 	{

@@ -68,7 +68,7 @@ public class ITORoster
 	}
 	/**
 	 * Set balance value(For retrieving data from database variable balance is referred to last month balance.<br>For update data to database variable balance is referred to this month balance) 
-	 * @param balance 
+	 * @param balance balance value
 	 */
 	public void setBalance(float balance) {
 		this.balance = balance;

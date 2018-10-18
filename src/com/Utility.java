@@ -66,9 +66,9 @@ public class Utility
     /**
      * Get DataStore implementation class.
      * @return DataStore object
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws ClassNotFoundException
+     * @throws InstantiationException the exception that was raised while instantiating the class
+     * @throws IllegalAccessException the exception that was raised while reflecting the class
+     * @throws ClassNotFoundException Class not found
      */
     public static DataStore getDataStore() throws InstantiationException, IllegalAccessException, ClassNotFoundException
     {
@@ -77,7 +77,7 @@ public class Utility
     }
     /**
      * Get Parameter value from the configuration file.
-     * @param parameterName
+     * @param parameterName parameter name/key
      * @return value
      */
     public static String getParameterValue(String parameterName)

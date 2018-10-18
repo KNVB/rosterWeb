@@ -22,24 +22,24 @@ public interface DataStore {
 	public void updateITOInfo();
 	/**
 	 * Get all ITO data for the specified month and year
-	 * @param year
-	 * @param month
+	 * @param year the specified year
+	 * @param month the specified month
 	 * @return List of ITO object
 	 */
 	public Hashtable<String,ITO>getITOList(int year,int month);
 	/**
 	 * Get the roster data for the specified ITO Ids,month and year
-	 * @param year
-	 * @param month
-	 * @param itoIdList
+	 * @param year the specified year
+	 * @param month the specified month
+	 * @param itoIdList ito id list
 	 * @return roster data
 	 */
 	public Hashtable<String,ITORoster> getITORosterList(int year,int month,String[] itoIdList);
 	/**
 	 * Get the Preferred Shift List for the specified ITO Ids,year and month
-	 * @param year
-	 * @param month
-	 * @param itoIdList
+	 * @param year the specified year
+	 * @param month the specified month
+	 * @param itoIdList ito id list
 	 * @return Preferred Shift List
 	 */
 	public Hashtable<String, Hashtable<Integer, String>> getPreferredShiftList(int year, int month, String[] itoIdList);
@@ -50,22 +50,22 @@ public interface DataStore {
 	public Hashtable<String,ArrayList<String>> getRosterRule();
 	/**
 	 * Get yearly roster statistic for the specified year and month
-	 * @param year
-	 * @param month
+	 * @param year the specified year
+	 * @param month  the specified month
 	 * @return result
 	 */
 	public Hashtable<String,ITOYearlyStatistic>getYearlyRosterStatistic(int year,int month);
 	/**
 	 * Update roster data to data store
-	 * @param rosterYear
-	 * @param rosterMonth
-	 * @param roster
+	 * @param rosterYear the specified year
+	 * @param rosterMonth the specified month
+	 * @param roster the rost object
 	 * @return boolean
 	 */
 	public boolean updateRoster(int rosterYear, int rosterMonth, Roster roster);
 	/**
 	 * Close the DataStore
-	 * @throws Exception
+	 * @throws Exception if a data store access error occurs
 	 */
 	public void close()throws Exception;
 	
