@@ -636,8 +636,8 @@ import java.util.GregorianCalendar;
 		int year=2018,month=8;
 		CalendarUtility cu=new CalendarUtility();
 		//GregorianCalendar now=new GregorianCalendar(year,month,14);
-		//GregorianCalendar now=new GregorianCalendar(2017,7,7);//節氣=立秋
-		GregorianCalendar now=new GregorianCalendar(2018,8,1);
+		GregorianCalendar now=new GregorianCalendar(2017,7,7);//節氣=立秋
+		//GregorianCalendar now=new GregorianCalendar(2018,9,17);
 		LunarCalendar lc=cu.getLunarCalendar(now);
 		GregorianCalendar easterDate=cu.getEasterDateByYear(year);
 		System.out.println("Solar Date="+now.get(Calendar.YEAR)+"/"+(1+now.get(Calendar.MONTH))+"/"+now.get(Calendar.DAY_OF_MONTH));
