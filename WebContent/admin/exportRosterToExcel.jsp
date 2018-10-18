@@ -23,7 +23,7 @@
 	File outputFile=new File(outputFilePath);
 	BufferedInputStream bis=new BufferedInputStream(new FileInputStream(outputFile));
 	response.setContentLengthLong(outputFile.length());
-	response.setHeader("Content-Disposition", "attachment; filename="+((roster.getRosterYear()%100)*100+roster.getRosterMonth()+1)+".xlsx");
+	response.setHeader("Content-Disposition", "attachment; filename="+((roster.getRosterYear()%100)*100+roster.getRosterMonth())+".xlsx");
 	while ((bis!=null) && ((length=bis.read(buffer))!=-1))
 	{
 		so.write(buffer,0,length);

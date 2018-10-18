@@ -1,7 +1,7 @@
 package util.calendar;
 /**
  * 
- * 農曆日曆物件<br> 	
+ * 農曆日期物件<br> 	
  *
  * 本程式參考自Sean Lin (林洵賢)先生的農曆月曆與世界時間DHTML程式(AD1900至AD2100)<br>
  * http://sean.o4u.com/2008/04/dhtml.html<br><br>
@@ -11,7 +11,7 @@ package util.calendar;
  *
  * @author Roy Tsang
  */
-public class LunarCalendar 
+public class LunarDate 
 {
 	/**
 	 *當天農曆年份(用數字來表示)<br>
@@ -67,7 +67,7 @@ public class LunarCalendar
 	 * 農曆日曆物件<BR>
 	 * Lunar Calendar object
 	 */
-	public LunarCalendar()
+	public LunarDate()
 	{
 		
 	}

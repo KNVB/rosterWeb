@@ -25,7 +25,7 @@ public class MonthlyCalendar
 	 * The day of 1st of the specified month.
 	 */
 	public int firstWeekDay;
-	private Hashtable<Integer,MyCalendar> monthlyCalendar; 
+	private Hashtable<Integer,MyDate> monthlyCalendar; 
 	/**
 	 * 西曆月曆物件
 	 * @param monthlyCalendar
@@ -34,17 +34,17 @@ public class MonthlyCalendar
 	{
 		
 	}
-	protected void setMonthlyCalendar(Hashtable<Integer,MyCalendar> monthlyCalendar)
+	protected void setMonthlyCalendar(Hashtable<Integer,MyDate> monthlyCalendar)
 	{
 		this.monthlyCalendar=monthlyCalendar;
 	}
 	/**
-	 * 傳回整個月的 MyCalendar物件<br>
-	 * It return a list of MyCalendar object for specified month  
-	 * @return 整個月的 MyCalendar物件<br>
-	 * A list of MyCalendar object for specified month
+	 * 傳回整個月的 MyLocalDate物件<br>
+	 * It return a list of MyLocalDate object for specified month  
+	 * @return 整個月的 MyLocalDate物件<br>
+	 * A list of MyLocalDate object for specified month
 	 */
-	public Hashtable<Integer,MyCalendar> getMonthlyCalendar()
+	public Hashtable<Integer,MyDate> getMonthlyCalendar()
 	{
 		return monthlyCalendar;
 	}	

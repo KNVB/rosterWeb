@@ -1,11 +1,12 @@
 package util.calendar;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.Hashtable;
 
 /**
  * 
- * MyCalendar 日期物件<br> 	
+ * MyLocalDate 日期物件<br> 	
  * 
  * 本程式參考自Sean Lin (林洵賢)先生的農曆月曆與世界時間DHTML程式(AD1900至AD2100)<br>
  * http://sean.o4u.com/2008/04/dhtml.html<br><br>
@@ -15,18 +16,17 @@ import java.util.GregorianCalendar;
  *
  * @author Roy Tsang
  */
-public class MyCalendar 
+public class MyDate 
 {
 	private boolean isPublicHoliday=false;
 	private String festivalInfo=new String();
-	private LunarCalendar lunarCalendar;
-	private GregorianCalendar solarCalendar;
-	
-	
-	protected MyCalendar(GregorianCalendar sc, LunarCalendar lc)
+	private LunarDate lunarDate;
+	private LocalDate solarDate;
+		
+	protected MyDate(LocalDate sc, LunarDate lc)
 	{
-		lunarCalendar=lc;
-		solarCalendar=sc;
+		lunarDate=lc;
+		solarDate=sc;
 	}
 	/**
 	 * 傳回當日的節日/假期資訊<br>
@@ -50,7 +50,7 @@ public class MyCalendar
 	 */
 	public String getChineseYearName() 
 	{
-		return lunarCalendar.chineseYearName;
+		return lunarDate.chineseYearName;
 	}
 	/** 
 	 * 傳回當天月柱<br>
@@ -60,7 +60,7 @@ public class MyCalendar
 	 */
 	public String getChineseMonthName() 
 	{
-		return lunarCalendar.chineseMonthName;
+		return lunarDate.chineseMonthName;
 	}
 	/**
 	 *傳回當天日柱<br>
@@ -70,7 +70,7 @@ public class MyCalendar
 	 */
 	public String getChineseDayName() 
 	{
-		return lunarCalendar.chineseDayName;
+		return lunarDate.chineseDayName;
 	}
 	/**
 	 *傳回當時時柱<br>
@@ -80,7 +80,7 @@ public class MyCalendar
 	 */
 	public String getChineseHourName() 
 	{
-		return lunarCalendar.chineseHourName;
+		return lunarDate.chineseHourName;
 	}
 	/**
 	 * 傳回該年生肖<br>
@@ -90,7 +90,7 @@ public class MyCalendar
 	 */
 	public String getAnimalOfYear() 
 	{
-		return lunarCalendar.animalOfYear;
+		return lunarDate.animalOfYear;
 	}
 	/**
 	 * 傳回當天節氣訊息<br>
@@ -100,7 +100,7 @@ public class MyCalendar
 	 */
 	public String getSolarTermInfo() 
 	{
-		return lunarCalendar.solarTermInfo;
+		return lunarDate.solarTermInfo;
 	}
 	
 	
@@ -112,7 +112,7 @@ public class MyCalendar
 	 */
 	public int getYear() 
 	{
-		return solarCalendar.get(Calendar.YEAR);
+		return solarDate.getYear();
 	}	
 	/**
 	 * 傳回當天西曆月份<br>
@@ -122,7 +122,7 @@ public class MyCalendar
 	 */
 	public int getMonth() 
 	{
-		return solarCalendar.get(Calendar.MONTH);
+		return solarDate.getMonthValue();
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class MyCalendar
 	 */
 	public int getDayOfMonth() 
 	{
-		return solarCalendar.get(Calendar.DAY_OF_MONTH);
+		return solarDate.getDayOfMonth();
 	}
 	
 	/**
@@ -142,9 +142,9 @@ public class MyCalendar
 	 * @return 當天星期幾<br>
 	 * The day of week of the specified date.
 	 */
-	public int getDayOfWeek() 
+	public DayOfWeek getDayOfWeek() 
 	{
-		return solarCalendar.get(Calendar.DAY_OF_WEEK);
+		return solarDate.getDayOfWeek();
 	}
 	
 	/**
@@ -167,7 +167,7 @@ public class MyCalendar
 	 */
 	public int getLunarYear()
 	{
-		return lunarCalendar.year;
+		return lunarDate.year;
 	}
 	/**
 	 * 傳回當天農曆月份(用數字來表示)<br>
@@ -177,7 +177,7 @@ public class MyCalendar
 	 */
 	public int getLunarMonth()
 	{
-		return lunarCalendar.month;
+		return lunarDate.month;
 	}
 	/**
 	 * 傳回當天農曆日子(用數字來表示)<br>
@@ -187,7 +187,7 @@ public class MyCalendar
 	 */
 	public int getLunarDate()
 	{
-		return lunarCalendar.date;
+		return lunarDate.date;
 	}
 	/**
 	 * 傳回當天是否為閏月<br>
@@ -197,6 +197,6 @@ public class MyCalendar
 	 */
 	public boolean isLeap()
 	{
-		return lunarCalendar.isLeap;
+		return lunarDate.isLeap;
 	}
 }

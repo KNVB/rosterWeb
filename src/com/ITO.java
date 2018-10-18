@@ -1,7 +1,7 @@
 package com;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 import java.util.Hashtable;
 
 import org.apache.logging.log4j.LogManager;
@@ -39,11 +39,11 @@ public class ITO {
 	/**
 	 * The join date of the specified ITO.
 	 */
-	private GregorianCalendar joinDate;
+	private LocalDate joinDate;
 	/**
 	 * The leave date of the specified ITO.
 	 */
-	private GregorianCalendar leaveDate;
+	private LocalDate leaveDate;
 	/**
 	 * The available shift list of the specified ITO.	
 	 */
@@ -121,28 +121,28 @@ public class ITO {
 	 * Get the join date of the specified ITO.
 	 * @return the join date of the specified ITO.
 	 */
-	public GregorianCalendar getJoinDate() {
+	public LocalDate getJoinDate() {
 		return joinDate;
 	}
 	/**
 	 * Set the join date of the specified ITO.
 	 * @param joinDate the join date of the specified ITO.
 	 */
-	public void setJoinDate(GregorianCalendar joinDate) {
+	public void setJoinDate(LocalDate joinDate) {
 		this.joinDate = joinDate;
 	}
 	/**
 	 * Get the leave date of the specified ITO.
 	 * @return the leave date of the specified ITO.
 	 */
-	public GregorianCalendar getLeaveDate() {
+	public LocalDate getLeaveDate() {
 		return leaveDate;
 	}
 	/**
 	 * Set the leave date of the specified ITO.
 	 * @param leaveDate the leave date of the specified ITO.
 	 */
-	public void setLeaveDate(GregorianCalendar leaveDate) {
+	public void setLeaveDate(LocalDate leaveDate) {
 		this.leaveDate = leaveDate;
 	}
 	/**

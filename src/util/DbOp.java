@@ -13,10 +13,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Set;
 
@@ -72,12 +71,12 @@ public class DbOp implements DataStore {
 		
 		PreparedStatement stmt = null;
 		ArrayList <String>blackListShiftPatternList=null;
-		GregorianCalendar joinDate,leaveDate;
-		GregorianCalendar theFirstDateOfTheMonth=new GregorianCalendar(year,month,1);
+		LocalDate joinDate,leaveDate;
+		LocalDate theFirstDateOfTheMonth=LocalDate.of(year,month,1);
 		Hashtable<String,ITO> result=new Hashtable<String,ITO>();
-		lastDay=theFirstDateOfTheMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
-		String firstDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-1";
-		String endDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-"+lastDay;
+		lastDay=theFirstDateOfTheMonth.getMonth().length(theFirstDateOfTheMonth.isLeapYear());
+		String firstDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-1";
+		String endDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-"+lastDay;
 	
 		logger.debug("startDateString="+firstDateString);
 		logger.debug("endDateString="+endDateString);
@@ -111,10 +110,8 @@ public class DbOp implements DataStore {
 					ito.setPostName(rs.getString("post_name"));
 					ito.setITOName(rs.getString("ito_name"));
 					ito.setWorkingHourPerDay(rs.getFloat("working_hour_per_day"));
-					joinDate=new GregorianCalendar();
-					leaveDate=new GregorianCalendar();
-					joinDate.setTime(rs.getDate("join_date"));
-					leaveDate.setTime(rs.getDate("leave_date"));
+					joinDate=rs.getDate("join_date").toLocalDate();
+					leaveDate=rs.getDate("leave_date").toLocalDate();
 					
 					ito.setJoinDate(joinDate);
 					ito.setLeaveDate(leaveDate);
@@ -139,15 +136,15 @@ public class DbOp implements DataStore {
 	@Override
 	public Hashtable<String, Hashtable<Integer, String>> getPreferredShiftList(int year, int month, String[] itoIdList)
 	{
-		GregorianCalendar theMonthShiftStartDate=new GregorianCalendar(year,month,1);
+		LocalDate theMonthShiftStartDate=LocalDate.of(year,month,1);
 		Hashtable<Integer,String>preferredShiftList;
 		Hashtable<String, Hashtable<Integer, String>>result=new Hashtable<String, Hashtable<Integer, String>>();
 		int lastDayOfThisMonth;
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
-		lastDayOfThisMonth=theMonthShiftStartDate.getActualMaximum(Calendar.DAY_OF_MONTH);
-		String theMonthShiftEndDateString=theMonthShiftStartDate.get(Calendar.YEAR)+"-"+(theMonthShiftStartDate.get(Calendar.MONTH)+1)+"-"+lastDayOfThisMonth;
-		String theMonthShiftStartDateString=theMonthShiftStartDate.get(Calendar.YEAR)+"-"+(theMonthShiftStartDate.get(Calendar.MONTH)+1)+"-1";
+		lastDayOfThisMonth=theMonthShiftStartDate.getMonth().length(theMonthShiftStartDate.isLeapYear());
+		String theMonthShiftEndDateString=year+"-"+month+"-"+lastDayOfThisMonth;
+		String theMonthShiftStartDateString=year+"-"+month+"-1";
 		try
 		{
 			for (String itoId :itoIdList)
@@ -185,23 +182,26 @@ public class DbOp implements DataStore {
 		ResultSet rs = null;
 		ITORoster itoRoster=null;
 		PreparedStatement stmt = null;
+		
 		Hashtable <Integer,String>shiftList=new Hashtable<Integer,String>();
 		Hashtable<Integer,String> previousMonthShiftList=new Hashtable<Integer,String>();
 		Hashtable<String, ITORoster> result=new  Hashtable<String, ITORoster>();
-		GregorianCalendar previousMonthShiftEndDate=new GregorianCalendar(year,month,1);
-		GregorianCalendar previousMonthShiftStartDate=new GregorianCalendar(year,month,1);
 		
-		GregorianCalendar theMonthShiftStartDate=new GregorianCalendar(year,month,1);
-		previousMonthShiftStartDate.add(Calendar.DAY_OF_MONTH, -RosterRule.getMaxConsecutiveWorkingDay());
-		previousMonthShiftEndDate.add(Calendar.DAY_OF_MONTH, -1);
+		LocalDate previousMonthShiftEndDate=LocalDate.of(year, month,1);
+		LocalDate previousMonthShiftStartDate=LocalDate.of(year,month,1);
+		LocalDate theMonthShiftStartDate=LocalDate.of(year,month,1);
 		
-		lastDayOfThisMonth=theMonthShiftStartDate.getActualMaximum(Calendar.DAY_OF_MONTH);
+		previousMonthShiftStartDate=previousMonthShiftStartDate.minusDays(RosterRule.getMaxConsecutiveWorkingDay());
+		previousMonthShiftEndDate=previousMonthShiftEndDate.minusDays(1);
 		
-		String previousMonthShiftStartDateString=previousMonthShiftStartDate.get(Calendar.YEAR)+"-"+(previousMonthShiftStartDate.get(Calendar.MONTH)+1)+"-"+previousMonthShiftStartDate.get(Calendar.DAY_OF_MONTH);
-		String previousMonthShiftEndDateString=previousMonthShiftEndDate.get(Calendar.YEAR)+"-"+ (previousMonthShiftEndDate.get(Calendar.MONTH)+1)+"-"+previousMonthShiftEndDate.get(Calendar.DAY_OF_MONTH);
-		String theMonthShiftEndDateString=theMonthShiftStartDate.get(Calendar.YEAR)+"-"+(theMonthShiftStartDate.get(Calendar.MONTH)+1)+"-"+lastDayOfThisMonth;
-		String theMonthShiftStartDateString=theMonthShiftStartDate.get(Calendar.YEAR)+"-"+(theMonthShiftStartDate.get(Calendar.MONTH)+1)+"-1";
+		lastDayOfThisMonth=theMonthShiftStartDate.getMonth().length(theMonthShiftStartDate.isLeapYear());
 		
+		String previousMonthShiftStartDateString=previousMonthShiftStartDate.getYear()+"-"+previousMonthShiftStartDate.getMonthValue()+"-"+previousMonthShiftStartDate.getDayOfMonth();
+		String previousMonthShiftEndDateString=previousMonthShiftEndDate.getYear()+"-"+previousMonthShiftEndDate.getMonthValue()+"-"+previousMonthShiftEndDate.getDayOfMonth();
+		
+		String theMonthShiftStartDateString=theMonthShiftStartDate.getYear()+"-"+theMonthShiftStartDate.getMonthValue()+"-1";
+		String theMonthShiftEndDateString=theMonthShiftStartDate.getYear()+"-"+theMonthShiftStartDate.getMonthValue()+"-"+lastDayOfThisMonth;
+				
 		logger.debug("previousMonthShiftStartDateString="+previousMonthShiftStartDateString);
 		logger.debug("previousMonthShiftEndDateString  ="+previousMonthShiftEndDateString);
 		logger.debug("thisMonthShiftEndDateString      ="+theMonthShiftEndDateString);
@@ -344,16 +344,16 @@ public class DbOp implements DataStore {
 		PreparedStatement stmt = null;
 		MonthlyStatistic monthlyStatistic =null;
 		ITOYearlyStatistic iTOYearlyStatistic=null;
-		GregorianCalendar theFirstDateOfTheMonth=new GregorianCalendar(year,month,1);
-		lastDay=theFirstDateOfTheMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
-		String startDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-1";
-		String endDateString=theFirstDateOfTheMonth.get(Calendar.YEAR)+"-"+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1)+"-"+lastDay;
+		LocalDate theFirstDateOfTheMonth=LocalDate.of(year,month,1);
+		lastDay=theFirstDateOfTheMonth.getMonth().length(theFirstDateOfTheMonth.isLeapYear());
+		String startDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-1";
+		String endDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-"+lastDay;
 		
 		Hashtable<String,ITOYearlyStatistic> result=new  Hashtable<String, ITOYearlyStatistic>();
 		logger.debug("startDateString="+startDateString);
 		logger.debug("endDateString="+endDateString);
 		logger.debug("year="+year);
-		logger.debug("month="+(theFirstDateOfTheMonth.get(Calendar.MONTH)+1));
+		logger.debug("month="+theFirstDateOfTheMonth.getMonthValue());
 		sqlString="select a.ito_id,b.post_name,";
 		sqlString=sqlString+"			sum(case when shift ='a' then 1 else 0 end) as a,";
 		sqlString=sqlString+"			sum(case when shift ='b' or shift ='b1' then 1 else 0 end) as b,";
@@ -376,7 +376,7 @@ public class DbOp implements DataStore {
 			stmt.setString(1,startDateString);
 			stmt.setString(2,endDateString);
 			stmt.setInt(3,year);
-			stmt.setInt(4,(theFirstDateOfTheMonth.get(Calendar.MONTH)+1));
+			stmt.setInt(4,theFirstDateOfTheMonth.getMonthValue());
 			rs=stmt.executeQuery();
 			while (rs.next())
 			{
@@ -418,11 +418,11 @@ public class DbOp implements DataStore {
 		PreparedStatement stmt=null;
 		try
 		{	
-			GregorianCalendar calendarObj=new GregorianCalendar();
-			GregorianCalendar balanceCalendar=new GregorianCalendar(year,month,1);
+			LocalDate calendarObj=LocalDate.of(year,month,1);
+			LocalDate balanceCalendar=LocalDate.of(year,month,1);
 			Hashtable<String,ITORoster>iTORosterList=roster.getITORosterList();
 			Hashtable<String,Hashtable<Integer,String>>iTOPreferredShiftList=roster.getITOPreferredShiftList();
-			balanceCalendar.add(Calendar.MONTH, 1);
+			balanceCalendar.plusMonths(1);
 			dbConn.setAutoCommit(false);
 			
 			logger.info("Update roster data transaction start.");
@@ -432,14 +432,14 @@ public class DbOp implements DataStore {
 			{
 				logger.debug("itoId="+itoId);
 				logger.debug("balance="+iTORosterList.get(itoId).getBalance());
-				logger.debug("Roster Month="+calendarObj.get(Calendar.YEAR)+"/"+calendarObj.get(Calendar.MONTH)+"/"+calendarObj.get(Calendar.DAY_OF_MONTH));
+				logger.debug("Roster Month="+calendarObj.getYear()+"/"+calendarObj.getMonthValue()+"/"+calendarObj.getDayOfMonth());
 				logger.debug("===============================");
 				
 				
 				sqlString="replace into last_month_balance (ito_id,shift_month,balance) values (?,?,?)";
 				stmt=dbConn.prepareStatement(sqlString);
 				stmt.setString(1,itoId);
-				stmt.setDate(2,new java.sql.Date(balanceCalendar.getTime().getTime()));
+				stmt.setDate(2,java.sql.Date.valueOf(balanceCalendar));
 				stmt.setFloat(3, iTORosterList.get(itoId).getBalance());
 				stmt.executeUpdate();
 				stmt.clearParameters();
@@ -448,7 +448,7 @@ public class DbOp implements DataStore {
 				sqlString="delete from shift_record where ito_id=? and month(shift_date)=? and year(shift_date)=?";
 				stmt=dbConn.prepareStatement(sqlString);
 				stmt.setString(1,itoId);
-				stmt.setInt(2,month+1);
+				stmt.setInt(2,month);
 				stmt.setInt(3,year);
 				stmt.executeUpdate();
 				stmt.close();
@@ -459,9 +459,7 @@ public class DbOp implements DataStore {
 				Set<Integer> dateList =shiftList.keySet();
 				for (Integer date:dateList)
 				{
-					calendarObj.set(Calendar.YEAR, year);
-					calendarObj.set(Calendar.MONTH,month);
-					calendarObj.set(Calendar.DAY_OF_MONTH,date);
+					calendarObj=LocalDate.of(year,month,date);
 					
 					if (!shiftList.get(date).equals(""))
 					{
@@ -471,7 +469,7 @@ public class DbOp implements DataStore {
 						{
 							stmt=dbConn.prepareStatement(sqlString);
 							stmt.setString(1,itoId);
-							stmt.setDate(2,new java.sql.Date(calendarObj.getTime().getTime()));
+							stmt.setDate(2,java.sql.Date.valueOf(calendarObj));
 							
 							stmt.setString(3,shiftType);
 							stmt.setString(4,"A");	
@@ -480,10 +478,7 @@ public class DbOp implements DataStore {
 						}
 					}
 				}
-				
-				calendarObj.set(Calendar.YEAR, year);
-				calendarObj.set(Calendar.MONTH,month);
-				calendarObj.set(Calendar.DAY_OF_MONTH,1);
+				calendarObj=LocalDate.of(year,month,1);
 				sqlString="delete from preferred_shift where ito_id=? and month(shift_date)=? and year(shift_date)=?";
 				stmt=dbConn.prepareStatement(sqlString);
 				stmt.setString(1,itoId);
@@ -499,17 +494,15 @@ public class DbOp implements DataStore {
 				logger.debug("Preferred Shift List:");
 				for (Integer date:dateList)
 				{
-					calendarObj.set(Calendar.YEAR, year);
-					calendarObj.set(Calendar.MONTH,month);
-					calendarObj.set(Calendar.DAY_OF_MONTH,date);
-					
+				
+					calendarObj=LocalDate.of(year,month,date);
 					if (!shiftList.get(date).equals(""))
 					{
 						logger.debug(itoId+","+date+","+shiftList.get(date));
 						stmt=dbConn.prepareStatement(sqlString);
 						stmt.setString(1,itoId);
 						stmt.setString(2,shiftList.get(date));
-						stmt.setDate(3,new java.sql.Date(calendarObj.getTime().getTime()));
+						stmt.setDate(3,java.sql.Date.valueOf(calendarObj));
 						stmt.executeUpdate();
 						stmt.close();
 					}

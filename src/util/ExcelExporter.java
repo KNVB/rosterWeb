@@ -33,16 +33,16 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.ITO;
 import com.ITORoster;
 
-import util.calendar.CalendarUtility;
+import util.calendar.MyCalendarUtility;
 import util.calendar.MonthlyCalendar;
-import util.calendar.MyCalendar;
+import util.calendar.MyDate;
 
 public class ExcelExporter 
 {
 	private MonthlyCalendar monthlyCalendar;
 	private int rosterYear,rosterMonth;
 	private ArrayList<String> vacantShiftData;
-	private CalendarUtility calendarUtility=new CalendarUtility();
+	private MyCalendarUtility myCalendarUtility=new MyCalendarUtility();
     
 	private String sampleExcelFilePath,tempOutputExcelFilePath;
 	private Hashtable<String, ITO> itoList;
@@ -54,7 +54,7 @@ public class ExcelExporter
 		this.rosterYear = rosterYear;
 		this.rosterMonth = rosterMonth;
 		logger.debug("rosterYear="+this.rosterYear+",rosterMonth="+this.rosterMonth);
-		this.monthlyCalendar=calendarUtility.getMonthlyCalendar(this.rosterYear, this.rosterMonth);
+		this.monthlyCalendar=myCalendarUtility.getMonthlyCalendar(this.rosterYear, this.rosterMonth);
 	}
 	public void setSampleExcelFilePath(String inputFilePath) {
 		this.sampleExcelFilePath=inputFilePath;
@@ -94,7 +94,7 @@ public class ExcelExporter
         
         //Set the roster Month value
         XSSFCell rosterMonthCell=sheet1.getRow(1).getCell(1);
-        String monthName=sheet2.getRow(this.rosterMonth).getCell(0).getStringCellValue()+" "+this.rosterYear;
+        String monthName=sheet2.getRow(this.rosterMonth-1).getCell(0).getStringCellValue()+" "+this.rosterYear;
         rosterMonthCell.setCellValue(monthName);
         
         //Create Style for Public Holiday
@@ -113,20 +113,20 @@ public class ExcelExporter
         for (i=1;i<=this.monthlyCalendar.length;i++)
 		{
         	noOfWorkingDay++;
-        	MyCalendar myCalendar=this.monthlyCalendar.getMonthlyCalendar().get(i);
-        	weekDayName=calendarUtility.weekDayNames.get(myCalendar.getDayOfWeek());
-        	logger.debug("i="+i+",is PH="+myCalendar.isPublicHoliday());
+        	MyDate myDate=this.monthlyCalendar.getMonthlyCalendar().get(i);
+        	weekDayName=myCalendarUtility.weekDayNames.get(myDate.getDayOfWeek());
+        	logger.debug("i="+i+",is PH="+myDate.isPublicHoliday());
         	cell=sheet1.getRow(3).getCell(i);
-        	if (myCalendar.isPublicHoliday())
+        	if (myDate.isPublicHoliday())
         	{	
         		cell.setCellValue("PH");
         	}
         	cell=sheet1.getRow(4).getCell(i);
-        	if (weekDayName.equals("S")||weekDayName.equals("Su")||myCalendar.isPublicHoliday())
+        	if (weekDayName.equals("S")||weekDayName.equals("Su")||myDate.isPublicHoliday())
         	{
         		cell.setCellStyle(style);
         	}
-        	if (weekDayName.equals("S")||weekDayName.equals("Su")||myCalendar.isPublicHoliday())
+        	if (weekDayName.equals("S")||weekDayName.equals("Su")||myDate.isPublicHoliday())
         	{
         		noOfWorkingDay--;
         	}

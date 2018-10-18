@@ -2,9 +2,10 @@ package util.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
 
 import javax.servlet.ServletException;
@@ -23,9 +24,9 @@ import com.RosterRule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-import util.calendar.CalendarUtility;
+import util.calendar.MyCalendarUtility;
 import util.calendar.MonthlyCalendar;
-import util.calendar.MyCalendar;
+import util.calendar.MyDate;
 
 /**
  * Servlet implementation class RosterViewer
@@ -35,12 +36,12 @@ public class RosterViewer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected int showNoOfPrevDate=2,noOfWorkingDay;
 	protected int rosterMonth,rosterYear,htmlIndentation=0;
-	protected MyCalendar myCalendar;
+	protected MyDate myDate;
 	protected Roster roster;
 	protected String[] itoIdList ;
 	protected Hashtable<String,ITO> itoList;
 	protected Hashtable<String,ITORoster> itoRosterList;
-	protected Hashtable<Integer,MyCalendar> myCalendarList;
+	protected Hashtable<Integer,MyDate> myDateList;
 	
 	protected static final Logger logger = LogManager.getLogger(Class.class.getSimpleName());
 	protected ObjectMapper objectMapper = new ObjectMapper();
@@ -61,7 +62,7 @@ public class RosterViewer extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out=response.getWriter();
-		GregorianCalendar now=new GregorianCalendar();
+		LocalDate now=LocalDate.now();
 		noOfWorkingDay=0;
 		response.setContentType("text/html; charset=UTF-8");
 		try
@@ -71,8 +72,8 @@ public class RosterViewer extends HttpServlet {
 		}
 		catch  (NumberFormatException nfe)
 		{
-			rosterYear=now.get(Calendar.YEAR);
-			rosterMonth=now.get(Calendar.MONTH);
+			rosterYear=now.getYear();
+			rosterMonth=now.getMonthValue();
 		}
 		getData();
 		printHTMLHeader(out,request);
@@ -92,10 +93,10 @@ public class RosterViewer extends HttpServlet {
 	{
 		ITO ito;
 		roster=new Roster(rosterYear,rosterMonth);
-		CalendarUtility calendarUtility=new CalendarUtility();
-		MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(rosterYear,rosterMonth);
+		MyCalendarUtility myDateUtility=new MyCalendarUtility();
+		MonthlyCalendar mc=myDateUtility.getMonthlyCalendar(rosterYear,rosterMonth);
 		
-		myCalendarList=mc.getMonthlyCalendar();
+		myDateList=mc.getMonthlyCalendar();
 		try
 		{
 			ito=new ITO();
@@ -222,18 +223,18 @@ public class RosterViewer extends HttpServlet {
 		htmlIndentation++;
 		out.println(getIndentation()+"<select id=\"selectRosterMonth\" name=\"month\" class=\"underlineText rosterMonthSelect\" onchange=\"this.form.submit()\">");
 		htmlIndentation++;
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.JANUARY)?"selected ":"")+"value=\""+Calendar.JANUARY+"\">January</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.FEBRUARY)?"selected ":"")+"value=\""+Calendar.FEBRUARY+"\">February</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.MARCH)?"selected ":"")+"value=\""+Calendar.MARCH+"\">March</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.APRIL)?"selected ":"")+"value=\""+Calendar.APRIL+"\">April</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.MAY)?"selected ":"")+"value=\""+Calendar.MAY+"\">May</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.JUNE)?"selected ":"")+"value=\""+Calendar.JUNE+"\">June</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.JULY)?"selected ":"")+"value=\""+Calendar.JULY+"\">July</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.AUGUST)?"selected ":"")+"value=\""+Calendar.AUGUST+"\">August</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.SEPTEMBER)?"selected ":"")+"value=\""+Calendar.SEPTEMBER+"\">September</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.OCTOBER)?"selected ":"")+"value=\""+Calendar.OCTOBER+"\">October</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.NOVEMBER)?"selected ":"")+"value=\""+Calendar.NOVEMBER+"\">November</option>");
-		out.println(getIndentation()+"<option "+((rosterMonth==Calendar.DECEMBER)?"selected ":"")+"value=\""+Calendar.DECEMBER+"\">December</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.JANUARY.getValue())?"selected ":"")+"value=\""+Month.JANUARY.getValue()+"\">January</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.FEBRUARY.getValue())?"selected ":"")+"value=\""+Month.FEBRUARY.getValue()+"\">February</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.MARCH.getValue())?"selected ":"")+"value=\""+Month.MARCH.getValue()+"\">March</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.APRIL.getValue())?"selected ":"")+"value=\""+Month.APRIL.getValue()+"\">April</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.MAY.getValue())?"selected ":"")+"value=\""+Month.MAY.getValue()+"\">May</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.JUNE.getValue())?"selected ":"")+"value=\""+Month.JUNE.getValue()+"\">June</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.JULY.getValue())?"selected ":"")+"value=\""+Month.JULY.getValue()+"\">July</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.AUGUST.getValue())?"selected ":"")+"value=\""+Month.AUGUST.getValue()+"\">August</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.SEPTEMBER.getValue())?"selected ":"")+"value=\""+Month.SEPTEMBER.getValue()+"\">September</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.OCTOBER.getValue())?"selected ":"")+"value=\""+Month.OCTOBER.getValue()+"\">October</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.NOVEMBER.getValue())?"selected ":"")+"value=\""+Month.NOVEMBER.getValue()+"\">November</option>");
+		out.println(getIndentation()+"<option "+((rosterMonth==Month.DECEMBER.getValue())?"selected ":"")+"value=\""+Month.DECEMBER.getValue()+"\">December</option>");
 		htmlIndentation--;
 		out.println(getIndentation()+"</select>"+rosterYear);
 		out.println(getIndentation()+"<input id=\"selectRosterYear\" type=\"hidden\" name=\"year\" value=\""+rosterYear+"\">");
@@ -250,10 +251,10 @@ public class RosterViewer extends HttpServlet {
 		printPrevDateHeaderCell(out);
 		for (i=0;i<31;i++)
 		{
-			if (i< myCalendarList.size())
+			if (i< myDateList.size())
 			{
-				myCalendar= myCalendarList.get(i+1);
-				if (myCalendar.isPublicHoliday())
+				myDate= myDateList.get(i+1);
+				if (myDate.isPublicHoliday())
 				{
 					out.println(getIndentation()+"<td class=\"dataCell alignCenter borderCell phCell\">PH</td>");	
 				}
@@ -277,32 +278,32 @@ public class RosterViewer extends HttpServlet {
 		for (i=0;i<31;i++)
 		{
 			String className="dataCell alignCenter borderCell";
-			if (i< myCalendarList.size())
+			if (i< myDateList.size())
 			{
-				myCalendar= myCalendarList.get(i+1);
-				if (myCalendar.isPublicHoliday()||
-					(myCalendar.getDayOfWeek()==Calendar.SATURDAY)||
-					(myCalendar.getDayOfWeek()==Calendar.SUNDAY))
+				myDate= myDateList.get(i+1);
+				if (myDate.isPublicHoliday()||
+					(myDate.getDayOfWeek()==DayOfWeek.SATURDAY)||
+					(myDate.getDayOfWeek()==DayOfWeek.SUNDAY))
 				{
 					className+=" phCell";	
 				}
 				else
 					noOfWorkingDay++;
-				switch (myCalendar.getDayOfWeek())
+				switch (myDate.getDayOfWeek())
 				{
-					case Calendar.FRIDAY:out.println(getIndentation()+"<td class=\""+className+"\">F</td>");
-										break;
-					case Calendar.MONDAY:out.println(getIndentation()+"<td class=\""+className+"\">M</td>");
+					case FRIDAY:out.println(getIndentation()+"<td class=\""+className+"\">F</td>");
+								break;
+					case MONDAY:out.println(getIndentation()+"<td class=\""+className+"\">M</td>");
 											break;
-					case Calendar.SATURDAY:out.println(getIndentation()+"<td class=\""+className+"\">S</td>");
+					case SATURDAY:out.println(getIndentation()+"<td class=\""+className+"\">S</td>");
 											break;
-					case Calendar.SUNDAY:out.println(getIndentation()+"<td class=\""+className+"\">Su</td>");
+					case SUNDAY:out.println(getIndentation()+"<td class=\""+className+"\">Su</td>");
 										 break;
-					case Calendar.TUESDAY:out.println(getIndentation()+"<td class=\""+className+"\">T</td>");
+					case TUESDAY:out.println(getIndentation()+"<td class=\""+className+"\">T</td>");
 										break;
-					case Calendar.THURSDAY:out.println(getIndentation()+"<td class=\""+className+"\">Th</td>");
+					case THURSDAY:out.println(getIndentation()+"<td class=\""+className+"\">Th</td>");
 										break;
-					case Calendar.WEDNESDAY:out.println(getIndentation()+"<td class=\""+className+"\">W</td>");
+					case WEDNESDAY:out.println(getIndentation()+"<td class=\""+className+"\">W</td>");
 										break;
 										 
 				}
@@ -321,7 +322,7 @@ public class RosterViewer extends HttpServlet {
 		printPrevDateHeaderCell(out);
 		for (i=0;i<31;i++)
 		{
-			if (i< myCalendarList.size())
+			if (i< myDateList.size())
 			{
 				out.println(getIndentation()+"<td class=\"dataCell alignCenter borderCell\">"+(i+1)+"</td>");
 			}

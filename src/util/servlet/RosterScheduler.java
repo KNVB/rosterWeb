@@ -67,7 +67,7 @@ public class RosterScheduler extends RosterViewer
 			out.println(getIndentation()+"rosterRule.utility=new RosterSchedulerUtility();");
 			out.println(getIndentation()+"var rosterScheduler=new RosterScheduler();");
 			out.println(getIndentation()+"rosterScheduler.itoList={};");
-			out.println(getIndentation()+"rosterScheduler.monthEndDate="+myCalendarList.size()+";");
+			out.println(getIndentation()+"rosterScheduler.monthEndDate="+myDateList.size()+";");
 			out.println(getIndentation()+"rosterScheduler.noOfWorkingDay="+noOfWorkingDay+";");
 			out.println(getIndentation()+"rosterScheduler.rosterRule=rosterRule;");
 			for (String itoId : itoIdList)
