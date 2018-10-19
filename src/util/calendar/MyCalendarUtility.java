@@ -347,10 +347,10 @@ public class MyCalendarUtility {
 			result.solarTermInfo = solarTerm[(inMonth-1)*2];
 		else
 		{	
-			solarTermDate=sTerm(inYear,(inMonth-1)*2);
+			solarTermDate=sTerm(inYear,(inMonth-1)*2+1);
 			if (solarTermDate==inDate)
 			{
-				result.solarTermInfo = solarTerm[(inMonth-1)*2];
+				result.solarTermInfo = solarTerm[(inMonth-1)*2+1];
 			}
 		}
 		return result;
@@ -428,7 +428,7 @@ public class MyCalendarUtility {
 		 * 西曆當月1日星期幾
 		 * the weekday of 1st of the month
 		 */
-		mc.firstWeekDay=sDObj.getDayOfWeek().getValue();
+		mc.firstWeekDay=sDObj.getDayOfWeek();
 		Hashtable<Integer,MyDate>myCalendarList=new Hashtable<Integer,MyDate>();
 		
 		for (i=1;i<=mc.length;i++)
