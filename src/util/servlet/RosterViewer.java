@@ -93,6 +93,7 @@ public class RosterViewer extends HttpServlet {
 	{
 		ITO ito;
 		roster=new Roster(rosterYear,rosterMonth);
+		logger.debug("rosterYear="+rosterYear+",rosterMonth="+rosterMonth);
 		MyCalendarUtility myDateUtility=new MyCalendarUtility();
 		MonthlyCalendar mc=myDateUtility.getMonthlyCalendar(rosterYear,rosterMonth);
 		
@@ -162,6 +163,7 @@ public class RosterViewer extends HttpServlet {
 			out.println(getIndentation()+"rosterRule.shiftHourCount="+objectMapper.writeValueAsString(RosterRule.getShiftHourCount())+";");
 			out.println(getIndentation()+"rosterRule.utility=new Utility();");
 			out.println(getIndentation()+"var rosterTable=new RosterTable();");
+			out.println(getIndentation()+"rosterTable.monthEndDate="+myDateList.size()+";");
 			out.println(getIndentation()+"rosterTable.itoIdList="+objectMapper.writeValueAsString(itoIdList)+";");
 			out.println(getIndentation()+"rosterTable.noOfWorkingDay="+noOfWorkingDay+";");
 			out.println(getIndentation()+"rosterTable.itoRosterList="+objectMapper.writeValueAsString(itoRosterList)+";");
@@ -278,6 +280,7 @@ public class RosterViewer extends HttpServlet {
 		for (i=0;i<31;i++)
 		{
 			String className="dataCell alignCenter borderCell";
+			logger.debug("myDateList.size()="+myDateList.size());
 			if (i< myDateList.size())
 			{
 				myDate= myDateList.get(i+1);

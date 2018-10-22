@@ -162,7 +162,7 @@ public class MyCalendarUtility {
 	 */
 	private int getMonthLength(int year,int month) 
 	{
-	 if(month==1)
+	 if(month==2)
 	    return(((year%4 == 0) && (year%100 != 0) || (year%400 == 0))? 29: 28);
 	 else
 	    return(solarMonth[month-1]);
@@ -412,6 +412,7 @@ public class MyCalendarUtility {
 		MonthlyCalendar mc=new MonthlyCalendar();
 		solarMonthPattern=String.format("%02d", month); 
 		
+		System.out.println("month="+month);
 		/*
 		 * 西曆當月一日日期
 		 * Create GregorianCalendar object for the 1st of the month 

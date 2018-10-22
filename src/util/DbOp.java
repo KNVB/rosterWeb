@@ -419,6 +419,8 @@ public class DbOp implements DataStore {
 		{	
 			LocalDate calendarObj=LocalDate.of(year,month,1);
 			LocalDate balanceCalendar=LocalDate.of(year,month,1);
+			
+			balanceCalendar=balanceCalendar.plusMonths(1);
 			Hashtable<String,ITORoster>iTORosterList=roster.getITORosterList();
 			Hashtable<String,Hashtable<Integer,String>>iTOPreferredShiftList=roster.getITOPreferredShiftList();
 			balanceCalendar.plusMonths(1);

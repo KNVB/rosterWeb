@@ -9,6 +9,7 @@ class RosterTable
 		this.holidayRow=document.getElementById("holidayRow");
 		this.itoIdList=[];
 		this.itoRosterList={};
+		this.monthEndDate;
 		this.noOfWorkingDay=0;
 		this.showNoOfPrevDate=2;
 		this.rosterBody=document.getElementById("rosterBody");
@@ -66,12 +67,14 @@ class RosterTable
 			for (i=0;i<31;i++)
 			{
 				cell=row.insertCell(row.cells.length);
-				cell.className="alignCenter borderCell cursorCell";
+				if ((i+1)<=self.monthEndDate)
+					cell.className="alignCenter borderCell cursorCell shiftCell";
+				else
+					cell.className="alignCenter borderCell";
 				if (itoRoster.shiftList[i+1]!=null)
 				{
 					shiftType=itoRoster.shiftList[i+1];
 					cell.textContent=shiftType;
-					$(cell).addClass("shiftCell");
 					$(cell).addClass(self.utility.getShiftCssClassName(shiftType));
 					shiftTypeList=shiftType.split("\+");
 					shiftTypeList.forEach(function(shiftType){

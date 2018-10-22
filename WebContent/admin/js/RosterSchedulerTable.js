@@ -356,15 +356,8 @@ class RosterSchedulerTable extends RosterTable
 						}	
 					}					
 				});
-				if (haveMissingShift)
-					break;
 			}
 			this.vacantShiftRow.cells[i].textContent=essentialShift;
-			if (essentialShift!="")
-			{	
-				haveMissingShift=true;
-				break;
-			}
 		}
 		return haveMissingShift;
 	}
@@ -791,82 +784,84 @@ class RosterSchedulerTable extends RosterTable
 		cell.className="borderCell alignCenter";
 		cell.textContent="Total";
 
-		this.itoIdList.forEach(function(itoId){
-			var aShiftTotal=0,bxShiftTotal=0,cShiftTotal=0,dxShiftTotal=0,oShiftTotal=0,finalTotal=0;
-			var itoMonthlyStatistic=self.yearlyStatistic[itoId].itomonthlyStatisticList;
-			var monthlyTotal;
-			for (i=0;i<itoMonthlyStatistic.length;i++)
-			{
-				aShiftTotal+=itoMonthlyStatistic[i].ashiftTotal;
-				bxShiftTotal+=itoMonthlyStatistic[i].bxShiftTotal;
-				cShiftTotal+=itoMonthlyStatistic[i].cshiftTotal;
-				dxShiftTotal+=itoMonthlyStatistic[i].dxShiftTotal;
-				oShiftTotal+=itoMonthlyStatistic[i].oshiftTotal;
-				monthlyTotal+=itoMonthlyStatistic[i].monthlyTotal;
-			}
-			row=yearlyStatisticTable.insertRow(yearlyStatisticTable.rows.length);
-			cell=row.insertCell(row.cells.length);
-			cell.className="borderCell alignCenter";
-			cell.textContent=self.yearlyStatistic[itoId].itoPostName;
-			
-			cell=row.insertCell(row.cells.length);
-			cell.className="borderCell alignCenter";
-			cell.textContent=aShiftTotal;
-
-			cell=row.insertCell(row.cells.length);
-			cell.className="borderCell alignCenter";
-			cell.textContent=bxShiftTotal;
-
-			cell=row.insertCell(row.cells.length);
-			cell.className="borderCell alignCenter";
-			cell.textContent=cShiftTotal;
-			
-			cell=row.insertCell(row.cells.length);
-			cell.className="borderCell alignCenter";
-			cell.textContent=dxShiftTotal;
-
-			cell=row.insertCell(row.cells.length);
-			cell.className="borderCell alignCenter";
-			cell.textContent=oShiftTotal;
-
-			finalTotal=oShiftTotal+cShiftTotal+aShiftTotal+dxShiftTotal+bxShiftTotal;
-			cell=row.insertCell(row.cells.length);
-			cell.className="borderCell alignCenter";
-			cell.textContent=finalTotal;
-			
-			for (i=0;i<itoMonthlyStatistic.length;i++)
-			{
+		if (!$.isEmptyObject(self.yearlyStatistic))
+		{
+			this.itoIdList.forEach(function(itoId){
+				var aShiftTotal=0,bxShiftTotal=0,cShiftTotal=0,dxShiftTotal=0,oShiftTotal=0,finalTotal=0;
+				var itoMonthlyStatistic=self.yearlyStatistic[itoId].itomonthlyStatisticList;
+				var monthlyTotal;
+				for (i=0;i<itoMonthlyStatistic.length;i++)
+				{
+					aShiftTotal+=itoMonthlyStatistic[i].ashiftTotal;
+					bxShiftTotal+=itoMonthlyStatistic[i].bxShiftTotal;
+					cShiftTotal+=itoMonthlyStatistic[i].cshiftTotal;
+					dxShiftTotal+=itoMonthlyStatistic[i].dxShiftTotal;
+					oShiftTotal+=itoMonthlyStatistic[i].oshiftTotal;
+					monthlyTotal+=itoMonthlyStatistic[i].monthlyTotal;
+				}
 				row=yearlyStatisticTable.insertRow(yearlyStatisticTable.rows.length);
 				cell=row.insertCell(row.cells.length);
 				cell.className="borderCell alignCenter";
-				cell.textContent=i+1;
+				cell.textContent=self.yearlyStatistic[itoId].itoPostName;
 				
 				cell=row.insertCell(row.cells.length);
 				cell.className="borderCell alignCenter";
-				cell.textContent=itoMonthlyStatistic[i].ashiftTotal;
+				cell.textContent=aShiftTotal;
+
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter";
+				cell.textContent=bxShiftTotal;
+
+				cell=row.insertCell(row.cells.length);
+				cell.className="borderCell alignCenter";
+				cell.textContent=cShiftTotal;
 				
 				cell=row.insertCell(row.cells.length);
 				cell.className="borderCell alignCenter";
-				cell.textContent=itoMonthlyStatistic[i].bxShiftTotal;
+				cell.textContent=dxShiftTotal;
 
 				cell=row.insertCell(row.cells.length);
 				cell.className="borderCell alignCenter";
-				cell.textContent=itoMonthlyStatistic[i].cshiftTotal;
+				cell.textContent=oShiftTotal;
 
+				finalTotal=oShiftTotal+cShiftTotal+aShiftTotal+dxShiftTotal+bxShiftTotal;
 				cell=row.insertCell(row.cells.length);
 				cell.className="borderCell alignCenter";
-				cell.textContent=itoMonthlyStatistic[i].dxShiftTotal;
+				cell.textContent=finalTotal;
+				
+				for (i=0;i<itoMonthlyStatistic.length;i++)
+				{
+					row=yearlyStatisticTable.insertRow(yearlyStatisticTable.rows.length);
+					cell=row.insertCell(row.cells.length);
+					cell.className="borderCell alignCenter";
+					cell.textContent=i+1;
+					
+					cell=row.insertCell(row.cells.length);
+					cell.className="borderCell alignCenter";
+					cell.textContent=itoMonthlyStatistic[i].ashiftTotal;
+					
+					cell=row.insertCell(row.cells.length);
+					cell.className="borderCell alignCenter";
+					cell.textContent=itoMonthlyStatistic[i].bxShiftTotal;
 
-				cell=row.insertCell(row.cells.length);
-				cell.className="borderCell alignCenter";
-				cell.textContent=itoMonthlyStatistic[i].oshiftTotal;
+					cell=row.insertCell(row.cells.length);
+					cell.className="borderCell alignCenter";
+					cell.textContent=itoMonthlyStatistic[i].cshiftTotal;
 
-				cell=row.insertCell(row.cells.length);
-				cell.className="borderCell alignCenter";
-				cell.textContent=itoMonthlyStatistic[i].monthlyTotal;
-			}			
-			
-		});
+					cell=row.insertCell(row.cells.length);
+					cell.className="borderCell alignCenter";
+					cell.textContent=itoMonthlyStatistic[i].dxShiftTotal;
+
+					cell=row.insertCell(row.cells.length);
+					cell.className="borderCell alignCenter";
+					cell.textContent=itoMonthlyStatistic[i].oshiftTotal;
+
+					cell=row.insertCell(row.cells.length);
+					cell.className="borderCell alignCenter";
+					cell.textContent=itoMonthlyStatistic[i].monthlyTotal;
+				}
+			});
+		}
 		yearlyStatisticReportDiv.append(yearlyStatisticTable);
 		return yearlyStatisticReportDiv;
 	}
