@@ -656,7 +656,10 @@ class RosterSchedulerTable extends RosterTable
 			for (i=0;i<31;i++)
 			{
 				cell=row.insertCell(row.cells.length);
-				cell.className="alignCenter borderCell cursorCell";
+				if ((i+1)<=self.monthEndDate)
+					cell.className="alignCenter borderCell cursorCell";
+				else
+					cell.className="alignCenter borderCell";
 				if (itoPreferredShiftList[i+1]!=null)
 				{
 					cell.textContent=itoPreferredShiftList[i+1];
