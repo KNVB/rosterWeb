@@ -1,8 +1,8 @@
-table#rosterTable 
+/*table#rosterTable 
 {
 	border-spacing: 0;
 	
-	border-collapse: separate; 
+	border-collapse: separate; */
 	/*
 	this is workaround for chrome bug
 	https://stackoverflow.com/questions/25591499/chrome-bug-with-colspan-and-border
@@ -13,7 +13,8 @@ table#rosterTable
 	
 	
 	
-}
+/*}
+
 thead tr+tr+tr td:first-child,
 tbody td:first-child
 {
@@ -23,6 +24,7 @@ tbody tr:last-child td
 {
 	border-bottom:1px solid #e0e0e0;
 }
+*/
 .alignCenter
 {
 	text-align: center;
@@ -64,8 +66,8 @@ tbody tr:last-child td
 {
 	padding: 0px;
 	text-align: center;
-	font-size:17px;
-	width:px;
+	font-size:15px;
+	width:30px;
 }
 .actualHourCell
 {
@@ -87,7 +89,7 @@ tbody tr:last-child td
 .phCell
 {
 	color:#ff0000;
-	font-size:17px;
+	font-size:15px;
 	font-weight: bold;
 }
 .rosterMonthSelectCell

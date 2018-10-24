@@ -3,7 +3,34 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Template 3</title>
-	<link rel="stylesheet" type="text/css" href="v4.css">
+	<link rel="stylesheet" type="text/css" href="v3.css">
+	<style>
+		.copyCellBorderBottom
+		{
+			animation: bottomBlinker 1s linear infinite;
+		}
+		@keyframes bottomBlinker
+		{
+			50%  { border-bottom:3px dashed #ffffff; } 
+		}
+		.copyCellBorderLeft
+		{
+			border-left:3px dashed #000000!important;
+			animation: leftBlinker 1s linear infinite;
+		}
+		@keyframes leftBlinker
+		{
+			50%  { border-left: #000000; } 
+		}
+		.copyCellBorderRight
+		{
+			border-right:3px dashed #000000!important;
+		}
+		.copyCellBorderTop
+		{
+			border-top:3px dashed #000000!important;
+		}
+	</style>
 	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 	<script src="ShiftCellEventHandler.js"></script>
 	<script>
@@ -323,7 +350,7 @@
 				<td class="borderCell alignCenter dataCell dxShiftColor shiftCell">d1</td>
 				<td class="borderCell alignCenter dataCell dxShiftColor shiftCell">d1</td>
 				<td class="borderCell alignCenter dataCell dxShiftColor shiftCell">d1</td>
-				<td class="borderCell alignCenter dataCell oShiftColor shiftCell">O</td>
+				<td class="borderCell alignCenter dataCell oShiftColor shiftCell copyCellBorderBottom">O</td>
 				<td class="borderCell alignCenter dataCell cShiftColor shiftCell">c</td>
 				<td class="borderCell alignCenter dataCell cShiftColor shiftCell">c</td>
 				<td class="borderCell alignCenter dataCell oShiftColor shiftCell">O</td>
