@@ -26,6 +26,7 @@ class RosterScheduler
 	{
 		var startDate=this.rosterSchedulerTable.getAutoPlanStartDate();
 		var endDate=this.rosterSchedulerTable.getAutoPlanEndDate();
+		var iterationCount=this.rosterSchedulerTable.getIterationCount();
 		if (startDate>endDate)
 			alert("Invalid start date or end date selection");
 		else
@@ -49,9 +50,9 @@ class RosterScheduler
 				 * https://stackoverflow.com/questions/51869613/create-an-loading-screen-for-long-calculation?noredirect=1#comment90691880_51869613
 				 */
 				setTimeout(() => {
-						for (var i=0;i<100;i++)
+						for (var i=0;i<iterationCount;i++)
 						{	
-							this._genRoster(startDate,endDate);
+							//this._genRoster(startDate,endDate);
 							roster=new Roster(startDate,this._genRoster(startDate,endDate),this.rosterSchedulerUtility,this.rosterRule,endDate-startDate+1);
 							this.theLowestSDRosters.push(roster);
 				    		this.theLowestSDRosters.sort(this._sortBySD);
@@ -268,8 +269,8 @@ class RosterScheduler
 		dateObj=new Date(this.rosterYear,this.rosterMonth,1);
 		dateObj.setTime(dateObj.getTime()-864000);
 		lastMonthEndDate=dateObj.getDate();
-		preferredShiftList=this.rosterSchedulerTable.getPreferredShiftList(startDate,endDate);
-		//console.log(this.previousMonthShiftList);
+		preferredShiftList=this.preferredShiftList;
+		//console.log("preferredShiftList="+preferredShiftList);
 		allPreviousShiftList=this._getPreviouseShiftList(startDate);
 		//console.log(allPreviousShiftList);
 		for (dateIndex=startDate;dateIndex<=endDate;dateIndex++)
@@ -285,6 +286,7 @@ class RosterScheduler
 					resultantShiftList=resultantRoster[itoId];
 				previousShiftList=allPreviousShiftList[itoId];
 				//console.log(itoId,previousShiftList);
+				//console.log(preferredShiftList[itoId]);
 				if (typeof preferredShiftList[itoId][dateIndex]=="undefined")
 					preferredShift="";
 				else		
@@ -312,7 +314,7 @@ class RosterScheduler
 								break;
 					default		:
 								iTOAvailableShiftList=this.rosterRule.getITOAvailableShiftList(dateIndex,ito,preferredShift,previousShiftList,resultantShiftList);
-								console.log("date="+dateIndex,iTOAvailableShiftList);
+								console.log("date="+dateIndex+",itoId="+itoId+",availableShift="+iTOAvailableShiftList);
 								if ((essentialShiftTemp=="") || (iTOAvailableShiftList.length==0))
 								{
 								//	console.log("O shift is assigned on day "+dateIndex);

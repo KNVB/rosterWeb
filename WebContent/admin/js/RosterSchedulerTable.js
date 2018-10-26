@@ -91,7 +91,7 @@ class RosterSchedulerTable extends RosterTable
 	}
 	getAutoPlanStartDate()
 	{
-		return parseInt($("#autoPlannStartDate").val());
+		return parseInt($("#autoPlanStartDate").val());
 	}
 	getCell(rowIndex,cellIndex)
 	{
@@ -116,6 +116,10 @@ class RosterSchedulerTable extends RosterTable
 			dataRowList.push(dataRow);
 		}
 		return dataRowList;
+	}
+	getIterationCount()
+	{
+		return parseInt($("#iterationCount").val());
 	}
 	getLastMonthBalance(itoId)
 	{
@@ -991,38 +995,56 @@ class RosterSchedulerTable extends RosterTable
 	}
 	_showButtons()
 	{
+		var autoPlannerTable,autoPlannerRow,autoPlannerCell,autoPlanStartDateSelect,autoPlanEndDateSelect;
 		var autoSchedulerDiv,autoSchedulerResultDiv,autoSchedulerResultTable,autoSchedulerResultCell,autoSchedulerResultRow;
-		var i,cell,select,row,buttonTable;
-		
-		autoSchedulerDiv=document.createElement("div");
-		autoSchedulerDiv.style.textAlign="center";
-		autoSchedulerDiv.textContent="Auto Planning Start From:";
-		
+		var i,iterationCountInput,cell,select,row,buttonTable;
 		cell=document.getElementById("autoScheduler");
-		select=document.createElement("select");
-		select.id="autoPlannStartDate";
+		autoPlannerTable=document.createElement("table");
+		//autoPlannerTable.setAttribute("border","1");
+		autoPlannerRow=autoPlannerTable.insertRow(autoPlannerTable.rows.length);
+		
+		autoPlannerCell=autoPlannerRow.insertCell(autoPlannerRow.cells.length);
+		autoPlannerCell.textContent="Auto Planning Start From:";
+		autoPlannerCell=autoPlannerRow.insertCell(autoPlannerRow.cells.length);
+		autoPlanStartDateSelect=document.createElement("select");
+		autoPlanStartDateSelect.id="autoPlanStartDate";
 		for (i=1;i<=this.monthEndDate;i++)
 		{
 			var option=document.createElement("option");
 			option.value=i;
 			option.text=i;
-			select.append(option);
-		}	
-		autoSchedulerDiv.append(select);
-		$(autoSchedulerDiv).append("&nbsp;to&nbsp;");
-		select=document.createElement("select");
-		select.id="autoPlanEndDate";
+			autoPlanStartDateSelect.append(option);
+		}
+		autoPlannerCell.append(autoPlanStartDateSelect);
+		$(autoPlannerCell).append("&nbsp;to&nbsp;");
+		autoPlanEndDateSelect=document.createElement("select");
+		autoPlanEndDateSelect.id="autoPlanEndDate";
 		for (i=1;i<=this.monthEndDate;i++)
 		{
 			var option=document.createElement("option");
 			option.value=i;
 			option.text=i;
-			select.append(option);
+			autoPlanEndDateSelect.append(option);
 		}	
-		autoSchedulerDiv.append(select);
-		$(autoSchedulerDiv).append("&nbsp;<a class=\"autoPlannerButton\">Auto Planner</a>");
 		option.selected=true;
-		cell.append(autoSchedulerDiv);
+		autoPlannerCell.append(autoPlanEndDateSelect);
+		autoPlannerCell.colSpan=2;
+		
+		autoPlannerRow=autoPlannerTable.insertRow(autoPlannerTable.rows.length);
+		autoPlannerCell=autoPlannerRow.insertCell(autoPlannerRow.cells.length);
+		autoPlannerCell.textContent="Iteration Count:";
+		
+		autoPlannerCell=autoPlannerRow.insertCell(autoPlannerRow.cells.length);
+		iterationCountInput=document.createElement("input");
+		iterationCountInput.id="iterationCount";
+		iterationCountInput.type="number";
+		iterationCountInput.value="100";
+		autoPlannerCell.append(iterationCountInput);
+		
+		autoPlannerCell=autoPlannerRow.insertCell(autoPlannerRow.cells.length);
+		autoPlannerCell.innerHTML="&nbsp;<a class=\"autoPlannerButton\">Auto Planner</a>";
+		
+		cell.append(autoPlannerTable);
 		
 		autoSchedulerResultDiv=document.createElement("div");
 		autoSchedulerResultDiv.id="genResult";
@@ -1088,6 +1110,7 @@ class RosterSchedulerTable extends RosterTable
 		
 		autoSchedulerResultDiv.append(autoSchedulerResultTable);
 		cell.append(autoSchedulerResultDiv);
+		
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		cell=row.insertCell(row.cells.length);
 		cell.colSpan=33;
