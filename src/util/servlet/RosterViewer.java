@@ -45,6 +45,7 @@ public class RosterViewer extends HttpServlet {
 	
 	protected static final Logger logger = LogManager.getLogger(Class.class.getSimpleName());
 	protected ObjectMapper objectMapper = new ObjectMapper();
+	protected LocalDate now;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -62,7 +63,7 @@ public class RosterViewer extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out=response.getWriter();
-		LocalDate now=LocalDate.now();
+		now=LocalDate.now();
 		noOfWorkingDay=0;
 		response.setContentType("text/html; charset=UTF-8");
 		try
@@ -327,7 +328,10 @@ public class RosterViewer extends HttpServlet {
 		{
 			if (i< myDateList.size())
 			{
-				out.println(getIndentation()+"<td class=\"dataCell alignCenter borderCell\">"+(i+1)+"</td>");
+				if (now.equals(LocalDate.of(this.rosterYear, this.rosterYear, i+1)))
+					out.println(getIndentation()+"<td class=\"dataCell alignCenter borderCell highlight\">"+(i+1)+"</td>");
+				else	
+					out.println(getIndentation()+"<td class=\"dataCell alignCenter borderCell\">"+(i+1)+"</td>");
 			}
 			else
 				out.println(getIndentation()+"<td class=\"dataCell alignCenter borderCell\"></td>");	
