@@ -328,7 +328,7 @@ public class RosterViewer extends HttpServlet {
 		{
 			if (i< myDateList.size())
 			{
-				if (now.equals(LocalDate.of(this.rosterYear, this.rosterYear, i+1)))
+				if (now.equals(LocalDate.of(this.rosterYear, this.rosterMonth, i+1)))
 					out.println(getIndentation()+"<td class=\"dataCell alignCenter borderCell highlight\">"+(i+1)+"</td>");
 				else	
 					out.println(getIndentation()+"<td class=\"dataCell alignCenter borderCell\">"+(i+1)+"</td>");
