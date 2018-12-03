@@ -10,6 +10,22 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>rosterViewer</welcome-file>
   </welcome-file-list>
+  <filter>
+  	<filter-name>Admin</filter-name>
+  	<filter-class>util.servlet.AdminFilter</filter-class>
+  		<init-param>
+			<param-name>loginPage</param-name>
+			<param-value>/admin/index.jsp</param-value>
+		</init-param>
+  		<init-param>
+			<param-name>exemptedPages</param-name>
+			<param-value>/admin/index.jsp,/admin/login.jsp</param-value>
+		</init-param>		
+  </filter>
+  <filter-mapping>
+	<filter-name>Admin</filter-name>
+	<url-pattern>/admin/*</url-pattern>
+  </filter-mapping>	
   <servlet>
     <servlet-name>RosterScheduler</servlet-name>
     <servlet-class>util.servlet.RosterScheduler</servlet-class>
@@ -28,16 +44,20 @@
     <servlet-name>RosterViewer</servlet-name>
     <url-pattern>/rosterViewer</url-pattern>
   </servlet-mapping>
-  <filter>
-  	<filter-name>Admin</filter-name>
-  	<filter-class>util.servlet.AdminFilter</filter-class>
-  		<init-param>
-			<param-name>login_page</param-name>
-			<param-value>/admin/</param-value>
+  <servlet>
+  	<servlet-name>AdminLoginPage</servlet-name>
+  	<jsp-file>/admin/login.jsp</jsp-file>
+	  	<init-param>
+	        <param-name>adminUserName</param-name>  
+	        <param-value>rosterAdmin</param-value>  
 		</init-param>
-  </filter>
-  <filter-mapping>
-	<filter-name>Admin</filter-name>
-	<url-pattern>/admin/*</url-pattern>
-  </filter-mapping>	
+	  	<init-param>
+	        <param-name>adminPassword</param-name>  
+	        <param-value>password</param-value>  
+		</init-param>    
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>AdminLoginPage</servlet-name>
+  	<url-pattern>/admin/login.jsp</url-pattern>
+  </servlet-mapping>
 </web-app>

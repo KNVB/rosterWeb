@@ -61,7 +61,7 @@
     	weekdayNames.put(Calendar.FRIDAY,"F");
     	weekdayNames.put(Calendar.SATURDAY,"S");   	
     	
-			
+	/*	
 		CalendarUtility calendarUtility=new CalendarUtility();
         MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
         CellStyle style = workbook.createCellStyle();
@@ -105,7 +105,7 @@
 			
 			cell=sheet1.getRow(6).getCell(1);
 			System.out.println("i="+i);
-			/*for (int idx = 0; idx < sheet2cf.getNumConditionalFormattings(); idx++) 
+			for (int idx = 0; idx < sheet2cf.getNumConditionalFormattings(); idx++) 
 	        {
 				XSSFConditionalFormatting cf = sheet2cf.getConditionalFormattingAt(idx);
 	        	CellRangeAddress[]ranges=cf.getFormattingRanges();
@@ -113,8 +113,8 @@
 	        	ranges[0].setLastRow(6);
 	        	cf.setFormattingRanges(ranges);
 	        	sheet1cf.addConditionalFormatting(cf);
-	        }*/
-		}
+	        }
+		}*/
 		workbook.write(new FileOutputStream(outputFile));
 		//response.setHeader("Content-length", Long.toString(outputFile.length()));
 		//response.setHeader("Content-Disposition", "attachment; filename=download.xlsx");
