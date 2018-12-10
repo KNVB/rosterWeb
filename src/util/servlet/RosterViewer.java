@@ -142,6 +142,7 @@ public class RosterViewer extends HttpServlet {
 	protected void printIncludedCSS(PrintWriter out,HttpServletRequest request)
 	{
 		out.println(getIndentation()+"<link rel=\"stylesheet\" type=\"text/css\" href=\""+request.getContextPath()+"/css/style.css\">");
+		out.println(getIndentation()+"<link rel=\"stylesheet\" type=\"text/css\" href=\""+request.getContextPath()+"/css/MonthPick.css\">");
 	}
 	protected void printIncludedJavascript(PrintWriter out,HttpServletRequest request)
 	{
@@ -149,6 +150,7 @@ public class RosterViewer extends HttpServlet {
 		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/js/RosterRule.js\"></script>");
 		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/js/RosterTable.js\"></script>");
 		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/js/util/ShiftCellEventHandler.js\"></script>");
+		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/js/util/MonthPicker.js\"></script>");
 		out.println(getIndentation()+"<script src=\""+request.getContextPath()+"/js/util/Utility.js\"></script>");
 	}
 	protected void printOnDomReadyFunction(PrintWriter out)
@@ -171,6 +173,16 @@ public class RosterViewer extends HttpServlet {
 			out.println(getIndentation()+"rosterTable.rosterRule=rosterRule;");
 			out.println(getIndentation()+"rosterTable.show();");
 			out.println(getIndentation()+"var shiftCellEventHandler=new ShiftCellEventHandler(rosterTable,\"cursorCell\");");
+			out.println(getIndentation()+"var mP=new MonthPicker({elements:$(\"#rosterMonth\"),initYear:"+rosterYear+",minValue: \"01/2017\"});");
+			out.println(getIndentation()+"mP.onPick(function (year,month){");
+			htmlIndentation++;
+			out.println(getIndentation()+"var form=document.getElementById(\"rosterMonthForm\");");
+			out.println(getIndentation()+"form.month.value=month;");
+			out.println(getIndentation()+"form.year.value=year;");
+			out.println(getIndentation()+"console.log(year,month);");
+			out.println(getIndentation()+"form.submit();");
+			htmlIndentation--;
+			out.println(getIndentation()+"});");
 			htmlIndentation--;
 			out.println(getIndentation()+"});");
 			htmlIndentation--;
@@ -220,11 +232,45 @@ public class RosterViewer extends HttpServlet {
 		out.println(getIndentation()+"<td class=\"nameCell\">");
 		out.println(getIndentation()+"</td>");
 		out.println(getIndentation()+"<td colspan=\"2\"></td>");
-		out.println(getIndentation()+"<td colspan=\"31\" class=\"underlineText alignCenter rosterMonthSelectCell\">");
+		out.println(getIndentation()+"<td colspan=\"31\" class=\"alignCenter rosterMonthSelectCell\">");
 		htmlIndentation++;
-		out.println(getIndentation()+"<form method=\"post\">");
+		out.println(getIndentation()+"<form method=\"post\" id=\"rosterMonthForm\">");
 		htmlIndentation++;
-		out.println(getIndentation()+"<select id=\"selectRosterMonth\" name=\"month\" class=\"underlineText rosterMonthSelect\" onchange=\"this.form.submit()\">");
+		out.println(getIndentation()+"<input type=hidden id=\"selectRosterMonth\" name=\"month\" value=\""+rosterMonth+"\">");
+		out.println(getIndentation()+"<input type=hidden id=\"selectRosterYear\" name=\"year\" value=\""+rosterYear+"\">");
+		out.println(getIndentation()+"<span id=\"rosterMonth\" class=\"underlineText clickable\">");
+		htmlIndentation++;
+		switch (Month.of(rosterMonth))
+		{
+			case JANUARY:out.print(getIndentation()+"January ");
+						break;
+			case FEBRUARY:out.print(getIndentation()+"February ");
+						break;
+			case MARCH:out.print(getIndentation()+"March ");
+						break;
+			case APRIL:out.print(getIndentation()+"April ");
+						break;
+			case MAY:out.print(getIndentation()+"May ");
+						break;
+			case JUNE:out.print(getIndentation()+"June ");
+						break;
+			case JULY:out.print(getIndentation()+"July ");
+						break;
+			case AUGUST:out.print(getIndentation()+"August ");
+						break;
+			case SEPTEMBER:out.print(getIndentation()+"September ");
+						break;
+			case OCTOBER:out.print(getIndentation()+"October ");
+						break;
+			case NOVEMBER:out.print(getIndentation()+"November ");
+						break;
+			case DECEMBER:out.print(getIndentation()+"December ");
+						break;
+		}
+		out.println(rosterYear);
+		htmlIndentation--;
+		out.println(getIndentation()+"</span>");
+	/*	out.println(getIndentation()+"<select id=\"selectRosterMonth\" name=\"month\" class=\"underlineText rosterMonthSelect\" onchange=\"this.form.submit()\">");
 		htmlIndentation++;
 		out.println(getIndentation()+"<option "+((rosterMonth==Month.JANUARY.getValue())?"selected ":"")+"value=\""+Month.JANUARY.getValue()+"\">January</option>");
 		out.println(getIndentation()+"<option "+((rosterMonth==Month.FEBRUARY.getValue())?"selected ":"")+"value=\""+Month.FEBRUARY.getValue()+"\">February</option>");
@@ -239,8 +285,15 @@ public class RosterViewer extends HttpServlet {
 		out.println(getIndentation()+"<option "+((rosterMonth==Month.NOVEMBER.getValue())?"selected ":"")+"value=\""+Month.NOVEMBER.getValue()+"\">November</option>");
 		out.println(getIndentation()+"<option "+((rosterMonth==Month.DECEMBER.getValue())?"selected ":"")+"value=\""+Month.DECEMBER.getValue()+"\">December</option>");
 		htmlIndentation--;
-		out.println(getIndentation()+"</select>"+rosterYear);
-		out.println(getIndentation()+"<input id=\"selectRosterYear\" type=\"hidden\" name=\"year\" value=\""+rosterYear+"\">");
+		out.println(getIndentation()+"</select>");
+		out.println(getIndentation()+"<select class=\"underlineText rosterMonthSelect\" id=\"selectRosterYear\" name=\"year\" onchange=\"this.form.submit()\">");
+		htmlIndentation++;
+		if (rosterYear>2017)
+			out.println(getIndentation()+"<option value=\""+(rosterYear-1)+"\">"+(rosterYear-1)+"</option>");		
+		out.println(getIndentation()+"<option selected value=\""+rosterYear+"\">"+rosterYear+"</option>");
+		out.println(getIndentation()+"<option value=\""+(rosterYear+1)+"\">"+(rosterYear+1)+"</option>");
+		htmlIndentation--;
+		out.println(getIndentation()+"</select>");*/		
 		htmlIndentation--;
 		out.println(getIndentation()+"</form>");
 		htmlIndentation--;

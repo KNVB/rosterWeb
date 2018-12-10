@@ -89,6 +89,19 @@ public class RosterScheduler extends RosterViewer
 			out.println(getIndentation()+"rosterScheduler.preferredShiftList="+objectMapper.writeValueAsString(preferredShiftList)+";");
 			out.println(getIndentation()+"rosterScheduler.yearlyStatistic="+objectMapper.writeValueAsString(yearlyRosterStatistic)+";");
 			out.println(getIndentation()+"rosterScheduler.show();");
+			
+			out.println(getIndentation()+"var mP=new MonthPicker({elements:$(\"#rosterMonth\"),initYear:"+rosterYear+",minValue: \"01/2017\"});");
+			out.println(getIndentation()+"mP.onPick(function (year,month){");
+			htmlIndentation++;
+			out.println(getIndentation()+"var form=document.getElementById(\"rosterMonthForm\");");
+			out.println(getIndentation()+"form.month.value=month;");
+			out.println(getIndentation()+"form.year.value=year;");
+			out.println(getIndentation()+"console.log(year,month);");
+			out.println(getIndentation()+"form.submit();");
+			htmlIndentation--;
+			out.println(getIndentation()+"});");
+			
+			
 			//out.println(getIndentation()+"var schedulerShiftCellEventHandler=new SchedulerShiftCellEventHandler(rosterSchedulerTable,\"cursorCell\");");
 			htmlIndentation--;
 			out.println(getIndentation()+"});");

@@ -172,7 +172,8 @@ class RosterTable
 	getRosterMonth()
 	{
 		var dropDownBox=document.getElementById("selectRosterMonth");
-		var result=dropDownBox.options[dropDownBox.selectedIndex].value;
+		var result=dropDownBox.value;
+		//var result=dropDownBox.options[dropDownBox.selectedIndex].value;
 		return result;
 	}
 	getRosterYear()
