@@ -28,7 +28,7 @@ public class RosterScheduler extends RosterViewer
 			e.printStackTrace();
 		}
 	
-	}
+	}	
 	protected void printHTMLTitle(PrintWriter out)
 	{
 		out.println(getIndentation()+"<title>Roster Scheduler</title>");

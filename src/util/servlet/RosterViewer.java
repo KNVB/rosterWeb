@@ -112,7 +112,7 @@ public class RosterViewer extends HttpServlet {
 			err.printStackTrace();
 		}
 	}
-	private void printHTMLBody(PrintWriter out) 
+	protected void printHTMLBody(PrintWriter out) 
 	{
 		out.println(getIndentation()+"<body>");
 		htmlIndentation++;
@@ -129,6 +129,7 @@ public class RosterViewer extends HttpServlet {
 		out.println(getIndentation()+"<head>");
 		htmlIndentation++;
 		out.println(getIndentation()+"<meta charset=\"UTF-8\">");
+		out.println(getIndentation()+"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
 		printHTMLTitle(out);
 		printIncludedCSS(out,request);
 		printIncludedJavascript(out,request);
@@ -402,7 +403,7 @@ public class RosterViewer extends HttpServlet {
 		htmlIndentation--;
 		out.println(getIndentation()+"</thead>");
 	}
-	private void printRosterTable(PrintWriter out)
+	protected void printRosterTable(PrintWriter out)
 	{
 		out.println(getIndentation()+"<table border=\"0\" id=\"rosterTable\">");
 		printRosterTableHeader(out);
