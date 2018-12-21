@@ -482,8 +482,9 @@ public class DbOp implements DataStore {
 				calendarObj=LocalDate.of(year,month,1);
 				sqlString="delete from preferred_shift where ito_id=? and month(shift_date)=? and year(shift_date)=?";
 				stmt=dbConn.prepareStatement(sqlString);
+				logger.debug("delete preferred shift data for:" + month+"/"+year);
 				stmt.setString(1,itoId);
-				stmt.setInt(2,month+1);
+				stmt.setInt(2,month);
 				stmt.setInt(3,year);
 				stmt.executeUpdate();
 				stmt.close();
