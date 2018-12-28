@@ -1,0 +1,304 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Roster Viewer</title>
+		<link rel="stylesheet" type="text/css" href="../css/style.css">
+		<link rel="stylesheet" type="text/css" href="../css/MonthPick.css">
+		<script type="text/javascript" src="http://f5vm9:8080/rosterWeb/webjars/jquery/3.3.1/jquery.min.js"></script>
+		<script src="../js/util/MonthPicker.js"></script>
+		<script>
+			var itoIds=["ITO1_1999-01-01","ITO3_2017-10-18","ITO4_1999-01-01","ITO6_1999-01-01","ITO8_1999-01-01"];
+			function addPreferredRow()
+			{
+				var row,cell,id,i;
+				itoIds.forEach(function(itoId){
+					row=document.createElement("tr");
+					row.id="preferredShift_"+itoId;
+					cell=row.insertCell(row.cells.length);
+					cell.className="alignLeft borderCell";
+					cell.innerHTML="Preferred Shift";
+					for (i=0;i<2;i++)
+					{
+						cell=row.insertCell(row.cells.length);
+						cell.className="alignLeft borderCell";
+					}
+					for (i=0;i<31;i++)
+					{
+						cell=row.insertCell(row.cells.length);
+						cell.className="alignCenter borderCell cursorCell";
+					}
+					cell=row.insertCell(row.cells.length);
+					cell.colSpan=5;
+					cell.className="alignCenter borderCell";
+					
+					for (i=0;i<5;i++)
+					{
+						cell=row.insertCell(row.cells.length);
+						cell.className="alignCenter borderCell";
+					}
+					shiftRow=document.getElementById("shift_"+itoId);
+					console.log("Hello 0");
+					$(row).insertAfter(shiftRow);
+					console.log("Hello 1");
+				});
+				row=document.createElement("tr");
+				row.id="vacantShiftRow";
+				cell=row.insertCell(row.cells.length);
+				cell.innerHTML="Vacant Shifts";
+				cell.className="vacantShiftLabel borderCell";
+				for (i=0;i<2;i++)
+				{
+					cell=row.insertCell(row.cells.length);
+					cell.className="alignCenter borderCell";
+				}
+				for (i=0;i<31;i++)
+				{
+					cell=row.insertCell(row.cells.length);
+					cell.className="alignCenter borderCell vacantShift";
+				}
+				cell=row.insertCell(row.cells.length);
+				cell.colSpan=5;
+				cell.className="alignCenter borderCell";
+				
+				cell=row.insertCell(row.cells.length);
+				cell.id="shiftAStdDev";
+				cell.className="alignCenter borderCell";
+				
+				cell=row.insertCell(row.cells.length);
+				cell.id="shiftBStdDev";
+				cell.className="alignCenter borderCell";
+				
+				cell=row.insertCell(row.cells.length);
+				cell.id="shiftCStdDev";
+				cell.className="alignCenter borderCell";
+				
+				cell=row.insertCell(row.cells.length);
+				cell.id="avgStdDev";
+				cell.className="alignCenter borderCell";
+				
+				cell=row.insertCell(row.cells.length);
+				cell.className="alignCenter borderCell";
+				$("#rosterBody").append(row);
+			}
+		</script>
+	</head>	
+	<body>
+		<table border="0" id="rosterTable">
+			<thead id="rosterHeader">
+				<tr>
+					<td class="nameCell"></td>
+					<td colspan="2"></td>
+					<td class="alignCenter titleCell underlineText" colspan="31">
+							EMSTF Resident Support &amp; Computer Operation Support Services Team Roster
+					</td>
+					<td class="totalHourCell"><br></td>
+					<td class="actualHourCell"><br></td>
+					<td class="lastMonthCell"><br></td>
+					<td class="thisMonthCell"><br></td>
+					<td class="totalCell"><br></td>
+					<td class="totalNoOfCell"><br></td>
+					<td class="totalNoOfCell"><br></td>
+					<td class="totalNoOfCell"><br></td>
+					<td class="totalNoOfCell"><br></td><td class="noOfWorkingDay"><br></td>
+				</tr>
+				<tr id="rosterMonthRow">
+					<td class="nameCell">
+					</td>
+					<td colspan="2"></td>
+					<td colspan="31" class="alignCenter rosterMonthSelectCell">
+						<form method="post" id="rosterMonthForm">
+							<input type="hidden" id="selectRosterMonth" name="month" value="1">
+							<input type="hidden" id="selectRosterYear" name="year" value="2019">
+							<span id="rosterMonth" class="underlineText clickable">
+								January 2019
+							</span>
+						</form>
+					</td>
+					<td colspan="10"></td>
+				</tr>
+				<tr id="holidayRow">
+					<td class="nameCell borderCell">Holiday</td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell phCell">PH</td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="borderCell" colspan="10"></td>
+				</tr>
+				<tr id="dayRow">
+					<td class="nameCell borderCell">Days</td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell phCell">T</td>
+					<td class="dataCell alignCenter borderCell">W</td>
+					<td class="dataCell alignCenter borderCell">Th</td>
+					<td class="dataCell alignCenter borderCell">F</td>
+					<td class="dataCell alignCenter borderCell phCell">S</td>
+					<td class="dataCell alignCenter borderCell phCell">Su</td>
+					<td class="dataCell alignCenter borderCell">M</td>
+					<td class="dataCell alignCenter borderCell">T</td>
+					<td class="dataCell alignCenter borderCell">W</td>
+					<td class="dataCell alignCenter borderCell">Th</td>
+					<td class="dataCell alignCenter borderCell">F</td>
+					<td class="dataCell alignCenter borderCell phCell">S</td>
+					<td class="dataCell alignCenter borderCell phCell">Su</td>
+					<td class="dataCell alignCenter borderCell">M</td>
+					<td class="dataCell alignCenter borderCell">T</td>
+					<td class="dataCell alignCenter borderCell">W</td>
+					<td class="dataCell alignCenter borderCell">Th</td>
+					<td class="dataCell alignCenter borderCell">F</td>
+					<td class="dataCell alignCenter borderCell phCell">S</td>
+					<td class="dataCell alignCenter borderCell phCell">Su</td>
+					<td class="dataCell alignCenter borderCell">M</td>
+					<td class="dataCell alignCenter borderCell">T</td>
+					<td class="dataCell alignCenter borderCell">W</td>
+					<td class="dataCell alignCenter borderCell">Th</td>
+					<td class="dataCell alignCenter borderCell">F</td>
+					<td class="dataCell alignCenter borderCell phCell">S</td>
+					<td class="dataCell alignCenter borderCell phCell">Su</td>
+					<td class="dataCell alignCenter borderCell">M</td>
+					<td class="dataCell alignCenter borderCell">T</td>
+					<td class="dataCell alignCenter borderCell">W</td>
+					<td class="dataCell alignCenter borderCell">Th</td>
+					<td class="alignCenter borderCell" rowspan="2">Total<br>Hour</td>
+					<td class="alignCenter borderCell" rowspan="2">Actual<br>Hour</td>
+					<td class="alignCenter borderCell" colspan="8">Hour Off Due</td>
+				</tr>
+				<tr id="dateRow">
+					<td class="nameCell borderCell">Resident Support<br>Team Members</td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell">1</td>
+					<td class="dataCell alignCenter borderCell">2</td>
+					<td class="dataCell alignCenter borderCell">3</td>
+					<td class="dataCell alignCenter borderCell">4</td>
+					<td class="dataCell alignCenter borderCell">5</td>
+					<td class="dataCell alignCenter borderCell">6</td>
+					<td class="dataCell alignCenter borderCell">7</td>
+					<td class="dataCell alignCenter borderCell">8</td>
+					<td class="dataCell alignCenter borderCell">9</td>
+					<td class="dataCell alignCenter borderCell">10</td>
+					<td class="dataCell alignCenter borderCell">11</td>
+					<td class="dataCell alignCenter borderCell">12</td>
+					<td class="dataCell alignCenter borderCell">13</td>
+					<td class="dataCell alignCenter borderCell">14</td>
+					<td class="dataCell alignCenter borderCell">15</td>
+					<td class="dataCell alignCenter borderCell">16</td>
+					<td class="dataCell alignCenter borderCell">17</td>
+					<td class="dataCell alignCenter borderCell">18</td>
+					<td class="dataCell alignCenter borderCell">19</td>
+					<td class="dataCell alignCenter borderCell">20</td>
+					<td class="dataCell alignCenter borderCell">21</td>
+					<td class="dataCell alignCenter borderCell">22</td>
+					<td class="dataCell alignCenter borderCell">23</td>
+					<td class="dataCell alignCenter borderCell">24</td>
+					<td class="dataCell alignCenter borderCell">25</td>
+					<td class="dataCell alignCenter borderCell">26</td>
+					<td class="dataCell alignCenter borderCell">27</td>
+					<td class="dataCell alignCenter borderCell">28</td>
+					<td class="dataCell alignCenter borderCell">29</td>
+					<td class="dataCell alignCenter borderCell">30</td>
+					<td class="dataCell alignCenter borderCell">31</td>
+					<td class="alignCenter borderCell">Last<br>Month</td>
+					<td class="alignCenter borderCell">This<br>Month</td>
+					<td class="alignCenter borderCell">Total</td>
+					<td class="alignCenter borderCell">Total No. of<br>A shift</td>
+					<td class="alignCenter borderCell">Total No. of<br>Bx shift</td>
+					<td class="alignCenter borderCell">Total No. of<br>C shift</td>
+					<td class="alignCenter borderCell">Total No. of<br>Dx shift</td>
+					<td class="alignCenter borderCell">No. of<br>working<br>day</td>
+				</tr>
+			</thead>
+			<tbody id="rosterBody">
+			<tr id="shift_ITO1_1999-01-01"><td class="borderCell alignLeft">TSANG Ka Shing Gary<br>ITO1 Extn. 2458</td><td class="alignCenter borderCell aShiftColor">a</td><td class="alignCenter borderCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td id="ITO1_1999-01-01_totalHour" class="alignCenter borderCell">171.6</td><td id="ITO1_1999-01-01_actualHour" class="alignCenter borderCell">140.75</td><td id="ITO1_1999-01-01_lastMonthBalance" class="alignCenter borderCell">48.7</td><td id="ITO1_1999-01-01_thisMonthHourTotal" class="alignCenter borderCell">-30.85</td><td id="ITO1_1999-01-01_thisMonthBalance" class="alignCenter borderCell">17.85</td><td id="ITO1_1999-01-01_aShiftCount" class="alignCenter borderCell">4</td><td id="ITO1_1999-01-01_bxShiftCount" class="alignCenter borderCell">7</td><td id="ITO1_1999-01-01_cShiftCount" class="alignCenter borderCell">6</td><td id="ITO1_1999-01-01_dxShiftCount" class="alignCenter borderCell">0</td><td id="ITO1_1999-01-01_noOfWoringDay" class="alignCenter borderCell">17</td></tr><tr id="shift_ITO3_2017-10-18"><td class="borderCell alignLeft">YUNG Kin Shing Tommy<br>ITO3 Extn. 2458</td><td class="alignCenter borderCell oShiftColor">O</td><td class="alignCenter borderCell bShiftColor">b1</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b1</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b1</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b1</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b1</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b1</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b1</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td id="ITO3_2017-10-18_totalHour" class="alignCenter borderCell">198</td><td id="ITO3_2017-10-18_actualHour" class="alignCenter borderCell">181.75</td><td id="ITO3_2017-10-18_lastMonthBalance" class="alignCenter borderCell">7.95</td><td id="ITO3_2017-10-18_thisMonthHourTotal" class="alignCenter borderCell">-16.25</td><td id="ITO3_2017-10-18_thisMonthBalance" class="alignCenter borderCell">-8.3</td><td id="ITO3_2017-10-18_aShiftCount" class="alignCenter borderCell">7</td><td id="ITO3_2017-10-18_bxShiftCount" class="alignCenter borderCell">6</td><td id="ITO3_2017-10-18_cShiftCount" class="alignCenter borderCell">7</td><td id="ITO3_2017-10-18_dxShiftCount" class="alignCenter borderCell">0</td><td id="ITO3_2017-10-18_noOfWoringDay" class="alignCenter borderCell">20</td></tr><tr id="shift_ITO4_1999-01-01"><td class="borderCell alignLeft">HUEN Kwai-leung Andrew<br>ITO4 Extn. 2458</td><td class="alignCenter borderCell bShiftColor">b</td><td class="alignCenter borderCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell dxShiftColor">d1</td><td id="ITO4_1999-01-01_totalHour" class="alignCenter borderCell">171.6</td><td id="ITO4_1999-01-01_actualHour" class="alignCenter borderCell">143</td><td id="ITO4_1999-01-01_lastMonthBalance" class="alignCenter borderCell">25.95</td><td id="ITO4_1999-01-01_thisMonthHourTotal" class="alignCenter borderCell">-28.6</td><td id="ITO4_1999-01-01_thisMonthBalance" class="alignCenter borderCell">-2.65</td><td id="ITO4_1999-01-01_aShiftCount" class="alignCenter borderCell">4</td><td id="ITO4_1999-01-01_bxShiftCount" class="alignCenter borderCell">6</td><td id="ITO4_1999-01-01_cShiftCount" class="alignCenter borderCell">6</td><td id="ITO4_1999-01-01_dxShiftCount" class="alignCenter borderCell">1</td><td id="ITO4_1999-01-01_noOfWoringDay" class="alignCenter borderCell">17</td></tr><tr id="shift_ITO6_1999-01-01"><td class="borderCell alignLeft">LI Chi-wai Joseph<br>ITO6 Extn. 2458</td><td class="alignCenter borderCell oShiftColor">O</td><td class="alignCenter borderCell dxShiftColor">d1</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell dxShiftColor">d1</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell dxShiftColor">d1</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell dxShiftColor">d1</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td id="ITO6_1999-01-01_totalHour" class="alignCenter borderCell">171.6</td><td id="ITO6_1999-01-01_actualHour" class="alignCenter borderCell">159</td><td id="ITO6_1999-01-01_lastMonthBalance" class="alignCenter borderCell">14.58</td><td id="ITO6_1999-01-01_thisMonthHourTotal" class="alignCenter borderCell">-12.6</td><td id="ITO6_1999-01-01_thisMonthBalance" class="alignCenter borderCell">1.98</td><td id="ITO6_1999-01-01_aShiftCount" class="alignCenter borderCell">4</td><td id="ITO6_1999-01-01_bxShiftCount" class="alignCenter borderCell">6</td><td id="ITO6_1999-01-01_cShiftCount" class="alignCenter borderCell">6</td><td id="ITO6_1999-01-01_dxShiftCount" class="alignCenter borderCell">3</td><td id="ITO6_1999-01-01_noOfWoringDay" class="alignCenter borderCell">19</td></tr><tr id="shift_ITO8_1999-01-01"><td class="borderCell alignLeft">CHAN Tai-hin Jimmy<br>ITO8 Extn. 2458</td><td class="alignCenter borderCell cShiftColor">c</td><td class="alignCenter borderCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell aShiftColor">a</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell bShiftColor">b</td><td class="alignCenter borderCell cursorCell shiftCell cShiftColor">c</td><td class="alignCenter borderCell cursorCell shiftCell oShiftColor">O</td><td class="alignCenter borderCell cursorCell shiftCell dxShiftColor">d1</td><td class="alignCenter borderCell cursorCell shiftCell dxShiftColor">d1</td><td id="ITO8_1999-01-01_totalHour" class="alignCenter borderCell">171.6</td><td id="ITO8_1999-01-01_actualHour" class="alignCenter borderCell">169</td><td id="ITO8_1999-01-01_lastMonthBalance" class="alignCenter borderCell">10.45</td><td id="ITO8_1999-01-01_thisMonthHourTotal" class="alignCenter borderCell">-2.6</td><td id="ITO8_1999-01-01_thisMonthBalance" class="alignCenter borderCell">7.85</td><td id="ITO8_1999-01-01_aShiftCount" class="alignCenter borderCell">6</td><td id="ITO8_1999-01-01_bxShiftCount" class="alignCenter borderCell">6</td><td id="ITO8_1999-01-01_cShiftCount" class="alignCenter borderCell">6</td><td id="ITO8_1999-01-01_dxShiftCount" class="alignCenter borderCell">2</td><td id="ITO8_1999-01-01_noOfWoringDay" class="alignCenter borderCell">20</td></tr></tbody>
+			<tfoot id="rosterFooter">
+				<tr>
+					<td colspan="44"><br></td>
+				</tr>
+				<tr>
+					<td colspan="13" class="aShiftColor">
+						a : 0800H - 1700H
+					</td>
+					<td colspan="20" rowspan="10" id="autoScheduler" style="vertical-align:top">
+					</td>
+					<td colspan="11" rowspan="20" id="yearlyStat" style="vertical-align:top">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="13" class="bShiftColor">
+						b : 1630H - 2215H
+					</td>
+				</tr>
+				<tr>
+					<td colspan="13" class="bShiftColor">
+						b1: 1500H - 2215H
+					</td>
+				</tr>
+				<tr>
+					<td colspan="13" class="cShiftColor">
+						c : 2145H - 0830H (the next day)
+					</td>
+				</tr>
+				<tr>
+					<td colspan="13" class="dxShiftColor">
+						d : 0800H - 1800H (on weekdays)
+					</td>
+				</tr>
+				<tr>
+					<td colspan="13" class="dxShiftColor">
+						d1 : 0800H - 1700H (on weekdays)
+					</td>
+				</tr>
+				<tr>
+					<td colspan="13" class="dxShiftColor">
+						d2 : 0900H - 1800H (on weekdays)
+					</td>
+				</tr>
+				<tr>
+					<td colspan="13" class="dxShiftColor">
+						d3 : 0800H - 1648H (on weekdays)
+					</td>
+				</tr>
+				<tr>
+					<td colspan="13" class="sickLeaveColor">
+						s : sick leave standby
+					</td>
+				</tr>
+				<tr>
+					<td colspan="13" class="oShiftColor">
+						O : dayoff
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+		<button onclick="addPreferredRow()">Add</button>
+	</body>
+</html>
