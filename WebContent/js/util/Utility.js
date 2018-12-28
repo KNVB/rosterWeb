@@ -39,6 +39,6 @@ class Utility
 	}
 	showAjaxErrorMessage(jqXHR, textStatus, errorThrown)
 	{
-		console.log(jqXHR,textStatus);
+		alert(jqXHR,textStatus);
 	}
 }
