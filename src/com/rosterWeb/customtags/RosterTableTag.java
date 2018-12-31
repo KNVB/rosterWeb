@@ -63,13 +63,11 @@ public class RosterTableTag extends SimpleTagSupport
 	{
 		
 	}
-	private void genRosterRows(JspWriter out) throws JspException, IOException
+	protected void genRosterRows(JspWriter out) throws JspException, IOException
 	{
-		ITO ito;
 		for (int i=0;i<itoIdList.length;i++)
 		{
-			ito=itoList.get(itoIdList[i]);
-			genITORow(out,ito);
+			genITORow(out,itoIdList[i]);
 		}
 	}
 	private void genTable() throws JspException, IOException 
@@ -77,7 +75,7 @@ public class RosterTableTag extends SimpleTagSupport
 		JspWriter out = getJspContext().getOut();
 		now=LocalDate.now();
 		getData();
-		out.println("<table border=\"1\" id=\"rosterTable\">");
+		out.println("<table border=\"0\" id=\"rosterTable\">");
 		genTableHeader(out);
 		genTableBody(out);
 		genTableFooter(out);
@@ -402,19 +400,19 @@ public class RosterTableTag extends SimpleTagSupport
 			out.println(getIndentation()+"<td class=\"dataCell alignCenter borderCell\"></td>");
 		}
 	}
-	protected void genITORow(JspWriter out,ITO ito)throws JspException, IOException
+	protected void genITORow(JspWriter out,String itoId)throws JspException, IOException
 	{
 		int aShiftCount=0, bxShiftCount=0,cShiftCount=0, dxShiftCount=0,totalWorkingDayCount=0;
-		float actualWorkingHour=0.0f,thisMonthBalance=0.0f,thisMonthHourTotal=0.0f ,totalHour=(float)noOfWorkingDay*ito.getWorkingHourPerDay();
+		float actualWorkingHour=0.0f,thisMonthBalance=0.0f,thisMonthHourTotal=0.0f,totalHour;
+		ITORoster itoRoster=itoRosterList.get(itoId);
 		String shiftClassName,shiftType;
-		ITORoster itoRoster=itoRosterList.get(ito.getITOId());
 		Hashtable<Integer,String>previousMonthShiftList=itoRoster.getPreviousMonthShiftList();
 		Hashtable<Integer, String> shiftList=itoRoster.getShiftList();
-		out.println(getIndentation()+"<tr id=\"shift_"+ito.getITOId()+"\">");
+		out.println(getIndentation()+"<tr id=\"shift_"+itoId+"\">");
 		htmlIndentation++;
 		out.println(getIndentation()+"<td class=\"borderCell alignLeft\">");
 		htmlIndentation++;
-		out.println(getIndentation()+ito.getITOName()+"<br>"+ito.getPostName()+" Extn. 2458");
+		out.println(getIndentation()+itoRoster.getITOName()+"<br>"+itoRoster.getITOPostName()+" Extn. 2458");
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");
 		logger.debug(itoRoster.getPreviousMonthShiftList().size());
@@ -447,6 +445,7 @@ public class RosterTableTag extends SimpleTagSupport
 							break;
 					case "c":
 							cShiftCount++;
+							break;
 					case "d":
 					case "d1":
 					case "d2":
@@ -468,66 +467,67 @@ public class RosterTableTag extends SimpleTagSupport
 			}
 			out.println(getIndentation()+"</td>");	
 		}
+		totalHour=(float)noOfWorkingDay*itoRoster.getITOWorkingHourPerDay();
 		totalWorkingDayCount=aShiftCount+cShiftCount+bxShiftCount+dxShiftCount;
 		thisMonthHourTotal=(float)Utility.roundTo((double)(actualWorkingHour-totalHour), 2);
 		thisMonthBalance=(float)Utility.roundTo((double)thisMonthHourTotal+itoRoster.getBalance(),2);
 		
-		out.println(getIndentation()+"<td id=\""+ito.getITOId()+"_totalHour\" class=\"alignCenter borderCell\">");
+		out.println(getIndentation()+"<td id=\""+itoId+"_totalHour\" class=\"alignCenter borderCell\">");
 		htmlIndentation++;
 		out.println(getIndentation()+totalHour);
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");
 		
-		out.println(getIndentation()+"<td id=\""+ito.getITOId()+"_actualHour\" class=\"alignCenter borderCell\">");
+		out.println(getIndentation()+"<td id=\""+itoId+"_actualHour\" class=\"alignCenter borderCell\">");
 		htmlIndentation++;
 		actualWorkingHour=(float)Utility.roundTo((double)actualWorkingHour,2);
 		out.println(getIndentation()+actualWorkingHour);
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");
 		
-		out.println(getIndentation()+"<td id=\""+ito.getITOId()+"_lastMonthBalance\" class=\"alignCenter borderCell\">");
+		out.println(getIndentation()+"<td id=\""+itoId+"_lastMonthBalance\" class=\"alignCenter borderCell\">");
 		htmlIndentation++;
 		out.println(getIndentation()+itoRoster.getBalance());
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");
 
-		out.println(getIndentation()+"<td id=\""+ito.getITOId()+"_thisMonthHourTotal\" class=\"alignCenter borderCell\">");
+		out.println(getIndentation()+"<td id=\""+itoId+"_thisMonthHourTotal\" class=\"alignCenter borderCell\">");
 		htmlIndentation++;
 		out.println(getIndentation()+thisMonthHourTotal);
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");
 		
-		out.println(getIndentation()+"<td id=\""+ito.getITOId()+"_thisMonthBalance\" class=\"alignCenter borderCell\">");
+		out.println(getIndentation()+"<td id=\""+itoId+"_thisMonthBalance\" class=\"alignCenter borderCell\">");
 		htmlIndentation++;
 		out.println(getIndentation()+thisMonthBalance);
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");
 		
-		out.println(getIndentation()+"<td id=\""+ito.getITOId()+"_aShiftCount\" class=\"alignCenter borderCell\">");
+		out.println(getIndentation()+"<td id=\""+itoId+"_aShiftCount\" class=\"alignCenter borderCell\">");
 		htmlIndentation++;
 		out.println(getIndentation()+aShiftCount);
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");		
 		
-		out.println(getIndentation()+"<td id=\""+ito.getITOId()+"_bxShiftCount\" class=\"alignCenter borderCell\">");
+		out.println(getIndentation()+"<td id=\""+itoId+"_bxShiftCount\" class=\"alignCenter borderCell\">");
 		htmlIndentation++;
 		out.println(getIndentation()+bxShiftCount);
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");
 		
-		out.println(getIndentation()+"<td id=\""+ito.getITOId()+"_cShiftCount\" class=\"alignCenter borderCell\">");
+		out.println(getIndentation()+"<td id=\""+itoId+"_cShiftCount\" class=\"alignCenter borderCell\">");
 		htmlIndentation++;
 		out.println(getIndentation()+cShiftCount);
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");
 		
-		out.println(getIndentation()+"<td id=\""+ito.getITOId()+"_dxShiftCount\" class=\"alignCenter borderCell\">");
+		out.println(getIndentation()+"<td id=\""+itoId+"_dxShiftCount\" class=\"alignCenter borderCell\">");
 		htmlIndentation++;
 		out.println(getIndentation()+dxShiftCount);
 		htmlIndentation--;
 		out.println(getIndentation()+"</td>");
 		
-		out.println(getIndentation()+"<td id=\""+ito.getITOId()+"_noOfWoringDay\" class=\"alignCenter borderCell\">");
+		out.println(getIndentation()+"<td id=\""+itoId+"_noOfWoringDay\" class=\"alignCenter borderCell\">");
 		htmlIndentation++;
 		out.println(getIndentation()+totalWorkingDayCount);
 		htmlIndentation--;
@@ -574,13 +574,11 @@ public class RosterTableTag extends SimpleTagSupport
 		{
 			case "b":
 			case "b1":shiftClassName="b";
-					
 					break;
 			case "d":
 			case "d1":
 			case "d2":
 			case "d3":shiftClassName="dx";
-					
 					break;
 			default:				
 				shiftClassName=shiftType;
