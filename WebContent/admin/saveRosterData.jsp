@@ -2,8 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.io.*"%>
 <%@ page import="java.util.*"%>
-<%@ page import="com.Roster"%>
-<%@ page import="com.ITORoster"%>
+<%@ page import="com.rosterWeb.Roster"%>
+<%@ page import="com.rosterWeb.ITORoster"%>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper"%>    
 <%
 	ObjectMapper objectMapper = new ObjectMapper();

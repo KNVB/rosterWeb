@@ -7,7 +7,7 @@ System.out.println(config.getInitParameter("adminUserName")+","+config.getInitPa
 if (loginName.equals(config.getInitParameter("adminUserName"))&& (password.equals(config.getInitParameter("adminPassword"))))
 {
 	session.setAttribute("isAuthenicated",true);
-	response.sendRedirect("rosterScheduler");
+	response.sendRedirect("adminPlatform.jsp");
 }
 else
 {%>

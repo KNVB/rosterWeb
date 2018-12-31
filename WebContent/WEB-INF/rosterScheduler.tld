@@ -1,10 +1,10 @@
 <taglib>
    <tlib-version>1.0</tlib-version>
    <jsp-version>2.0</jsp-version>
-   <short-name>RosterTable short name</short-name>
+   <short-name>RosterScheduler short name</short-name>
    <tag>
-      <name>RosterTableTag</name>
-      <tag-class>com.rosterWeb.customtags.RosterTableTag</tag-class>
+      <name>RosterSchedulerTag</name>
+      <tag-class>com.rosterWeb.customtags.RosterSchedulerTag</tag-class>
       <body-content>scriptless</body-content>
       <attribute>
          <name>rosterYear</name>

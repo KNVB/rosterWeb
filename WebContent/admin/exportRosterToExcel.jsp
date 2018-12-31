@@ -2,9 +2,9 @@
 <%@ page contentType="applicaton/octet-stream" %>
 <%@ page import="java.io.*"%>
 <%@ page import="java.util.*"%>
-<%@ page import="com.Roster"%>
-<%@ page import="com.ITORoster"%>
-<%@ page import="com.Utility"%>
+<%@ page import="com.rosterWeb.Roster"%>
+<%@ page import="com.rosterWeb.ITORoster"%>
+<%@ page import="com.rosterWeb.Utility"%>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper"%>  
 <%@ page import="org.apache.poi.xssf.usermodel.XSSFWorkbook"%>  
 <%
