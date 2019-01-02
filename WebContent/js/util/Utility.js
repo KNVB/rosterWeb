@@ -9,6 +9,7 @@ class Utility
 		return jQuery.ajax({"url": "getDateList.jsp",
 							data:{"year":year,"month":month},
 							method:"POST",
+							dataType:"json",
 							error: function(xhr) {
 							      console.log('error', xhr);
 							    }
@@ -19,6 +20,7 @@ class Utility
 		return jQuery.ajax({"url": "getRosterList.jsp",
 							data:{"year":year,"month":month},
 							method:"POST",
+							dataType:"json",
 							error: function(xhr) {
 							      console.log('error', xhr);
 							    }

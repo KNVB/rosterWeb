@@ -1,0 +1,546 @@
+class RosterTable
+{
+	constructor(container)
+	{
+		var self=this;
+
+		this.utility=new Utility();
+		this.rosterRule=new RosterRule();
+		this.showNoOfPrevDate=0;
+		
+		this.rosterBody=document.createElement("tbody");
+		this.rosterFooter=document.createElement("tFoot");
+		this.rosterHeader=document.createElement("thead");
+		this.rosterTable=document.createElement("table");
+		
+		this.rosterBody.id="rosterBody";
+		this.rosterFooter.id="rosterFooter";
+		this.rosterHeader.id="rosterHeader";
+		this.rosterTable.id="rosterTable";
+		
+		$(this.rosterTable).attr("border","0");
+		container.append(this.rosterTable);
+	}
+	build(year,month)
+	{
+		var self=this;
+		this.rosterYear=year;
+		this.rosterMonth=month;
+		this.aShiftData=[];
+		this.bShiftData=[];
+		this.cShiftData=[];
+		this.noOfWorkingDay=0;
+
+		this._buildTableHeader();
+		this._buildTableBody();
+		this._buildTableFooter();
+		this.rosterTable.append(this.rosterHeader);
+		this.rosterTable.append(this.rosterBody);
+		this.rosterTable.append(this.rosterFooter);
+		var mP=new MonthPicker({elements:$("#rosterMonth"),initYear:this.rosterYear,minValue: "01/2017"});
+		mP.onPick(function (year,month){
+			self.build(year,month);
+		});
+	}
+//========================================================	
+	_buildCaptionRow()
+	{
+		var row=this.rosterHeader.insertRow(this.rosterHeader.rows.length);
+		var cell=row.insertCell(row.cells.length);
+		cell.className="nameCell";
+		for (var i=0;i<this.showNoOfPrevDate;i++)
+		{
+			cell=row.insertCell(row.cells.length);
+		}
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter titleCell underlineText";
+		cell.textContent="EMSTF Resident Support & Computer Operation Support Services Team Roster";
+		cell.colSpan=31;
+		cell=row.insertCell(row.cells.length);
+		cell.className="totalHourCell";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="actualHourCell";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="lastMonthCell";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="thisMonthCell";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="totalCell";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="totalNoOfCell";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="totalNoOfCell";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="totalNoOfCell";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="totalNoOfCell";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="noOfWorkingDay";
+	}
+	_buildDateRow(dateObjectList)
+	{
+		var row=this.rosterHeader.insertRow(this.rosterHeader.rows.length);
+		var cell=row.insertCell(row.cells.length);
+		row.id="dateRow";
+		cell.className="nameCell borderCell";
+		cell.innerHTML="Resident Support<br>Team Members";
+		for (var i=0;i<this.showNoOfPrevDate;i++)
+		{
+			cell=row.insertCell(row.cells.length);
+			cell.className="dataCell alignCenter borderCell";
+		}
+		for (var i=0;i<31;i++)
+		{
+			cell=row.insertCell(row.cells.length);
+			cell.className="dataCell alignCenter borderCell";
+			
+			if (i<Object.keys(dateObjectList).length)
+			{
+				cell.textContent=(i+1);
+			}
+		}
+	
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter borderCell";
+		cell.innerHTML="Last<br>Month";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter borderCell";
+		cell.innerHTML="This<br>Month";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter borderCell";
+		cell.innerHTML="Total";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter borderCell";
+		cell.innerHTML="Total No. of <br>A Shift";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter borderCell";
+		cell.innerHTML="Total No. of <br>Bx Shift";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter borderCell";
+		cell.innerHTML="Total No. of <br>C Shift";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter borderCell";
+		cell.innerHTML="Total No. of <br>Dx Shift";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter borderCell";
+		cell.innerHTML="No. of <br>working<br>day";
+	}
+	_buildHolidayRow(dateObjectList)
+	{
+		var dateObj;
+		var row=this.rosterHeader.insertRow(this.rosterHeader.rows.length);
+		var cell=row.insertCell(row.cells.length);
+		row.id="holidayRow";
+		cell.className="nameCell borderCell";
+		cell.textContent="Holiday";
+		for (var i=0;i<this.showNoOfPrevDate;i++)
+		{
+			cell=row.insertCell(row.cells.length);
+			cell.className="dataCell alignCenter borderCell";
+		}
+		for (var i=0;i<31;i++)
+		{
+			cell=row.insertCell(row.cells.length);
+			cell.className="dataCell alignCenter borderCell phCell";
+			
+			if (i<Object.keys(dateObjectList).length)
+			{
+				dateObj=dateObjectList[i+1];
+				if(dateObj.publicHoliday==true)
+				{
+					cell.textContent="PH";
+				}
+			}
+		}
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=10;
+		cell.className="borderCell";
+	}
+	_buildITORow(itoId,rosterDataList)
+	{
+		var aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0;
+		var	actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
+		var i,shiftType;
+		
+		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
+		var cell=row.insertCell(row.cells.length);
+		row.id="shift_"+itoId;
+		cell.className="borderCell alignLeft";
+		cell.innerHTML=rosterDataList.itoname+"<br>"+rosterDataList.itopostName+" Extn. 2458";
+
+		var index=Object.keys(rosterDataList.previousMonthShiftList).length-this.showNoOfPrevDate+1;
+		for (i=index;i<=Object.keys(rosterDataList.previousMonthShiftList).length;i++)
+		{
+			cell=row.insertCell(row.cells.length);
+			cell.textContent=rosterDataList.previousMonthShiftList[i];
+			cell.className=this.utility.getShiftCssClassName(rosterDataList.previousMonthShiftList[i]);
+			cell.className+=" alignCenter borderCell";
+		}
+		for (i=0;i<Object.keys(rosterDataList.shiftList).length;i++)
+		{
+			shiftType=rosterDataList.shiftList[i+1];
+			cell=row.insertCell(row.cells.length);
+			cell.textContent=shiftType;
+			cell.className=this.utility.getShiftCssClassName(shiftType);
+			cell.className+=" alignCenter borderCell cursorCell shiftCell";
+			switch(shiftType)
+			{
+				case "a":
+						aShiftCount++;
+						break;
+				case "b":
+				case "b1":
+						bxShiftCount++;
+						break;
+				case "c":
+						cShiftCount++;
+						break;
+				case "d":
+				case "d1":
+				case "d2":
+				case "d3":
+						dxShiftCount++;
+						break;		
+			}
+			actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];			
+		}
+		for (var j=i;j<31;j++)
+		{
+			cell=row.insertCell(row.cells.length);
+			cell.className="alignCenter borderCell";
+		}
+		
+		var totalHour=rosterDataList.itoworkingHourPerDay*this.noOfWorkingDay;
+		thisMonthHourTotal=actualWorkingHour-totalHour;
+		thisMonthBalance=thisMonthHourTotal+rosterDataList.balance;
+		
+		cell=row.insertCell(row.cells.length);
+		cell.id=itoId+"_totalHour";
+		cell.className="alignCenter borderCell";
+		cell.textContent=this.utility.roundTo(totalHour,2);
+		
+		cell=row.insertCell(row.cells.length);
+		cell.id=itoId+"_actualHour";
+		cell.className="alignCenter borderCell";
+		cell.textContent=this.utility.roundTo(actualWorkingHour,2);
+		
+		cell=row.insertCell(row.cells.length);
+		cell.id=itoId+"_lastMonthBalance";
+		cell.className="alignCenter borderCell";
+		cell.textContent=this.utility.roundTo(rosterDataList.balance,2);
+		
+		cell=row.insertCell(row.cells.length);
+		cell.id=itoId+"_thisMonthHourTotal";
+		cell.className="alignCenter borderCell";
+		cell.textContent=this.utility.roundTo(thisMonthHourTotal,2);
+		
+		cell=row.insertCell(row.cells.length);
+		cell.id=itoId+"_thisMonthBalance";
+		cell.className="alignCenter borderCell";
+		cell.textContent=this.utility.roundTo(thisMonthBalance,2);
+		
+		cell=row.insertCell(row.cells.length);
+		cell.id=itoId+"_aShiftCount";
+		cell.className="alignCenter borderCell";
+		cell.textContent=aShiftCount;
+		
+		cell=row.insertCell(row.cells.length);
+		cell.id=itoId+"_bxShiftCount";
+		cell.className="alignCenter borderCell";
+		cell.textContent=bxShiftCount;
+
+		cell=row.insertCell(row.cells.length);
+		cell.id=itoId+"_cShiftCount";
+		cell.className="alignCenter borderCell";
+		cell.textContent=cShiftCount;
+
+		cell=row.insertCell(row.cells.length);
+		cell.id=itoId+"_dxShiftCount";
+		cell.className="alignCenter borderCell";
+		cell.textContent=dxShiftCount;
+
+		cell=row.insertCell(row.cells.length);
+		cell.id=itoId+"_noOfWoringDay";
+		cell.className="alignCenter borderCell";
+		cell.textContent=(dxShiftCount+cShiftCount+bxShiftCount+aShiftCount);
+		
+		if ($.isEmptyObject(rosterDataList.shiftList))
+		{
+			this.aShiftData.push(0);
+			this.bShiftData.push(0);
+			this.cShiftData.push(0);
+		}	
+		else
+		{
+			this.aShiftData.push(aShiftCount); 
+			this.bShiftData.push(bxShiftCount); 
+			this.cShiftData.push(cShiftCount);
+		}
+	}
+	_buildNextMonth()
+	{
+		if (this.rosterMonth==12)
+		{
+			this.rosterMonth=1;
+			this.rosterYear++;
+		}	
+		else
+			this.rosterMonth++;
+		this.build(this.rosterYear,this.rosterMonth);
+	}
+	_buildPreviousMonth()
+	{
+		if (this.rosterMonth==1)
+		{
+			this.rosterMonth=12;
+			this.rosterYear--;
+		}	
+		else
+			this.rosterMonth--;
+		this.build(this.rosterYear,this.rosterMonth);
+	}
+	_buildRosterRows(rosterList)
+	{
+		var self=this;
+		Object.keys(rosterList).forEach(function(itoId){
+			self._buildITORow(itoId,rosterList[itoId]);
+		});
+	}
+	_buildRosterMonthRow()
+	{
+		var input,span,link;
+		var self=this;
+		var row=this.rosterHeader.insertRow(this.rosterHeader.rows.length);
+		row.id="rosterMonthRow";
+		var cell=row.insertCell(row.cells.length);
+		cell.className="nameCell";
+		for (var i=0;i<this.showNoOfPrevDate;i++)
+		{
+			cell=row.insertCell(row.cells.length);
+		}
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter rosterMonthSelectCell";
+		cell.colSpan=31;
+		link=document.createElement("a");
+		link.innerHTML="<&nbsp;&nbsp;";
+		link.setAttribute('href', "#");
+		cell.append(link);
+		$(link).click(function(){
+			self._buildPreviousMonth();	
+		});
+		
+		span=document.createElement("span");
+		span.id="rosterMonth";
+		span.className="underlineText clickable"
+		span.textContent=this.utility.monthNames[this.rosterMonth]+" "+this.rosterYear;
+		cell.append(span);	
+	
+		link=document.createElement("a");
+		link.innerHTML="&nbsp;&nbsp;>";
+		link.setAttribute('href', "#");
+		cell.append(link);		
+		$(link).click(function(){
+			self._buildNextMonth();	
+		});
+		
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=10;		
+	}
+	_buildWeekDayRow(dateObjectList)
+	{
+		var dateObj;
+		var row=this.rosterHeader.insertRow(this.rosterHeader.rows.length);
+		var cell=row.insertCell(row.cells.length);
+		row.id="dayRow";
+		cell.className="nameCell borderCell";
+		cell.textContent="Days";
+		for (var i=0;i<this.showNoOfPrevDate;i++)
+		{
+			cell=row.insertCell(row.cells.length);
+			cell.className="dataCell alignCenter borderCell";
+		}
+		for (var i=0;i<31;i++)
+		{
+			cell=row.insertCell(row.cells.length);
+			cell.className="dataCell alignCenter borderCell";
+			
+			if (i<Object.keys(dateObjectList).length)
+			{
+				dateObj=dateObjectList[i+1];
+				if ((dateObj.publicHoliday==true)||(dateObj.dayOfWeek=="SATURDAY")||(dateObj.dayOfWeek=="SUNDAY"))
+				{
+					cell.className+=" phCell";	
+				}
+				else
+					this.noOfWorkingDay++;
+				
+				switch (dateObj.dayOfWeek)
+				{
+					case "MONDAY":
+								cell.textContent="M";
+								break;	
+					case "TUESDAY":
+								cell.textContent="T";
+								break;	
+					case "WEDNESDAY":
+								cell.textContent="W";
+								break;	
+					case "THURSDAY":
+								cell.textContent="TH";
+								break;	
+					case "FRIDAY":
+								cell.textContent="F";
+								break;	
+					case "SATURDAY":
+								cell.textContent="S";
+								break;	
+					case "SUNDAY":
+								cell.textContent="Su";
+								break;	
+				}					
+			}
+		}
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter borderCell"; 
+		cell.rowSpan=2;
+		cell.innerHTML="Total<br>Hour";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter borderCell"; 
+		cell.rowSpan=2;
+		cell.innerHTML="Actual<br>Hour";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.className="alignCenter borderCell"; 
+		cell.colSpan=8;
+		cell.innerHTML="Hour Off Due";
+	}
+	_buildTableBody()
+	{
+		var self=this;
+		$(this.rosterBody).empty();
+		this.utility.getRosterList(this.rosterYear,this.rosterMonth)
+		.done(function(rosterList){
+			self._buildRosterRows(rosterList);
+		})
+		.fail(function(data){
+			alert("Failed to get roster list.");
+		});
+		
+	}
+	_buildTableFooter()
+	{
+		$(this.rosterFooter).empty();
+		var shiftCellColSpan=11+this.showNoOfPrevDate;
+		var row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
+		var cell=row.insertCell(row.cells.length);
+		cell.colSpan=44-this.showNoOfPrevDate;
+		cell.innerHTML="<br>";
+		
+		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=shiftCellColSpan;
+		cell.className="aShiftColor";
+		cell.textContent="a : 0800H - 1700H";
+		
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=21;
+		cell.rowSpan=10;
+		cell.id="autoScheduler"; 
+		cell.style.verticalAlign="top";
+		//this._buildSchedulerButton(cell);
+		
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=10;
+		cell.rowSpan=20;
+		cell.id="yearlyStat"; 
+		cell.style.verticalAlign="top";
+		//this._buildStatisticReport(cell);
+		
+		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=shiftCellColSpan;
+		cell.className="bShiftColor";
+		cell.textContent="b : 1630H - 2215H";
+		
+		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=shiftCellColSpan;
+		cell.className="bShiftColor";
+		cell.textContent="b1: 1500H - 2215H";
+		
+		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=shiftCellColSpan;
+		cell.className="cShiftColor";
+		cell.textContent="c : 2145H - 0830H (the next day)";
+		
+		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=shiftCellColSpan;
+		cell.className="dxShiftColor";
+		cell.textContent="d : 0800H - 1800H (on weekdays)";
+
+		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=shiftCellColSpan;
+		cell.className="dxShiftColor";
+		cell.textContent="d1 : 0800H - 1700H (on weekdays)";
+		
+		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=shiftCellColSpan;
+		cell.className="dxShiftColor";
+		cell.textContent="d2 : 0900H - 1800H (on weekdays)";
+		
+		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=shiftCellColSpan;
+		cell.className="dxShiftColor";
+		cell.textContent="d3 : 0800H - 1648H (on weekdays)";
+		
+		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=shiftCellColSpan;
+		cell.className="sickLeaveColor";
+		cell.textContent="s : sick leave standby";
+
+		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=shiftCellColSpan;
+		cell.className="oShiftColor";
+		cell.textContent="O : dayoff";
+	}
+	_buildTableHeader()
+	{
+		var self=this;
+		$(this.rosterHeader).empty();
+		this._buildCaptionRow();
+		this.utility.getDateList(this.rosterYear,this.rosterMonth)
+		.done(function(dateObjList){
+			self._buildRosterMonthRow();
+			self._buildHolidayRow(dateObjList);
+			self._buildWeekDayRow(dateObjList);
+			self._buildDateRow(dateObjList);
+		})
+		.fail(function(data){
+			alert("Fail to get Date Object List");
+		});
+	}	
+}
