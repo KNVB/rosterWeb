@@ -412,7 +412,7 @@ public class MyCalendarUtility {
 		MonthlyCalendar mc=new MonthlyCalendar();
 		solarMonthPattern=String.format("%02d", month); 
 		
-		System.out.println("month="+month);
+		//System.out.println("month="+month);
 		/*
 		 * 西曆當月一日日期
 		 * Create GregorianCalendar object for the 1st of the month 
