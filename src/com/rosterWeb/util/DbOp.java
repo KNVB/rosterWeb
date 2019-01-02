@@ -1,12 +1,12 @@
-package util;
+package com.rosterWeb.util;
 
-import com.ITO;
-import com.ITORoster;
-import com.Roster;
-import com.RosterRule;
-import com.Utility;
-import com.rosterStatistic.ITOYearlyStatistic;
-import com.rosterStatistic.MonthlyStatistic;
+import com.rosterWeb.ITO;
+import com.rosterWeb.ITORoster;
+import com.rosterWeb.Roster;
+import com.rosterWeb.RosterRule;
+import com.rosterWeb.Utility;
+import com.rosterWeb.rosterStatistic.ITOYearlyStatistic;
+import com.rosterWeb.rosterStatistic.MonthlyStatistic;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

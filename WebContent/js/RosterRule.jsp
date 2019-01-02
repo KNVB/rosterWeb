@@ -1,3 +1,10 @@
+<%@ page trimDirectiveWhitespaces="true" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.rosterWeb.RosterRule"%>
+<%@ page import="com.fasterxml.jackson.databind.ObjectMapper"%>
+<% 
+	ObjectMapper objectMapper = new ObjectMapper();
+%>
 /**
  * 
  */
@@ -5,10 +12,9 @@ class RosterRule
 {
 	constructor()
 	{
-		this.essentialShiftList=[];
-		this.maxNoOfShiftPerMonth;
-		this.maxConsecutiveWorkingDay;
-		this.shiftHourCount=[];
+		this.essentialShiftList=<%=objectMapper.writeValueAsString(RosterRule.getEssentialShiftList()).replace("\\\"", "")%>;
+		this.maxConsecutiveWorkingDay=<%=objectMapper.writeValueAsString(RosterRule.getMaxConsecutiveWorkingDay())%>;
+		this.shiftHourCount=<%=objectMapper.writeValueAsString(RosterRule.getShiftHourCount())%>;
 		this.utility;
 	}
 	getEssentialShift()

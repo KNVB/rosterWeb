@@ -1,4 +1,4 @@
-DataStoreImplementationClassName = util.DbOp
+DataStoreImplementationClassName = com.rosterWeb.util.DbOp
 dbServerName=server
 dbms=mysql
 dbName=roster

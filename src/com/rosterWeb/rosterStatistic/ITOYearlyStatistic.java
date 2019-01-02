@@ -1,4 +1,4 @@
-package com.rosterStatistic;
+package com.rosterWeb.rosterStatistic;
 
 import java.util.ArrayList;
 

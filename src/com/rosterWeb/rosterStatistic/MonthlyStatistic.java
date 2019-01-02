@@ -1,4 +1,4 @@
-package com.rosterStatistic;
+package com.rosterWeb.rosterStatistic;
 
 public class MonthlyStatistic 
 {

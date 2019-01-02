@@ -1,4 +1,4 @@
-package com;
+package com.rosterWeb;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import util.DataStore;
+import com.rosterWeb.util.DataStore;
 /**
  * It denote a set of roster rules.
  * All parameters are read from DataStore object

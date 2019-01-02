@@ -1,8 +1,8 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%//@ page contentType="applicaton/octet-stream" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="util.calendar.*"%>
-<%@ page import="com.Utility"%>
+<%@ page import="com.rosterWeb.util.calendar.*"%>
+<%@ page import="com.rosterWeb.Utility"%>
 
 <%@ page import="java.io.File"%>
 <%@ page import="java.io.FileInputStream"%>
