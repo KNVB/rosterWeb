@@ -8,6 +8,7 @@ class RosterTable
 		this.rosterList=null;
 		this.rosterRule=new RosterRule();
 		this.showNoOfPrevDate=0;
+		this.dateObjList=null;
 		
 		this.rosterBody=document.createElement("tbody");
 		this.rosterFooter=document.createElement("tFoot");
@@ -21,9 +22,7 @@ class RosterTable
 		this.rosterTable.id="rosterTable";
 		
 		$(this.rosterTable).attr("border","0");
-		
-		this._buildTableFooter();
-		this.rosterTable.append(this.rosterFooter);
+		this.container=container;
 		container.append(this.rosterTable);
 	}
 	build(year,month)
@@ -38,15 +37,35 @@ class RosterTable
 
 		this._buildTableHeader();
 		this._buildTableBody();
-		
+		this._buildTableFooter();
+
 		this.rosterTable.append(this.rosterHeader);
 		this.rosterTable.append(this.rosterBody);
-		
+		this.rosterTable.append(this.rosterFooter);
 		
 		var mP=new MonthPicker({elements:$("#rosterMonth"),initYear:this.rosterYear,minValue: "01/2017"});
 		mP.onPick(function (year,month){
 			self.build(year,month);
 		});
+	}
+	markCoorindate(theCell)
+	{
+		var row=theCell.parentElement;
+		var dateRow=document.getElementById("dateRow");
+		
+		var cell=dateRow.cells[theCell.cellIndex];
+		$(cell).addClass("highlight");
+		cell=row.cells[0];
+		$(cell).addClass("highlight");
+	}
+	unMarkCoorindate(theCell)
+	{
+		var row=theCell.parentElement;
+		var dateRow=document.getElementById("dateRow");
+		var cell=dateRow.cells[theCell.cellIndex];
+		$(cell).removeClass("highlight");
+		cell=row.cells[0];
+		$(cell).removeClass("highlight");
 	}
 //========================================================	
 	_buildCaptionRow()
@@ -92,8 +111,9 @@ class RosterTable
 		cell=row.insertCell(row.cells.length);
 		cell.className="noOfWorkingDay";
 	}
-	_buildDateRow(dateObjectList)
+	_buildDateRow()
 	{
+		var now=new Date(); 
 		var row=this.rosterHeader.insertRow(this.rosterHeader.rows.length);
 		var cell=row.insertCell(row.cells.length);
 		row.id="dateRow";
@@ -109,9 +129,13 @@ class RosterTable
 			cell=row.insertCell(row.cells.length);
 			cell.className="dataCell alignCenter borderCell";
 			
-			if (i<Object.keys(dateObjectList).length)
+			if (i<Object.keys(this.dateObjList).length)
 			{
 				cell.textContent=(i+1);
+				if ((this.rosterYear==now.getFullYear()) &&
+					(this.rosterMonth==(1+now.getMonth())) &&
+					((i+1)==(now.getDate())))
+					cell.className+=" highlight";	
 			}
 		}
 	
@@ -147,7 +171,7 @@ class RosterTable
 		cell.className="alignCenter borderCell";
 		cell.innerHTML="No. of <br>working<br>day";
 	}
-	_buildHolidayRow(dateObjectList)
+	_buildHolidayRow()
 	{
 		var dateObj;
 		var row=this.rosterHeader.insertRow(this.rosterHeader.rows.length);
@@ -165,9 +189,9 @@ class RosterTable
 			cell=row.insertCell(row.cells.length);
 			cell.className="dataCell alignCenter borderCell phCell";
 			
-			if (i<Object.keys(dateObjectList).length)
+			if (i<Object.keys(this.dateObjList).length)
 			{
-				dateObj=dateObjectList[i+1];
+				dateObj=this.dateObjList[i+1];
 				if(dateObj.publicHoliday==true)
 				{
 					cell.textContent="PH";
@@ -178,12 +202,13 @@ class RosterTable
 		cell.colSpan=10;
 		cell.className="borderCell";
 	}
-	_buildITORow(itoId,rosterDataList)
+	_buildITORow(itoId)
 	{
 		var aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0;
 		var	actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
 		var i,shiftType;
-		
+		var self=this;
+		var rosterDataList=this.rosterList[itoId]
 		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
 		var cell=row.insertCell(row.cells.length);
 		row.id="shift_"+itoId;
@@ -321,11 +346,11 @@ class RosterTable
 			this.rosterMonth--;
 		this.build(this.rosterYear,this.rosterMonth);
 	}
-	_buildRosterRows(rosterList)
+	_buildRosterRows()
 	{
 		var self=this;
-		Object.keys(rosterList).forEach(function(itoId){
-			self._buildITORow(itoId,rosterList[itoId]);
+		Object.keys(this.rosterList).forEach(function(itoId){
+			self._buildITORow(itoId);
 		});
 	}
 	_buildRosterMonthRow()
@@ -369,7 +394,7 @@ class RosterTable
 		cell=row.insertCell(row.cells.length);
 		cell.colSpan=10;		
 	}
-	_buildWeekDayRow(dateObjectList)
+	_buildWeekDayRow()
 	{
 		var dateObj;
 		var row=this.rosterHeader.insertRow(this.rosterHeader.rows.length);
@@ -387,9 +412,9 @@ class RosterTable
 			cell=row.insertCell(row.cells.length);
 			cell.className="dataCell alignCenter borderCell";
 			
-			if (i<Object.keys(dateObjectList).length)
+			if (i<Object.keys(this.dateObjList).length)
 			{
-				dateObj=dateObjectList[i+1];
+				dateObj=this.dateObjList[i+1];
 				if ((dateObj.publicHoliday==true)||(dateObj.dayOfWeek=="SATURDAY")||(dateObj.dayOfWeek=="SUNDAY"))
 				{
 					cell.className+=" phCell";	
@@ -409,7 +434,7 @@ class RosterTable
 								cell.textContent="W";
 								break;	
 					case "THURSDAY":
-								cell.textContent="TH";
+								cell.textContent="Th";
 								break;	
 					case "FRIDAY":
 								cell.textContent="F";
@@ -442,15 +467,11 @@ class RosterTable
 	{
 		var self=this;
 		$(this.rosterBody).empty();
-		this.utility.getRosterList(this.rosterYear,this.rosterMonth)
-		.done(function(rosterList){
-			self._buildRosterRows(rosterList);
-			self.rosterList=rosterList;
-		})
-		.fail(function(data){
-			alert("Failed to get roster list.");
+		this._getData()
+		.then(function(){
+			self._buildRosterRows();
+			var shiftCellHighLighter=new ShiftCellHighLighter(self,"cursorCell");
 		});
-		
 	}
 	_buildTableFooter()
 	{
@@ -543,12 +564,28 @@ class RosterTable
 		this._buildRosterMonthRow();
 		this.utility.getDateList(this.rosterYear,this.rosterMonth)
 		.done(function(dateObjList){
-			self._buildHolidayRow(dateObjList);
-			self._buildWeekDayRow(dateObjList);
-			self._buildDateRow(dateObjList);
+			self.dateObjList=dateObjList;
+			self._buildHolidayRow();
+			self._buildWeekDayRow();
+			self._buildDateRow();
 		})
 		.fail(function(data){
 			alert("Fail to get Date Object List");
 		});
-	}	
+	}
+	_getData()
+	{
+		var self=this;
+		return new Promise((resolve, reject) =>{
+			 this.utility.getRosterList(this.rosterYear,this.rosterMonth)
+			 .done(function(rosterList){
+				 self.rosterList=rosterList;
+				 resolve();
+			 })
+			 .fail(function(data){
+				 alert("Failed to get roster list.");
+				 reject();
+			 });
+		});
+	}
 }

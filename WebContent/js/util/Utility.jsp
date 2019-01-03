@@ -6,7 +6,7 @@ class Utility
 	}
 	getDateList(year,month)
 	{
-		return jQuery.ajax({"url": "getDateList.jsp",
+		return jQuery.ajax({"url": "<%=request.getContextPath()%>/getDateList.jsp",
 							data:{"year":year,"month":month},
 							method:"POST",
 							dataType:"json",
@@ -17,7 +17,7 @@ class Utility
 	}
 	getRosterList(year,month)
 	{
-		return jQuery.ajax({"url": "getRosterList.jsp",
+		return jQuery.ajax({"url": "<%=request.getContextPath()%>/getRosterList.jsp",
 							data:{"year":year,"month":month},
 							method:"POST",
 							dataType:"json",
@@ -25,7 +25,7 @@ class Utility
 							      console.log('error', xhr);
 							    }
 		});
-	}
+	}	
 	getShiftCssClassName(shiftType)
 	{
 		var className="";

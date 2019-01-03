@@ -25,8 +25,9 @@
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery/3.3.1/jquery.min.js"></script>
 		<script src="<%=request.getContextPath()%>/js/RosterTable.js"></script>
 		<script src="<%=request.getContextPath()%>/js/RosterRule.jsp"></script>
-		<script src="<%=request.getContextPath()%>/js/util/Utility.js"></script>
+		<script src="<%=request.getContextPath()%>/js/util/Utility.jsp"></script>
 		<script src="<%=request.getContextPath()%>/js/util/MonthPicker.js"></script>
+		<script src="<%=request.getContextPath()%>/js/util/ShiftCellHighLighter.js"></script>
 		<script>
 			$( document ).ready(function() {
 				var rosterTable=new RosterTable($("body"));
