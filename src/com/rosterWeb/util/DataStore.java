@@ -5,7 +5,7 @@ import com.rosterWeb.Roster;
 import com.rosterWeb.rosterStatistic.ITOYearlyStatistic;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Map;
 
 
 
@@ -26,7 +26,7 @@ public interface DataStore {
 	 * @param month the specified month
 	 * @return List of ITO object
 	 */
-	public Hashtable<String,ITO>getITOList(int year,int month);
+	public Map<String,ITO>getITOList(int year,int month);
 	/**
 	 * Get the roster data for the specified ITO Ids,month and year
 	 * @param year the specified year
@@ -34,7 +34,7 @@ public interface DataStore {
 	 * @param itoIdList ito id list
 	 * @return roster data
 	 */
-	public Hashtable<String,ITORoster> getITORosterList(int year,int month,String[] itoIdList);
+	public Map<String,ITORoster> getITORosterList(int year,int month,String[] itoIdList);
 	/**
 	 * Get the Preferred Shift List for the specified ITO Ids,year and month
 	 * @param year the specified year
@@ -42,19 +42,19 @@ public interface DataStore {
 	 * @param itoIdList ito id list
 	 * @return Preferred Shift List
 	 */
-	public Hashtable<String, Hashtable<Integer, String>> getPreferredShiftList(int year, int month, String[] itoIdList);
+	public Map<String, Map<Integer, String>> getPreferredShiftList(int year, int month, String[] itoIdList);
 	/**
 	 * Reading roster rules from data store
 	 * @return roster rules
 	 */
-	public Hashtable<String,ArrayList<String>> getRosterRule();
+	public Map<String,ArrayList<String>> getRosterRule();
 	/**
 	 * Get yearly roster statistic for the specified year and month
 	 * @param year the specified year
 	 * @param month  the specified month
 	 * @return result
 	 */
-	public Hashtable<String,ITOYearlyStatistic>getYearlyRosterStatistic(int year,int month);
+	public Map<String,ITOYearlyStatistic>getYearlyRosterStatistic(int year,int month);
 	/**
 	 * Update roster data to data store
 	 * @param rosterYear the specified year

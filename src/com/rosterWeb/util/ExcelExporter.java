@@ -7,9 +7,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,9 +43,9 @@ public class ExcelExporter
 	private MyCalendarUtility myCalendarUtility=new MyCalendarUtility();
     
 	private String sampleExcelFilePath,tempOutputExcelFilePath;
-	private Hashtable<String, ITO> itoList;
-	private Hashtable<String, ITORoster> iTORosterList;
-	private Hashtable<Integer,String> shiftList;
+	private Map<String, ITO> itoList;
+	private Map<String, ITORoster> iTORosterList;
+	private Map<Integer,String> shiftList;
 	private static final Logger logger = LogManager.getLogger("ExcelExporter");
 	public ExcelExporter(int rosterYear, int rosterMonth) 
 	{
@@ -62,10 +61,10 @@ public class ExcelExporter
 		
 		this.tempOutputExcelFilePath=outputFilePath;
 	}
-	public void setITOList(Hashtable<String, ITO> itoList) {
+	public void setITOList(Map<String, ITO> itoList) {
 		this.itoList=itoList;
 	}	
-	public void setITORosterList(Hashtable<String, ITORoster> iTORosterList) {
+	public void setITORosterList(Map<String, ITORoster> iTORosterList) {
 		this.iTORosterList=iTORosterList;		
 	}
 	public void setVacantShiftData(ArrayList<String>vacantShiftData)
@@ -136,7 +135,7 @@ public class ExcelExporter
         
         //Prepare for copy rows from sheet2 to sheet1
 		String[] itoIdList = this.itoList.keySet().toArray(new String[0]);
-		Arrays.sort(itoIdList);
+		
 		
         XSSFRow sourceRow=sheet2.getRow(12),destRow,vancancyShiftRow;
 		List<XSSFRow> sourceRows=new ArrayList<XSSFRow>();

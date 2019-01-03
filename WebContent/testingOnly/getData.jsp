@@ -36,14 +36,14 @@ ITORoster itoRoster;
 Hashtable<String,Hashtable<Integer,String>>allPreferredShiftList;
 Hashtable<String,ITORoster>itoRosterList;
 
-Hashtable<String,ITO> itoList=ito.getITOList(rosterYear,rosterMonth);
+//Hashtable<String,ITO> itoList=ito.getITOList(rosterYear,rosterMonth);
 //MonthlyCalendar mc=calendarUtility.getMonthlyCalendar(rosterYear,rosterMonth);
 //Hashtable<Integer,MyCalendar>myCalendarList=mc.getMonthlyCalendar();
-ObjectMapper objectMapper = new ObjectMapper();
+//ObjectMapper objectMapper = new ObjectMapper();
 //PreferredShift preferredShift=new PreferredShift();
 
-itoIdList = itoList.keySet().toArray(new String[0]);
-Arrays.sort(itoIdList);
+//itoIdList = itoList.keySet().toArray(new String[0]);
+//Arrays.sort(itoIdList);
 //itoRosterList=roster.getRoster(rosterYear,rosterMonth, itoIdList);
 //allPreferredShiftList=preferredShift.getPreferredShiftList(rosterYear,rosterMonth, itoIdList);
 out.println("<hr>");

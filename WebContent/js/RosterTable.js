@@ -5,6 +5,7 @@ class RosterTable
 		var self=this;
 
 		this.utility=new Utility();
+		this.rosterList=null;
 		this.rosterRule=new RosterRule();
 		this.showNoOfPrevDate=0;
 		
@@ -16,9 +17,13 @@ class RosterTable
 		this.rosterBody.id="rosterBody";
 		this.rosterFooter.id="rosterFooter";
 		this.rosterHeader.id="rosterHeader";
+		
 		this.rosterTable.id="rosterTable";
 		
 		$(this.rosterTable).attr("border","0");
+		
+		this._buildTableFooter();
+		this.rosterTable.append(this.rosterFooter);
 		container.append(this.rosterTable);
 	}
 	build(year,month)
@@ -33,10 +38,11 @@ class RosterTable
 
 		this._buildTableHeader();
 		this._buildTableBody();
-		this._buildTableFooter();
+		
 		this.rosterTable.append(this.rosterHeader);
 		this.rosterTable.append(this.rosterBody);
-		this.rosterTable.append(this.rosterFooter);
+		
+		
 		var mP=new MonthPicker({elements:$("#rosterMonth"),initYear:this.rosterYear,minValue: "01/2017"});
 		mP.onPick(function (year,month){
 			self.build(year,month);
@@ -324,7 +330,7 @@ class RosterTable
 	}
 	_buildRosterMonthRow()
 	{
-		var input,span,link;
+		var input,span;
 		var self=this;
 		var row=this.rosterHeader.insertRow(this.rosterHeader.rows.length);
 		row.id="rosterMonthRow";
@@ -337,25 +343,26 @@ class RosterTable
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter rosterMonthSelectCell";
 		cell.colSpan=31;
-		link=document.createElement("a");
-		link.innerHTML="<&nbsp;&nbsp;";
-		link.setAttribute('href', "#");
-		cell.append(link);
-		$(link).click(function(){
+		
+		span=document.createElement("span");
+		span.innerHTML="<&nbsp;&nbsp;";
+		span.className="underlineText clickable";
+		cell.append(span);
+		$(span).click(function(){
 			self._buildPreviousMonth();	
 		});
 		
 		span=document.createElement("span");
 		span.id="rosterMonth";
-		span.className="underlineText clickable"
+		span.className="underlineText clickable";
 		span.textContent=this.utility.monthNames[this.rosterMonth]+" "+this.rosterYear;
 		cell.append(span);	
 	
-		link=document.createElement("a");
-		link.innerHTML="&nbsp;&nbsp;>";
-		link.setAttribute('href', "#");
-		cell.append(link);		
-		$(link).click(function(){
+		span=document.createElement("span");
+		span.innerHTML="&nbsp;&nbsp;>";
+		span.className="underlineText clickable";
+		cell.append(span);		
+		$(span).click(function(){
 			self._buildNextMonth();	
 		});
 		
@@ -438,6 +445,7 @@ class RosterTable
 		this.utility.getRosterList(this.rosterYear,this.rosterMonth)
 		.done(function(rosterList){
 			self._buildRosterRows(rosterList);
+			self.rosterList=rosterList;
 		})
 		.fail(function(data){
 			alert("Failed to get roster list.");
@@ -532,9 +540,9 @@ class RosterTable
 		var self=this;
 		$(this.rosterHeader).empty();
 		this._buildCaptionRow();
+		this._buildRosterMonthRow();
 		this.utility.getDateList(this.rosterYear,this.rosterMonth)
 		.done(function(dateObjList){
-			self._buildRosterMonthRow();
 			self._buildHolidayRow(dateObjList);
 			self._buildWeekDayRow(dateObjList);
 			self._buildDateRow(dateObjList);

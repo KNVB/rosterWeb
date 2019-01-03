@@ -16,8 +16,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
+
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,7 +65,7 @@ public class DbOp implements DataStore {
 	}
 
 	@Override
-	public Hashtable<String, ITO> getITOList(int year, int month) {
+	public Map<String, ITO> getITOList(int year, int month) {
 		ITO ito=null;
 		int lastDay;
 		ResultSet rs = null;
@@ -72,7 +74,7 @@ public class DbOp implements DataStore {
 		ArrayList <String>blackListShiftPatternList=null;
 		LocalDate joinDate,leaveDate;
 		LocalDate theFirstDateOfTheMonth=LocalDate.of(year,month,1);
-		Hashtable<String,ITO> result=new Hashtable<String,ITO>();
+		Map<String,ITO> result=new TreeMap<String,ITO>();
 		lastDay=theFirstDateOfTheMonth.getMonth().length(theFirstDateOfTheMonth.isLeapYear());
 		String firstDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-1";
 		String endDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-"+lastDay;
@@ -133,11 +135,11 @@ public class DbOp implements DataStore {
 		return result;		
 	}
 	@Override
-	public Hashtable<String, Hashtable<Integer, String>> getPreferredShiftList(int year, int month, String[] itoIdList)
+	public Map<String, Map<Integer, String>> getPreferredShiftList(int year, int month, String[] itoIdList)
 	{
 		LocalDate theMonthShiftStartDate=LocalDate.of(year,month,1);
-		Hashtable<Integer,String>preferredShiftList;
-		Hashtable<String, Hashtable<Integer, String>>result=new Hashtable<String, Hashtable<Integer, String>>();
+		Map<Integer,String>preferredShiftList;
+		Map<String, Map<Integer, String>>result=new TreeMap<String, Map<Integer, String>>();
 		int lastDayOfThisMonth;
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
@@ -148,7 +150,7 @@ public class DbOp implements DataStore {
 		{
 			for (String itoId :itoIdList)
 			{
-				preferredShiftList=new Hashtable<Integer,String>();
+				preferredShiftList=new TreeMap<Integer,String>();
 				sqlString="select day(shift_date) as d,preferred_shift from preferred_shift where ito_id=? and (preferred_shift.shift_date between ? and ?)";
 				stmt=dbConn.prepareStatement(sqlString);
 				stmt.setString(1,itoId);
@@ -175,16 +177,16 @@ public class DbOp implements DataStore {
 		return result;
 	}
 	@Override
-	public Hashtable<String, ITORoster> getITORosterList(int year, int month, String[] itoIdList) {
+	public Map<String, ITORoster> getITORosterList(int year, int month, String[] itoIdList) {
 		int lastDayOfThisMonth;
 		String temp;
 		ResultSet rs = null;
 		ITORoster itoRoster=null;
 		PreparedStatement stmt = null;
 		
-		Hashtable <Integer,String>shiftList=new Hashtable<Integer,String>();
-		Hashtable<Integer,String> previousMonthShiftList=new Hashtable<Integer,String>();
-		Hashtable<String, ITORoster> result=new  Hashtable<String, ITORoster>();
+		Map <Integer,String>shiftList=new TreeMap<Integer,String>();
+		Map<Integer,String> previousMonthShiftList=new TreeMap<Integer,String>();
+		Map<String, ITORoster> result=new TreeMap<String, ITORoster>();
 		
 		LocalDate previousMonthShiftEndDate=LocalDate.of(year, month,1);
 		LocalDate previousMonthShiftStartDate=LocalDate.of(year,month,1);
@@ -224,7 +226,7 @@ public class DbOp implements DataStore {
 				stmt.close();
 				rs.close();
 				
-				previousMonthShiftList=new Hashtable<Integer,String>();
+				previousMonthShiftList=new TreeMap<Integer,String>();
 				sqlString ="select day(shift_date) as d,shift from shift_record where ito_Id=? and (shift_record.shift_date between ? and ?)";
 				stmt=dbConn.prepareStatement(sqlString);
 				stmt.setString(1,itoId);
@@ -242,7 +244,7 @@ public class DbOp implements DataStore {
 				itoRoster.setPreviousMonthShiftList(previousMonthShiftList);
 				
 				sqlString ="select day(shift_date) as d,shift from shift_record where ito_Id=? and (shift_record.shift_date between ? and ?)";
-				shiftList=new Hashtable<Integer,String>();
+				shiftList=new TreeMap<Integer,String>();
 				stmt=dbConn.prepareStatement(sqlString);
 				stmt.setString(1,itoId);
 				stmt.setString(2,theMonthShiftStartDateString);
@@ -288,14 +290,14 @@ public class DbOp implements DataStore {
 	}
 
 	@Override
-	public Hashtable<String, ArrayList<String>> getRosterRule() {
+	public Map<String, ArrayList<String>> getRosterRule() {
 		char escapChar=(char)27;
 		ResultSet rs = null;
 		
 		String ruleType=new String();
 		PreparedStatement stmt = null;
 		ArrayList <String>keyValue=null;
-		Hashtable<String,ArrayList<String>> result=new Hashtable<String,ArrayList<String>>();
+		Map<String,ArrayList<String>> result=new TreeMap<String,ArrayList<String>>();
 		sqlString ="select * from roster_rule order by rule_type,rule_key,rule_value";
 		try
 		{
@@ -336,7 +338,7 @@ public class DbOp implements DataStore {
 	}
 
 	@Override
-	public Hashtable<String, ITOYearlyStatistic> getYearlyRosterStatistic(int year, int month) 
+	public Map<String, ITOYearlyStatistic> getYearlyRosterStatistic(int year, int month) 
 	{
 		int lastDay;
 		ResultSet rs = null;
@@ -348,7 +350,7 @@ public class DbOp implements DataStore {
 		String startDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-1";
 		String endDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-"+lastDay;
 		
-		Hashtable<String,ITOYearlyStatistic> result=new  Hashtable<String, ITOYearlyStatistic>();
+		Map<String,ITOYearlyStatistic> result=new TreeMap<String, ITOYearlyStatistic>();
 		logger.debug("startDateString="+startDateString);
 		logger.debug("endDateString="+endDateString);
 		logger.debug("year="+year);
@@ -413,7 +415,7 @@ public class DbOp implements DataStore {
 	{
 		boolean result=true;
 		String[]temp;
-		Hashtable<Integer,String> shiftList;
+		Map<Integer,String> shiftList;
 		PreparedStatement stmt=null;
 		try
 		{	
@@ -421,8 +423,8 @@ public class DbOp implements DataStore {
 			LocalDate balanceCalendar=LocalDate.of(year,month,1);
 			
 			balanceCalendar=balanceCalendar.plusMonths(1);
-			Hashtable<String,ITORoster>iTORosterList=roster.getITORosterList();
-			Hashtable<String,Hashtable<Integer,String>>iTOPreferredShiftList=roster.getITOPreferredShiftList();
+			Map<String,ITORoster>iTORosterList=roster.getITORosterList();
+			Map<String,Map<Integer,String>>iTOPreferredShiftList=roster.getITOPreferredShiftList();
 			balanceCalendar.plusMonths(1);
 			dbConn.setAutoCommit(false);
 			

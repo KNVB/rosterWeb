@@ -2,7 +2,7 @@ package com.rosterWeb;
 
 import java.util.ArrayList;
 import java.time.LocalDate;
-import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,11 +69,11 @@ public class ITO {
 	 * @return A list of ITO object order by post name.
 	 * @throws Exception the exception that was raised when retrieving ito data from data store
 	 */
-	public Hashtable<String,ITO> getITOList(int year,int month) throws Exception
+	public Map<String,ITO> getITOList(int year,int month) throws Exception
 	{
 		logger.info("ITO.getITOList("+year+","+ month+") is called");
 		dataStore=Utility.getDataStore();
-		Hashtable<String,ITO> result=dataStore.getITOList(year,month);
+		Map<String,ITO> result=dataStore.getITOList(year,month);
 		dataStore.close();
 		return result;
 	}	

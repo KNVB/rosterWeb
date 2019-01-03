@@ -1,6 +1,7 @@
 package com.rosterWeb;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,8 +15,8 @@ public class Roster
 	private DataStore dataStore;
 	private int rosterYear,rosterMonth;
 	private ArrayList<String> vacantShiftData;
-	private Hashtable<String,ITORoster> iTORosterList;
-	private Hashtable<String,Hashtable<Integer,String>> iTOPreferredShiftList;
+	private Map<String,ITORoster> iTORosterList;
+	private Map<String,Map<Integer,String>> iTOPreferredShiftList;
 	
 	private static final Logger logger = LogManager.getLogger(Class.class.getSimpleName());
 	
@@ -39,7 +40,7 @@ public class Roster
 		try {
 			
 			ITO ito=new ITO();
-			Hashtable<String,ITO> itoList=ito.getITOList(this.rosterYear, this.rosterMonth);
+			Map<String,ITO> itoList=ito.getITOList(this.rosterYear, this.rosterMonth);
 	        ExcelExporter excelExporter=new ExcelExporter(this.rosterYear, this.rosterMonth);
 	        excelExporter.setSampleExcelFilePath(inputFilePath);
 	        excelExporter.setTempOutputExcelFilePath(outputFilePath);
@@ -65,7 +66,7 @@ public class Roster
 	 * It return a list of preferred shift for specified ITO ids
 	 * @return iTOPreferredShiftList
 	 */
-	public Hashtable<String,Hashtable<Integer,String>> getITOPreferredShiftList()
+	public Map<String,Map<Integer,String>> getITOPreferredShiftList()
 	{
 		return iTOPreferredShiftList;
 	}
@@ -73,7 +74,7 @@ public class Roster
 	 * It returns ITORoster object for the specified roster year and month.
 	 * @return ITORoster 
 	 */
-	public Hashtable<String,ITORoster>getITORosterList()
+	public Map<String,ITORoster>getITORosterList()
 	{
 		return iTORosterList;
 	}
@@ -83,11 +84,11 @@ public class Roster
 	 * @return iTORosterList
 	 * @throws Exception the exception that was raised while get ITO roster from data store
 	 */
-	public Hashtable<String, ITORoster> getITORosterList(String[] itoIdList) throws Exception
+	public Map<String, ITORoster> getITORosterList(String[] itoIdList) throws Exception
 	{
 		logger.info("Roster.getRoster("+this.rosterYear+","+ this.rosterMonth+") is called");
 		dataStore=Utility.getDataStore();
-		Hashtable<String,ITORoster>iTORosterList=dataStore.getITORosterList(this.rosterYear,this.rosterMonth, itoIdList);
+		Map<String,ITORoster>iTORosterList=dataStore.getITORosterList(this.rosterYear,this.rosterMonth, itoIdList);
 		dataStore.close();
 		return iTORosterList;
 	}
@@ -97,7 +98,7 @@ public class Roster
 	 * @return iTOPreferredShiftList
 	 * @throws Exception the exception that was raised while get ITO Preferred shift from data store
 	 */
-	public Hashtable<String,Hashtable<Integer,String>>getITOPreferredShiftList(String[] itoIdList) throws Exception
+	public Map<String,Map<Integer,String>>getITOPreferredShiftList(String[] itoIdList) throws Exception
 	{
 		logger.info("PreferredShift.getPreferredShiftList("+this.rosterYear+","+ this.rosterMonth+") is called");
 		dataStore=Utility.getDataStore();
@@ -131,9 +132,9 @@ public class Roster
 	 * @return return the yearly statistic
 	 * @throws Exception the exception that was raised while get yearly statistic from data store
 	 */
-	public Hashtable<String,ITOYearlyStatistic> getYearlyStatistic()throws Exception
+	public Map<String,ITOYearlyStatistic> getYearlyStatistic()throws Exception
 	{
-		Hashtable<String,ITOYearlyStatistic> result;
+		Map<String,ITOYearlyStatistic> result;
 		dataStore=Utility.getDataStore();
 		result=dataStore.getYearlyRosterStatistic(this.rosterYear,this.rosterMonth);
 		dataStore.close();
@@ -143,7 +144,7 @@ public class Roster
 	 * It sets a list of ITO Preferred shift for the specified roster year and month.
 	 * @param iTOPreferredShiftList List of ITO Preferred shift
 	 */
-	public void setITOPreferredShiftList(Hashtable<String,Hashtable<Integer,String>> iTOPreferredShiftList)
+	public void setITOPreferredShiftList(Map<String,Map<Integer,String>> iTOPreferredShiftList)
 	{
 		this.iTOPreferredShiftList=iTOPreferredShiftList;
 	}	

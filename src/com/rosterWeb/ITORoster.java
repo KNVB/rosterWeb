@@ -1,6 +1,6 @@
 package com.rosterWeb;
 
-import java.util.Hashtable;
+import java.util.Map;
 
 public class ITORoster 
 {
@@ -9,8 +9,8 @@ public class ITORoster
 	 * For update data to database variable balance is referred to this month balance
 	 */	
 	private float balance;
-	private Hashtable<Integer,String>shiftList;
-	private Hashtable<Integer,String>previousMonthShiftList;
+	private Map<Integer,String>shiftList;
+	private Map<Integer,String>previousMonthShiftList;
 	
 	/**
 	 * The name of the specified ITO.
@@ -56,14 +56,14 @@ public class ITORoster
 	 * Get Previous Month Shift list(Not whole month shift list, the size of the shift list depends on RosterRule.getMaxConsecutiveWorkingDay() value).
 	 * @return the previous month shift list
 	 */
-	public Hashtable<Integer, String> getPreviousMonthShiftList() {
+	public Map<Integer, String> getPreviousMonthShiftList() {
 		return previousMonthShiftList;
 	}
 	/**
 	 * Get Shift list
 	 * @return Shift list
 	 */
-	public Hashtable<Integer, String> getShiftList() {
+	public Map<Integer, String> getShiftList() {
 		return shiftList;
 	}
 	/**
@@ -78,7 +78,7 @@ public class ITORoster
 	 * Set Shift list
 	 * @param shiftList Shift list
 	 */
-	public void setShiftList(Hashtable<Integer, String> shiftList) {
+	public void setShiftList(Map<Integer, String> shiftList) {
 		this.shiftList = shiftList;
 	}
 	
@@ -102,7 +102,7 @@ public class ITORoster
 	 * Set Previous Month Shift list(Not whole month shift list, the length of the shift list depends on RosterRule.getMaxConsecutiveWorkingDay() value).
 	 * @param previousMonthShiftList Previous Month Shift list
 	 */
-	public void setPreviousMonthShiftList(Hashtable<Integer, String> previousMonthShiftList) {
+	public void setPreviousMonthShiftList(Map<Integer, String> previousMonthShiftList) {
 		this.previousMonthShiftList = previousMonthShiftList;
 	}
 	

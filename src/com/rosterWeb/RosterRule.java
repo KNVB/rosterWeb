@@ -1,7 +1,8 @@
 package com.rosterWeb;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +19,7 @@ public class RosterRule
 	/**
 	 * It stores the shift to hour count mapping
 	 */
-	private static Hashtable<String,Float>shiftHourCount=new Hashtable<String,Float>();
+	private static Map<String,Float>shiftHourCount=new TreeMap<String,Float>();
 	
 	/**
 	 * It stores the essential shift of every day
@@ -62,7 +63,7 @@ public class RosterRule
 		String escapChar=String.valueOf((char)27);
 		
 		DataStore dataStore=Utility.getDataStore();
-		Hashtable<String,ArrayList<String>>rosterRule=dataStore.getRosterRule();
+		Map<String,ArrayList<String>>rosterRule=dataStore.getRosterRule();
 		dataStore.close();
 		dataStore=null;
 		for (String shift:rosterRule.get("shiftHour"))
@@ -90,7 +91,7 @@ public class RosterRule
 	 * Get the shift to hour count mapping
 	 * @return the shift to hour count mapping
 	 */
-	public static Hashtable<String, Float> getShiftHourCount() 
+	public static Map<String, Float> getShiftHourCount() 
 	{
 		return shiftHourCount;
 	}
