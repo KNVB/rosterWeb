@@ -30,16 +30,13 @@ class RosterSchedulerTable extends RosterTable
 		Object.keys(this.rosterList).forEach(function (itoId){
 			$("#shift_" +itoId).children("td.shiftCell").html("").blur();
 		});
-		$(this.vacantShiftRow).children("td.vacantShift").html("").blur();
+		$(this.vacantShiftRow).children("td.vacantShift").html("");
 	}
 	setScheduler(rosterScheduler)
 	{
 		this.rosterScheduler=rosterScheduler;
 	}
-	updateValue(theCell)
-	{
-		console.log("he");
-	}
+//======================================================================
 	_buildITORow(itoId)
 	{
 		super._buildITORow(itoId);
@@ -85,10 +82,6 @@ class RosterSchedulerTable extends RosterTable
 		super._buildRosterRows();
 		var i,self=this;
 		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
-		var shiftAStdDev=this.utility.getSD(this.aShiftData);
-		var shiftBStdDev=this.utility.getSD(this.bShiftData);
-		var shiftCStdDev=this.utility.getSD(this.cShiftData);
-		var avgStdDev=(shiftAStdDev+shiftBStdDev+shiftCStdDev)/3;
 		var cell=row.insertCell(row.cells.length);
 		row.id="vacantShiftRow";
 		this.vacantShiftRow=row;
@@ -100,20 +93,11 @@ class RosterSchedulerTable extends RosterTable
 			cell=row.insertCell(row.cells.length);
 			cell.className="alignCenter borderCell";
 		}
-		Object.keys(this.dateObjList).forEach(function(date){
-			var vacantShift=self.rosterRule.getEssentialShift();
+		for (i=0;i<31;i++)
+		{
 			cell=row.insertCell(row.cells.length);
 			cell.className="alignCenter borderCell vacantShift";
-			Object.keys(self.rosterList).forEach(function(itoId){
-				var rosterData=self.rosterList[itoId];
-				var shiftType=rosterData.shiftList[date];
-				if (shiftType=="b1")
-					vacantShift=vacantShift.replace("b","");
-				else
-					vacantShift=vacantShift.replace(shiftType,"");
-			});
-			cell.textContent=vacantShift;
-		});		
+		}
 		for (i=Object.keys(this.dateObjList).length;i<31;i++)
 		{
 			cell=row.insertCell(row.cells.length);
@@ -127,31 +111,24 @@ class RosterSchedulerTable extends RosterTable
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		cell.id="shiftAStdDev";
-		cell.textContent=this.utility.roundTo(shiftAStdDev,2);
+		
 		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
-		cell.id="shiftBStdDev";
-		cell.textContent=this.utility.roundTo(shiftBStdDev,2);
+		cell.id="shiftBStdDev";		
 		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
-		cell.id="shiftCStdDev";
-		cell.textContent=this.utility.roundTo(shiftCStdDev,2);
+		cell.id="shiftCStdDev";		
 		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
-		cell.id="avgStdDev";
-		cell.textContent=this.utility.roundTo(avgStdDev,2);
+		cell.id="avgStdDev";		
 		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		
 		$("td.cursorCell").attr('contentEditable',true);
-		$("td.shiftCell").on("blur",function(){
-			self.updateValue(this);
-		});
-
 	}
 	_genYearlyStatisticReport()
 	{
@@ -443,5 +420,34 @@ class RosterSchedulerTable extends RosterTable
 		cell.colSpan=2;
 		cell.style.textAlign="center";
 		cell.innerHTML ="<a class=\"saveRosterToDBButton\">Save all data to DB</a>";
+	}
+	_updateShiftCount(theCell,itoId)
+	{
+		super._updateShiftCount(theCell,itoId);
+		var vacantShift=this.rosterRule.getEssentialShift();
+		var aShiftData=[],bShiftData=[],cShiftData=[];
+		var aShiftSD,bShiftSD,cShiftSD,avgStdDev;
+		Object.keys(this.rosterList).forEach(function(itoId){
+			 var cell=document.getElementById("shift_"+itoId).cells[theCell.cellIndex];
+			 if (cell.textContent!="")
+			 {
+				 if (cell.textContent=="b1")
+					 vacantShift=vacantShift.replace("b","");
+				 else
+					 vacantShift=vacantShift.replace(cell.textContent,"");
+			 } 
+			 aShiftData.push(Number(document.getElementById(itoId+"_aShiftCount").textContent));
+			 bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
+			 cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
+		});
+		aShiftSD=this.utility.getSD(aShiftData);
+		bShiftSD=this.utility.getSD(bShiftData);
+		cShiftSD=this.utility.getSD(cShiftData);
+		avgStdDev=(aShiftSD+bShiftSD+cShiftSD)/3;
+		document.getElementById("shiftAStdDev").textContent=this.utility.roundTo(aShiftSD,2);
+		document.getElementById("shiftBStdDev").textContent=this.utility.roundTo(bShiftSD,2);
+		document.getElementById("shiftCStdDev").textContent=this.utility.roundTo(cShiftSD,2);
+		document.getElementById("avgStdDev").textContent=this.utility.roundTo(avgStdDev,2);
+		document.getElementById("vacantShiftRow").cells[theCell.cellIndex].textContent=vacantShift;
 	}
 }
