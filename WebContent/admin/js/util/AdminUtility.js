@@ -4,6 +4,18 @@ class AdminUtility  extends Utility
 	{
 		super();
 	}
+	getITOList(year,month)
+	{
+		return jQuery.ajax({"url": "getITOList.jsp",
+							data:{"year":year,"month":month},
+							method:"POST",
+							dataType:"json",
+							error: function(xhr) {
+							      console.log('error', xhr);
+							    }
+		});
+	}
+
 	getPreferredShiftList(rosterYear,rosterMonth)
 	{
 		return jQuery.ajax({"url": "getPreferredShiftList.jsp",

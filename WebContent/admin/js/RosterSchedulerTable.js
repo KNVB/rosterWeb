@@ -3,6 +3,7 @@ class RosterSchedulerTable extends RosterTable
 	constructor(container)
 	{
 		super(container);
+		this.itoList;
 		this.showNoOfPrevDate=2;
 		this.utility=new AdminUtility();
 		this.preferredShiftList=null;
@@ -27,7 +28,7 @@ class RosterSchedulerTable extends RosterTable
 	clearAllShift()
 	{
 		var i,cells;
-		Object.keys(this.rosterList).forEach(function (itoId){
+		Object.keys(this.itoList).forEach(function (itoId){
 			$("#shift_" +itoId).children("td.shiftCell").html("").blur();
 		});
 		$(this.vacantShiftRow).children("td.vacantShift").html("");
@@ -80,7 +81,9 @@ class RosterSchedulerTable extends RosterTable
 	_buildRosterRows()
 	{
 		super._buildRosterRows();
-		var i,self=this;
+		var aShiftData=[],bShiftData=[],cShiftData=[];
+		var aShiftSD,bShiftSD,cShiftSD,avgStdDev;
+		var i,self=this,shiftType;
 		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
 		var cell=row.insertCell(row.cells.length);
 		row.id="vacantShiftRow";
@@ -93,7 +96,21 @@ class RosterSchedulerTable extends RosterTable
 			cell=row.insertCell(row.cells.length);
 			cell.className="alignCenter borderCell";
 		}
-		for (i=0;i<31;i++)
+		Object.keys(this.dateObjList).forEach(function(date){
+			var essentialShift=self.rosterRule.getEssentialShift();
+			cell=row.insertCell(row.cells.length);
+			cell.className="alignCenter borderCell";
+			Object.keys(self.rosterList).forEach(function(itoId){
+				shiftType=self.rosterList[itoId].shiftList[date];
+				if (shiftType=="b1")
+					essentialShift=essentialShift.replace("b","");
+				else
+					essentialShift=essentialShift.replace(shiftType,"");
+			});
+			cell.textContent=essentialShift;
+		});
+		
+		for (i=Object.keys(this.dateObjList).length;i<31;i++)
 		{
 			cell=row.insertCell(row.cells.length);
 			cell.className="alignCenter borderCell vacantShift";
@@ -103,28 +120,44 @@ class RosterSchedulerTable extends RosterTable
 			cell=row.insertCell(row.cells.length);
 			cell.className="alignCenter borderCell";
 		}
+
+		Object.keys(self.itoList).forEach(function(itoId){
+			aShiftData.push(Number(document.getElementById(itoId+"_aShiftCount").textContent));
+			bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
+			cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
+			$("#shift_"+itoId+" td.shiftCell").blur(function(){
+				self._updateValue(this,itoId);
+			});
+		});
+
+		aShiftSD=this.utility.getSD(aShiftData);
+		bShiftSD=this.utility.getSD(bShiftData);
+		cShiftSD=this.utility.getSD(cShiftData);
+		avgStdDev=(aShiftSD+bShiftSD+cShiftSD)/3;
 		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		cell.colSpan=5;
-		
+				
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		cell.id="shiftAStdDev";
-		
+		cell.textContent=this.utility.roundTo(aShiftSD,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		cell.id="shiftBStdDev";		
+		cell.textContent=this.utility.roundTo(bShiftSD,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
-		cell.id="shiftCStdDev";		
+		cell.id="shiftCStdDev";
+		cell.textContent=this.utility.roundTo(cShiftSD,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		cell.id="avgStdDev";		
-		
+		cell.textContent=this.utility.roundTo(avgStdDev,2);
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		
@@ -253,18 +286,28 @@ class RosterSchedulerTable extends RosterTable
 	_getData()
 	{
 		var self=this;
-		return super._getData().then(function(){
-			return new Promise((resolve, reject) =>{
-				self.utility.getPreferredShiftList(self.rosterYear,self.rosterMonth)
-				.done(function(preferredShiftList){
-					self.preferredShiftList=preferredShiftList;
-					resolve();
-				})
-				.fail(function(data){
-					 alert("Failed to get Preferred shift list.");
-					 reject();
-				 });
-			});
+		return super._getData()
+		.then(()=>self.utility.getITOList(self.rosterYear,self.rosterMonth))
+		.then((itoList)=>self._loadITOList(itoList))
+		.then(()=>self.utility.getPreferredShiftList(self.rosterYear,self.rosterMonth))
+		.then((preferredShiftList)=>self.preferredShiftList=preferredShiftList);
+	}
+	_loadITOList(itoList)
+	{
+		var ito,itoObj;
+		var self=this;
+		this.itoList=[];
+		
+		Object.keys(itoList).forEach(function(itoId){
+			ito=itoList[itoId];
+			itoObj=new ITO();
+			itoObj.itoId=itoId;
+			itoObj.name=ito.itoname;
+			itoObj.postName=ito.postName;
+			itoObj.workingHourPerDay=ito.workingHourPerDay;
+			itoObj.availableShiftList=ito.availableShiftList;
+			itoObj.blackListShiftPatternList=ito.blackListedShiftPatternList;
+			self.itoList[itoId]=itoObj;
 		});
 	}
 	_showButtons()
@@ -387,7 +430,7 @@ class RosterSchedulerTable extends RosterTable
 		
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		cell=row.insertCell(row.cells.length);
-		cell.colSpan=33;
+		cell.colSpan=34;
 		buttonTable=document.createElement("table");
 		//buttonTable.setAttribute("border","1");
 		buttonTable.style.width="100%";
@@ -421,13 +464,68 @@ class RosterSchedulerTable extends RosterTable
 		cell.style.textAlign="center";
 		cell.innerHTML ="<a class=\"saveRosterToDBButton\">Save all data to DB</a>";
 	}
-	_updateShiftCount(theCell,itoId)
+	_updateValue(theCell,itoId)
 	{
-		super._updateShiftCount(theCell,itoId);
-		var vacantShift=this.rosterRule.getEssentialShift();
+		var aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
+		var	actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
 		var aShiftData=[],bShiftData=[],cShiftData=[];
 		var aShiftSD,bShiftSD,cShiftSD,avgStdDev;
-		Object.keys(this.rosterList).forEach(function(itoId){
+		var cell,i;
+		var ito=this.itoList[itoId];
+		var row;
+		var shiftType=theCell.textContent;
+		var vacantShift=this.rosterRule.getEssentialShift();
+		var startIndex=this.showNoOfPrevDate+1;
+		var endIndex=startIndex+Object.keys(this.dateObjList).length;
+		var totalHour=Number(document.getElementById(itoId+"_totalHour").textContent);
+		var balance=Number(document.getElementById(itoId+"_lastMonthBalance").textContent);
+
+		row=theCell.parentElement;
+		theCell.className="alignCenter borderCell cursorCell shiftCell";
+		
+		for (i=startIndex;i<endIndex;i++)
+		{
+			cell=row.cells[i];
+			shiftType=cell.textContent;
+			if (ito.isValidShift(shiftType))
+			{
+				theCell.className+=" "+this.utility.getShiftCssClassName(shiftType);
+				switch(shiftType)
+				{
+					case "a":
+							aShiftCount++;
+							break;
+					case "b":
+					case "b1":
+							bxShiftCount++;
+							break;
+					case "c":
+							cShiftCount++;
+							break;
+					case "d":
+					case "d1":
+					case "d2":
+					case "d3":
+							dxShiftCount++;
+							break;		
+				}
+				actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
+			}
+		}
+		
+		thisMonthHourTotal=actualWorkingHour-totalHour;
+		thisMonthBalance=thisMonthHourTotal+balance;
+		document.getElementById(itoId+"_actualHour").textContent=this.utility.roundTo(actualWorkingHour,2);
+		document.getElementById(itoId+"_thisMonthHourTotal").textContent=this.utility.roundTo(thisMonthHourTotal,2);
+		document.getElementById(itoId+"_thisMonthBalance").textContent=this.utility.roundTo(thisMonthBalance,2);
+		document.getElementById(itoId+"_aShiftCount").textContent=aShiftCount;
+		document.getElementById(itoId+"_bxShiftCount").textContent=bxShiftCount;
+		document.getElementById(itoId+"_cShiftCount").textContent=cShiftCount;
+		document.getElementById(itoId+"_dxShiftCount").textContent=dxShiftCount;
+		document.getElementById(itoId+"_noOfWoringDay").textContent=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
+
+		
+		Object.keys(this.itoList).forEach(function(itoId){
 			 var cell=document.getElementById("shift_"+itoId).cells[theCell.cellIndex];
 			 if (cell.textContent!="")
 			 {
@@ -440,10 +538,12 @@ class RosterSchedulerTable extends RosterTable
 			 bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
 			 cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
 		});
+		
 		aShiftSD=this.utility.getSD(aShiftData);
 		bShiftSD=this.utility.getSD(bShiftData);
 		cShiftSD=this.utility.getSD(cShiftData);
 		avgStdDev=(aShiftSD+bShiftSD+cShiftSD)/3;
+		
 		document.getElementById("shiftAStdDev").textContent=this.utility.roundTo(aShiftSD,2);
 		document.getElementById("shiftBStdDev").textContent=this.utility.roundTo(bShiftSD,2);
 		document.getElementById("shiftCStdDev").textContent=this.utility.roundTo(cShiftSD,2);

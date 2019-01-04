@@ -15,17 +15,6 @@ class Utility
 							    }
 		});
 	}
-	getITOList(year,month)
-	{
-		return jQuery.ajax({"url": "<%=request.getContextPath()%>/getITOList.jsp",
-							data:{"year":year,"month":month},
-							method:"POST",
-							dataType:"json",
-							error: function(xhr) {
-							      console.log('error', xhr);
-							    }
-		});
-	}
 	getRosterList(year,month)
 	{
 		return jQuery.ajax({"url": "<%=request.getContextPath()%>/getRosterList.jsp",

@@ -3,7 +3,6 @@ class RosterTable
 	constructor(container)
 	{
 		var self=this;
-		this.itoList;
 		this.utility=new Utility();
 		this.rosterList=null;
 		this.rosterRule=new RosterRule();
@@ -24,7 +23,7 @@ class RosterTable
 		
 		this.rosterTable.append(this.rosterHeader);
 		
-		$(this.rosterTable).attr("border","1");
+		$(this.rosterTable).attr("border","0");
 		this.container=container;
 		
 		container.append(this.rosterTable);
@@ -130,10 +129,14 @@ class RosterTable
 	}
 	_buildITORow(itoId)
 	{
-		var i;
+		var aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
+		var	actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
+
+		var cell,i;
 		var rosterDataList=this.rosterList[itoId]
 		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
-		var cell=row.insertCell(row.cells.length);
+		var shiftType;
+		cell=row.insertCell(row.cells.length);
 		row.id="shift_"+itoId;
 		cell.className="borderCell alignLeft";
 		cell.innerHTML=rosterDataList.itoname+"<br>"+rosterDataList.itopostName+" Extn. 2458";
@@ -148,8 +151,31 @@ class RosterTable
 		}
 		for (i=0;i<Object.keys(rosterDataList.shiftList).length;i++)
 		{
+			shiftType=rosterDataList.shiftList[i+1];
 			cell=row.insertCell(row.cells.length);
 			cell.className="alignCenter borderCell cursorCell shiftCell";
+			cell.textContent=shiftType;
+			cell.className+=" "+this.utility.getShiftCssClassName(shiftType);
+			actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
+			switch(shiftType)
+			{
+				case "a":
+						aShiftCount++;
+						break;
+				case "b":
+				case "b1":
+						bxShiftCount++;
+						break;
+				case "c":
+						cShiftCount++;
+						break;
+				case "d":
+				case "d1":
+				case "d2":
+				case "d3":
+						dxShiftCount++;
+						break;		
+			}
 		}
 		for (var j=i;j<31;j++)
 		{
@@ -157,6 +183,8 @@ class RosterTable
 			cell.className="alignCenter borderCell";
 		}
 		var totalHour=rosterDataList.itoworkingHourPerDay*this.noOfWorkingDay;
+		thisMonthHourTotal=actualWorkingHour-totalHour;
+		thisMonthBalance=thisMonthHourTotal+rosterDataList.balance;
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_totalHour";
 		cell.className="alignCenter borderCell";
@@ -165,6 +193,7 @@ class RosterTable
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_actualHour";
 		cell.className="alignCenter borderCell";
+		cell.textContent=this.utility.roundTo(actualWorkingHour,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_lastMonthBalance";
@@ -174,30 +203,37 @@ class RosterTable
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_thisMonthHourTotal";
 		cell.className="alignCenter borderCell";
-		
+		cell.textContent=this.utility.roundTo(thisMonthHourTotal,2);
+				
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_thisMonthBalance";
 		cell.className="alignCenter borderCell";
+		cell.textContent=this.utility.roundTo(thisMonthBalance,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_aShiftCount";
 		cell.className="alignCenter borderCell";
+		cell.textContent=aShiftCount;
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_bxShiftCount";
 		cell.className="alignCenter borderCell";
+		cell.textContent=bxShiftCount;
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_cShiftCount";
 		cell.className="alignCenter borderCell";
+		cell.textContent=cShiftCount;
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_dxShiftCount";
 		cell.className="alignCenter borderCell";
+		cell.textContent=dxShiftCount;
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_noOfWoringDay";
 		cell.className="alignCenter borderCell";
+		cell.textContent=bxShiftCount+dxShiftCount+cShiftCount+aShiftCount;
 	}
 	_buildHolidayRow()
 	{
@@ -305,12 +341,6 @@ class RosterTable
 		this._getData()
 		.then(function(){
 			self._buildRosterRows();
-			Object.keys(self.rosterList).forEach(function(itoId){
-				$("#shift_"+itoId+" td.shiftCell").blur(function(){
-					self._updateShiftCount(this,itoId);
-				});
-				self._loadRosterData(itoId);
-			});
 			var shiftCellHighLighter=new ShiftCellHighLighter(self,"cursorCell");
 		});
 	}
@@ -558,61 +588,5 @@ class RosterTable
 		Object.keys(shiftList).forEach(function(date){
 			$(itoRow.cells[self.showNoOfPrevDate+Number(date)]).html(shiftList[date]).blur();
 		});			
-	}
-	_updateShiftCount(theCell,itoId)
-	{
-		var aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
-		var	actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
-		var i,cell;
-		var row=theCell.parentElement;
-		var shiftType=theCell.textContent;
-		var startIndex=this.showNoOfPrevDate+1;
-		var endIndex=startIndex+Object.keys(this.dateObjList).length;
-		var totalHour=Number(document.getElementById(itoId+"_totalHour").textContent);
-		var balance=Number(document.getElementById(itoId+"_lastMonthBalance").textContent);
-		
-		theCell.className="alignCenter borderCell cursorCell shiftCell";
-		{
-			theCell.className+=" "+this.utility.getShiftCssClassName(shiftType);
-		}		
-		for (i=startIndex;i<endIndex;i++)
-		{
-			cell=row.cells[i];
-			shiftType=cell.textContent;
-			if (shiftType!="")
-			{
-				switch(shiftType)
-				{
-					case "a":
-							aShiftCount++;
-							break;
-					case "b":
-					case "b1":
-							bxShiftCount++;
-							break;
-					case "c":
-							cShiftCount++;
-							break;
-					case "d":
-					case "d1":
-					case "d2":
-					case "d3":
-							dxShiftCount++;
-							break;		
-				}
-				actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
-			}
-		}
-		
-		thisMonthHourTotal=actualWorkingHour-totalHour;
-		thisMonthBalance=thisMonthHourTotal+balance;
-		document.getElementById(itoId+"_actualHour").textContent=this.utility.roundTo(actualWorkingHour,2);
-		document.getElementById(itoId+"_thisMonthHourTotal").textContent=this.utility.roundTo(thisMonthHourTotal,2);
-		document.getElementById(itoId+"_thisMonthBalance").textContent=this.utility.roundTo(thisMonthBalance,2);
-		document.getElementById(itoId+"_aShiftCount").textContent=aShiftCount;
-		document.getElementById(itoId+"_bxShiftCount").textContent=bxShiftCount;
-		document.getElementById(itoId+"_cShiftCount").textContent=cShiftCount;
-		document.getElementById(itoId+"_dxShiftCount").textContent=dxShiftCount;
-		document.getElementById(itoId+"_noOfWoringDay").textContent=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
 	}
 }

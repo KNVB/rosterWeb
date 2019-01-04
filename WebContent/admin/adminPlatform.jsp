@@ -30,6 +30,7 @@
 		<script src="<%=request.getContextPath()%>/js/util/MonthPicker.js"></script>
 		<script src="<%=request.getContextPath()%>/js/util/ShiftCellHighLighter.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/ITO.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterSchedulerTable.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterScheduler.js"></script>
 		<script>
