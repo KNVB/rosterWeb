@@ -158,6 +158,7 @@ class RosterSchedulerTable extends RosterTable
 		cell.className="alignCenter borderCell";
 		cell.id="avgStdDev";		
 		cell.textContent=this.utility.roundTo(avgStdDev,2);
+		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		
@@ -482,14 +483,16 @@ class RosterSchedulerTable extends RosterTable
 
 		row=theCell.parentElement;
 		theCell.className="alignCenter borderCell cursorCell shiftCell";
+		if (ito.isValidShift(shiftType))
+			theCell.className+=" "+this.utility.getShiftCssClassName(shiftType);
 		
 		for (i=startIndex;i<endIndex;i++)
 		{
 			cell=row.cells[i];
 			shiftType=cell.textContent;
+			console.log(ito.isValidShift(shiftType));
 			if (ito.isValidShift(shiftType))
 			{
-				theCell.className+=" "+this.utility.getShiftCssClassName(shiftType);
 				switch(shiftType)
 				{
 					case "a":
@@ -515,16 +518,9 @@ class RosterSchedulerTable extends RosterTable
 		
 		thisMonthHourTotal=actualWorkingHour-totalHour;
 		thisMonthBalance=thisMonthHourTotal+balance;
-		document.getElementById(itoId+"_actualHour").textContent=this.utility.roundTo(actualWorkingHour,2);
-		document.getElementById(itoId+"_thisMonthHourTotal").textContent=this.utility.roundTo(thisMonthHourTotal,2);
-		document.getElementById(itoId+"_thisMonthBalance").textContent=this.utility.roundTo(thisMonthBalance,2);
-		document.getElementById(itoId+"_aShiftCount").textContent=aShiftCount;
-		document.getElementById(itoId+"_bxShiftCount").textContent=bxShiftCount;
-		document.getElementById(itoId+"_cShiftCount").textContent=cShiftCount;
-		document.getElementById(itoId+"_dxShiftCount").textContent=dxShiftCount;
-		document.getElementById(itoId+"_noOfWoringDay").textContent=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
+	
+		this._updateShiftCount(itoId,totalHour,actualWorkingHour,balance,thisMonthHourTotal,thisMonthBalance,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount);
 
-		
 		Object.keys(this.itoList).forEach(function(itoId){
 			 var cell=document.getElementById("shift_"+itoId).cells[theCell.cellIndex];
 			 if (cell.textContent!="")

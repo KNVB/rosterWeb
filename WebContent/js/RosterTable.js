@@ -188,52 +188,51 @@ class RosterTable
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_totalHour";
 		cell.className="alignCenter borderCell";
-		cell.textContent=this.utility.roundTo(totalHour,2);
+//		cell.textContent=this.utility.roundTo(totalHour,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_actualHour";
 		cell.className="alignCenter borderCell";
-		cell.textContent=this.utility.roundTo(actualWorkingHour,2);
+//		cell.textContent=this.utility.roundTo(actualWorkingHour,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_lastMonthBalance";
 		cell.className="alignCenter borderCell";
-		cell.textContent=this.utility.roundTo(rosterDataList.balance,2);
+//		cell.textContent=this.utility.roundTo(rosterDataList.balance,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_thisMonthHourTotal";
 		cell.className="alignCenter borderCell";
-		cell.textContent=this.utility.roundTo(thisMonthHourTotal,2);
+//		cell.textContent=this.utility.roundTo(thisMonthHourTotal,2);
 				
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_thisMonthBalance";
 		cell.className="alignCenter borderCell";
-		cell.textContent=this.utility.roundTo(thisMonthBalance,2);
+//		cell.textContent=this.utility.roundTo(thisMonthBalance,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_aShiftCount";
 		cell.className="alignCenter borderCell";
-		cell.textContent=aShiftCount;
+		//cell.textContent=aShiftCount;
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_bxShiftCount";
 		cell.className="alignCenter borderCell";
-		cell.textContent=bxShiftCount;
+		//cell.textContent=bxShiftCount;
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_cShiftCount";
 		cell.className="alignCenter borderCell";
-		cell.textContent=cShiftCount;
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_dxShiftCount";
 		cell.className="alignCenter borderCell";
-		cell.textContent=dxShiftCount;
 		
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_noOfWoringDay";
 		cell.className="alignCenter borderCell";
-		cell.textContent=bxShiftCount+dxShiftCount+cShiftCount+aShiftCount;
+		//cell.textContent=bxShiftCount+dxShiftCount+cShiftCount+aShiftCount;
+		this._updateShiftCount(itoId,totalHour,actualWorkingHour,rosterDataList.balance,thisMonthHourTotal,thisMonthBalance,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount);
 	}
 	_buildHolidayRow()
 	{
@@ -579,14 +578,17 @@ class RosterTable
 			 });
 		});
 	}
-	_loadRosterData(itoId)
+	_updateShiftCount(itoId,totalHour,actualWorkingHour,balance,thisMonthHourTotal,thisMonthBalance,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount)
 	{
-		var shiftList=this.rosterList[itoId].shiftList;
-		var i,shiftType;
-		var self=this;
-		var itoRow=document.getElementById("shift_"+itoId);
-		Object.keys(shiftList).forEach(function(date){
-			$(itoRow.cells[self.showNoOfPrevDate+Number(date)]).html(shiftList[date]).blur();
-		});			
+		document.getElementById(itoId+"_totalHour").textContent=this.utility.roundTo(totalHour,2);
+		document.getElementById(itoId+"_actualHour").textContent=this.utility.roundTo(actualWorkingHour,2);
+		document.getElementById(itoId+"_lastMonthBalance").textContent=this.utility.roundTo(balance,2);
+		document.getElementById(itoId+"_thisMonthHourTotal").textContent=this.utility.roundTo(thisMonthHourTotal,2);
+		document.getElementById(itoId+"_thisMonthBalance").textContent=this.utility.roundTo(thisMonthBalance,2);
+		document.getElementById(itoId+"_aShiftCount").textContent=aShiftCount;
+		document.getElementById(itoId+"_bxShiftCount").textContent=bxShiftCount;
+		document.getElementById(itoId+"_cShiftCount").textContent=cShiftCount;
+		document.getElementById(itoId+"_dxShiftCount").textContent=dxShiftCount;
+		document.getElementById(itoId+"_noOfWoringDay").textContent=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
 	}
 }
