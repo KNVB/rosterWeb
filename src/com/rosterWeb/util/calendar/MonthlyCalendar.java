@@ -1,4 +1,4 @@
-﻿package com.rosterWeb.util.calendar;
+package com.rosterWeb.util.calendar;
 
 import java.time.DayOfWeek;
 import java.util.Hashtable;
