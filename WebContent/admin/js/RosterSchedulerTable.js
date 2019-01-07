@@ -130,11 +130,6 @@ class RosterSchedulerTable extends RosterTable
 			});
 		});
 
-		aShiftSD=this.utility.getSD(aShiftData);
-		bShiftSD=this.utility.getSD(bShiftData);
-		cShiftSD=this.utility.getSD(cShiftData);
-		avgStdDev=(aShiftSD+bShiftSD+cShiftSD)/3;
-		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		cell.colSpan=5;
@@ -142,12 +137,12 @@ class RosterSchedulerTable extends RosterTable
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		cell.id="shiftAStdDev";
-		cell.textContent=this.utility.roundTo(aShiftSD,2);
+		//cell.textContent=this.utility.roundTo(aShiftSD,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		cell.id="shiftBStdDev";		
-		cell.textContent=this.utility.roundTo(bShiftSD,2);
+		//cell.textContent=this.utility.roundTo(bShiftSD,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
@@ -157,11 +152,12 @@ class RosterSchedulerTable extends RosterTable
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		cell.id="avgStdDev";		
-		cell.textContent=this.utility.roundTo(avgStdDev,2);
+		//cell.textContent=this.utility.roundTo(avgStdDev,2);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.className="alignCenter borderCell";
 		
+		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
 		$("td.cursorCell").attr('contentEditable',true);
 	}
 	_genYearlyStatisticReport()
@@ -465,6 +461,18 @@ class RosterSchedulerTable extends RosterTable
 		cell.style.textAlign="center";
 		cell.innerHTML ="<a class=\"saveRosterToDBButton\">Save all data to DB</a>";
 	}
+	_updateStandardDevation(aShiftData,bShiftData,cShiftData)
+	{
+		var aShiftSD=this.utility.getSD(aShiftData);
+		var bShiftSD=this.utility.getSD(bShiftData);
+		var cShiftSD=this.utility.getSD(cShiftData);
+		var avgStdDev=(aShiftSD+bShiftSD+cShiftSD)/3;
+		
+		document.getElementById("shiftAStdDev").textContent=this.utility.roundTo(aShiftSD,2);
+		document.getElementById("shiftBStdDev").textContent=this.utility.roundTo(bShiftSD,2);
+		document.getElementById("shiftCStdDev").textContent=this.utility.roundTo(cShiftSD,2);
+		document.getElementById("avgStdDev").textContent=this.utility.roundTo(avgStdDev,2);
+	}
 	_updateValue(theCell,itoId)
 	{
 		var aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
@@ -534,16 +542,7 @@ class RosterSchedulerTable extends RosterTable
 			 bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
 			 cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
 		});
-		
-		aShiftSD=this.utility.getSD(aShiftData);
-		bShiftSD=this.utility.getSD(bShiftData);
-		cShiftSD=this.utility.getSD(cShiftData);
-		avgStdDev=(aShiftSD+bShiftSD+cShiftSD)/3;
-		
-		document.getElementById("shiftAStdDev").textContent=this.utility.roundTo(aShiftSD,2);
-		document.getElementById("shiftBStdDev").textContent=this.utility.roundTo(bShiftSD,2);
-		document.getElementById("shiftCStdDev").textContent=this.utility.roundTo(cShiftSD,2);
-		document.getElementById("avgStdDev").textContent=this.utility.roundTo(avgStdDev,2);
 		document.getElementById("vacantShiftRow").cells[theCell.cellIndex].textContent=vacantShift;
+		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
 	}
 }

@@ -109,6 +109,7 @@ public class AdminFilter implements Filter {
 	/**
 	 * Called by the web container to indicate to a filter 
      * that it is being placed into service
+     * @throws ServletException
 	 * @see Filter#init(FilterConfig)
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {
