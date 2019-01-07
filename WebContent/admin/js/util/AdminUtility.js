@@ -4,6 +4,34 @@ class AdminUtility  extends Utility
 	{
 		super();
 	}
+	//Clone Array only
+	cloneArray(inArray) 
+	{
+	 return inArray.map(value => {
+	    return (value);
+	    //console.log(after,obj);
+	  });
+	}
+	exportRosterToExcel(rosterData)
+	{
+		return jQuery.ajax({"url": "exportRosterToExcel.jsp",
+			data:JSON.stringify(rosterData),
+			method:"POST",
+			dataType: 'binary',
+			xhrFields: {
+		            responseType: 'blob'
+		        },
+			success:function(blob, status, request){
+						  var fileName=(request.getResponseHeader("Content-Disposition"));
+						  fileName=fileName.substr(fileName.indexOf("filename=")+"filename=".length);
+					      var link=document.createElement('a');
+					      link.href=window.URL.createObjectURL(blob);
+					      link.download=fileName;
+					      link.click();
+					 },   
+			error:this.showAjaxErrorMessage			 
+		});
+	}	
 	getITOList(year,month)
 	{
 		return jQuery.ajax({"url": "getITOList.jsp",
@@ -53,5 +81,46 @@ class AdminUtility  extends Utility
 			    }
 		});
 	}
-
+	saveRosterData(rosterData)
+	{
+		//console.log(rosterData);
+		return jQuery.ajax({"url": "saveRosterData.jsp",
+			 dataType: 'text',
+			 data:JSON.stringify(rosterData),
+			 method:"POST",
+			 error:this.showAjaxErrorMessage
+		});
+	}
+	shuffleProperties(obj)
+	{
+		var new_obj = {};
+	    var keys = this._getKeys(obj);
+	    this._shuffle(keys);
+        for (var key in keys){
+            if (key == "shuffle") continue; // skip our prototype method
+            new_obj[keys[key]] = obj[keys[key]];
+        }
+        return new_obj;	
+	}
+/*==============================================================================================*
+ *																				  				*
+ *	Private Method																				*
+ *																				  				*
+ *==============================================================================================*/
+	_getKeys(obj)
+	{
+        var arr = new Array();
+        for (var key in obj)
+            arr.push(key);
+        return arr;
+    }	
+	_shuffle(arr)
+    {
+    	for (var i = 0; i < arr.length; i++){
+            var a = arr[i];
+            var b = Math.floor(Math.random() * arr.length);
+            arr[i] = arr[b];
+            arr[b] = a;
+        }
+    }	
 }

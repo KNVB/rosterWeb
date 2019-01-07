@@ -29,10 +29,13 @@
 		<script src="<%=request.getContextPath()%>/js/util/Utility.jsp"></script>
 		<script src="<%=request.getContextPath()%>/js/util/MonthPicker.js"></script>
 		<script src="<%=request.getContextPath()%>/js/util/ShiftCellHighLighter.js"></script>
-		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/ITO.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/Roster.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterSchedulerTable.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterScheduler.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/LoadingScreen.js"></script>
+		
 		<script>
 			/* Set the width of the side navigation to 250px */
 			function openNav() {
