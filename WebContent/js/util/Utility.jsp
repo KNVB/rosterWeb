@@ -45,7 +45,7 @@ class Utility
 			case "d1":
 			case "d2":
 			case "d3":
-					 className="dxShiftColor";
+					 className="dShiftColor";
 					 break;
 			case  "O":
 					 className="oShiftColor";

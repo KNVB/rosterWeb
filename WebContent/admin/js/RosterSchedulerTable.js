@@ -1125,7 +1125,7 @@ class RosterSchedulerTable extends RosterTable
 		var	actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
 		var aShiftData=[],bShiftData=[],cShiftData=[];
 		var aShiftSD,bShiftSD,cShiftSD,avgStdDev;
-		var cell,i;
+		var cell,i,newClassName;
 		var ito=this.itoList[itoId];
 		var row;
 		var shiftType=theCell.textContent;
@@ -1136,7 +1136,13 @@ class RosterSchedulerTable extends RosterTable
 		var balance=Number(document.getElementById(itoId+"_lastMonthBalance").textContent);
 
 		row=theCell.parentElement;
-		theCell.className="alignCenter borderCell cursorCell shiftCell";
+		newClassName=theCell.className;
+		
+		Object.keys(this.rosterRule.shiftHourCount).forEach(function(shiftType){
+				newClassName=newClassName.replace(shiftType.toLowerCase()+"ShiftColor","");
+			});
+		
+		theCell.className=newClassName;
 		if (ito.isValidShift(shiftType))
 			theCell.className+=" "+this.utility.getShiftCssClassName(shiftType);
 		

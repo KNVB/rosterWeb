@@ -46,6 +46,17 @@ class ShiftCellSelector
 		$("body").keydown(function(event){
 			self._handleKeyDownEvent(event);
 		});
+		/*
+		window.addEventListener("focus",function(event){
+			self.window_focus=true;
+			event.stopPropagation();
+			console.log("Window focus");
+		});
+		window.addEventListener("blur",function(event){
+			self.window_focus=false;
+			event.stopPropagation();
+			console.log("Window Blur");
+		});*/
 	}
 //============================================================================
 /******************************************************************************************

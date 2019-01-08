@@ -164,17 +164,17 @@ table#yearlyStatistic
 {
 	background-color:#ccffcc;
 }
-.sickLeaveColor
-{
-	background-color:#cc99ff;
-}
 .oShiftColor
 {
 	background-color:#ffffff;
 }
-.dxShiftColor
+.dShiftColor
 {
 	background-color:#ccffff;
+}
+.sickLeaveColor
+{
+	background-color:#cc99ff;
 }
 .vacantShiftLabel
 {
