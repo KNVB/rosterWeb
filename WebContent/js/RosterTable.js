@@ -432,25 +432,25 @@ class RosterTable
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		cell=row.insertCell(row.cells.length);
 		cell.colSpan=shiftCellColSpan;
-		cell.className="dxShiftColor";
+		cell.className="dShiftColor";
 		cell.textContent="d : 0800H - 1800H (on weekdays)";
 
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		cell=row.insertCell(row.cells.length);
 		cell.colSpan=shiftCellColSpan;
-		cell.className="dxShiftColor";
+		cell.className="dShiftColor";
 		cell.textContent="d1 : 0800H - 1700H (on weekdays)";
 		
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		cell=row.insertCell(row.cells.length);
 		cell.colSpan=shiftCellColSpan;
-		cell.className="dxShiftColor";
+		cell.className="dShiftColor";
 		cell.textContent="d2 : 0900H - 1800H (on weekdays)";
 		
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		cell=row.insertCell(row.cells.length);
 		cell.colSpan=shiftCellColSpan;
-		cell.className="dxShiftColor";
+		cell.className="dShiftColor";
 		cell.textContent="d3 : 0800H - 1648H (on weekdays)";
 		
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
