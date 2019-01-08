@@ -29,7 +29,7 @@ class RosterSchedulerTable extends RosterTable
 		.fail(function(data){
 			alert("Failed to yearly statistic");
 		});
-	}
+	}	
 	clearAllShift()
 	{
 		var i,cells;
@@ -38,14 +38,49 @@ class RosterSchedulerTable extends RosterTable
 		});
 		$(this.vacantShiftRow).children("td.vacantShift").html("");
 	}
-	getAutoPlanEndDate()
+	clearCopiedRegion(copiedRegionCoordinate)
 	{
-		return parseInt($("#autoPlanEndDate").val());
+		var cell,i,j;
+		for (i=copiedRegionCoordinate.minY;i<=copiedRegionCoordinate.maxY;i++)
+		{
+			for (j=copiedRegionCoordinate.minX;j<=copiedRegionCoordinate.maxX;j++)
+			{
+				cell=this.getCell(i,j);
+				this.disableEditMode(cell);
+				$(cell).removeClass("copyCellBorderTop");
+				$(cell).removeClass("copyCellBorderLeft");
+				$(cell).removeClass("copyCellBorderRight");
+				$(cell).removeClass("copyCellBorderBottom");
+			}	
+		}
 	}
-	getAutoPlanStartDate()
+	clearSelectedRegion(selectedRegionCoordinate)
 	{
-		return parseInt($("#autoPlanStartDate").val());
+		var cell,i,j;
+		for (i=selectedRegionCoordinate.minY;i<=selectedRegionCoordinate.maxY;i++)
+		{
+			for (j=selectedRegionCoordinate.minX;j<=selectedRegionCoordinate.maxX;j++)
+			{
+				cell=this.getCell(i,j);
+				this.disableEditMode(cell);
+				$(cell).removeClass("selectCellBorderRight");   
+				$(cell).removeClass("selectCellBorderTop");     
+				$(cell).removeClass("selectCellBorderBottom");  
+				$(cell).removeClass("selectCellBorderLeft");
+			}	
+		}
 	}
+	disableEditMode(theCell)
+	{
+		theCell.contentEditable=false;
+		theCell.blur();
+	}
+	enableEditMode(theCell)
+	{
+		theCell.contentEditable=true;
+		theCell.focus();
+	}	
+	
 	getAllDataForSaveToDb()
 	{
 		var rosterData={},self=this;
@@ -69,14 +104,47 @@ class RosterSchedulerTable extends RosterTable
 		});
 		return(rosterData);
 	}
-	getIterationCount()
-	{
-		return parseInt($("#iterationCount").val());
-	}
 	getAllPreferredShiftData()
 	{
 		return this._getShiftRowData(this._getAllPreferredShiftRow(),1,Object.keys(this.dateObjList).length);
 	}
+	getAutoPlanEndDate()
+	{
+		return parseInt($("#autoPlanEndDate").val());
+	}
+	getAutoPlanStartDate()
+	{
+		return parseInt($("#autoPlanStartDate").val());
+	}
+	getCell(rowIndex,cellIndex)
+	{
+		var row=this.rosterTable.rows[rowIndex];
+		var cell=row.cells[cellIndex];
+		return cell;
+	}
+	getDataForCopy(selectedRegionCoordinate)
+	{
+		var cell;
+		var dataRow=[],dataRowList=[];
+		this.clearSelectedRegion(selectedRegionCoordinate);
+		this.setCopiedRegion(selectedRegionCoordinate);
+		for (var y=selectedRegionCoordinate.minY;y<=selectedRegionCoordinate.maxY;y++)
+		{
+			dataRow=[];
+			for (var x=selectedRegionCoordinate.minX;x<=selectedRegionCoordinate.maxX;x++)
+			{
+				cell=this.getCell(y,x);
+				dataRow.push(cell.textContent);
+			}
+			dataRowList.push(dataRow);
+		}
+		return dataRowList;
+	}
+	getIterationCount()
+	{
+		return parseInt($("#iterationCount").val());
+	}
+	
 	getPreviouseShiftList(startDate)
 	{
 		var i,j,itoRoster;
@@ -321,6 +389,68 @@ class RosterSchedulerTable extends RosterTable
 		}
 		this.haveMissingShift();
 	}
+	pasteDataFromClipboard(selectedRegionCoordinate,copiedRegionCoordinate,dataRowList)
+	{
+		var cell;
+		var self=this,x,y;
+		
+		x=selectedRegionCoordinate.minX;
+		y=selectedRegionCoordinate.minY;
+		
+		dataRowList.forEach(function(dataRow){
+			x=selectedRegionCoordinate.minX;
+			dataRow.forEach(function(value){
+				cell=self.getCell(y,x++);
+				$(cell).text(value).blur();
+			});
+			y++;
+		});
+		this.clearCopiedRegion(copiedRegionCoordinate);
+	}
+	selectCell(theCell)
+	{
+		theCell.focus();
+		$(theCell).addClass("selectCellBorderRight");
+		$(theCell).addClass("selectCellBorderTop");
+		$(theCell).addClass("selectCellBorderBottom");
+		$(theCell).addClass("selectCellBorderLeft");
+	}
+	setCopiedRegion(selectedRegionCoordinate)
+	{
+		var cell,i;
+		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.minX);
+		$(cell).addClass("copyCellBorderTop");
+		$(cell).addClass("copyCellBorderLeft");
+		
+		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.maxX);
+		$(cell).addClass("copyCellBorderTop");
+		$(cell).addClass("copyCellBorderRight");
+		
+		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.minX);
+		$(cell).addClass("copyCellBorderBottom");
+		$(cell).addClass("copyCellBorderLeft");
+
+		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.maxX);
+		$(cell).addClass("copyCellBorderBottom");
+		$(cell).addClass("copyCellBorderRight");
+		
+		for (i=selectedRegionCoordinate.minY+1;i<selectedRegionCoordinate.maxY;i++)
+		{
+			cell=this.getCell(i,selectedRegionCoordinate.minX);
+			$(cell).addClass("copyCellBorderLeft");
+
+			cell=this.getCell(i,selectedRegionCoordinate.maxX);
+			$(cell).addClass("copyCellBorderRight");
+		}
+		for (i=selectedRegionCoordinate.minX+1;i<selectedRegionCoordinate.maxX;i++)
+		{
+			cell=this.getCell(selectedRegionCoordinate.minY,i);
+			$(cell).addClass("copyCellBorderTop");
+			
+			cell=this.getCell(selectedRegionCoordinate.maxY,i);
+			$(cell).addClass("copyCellBorderBottom");
+		}
+	}
 	setLowestSDData(lowestSDData)
 	{
 		var firstRow=document.getElementById("theLowestSD");
@@ -402,6 +532,43 @@ class RosterSchedulerTable extends RosterTable
 	setScheduler(rosterScheduler)
 	{
 		this.rosterScheduler=rosterScheduler;
+	}
+	setSelectedRegion(selectedRegionCoordinate)
+	{
+		var cell,i;
+		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.minX);
+		$(cell).addClass("selectCellBorderTop");
+		$(cell).addClass("selectCellBorderLeft");
+		
+		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.maxX);
+		$(cell).addClass("selectCellBorderTop");
+		$(cell).addClass("selectCellBorderRight");
+		
+		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.minX);
+		$(cell).addClass("selectCellBorderBottom");
+		$(cell).addClass("selectCellBorderLeft");
+
+		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.maxX);
+		$(cell).addClass("selectCellBorderBottom");
+		$(cell).addClass("selectCellBorderRight");
+		
+		for (i=selectedRegionCoordinate.minY+1;i<selectedRegionCoordinate.maxY;i++)
+		{
+			cell=this.getCell(i,selectedRegionCoordinate.minX);
+			$(cell).addClass("selectCellBorderLeft");
+
+			cell=this.getCell(i,selectedRegionCoordinate.maxX);
+			$(cell).addClass("selectCellBorderRight");
+		}
+		for (i=selectedRegionCoordinate.minX+1;i<selectedRegionCoordinate.maxX;i++)
+		{
+			cell=this.getCell(selectedRegionCoordinate.minY,i);
+			$(cell).addClass("selectCellBorderTop");
+			
+			cell=this.getCell(selectedRegionCoordinate.maxY,i);
+			$(cell).addClass("selectCellBorderBottom");
+		}
+		
 	}
 	showGenResultTable()
 	{
@@ -526,6 +693,7 @@ class RosterSchedulerTable extends RosterTable
 		
 		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
 		$("td.cursorCell").attr('contentEditable',true);
+		var shiftCellSelector=new ShiftCellSelector(this,"cursorCell");
 	}
 	_genYearlyStatisticReport()
 	{
