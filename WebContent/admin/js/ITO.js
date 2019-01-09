@@ -8,6 +8,8 @@ class ITO
 		this.workingHourPerDay;
 		this.availableShiftList;
 		this.blackListShiftPatternList;
+		this.joinDate;
+		this.leaveDate;
 	}
 	getBlackListedShiftPatternIndex(shiftPattern)
 	{

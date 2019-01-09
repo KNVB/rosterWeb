@@ -62,6 +62,7 @@ class RosterScheduler
 						self.rosterSchedulerTable.setMissingShiftData(self.theLowestMissingShiftRosters);
 						self.rosterSchedulerTable.showGenResultTable();
 					}, 50);
+				alert("Done");
 			}	
 		}
 	}	

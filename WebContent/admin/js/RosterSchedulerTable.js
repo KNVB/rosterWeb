@@ -33,9 +33,10 @@ class RosterSchedulerTable extends RosterTable
 	clearAllShift()
 	{
 		var i,cells;
-		Object.keys(this.itoList).forEach(function (itoId){
+		for (var itoId in this.itoList)
+		{
 			$("#shift_" +itoId).children("td.shiftCell").html("").blur();
-		});
+		}
 		$(this.vacantShiftRow).children("td.vacantShift").html("");
 	}
 	clearCopiedRegion(copiedRegionCoordinate)
@@ -92,7 +93,8 @@ class RosterSchedulerTable extends RosterTable
 		rosterData["itorosterList"]={};
 		rosterData["itopreferredShiftList"]={};
 		
-		Object.keys(this.itoList).forEach(function (itoId){
+		for (var itoId in this.itoList)
+		{
 			iTOShiftData={};
 			iTOShiftData["shiftList"]=allITOShiftData[itoId];
 			if (isNaN(self._getLastMonthBalance(itoId)))
@@ -101,7 +103,7 @@ class RosterSchedulerTable extends RosterTable
 				iTOShiftData["balance"]=self._getLastMonthBalance(itoId);
 			rosterData["itorosterList"][itoId]=iTOShiftData;
 			rosterData["itopreferredShiftList"][itoId]=allPreferredShiftData[itoId];
-		});
+		}	
 		return(rosterData);
 	}
 	getAllPreferredShiftData()
@@ -820,10 +822,11 @@ class RosterSchedulerTable extends RosterTable
 		var result=[];
 		var shiftRow;
 
-		Object.keys(this.itoList).forEach(function(itoId){
+		for (var itoId in this.itoList)
+		{
 			shiftRow=document.getElementById("shift_"+itoId);
 			result[itoId]=shiftRow;
-		});
+		}	
 		
 		return result;
 	}
@@ -836,7 +839,7 @@ class RosterSchedulerTable extends RosterTable
 		var self=this;
 		return super._getData()
 		.then(()=>self.utility.getITOList(self.rosterYear,self.rosterMonth))
-		.then((itoList)=>self._loadITOList(itoList))
+		.then((itoList)=>self.itoList=itoList)
 		.then(()=>self.utility.getPreferredShiftList(self.rosterYear,self.rosterMonth))
 		.then((preferredShiftList)=>self.preferredShiftList=preferredShiftList);
 	}
@@ -933,25 +936,6 @@ class RosterSchedulerTable extends RosterTable
 		}
 		
 		return result;
-	}
-	
-	_loadITOList(itoList)
-	{
-		var ito,itoObj;
-		var self=this;
-		this.itoList=[];
-		
-		Object.keys(itoList).forEach(function(itoId){
-			ito=itoList[itoId];
-			itoObj=new ITO();
-			itoObj.itoId=itoId;
-			itoObj.name=ito.itoname;
-			itoObj.postName=ito.postName;
-			itoObj.workingHourPerDay=ito.workingHourPerDay;
-			itoObj.availableShiftList=ito.availableShiftList;
-			itoObj.blackListShiftPatternList=ito.blackListedShiftPatternList;
-			self.itoList[itoId]=itoObj;
-		});
 	}
 	_showButtons()
 	{
@@ -1180,7 +1164,8 @@ class RosterSchedulerTable extends RosterTable
 	
 		this._updateShiftCount(itoId,totalHour,actualWorkingHour,balance,thisMonthHourTotal,thisMonthBalance,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount);
 
-		Object.keys(this.itoList).forEach(function(itoId){
+		for (var itoId in this.itoList)
+		{
 			 var cell=document.getElementById("shift_"+itoId).cells[theCell.cellIndex];
 			 if (cell.textContent!="")
 			 {
@@ -1192,7 +1177,8 @@ class RosterSchedulerTable extends RosterTable
 			 aShiftData.push(Number(document.getElementById(itoId+"_aShiftCount").textContent));
 			 bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
 			 cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
-		});
+		}
+		
 		document.getElementById("vacantShiftRow").cells[theCell.cellIndex].textContent=vacantShift;
 		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
 	}

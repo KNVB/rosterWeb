@@ -24,12 +24,14 @@
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/admin/css/style.css">
 		
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery/3.3.1/jquery.min.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery-ui/1.9.2/jquery-ui.js"></script>
 		<script src="<%=request.getContextPath()%>/js/RosterRule.jsp"></script>
 		<script src="<%=request.getContextPath()%>/js/RosterTable.js"></script>
 		<script src="<%=request.getContextPath()%>/js/util/Utility.jsp"></script>
 		<script src="<%=request.getContextPath()%>/js/util/MonthPicker.js"></script>
 		<script src="<%=request.getContextPath()%>/js/util/ShiftCellHighLighter.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/ITO.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/ITOManagement.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/Roster.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterSchedulerTable.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterScheduler.js"></script>
@@ -54,6 +56,15 @@
 				var rosterScheduler=new RosterScheduler();
 				rosterScheduler.buildRosterTable(<%=rosterYear%>,<%=rosterMonth%>);
 			}
+			function loadITOManagementPanel()
+			{
+				closeNav();
+				var itoManagement=new ITOManagement($("#main")[0]);
+				itoManagement.loadITOList(<%=rosterYear%>,<%=rosterMonth%>)
+				.then(function(){
+					itoManagement.showITOTable();
+				});
+			}
 			$( document ).ready(function() {
 				loadScheduler();
 			});
@@ -63,7 +74,7 @@
 		<div id="mySidenav" class="sidenav">
 		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		  <a href="javascript:loadScheduler()" >Roster Scheduler</a>
-		  <a href="#">Staff Info. management</a>
+		  <a href="javascript:loadITOManagementPanel()">ITO management</a>
 		  <a href="logout.jsp">Logout</a>
 		</div>
 		<!-- Use any element to open the sidenav -->
