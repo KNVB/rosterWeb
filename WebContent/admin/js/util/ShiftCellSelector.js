@@ -174,6 +174,26 @@ class ShiftCellSelector
 			}
 		}
 	}
+	_handleDeleteKeyEvent(event)
+	{
+		if ((this.selectStartRowIndex>-1) && (this.selectStartCellIndex>-1))
+		{
+			event.preventDefault();
+			var cell=this.rosterTable.getCell(this.selectedRegionCoordinate.minY,this.selectedRegionCoordinate.minX);
+			for (var i=this.selectedRegionCoordinate.minX;i<=this.selectedRegionCoordinate.maxX;i++)
+			{
+				for (var j=this.selectedRegionCoordinate.minY;j<=this.selectedRegionCoordinate.maxY;j++)
+				{
+					cell=this.rosterTable.getCell(j,i);
+					if ($(cell).hasClass("shiftCell"))
+					{
+						$(cell).html("").blur();
+					}	
+				}	
+			}
+			this._clearAllSelectionState();
+		}
+	}
 	_handleKeyDownEvent(event)
 	{
 		event.stopPropagation();
@@ -202,7 +222,10 @@ class ShiftCellSelector
 					break;
 			case 40://handle down arrow key
 					this._handleArrowKeyEvent(event,1,0);
-					break;		
+					break;
+			case 46:
+					this._handleDeleteKeyEvent(event);
+					break;
 			default:
 					if (event.ctrlKey)
 					{
