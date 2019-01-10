@@ -19,7 +19,7 @@ public class RosterRule
 	/**
 	 * It stores the shift to hour count mapping
 	 */
-	private static Map<String,Float>shiftHourCount=new TreeMap<String,Float>();
+	private static Map<String,Float>shiftHourCount=new TreeMap<String,Float>(String.CASE_INSENSITIVE_ORDER);
 	
 	/**
 	 * It stores the essential shift of every day

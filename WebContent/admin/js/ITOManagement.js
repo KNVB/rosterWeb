@@ -6,13 +6,11 @@ class ITOManagement
 		this.container=container;
 		this.rosterRule=new RosterRule();
 	}
-	loadITOList(year,month)
+	loadITOList()
 	{	
 		var self=this;
-		this.year=year;
-		this.month=month;
 		return new Promise((resolve, reject) =>{
-			self.adminUtility.getITOList(year,month)
+			self.adminUtility.getAllITOInfo()
 			.then(function(itoList){
 				self.itoList=itoList;
 				resolve();
@@ -25,11 +23,14 @@ class ITOManagement
 	}
 	showITOTable()
 	{
-		var cell,ito,itoTable=document.createElement("table");
-		var link;
+		var cell,firstITOId=null;
+		var form=document.getElementById("updateITOInfoFormTemplate").cloneNode(true);
+		var link,ito,itoTable=document.createElement("table");
 		var row=itoTable.insertRow(itoTable.rows.length);
 		var self=this;
 		$(this.container).empty();
+		form.id="updateITOInfoForm";
+		
 		$(itoTable).attr("border","1");
 		
 		cell=row.insertCell(row.cells.length);
@@ -50,11 +51,13 @@ class ITOManagement
 			ito=this.itoList[itoId];
 			row=itoTable.insertRow(itoTable.rows.length);
 			
+			if (firstITOId==null)
+				firstITOId=itoId;
 			link=document.createElement("a");
 			link.textContent=ito.name;
 			link.href="#";
 			link.addEventListener("click",function(){
-				self.showITOInfo(itoId);
+				self.loadITOInfo(itoId);
 			});
 			
 			cell=row.insertCell(row.cells.length);
@@ -70,108 +73,35 @@ class ITOManagement
 			cell.textContent=ito.workingHourPerDay;
 		}
 		$(this.container).append(itoTable);
-	}
-	showITOInfo(itoId)
-	{
-		var cell;
-		var form=document.createElement("form");
-		var input,ito,itoInfoTable=document.createElement("table");
-		var link;
-		var row=itoInfoTable.insertRow(itoInfoTable.rows.length);
-		var self=this,textNode;
-		$(this.container).empty();
-		ito=this.itoList[itoId];
-		$(itoInfoTable).attr("border","1");
-		input=document.createElement("input");
-		input.type="hidden";
-		input.value=ito.itoId;
-		input.name="itoId";
-		form.append(input);
-	
-		cell=row.insertCell(row.cells.length);
-		cell.textContent="ITO Name";
-		
-		input=document.createElement("input");
-		input.type="text";
-		input.value=ito.name;
-		input.name="itoName";
-		input.required = true;
-		
-		cell=row.insertCell(row.cells.length);
-		cell.append(input);
-		
-		row=itoInfoTable.insertRow(itoInfoTable.rows.length);
-		cell=row.insertCell(row.cells.length);
-		cell.textContent="Post Name";
-		
-		input=document.createElement("input");
-		input.type="text";
-		input.value=ito.postName;
-		input.name="postName";
-		input.required = true;
-		
-		cell=row.insertCell(row.cells.length);
-		cell.append(input);
-		
-		row=itoInfoTable.insertRow(itoInfoTable.rows.length);
-		cell=row.insertCell(row.cells.length);
-		cell.textContent="Avaliable Shift Type";
-		
-		cell=row.insertCell(row.cells.length);
-		for (var shiftType in this.rosterRule.shiftHourCount)
-		{
-			input=document.createElement("input");
-			input.type="checkbox";
-			input.value=shiftType;
-			input.name="availableShiftList";
-			
-			if (jQuery.inArray(shiftType,ito.availableShiftList)>-1)
-				input.checked=true;
-			
-			textNode=document.createTextNode(shiftType);
-			cell.append(textNode);
-			cell.append(input);
-		}
-		row=itoInfoTable.insertRow(itoInfoTable.rows.length);
-		cell=row.insertCell(row.cells.length);
-		cell.textContent="No. of Working Hour Per Day";
-		
-		input=document.createElement("input");
-		input.type="number";
-		input.value=ito.workingHourPerDay;
-		input.name="workingHourPerDay";
-		input.required = true;
-		
-		cell=row.insertCell(row.cells.length);
-		cell.append(input);
-		
-		row=itoInfoTable.insertRow(itoInfoTable.rows.length);
-		cell=row.insertCell(row.cells.length);
-		cell.textContent="Join Date";
-		
-		cell=row.insertCell(row.cells.length);
-		input=document.createElement("input");
-		input.type="date";
-		input.value=ito.joinDate.getFullYear()+"-"+(ito.joinDate.getMonth()+1)+"-"+ito.joinDate.getDate();
-		input.name="joinDate";
-		input.required = true;
-		//console.log(ito.joinDate.getFullYear()+"-"+ito.joinDate.getMonth()+"-"+ito.joinDate.getDate());
-		cell.append(input);
-		
-		row=itoInfoTable.insertRow(itoInfoTable.rows.length);
-		cell=row.insertCell(row.cells.length);
-		cell.colSpan=2;
-		cell.style.textAlign="right";
-		link=document.createElement("a");
-		link.textContent="<";
-		link.href="#";
-		link.addEventListener("click",function(){
-			self.showITOTable();
-		});
-		cell.append(link);
-		
-		form.append(itoInfoTable);
+		$(this.container).append("<br>");
 		$(this.container).append(form);
-		console.log(ito.blackListShiftPatternList);
+		form.style.display="inline";
+		this.loadITOInfo(firstITOId);
+	}
+	loadITOInfo(itoId)
+	{
+		var availableShiftList;
+		var form=document.getElementById("updateITOInfoForm");
+		var ito=this.itoList[itoId];
+		
+		form.itoId.value=ito.itoId;
+		form.itoName.value=ito.name;
+		form.postName.value=ito.postName;
+		form.workingHourPerDay.value=ito.workingHourPerDay;
+		
+		$(form).find("input[name='availableShiftList']").each(function(){
+				if ($.inArray(this.value,ito.availableShiftList)>-1)
+					this.checked=true;
+				else
+					this.checked=false;
+				});
+		$(form.joinDate).val(ito.joinDate.getFullYear()+"-"+(1+ito.joinDate.getMonth())+"-"+ito.joinDate.getDate());
+		$(form.joinDate).datepicker({dateFormat:"yy-mm-dd",
+			                         "defaultDate":ito.joinDate});
+		
+		$(form.leaveDate).val(ito.leaveDate.getFullYear()+"-"+(1+ito.leaveDate.getMonth())+"-"+ito.leaveDate.getDate());
+		$(form.leaveDate).datepicker({dateFormat:"yy-mm-dd",
+			                         "defaultDate":ito.leaveDate});
+		
 	}
 }

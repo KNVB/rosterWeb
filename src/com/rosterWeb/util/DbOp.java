@@ -16,7 +16,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -63,7 +64,69 @@ public class DbOp implements DataStore {
 		// TODO Auto-generated method stub
 
 	}
+	@Override
+	public Map<String,ITO>getAllITOInfo(){
+		ArrayList <String>blackListShiftPatternList=null;
+		ITO ito=null;
+		List<String>list;
+		LocalDate joinDate,leaveDate;
+		Map<String,ITO> result=new TreeMap<String,ITO>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
+		sqlString ="SELECT join_date,leave_date,ito_info.ito_id,post_name,ito_name,available_shift,working_hour_per_day,black_list_pattern from ";
+		sqlString+="ito_info inner join black_list_pattern ";
+		sqlString+="on ito_info.ito_id=black_list_pattern.ito_id ";
+		sqlString+="order by ito_info.ito_id";
+		
+		try
+		{
+			stmt=dbConn.prepareStatement(sqlString);
+			rs=stmt.executeQuery();
+			while (rs.next())
+			{
+				if (result.containsKey(rs.getString("ito_id")))
+				{	
+					ito=result.get(rs.getString("ito_id"));
+					blackListShiftPatternList=ito.getBlackListedShiftPatternList();
+					blackListShiftPatternList.add(rs.getString("black_list_pattern"));
+					ito.setBlackListedShiftPatternList(blackListShiftPatternList);
+					result.replace(ito.getITOId(), ito);
+//					logger.debug(rs.getString("ito_name")+","+ito.getJoinDate().get(Calendar.MONTH)+","+rs.getDate("join_date").getMonth());
+				}
+				else
+				{
+					ito=new ITO();
+					ito.setITOId(rs.getString("ito_id"));
+					ito.setPostName(rs.getString("post_name"));
+					ito.setITOName(rs.getString("ito_name"));
+					ito.setWorkingHourPerDay(rs.getFloat("working_hour_per_day"));
+					joinDate=rs.getDate("join_date").toLocalDate();
+					leaveDate=rs.getDate("leave_date").toLocalDate();
+					
+					ito.setJoinDate(joinDate);
+					ito.setLeaveDate(leaveDate);
+					list=Arrays.asList(rs.getString("available_shift").split(","));
+					Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+					ito.setAvailableShiftList(new ArrayList<String>(list));
+					blackListShiftPatternList=new ArrayList<String>();
+					blackListShiftPatternList.add(rs.getString("black_list_pattern"));
+					ito.setBlackListedShiftPatternList(blackListShiftPatternList);
+					result.put(ito.getITOId(), ito);
+				}
+			}
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		} 
+		finally 
+		{
+			releaseResource(rs, stmt);
+		}
+		return result;		
+
+	}
 	@Override
 	public Map<String, ITO> getITOList(int year, int month) {
 		ITO ito=null;
@@ -72,6 +135,7 @@ public class DbOp implements DataStore {
 		
 		PreparedStatement stmt = null;
 		ArrayList <String>blackListShiftPatternList=null;
+		List<String>list;
 		LocalDate joinDate,leaveDate;
 		LocalDate theFirstDateOfTheMonth=LocalDate.of(year,month,1);
 		Map<String,ITO> result=new TreeMap<String,ITO>();
@@ -116,7 +180,9 @@ public class DbOp implements DataStore {
 					
 					ito.setJoinDate(joinDate);
 					ito.setLeaveDate(leaveDate);
-					ito.setAvailableShiftList(new ArrayList<String>(Arrays.asList(rs.getString("available_shift").split(","))));
+					list=Arrays.asList(rs.getString("available_shift").split(","));
+					Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+					ito.setAvailableShiftList(new ArrayList<String>(list));
 					blackListShiftPatternList=new ArrayList<String>();
 					blackListShiftPatternList.add(rs.getString("black_list_pattern"));
 					ito.setBlackListedShiftPatternList(blackListShiftPatternList);

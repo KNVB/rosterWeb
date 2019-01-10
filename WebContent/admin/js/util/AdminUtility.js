@@ -31,7 +31,42 @@ class AdminUtility  extends Utility
 					 },   
 			error:this.showAjaxErrorMessage			 
 		});
-	}	
+	}
+	getAllITOInfo()
+	{
+		var self=this;
+		var jsITOList={};
+		return new Promise((resolve, reject) =>{
+			jQuery.ajax({"url": "getAllITOInfo.jsp",
+				data:{},
+				method:"POST",
+				dataType:"json",
+				success:function(itoList){
+					var jsITO,ito;
+					for (var itoId in itoList)
+					{
+						ito=itoList[itoId];
+						jsITO=new ITO();
+						jsITO.itoId=itoId;
+						jsITO.name=ito.name;
+						jsITO.postName=ito.postName;
+						jsITO.workingHourPerDay=ito.workingHourPerDay;
+						jsITO.availableShiftList=ito.availableShiftList;
+						jsITO.blackListShiftPatternList=ito.blackListedShiftPatternList;
+						
+						jsITO.joinDate=new Date(ito.joinDate.year,ito.joinDate.monthValue-1,ito.joinDate.dayOfMonth);
+						jsITO.leaveDate=new Date(ito.leaveDate.year,ito.leaveDate.monthValue-1,ito.leaveDate.dayOfMonth);	
+						jsITOList[itoId]=jsITO;
+					}
+					resolve(jsITOList);
+				},
+				error: function(xhr) {
+				      console.log('error', xhr);
+				      reject();
+				}
+			});
+		});	
+	}
 	getITOList(year,month)
 	{
 		var jsITOList={};
@@ -47,7 +82,7 @@ class AdminUtility  extends Utility
 						ito=itoList[itoId];
 						jsITO=new ITO();
 						jsITO.itoId=itoId;
-						jsITO.name=ito.itoname;
+						jsITO.name=ito.name;
 						jsITO.postName=ito.postName;
 						jsITO.workingHourPerDay=ito.workingHourPerDay;
 						jsITO.availableShiftList=ito.availableShiftList;

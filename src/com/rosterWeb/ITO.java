@@ -1,6 +1,7 @@
 package com.rosterWeb;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -62,8 +63,16 @@ public class ITO {
 	public void add(){
 
 	}
+	public Map<String,ITO>getAllITOInfo()throws Exception
+	{
+		logger.info("ITO.getAllITOInfo() is called");
+		dataStore=Utility.getDataStore();
+		Map<String,ITO> result=dataStore.getAllITOInfo();
+		dataStore.close();
+		return result;
+	}	
 	/**
-	 * Get ITO Information List
+	 * Get a list of valid ITO Object in the specified year and month value. 
 	 * @param year year
 	 * @param month month
 	 * @return A list of ITO object order by post name.
@@ -164,7 +173,7 @@ public class ITO {
 	 */
 	public void setAvailableShiftList(ArrayList<String> availableShiftList)
 	{
-		this.availableShiftList=availableShiftList;
+		this.availableShiftList= availableShiftList;
 	}
 	/**
 	 * Get the total no. of working hour per day for the specified ITO.

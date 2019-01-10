@@ -1,9 +1,12 @@
 <%@ page trimDirectiveWhitespaces="true" %>
+<%@ page import="com.rosterWeb.RosterRule"%>
 <%@ page import="java.time.LocalDate"%>
+<%@ page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% 
 	int rosterMonth=0,rosterYear=0;
 	LocalDate now=LocalDate.now();
+	Map <String,Float>shiftHourCount=RosterRule.getShiftHourCount();
 	try
 	{
 		rosterYear=Integer.parseInt(request.getParameter("year"));
@@ -18,13 +21,15 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Roster Admin. Page</title>
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/style.css">
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/MonthPick.css">
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/admin/css/style.css">
+		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/webjars/jquery-ui/1.12.1/jquery-ui.min.css">
 		
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery/3.3.1/jquery.min.js"></script>
-		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery-ui/1.9.2/jquery-ui.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>
 		<script src="<%=request.getContextPath()%>/js/RosterRule.jsp"></script>
 		<script src="<%=request.getContextPath()%>/js/RosterTable.js"></script>
 		<script src="<%=request.getContextPath()%>/js/util/Utility.jsp"></script>
@@ -60,14 +65,16 @@
 			{
 				closeNav();
 				var itoManagement=new ITOManagement($("#main")[0]);
-				itoManagement.loadITOList(<%=rosterYear%>,<%=rosterMonth%>)
+				itoManagement.loadITOList()
 				.then(function(){
 					itoManagement.showITOTable();
 				});
 			}
+			
 			$( document ).ready(function() {
-				loadScheduler();
+				$( "#datepicker" ).datepicker({dateFormat:"yy-mm-dd","defaultDate":new Date(1999,1,1)});
 			});
+			
 		</script>
 	</head>
 	<body>
@@ -77,11 +84,62 @@
 		  <a href="javascript:loadITOManagementPanel()">ITO management</a>
 		  <a href="logout.jsp">Logout</a>
 		</div>
-		<!-- Use any element to open the sidenav -->
-		<span onclick="openNav()" class="openbtn">&#9776;</span>
-		<!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
-		<div id="main">
-			<!-- Main Content -->
-		</div>
+		<div style="width:100%;flex-direction:row;margin:0px;display:flex;">
+			<div style="display:flex;flex:1 1 auto;margin:0px;">
+				<span onclick="openNav()" class="openbtn" style="padding:0px;margin:0px">&#9776;</span>
+			</div>
+			<div style="width:100%;margin:0px;display:flex;align-items:center;flex-direction:column">
+				<div style="display:flex;flex:1 1 auto;margin:0px;">
+					<h1 style="padding:0px;margin:0px;">EMSTF Roster Admin. Page</h1>
+				</div>
+				<div style="display:flex;flex:1 1 auto;margin:0px;align-items:center;flex-direction:column" id="main">
+				</div>
+			</div>
+		</div>	
+		<form id="updateITOInfoFormTemplate" style="display:none" method="post">
+			<input type="hidden" name="itoId">
+			<table border="1">
+				<tbody>
+					<tr>
+						<td>ITO Name</td>
+						<td><input type="text" name="itoName" required></td>
+					</tr>
+					<tr>
+						<td>Post Name</td>
+						<td><input type="text" name="postName" required></td>
+					</tr>
+					<tr>
+						<td>Avaliable Shift Type</td>
+						<td>
+						<%
+						for (String key : shiftHourCount.keySet()) 
+						{
+				            out.println(key+"<input type=\"checkbox\" value=\""+key+"\" name=\"availableShiftList\">");
+				        }
+						%>
+						</td>
+					</tr>
+					<tr>
+						<td>No. of Working Hour Per Day</td>
+						<td><input type="number" step="0.01" name="workingHourPerDay" required></td>
+					</tr>
+					<tr>
+						<td>Join Date</td>
+						<td><input type="text" name="joinDate" required readOnly></td>
+					</tr>
+					<tr>
+						<td>Leave Date</td>
+						<td>
+							<input type="text" name="leaveDate" required readOnly>
+							"2099-12-31" mean active member
+						</td>
+					</tr>					
+					<tr>
+						<td colspan="2" style="text-align: right;"><input type="submit" value="Save Value"></a></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+		
 	</body>
 </html>	
