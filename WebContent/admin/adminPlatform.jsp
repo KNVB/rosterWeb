@@ -96,7 +96,7 @@
 				</div>
 			</div>
 		</div>	
-		<form id="updateITOInfoFormTemplate" style="display:none" method="post">
+		<form id="updateITOInfoFormTemplate" style="display:none" method="post" onsubmit="return false;">
 			<input type="hidden" name="itoId">
 			<table border="1">
 				<tbody>

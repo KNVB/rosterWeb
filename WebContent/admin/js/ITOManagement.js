@@ -102,6 +102,15 @@ class ITOManagement
 		$(form.leaveDate).val(ito.leaveDate.getFullYear()+"-"+(1+ito.leaveDate.getMonth())+"-"+ito.leaveDate.getDate());
 		$(form.leaveDate).datepicker({dateFormat:"yy-mm-dd",
 			                         "defaultDate":ito.leaveDate});
-		
+		$(form).submit(function(){
+			var ito=new ITO();
+			ito.itoId=this.itoId.value;
+			ito.name=this.itoName.value;
+			ito.postName=this.postName.value;
+			ito.workingHourPerDay=this.workingHourPerDay.value;
+			ito.joinDate=this.joinDate.value;
+			ito.leaveDate=this.leaveDate.value;
+			console.log(JSON.stringify(ito));
+		});
 	}
 }

@@ -23,8 +23,9 @@ itoRosterString="{\"itoId\":\"ITO1_1999-01-01\",";
 itoRosterString+="\"shift\":\"b\",";
 itoRosterString+="\"shiftDate\":"+time;
 itoRosterString+="}";
+console.log(itoRosterString);
 jQuery.ajax({"url": "saveShift.jsp",
-	 dataType: 'text',
+	 dataType: 'json',
 	 data:itoRosterString,
 	 method:"POST",
 	 success:function(requestResult){
