@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,17 +54,7 @@ public class DbOp implements DataStore {
 		Class.forName(jdbcDriver);
 		dbConn= DriverManager.getConnection(jdbcURL,dbUserName,dbUserPwd);
 	}
-	@Override
-	public void saveITOInfo() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void updateITOInfo() {
-		// TODO Auto-generated method stub
-
-	}
+	
 	@Override
 	public Map<String,ITO>getAllITOInfo(){
 		ArrayList <String>blackListShiftPatternList=null;
@@ -475,6 +466,44 @@ public class DbOp implements DataStore {
 			releaseResource(rs, stmt);
 		}
 		return result;
+	}
+	@Override
+	public void updateITOInfo(ITO ito) 
+	{
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		PreparedStatement stmt=null;
+		String availableShiftList=new String();
+		StringBuilder sb = new StringBuilder();
+		for (String shiftType:ito.getAvailableShiftList())
+		{
+			sb.append(shiftType);
+		    sb.append(",");
+		}
+		availableShiftList=sb.toString();
+		availableShiftList=availableShiftList.substring(0, availableShiftList.length()-1);
+		logger.debug(availableShiftList);		
+		sqlString="replace into ito_info (ito_id,ito_name,post_name,join_date,leave_date,available_shift,working_hour_per_day) values (?,?,?,?,?,?,?,?)";
+		try 
+		{
+			stmt=dbConn.prepareStatement(sqlString);
+			stmt.setString(1,ito.getITOId());
+			stmt.setString(2,ito.getITOName());
+			stmt.setString(3,ito.getPostName());
+			stmt.setString(4, ito.getJoinDate().format(formatter));
+			stmt.setString(5, ito.getLeaveDate().format(formatter));
+			stmt.setString(6, availableShiftList);
+			stmt.setFloat(7, ito.getWorkingHourPerDay());
+			stmt.executeUpdate();
+			stmt.close();
+		} 
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally 
+		{
+			releaseResource(null, stmt);
+		}
 	}
 	@Override
 	public boolean updateRoster(int year,int month,Roster roster) 

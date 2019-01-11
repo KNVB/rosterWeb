@@ -19,8 +19,7 @@ import java.util.Map;
 public interface DataStore {
 
 	public Map<String,ITO>getAllITOInfo();
-	public void saveITOInfo();
-	public void updateITOInfo();
+	public void updateITOInfo(ITO ito);
 	/**
 	 * Get a list of valid ITO Object in the specified year and month value.
 	 * @param year the specified year

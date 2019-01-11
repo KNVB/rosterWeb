@@ -1,7 +1,6 @@
 package com.rosterWeb;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -9,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.rosterWeb.util.DataStore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * It denote a ITO record
@@ -20,15 +20,15 @@ public class ITO {
 	/**
 	 * The ITO Id of the specified ITO.
 	 */
-	private String itoId;
+	private String itoId=new String();
 	/**
 	 * The name of the specified ITO.
 	 */
-	private String itoName;
+	private String itoName=new String();
 	/**
 	 * The post name of the specified ITO
 	 */
-	private String postName;
+	private String postName=new String();
 	/**
 	 * DataStore object for reading/writing data from/to data store
 	 */
@@ -36,7 +36,7 @@ public class ITO {
 	/**
 	 * The total no. of working hour per day for the specified ITO.
 	 */
-	private float workingHourPerDay;
+	private float workingHourPerDay=0.0f;
 	/**
 	 * The join date of the specified ITO.
 	 */
@@ -59,10 +59,13 @@ public class ITO {
 	{
 		
 	}
-
-	public void add(){
-
-	}
+	
+	/**
+	 * Get all ITO object from the data store
+	 * @return A list of ITO object order by post name.
+	 * @throws Exception The exception that was raised when retrieving ito data from data store
+	 */
+	@JsonBackReference
 	public Map<String,ITO>getAllITOInfo()throws Exception
 	{
 		logger.info("ITO.getAllITOInfo() is called");
@@ -76,7 +79,7 @@ public class ITO {
 	 * @param year year
 	 * @param month month
 	 * @return A list of ITO object order by post name.
-	 * @throws Exception the exception that was raised when retrieving ito data from data store
+	 * @throws Exception The exception that was raised when retrieving ito data from data store
 	 */
 	public Map<String,ITO> getITOList(int year,int month) throws Exception
 	{
@@ -86,8 +89,12 @@ public class ITO {
 		dataStore.close();
 		return result;
 	}	
-	public void update(){
-
+	public void update() throws Exception
+	{
+		logger.info("ITO.update() is called");
+		dataStore=Utility.getDataStore();
+		dataStore.updateITOInfo(this);
+		dataStore.close();
 	}
 	/**
 	 * Get ITO Id of the specified ITO.

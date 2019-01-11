@@ -99,45 +99,48 @@
 		<form id="updateITOInfoFormTemplate" style="display:none" method="post" onsubmit="return false;">
 			<input type="hidden" name="itoId">
 			<table border="1">
-				<tbody>
-					<tr>
-						<td>ITO Name</td>
-						<td><input type="text" name="itoName" required></td>
-					</tr>
-					<tr>
-						<td>Post Name</td>
-						<td><input type="text" name="postName" required></td>
-					</tr>
-					<tr>
-						<td>Avaliable Shift Type</td>
-						<td>
-						<%
-						for (String key : shiftHourCount.keySet()) 
-						{
-				            out.println(key+"<input type=\"checkbox\" value=\""+key+"\" name=\"availableShiftList\">");
-				        }
-						%>
-						</td>
-					</tr>
-					<tr>
-						<td>No. of Working Hour Per Day</td>
-						<td><input type="number" step="0.01" name="workingHourPerDay" required></td>
-					</tr>
-					<tr>
-						<td>Join Date</td>
-						<td><input type="text" name="joinDate" required readOnly></td>
-					</tr>
-					<tr>
-						<td>Leave Date</td>
-						<td>
-							<input type="text" name="leaveDate" required readOnly>
-							"2099-12-31" mean active member
-						</td>
-					</tr>					
-					<tr>
-						<td colspan="2" style="text-align: right;"><input type="submit" value="Save Value"></a></td>
-					</tr>
-				</tbody>
+				<tr>
+					<td>ITO Name</td>
+					<td><input type="text" name="itoName" required></td>
+				</tr>
+				<tr>
+					<td>Post Name</td>
+					<td><input type="text" name="postName" required></td>
+				</tr>
+				<tr>
+					<td>Avaliable Shift Type</td>
+					<td>
+					<%
+					for (String key : shiftHourCount.keySet()) 
+					{
+			            out.println(key+"<input type=\"checkbox\" value=\""+key+"\" name=\"availableShiftList\">");
+			        }
+					%>
+					</td>
+				</tr>
+				<tr>
+					<td>Black Listed Shift Type</td>
+					<td id="blackListShiftPatterns">
+					</td>
+				</tr>	
+				<tr>
+					<td>No. of Working Hour Per Day</td>
+					<td><input type="number" step="0.01" name="workingHourPerDay" required></td>
+				</tr>
+				<tr>
+					<td>Join Date</td>
+					<td><input type="text" name="joinDate" required readOnly></td>
+				</tr>
+				<tr>
+					<td>Leave Date</td>
+					<td>
+						<input type="text" name="leaveDate" required readOnly>
+						"2099-12-31" mean active member
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="text-align: right;"><input type="submit" value="Update"></a></td>
+				</tr>
 			</table>
 		</form>
 		

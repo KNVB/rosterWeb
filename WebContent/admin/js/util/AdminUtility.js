@@ -48,7 +48,7 @@ class AdminUtility  extends Utility
 						ito=itoList[itoId];
 						jsITO=new ITO();
 						jsITO.itoId=itoId;
-						jsITO.name=ito.name;
+						jsITO.name=ito.itoname;
 						jsITO.postName=ito.postName;
 						jsITO.workingHourPerDay=ito.workingHourPerDay;
 						jsITO.availableShiftList=ito.availableShiftList;
@@ -67,6 +67,11 @@ class AdminUtility  extends Utility
 			});
 		});	
 	}
+	getUTCDateObj(date)
+	{
+		var dateElements=date.split("-");
+		return Date.UTC(dateElements[0],dateElements[1]-1,dateElements[2]);
+	}
 	getITOList(year,month)
 	{
 		var jsITOList={};
@@ -82,7 +87,7 @@ class AdminUtility  extends Utility
 						ito=itoList[itoId];
 						jsITO=new ITO();
 						jsITO.itoId=itoId;
-						jsITO.name=ito.name;
+						jsITO.name=ito.itoname;
 						jsITO.postName=ito.postName;
 						jsITO.workingHourPerDay=ito.workingHourPerDay;
 						jsITO.availableShiftList=ito.availableShiftList;
@@ -159,6 +164,17 @@ class AdminUtility  extends Utility
             new_obj[keys[key]] = obj[keys[key]];
         }
         return new_obj;	
+	}
+	updateITOInfo(ito)
+	{
+		console.log(JSON.stringify(ito));
+		return jQuery.ajax({"url": "updateITOInfo.jsp",
+			data:JSON.stringify(ito),
+			method:"POST",
+			error: function(xhr) {
+			      console.log('error', xhr);
+			    }
+		});
 	}
 /*==============================================================================================*
  *																				  				*

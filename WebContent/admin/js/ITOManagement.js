@@ -23,8 +23,8 @@ class ITOManagement
 	}
 	showITOTable()
 	{
-		var cell,firstITOId=null;
-		var form=document.getElementById("updateITOInfoFormTemplate").cloneNode(true);
+		var addbtn,cell,firstITOId=null;
+		let form=document.getElementById("updateITOInfoFormTemplate").cloneNode(true);
 		var link,ito,itoTable=document.createElement("table");
 		var row=itoTable.insertRow(itoTable.rows.length);
 		var self=this;
@@ -72,6 +72,25 @@ class ITOManagement
 			cell=row.insertCell(row.cells.length);
 			cell.textContent=ito.workingHourPerDay;
 		}
+		addbtn=document.createElement("button");
+		addbtn.textContent="Add New ITO";
+		
+		row=itoTable.insertRow(itoTable.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=4;
+		cell.style.textAlign="right";
+		cell.append(addbtn);
+		addbtn.onclick=function(){
+			form.reset();
+			form.itoId.value="";
+			$(form).find("span").remove();
+			form.joinDate.value="";
+			$(form.joinDate).datepicker("destroy");
+			$(form.joinDate).datepicker({"defaultDate":new Date()});
+			$(form.joinDate).datepicker("refresh");
+			form.leaveDate.value="2099-12-31";
+		};		
+		
 		$(this.container).append(itoTable);
 		$(this.container).append("<br>");
 		$(this.container).append(form);
@@ -81,20 +100,42 @@ class ITOManagement
 	loadITOInfo(itoId)
 	{
 		var availableShiftList;
+		var blackListShiftCell;
 		var form=document.getElementById("updateITOInfoForm");
 		var ito=this.itoList[itoId];
+		var self=this,table;
 		
 		form.itoId.value=ito.itoId;
 		form.itoName.value=ito.name;
 		form.postName.value=ito.postName;
 		form.workingHourPerDay.value=ito.workingHourPerDay;
-		
+		blackListShiftCell=$(form).children("table").find("td#blackListShiftPatterns")[0];
+		$(blackListShiftCell).empty();
 		$(form).find("input[name='availableShiftList']").each(function(){
 				if ($.inArray(this.value,ito.availableShiftList)>-1)
 					this.checked=true;
 				else
 					this.checked=false;
 				});
+		ito.blackListShiftPatternList.forEach(function(blackListShiftPattern){
+			var input=document.createElement("input");
+			var span=document.createElement("span");
+			input.name="blackListShiftPattern";
+			input.type="text";
+			input.value=blackListShiftPattern;
+			
+			span.style.cursor="pointer";
+			span.append(input);
+			span.onclick=function(){
+				$(this).remove();
+			}
+			
+			$(span).append("&nbsp;-");
+			
+			blackListShiftCell.append(span);
+			blackListShiftCell.append(document.createElement("br"));
+		});
+		
 		$(form.joinDate).val(ito.joinDate.getFullYear()+"-"+(1+ito.joinDate.getMonth())+"-"+ito.joinDate.getDate());
 		$(form.joinDate).datepicker({dateFormat:"yy-mm-dd",
 			                         "defaultDate":ito.joinDate});
@@ -103,14 +144,30 @@ class ITOManagement
 		$(form.leaveDate).datepicker({dateFormat:"yy-mm-dd",
 			                         "defaultDate":ito.leaveDate});
 		$(form).submit(function(){
-			var ito=new ITO();
-			ito.itoId=this.itoId.value;
-			ito.name=this.itoName.value;
+			var ito={};
+			var availableShiftList=[];
+			if (this.itoId.value=="")
+				ito.itoid=this.postName.value+"_"+this.joinDate.value;
+			else	
+				ito.itoid=this.itoId.value;
+			
+			ito.itoname=this.itoName.value;
 			ito.postName=this.postName.value;
 			ito.workingHourPerDay=this.workingHourPerDay.value;
-			ito.joinDate=this.joinDate.value;
-			ito.leaveDate=this.leaveDate.value;
-			console.log(JSON.stringify(ito));
+			ito.joinDate=new Date(self.adminUtility.getUTCDateObj(this.joinDate.value));
+			ito.leaveDate=new Date(self.adminUtility.getUTCDateObj(this.leaveDate.value));
+			this.availableShiftList.forEach(function(inputItem){
+				if (inputItem.checked)
+					availableShiftList.push(inputItem.value);
+			});
+			ito.availableShiftList=availableShiftList;
+			self.adminUtility.updateITOInfo(ito)
+			.done(function(){
+				alert("The ITO information update success.");
+			})
+			.fail(function(){
+				alert("The ITO information update failure.");
+			});
 		});
 	}
 }
