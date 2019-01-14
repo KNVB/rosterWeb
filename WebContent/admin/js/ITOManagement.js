@@ -80,72 +80,40 @@ class ITOManagement
 		cell.colSpan=4;
 		cell.style.textAlign="right";
 		cell.append(addbtn);
+		
+		
+		
 		addbtn.onclick=function(){
 			form.reset();
 			form.itoId.value="";
-			$(form).find("span").remove();
+			 
 			form.joinDate.value="";
 			$(form.joinDate).datepicker("destroy");
 			$(form.joinDate).datepicker({"defaultDate":new Date()});
 			$(form.joinDate).datepicker("refresh");
 			form.leaveDate.value="2099-12-31";
+			
+			var blackListShiftListDiv=$("div.blackListShiftListDiv")[0];
+		
+			$(blackListShiftListDiv).empty();
+			self._addBlackListShiftPatternEntry("",blackListShiftListDiv);
 		};		
 		
 		$(this.container).append(itoTable);
 		$(this.container).append("<br>");
 		$(this.container).append(form);
-		form.style.display="inline";
-		this.loadITOInfo(firstITOId);
-	}
-	loadITOInfo(itoId)
-	{
-		var availableShiftList;
-		var blackListShiftCell;
-		var form=document.getElementById("updateITOInfoForm");
-		var ito=this.itoList[itoId];
-		var self=this,table;
 		
-		form.itoId.value=ito.itoId;
-		form.itoName.value=ito.name;
-		form.postName.value=ito.postName;
-		form.workingHourPerDay.value=ito.workingHourPerDay;
-		blackListShiftCell=$(form).children("table").find("td#blackListShiftPatterns")[0];
-		$(blackListShiftCell).empty();
-		$(form).find("input[name='availableShiftList']").each(function(){
-				if ($.inArray(this.value,ito.availableShiftList)>-1)
-					this.checked=true;
-				else
-					this.checked=false;
-				});
-		ito.blackListShiftPatternList.forEach(function(blackListShiftPattern){
-			var input=document.createElement("input");
-			var span=document.createElement("span");
-			input.name="blackListShiftPattern";
-			input.type="text";
-			input.value=blackListShiftPattern;
-			
-			span.style.cursor="pointer";
-			span.append(input);
-			span.onclick=function(){
-				$(this).remove();
-			}
-			
-			$(span).append("&nbsp;-");
-			
-			blackListShiftCell.append(span);
-			blackListShiftCell.append(document.createElement("br"));
+		var blackListShiftListDiv=$("div.blackListShiftListDiv")[0];
+		
+		$("div.addBlackListShiftEntryDiv").click(function(){
+			self._addBlackListShiftPatternEntry("",blackListShiftListDiv);
 		});
 		
-		$(form.joinDate).val(ito.joinDate.getFullYear()+"-"+(1+ito.joinDate.getMonth())+"-"+ito.joinDate.getDate());
-		$(form.joinDate).datepicker({dateFormat:"yy-mm-dd",
-			                         "defaultDate":ito.joinDate});
-		
-		$(form.leaveDate).val(ito.leaveDate.getFullYear()+"-"+(1+ito.leaveDate.getMonth())+"-"+ito.leaveDate.getDate());
-		$(form.leaveDate).datepicker({dateFormat:"yy-mm-dd",
-			                         "defaultDate":ito.leaveDate});
+		form.style.display="inline";
 		$(form).submit(function(){
-			var ito={};
 			var availableShiftList=[];
+			var ito={};
+			var theForm=this;
 			if (this.itoId.value=="")
 				ito.itoid=this.postName.value+"_"+this.joinDate.value;
 			else	
@@ -161,13 +129,85 @@ class ITOManagement
 					availableShiftList.push(inputItem.value);
 			});
 			ito.availableShiftList=availableShiftList;
-			self.adminUtility.updateITOInfo(ito)
+			if (this.blackListShiftPatternList==null)
+			{
+				alert("Black Listed Shift Type must be included.");
+			}
+			else
+			{
+				this.blackListShiftPatternList.forEach(function(blackListShiftPattern){
+					console.log(blackListShiftPattern.value);
+					blackListShiftPattern.value.split(",").forEach(function(blackListShift){
+							console.log(blackListShift);
+					})
+					console.log("===============================");
+				});	
+			}	
+			/*self.adminUtility.updateITOInfo(ito)
 			.done(function(){
 				alert("The ITO information update success.");
 			})
 			.fail(function(){
 				alert("The ITO information update failure.");
-			});
+			});*/
+			return false;
 		});
+		this.loadITOInfo(firstITOId);
+	}
+	loadITOInfo(itoId)
+	{
+		var availableShiftList,addBlackListShiftEntryDiv;
+		var blackListShiftListDiv,blackListShiftEntryDiv;
+		var form=document.getElementById("updateITOInfoForm");
+		var ito=this.itoList[itoId];
+		var self=this,span,table;
+		
+		form.itoId.value=ito.itoId;
+		form.itoName.value=ito.name;
+		form.postName.value=ito.postName;
+		form.workingHourPerDay.value=ito.workingHourPerDay;
+		
+		
+		$(form).find("input[name='availableShiftList']").each(function(){
+				if ($.inArray(this.value,ito.availableShiftList)>-1)
+					this.checked=true;
+				else
+					this.checked=false;
+				});
+		blackListShiftListDiv=$("div.blackListShiftListDiv")[0];
+		$(blackListShiftListDiv).empty();
+		
+		ito.blackListShiftPatternList.forEach(function(blackListShiftPattern){
+			self._addBlackListShiftPatternEntry(blackListShiftPattern,blackListShiftListDiv);
+		});
+		
+		$(form.joinDate).val(ito.joinDate.getFullYear()+"-"+(1+ito.joinDate.getMonth())+"-"+ito.joinDate.getDate());
+		$(form.joinDate).datepicker({dateFormat:"yy-mm-dd",
+			                         "defaultDate":ito.joinDate});
+		
+		$(form.leaveDate).val(ito.leaveDate.getFullYear()+"-"+(1+ito.leaveDate.getMonth())+"-"+ito.leaveDate.getDate());
+		$(form.leaveDate).datepicker({dateFormat:"yy-mm-dd",
+			                         "defaultDate":ito.leaveDate});
+		
+	}
+	_addBlackListShiftPatternEntry(blackListShiftPattern,blackListShiftListDiv)
+	{
+		var div=document.createElement("div");
+		var input=document.createElement("input");
+		var span=document.createElement("span");
+		
+		input.name="blackListShiftPatternList";
+		input.required = true;
+		input.type="text";			
+		input.value=blackListShiftPattern;
+		
+		span.style.cursor="pointer";
+		span.className="fas fa-minus-circle";
+		span.onclick=function(){
+			$(div).remove();
+		}
+		div.append(input);
+		div.append(span);
+		blackListShiftListDiv.append(div);
 	}
 }

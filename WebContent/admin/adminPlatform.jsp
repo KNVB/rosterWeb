@@ -27,6 +27,7 @@
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/MonthPick.css">
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/admin/css/style.css">
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/webjars/jquery-ui/1.12.1/jquery-ui.min.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 		
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery/3.3.1/jquery.min.js"></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>
@@ -96,7 +97,7 @@
 				</div>
 			</div>
 		</div>	
-		<form id="updateITOInfoFormTemplate" style="display:none" method="post" onsubmit="return false;">
+		<form id="updateITOInfoFormTemplate" style="display:none" method="post">
 			<input type="hidden" name="itoId">
 			<table border="1">
 				<tr>
@@ -121,6 +122,13 @@
 				<tr>
 					<td>Black Listed Shift Type</td>
 					<td id="blackListShiftPatterns">
+						<div class="blackListShiftDiv">
+							<div class="blackListShiftListDiv">
+							</div>
+							<div class="addBlackListShiftEntryDiv">
+								<span class="fas fa-plus-circle"></span>
+							</div>
+						</div>
 					</td>
 				</tr>	
 				<tr>

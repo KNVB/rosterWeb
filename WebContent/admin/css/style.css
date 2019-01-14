@@ -51,3 +51,21 @@
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
 }
+.addBlackListShiftEntryDiv
+{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	flex:1 1;
+}
+.blackListShiftDiv
+{
+	flex-direction:row;
+	margin:0px;
+	display:flex;
+}
+.blackListShiftListDiv
+{
+	display:flex;
+	flex-direction:column;
+}
