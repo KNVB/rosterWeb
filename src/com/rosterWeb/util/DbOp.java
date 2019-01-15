@@ -482,9 +482,11 @@ public class DbOp implements DataStore {
 		availableShiftList=sb.toString();
 		availableShiftList=availableShiftList.substring(0, availableShiftList.length()-1);
 		logger.debug(availableShiftList);		
-		sqlString="replace into ito_info (ito_id,ito_name,post_name,join_date,leave_date,available_shift,working_hour_per_day) values (?,?,?,?,?,?,?,?)";
+		sqlString="replace into ito_info (ito_id,ito_name,post_name,join_date,leave_date,available_shift,working_hour_per_day) values (?,?,?,?,?,?,?)";
+		
 		try 
 		{
+			dbConn.setAutoCommit(false);
 			stmt=dbConn.prepareStatement(sqlString);
 			stmt.setString(1,ito.getITOId());
 			stmt.setString(2,ito.getITOName());
@@ -495,6 +497,18 @@ public class DbOp implements DataStore {
 			stmt.setFloat(7, ito.getWorkingHourPerDay());
 			stmt.executeUpdate();
 			stmt.close();
+			
+			sqlString="replace into black_list_pattern (ito_id,black_list_pattern) values(?,?)";
+			for (String blackListPattern:ito.getBlackListedShiftPatternList())
+			{
+				logger.debug("itoId="+ito.getITOId()+",blackListPattern="+blackListPattern);
+				stmt=dbConn.prepareStatement(sqlString);
+				stmt.setString(1,ito.getITOId());
+				stmt.setString(2,blackListPattern);
+				stmt.executeUpdate();
+				stmt.close();
+			}
+			dbConn.commit();
 		} 
 		catch (SQLException e) {
 			// TODO Auto-generated catch block
