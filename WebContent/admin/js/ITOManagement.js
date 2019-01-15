@@ -89,7 +89,7 @@ class ITOManagement
 			 
 			form.joinDate.value="";
 			$(form.joinDate).datepicker("destroy");
-			$(form.joinDate).datepicker({"defaultDate":new Date()});
+			$(form.joinDate).datepicker({"defaultDate":new Date(),dateFormat: 'yy-mm-dd'});
 			$(form.joinDate).datepicker("refresh");
 			form.leaveDate.value="2099-12-31";
 			
@@ -114,6 +114,7 @@ class ITOManagement
 			var availableShiftList=[];
 			var ito={};
 			var theForm=this;
+			var result=true;
 			if (this.itoId.value=="")
 				ito.itoid=this.postName.value+"_"+this.joinDate.value;
 			else	
@@ -124,32 +125,64 @@ class ITOManagement
 			ito.workingHourPerDay=this.workingHourPerDay.value;
 			ito.joinDate=new Date(self.adminUtility.getUTCDateObj(this.joinDate.value));
 			ito.leaveDate=new Date(self.adminUtility.getUTCDateObj(this.leaveDate.value));
-			this.availableShiftList.forEach(function(inputItem){
-				if (inputItem.checked)
-					availableShiftList.push(inputItem.value);
-			});
-			ito.availableShiftList=availableShiftList;
-			if (this.blackListShiftPatternList==null)
+			
+			if ($("input[name='availableShiftList']:checked").length==0)
 			{
-				alert("Black Listed Shift Type must be included.");
+				alert("Please select an available shift type.");
+				result=false;
 			}
 			else
 			{
-				this.blackListShiftPatternList.forEach(function(blackListShiftPattern){
-					console.log(blackListShiftPattern.value);
-					blackListShiftPattern.value.split(",").forEach(function(blackListShift){
-							console.log(blackListShift);
-					})
-					console.log("===============================");
-				});	
-			}	
-			/*self.adminUtility.updateITOInfo(ito)
-			.done(function(){
-				alert("The ITO information update success.");
-			})
-			.fail(function(){
-				alert("The ITO information update failure.");
-			});*/
+				this.availableShiftList.forEach(function(inputItem){
+					if (inputItem.checked)
+						availableShiftList.push(inputItem.value);
+				});
+				ito.availableShiftList=availableShiftList;
+				if ($("input[name='blackListShiftPatternList']").length==0)
+				{
+					alert("Black Listed Shift Type must be included.");
+					result=false;
+				}
+				else
+				{
+					var blackListShiftPatternListResult=true,shiftType;
+					for (var i=0;i<$(this.blackListShiftPatternList).length;i++)
+					{
+						var blackListShiftPatternList=$(this.blackListShiftPatternList)[i].value.split(",");
+						for (var j=0;j<blackListShiftPatternList.length;j++)
+						{
+							shiftType=blackListShiftPatternList[j];
+							if ($.inArray(shiftType,availableShiftList)==-1)
+							{	
+								blackListShiftPatternListResult=false;
+								break;
+							}
+						}
+						if (blackListShiftPatternListResult==false)
+						{
+							$(this.blackListShiftPatternList)[i].focus();
+							alert("Invalid shift type entered.");
+							result=false;
+							break;
+						}	
+					}
+					if (result==true)
+					{
+						ito.blackListedShiftPatternList=[];
+						for (var i=0;i<$(this.blackListShiftPatternList).length;i++)
+						{
+							ito.blackListedShiftPatternList.push($(this.blackListShiftPatternList)[i].value);
+						}
+						self.adminUtility.updateITOInfo(ito)
+						.done(function(){
+							alert("The ITO information update success.");
+						})
+						.fail(function(){
+							alert("The ITO information update failure.");
+						});
+					}	
+				}	
+			}
 			return false;
 		});
 		this.loadITOInfo(firstITOId);
