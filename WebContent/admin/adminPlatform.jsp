@@ -138,12 +138,12 @@
 				</tr>
 				<tr>
 					<td>Join Date</td>
-					<td><input type="text" name="joinDate" required></td>
+					<td><input type="text" name="joinDate" required readonly></td>
 				</tr>
 				<tr>
 					<td>Leave Date</td>
 					<td>
-						<input type="text" name="leaveDate" required>
+						<input type="text" name="leaveDate" required readonly>
 						"2099-12-31" mean active member
 					</td>
 				</tr>

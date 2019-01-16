@@ -88,12 +88,16 @@ class ITOManagement
 		});
 		
 		$(form.joinDate).val(ito.joinDate.getFullYear()+"-"+(1+ito.joinDate.getMonth())+"-"+ito.joinDate.getDate());
-		$(form.joinDate).datepicker({dateFormat:"yy-mm-dd",
-			                         "defaultDate":ito.joinDate});
+		$(form.joinDate).datepicker({changeMonth: true,
+									 changeYear: true,
+									 dateFormat:"yy-mm-dd",
+									 "defaultDate":ito.joinDate});
 		
 		$(form.leaveDate).val(ito.leaveDate.getFullYear()+"-"+(1+ito.leaveDate.getMonth())+"-"+ito.leaveDate.getDate());
-		$(form.leaveDate).datepicker({dateFormat:"yy-mm-dd",
-			                         "defaultDate":ito.leaveDate});
+		$(form.leaveDate).datepicker({changeMonth: true,
+			                          changeYear: true,
+			                          dateFormat:"yy-mm-dd",
+				                      "defaultDate":ito.leaveDate,});
 		form.submitButton.value="Update";
 	}
 	_showITOList(itoTable,form)
@@ -182,7 +186,10 @@ class ITOManagement
 		 
 		form.joinDate.value="";
 		$(form.joinDate).datepicker("destroy");
-		$(form.joinDate).datepicker({"defaultDate":new Date(),dateFormat: 'yy-mm-dd'});
+		$(form.joinDate).datepicker({changeMonth: true,
+			                         changeYear: true,
+			                         dateFormat: 'yy-mm-dd',
+			                         "defaultDate":new Date()});
 		$(form.joinDate).datepicker("refresh");
 		form.leaveDate.value="2099-12-31";
 		
