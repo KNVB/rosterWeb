@@ -54,8 +54,10 @@ public class ITO {
 	 */
 	private ArrayList<String> blackListedShiftPatternList;
 	private static final Logger logger = LogManager.getLogger(Class.class.getSimpleName());
-	
-	public ITO() throws InstantiationException, IllegalAccessException, ClassNotFoundException
+	/**
+	 * Instantiate an ITO object
+	 */
+	public ITO()
 	{
 		
 	}
@@ -88,7 +90,11 @@ public class ITO {
 		Map<String,ITO> result=dataStore.getITOList(year,month);
 		dataStore.close();
 		return result;
-	}	
+	}
+	/**
+	 * Add/Update an ITO record to data store
+	 * @throws Exception The exception that was raised when updating ito record to data store
+	 */
 	public void update() throws Exception
 	{
 		logger.info("ITO.update() is called");

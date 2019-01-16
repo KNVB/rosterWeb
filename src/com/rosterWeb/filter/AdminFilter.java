@@ -62,8 +62,8 @@ public class AdminFilter implements Filter {
 	 * @param request Servlet Request
 	 * @param response Servlet Response
 	 * @param chain Filter Chain
-	 * @throws IOException 
-	 * @throws ServletException 
+	 * @throws IOException The exception that was raised when during the doFilter process.
+	 * @throws ServletException The exception that was raised when during the doFilter process. 
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -109,7 +109,7 @@ public class AdminFilter implements Filter {
 	/**
 	 * Called by the web container to indicate to a filter 
      * that it is being placed into service
-     * @throws ServletException
+     * @throws ServletException The exception that was raised when initialize this filter
 	 * @see Filter#init(FilterConfig)
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {

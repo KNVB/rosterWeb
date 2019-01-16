@@ -19,11 +19,18 @@ public class Roster
 	private Map<String,Map<Integer,String>> iTOPreferredShiftList;
 	
 	private static final Logger logger = LogManager.getLogger(Class.class.getSimpleName());
-	
+	/**
+	 * Instantiate Roster object
+	 */ 
 	public Roster()
 	{
 		
 	}
+	/**
+	 * Instantiate Roster object in the specified year and month value.  
+	 * @param year year
+	 * @param month month
+	 */
 	public Roster(int year,int month)
 	{
 		rosterYear=year;

@@ -17,8 +17,15 @@ import java.util.Map;
  * 
  */
 public interface DataStore {
-
+	/**
+	 * Get a list of all ITO Object stored in data store.
+	 * @return List of ITO object
+	 */
 	public Map<String,ITO>getAllITOInfo();
+	/**
+	 * Add/Update an ITO record to data store
+	 * @param ito ITO object
+	 */
 	public void updateITOInfo(ITO ito);
 	/**
 	 * Get a list of valid ITO Object in the specified year and month value.
