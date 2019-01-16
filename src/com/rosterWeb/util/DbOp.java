@@ -498,7 +498,13 @@ public class DbOp implements DataStore {
 			stmt.executeUpdate();
 			stmt.close();
 			
-			sqlString="replace into black_list_pattern (ito_id,black_list_pattern) values(?,?)";
+			sqlString="delete from black_list_pattern where ito_id=?";
+			stmt=dbConn.prepareStatement(sqlString);
+			stmt.setString(1,ito.getITOId());
+			stmt.executeUpdate();
+			stmt.close();
+			
+			sqlString="insert into black_list_pattern (ito_id,black_list_pattern) values(?,?)";
 			for (String blackListPattern:ito.getBlackListedShiftPatternList())
 			{
 				logger.debug("itoId="+ito.getITOId()+",blackListPattern="+blackListPattern);

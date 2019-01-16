@@ -5,27 +5,12 @@ class ITOManagement
 		this.adminUtility=new AdminUtility();
 		this.container=container;
 		this.rosterRule=new RosterRule();
-	}
-	loadITOList()
-	{	
-		var self=this;
-		return new Promise((resolve, reject) =>{
-			self.adminUtility.getAllITOInfo()
-			.then(function(itoList){
-				self.itoList=itoList;
-				resolve();
-			})
-			.catch(function(data){
-				alert("Fail to get ITO Object List.");
-				reject();
-			});	
-		});
-	}
+	}	
 	showITOTable()
 	{
-		var addbtn,cell,firstITOId=null;
+		var cell;
 		let form=document.getElementById("updateITOInfoFormTemplate").cloneNode(true);
-		var link,ito,itoTable=document.createElement("table");
+		var itoTable=document.createElement("table");
 		var row=itoTable.insertRow(itoTable.rows.length);
 		var self=this;
 		$(this.container).empty();
@@ -45,149 +30,37 @@ class ITOManagement
 		cell=row.insertCell(row.cells.length);
 		cell.textContent="No. of Working Hour Per Day";
 		
-		$(this.container).empty();
-		for (let itoId in this.itoList)
-		{	
-			ito=this.itoList[itoId];
-			row=itoTable.insertRow(itoTable.rows.length);
-			
-			if (firstITOId==null)
-				firstITOId=itoId;
-			link=document.createElement("a");
-			link.textContent=ito.name;
-			link.href="#";
-			link.addEventListener("click",function(){
-				self.loadITOInfo(itoId);
-			});
-			
-			cell=row.insertCell(row.cells.length);
-			cell.append(link);
-			
-			cell=row.insertCell(row.cells.length);
-			cell.textContent=ito.postName;
-			
-			cell=row.insertCell(row.cells.length);
-			cell.textContent=ito.availableShiftList;
-
-			cell=row.insertCell(row.cells.length);
-			cell.textContent=ito.workingHourPerDay;
-		}
-		addbtn=document.createElement("button");
-		addbtn.textContent="Add New ITO";
-		
-		row=itoTable.insertRow(itoTable.rows.length);
-		cell=row.insertCell(row.cells.length);
-		cell.colSpan=4;
-		cell.style.textAlign="right";
-		cell.append(addbtn);
-		
-		
-		
-		addbtn.onclick=function(){
-			form.reset();
-			form.itoId.value="";
-			 
-			form.joinDate.value="";
-			$(form.joinDate).datepicker("destroy");
-			$(form.joinDate).datepicker({"defaultDate":new Date(),dateFormat: 'yy-mm-dd'});
-			$(form.joinDate).datepicker("refresh");
-			form.leaveDate.value="2099-12-31";
-			
-			var blackListShiftListDiv=$("div.blackListShiftListDiv")[0];
-		
-			$(blackListShiftListDiv).empty();
-			self._addBlackListShiftPatternEntry("",blackListShiftListDiv);
-		};		
-		
-		$(this.container).append(itoTable);
-		$(this.container).append("<br>");
-		$(this.container).append(form);
-		
-		var blackListShiftListDiv=$("div.blackListShiftListDiv")[0];
-		
-		$("div.addBlackListShiftEntryDiv").click(function(){
-			self._addBlackListShiftPatternEntry("",blackListShiftListDiv);
+		this.adminUtility.getAllITOInfo()
+		.then(function(itoList){
+			self.itoList=itoList;
+			self._showITOList(itoTable,form);
+		})
+		.catch(function(data){
+			console.log(data);
+			alert("Fail to get ITO Object List.");
 		});
-		
-		form.style.display="inline";
-		$(form).submit(function(){
-			var availableShiftList=[];
-			var ito={};
-			var theForm=this;
-			var result=true;
-			if (this.itoId.value=="")
-				ito.itoid=this.postName.value+"_"+this.joinDate.value;
-			else	
-				ito.itoid=this.itoId.value;
-			
-			ito.itoname=this.itoName.value;
-			ito.postName=this.postName.value;
-			ito.workingHourPerDay=this.workingHourPerDay.value;
-			ito.joinDate=new Date(self.adminUtility.getUTCDateObj(this.joinDate.value));
-			ito.leaveDate=new Date(self.adminUtility.getUTCDateObj(this.leaveDate.value));
-			
-			if ($("input[name='availableShiftList']:checked").length==0)
-			{
-				alert("Please select an available shift type.");
-				result=false;
-			}
-			else
-			{
-				this.availableShiftList.forEach(function(inputItem){
-					if (inputItem.checked)
-						availableShiftList.push(inputItem.value);
-				});
-				ito.availableShiftList=availableShiftList;
-				if ($("input[name='blackListShiftPatternList']").length==0)
-				{
-					alert("Black Listed Shift Type must be included.");
-					result=false;
-				}
-				else
-				{
-					var blackListShiftPatternListResult=true,shiftType;
-					for (var i=0;i<$(this.blackListShiftPatternList).length;i++)
-					{
-						var blackListShiftPatternList=$(this.blackListShiftPatternList)[i].value.split(",");
-						for (var j=0;j<blackListShiftPatternList.length;j++)
-						{
-							shiftType=blackListShiftPatternList[j];
-							if ($.inArray(shiftType,availableShiftList)==-1)
-							{	
-								blackListShiftPatternListResult=false;
-								break;
-							}
-						}
-						if (blackListShiftPatternListResult==false)
-						{
-							$(this.blackListShiftPatternList)[i].focus();
-							alert("Invalid shift type entered.");
-							result=false;
-							break;
-						}	
-					}
-					if (result==true)
-					{
-						ito.blackListedShiftPatternList=[];
-						for (var i=0;i<$(this.blackListShiftPatternList).length;i++)
-						{
-							ito.blackListedShiftPatternList.push($(this.blackListShiftPatternList)[i].value);
-						}
-						self.adminUtility.updateITOInfo(ito)
-						.done(function(){
-							alert("The ITO information update success.");
-						})
-						.fail(function(){
-							alert("The ITO information update failure.");
-						});
-					}	
-				}	
-			}
-			return false;
-		});
-		this.loadITOInfo(firstITOId);
 	}
-	loadITOInfo(itoId)
+	_addBlackListShiftPatternEntry(blackListShiftPattern,blackListShiftListDiv)
+	{
+		var div=document.createElement("div");
+		var input=document.createElement("input");
+		var span=document.createElement("span");
+		
+		input.name="blackListShiftPatternList";
+		input.required = true;
+		input.type="text";			
+		input.value=blackListShiftPattern;
+		
+		span.style.cursor="pointer";
+		span.className="fas fa-minus-circle";
+		span.onclick=function(){
+			$(div).remove();
+		}
+		div.append(input);
+		div.append(span);
+		blackListShiftListDiv.append(div);
+	}
+	_loadITOInfo(itoId)
 	{
 		var availableShiftList,addBlackListShiftEntryDiv;
 		var blackListShiftListDiv,blackListShiftEntryDiv;
@@ -221,26 +94,179 @@ class ITOManagement
 		$(form.leaveDate).val(ito.leaveDate.getFullYear()+"-"+(1+ito.leaveDate.getMonth())+"-"+ito.leaveDate.getDate());
 		$(form.leaveDate).datepicker({dateFormat:"yy-mm-dd",
 			                         "defaultDate":ito.leaveDate});
-		
+		form.submitButton.value="Update";
 	}
-	_addBlackListShiftPatternEntry(blackListShiftPattern,blackListShiftListDiv)
+	_showITOList(itoTable,form)
 	{
-		var div=document.createElement("div");
-		var input=document.createElement("input");
-		var span=document.createElement("span");
+		var addbtn,cell,firstITOId=null;
+		var link,ito,row,self=this;
+		for (let itoId in this.itoList)
+		{
+			ito=this.itoList[itoId];
+			row=itoTable.insertRow(itoTable.rows.length);
+			
+			if (firstITOId==null)
+				firstITOId=itoId;
+			link=document.createElement("a");
+			link.textContent=ito.name;
+			link.href="#";
+			link.addEventListener("click",function(){
+				self._loadITOInfo(itoId);
+			});
+			
+			cell=row.insertCell(row.cells.length);
+			cell.append(link);
+			
+			cell=row.insertCell(row.cells.length);
+			cell.textContent=ito.postName;
+			
+			cell=row.insertCell(row.cells.length);
+			cell.textContent=ito.availableShiftList;
+
+			cell=row.insertCell(row.cells.length);
+			cell.textContent=ito.workingHourPerDay;
+		}	
 		
-		input.name="blackListShiftPatternList";
-		input.required = true;
-		input.type="text";			
-		input.value=blackListShiftPattern;
+		addbtn=document.createElement("button");
+		addbtn.textContent="Add New ITO";
+		addbtn.onclick=function(){
+			self._resetUpdateITOInfoForm();
+		};
 		
-		span.style.cursor="pointer";
-		span.className="fas fa-minus-circle";
-		span.onclick=function(){
-			$(div).remove();
+		row=itoTable.insertRow(itoTable.rows.length);
+		cell=row.insertCell(row.cells.length);
+		cell.colSpan=4;
+		cell.style.textAlign="right";
+		cell.append(addbtn);
+		
+		$(this.container).append(itoTable);
+		$(this.container).append("<br>");
+		$(this.container).append(form);
+
+		
+		$(form).find("span.fas.fa-minus-circle").click(function(){
+			$(this).parent("div").remove();
+		});
+		
+		var blackListShiftListDiv=$("div.blackListShiftListDiv")[0];
+		$(form).find("span.fas.fa-plus-circle").click(function(){
+			self._addBlackListShiftPatternEntry("",blackListShiftListDiv);
+		});
+		
+		this._loadITOInfo(firstITOId);
+		
+		form.style.display="inline";
+		
+		$(form).submit(function(){
+			try
+			{
+				var ito=self._validateITOInfoForm(this);
+				self._submitITOInfoToServer(ito);
+			}
+			catch (err)
+			{
+				alert(err);
+			}
+			finally 
+			{
+				return false;
+			}
+		});
+	}
+	_resetUpdateITOInfoForm()
+	{
+		var self=this;
+		var form=document.getElementById("updateITOInfoForm");
+		form.reset();
+		form.itoId.value="";
+		 
+		form.joinDate.value="";
+		$(form.joinDate).datepicker("destroy");
+		$(form.joinDate).datepicker({"defaultDate":new Date(),dateFormat: 'yy-mm-dd'});
+		$(form.joinDate).datepicker("refresh");
+		form.leaveDate.value="2099-12-31";
+		
+		var blackListShiftListDiv=$("div.blackListShiftListDiv")[0];
+	
+		$(blackListShiftListDiv).empty();
+		self._addBlackListShiftPatternEntry("",blackListShiftListDiv);
+		form.submitButton.value="Add";
+	}
+	_submitITOInfoToServer(ito)
+	{
+		var self=this;
+		this.adminUtility.updateITOInfo(ito)
+		.done(function(){
+			alert("The ITO information update success.");
+			self.showITOTable();
+		})
+		.fail(function(){
+			alert("The ITO information update failure.");
+		});
+	}
+	_validateITOInfoForm(form)
+	{
+		var availableShiftList=[];
+		var ito={};
+		var result=true;
+		var self=this;
+		
+		if (form.itoId.value=="")
+			ito.itoid=form.postName.value+"_"+form.joinDate.value;
+		else	
+			ito.itoid=form.itoId.value;
+		ito.itoname=form.itoName.value;
+		ito.postName=form.postName.value;
+		ito.workingHourPerDay=form.workingHourPerDay.value;
+		ito.joinDate=new Date(self.adminUtility.getUTCDateObj(form.joinDate.value));
+		ito.leaveDate=new Date(self.adminUtility.getUTCDateObj(form.leaveDate.value));
+		
+		if ($("input[name='availableShiftList']:checked").length==0)
+			throw "Please select an available shift type.";
+		else
+		{
+			form.availableShiftList.forEach(function(inputItem){
+				if (inputItem.checked)
+					availableShiftList.push(inputItem.value);
+			});
+			ito.availableShiftList=availableShiftList;
+			if ($(form).find("input[name='blackListShiftPatternList']").length==0)
+			{
+				throw "Black Listed Shift Type must be included.";
+			}
+			else
+			{
+				var shiftType;
+				result=true;
+				for (var i=0;i<$(form.blackListShiftPatternList).length;i++)
+				{
+					var blackListShiftPatternList=$(form.blackListShiftPatternList)[i].value.split(",");
+					for (var j=0;j<blackListShiftPatternList.length;j++)
+					{
+						shiftType=blackListShiftPatternList[j];
+						if ($.inArray(shiftType,availableShiftList)==-1)
+						{	
+							result=false;
+							break;
+						}
+					}
+					if (result==false)
+					{
+						$(form.blackListShiftPatternList)[i].focus();
+						throw "Invalid shift type entered.";
+						break;
+					}	
+				}
+				if (result==true)
+				{
+					ito.blackListedShiftPatternList=[];
+					for (var i=0;i<$(form.blackListShiftPatternList).length;i++)
+					{
+						ito.blackListedShiftPatternList.push($(form.blackListShiftPatternList)[i].value);
+					}
+					return ito;
+				}	
+			}	
 		}
-		div.append(input);
-		div.append(span);
-		blackListShiftListDiv.append(div);
 	}
 }

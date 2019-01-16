@@ -66,10 +66,7 @@
 			{
 				closeNav();
 				var itoManagement=new ITOManagement($("#main")[0]);
-				itoManagement.loadITOList()
-				.then(function(){
-					itoManagement.showITOTable();
-				});
+				itoManagement.showITOTable();
 			}
 			
 			$( document ).ready(function() {
@@ -124,9 +121,13 @@
 					<td id="blackListShiftPatterns">
 						<div class="blackListShiftDiv">
 							<div class="blackListShiftListDiv">
+								<div>
+									<input name="blackListShiftPatternList" required type="text">
+									<span class="fas fa-minus-circle" style="cursor: pointer;"></span>
+								</div>
 							</div>
 							<div class="addBlackListShiftEntryDiv">
-								<span class="fas fa-plus-circle"></span>
+								<span class="fas fa-plus-circle" style="cursor:pointer"></span>
 							</div>
 						</div>
 					</td>
@@ -137,17 +138,17 @@
 				</tr>
 				<tr>
 					<td>Join Date</td>
-					<td><input type="text" name="joinDate" required readOnly></td>
+					<td><input type="text" name="joinDate" required></td>
 				</tr>
 				<tr>
 					<td>Leave Date</td>
 					<td>
-						<input type="text" name="leaveDate" required readOnly>
+						<input type="text" name="leaveDate" required>
 						"2099-12-31" mean active member
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" style="text-align: right;"><input type="submit" value="Update"></a></td>
+					<td colspan="2" style="text-align: right;"><input type="submit" name="submitButton" value="Update"></a></td>
 				</tr>
 			</table>
 		</form>
