@@ -178,16 +178,19 @@ class ShiftCellSelector
 	{
 		if ((this.selectStartRowIndex>-1) && (this.selectStartCellIndex>-1))
 		{
-			event.preventDefault();
 			var cell=this.rosterTable.getCell(this.selectedRegionCoordinate.minY,this.selectedRegionCoordinate.minX);
 			for (var i=this.selectedRegionCoordinate.minX;i<=this.selectedRegionCoordinate.maxX;i++)
 			{
 				for (var j=this.selectedRegionCoordinate.minY;j<=this.selectedRegionCoordinate.maxY;j++)
 				{
 					cell=this.rosterTable.getCell(j,i);
-					if ($(cell).hasClass("shiftCell"))
+					if ($(cell).hasClass("cursorCell"))
 					{
-						$(cell).html("").blur();
+						$(cell).empty().blur();
+					}
+					else
+					{
+						event.preventDefault();
 					}	
 				}	
 			}

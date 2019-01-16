@@ -654,12 +654,7 @@ class RosterSchedulerTable extends RosterTable
 		{
 			cell=row.insertCell(row.cells.length);
 			cell.className="alignCenter borderCell vacantShift";
-		}
-		for (i=Object.keys(this.dateObjList).length;i<31;i++)
-		{
-			cell=row.insertCell(row.cells.length);
-			cell.className="alignCenter borderCell";
-		}
+		}	
 
 		Object.keys(self.itoList).forEach(function(itoId){
 			aShiftData.push(Number(document.getElementById(itoId+"_aShiftCount").textContent));
