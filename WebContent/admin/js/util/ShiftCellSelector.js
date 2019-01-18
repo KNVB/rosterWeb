@@ -188,7 +188,7 @@ class ShiftCellSelector
 					cell=this.rosterTable.getCell(j,i);
 					if ($(cell).hasClass("cursorCell"))
 					{
-						//$(cell).empty().blur();
+						//$(cell).empty().blur(); //<==this is old delete method.
 						sel.removeAllRanges();
 						range.selectNodeContents(cell);
 						sel.addRange(range);
