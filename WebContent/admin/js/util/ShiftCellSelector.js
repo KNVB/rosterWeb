@@ -178,7 +178,8 @@ class ShiftCellSelector
 	{
 		if ((this.selectStartRowIndex>-1) && (this.selectStartCellIndex>-1))
 		{
-			var cell=this.rosterTable.getCell(this.selectedRegionCoordinate.minY,this.selectedRegionCoordinate.minX);
+			var cell;
+			
 			for (var i=this.selectedRegionCoordinate.minX;i<=this.selectedRegionCoordinate.maxX;i++)
 			{
 				for (var j=this.selectedRegionCoordinate.minY;j<=this.selectedRegionCoordinate.maxY;j++)
@@ -194,6 +195,7 @@ class ShiftCellSelector
 					}	
 				}	
 			}
+			
 			this._clearAllSelectionState();
 		}
 	}

@@ -35,6 +35,7 @@
 				var endNode=document.getElementById("c23");
 				range.setStart(startNode, 0);
 				range.setEnd(endNode, 1);
+				selection.removeAllRanges();
 				selection.addRange(range);
 				console.log(document.execCommand('copy'));
 			}
