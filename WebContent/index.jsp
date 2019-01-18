@@ -15,6 +15,7 @@
 		rosterMonth=now.getMonthValue();
 	}
 %>
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Roster Viewer</title>

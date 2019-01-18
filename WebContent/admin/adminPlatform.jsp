@@ -18,6 +18,7 @@
 		rosterMonth=now.getMonthValue();
 	}
 %>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
@@ -148,7 +149,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" style="text-align: right;"><input type="submit" name="submitButton" value="Update"></a></td>
+					<td colspan="2" style="text-align: right;"><input type="submit" name="submitButton" value="Update"></td>
 				</tr>
 			</table>
 		</form>

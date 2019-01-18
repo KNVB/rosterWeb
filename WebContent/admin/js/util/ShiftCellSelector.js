@@ -237,6 +237,7 @@ class ShiftCellSelector
 			case 46:
 					this._handleDeleteKeyEvent(event);
 					break;
+		/*			
 			default:
 					if (event.ctrlKey)
 					{
@@ -254,7 +255,7 @@ class ShiftCellSelector
 							}
 						}
 					}	
-					break;
+					break;*/
 		}
 		
 	}
