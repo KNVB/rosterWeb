@@ -179,7 +179,8 @@ class ShiftCellSelector
 		if ((this.selectStartRowIndex>-1) && (this.selectStartCellIndex>-1))
 		{
 			var cell;
-			
+			var sel = window.getSelection();
+			var range = document.createRange();
 			for (var i=this.selectedRegionCoordinate.minX;i<=this.selectedRegionCoordinate.maxX;i++)
 			{
 				for (var j=this.selectedRegionCoordinate.minY;j<=this.selectedRegionCoordinate.maxY;j++)
@@ -187,7 +188,12 @@ class ShiftCellSelector
 					cell=this.rosterTable.getCell(j,i);
 					if ($(cell).hasClass("cursorCell"))
 					{
-						$(cell).empty().blur();
+						//$(cell).empty().blur();
+						sel.removeAllRanges();
+						range.selectNodeContents(cell);
+						sel.addRange(range);
+						document.execCommand("delete",false,null);
+						$(cell).blur();
 					}
 					else
 					{
@@ -328,7 +334,7 @@ class ShiftCellSelector
 	{
 		if (this.inSelectMode)
 		{
-			theCell.contentEditable=false;
+			//theCell.contentEditable=false;
 			this.selectPreviousRowIndex=rowIndex;	
 			this.selectPreviousCellIndex=cellIndex;
 		}

@@ -288,15 +288,27 @@
 		var a=document.getElementsByClassName("aShiftColor");
 		var b=document.getElementById("ITO1_1999-01-01_lastMonthBalance");
 		var c=document.getElementById("ITO1_1999-01-01_thisMonthBalance");
+		var cell;
 		var sel = window.getSelection();
 		var range = document.createRange();
+		var row=document.getElementById("shift_ITO1_1999-01-01");
+		for (i=14;i<20;i++)
+		{
+			cell=row.cells[i];
+			console.log(cell);
+			range.selectNodeContents(cell);
+			sel.removeAllRanges();
+			sel.addRange(range);
+			document.execCommand("Delete",false,null);
+		}
+		/*
 		for (i=0;i<a.length;i++)
 		{
 			range.selectNodeContents(a[i]);
 			sel.removeAllRanges();
 			sel.addRange(range);
 			document.execCommand("Delete",false,null);
-		}	
+		}*/	
 		
 		/**
 		Although a no. of cell are added to the selection range, the delete action only 

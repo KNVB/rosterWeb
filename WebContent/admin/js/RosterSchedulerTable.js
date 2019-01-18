@@ -73,7 +73,7 @@ class RosterSchedulerTable extends RosterTable
 	}
 	disableEditMode(theCell)
 	{
-		theCell.contentEditable=false;
+		//theCell.contentEditable=false;
 		theCell.blur();
 	}
 	enableEditMode(theCell)
