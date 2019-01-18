@@ -45,7 +45,7 @@
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/LoadingScreen.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/ShiftCellSelector.js"></script>
-		<script src="<%=request.getContextPath()%>/admin/js/util/SelectedRegionCoordinate.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/SelectedRegion.js"></script>
 		<script>
 			/* Set the width of the side navigation to 250px */
 			function openNav() {
