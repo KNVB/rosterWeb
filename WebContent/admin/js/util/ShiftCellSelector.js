@@ -15,10 +15,6 @@ class ShiftCellSelector
 			self.selectedRegion.update(this);
 			event.preventDefault();
 		});
-		$(this.selectionString).mouseout(function(event){
-			self.selectedRegion.update(this);
-			event.preventDefault();
-		});
 		$("body").mouseup(function(event){
 			event.preventDefault();
 			self.selectedRegion.endSelect();

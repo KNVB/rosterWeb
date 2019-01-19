@@ -11,7 +11,7 @@ class SelectedRegionCoordinate
 	}
 	clear()
 	{
-		console.log(this.isClear());
+//		console.log(this.isClear());
 		if (!this.isClear())
 		{
 			this.rosterSchedulerTable.clearSelectedRegion(this);
@@ -78,9 +78,9 @@ class SelectedRegionCoordinate
 		
 		if (this.inSelectMode)
 		{
+			console.log(cellIndex,this.minX,(cellIndex<this.minX));
 			if (cellIndex<this.minX)
 			{
-				newMaxX=this.minX;
 				newMinX=cellIndex;
 				isChanged=true;
 			}
@@ -101,19 +101,21 @@ class SelectedRegionCoordinate
 			{
 				if (rowIndex<this.minY)
 				{
-					newMaxY=this.minY;
 					newMinY=rowIndex;
 					isChanged=true;
 				}	
 			}
 			if (isChanged)
 			{
-				this.clear();
-				this.minY=newMinX;
+				this.rosterSchedulerTable.clearSelectedRegion(this);
+
+				this.minX=newMinX;
 				this.maxX=newMaxX;
 				
 				this.minY=newMinY;
 				this.maxY=newMaxY;
+				console.log("this.minX="+this.minX+",this.maxX="+this.maxX);
+				console.log("this.minY="+this.minY+",this.maxY="+this.maxY);
 				this.rosterSchedulerTable.setSelectedRegion(this);
 			}	
 		}
