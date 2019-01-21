@@ -1,6 +1,7 @@
 package com.rosterWeb.filter;
 
 import java.io.IOException;
+import java.time.LocalTime;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -11,6 +12,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,10 +22,11 @@ import org.apache.logging.log4j.Logger;
 /**
  * Servlet Filter implementation class AdminFilter
  */
-public class AdminFilter implements Filter {
+public class AdminFilter implements Filter,HttpSessionListener {
 	FilterConfig filterConfig;
 	String []exemptedPages;
 	String loginPage;
+	boolean isSessionExpired=false;
 	protected static final Logger logger = LogManager.getLogger(Class.class.getSimpleName());
 	/**
      * Default constructor. 
@@ -88,16 +92,24 @@ public class AdminFilter implements Filter {
 			else
 			{   
 				final HttpSession session = ((HttpServletRequest)request).getSession(false);
-		        if (session==null||session.getAttribute("isAuthenicated")==null)
-		       	{
-		          	 filterConfig.getServletContext().getRequestDispatcher(loginPage).forward(request, response);
-		          	 return;
-		       	}
-		        else
-		        {
-		          	 chain.doFilter(request, response);
-		        	 return;
-		        }   
+				if (isSessionExpired)
+				{
+					((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Session Timeout.");
+				}
+				else
+				{
+					if (session==null||session.getAttribute("isAuthenicated")==null)
+			       	{
+			          	 filterConfig.getServletContext().getRequestDispatcher(loginPage).forward(request, response);
+			          	 return;
+			       	}
+			        else
+			        {
+			          	 chain.doFilter(request, response);
+			        	 return;
+			        }   
+				}
+		       
 			}	
 		}
 		else
@@ -116,6 +128,18 @@ public class AdminFilter implements Filter {
 		this.filterConfig=fConfig;
 		loginPage=filterConfig.getInitParameter("loginPage");
 		exemptedPages=filterConfig.getInitParameter("exemptedPages").split(",");
+	}
+
+	@Override
+	public void sessionCreated(HttpSessionEvent se) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sessionDestroyed(HttpSessionEvent se) {
+		logger.debug("Session expired at " +LocalTime.now().toString());
+		 isSessionExpired=true;
 	}
 
 }
