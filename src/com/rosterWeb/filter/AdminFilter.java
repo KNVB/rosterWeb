@@ -79,7 +79,6 @@ public class AdminFilter implements Filter {
 		}
 		else
 		{
-			
 			HttpSession session = httpRequest.getSession(false);// don't create if it doesn't exist
 			if(session == null || session.isNew()) //if session time out  
 			{
