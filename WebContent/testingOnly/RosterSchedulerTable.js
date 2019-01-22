@@ -1,4 +1,4 @@
-class RosterSchedulerTable extends RosterTable
+class RosterSchedulerTable
 {
 	constructor()
 	{

@@ -6,9 +6,17 @@
 		<link rel="stylesheet" type="text/css" href="../css/MonthPick.css">
 		<link rel="stylesheet" type="text/css" href="../admin/css/style.css">
 		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		
 		<script src="SelectedRegion.js"></script>
+		<script src="CursorCellSelector.js"></script>
 		<script src="RosterSchedulerTable.js"></script>
-		<script src="../js.util/MonthPicker.js"></script>
+		<script src="../js/util/MonthPicker.js"></script>
+		<script>
+		$( document ).ready(function() {
+			var rosterSchedulerTable=new RosterSchedulerTable();
+			var cursorCellSelector=new CursorCellSelector(rosterSchedulerTable,"cursorCell");
+		});
+		</script>
 	</head>
 	<body>
 		<table id="rosterTable" border="0">
