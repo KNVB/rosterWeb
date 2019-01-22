@@ -1,4 +1,10 @@
+<!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Roster Admin. Login Page</title>
+	</head>
 	<body>
 		<br><br>
 		<div style="display:flex;align-items: center;justify-content: center;width:100%">

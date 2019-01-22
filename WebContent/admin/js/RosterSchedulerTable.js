@@ -47,7 +47,7 @@ class RosterSchedulerTable extends RosterTable
 			for (j=copiedRegionCoordinate.minX;j<=copiedRegionCoordinate.maxX;j++)
 			{
 				cell=this.getCell(i,j);
-				this.disableEditMode(cell);
+				cell.blur();
 				$(cell).removeClass("copyCellBorderTop");
 				$(cell).removeClass("copyCellBorderLeft");
 				$(cell).removeClass("copyCellBorderRight");
@@ -63,19 +63,14 @@ class RosterSchedulerTable extends RosterTable
 			for (j=selectedRegionCoordinate.minX;j<=selectedRegionCoordinate.maxX;j++)
 			{
 				cell=this.getCell(i,j);
-				this.disableEditMode(cell);
+				cell.blur();
 				$(cell).removeClass("selectCellBorderRight");   
 				$(cell).removeClass("selectCellBorderTop");     
 				$(cell).removeClass("selectCellBorderBottom");  
 				$(cell).removeClass("selectCellBorderLeft");
 			}	
 		}
-	}
-	disableEditMode(theCell)
-	{
-		//theCell.contentEditable=false;
-		theCell.blur();
-	}
+	}	
 	enableEditMode(theCell)
 	{
 		theCell.contentEditable=true;
