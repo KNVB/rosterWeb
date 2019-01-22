@@ -1,7 +1,6 @@
 package com.rosterWeb.filter;
 
 import java.io.IOException;
-import java.time.LocalTime;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,8 +11,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Servlet Filter implementation class AdminFilter
  */
-public class AdminFilter implements Filter,HttpSessionListener {
+public class AdminFilter implements Filter {
 	FilterConfig filterConfig;
 	String []exemptedPages;
 	String loginPage;
@@ -51,14 +48,14 @@ public class AdminFilter implements Filter,HttpSessionListener {
 		for (int i=0;i<exemptedPages.length;i++)
 		{
 			temp=request.getContextPath()+exemptedPages[i];
-			logger.debug("aDestination="+aDestination+",exemptedPage="+temp+",result="+aDestination.equals(temp));
+			//logger.debug("aDestination="+aDestination+",exemptedPage="+temp+",result="+aDestination.equals(temp));
 			if (aDestination.equals(temp))
 			{	
 				result=true;
 				break;
 			}
 		}
-		logger.debug("result="+result);
+		logger.debug(aDestination+" is an Exempted URL="+result);
 		return result; 
 	}
 	/**
@@ -71,50 +68,35 @@ public class AdminFilter implements Filter,HttpSessionListener {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		// place your code here
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-		// pass the request along the filter chain
-		if (request instanceof HttpServletRequest)
-		{	
-			request.setCharacterEncoding("UTF-8");
-			response.setCharacterEncoding("UTF-8");
-			((HttpServletResponse)response).setHeader("Cache-Control","no-cache");
-			((HttpServletResponse)response).setHeader("Pragma","no-cache");
- 			((HttpServletResponse)response).setDateHeader ("Expires", -1);
-
-			final String destination = ((HttpServletRequest)request).getRequestURI();
-			if(isExemptedURL(destination,(HttpServletRequest)request))
-			{
-			    chain.doFilter(request, response);
-			    return;
-			}
-			else
-			{   
-				final HttpSession session = ((HttpServletRequest)request).getSession(false);
-				if (isSessionExpired)
-				{
-					((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Session Timeout.");
-				}
-				else
-				{
-					if (session==null||session.getAttribute("isAuthenicated")==null)
-			       	{
-			          	 filterConfig.getServletContext().getRequestDispatcher(loginPage).forward(request, response);
-			          	 return;
-			       	}
-			        else
-			        {
-			          	 chain.doFilter(request, response);
-			        	 return;
-			        }   
-				}
-		       
-			}	
+		final String destination = ((HttpServletRequest)request).getRequestURI();
+		if(isExemptedURL(destination,(HttpServletRequest)request))
+		{
+		    chain.doFilter(request, response);
+		    return;
 		}
 		else
 		{
-			throw new ServletException("A Servlet request received.");
+			
+			HttpSession session = httpRequest.getSession(false);// don't create if it doesn't exist
+			if(session == null || session.isNew()) //if session time out  
+			{
+				if ("XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"))) //<== this ajax call
+				{		
+					httpResponse.setStatus(440); // return status code 440. That mean client's session has expired and must log in again.
+				}
+				else
+				{	
+					//if it is not an ajax call,forward the client to login page.
+					filterConfig.getServletContext().getRequestDispatcher(loginPage).forward(request, response);
+	          	 	return;
+				}
+			}else{
+			    // pass the request along the filter chain
+			    chain.doFilter(request, response);
+			}
 		}
 	}
 
@@ -128,18 +110,5 @@ public class AdminFilter implements Filter,HttpSessionListener {
 		this.filterConfig=fConfig;
 		loginPage=filterConfig.getInitParameter("loginPage");
 		exemptedPages=filterConfig.getInitParameter("exemptedPages").split(",");
-	}
-
-	@Override
-	public void sessionCreated(HttpSessionEvent se) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void sessionDestroyed(HttpSessionEvent se) {
-		logger.debug("Session expired at " +LocalTime.now().toString());
-		 isSessionExpired=true;
-	}
-
+	}	
 }

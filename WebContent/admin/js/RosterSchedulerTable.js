@@ -27,7 +27,7 @@ class RosterSchedulerTable extends RosterTable
 			self.rosterScheduler.initButton();
 		})
 		.fail(function(data){
-			alert("Failed to yearly statistic");
+			alert("Failed to get yearly statistic");
 		});
 	}	
 	clearAllShift()

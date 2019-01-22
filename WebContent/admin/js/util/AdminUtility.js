@@ -29,7 +29,10 @@ class AdminUtility  extends Utility
 					      link.download=fileName;
 					      link.click();
 					 },   
-			error:this.showAjaxErrorMessage			 
+			error:function(xhr) {
+				console.log('error', xhr);
+				reject(xhr);
+			}	 
 		});
 	}
 	getAllITOInfo()
@@ -61,8 +64,8 @@ class AdminUtility  extends Utility
 					resolve(jsITOList);
 				},
 				error: function(xhr) {
-				      console.log('error', xhr);
-				      reject();
+						console.log('error', xhr);
+						reject(xhr);
 				}
 			});
 		});	
@@ -101,7 +104,7 @@ class AdminUtility  extends Utility
 				},
 				error: function(xhr) {
 				      console.log('error', xhr);
-				      reject();
+				      reject(xhr);
 				}
 			});
 		});
@@ -115,6 +118,7 @@ class AdminUtility  extends Utility
 			dataType:"json",
 			error: function(xhr) {
 			      console.log('error', xhr);
+			      reject(xhr);
 			    }
 		});
 	}
@@ -141,6 +145,7 @@ class AdminUtility  extends Utility
 			dataType:"json",
 			error: function(xhr) {
 			      console.log('error', xhr);
+			      reject(xhr);
 			    }
 		});
 	}
@@ -151,7 +156,10 @@ class AdminUtility  extends Utility
 			 dataType: 'text',
 			 data:JSON.stringify(rosterData),
 			 method:"POST",
-			 error:this.showAjaxErrorMessage
+			 error:function(xhr) {
+					console.log('error', xhr);
+					reject(xhr);
+				}
 		});
 	}
 	shuffleProperties(obj)
@@ -173,6 +181,7 @@ class AdminUtility  extends Utility
 			method:"POST",
 			error: function(xhr) {
 			      console.log('error', xhr);
+			      reject(xhr);
 			    }
 		});
 	}

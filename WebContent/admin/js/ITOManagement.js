@@ -35,9 +35,10 @@ class ITOManagement
 			self.itoList=itoList;
 			self._showITOList(itoTable,form);
 		})
-		.catch(function(data){
-			console.log(data);
+		.catch(function(xhr){
+			//console.log(data);
 			alert("Fail to get ITO Object List.");
+			//alert(xhr.status);
 		});
 	}
 	_addBlackListShiftPatternEntry(blackListShiftPattern,blackListShiftListDiv)
