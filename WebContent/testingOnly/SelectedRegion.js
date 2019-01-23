@@ -19,6 +19,28 @@ class SelectedRegion
 	{
 		
 	}
+	deleteContent()
+	{
+		var cell,minCell,maxCell;
+		var sel = window.getSelection();
+		var range = document.createRange();
+		for (var i=this.minX;i<=this.maxX;i++)
+		{
+			for (var j=this.minY;j<=this.maxY;j++)
+			{
+				cell=this.rosterSchedulerTable.getCell(j,i);
+				if ($(cell).hasClass("cursorCell"))
+				{
+					//$(cell).empty().blur(); //<==this is old delete method.
+					sel.removeAllRanges();
+					range.selectNodeContents(cell);
+					sel.addRange(range);
+					document.execCommand("delete",false,null);
+					$(cell).blur();
+				}
+			}	
+		}
+	}	
 	isClear()
 	{
 		if ((this.minX==-1)||(this.minY==-1))
@@ -51,7 +73,7 @@ class SelectedRegion
 		this.rosterSchedulerTable.clearSelectedRegion(this);
 		this.rosterSchedulerTable.setSelectedRegion(this);
 	}
-	select(theCell)
+	startSelect(theCell)
 	{
 		var row=theCell.parentElement;
 		

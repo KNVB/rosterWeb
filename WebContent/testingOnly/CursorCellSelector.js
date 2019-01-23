@@ -3,13 +3,14 @@ class CursorCellSelector
 	constructor(rosterSchedulerTable,targetCellClassName)
 	{
 		var self=this;
+		this.targetCellClassName=targetCellClassName;
 		this.selectedRegion=new SelectedRegion(rosterSchedulerTable);
 		this.selectionString="td."+targetCellClassName;
 		this.rosterSchedulerTable=rosterSchedulerTable;
 		
 		$(this.selectionString).mousedown(function(event){
 			event.preventDefault();
-			self.selectedRegion.select(this);
+			self.selectedRegion.startSelect(this);
 		});
 		$(this.selectionString).mouseenter(function(event){
 			self.selectedRegion.update(this);
@@ -68,63 +69,55 @@ class CursorCellSelector
 			var newX=this.selectedRegion.minX+xOffset;
 			var newY=this.selectedRegion.minY+yOffset;
 			var cell=this.rosterSchedulerTable.getCell(newY,newX);
-			if ($(cell).hasClass("cursorCell"))
+			if ($(cell).hasClass(this.targetCellClassName))
 			{
 				event.preventDefault();
-				this.selectedRegion.select(cell);
+				this.selectedRegion.startSelect(cell);
 				this.selectedRegion.endSelect();
 			}			
 		}			
 	}
 	_handleDeleteKeyEvent(event)
 	{
-		if (!this.selectedRegion.isClear())
+		if (!this.selectedRegion.isSingleCell())
 		{
 			event.preventDefault();
-			var cell,minCell,maxCell;
-			var sel = window.getSelection();
-			var range = document.createRange();
-			for (var i=this.selectedRegion.minX;i<=this.selectedRegion.maxX;i++)
-			{
-				for (var j=this.selectedRegion.minY;j<=this.selectedRegion.maxY;j++)
-				{
-					cell=this.rosterSchedulerTable.getCell(j,i);
-					if ($(cell).hasClass("cursorCell"))
-					{
-						//$(cell).empty().blur(); //<==this is old delete method.
-						sel.removeAllRanges();
-						range.selectNodeContents(cell);
-						sel.addRange(range);
-						document.execCommand("delete",false,null);
-						$(cell).blur();
-					}
-					else
-					{
-						event.preventDefault();
-					}	
-				}	
-			}
-			//this.selectedRegion.redraw();
-			//this.selectedRegion.clear();
-		}					
+			this.selectedRegion.deleteContent();
+		}				
 	}
 	_handleTabKeyEvent(event)
 	{
 		var tempX;
+		if (event.shiftKey)
+			tempX=this.selectedRegion.minX-1;
+		else
+			tempX=this.selectedRegion.minX+1;
+		var cell=this.rosterSchedulerTable.getCell(this.selectedRegion.minY,tempX);
+		
 		if (!this.selectedRegion.isClear())
 		{
-			event.preventDefault();
-			if (event.shiftKey)
-				tempX=this.selectedRegion.minX-1;
-			else
-				tempX=this.selectedRegion.minX+1;
-			var cell=this.rosterSchedulerTable.getCell(this.selectedRegion.minY,tempX);
-			if ($(cell).hasClass("cursorCell"))
+			while (!$(cell).hasClass(this.targetCellClassName))
 			{
-				this.selectedRegion.select(cell);
-				this.selectedRegion.endSelect();
+				if (tempX<this.selectedRegion.minX)
+				{
+					cell=this.rosterSchedulerTable.getCell(this.selectedRegion.maxY,this.selectedRegion.maxX);
+				}
 			}
-		}	
+		}
+/*		
+	
+		
+		if (!this.selectedRegion.isClear() && 
+				this.selectedRegion.isSingleCell() &&
+				$(cell).hasClass("cursorCell"))
+				)
+		{
+			event.preventDefault();
+			this.selectedRegion.startSelect(cell);
+			this.selectedRegion.endSelect();
+		}*/
+			
+			
 	}
 	_handleUndoEvent(event)
 	{
@@ -141,7 +134,9 @@ class CursorCellSelector
 			
 			node.textContent="";
 			node.textContent=text;
-			$("td.shiftCell").blur();
+			
+			$(node).blur().focus();
+			//$("td.shiftCell").blur().focus();
 		}
 	}
 }
