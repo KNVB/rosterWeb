@@ -28,7 +28,7 @@ class SelectedRegion
 	}
 	isSingleCell()
 	{
-		if ((this.minX==-1)||(this.minY=-1))
+		if ((this.minX==-1)||(this.minY==-1))
 		{
 			return false;
 		}
@@ -44,6 +44,12 @@ class SelectedRegion
 	pasteFromClipBoard()
 	{
 		
+	}
+	redraw()
+	{
+		var cell;
+		this.rosterSchedulerTable.clearSelectedRegion(this);
+		this.rosterSchedulerTable.setSelectedRegion(this);
 	}
 	select(theCell)
 	{
@@ -77,7 +83,7 @@ class SelectedRegion
 			
 			if (this.inSelectMode)
 			{
-				console.log(cellIndex,this.minX,(cellIndex<this.minX));
+				//console.log(cellIndex,this.minX,(cellIndex<this.minX));
 				if (cellIndex<this.firstX)
 				{
 					newMinX=cellIndex;
@@ -92,12 +98,9 @@ class SelectedRegion
 					}
 					else
 					{
-						if (cellIndex==this.firstX)
-						{
-							newMinX=this.firstX;
-							newMaxX=this.firstX;
-							isChanged=true;
-						}
+						newMinX=this.firstX;
+						newMaxX=this.firstX;
+						isChanged=true;
 					}	
 				}
 				if (rowIndex>this.firstY)
@@ -114,12 +117,9 @@ class SelectedRegion
 					}
 					else
 					{
-						if (rowIndex==this.firstY)
-						{
-							newMinY=this.firstY;
-							newMaxY=this.firstY;
-							isChanged=true;
-						}
+						newMinY=this.firstY;
+						newMaxY=this.firstY;
+						isChanged=true;
 					}	
 				}
 				if (isChanged)
@@ -131,8 +131,8 @@ class SelectedRegion
 					
 					this.minY=newMinY;
 					this.maxY=newMaxY;
-					console.log("this.minX="+this.minX+",this.maxX="+this.maxX);
-					console.log("this.minY="+this.minY+",this.maxY="+this.maxY);
+					//console.log("this.minX="+this.minX+",this.maxX="+this.maxX);
+					//console.log("this.minY="+this.minY+",this.maxY="+this.maxY);
 					this.rosterSchedulerTable.setSelectedRegion(this);
 				}	
 			}

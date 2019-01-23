@@ -3,6 +3,37 @@ class RosterSchedulerTable
 	constructor()
 	{
 		this.rosterTable=document.getElementById("rosterTable");
+		$("td.cursorCell").attr('contentEditable',true);
+		$("td.shiftCell").blur(function(){
+			var thisCell=this;
+			var shiftType=thisCell.textContent;
+			var newClassName=thisCell.className;
+			newClassName=newClassName.replace("aShiftColor","");
+			newClassName=newClassName.replace("bShiftColor","");
+			newClassName=newClassName.replace("cShiftColor","");
+			newClassName=newClassName.replace("dShiftColor","");
+			newClassName=newClassName.replace("oShiftColor","");
+			switch(shiftType)
+				{
+					case "a":
+							newClassName+=" aShiftColor";
+							break;
+					case "b":
+					case "b1":
+							newClassName+=" bShiftColor";
+							break;
+					case "c":
+							newClassName+=" cShiftColor";
+							break;
+					case "d":
+					case "d1":
+					case "d2":
+					case "d3":
+							newClassName+=" dShiftColor";
+							break;		
+				}
+			thisCell.className=newClassName;
+		});
 	}
 	clearSelectedRegion(selectedRegion)
 	{
