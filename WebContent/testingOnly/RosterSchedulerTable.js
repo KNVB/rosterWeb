@@ -2,8 +2,17 @@ class RosterSchedulerTable
 {
 	constructor()
 	{
+		this.selectedRegionDiv=document.createElement("div");
 		this.rosterTable=document.getElementById("rosterTable");
-		$("td.cursorCell").attr('contentEditable',true);
+		var targetCellClassName="cursorCell";
+		var selectedRegion=new SelectedRegion(this);
+		var selectionString="td."+targetCellClassName;
+		var thisWebPageEventHandler=new ThisWebPageEventHandler(this,targetCellClassName,selectedRegion);
+		var rosterTableEventHandler=new RosterTableEventHandler($(selectionString),this,selectedRegion);
+		this.selectedRegionDiv.className="selectedRegionDiv";
+		
+		$(selectionString).attr('contentEditable',true);
+		$(selectionString).css("position","relative");
 		$("td.shiftCell").blur(function(){
 			var thisCell=this;
 			var shiftType=thisCell.textContent;
@@ -50,6 +59,8 @@ class RosterSchedulerTable
 				$(cell).removeClass("selectCellBorderLeft");
 			}	
 		}
+		/*console.log("hide");
+		$(this.selectedRegionDiv).remove();*/
 	}
 	getCell(rowIndex,cellIndex)
 	{
@@ -59,6 +70,26 @@ class RosterSchedulerTable
 	}
 	setSelectedRegion(selectedRegion)
 	{
+		/*var cell,i,yOuterHeight=0;
+		var xCellCount;
+		cell=this.getCell(selectedRegion.minY,selectedRegion.minX);
+		
+		
+		var offset=$(cell).offset();
+		this.selectedRegionDiv.style.top=offset.top;
+		this.selectedRegionDiv.style.left=offset.left;
+		xCellCount=selectedRegion.maxX-selectedRegion.minX+1;
+		
+		for (i=selectedRegion.minY;i<=selectedRegion.maxY;i++)
+		{
+			cell=this.getCell(i,selectedRegion.minX);
+			yOuterHeight+=$(cell).outerHeight();
+		}
+		
+		$(this.selectedRegionDiv).outerHeight(yOuterHeight);
+		$(this.selectedRegionDiv).outerWidth((xCellCount)*$(cell).outerWidth());
+		$("body").append(this.selectedRegionDiv);
+		$(this.selectedRegionDiv).show();*/
 		var cell,i;
 		cell=this.getCell(selectedRegion.minY,selectedRegion.minX);
 		$(cell).addClass("selectCellBorderTop");
