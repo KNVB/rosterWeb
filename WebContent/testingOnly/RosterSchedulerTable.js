@@ -16,7 +16,6 @@ class RosterSchedulerTable
 		this.selectedRegionDiv.className="selectedRegionDiv";
 		var firstCell=$(selectionString)[0];
 		$(selectionString).attr('contentEditable',true);
-		$(selectionString).css("position","relative");
 		$("td.shiftCell").blur(function(){
 			var thisCell=this;
 			var shiftType=thisCell.textContent;

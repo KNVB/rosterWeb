@@ -19,7 +19,6 @@ class RosterTableEventHandler
 			event.preventDefault();
 		});
 		cursorCells.dblclick(function(event){
-			self.fromDblClick=true;
 			console.log("Double click="+$(this).is(":focus")+","+self.fromDblClick);
 			this.focus();			
 		});
