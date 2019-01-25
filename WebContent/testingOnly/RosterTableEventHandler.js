@@ -4,18 +4,10 @@ class RosterTableEventHandler
 	{
 		var self=this;
 		this.cursorCells=cursorCells;
-		this.fromTabKey=false;
+		this.fromDblClick=false;
 		this.selectedRegion=selectedRegion;
 		this.rosterSchedulerTable=rosterSchedulerTable;
-		cursorCells.focus(function(event){
-			console.log("cell focus",self.fromTabKey);
-			if (self.selectedRegion.isClear())
-			{	
-				self.selectedRegion.startSelect(this);
-				self.selectedRegion.endSelect();
-				this.blur();
-			}				
-		});
+	
 		cursorCells.mousedown(function(event){
 			event.preventDefault();
 		//	console.log("mouse down");
@@ -26,8 +18,9 @@ class RosterTableEventHandler
 			self.selectedRegion.update(this);
 			event.preventDefault();
 		});
-		cursorCells.click(function(event){
-		//	console.log("mouse click");
+		cursorCells.dblclick(function(event){
+			self.fromDblClick=true;
+			console.log("Double click="+$(this).is(":focus")+","+self.fromDblClick);
 			this.focus();			
 		});
 		cursorCells.keydown(function(event){
@@ -43,22 +36,8 @@ class RosterTableEventHandler
 			case  9://handle tab key
 					this._handleTabKeyEvent(theCell,event);
 					break;
-			case 27://handle "Esc" key event
-					this.selectedRegion.clear();
-					event.stopPropagation();
-					break;
-			case 37://handle left arrow key event
-					this._handleArrowKeyEvent(event,0,-1);
-					break;
-			case 38://handle up arrow key event
-					this._handleArrowKeyEvent(event,-1,0);
-					break;
-			case 39://handle right arrow key event
-					this._handleArrowKeyEvent(event,0,1);
-					break;
-			case 40://handle down arrow key event
-					this._handleArrowKeyEvent(event,1,0);
-					break;							
+			
+									
 			case 46://handle delete key event
 					this._handleDeleteKeyEvent(event);
 					break;		
@@ -69,23 +48,7 @@ class RosterTableEventHandler
 					}
 					break;			
 		}			
-	}
-	_handleArrowKeyEvent(event,yOffset,xOffset)
-	{
-		console.log("Arrow Key");
-		if (!this.selectedRegion.isClear())
-		{
-			var newX=this.selectedRegion.minX+xOffset;
-			var newY=this.selectedRegion.minY+yOffset;
-			var cell=this.rosterSchedulerTable.getCell(newY,newX);
-			if ($(cell).hasClass(this.targetCellClassName))
-			{
-				event.preventDefault();
-				this.selectedRegion.startSelect(cell);
-				this.selectedRegion.endSelect();
-			}			
-		}			
-	}
+	}	
 	_handleDeleteKeyEvent(event)
 	{
 		if (!this.selectedRegion.isSingleCell())
@@ -101,7 +64,7 @@ class RosterTableEventHandler
 		var nextCell,index;
 		var row=theCell.parentElement;
 		var newX,newY=row.rowIndex;
-		console.log("Tab key");
+		console.log("RosterTable Tab key");
 		if (this.selectedRegion.selectedCellList.length>1)
 		{
 			if (event.shiftKey)
@@ -129,7 +92,13 @@ class RosterTableEventHandler
 				nextCell=this.selectedRegion.selectedCellList[index];
 				nextCell.focus();
 			}				
-		}			
+		}
+		else
+		{
+			event.preventDefault();
+			this.selectedRegion.startSelect(theCell);
+			this.selectedRegion.endSelect();
+		}
 	}
 	_handleUndoEvent(event)
 	{

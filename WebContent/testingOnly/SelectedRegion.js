@@ -45,19 +45,27 @@ class SelectedRegion
 	}
 	endSelect()
 	{
-		this.inSelectMode=false;
 		var cell;
-		this.selectedCellList=[];
-		for (var i=this.minY;i<=this.maxY;i++)
-		{
-			for (var j=this.minX;j<=this.maxX;j++)
+		if (this.inSelectMode)
+		{	
+			this.inSelectMode=false;
+			this.selectedCellList=[];
+			this.colCount=this.maxX-this.minX+1;
+			this.rowCount=this.maxY-this.minY+1;
+			for (var i=this.minY;i<=this.maxY;i++)
 			{
-				cell=this.rosterSchedulerTable.getCell(i,j);
-				this.selectedCellList.push(cell);
-			}					
+				for (var j=this.minX;j<=this.maxX;j++)
+				{
+					cell=this.rosterSchedulerTable.getCell(i,j);
+					this.selectedCellList.push(cell);
+				}					
+			}
+			if (this.selectedCellList.length>1)
+			{
+				cell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
+				cell.focus();
+			}
 		}
-		cell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
-		cell.focus();
 	}	
 	isClear()
 	{
@@ -89,8 +97,10 @@ class SelectedRegion
 		this.minY=row.rowIndex;
 		this.maxX=theCell.cellIndex;
 		this.maxY=row.rowIndex;
-		this.rosterSchedulerTable.setSelectedRegion(this)
+		this.rosterSchedulerTable.setSelectedRegion(this);
+		this.selectedCellList.push(theCell);
 		this.inSelectMode=true;
+
 	}
 	update(theCell)
 	{
@@ -163,12 +173,14 @@ class SelectedRegion
 	}	
 	_init()
 	{
-		this.selectedCellList=[];
+		this.colCount=-1;
 		this.firstX=-1;
 		this.firstY=-1;
 		this.minX=-1;
 		this.minY=-1;
 		this.maxX=-1;
 		this.maxY=-1;
+		this.rowCount=-1;
+		this.selectedCellList=[];
 	}
 }

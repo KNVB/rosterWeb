@@ -4,13 +4,17 @@ class RosterSchedulerTable
 	{
 		this.selectedRegionDiv=document.createElement("div");
 		this.rosterTable=document.getElementById("rosterTable");
+		this.dateObjList={};
+		this.dateObjList.length=28;
+		this.itoList={};
+		this.itoList.length=5;
 		var targetCellClassName="cursorCell";
 		var selectedRegion=new SelectedRegion(this);
 		var selectionString="td."+targetCellClassName;
-		var thisWebPageEventHandler=new ThisWebPageEventHandler(this,targetCellClassName,selectedRegion);
+		var thisWebPageEventHandler=new ThisWebPageEventHandler($(selectionString),this,selectedRegion);
 		var rosterTableEventHandler=new RosterTableEventHandler($(selectionString),this,selectedRegion);
 		this.selectedRegionDiv.className="selectedRegionDiv";
-		
+		var firstCell=$(selectionString)[0];
 		$(selectionString).attr('contentEditable',true);
 		$(selectionString).css("position","relative");
 		$("td.shiftCell").blur(function(){
