@@ -15,6 +15,13 @@ class RosterSchedulerTable
 		var rosterTableEventHandler=new RosterTableEventHandler($(selectionString),this,selectedRegion);
 		this.selectedRegionDiv.className="selectedRegionDiv";
 		var firstCell=$(selectionString)[0];
+		$(firstCell).focus(function (){
+			if (selectedRegion.isClear())
+			{
+				selectedRegion.startSelect(this);
+				selectedRegion.endSelect();
+			}
+		});
 		$(selectionString).attr('contentEditable',true);
 		$("td.shiftCell").blur(function(){
 			var thisCell=this;

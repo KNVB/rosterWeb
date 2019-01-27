@@ -94,9 +94,22 @@ class RosterTableEventHandler
 		}
 		else
 		{
-			event.preventDefault();
-			this.selectedRegion.startSelect(theCell);
-			this.selectedRegion.endSelect();
+			index=$.inArray(theCell,this.cursorCells);
+			if (event.shiftKey)
+				index--;
+			else
+				index++;
+			if ((index>0) && (index<this.cursorCells.length))
+			{
+				event.preventDefault();
+				nextCell=this.cursorCells[index];
+				this.selectedRegion.startSelect(theCell);
+				this.selectedRegion.endSelect();
+			}
+			else
+			{
+				this.selectedRegion.clear();
+			}
 		}
 	}
 	_handleUndoEvent(event)

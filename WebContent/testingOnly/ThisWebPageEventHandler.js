@@ -75,18 +75,12 @@ class ThisWebPageEventHandler
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
 					break;
-			default:
-					if(!this.selectedRegion.isClear() && (event.target===document.body))
-					{
-						var theCell=this.rosterSchedulerTable.getCell(this.selectedRegion.minY,this.selectedRegion.minX);
-						theCell.focus();
-					}
-					break;			
 		}
 	}
 	_handleTabKeyEvent(event)
 	{
 		console.log("Body Tab key");
+		
 		if (event.shiftKey)
 			this._handleArrowKeyEvent(event,0,-1);
 		else
