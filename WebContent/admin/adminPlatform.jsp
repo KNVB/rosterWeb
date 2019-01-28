@@ -44,8 +44,9 @@
 		<script src="<%=request.getContextPath()%>/admin/js/RosterScheduler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/LoadingScreen.js"></script>
-		<script src="<%=request.getContextPath()%>/admin/js/util/ShiftCellSelector.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/RosterTableEventHandler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/SelectedRegion.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/ThisWebPageEventHandler.js"></script>
 		<script>
 			/* Set the width of the side navigation to 250px */
 			function openNav() {

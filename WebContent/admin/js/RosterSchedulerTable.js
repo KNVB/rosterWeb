@@ -685,7 +685,18 @@ class RosterSchedulerTable extends RosterTable
 		
 		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
 		$("td.cursorCell").attr('contentEditable',true);
-		var shiftCellSelector=new ShiftCellSelector(this,"cursorCell");
+		//var shiftCellSelector=new ShiftCellSelector(this,"cursorCell");
+		var firstCell=$("td.cursorCell")[0];
+		$(firstCell).focus(function (){
+			if (selectedRegion.isClear())
+			{
+				selectedRegion.startSelect(this);
+				selectedRegion.endSelect();
+			}
+		});
+		var selectedRegion=new SelectedRegion(this);
+		var thisWebPageEventHandler=new ThisWebPageEventHandler($("td.cursorCell"),this,selectedRegion);
+		var rosterTableEventHandler=new RosterTableEventHandler($("td.cursorCell"),this,selectedRegion);
 	}
 	_genYearlyStatisticReport()
 	{
