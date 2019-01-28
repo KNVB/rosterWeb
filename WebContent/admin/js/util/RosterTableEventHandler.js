@@ -35,8 +35,10 @@ class RosterTableEventHandler
 			case  9://handle tab key
 					this._handleTabKeyEvent(theCell,event);
 					break;
-			
-									
+			case 27://handle "Esc" key event
+					this.selectedRegion.empty();
+					event.stopPropagation();
+					break;				
 			case 46://handle delete key event
 					this._handleDeleteKeyEvent(event);
 					break;		
