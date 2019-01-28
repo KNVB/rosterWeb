@@ -688,7 +688,7 @@ class RosterSchedulerTable extends RosterTable
 		//var shiftCellSelector=new ShiftCellSelector(this,"cursorCell");
 		var firstCell=$("td.cursorCell")[0];
 		$(firstCell).focus(function (){
-			if (selectedRegion.isClear())
+			if (selectedRegion.isEmpty())
 			{
 				selectedRegion.startSelect(this);
 				selectedRegion.endSelect();

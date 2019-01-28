@@ -6,10 +6,10 @@ class SelectedRegion
 		this.rosterSchedulerTable=rosterSchedulerTable;
 		this._init();
 	}
-	clear()
+	empty()
 	{
 //		console.log(this.isClear());
-		if (!this.isClear())
+		if (!this.isEmpty())
 		{
 			this.rosterSchedulerTable.clearSelectedRegion(this);
 			this._init();
@@ -67,7 +67,7 @@ class SelectedRegion
 			}
 		}
 	}	
-	isClear()
+	isEmpty()
 	{
 		return (this.selectedCellList.length<1)
 	}
@@ -89,7 +89,7 @@ class SelectedRegion
 	{
 		var row=theCell.parentElement;
 		
-		this.clear();
+		this.empty();
 		this.firstX=theCell.cellIndex;
 		this.firstY=row.rowIndex;
 

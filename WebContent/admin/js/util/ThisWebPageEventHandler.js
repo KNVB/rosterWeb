@@ -20,7 +20,7 @@ class ThisWebPageEventHandler
 	_handleArrowKeyEvent(event,yOffset,xOffset)
 	{
 		console.log("Arrow Key");
-		if (!this.selectedRegion.isClear())
+		if (!this.selectedRegion.isEmpty())
 		{
 			var theCell=this.rosterSchedulerTable.getCell(this.selectedRegion.minY,this.selectedRegion.minX);
 			var index;
@@ -60,7 +60,7 @@ class ThisWebPageEventHandler
 					this._handleTabKeyEvent(event);
 					break;
 			case 27://handle "Esc" key event
-					this.selectedRegion.clear();
+					this.selectedRegion.empty();
 					event.stopPropagation();
 					break;
 			case 37://handle left arrow key event

@@ -108,7 +108,7 @@ class RosterTableEventHandler
 			}
 			else
 			{
-				this.selectedRegion.clear();
+				this.selectedRegion.empty();
 			}
 		}
 	}
