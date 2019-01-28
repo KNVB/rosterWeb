@@ -79,8 +79,8 @@ public class AdminFilter implements Filter {
 		}
 		else
 		{
-			HttpSession session = httpRequest.getSession(false);// don't create if it doesn't exist
-			if(session == null || session.isNew()) //if session time out  
+			HttpSession session = httpRequest.getSession(false);
+			if((session == null)  || (session.getAttribute("isAuthenicated")==null))
 			{
 				if ("XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"))) //<== this ajax call
 				{		
@@ -92,9 +92,20 @@ public class AdminFilter implements Filter {
 					filterConfig.getServletContext().getRequestDispatcher(loginPage).forward(request, response);
 	          	 	return;
 				}
-			}else{
-			    // pass the request along the filter chain
-			    chain.doFilter(request, response);
+			}
+			else
+			{	
+				if ((boolean)session.getAttribute("isAuthenicated")==true)
+				{
+					// pass the request along the filter chain
+					chain.doFilter(request, response);
+			    }
+				else
+				{
+					//if it is not an ajax call,forward the client to login page.
+					filterConfig.getServletContext().getRequestDispatcher(loginPage).forward(request, response);
+	          	 	return;
+				}
 			}
 		}
 	}

@@ -52,7 +52,7 @@
    	 The specified timeout must be expressed in a whole number of minutes. 
    	 If the timeout is 0 or less, the container ensures the default behaviour of sessions is never to time out.
    -->
-    <session-timeout>0</session-timeout> 
+    <session-timeout>1</session-timeout> 
  </session-config>
  	 
 </web-app>

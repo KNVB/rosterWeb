@@ -4,6 +4,7 @@ String loginName=((request.getParameter("loginName")==null)?"":request.getParame
 String password=((request.getParameter("adminPwd")==null)?"":request.getParameter("adminPwd"));
 if (loginName.equals(config.getInitParameter("adminUserName"))&& (password.equals(config.getInitParameter("adminPassword"))))
 {
+	request.changeSessionId();
 	session.setAttribute("isAuthenicated",true);
 	response.sendRedirect("adminPlatform.jsp");
 }

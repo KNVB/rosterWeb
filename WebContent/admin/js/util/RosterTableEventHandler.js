@@ -29,14 +29,27 @@ class RosterTableEventHandler
 	
 	_handleKeyDownEvent(theCell,event)
 	{
+		var index,orgIndex;
 		event.stopPropagation();
 		switch (event.which)
 		{
 			case  9://handle tab key
 					this._handleTabKeyEvent(theCell,event);
+					break;		
+			case 13://handle "Enter" key event
+					orgIndex=$.inArray(theCell,this.cursorCells);
+					index=orgIndex+Object.keys(this.rosterSchedulerTable.dateObjList).length;
+					if (index>this.cursorCells.length-1)
+					{
+						index=orgIndex % Object.keys(this.rosterSchedulerTable.dateObjList).length;
+					}
+					theCell=this.cursorCells[index];
+					this.selectedRegion.startSelect(theCell);
+					this.selectedRegion.endSelect();
+					event.preventDefault();
 					break;
 			case 27://handle "Esc" key event
-					this.selectedRegion.empty();
+					theCell.blur();
 					event.stopPropagation();
 					break;				
 			case 46://handle delete key event
@@ -47,7 +60,7 @@ class RosterTableEventHandler
 					{
 						this._handleUndoEvent(event);
 					}
-					break;			
+					break;
 		}			
 	}	
 	_handleDeleteKeyEvent(event)

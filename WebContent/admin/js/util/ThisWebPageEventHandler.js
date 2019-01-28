@@ -54,10 +54,28 @@ class ThisWebPageEventHandler
 	}
 	_handleKeyDownEvent(event)
 	{
+		var index,orgIndex,theCell;
 		switch (event.which)
 		{
-			case 9:
+			case 9://handle tab key
 					this._handleTabKeyEvent(event);
+					break;
+			case 13://handle enter key
+					if (this.selectedRegion.isSingleCell())
+					{
+						theCell=this.rosterSchedulerTable.getCell(this.selectedRegion.minY,this.selectedRegion.minX);
+						orgIndex=$.inArray(theCell,this.cursorCells);
+						index=orgIndex+Object.keys(this.rosterSchedulerTable.dateObjList).length;
+						if (index>(this.cursorCells.length-1))
+						{
+							index=orgIndex % Object.keys(this.rosterSchedulerTable.dateObjList).length;
+						}
+						console.log(index,orgIndex);
+						theCell=this.cursorCells[index];
+						this.selectedRegion.startSelect(theCell);
+						this.selectedRegion.endSelect();
+					}
+					event.preventDefault();
 					break;
 			case 27://handle "Esc" key event
 					this.selectedRegion.empty();
@@ -75,6 +93,12 @@ class ThisWebPageEventHandler
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
 					break;
+			default:
+					if (this.selectedRegion.isSingleCell())
+					{
+						theCell=this.rosterSchedulerTable.getCell(this.selectedRegion.minY,this.selectedRegion.minX);
+						$(theCell).text("").focus();
+					}	
 		}
 	}
 	_handleTabKeyEvent(event)
