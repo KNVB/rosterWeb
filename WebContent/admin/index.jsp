@@ -8,7 +8,7 @@
 	<body>
 		<br><br>
 		<div style="display:flex;align-items: center;justify-content: center;width:100%">
-			<form method="post" action="login.jsp">
+			<form method="post" action="<%=request.getContextPath()%>/admin/login.jsp">
 				<table border="0">
 					<tr>
 						<td colspan="2" style="text-align:center">Roster Scheduler Login page</td>

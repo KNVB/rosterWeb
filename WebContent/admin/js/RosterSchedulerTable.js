@@ -40,9 +40,9 @@ class RosterSchedulerTable extends RosterTable
 		var i,cells;
 		for (var itoId in this.itoList)
 		{
-			$("#shift_" +itoId).children("td.shiftCell").html("").blur();
+			$("#shift_" +itoId).children("td."+this.shiftCellClassName).html("").blur();
 		}
-		$(this.vacantShiftRow).children("td.vacantShift").html("");
+		$(this.vacantShiftRow).children("td."+this.vacantShiftClassName).html("");
 	}
 	clearCopiedRegion(copiedRegionCoordinate)
 	{
