@@ -38,14 +38,17 @@ class RosterTableEventHandler
 					break;		
 			case 13://handle "Enter" key event
 					orgIndex=$.inArray(theCell,this.cursorCells);
-					index=orgIndex+Object.keys(this.rosterSchedulerTable.dateObjList).length;
-					if (index>this.cursorCells.length-1)
+					if (this.selectedRegion.isSingleCell())
 					{
-						index=orgIndex % Object.keys(this.rosterSchedulerTable.dateObjList).length;
+						theCell=this.rosterSchedulerTable.getNextCellInRosterTable(1,0);
+						this.selectedRegion.startSelect(theCell);
+						this.selectedRegion.endSelect();
 					}
-					theCell=this.cursorCells[index];
-					this.selectedRegion.startSelect(theCell);
-					this.selectedRegion.endSelect();
+					else
+					{	
+						var nextCell=this.rosterSchedulerTable.getNextCellInSelectedRegion(theCell,1,0);
+						nextCell.focus();
+					}
 					event.preventDefault();
 					break;
 			case 27://handle "Esc" key event
@@ -75,37 +78,19 @@ class RosterTableEventHandler
 	_handleTabKeyEvent(theCell,event)
 	{
 		//event.preventDefault();
-		var nextCell,index;
+		var index;
+		var nextCell=null,newX,newY;
 		var row=theCell.parentElement;
-		var newX,newY=row.rowIndex;
+		newY=row.rowIndex;
 		console.log("RosterTable Tab key");
 		if (this.selectedRegion.selectedCellList.length>1)
 		{
+			event.preventDefault();
 			if (event.shiftKey)
-				newX=theCell.cellIndex-1
+				nextCell=this.rosterSchedulerTable.getNextCellInSelectedRegion(theCell,0,-1);
 			else
-				newX=theCell.cellIndex+1;	
-			nextCell=this.rosterSchedulerTable.getCell(newY,newX);
-			if ($.inArray(nextCell,this.selectedRegion.selectedCellList)==-1)
-			{
-				event.preventDefault();
-				index=$.inArray(theCell,this.selectedRegion.selectedCellList);
-				if (event.shiftKey)
-					index--;
-				else
-					index++;
-				if (index<0)
-					index=this.selectedRegion.selectedCellList.length-1;
-				else
-				{	
-					if (index==this.selectedRegion.selectedCellList.length)
-					{
-						index=0;
-					}						
-				}
-				nextCell=this.selectedRegion.selectedCellList[index];
-				nextCell.focus();
-			}				
+				nextCell=this.rosterSchedulerTable.getNextCellInSelectedRegion(theCell,0,1);
+			nextCell.focus();
 		}
 		else
 		{

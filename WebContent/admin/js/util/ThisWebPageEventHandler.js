@@ -19,35 +19,11 @@ class ThisWebPageEventHandler
 	}
 	_handleArrowKeyEvent(event,yOffset,xOffset)
 	{
-		console.log("Arrow Key");
-		if (!this.selectedRegion.isEmpty())
+		console.log("Body Arrow Key");
+		if (this.selectedRegion.isSingleCell())
 		{
-			var theCell=this.rosterSchedulerTable.getCell(this.selectedRegion.minY,this.selectedRegion.minX);
-			var index;
-			var maxRowCount=Object.keys(this.rosterSchedulerTable.itoList).length*2;
-			var orgIndex=$.inArray(theCell,this.cursorCells);
-			var nextCell;
-			
-			var newX=orgIndex % Object.keys(this.rosterSchedulerTable.dateObjList).length;
-			var newY=(orgIndex-newX)/Object.keys(this.rosterSchedulerTable.dateObjList).length;
-			
-			newX+=xOffset;
-			if (newX>=Object.keys(this.rosterSchedulerTable.dateObjList).length)
-				newX=0;
-			else
-				if (newX<0)
-					newX=Object.keys(this.rosterSchedulerTable.dateObjList).length-1;
-			newY+=yOffset;
-			if (newY>=maxRowCount)
-				newY=0;
-			else
-				if (newY<0)
-					newY=maxRowCount-1;
-			console.log(newX,newY);
-			index=newX+newY*Object.keys(this.rosterSchedulerTable.dateObjList).length;
-			
-			nextCell=this.cursorCells[index];
 			event.preventDefault();
+			var nextCell=this.rosterSchedulerTable.getNextCellInRosterTable(yOffset,xOffset);
 			this.selectedRegion.startSelect(nextCell);
 			this.selectedRegion.endSelect();
 		}			
@@ -63,20 +39,16 @@ class ThisWebPageEventHandler
 			case 13://handle enter key
 					if (this.selectedRegion.isSingleCell())
 					{
-						theCell=this.rosterSchedulerTable.getCell(this.selectedRegion.minY,this.selectedRegion.minX);
-						orgIndex=$.inArray(theCell,this.cursorCells);
-						index=orgIndex+Object.keys(this.rosterSchedulerTable.dateObjList).length;
-						if (index>(this.cursorCells.length-1))
-						{
-							index=orgIndex % Object.keys(this.rosterSchedulerTable.dateObjList).length;
-						}
-						console.log(index,orgIndex);
-						theCell=this.cursorCells[index];
+						theCell=this.rosterSchedulerTable.getNextCellInRosterTable(1,0);
 						this.selectedRegion.startSelect(theCell);
 						this.selectedRegion.endSelect();
 					}
 					event.preventDefault();
 					break;
+			case 16://handle shift key
+			case 17://handle Ctrl key
+			case 18://handle alt key	
+					break;		
 			case 27://handle "Esc" key event
 					this.selectedRegion.empty();
 					event.stopPropagation();

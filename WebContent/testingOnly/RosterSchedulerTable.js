@@ -8,18 +8,19 @@ class RosterSchedulerTable
 		this.dateObjList.length=28;
 		this.itoList={};
 		this.itoList.length=5;
-		var targetCellClassName="cursorCell";
+		var self=this;
 		var selectedRegion=new SelectedRegion(this);
+		var targetCellClassName="cursorCell";
 		var selectionString="td."+targetCellClassName;
 		var thisWebPageEventHandler=new ThisWebPageEventHandler($(selectionString),this,selectedRegion);
 		var rosterTableEventHandler=new RosterTableEventHandler($(selectionString),this,selectedRegion);
 		this.selectedRegionDiv.className="selectedRegionDiv";
 		var firstCell=$(selectionString)[0];
 		$(firstCell).focus(function (){
-			if (selectedRegion.isClear())
+			if (self.selectedRegion.isClear())
 			{
-				selectedRegion.startSelect(this);
-				selectedRegion.endSelect();
+				self.selectedRegion.startSelect(this);
+				self.selectedRegion.endSelect();
 			}
 		});
 		$(selectionString).attr('contentEditable',true);
