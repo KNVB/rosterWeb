@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Copy event to clipboard</title>
+		<style>
+			/*::selection {
+			  background: none; /* WebKit/Blink Browsers */
+			}
+			::-moz-selection {
+			  background: none; /* Gecko Browsers */
+			}*/		
+		</style>
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script>
+			$( document ).ready(function() {
+				$("body").on("copy",copy);
+			});
+			function copy(event)
+			{
+				var cell1,cell2;
+				var endCol=getValue("endCol");
+				var endRow=getValue("endRow");
+				var range;
+				var startCol=getValue("startCol"),startRow=getValue("startRow");
+				var selection = window.getSelection();
+				selection.removeAllRanges();
+				//console.log(startCol,startRow,endCol,endRow);
+				//event.preventDefault();
+				for (var i=startRow;i<=endRow;i++)
+				{
+					range = document.createRange();
+					cell1=getCell(i,startCol);
+					cell2=getCell(i,endCol);
+					range.setStart(cell1,0);
+					range.setEnd(cell2,cell2.childNodes.length);
+					selection.addRange(range);
+				}
+				/*var row=table.rows[rowIndex];
+				var cell=row.cells[cellIndex];*/
+			}
+			function copyContent()
+			{
+				document.execCommand("copy");
+			}
+			function getCell(rowIndex,cellIndex)
+			{
+				var table=document.getElementById("dataTable");
+				var row=table.rows[rowIndex];
+				var cell=row.cells[cellIndex];
+				return cell;
+			}
+			function getValue(id)
+			{
+				var element=document.getElementById(id);
+				var index=element.selectedIndex;
+				return element.options[index].value;
+			}
+		</script>	
+	</head>
+	<body>
+		<table border="1" id="dataTable">
+			<tr>
+				<td id="c11" contenteditable="true">1_1</td>
+				<td id="c12" contenteditable="true">1_2</td>
+				<td id="c13" contenteditable="true">1_3</td>
+			</tr>
+			<tr>
+				<td id="c21" contenteditable="true">2_1</td>
+				<td id="c22" contenteditable="true">2_2</td>
+				<td id="c23" contenteditable="true">2_3</td>
+			</tr>
+			<tr>
+				<td id="c31" contenteditable="true">3_1</td>
+				<td id="c32" contenteditable="true">3_2</td>
+				<td id="c33" contenteditable="true">3_3</td>
+			</tr>
+		</table><br>
+		start column:
+		<select id="startCol">
+			<option value=0>1</option>
+			<option value=1>2</option>
+			<option value=2>3</option>
+		</select>
+		end column:
+		<select id="endCol">
+			<option value=0>1</option>
+			<option value=1>2</option>
+			<option value=2>3</option>
+		</select>
+		<br>
+		start row:
+		<select id="startRow">
+			<option value=0>1</option>
+			<option value=1>2</option>
+			<option value=2>3</option>
+		</select>
+		end row:
+		<select id="endRow">
+			<option value=0>1</option>
+			<option value=1>2</option>
+			<option value=2>3</option>
+		</select>
+		<br>
+		<button onclick="copyContent()">Copy</button>
+		<textarea id=copiedContent>
+		</textarea>
+	</body>
+</html>
