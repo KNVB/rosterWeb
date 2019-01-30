@@ -4,7 +4,6 @@ class RosterTableEventHandler
 	{
 		var self=this;
 		this.cursorCells=cursorCells;
-		this.fromDblClick=false;
 		this.selectedRegion=selectedRegion;
 		this.rosterSchedulerTable=rosterSchedulerTable;
 	
@@ -19,12 +18,12 @@ class RosterTableEventHandler
 			event.preventDefault();
 		});
 		cursorCells.dblclick(function(event){
-			console.log("Double click="+$(this).is(":focus")+","+self.fromDblClick);
+			console.log("Double click");
 			this.focus();			
 		});
 		cursorCells.keydown(function(event){
 			self._handleKeyDownEvent(this,event);
-		});
+		});		
 	}
 	
 	_handleKeyDownEvent(theCell,event)

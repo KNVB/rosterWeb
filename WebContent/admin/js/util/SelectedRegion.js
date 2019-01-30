@@ -17,6 +17,30 @@ class SelectedRegion
 	}
 	copyToClipBoard()
 	{
+		var cell1,cell2;
+		var range;
+		var selection = window.getSelection();
+		selection.removeAllRanges();
+		
+		for (var i=this.minY;i<=this.maxY;i++)
+		{
+			range = document.createRange();
+			
+			cell1=this.rosterSchedulerTable.getCell(i,this.minX);
+			cell2=this.rosterSchedulerTable.getCell(i,this.maxX);
+			cell1.blur();
+			range.setStart(cell1,0);
+			range.setEnd(cell2,cell2.childNodes.length);
+			selection.addRange(range);
+		}	
+		/*this.minX=-1;
+		this.minY=-1;
+		this.maxX=-1;
+		this.maxY=-1;
+		range.setStart(this.selectedCellList[0],0);
+		range.setEnd(this.selectedCellList[0],this.selectedCellList[0].childNodes.length);
+		selection.removeAllRanges();
+		selection.addRange(range);*/
 		
 	}
 	deleteContent()

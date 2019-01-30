@@ -11,7 +11,17 @@ class ThisWebPageEventHandler
 			if (self.selectedRegion.inSelectMode)
 				self.selectedRegion.endSelect();
 		});
-		
+		$("body").on("copy",function(event){
+			event.preventDefault();
+			event.stopPropagation();
+			console.log("Copy event");
+			self.selectedRegion.copyToClipBoard();
+		});
+		$("body").on("paste", function(event){
+			console.log("Paste event");
+			event.stopPropagation();
+			event.preventDefault();
+		});
 		$("body").keydown(function(event){
 			event.stopPropagation();
 			self._handleKeyDownEvent(event);
@@ -69,7 +79,8 @@ class ThisWebPageEventHandler
 					if (this.selectedRegion.isSingleCell())
 					{
 						theCell=this.rosterSchedulerTable.getCell(this.selectedRegion.minY,this.selectedRegion.minX);
-						$(theCell).text("").focus();
+						if (!(event.altKey||event.ctrlKey||event.metaKey||event.shiftKey))
+							$(theCell).text("").focus();
 					}	
 		}
 	}
