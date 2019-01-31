@@ -15,37 +15,66 @@
 		<script>
 			$( document ).ready(function() {
 				$("body").on("copy",copy);
+				$("body").on("paste",function(event){
+					var clipboard=event.originalEvent.clipboardData;
+					var data=clipboard.getData("text/plain");
+					var cell1=getCell("destTable",0,0);
+					var range = document.createRange();
+					var selection = window.getSelection();
+					console.log(data,cell1,clipboard);
+					
+					range.setStart(cell1,0);
+					range.setEnd(cell1,cell1.childNodes.length);
+					selection.removeAllRanges();
+					selection.addRange(range);
+					//event.preventDefault();
+				});
 			});
 			function copy(event)
 			{
 				var cell1,cell2;
+				var data="";
 				var endCol=getValue("endCol");
 				var endRow=getValue("endRow");
 				var range;
 				var startCol=getValue("startCol"),startRow=getValue("startRow");
 				var selection = window.getSelection();
-				selection.removeAllRanges();
+				
 				//console.log(startCol,startRow,endCol,endRow);
-				//event.preventDefault();
+				/*event.preventDefault();
+				for (var i=startRow;i<=endRow;i++)
+				{
+					for (var j=startCol;j<=endCol;j++)
+					{
+						cell1=getCell("dataTable",i,j);
+						data+=cell1.textContent+"\t";
+					}
+					data=data.substring(0,data.length-1);
+					data+="\n";
+				}
+				var clipboard=event.originalEvent.clipboardData;
+				clipboard.clearData();
+				clipboard.setData("text/plain",data);*/
+				
+				selection.removeAllRanges();
 				for (var i=startRow;i<=endRow;i++)
 				{
 					range = document.createRange();
-					cell1=getCell(i,startCol);
-					cell2=getCell(i,endCol);
+					cell1=getCell("dataTable",i,startCol);
+					cell2=getCell("dataTable",i,endCol);
 					range.setStart(cell1,0);
 					range.setEnd(cell2,cell2.childNodes.length);
 					selection.addRange(range);
 				}
-				/*var row=table.rows[rowIndex];
-				var cell=row.cells[cellIndex];*/
 			}
+			
 			function copyContent()
 			{
 				document.execCommand("copy");
 			}
-			function getCell(rowIndex,cellIndex)
+			function getCell(tableId,rowIndex,cellIndex)
 			{
-				var table=document.getElementById("dataTable");
+				var table=document.getElementById(tableId);
 				var row=table.rows[rowIndex];
 				var cell=row.cells[cellIndex];
 				return cell;
@@ -79,31 +108,46 @@
 		start column:
 		<select id="startCol">
 			<option value=0>1</option>
-			<option value=1>2</option>
+			<option value=1 selected>2</option>
 			<option value=2>3</option>
 		</select>
 		end column:
 		<select id="endCol">
 			<option value=0>1</option>
 			<option value=1>2</option>
-			<option value=2>3</option>
+			<option value=2 selected>3</option>
 		</select>
 		<br>
 		start row:
 		<select id="startRow">
-			<option value=0>1</option>
+			<option value=0 selected>1</option>
 			<option value=1>2</option>
 			<option value=2>3</option>
 		</select>
 		end row:
 		<select id="endRow">
 			<option value=0>1</option>
-			<option value=1>2</option>
+			<option value=1 selected>2</option>
 			<option value=2>3</option>
 		</select>
 		<br>
 		<button onclick="copyContent()">Copy</button>
-		<textarea id=copiedContent>
-		</textarea>
+		<table border="1" id="destTable">
+			<tr>
+				<td id="c11" contenteditable="true"></td>
+				<td id="c12" contenteditable="true"></td>
+				<td id="c13" contenteditable="true"></td>
+			</tr>
+			<tr>
+				<td id="c21" contenteditable="true"></td>
+				<td id="c22" contenteditable="true"></td>
+				<td id="c23" contenteditable="true"></td>
+			</tr>
+			<tr>
+				<td id="c31" contenteditable="true"></td>
+				<td id="c32" contenteditable="true"></td>
+				<td id="c33" contenteditable="true"></td>
+			</tr>
+		</table>
 	</body>
 </html>
