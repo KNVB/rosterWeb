@@ -17,7 +17,10 @@ class SelectedRegion
 			if (this.copiedRegion==null)
 				this.copiedRegion=new SelectedRegion(this.rosterSchedulerTable);
 			else
-				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
+			{	
+				if (!this.copiedRegion.isEmpty())
+					this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
+			}
 			this.copiedRegion.selectedCellList=this.selectedCellList;
 			this.copiedRegion.minX=this.minX;
 			this.copiedRegion.maxX=this.maxX;
@@ -107,8 +110,8 @@ class SelectedRegion
 				console.log("Do paste");
 				var dataRowList=JSON.parse(clipboard.getData("application/json"));
 				this.rosterSchedulerTable.pasteDataFromClipboard(this,dataRowList);
-				this.copiedRegion.empty();
 				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
+				this.copiedRegion.empty();				
 			}	
 		}	
 	}

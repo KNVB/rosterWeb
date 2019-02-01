@@ -458,21 +458,22 @@ class RosterSchedulerTable extends RosterTable
 	}
 	pasteDataFromClipboard(selectedRegion,dataRowList)
 	{
-		var cell;
+		var cell,firstCell,firstDataCell;
 		var self=this,x,y;
 		
 		x=selectedRegion.minX;
 		y=selectedRegion.minY;
-		
+		firstCell=this.getCell(y,x);
+		firstDataCell=dataRowList[0][0];
+		var index=$.inArray(firstCell,this.cursorCells);
 		dataRowList.forEach(function(dataRow){
-			x=selectedRegion.minX;
 			dataRow.forEach(function(dataCell){
-				cell=self.getCell(y,x++);
-				$(cell).text(dataCell.textContent).blur();
+				if (index>=self.cursorCells.length)
+					index=0;
+				$(self.cursorCells[index]).text(dataCell.textContent).blur();
+				index++;
 			});
-			y++;
-		});
-		
+		});		
 	}
 	selectCell(theCell)
 	{
@@ -1027,18 +1028,7 @@ class RosterSchedulerTable extends RosterTable
 		return shiftPattern;
 	}
 
-	_getVacantShiftData()
-	{
-		var cell,result=[];
-		var vacancyRow=document.getElementById("vacantShiftRow");
-		var cells=$(vacancyRow).children("."+this.vacantShiftClassName);
-		for (var i=0;i<cells.length;i++)
-		{
-			cell=cells[i];
-			result.push(cell.textContent);
-		}
-		return result;
-	}
+	
 	_getShiftRowData(shiftRowList,startIndex,endIndex)
 	{
 		var result={};
@@ -1058,6 +1048,18 @@ class RosterSchedulerTable extends RosterTable
 				shiftList[counter++]=shiftType;
 			}
 			result[itoId]=shiftList;
+		}
+		return result;
+	}
+	_getVacantShiftData()
+	{
+		var cell,result=[];
+		var vacancyRow=document.getElementById("vacantShiftRow");
+		var cells=$(vacancyRow).children("."+this.vacantShiftClassName);
+		for (var i=0;i<cells.length;i++)
+		{
+			cell=cells[i];
+			result.push(cell.textContent);
 		}
 		return result;
 	}
@@ -1090,6 +1092,7 @@ class RosterSchedulerTable extends RosterTable
 		
 		return result;
 	}
+	
 	_showButtons()
 	{
 		var autoPlannerTable,autoPlannerRow,autoPlannerCell,autoPlanStartDateSelect,autoPlanEndDateSelect;
