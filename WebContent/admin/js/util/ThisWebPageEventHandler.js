@@ -15,12 +15,15 @@ class ThisWebPageEventHandler
 			event.preventDefault();
 			event.stopPropagation();
 			console.log("Copy event");
-			self.selectedRegion.copyToClipBoard();
+			var clipboard=event.originalEvent.clipboardData;
+			self.selectedRegion.copyToClipBoard(clipboard);
 		});
 		$("body").on("paste", function(event){
 			console.log("Paste event");
 			event.stopPropagation();
 			event.preventDefault();
+			var clipboard=event.originalEvent.clipboardData;
+			self.selectedRegion.pasteFromClipBoard(clipboard);
 		});
 		$("body").keydown(function(event){
 			event.stopPropagation();

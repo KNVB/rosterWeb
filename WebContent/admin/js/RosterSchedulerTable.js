@@ -3,11 +3,13 @@ class RosterSchedulerTable extends RosterTable
 	constructor(container)
 	{
 		super(container);
+		this.cursorCells=null;
 		this.errorRedBlackGroundClassName="errorRedBlackGround";
 		this.itoList;
-		this.showNoOfPrevDate=2;
-		this.utility=new AdminUtility();
 		this.preferredShiftList=null;
+		this.showNoOfPrevDate=2;
+		this.selectedRegion=null;
+		this.utility=new AdminUtility();
 		this.vacantShiftClassName="vacantShift";
 		this.vacantShiftLabelClassName="vacantShiftLabel";
 		this.yearlyStatisticReportDivClassName="yearlyStatisticReportDiv";
@@ -44,12 +46,12 @@ class RosterSchedulerTable extends RosterTable
 		}
 		$(this.vacantShiftRow).children("td."+this.vacantShiftClassName).html("");
 	}
-	clearCopiedRegion(copiedRegionCoordinate)
+	clearCopiedRegion(copiedRegion)
 	{
 		var cell,i,j;
-		for (i=copiedRegionCoordinate.minY;i<=copiedRegionCoordinate.maxY;i++)
+		for (i=copiedRegion.minY;i<=copiedRegion.maxY;i++)
 		{
-			for (j=copiedRegionCoordinate.minX;j<=copiedRegionCoordinate.maxX;j++)
+			for (j=copiedRegion.minX;j<=copiedRegion.maxX;j++)
 			{
 				cell=this.getCell(i,j);
 				cell.blur();
@@ -60,12 +62,12 @@ class RosterSchedulerTable extends RosterTable
 			}	
 		}
 	}
-	clearSelectedRegion(selectedRegionCoordinate)
+	clearSelectedRegion(selectedRegion)
 	{
 		var cell,i,j;
-		for (i=selectedRegionCoordinate.minY;i<=selectedRegionCoordinate.maxY;i++)
+		for (i=selectedRegion.minY;i<=selectedRegion.maxY;i++)
 		{
-			for (j=selectedRegionCoordinate.minX;j<=selectedRegionCoordinate.maxX;j++)
+			for (j=selectedRegion.minX;j<=selectedRegion.maxX;j++)
 			{
 				cell=this.getCell(i,j);
 				cell.blur();
@@ -125,19 +127,25 @@ class RosterSchedulerTable extends RosterTable
 		return cell;
 	}
 
-	getDataForCopy(selectedRegionCoordinate)
+	getDataForCopy(selectedRegion)
 	{
-		var cell;
+		var cell,cellObj;
 		var dataRow=[],dataRowList=[];
-		this.clearSelectedRegion(selectedRegionCoordinate);
-		this.setCopiedRegion(selectedRegionCoordinate);
-		for (var y=selectedRegionCoordinate.minY;y<=selectedRegionCoordinate.maxY;y++)
+		this.clearSelectedRegion(selectedRegion);
+		this.setCopiedRegion(selectedRegion);
+		for (var y=selectedRegion.minY;y<=selectedRegion.maxY;y++)
 		{
 			dataRow=[];
-			for (var x=selectedRegionCoordinate.minX;x<=selectedRegionCoordinate.maxX;x++)
+			for (var x=selectedRegion.minX;x<=selectedRegion.maxX;x++)
 			{
 				cell=this.getCell(y,x);
-				dataRow.push(cell.textContent);
+				cellObj={};
+				if ($(cell).hasClass(this.shiftCellClassName))
+					cellObj.className=this.shiftCellClassName;
+				else
+					cellObj.className=this.vacantShiftClassName;
+				cellObj.textContent=cell.textContent;
+				dataRow.push(cellObj);
 			}
 			dataRowList.push(dataRow);
 		}
@@ -448,23 +456,23 @@ class RosterSchedulerTable extends RosterTable
 		}
 		this.haveMissingShift();
 	}
-	pasteDataFromClipboard(selectedRegionCoordinate,copiedRegionCoordinate,dataRowList)
+	pasteDataFromClipboard(selectedRegion,dataRowList)
 	{
 		var cell;
 		var self=this,x,y;
 		
-		x=selectedRegionCoordinate.minX;
-		y=selectedRegionCoordinate.minY;
+		x=selectedRegion.minX;
+		y=selectedRegion.minY;
 		
 		dataRowList.forEach(function(dataRow){
-			x=selectedRegionCoordinate.minX;
-			dataRow.forEach(function(value){
+			x=selectedRegion.minX;
+			dataRow.forEach(function(dataCell){
 				cell=self.getCell(y,x++);
-				$(cell).text(value).blur();
+				$(cell).text(dataCell.textContent).blur();
 			});
 			y++;
 		});
-		this.clearCopiedRegion(copiedRegionCoordinate);
+		
 	}
 	selectCell(theCell)
 	{
@@ -474,39 +482,39 @@ class RosterSchedulerTable extends RosterTable
 		$(theCell).addClass("selectCellBorderBottom");
 		$(theCell).addClass("selectCellBorderLeft");
 	}
-	setCopiedRegion(selectedRegionCoordinate)
+	setCopiedRegion(selectedRegion)
 	{
 		var cell,i;
-		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.minX);
+		cell=this.getCell(selectedRegion.minY,selectedRegion.minX);
 		$(cell).addClass("copyCellBorderTop");
 		$(cell).addClass("copyCellBorderLeft");
 		
-		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.maxX);
+		cell=this.getCell(selectedRegion.minY,selectedRegion.maxX);
 		$(cell).addClass("copyCellBorderTop");
 		$(cell).addClass("copyCellBorderRight");
 		
-		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.minX);
+		cell=this.getCell(selectedRegion.maxY,selectedRegion.minX);
 		$(cell).addClass("copyCellBorderBottom");
 		$(cell).addClass("copyCellBorderLeft");
 
-		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.maxX);
+		cell=this.getCell(selectedRegion.maxY,selectedRegion.maxX);
 		$(cell).addClass("copyCellBorderBottom");
 		$(cell).addClass("copyCellBorderRight");
 		
-		for (i=selectedRegionCoordinate.minY+1;i<selectedRegionCoordinate.maxY;i++)
+		for (i=selectedRegion.minY+1;i<selectedRegion.maxY;i++)
 		{
-			cell=this.getCell(i,selectedRegionCoordinate.minX);
+			cell=this.getCell(i,selectedRegion.minX);
 			$(cell).addClass("copyCellBorderLeft");
 
-			cell=this.getCell(i,selectedRegionCoordinate.maxX);
+			cell=this.getCell(i,selectedRegion.maxX);
 			$(cell).addClass("copyCellBorderRight");
 		}
-		for (i=selectedRegionCoordinate.minX+1;i<selectedRegionCoordinate.maxX;i++)
+		for (i=selectedRegion.minX+1;i<selectedRegion.maxX;i++)
 		{
-			cell=this.getCell(selectedRegionCoordinate.minY,i);
+			cell=this.getCell(selectedRegion.minY,i);
 			$(cell).addClass("copyCellBorderTop");
 			
-			cell=this.getCell(selectedRegionCoordinate.maxY,i);
+			cell=this.getCell(selectedRegion.maxY,i);
 			$(cell).addClass("copyCellBorderBottom");
 		}
 	}
@@ -592,39 +600,39 @@ class RosterSchedulerTable extends RosterTable
 	{
 		this.rosterScheduler=rosterScheduler;
 	}
-	setSelectedRegion(selectedRegionCoordinate)
+	setSelectedRegion(selectedRegion)
 	{
 		var cell,i;
-		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.minX);
+		cell=this.getCell(selectedRegion.minY,selectedRegion.minX);
 		$(cell).addClass("selectCellBorderTop");
 		$(cell).addClass("selectCellBorderLeft");
 		
-		cell=this.getCell(selectedRegionCoordinate.minY,selectedRegionCoordinate.maxX);
+		cell=this.getCell(selectedRegion.minY,selectedRegion.maxX);
 		$(cell).addClass("selectCellBorderTop");
 		$(cell).addClass("selectCellBorderRight");
 		
-		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.minX);
+		cell=this.getCell(selectedRegion.maxY,selectedRegion.minX);
 		$(cell).addClass("selectCellBorderBottom");
 		$(cell).addClass("selectCellBorderLeft");
 
-		cell=this.getCell(selectedRegionCoordinate.maxY,selectedRegionCoordinate.maxX);
+		cell=this.getCell(selectedRegion.maxY,selectedRegion.maxX);
 		$(cell).addClass("selectCellBorderBottom");
 		$(cell).addClass("selectCellBorderRight");
 		
-		for (i=selectedRegionCoordinate.minY+1;i<selectedRegionCoordinate.maxY;i++)
+		for (i=selectedRegion.minY+1;i<selectedRegion.maxY;i++)
 		{
-			cell=this.getCell(i,selectedRegionCoordinate.minX);
+			cell=this.getCell(i,selectedRegion.minX);
 			$(cell).addClass("selectCellBorderLeft");
 
-			cell=this.getCell(i,selectedRegionCoordinate.maxX);
+			cell=this.getCell(i,selectedRegion.maxX);
 			$(cell).addClass("selectCellBorderRight");
 		}
-		for (i=selectedRegionCoordinate.minX+1;i<selectedRegionCoordinate.maxX;i++)
+		for (i=selectedRegion.minX+1;i<selectedRegion.maxX;i++)
 		{
-			cell=this.getCell(selectedRegionCoordinate.minY,i);
+			cell=this.getCell(selectedRegion.minY,i);
 			$(cell).addClass("selectCellBorderTop");
 			
-			cell=this.getCell(selectedRegionCoordinate.maxY,i);
+			cell=this.getCell(selectedRegion.maxY,i);
 			$(cell).addClass("selectCellBorderBottom");
 		}
 		
