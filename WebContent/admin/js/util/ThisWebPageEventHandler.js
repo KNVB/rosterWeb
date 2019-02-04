@@ -16,14 +16,17 @@ class ThisWebPageEventHandler
 			event.stopPropagation();
 			console.log("Copy event");
 			var clipboard=event.originalEvent.clipboardData;
-			self.selectedRegion.copyToClipBoard(clipboard);
+			//self.selectedRegion.copyToClipBoard(clipboard);
+			self.selectedRegion.copy(clipboard);
 		});
 		$("body").on("paste", function(event){
 			console.log("Paste event");
+			
+			var clipboard=event.originalEvent.clipboardData;
+			//self.selectedRegion.pasteFromClipBoard(clipboard);
+			self.selectedRegion.paste(clipboard);
 			event.stopPropagation();
 			event.preventDefault();
-			var clipboard=event.originalEvent.clipboardData;
-			self.selectedRegion.pasteFromClipBoard(clipboard);
 		});
 		$("body").keydown(function(event){
 			event.stopPropagation();

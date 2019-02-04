@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Copy event to clipboard</title>
+		<style>
+			/*::selection {
+			  background: none; /* WebKit/Blink Browsers */
+			}
+			::-moz-selection {
+			  background: none; /* Gecko Browsers */
+			}*/		
+		</style>
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script>
+			$( document ).ready(function() {
+			
+				$("body").on("paste",function(event){
+					console.log("Paste Event");
+					var clipboard=event.originalEvent.clipboardData;
+					var data=clipboard.setData("text/plain","A");
+					//var cell1=getCell("destTable",0,0);
+					var cell1=$("#destTable").find("#c11");
+					cell1.focus();
+					document.execCommand("paste");
+					event.preventDefault();
+				});
+			});
+			function getCell(tableId,rowIndex,cellIndex)
+			{
+				var table=document.getElementById(tableId);
+				var row=table.rows[rowIndex];
+				var cell=row.cells[cellIndex];
+				return cell;
+			}
+			function getValue(id)
+			{
+				var element=document.getElementById(id);
+				var index=element.selectedIndex;
+				return element.options[index].value;
+			}
+		</script>	
+	</head>
+	<body>
+		<table border="1" id="dataTable">
+			<tr>
+				<td id="c11" contenteditable="true">1_1</td>
+				<td id="c12" contenteditable="true">1_2</td>
+				<td id="c13" contenteditable="true">1_3</td>
+			</tr>
+			<tr>
+				<td id="c21" contenteditable="true">2_1</td>
+				<td id="c22" contenteditable="true">2_2</td>
+				<td id="c23" contenteditable="true">2_3</td>
+			</tr>
+			<tr>
+				<td id="c31" contenteditable="true">3_1</td>
+				<td id="c32" contenteditable="true">3_2</td>
+				<td id="c33" contenteditable="true">3_3</td>
+			</tr>
+		</table><br>
+		start column:
+		<select id="startCol">
+			<option value=0>1</option>
+			<option value=1 selected>2</option>
+			<option value=2>3</option>
+		</select>
+		end column:
+		<select id="endCol">
+			<option value=0>1</option>
+			<option value=1>2</option>
+			<option value=2 selected>3</option>
+		</select>
+		<br>
+		start row:
+		<select id="startRow">
+			<option value=0 selected>1</option>
+			<option value=1>2</option>
+			<option value=2>3</option>
+		</select>
+		end row:
+		<select id="endRow">
+			<option value=0>1</option>
+			<option value=1 selected>2</option>
+			<option value=2>3</option>
+		</select>
+		<br>
+		<button onclick="copyContent()">Copy</button>
+		<table border="1" id="destTable" width="500px">
+			<tr>
+				<td id="c11" contenteditable="true"></td>
+				<td id="c12" contenteditable="true"></td>
+				<td id="c13" contenteditable="true"></td>
+			</tr>
+			<tr>
+				<td id="c21" contenteditable="true"></td>
+				<td id="c22" contenteditable="true"></td>
+				<td id="c23" contenteditable="true"></td>
+			</tr>
+			<tr>
+				<td id="c31" contenteditable="true"></td>
+				<td id="c32" contenteditable="true"></td>
+				<td id="c33" contenteditable="true"></td>
+			</tr>
+		</table>
+	</body>
+</html>

@@ -7,6 +7,30 @@ class SelectedRegion
 		this._init();
 		this.copiedRegion=null;
 	}
+	copy(clipboard)
+	{
+		var cell1,cell2;
+		var dataRowList;
+		if (!this.isEmpty())
+		{
+			dataRowList=this.rosterSchedulerTable.getDataForCopy(this);
+			if (this.copiedRegion==null)
+				this.copiedRegion=new SelectedRegion(this.rosterSchedulerTable);
+			else
+			{	
+				if (!this.copiedRegion.isEmpty())
+					this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
+			}
+			this.copiedRegion.selectedCellList=this.selectedCellList;
+			this.copiedRegion.minX=this.minX;
+			this.copiedRegion.maxX=this.maxX;
+			this.copiedRegion.minY=this.minY;
+			this.copiedRegion.maxY=this.maxY;
+			clipboard.clearData();
+			clipboard.setData("text/plain","");
+			localStorage.setItem("copiedData",JSON.stringify(dataRowList));
+		}
+	}
 	copyToClipBoard(clipboard)
 	{
 		var cell1,cell2;
@@ -100,6 +124,29 @@ class SelectedRegion
 	isSingleCell()
 	{
 		return (this.selectedCellList.length==1);
+	}
+	paste(clipboard)
+	{
+		var dataRowList=JSON.parse(localStorage.getItem("copiedData"));
+		var firstCell,textContent;
+		if (!this.copiedRegion.isEmpty())
+		{
+			if (!this.isEmpty())
+			{
+				//console.log(this.selectedCellList.length);
+				textContent=dataRowList[0][0].textContent;
+			//	clipboard.clearData();
+		    //	clipboard.setData("text/plain",textContent);
+				firstCell=this.selectedCellList[0];
+				firstCell.focus();
+				
+				var e = $.Event("keydown");
+				e.which =textContent.charCodeAt(0);
+				$(firstCell).trigger(e);
+				
+				
+			}
+		}
 	}
 	pasteFromClipBoard(clipboard)
 	{
