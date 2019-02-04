@@ -14,81 +14,48 @@
 		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 		<script>
 			$( document ).ready(function() {
-			
-				$("body").on("paste",function(event){
-					console.log("Paste Event");
-					var clipboard=event.originalEvent.clipboardData;
-					var data=clipboard.setData("text/plain","A");
-					//var cell1=getCell("destTable",0,0);
-					var cell1=$("#destTable").find("#c11");
-					cell1.focus();
-					document.execCommand("paste");
-					event.preventDefault();
+				$("td").on("paste",function(event){
+					console.log(this.textContent);
+					console.log("cell paste event");
+					var self = this;
+					setTimeout(function() {
+						self.blur();
+					}, 0);
+				});
+				$("body").keydown(function(event){
+					switch (event.which)
+					{
+						case 86://v
+								if (event.ctrlKey)	
+								{
+									pasteDemo();
+								}
+					}			
 				});
 			});
-			function getCell(tableId,rowIndex,cellIndex)
+			function pasteDemo()
 			{
-				var table=document.getElementById(tableId);
-				var row=table.rows[rowIndex];
-				var cell=row.cells[cellIndex];
-				return cell;
-			}
-			function getValue(id)
-			{
-				var element=document.getElementById(id);
-				var index=element.selectedIndex;
-				return element.options[index].value;
+				console.log("Body Paste Event");
+				var inputBox=document.createElement("input");
+				var cell1=document.getElementById("c11");
+				var range=document.createRange();
+				var selection=window.getSelection();
+				$("body").append(inputBox);
+				inputBox.value="QQ";
+				inputBox.select();
+				
+				console.log("Copy Result="+document.execCommand("copy"));
+				cell1.focus();
+				$(inputBox).remove();
+				console.log("Paste Result="+document.execCommand("paste"));
+				
 			}
 		</script>	
 	</head>
 	<body>
-		<table border="1" id="dataTable">
-			<tr>
-				<td id="c11" contenteditable="true">1_1</td>
-				<td id="c12" contenteditable="true">1_2</td>
-				<td id="c13" contenteditable="true">1_3</td>
-			</tr>
-			<tr>
-				<td id="c21" contenteditable="true">2_1</td>
-				<td id="c22" contenteditable="true">2_2</td>
-				<td id="c23" contenteditable="true">2_3</td>
-			</tr>
-			<tr>
-				<td id="c31" contenteditable="true">3_1</td>
-				<td id="c32" contenteditable="true">3_2</td>
-				<td id="c33" contenteditable="true">3_3</td>
-			</tr>
-		</table><br>
-		start column:
-		<select id="startCol">
-			<option value=0>1</option>
-			<option value=1 selected>2</option>
-			<option value=2>3</option>
-		</select>
-		end column:
-		<select id="endCol">
-			<option value=0>1</option>
-			<option value=1>2</option>
-			<option value=2 selected>3</option>
-		</select>
-		<br>
-		start row:
-		<select id="startRow">
-			<option value=0 selected>1</option>
-			<option value=1>2</option>
-			<option value=2>3</option>
-		</select>
-		end row:
-		<select id="endRow">
-			<option value=0>1</option>
-			<option value=1 selected>2</option>
-			<option value=2>3</option>
-		</select>
-		<br>
-		<button onclick="copyContent()">Copy</button>
 		<table border="1" id="destTable" width="500px">
 			<tr>
-				<td id="c11" contenteditable="true"></td>
+				<td id="c11" contenteditable="true" style="width:96px"></td>
 				<td id="c12" contenteditable="true"></td>
 				<td id="c13" contenteditable="true"></td>
 			</tr>
@@ -103,5 +70,10 @@
 				<td id="c33" contenteditable="true"></td>
 			</tr>
 		</table>
+		<!--
+		Even I put the element outside the above, the paste function still does not work
+		<div id="c11" contenteditable="true"></div>
+		<textarea id="c11"></textarea>
+		-->
 	</body>
 </html>
