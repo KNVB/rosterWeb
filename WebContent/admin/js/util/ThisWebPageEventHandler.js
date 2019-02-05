@@ -11,23 +11,6 @@ class ThisWebPageEventHandler
 			if (self.selectedRegion.inSelectMode)
 				self.selectedRegion.endSelect();
 		});
-		$("body").on("copy",function(event){
-			event.preventDefault();
-			event.stopPropagation();
-			console.log("Copy event");
-			var clipboard=event.originalEvent.clipboardData;
-			//self.selectedRegion.copyToClipBoard(clipboard);
-			self.selectedRegion.copy(clipboard);
-		});
-		$("body").on("paste", function(event){
-			console.log("Paste event");
-			
-			var clipboard=event.originalEvent.clipboardData;
-			//self.selectedRegion.pasteFromClipBoard(clipboard);
-			self.selectedRegion.paste(clipboard);
-			event.stopPropagation();
-			event.preventDefault();
-		});
 		$("body").keydown(function(event){
 			event.stopPropagation();
 			self._handleKeyDownEvent(event);
@@ -80,6 +63,13 @@ class ThisWebPageEventHandler
 					break;
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
+					break;
+			case 86://v
+					if (event.ctrlKey)
+					{
+						//handle ctrl-v event
+						this.selectedRegion.paste(event);
+					}
 					break;
 			default:
 					if (this.selectedRegion.isSingleCell())

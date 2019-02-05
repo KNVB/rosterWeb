@@ -7,7 +7,7 @@ class SelectedRegion
 		this._init();
 		this.copiedRegion=null;
 	}
-	copy(clipboard)
+	copy()
 	{
 		var cell1,cell2;
 		var dataRowList;
@@ -26,8 +26,6 @@ class SelectedRegion
 			this.copiedRegion.maxX=this.maxX;
 			this.copiedRegion.minY=this.minY;
 			this.copiedRegion.maxY=this.maxY;
-			clipboard.clearData();
-			clipboard.setData("text/plain","");
 			localStorage.setItem("copiedData",JSON.stringify(dataRowList));
 		}
 	}
@@ -125,7 +123,7 @@ class SelectedRegion
 	{
 		return (this.selectedCellList.length==1);
 	}
-	paste(clipboard)
+	paste(event)
 	{
 		var dataRowList=JSON.parse(localStorage.getItem("copiedData"));
 		var firstCell,textContent;
@@ -133,18 +131,22 @@ class SelectedRegion
 		{
 			if (!this.isEmpty())
 			{
-				//console.log(this.selectedCellList.length);
 				textContent=dataRowList[0][0].textContent;
-			//	clipboard.clearData();
-		    //	clipboard.setData("text/plain",textContent);
+				var inputBox=document.createElement("input");
+				$("body").append(inputBox);
+				inputBox.value=textContent;
+				inputBox.type="hidden";
+				inputBox.select();
+				
+				console.log("Copy Result="+document.execCommand("copy"));
+				
+				$(inputBox).remove();
 				firstCell=this.selectedCellList[0];
-				firstCell.focus();
+				$(firstCell).text("").focus();
+				console.log("Paste Result="+document.execCommand("paste"));				
 				
-				var e = $.Event("keydown");
-				e.which =textContent.charCodeAt(0);
-				$(firstCell).trigger(e);
-				
-				
+				//event.preventDefault();
+				//event.stopPropagation();
 			}
 		}
 	}
