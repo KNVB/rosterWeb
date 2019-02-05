@@ -15,7 +15,6 @@
 		<script>
 			$( document ).ready(function() {
 				$("td").on("paste",function(event){
-					console.log(this.textContent);
 					console.log("cell paste event");
 					var self = this;
 					setTimeout(function() {
@@ -28,34 +27,37 @@
 						case 86://v
 								if (event.ctrlKey)	
 								{
-									pasteDemo();
+									pasteDemo(event);
 								}
 					}			
 				});
 			});
-			function pasteDemo()
+			function pasteDemo(event)
 			{
 				console.log("Body Paste Event");
 				var inputBox=document.createElement("input");
-				var cell1=document.getElementById("c11");
-				var range=document.createRange();
-				var selection=window.getSelection();
+				var cell,cellNames=["c11","c12","c13"];
+				var data=["QQ","SS","RR"];
+				
 				$("body").append(inputBox);
-				inputBox.value="QQ";
-				inputBox.select();
 				
-				console.log("Copy Result="+document.execCommand("copy"));
-				cell1.focus();
+				for (var i=0;i<cellNames.length;i++)
+				{
+					cell=document.getElementById(cellNames[i]);
+					inputBox.value=data[i];
+					inputBox.select();
+					console.log("Copy Result="+document.execCommand("copy"));
+					cell.focus();
+					console.log("Paste Result="+document.execCommand("paste"));
+				}
 				$(inputBox).remove();
-				console.log("Paste Result="+document.execCommand("paste"));
-				
 			}
 		</script>	
 	</head>
 	<body>
 		<table border="1" id="destTable" width="500px">
 			<tr>
-				<td id="c11" contenteditable="true" style="width:96px"></td>
+				<td id="c11" contenteditable="true"></td>
 				<td id="c12" contenteditable="true"></td>
 				<td id="c13" contenteditable="true"></td>
 			</tr>
@@ -70,10 +72,5 @@
 				<td id="c33" contenteditable="true"></td>
 			</tr>
 		</table>
-		<!--
-		Even I put the element outside the above, the paste function still does not work
-		<div id="c11" contenteditable="true"></div>
-		<textarea id="c11"></textarea>
-		-->
 	</body>
 </html>

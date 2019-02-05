@@ -131,22 +131,9 @@ class SelectedRegion
 		{
 			if (!this.isEmpty())
 			{
-				textContent=dataRowList[0][0].textContent;
-				var inputBox=document.createElement("input");
-				$("body").append(inputBox);
-				inputBox.value=textContent;
-				inputBox.type="hidden";
-				inputBox.select();
-				
-				console.log("Copy Result="+document.execCommand("copy"));
-				
-				$(inputBox).remove();
-				firstCell=this.selectedCellList[0];
-				$(firstCell).text("").focus();
-				console.log("Paste Result="+document.execCommand("paste"));				
-				
-				//event.preventDefault();
-				//event.stopPropagation();
+				this.rosterSchedulerTable.pasteDataFromClipboard(this,dataRowList);
+				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
+				this.copiedRegion.empty();		
 			}
 		}
 	}

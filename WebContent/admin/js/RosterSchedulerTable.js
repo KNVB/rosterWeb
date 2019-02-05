@@ -458,22 +458,35 @@ class RosterSchedulerTable extends RosterTable
 	}
 	pasteDataFromClipboard(selectedRegion,dataRowList)
 	{
-		var cell,firstCell,firstDataCell;
-		var self=this,x,y;
+		var cell,destCell,dataCell,dataRow;
+		var index,self=this,x,y;
 		
+		var inputBox=document.createElement("input");
+		$("body").append(inputBox);
+
 		x=selectedRegion.minX;
 		y=selectedRegion.minY;
-		firstCell=this.getCell(y,x);
-		firstDataCell=dataRowList[0][0];
-		var index=$.inArray(firstCell,this.cursorCells);
-		dataRowList.forEach(function(dataRow){
-			dataRow.forEach(function(dataCell){
-				if (index>=self.cursorCells.length)
-					index=0;
-				$(self.cursorCells[index]).text(dataCell.textContent).blur();
-				index++;
-			});
-		});		
+		destCell=this.getCell(y,x);
+		index=$.inArray(destCell,this.cursorCells);
+		dataRow=dataRowList[0];
+		for (var j=0;j<dataRow.length;j++)
+		{
+			dataCell=dataRow[j];
+			inputBox.value=dataCell.textContent;
+			inputBox.select();
+			console.log("Copy Result="+document.execCommand("copy"));
+			
+			destCell=this.cursorCells[index];
+			$(destCell).text("").focus();
+			console.log("Paste Result="+document.execCommand("paste"));
+			index++;
+			if (index>=this.cursorCells.length)
+			{
+				index=0;
+			}	
+		}	
+		
+		$(inputBox).remove();	
 	}
 	selectCell(theCell)
 	{
