@@ -81,6 +81,14 @@ class RosterTable
 		});
 
 	}
+	destroy()
+	{
+		if (this.monthPicker!=null)
+		{	
+			this.monthPicker.destroy();
+			this.monthPicker=null;
+		}
+	}
 	markCoorindate(theCell)
 	{
 		var row=theCell.parentElement;

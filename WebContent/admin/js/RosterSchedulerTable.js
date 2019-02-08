@@ -80,6 +80,7 @@ class RosterSchedulerTable extends RosterTable
 	}	
 	destroy()
 	{
+		super.destroy();
 		this.thisWebPageEventHandler.destroy();
 		this.rosterTableEventHandler.destroy();
 	}
