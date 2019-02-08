@@ -24,15 +24,18 @@ class RosterTableEventHandler
 		cursorCells.keydown(function(event){
 			self._handleKeyDownEvent(this,event);
 		});
-		cursorCells.on("paste",function(event){
+		/*cursorCells.on("paste",function(event){
 			console.log("cell paste event");
 			var self = this;
 			setTimeout(function() {
 				self.blur();
 			}, 0);
-		});
+		});*/
 	}
-	
+	destroy()
+	{
+		$(this.cursorCells).unbind();
+	}
 	_handleKeyDownEvent(theCell,event)
 	{
 		var index,orgIndex;
@@ -64,15 +67,6 @@ class RosterTableEventHandler
 			case 46://handle delete key event
 					this._handleDeleteKeyEvent(event);
 					break;		
-			case 67://c
-					if (event.ctrlKey)
-					{
-						//handle ctrl-c event
-						event.preventDefault();
-						event.stopPropagation();
-						this.selectedRegion.copy();
-					}
-					break;
 			case 90:
 					if(event.ctrlKey)
 					{

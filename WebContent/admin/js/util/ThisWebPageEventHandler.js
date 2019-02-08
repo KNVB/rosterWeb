@@ -15,6 +15,21 @@ class ThisWebPageEventHandler
 			event.stopPropagation();
 			self._handleKeyDownEvent(event);
 		});
+		
+		$("body").on("copy",function (event){
+			event.preventDefault();
+			event.stopPropagation();
+			self.selectedRegion.copy();
+		});
+		$("body").on("paste",function (event){
+			event.preventDefault();
+			event.stopPropagation();
+			self.selectedRegion.paste(event);
+		});
+	}
+	destroy()
+	{
+		$("body").unbind();
 	}
 	_handleArrowKeyEvent(event,yOffset,xOffset)
 	{
@@ -64,20 +79,14 @@ class ThisWebPageEventHandler
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
 					break;
-			case 86://v
-					if (event.ctrlKey)
-					{
-						//handle ctrl-v event
-						this.selectedRegion.paste(event);
-					}
-					break;
-			default:
+			
+			/*default:
 					if (this.selectedRegion.isSingleCell())
 					{
 						theCell=this.rosterSchedulerTable.getCell(this.selectedRegion.minY,this.selectedRegion.minX);
 						if (!(event.altKey||event.ctrlKey||event.metaKey||event.shiftKey))
 							$(theCell).text("").focus();
-					}	
+					}*/	
 		}
 	}
 	_handleTabKeyEvent(event)

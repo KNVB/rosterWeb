@@ -73,6 +73,13 @@ class RosterScheduler
 		this.rosterSchedulerTable.setScheduler(this);
 		this.rosterSchedulerTable.build(year,month);
 	}
+	destroy()
+	{
+		this.rosterSchedulerTable.destroy();
+		this.loadingScreen=null;
+		this.utility=null;
+		this.rosterRule=null;
+	}
 	exportRosterToExcel()
 	{
 		var rosterData=this.rosterSchedulerTable.getRosterDataForExport();

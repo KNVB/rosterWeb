@@ -5,7 +5,7 @@ class SelectedRegion
 		this.inSelectMode=false;
 		this.rosterSchedulerTable=rosterSchedulerTable;
 		this._init();
-		this.copiedRegion=null;
+		this.copiedRegion=new CopiedRegion();
 	}
 	copy()
 	{
@@ -13,44 +13,16 @@ class SelectedRegion
 		var dataRowList;
 		if (!this.isEmpty())
 		{
-			dataRowList=this.rosterSchedulerTable.getDataForCopy(this);
-			if (this.copiedRegion==null)
-				this.copiedRegion=new SelectedRegion(this.rosterSchedulerTable);
-			else
-			{	
-				if (!this.copiedRegion.isEmpty())
-					this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
-			}
-			this.copiedRegion.selectedCellList=this.selectedCellList;
-			this.copiedRegion.minX=this.minX;
-			this.copiedRegion.maxX=this.maxX;
-			this.copiedRegion.minY=this.minY;
-			this.copiedRegion.maxY=this.maxY;
-			localStorage.setItem("copiedData",JSON.stringify(dataRowList));
-		}
-	}
-	copyToClipBoard(clipboard)
-	{
-		var cell1,cell2;
-		var dataRowList;
-		if (!this.isEmpty())
-		{
-			dataRowList=this.rosterSchedulerTable.getDataForCopy(this);
-			if (this.copiedRegion==null)
-				this.copiedRegion=new SelectedRegion(this.rosterSchedulerTable);
-			else
-			{	
-				if (!this.copiedRegion.isEmpty())
-					this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
-			}
-			this.copiedRegion.selectedCellList=this.selectedCellList;
-			this.copiedRegion.minX=this.minX;
-			this.copiedRegion.maxX=this.maxX;
-			this.copiedRegion.minY=this.minY;
-			this.copiedRegion.maxY=this.maxY;
+			if (!this.copiedRegion.isEmpty())
+				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
 			
-			clipboard.clearData();
-			clipboard.setData("application/json",JSON.stringify(dataRowList));
+			this.copiedRegion.selectedCellList=this.selectedCellList;
+			this.copiedRegion.minX=this.minX;
+			this.copiedRegion.maxX=this.maxX;
+			this.copiedRegion.minY=this.minY;
+			this.copiedRegion.maxY=this.maxY;
+			dataRowList=this.rosterSchedulerTable.getDataForCopy(this);
+			localStorage.setItem("copiedData",JSON.stringify(dataRowList));
 		}
 	}
 	deleteContent()
@@ -79,15 +51,9 @@ class SelectedRegion
 	}
 	empty()
 	{
-//		console.log(this.isClear());
 		if (!this.isEmpty())
 		{
 			this.rosterSchedulerTable.clearSelectedRegion(this);
-			/*if (this.copiedRegion!=null)
-			{	
-				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
-				this.copiedRegion.empty();
-			}*/
 			this._init();
 		}
 	}
@@ -123,39 +89,19 @@ class SelectedRegion
 	{
 		return (this.selectedCellList.length==1);
 	}
-	paste(event)
+	paste()
 	{
 		var dataRowList=JSON.parse(localStorage.getItem("copiedData"));
-		var firstCell,textContent;
+		
 		if (!this.copiedRegion.isEmpty())
 		{
 			if (!this.isEmpty())
 			{
-				this.rosterSchedulerTable.pasteDataFromClipboard(this,dataRowList);
 				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
+				this.rosterSchedulerTable.pasteDataFromClipboard(this,dataRowList);
 				this.copiedRegion.empty();		
-			}
+			}			
 		}
-	}
-	pasteFromClipBoard(clipboard)
-	{
-		if (!this.copiedRegion.isEmpty())
-		{
-			if (!this.isEmpty())
-			{
-				console.log("Do paste");
-				var dataRowList=JSON.parse(clipboard.getData("application/json"));
-				this.rosterSchedulerTable.pasteDataFromClipboard(this,dataRowList);
-				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
-				this.copiedRegion.empty();				
-			}	
-		}	
-	}
-	redraw()
-	{
-		var cell;
-		this.rosterSchedulerTable.clearSelectedRegion(this);
-		this.rosterSchedulerTable.setSelectedRegion(this);
 	}
 	startSelect(theCell)
 	{
@@ -242,7 +188,7 @@ class SelectedRegion
 			}
 
 		}
-	}	
+	}
 	_init()
 	{
 		this.colCount=-1;

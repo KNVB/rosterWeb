@@ -78,6 +78,11 @@ class RosterSchedulerTable extends RosterTable
 			}	
 		}
 	}	
+	destroy()
+	{
+		this.thisWebPageEventHandler.destroy();
+		this.rosterTableEventHandler.destroy();
+	}
 	enableEditMode(theCell)
 	{
 		theCell.contentEditable=true;
@@ -180,7 +185,7 @@ class RosterSchedulerTable extends RosterTable
 			else
 				if (newY<0)
 					newY=maxRowCount-1;
-			console.log(newX,newY);
+			//console.log(newX,newY);
 			index=newX+newY*Object.keys(this.dateObjList).length;
 			
 			nextCell=this.cursorCells[index];
@@ -460,33 +465,31 @@ class RosterSchedulerTable extends RosterTable
 	{
 		var cell,destCell,dataCell,dataRow;
 		var index,self=this,x,y;
-		
-		var inputBox=document.createElement("input");
-		$("body").append(inputBox);
-
 		x=selectedRegion.minX;
 		y=selectedRegion.minY;
 		destCell=this.getCell(y,x);
 		index=$.inArray(destCell,this.cursorCells);
-		dataRow=dataRowList[0];
-		for (var j=0;j<dataRow.length;j++)
+		for (var i=0;i<dataRowList.length;i++)
 		{
-			dataCell=dataRow[j];
-			inputBox.value=dataCell.textContent;
-			inputBox.select();
-			console.log("Copy Result="+document.execCommand("copy"));
-			
-			destCell=this.cursorCells[index];
-			$(destCell).text("").focus();
-			console.log("Paste Result="+document.execCommand("paste"));
-			index++;
+			dataRow=dataRowList[i];
+			for (var j=0;j<dataRow.length;j++)
+			{
+				dataCell=dataRow[j];
+				destCell=this.cursorCells[index];
+				$(destCell).text(dataCell.textContent).blur();
+				index++;
+				if (index>=this.cursorCells.length)
+				{
+					index=0;
+				}	
+			}
+			index-=j;
+			index=index+Object.keys(this.dateObjList).length;
 			if (index>=this.cursorCells.length)
 			{
 				index=0;
 			}	
-		}	
-		
-		$(inputBox).remove();	
+		}
 	}
 	selectCell(theCell)
 	{
@@ -818,8 +821,8 @@ class RosterSchedulerTable extends RosterTable
 			}
 		});
 		this.cursorCells=$("td."+this.cursorCellClassName);
-		var thisWebPageEventHandler=new ThisWebPageEventHandler(this.cursorCells,this,this.selectedRegion);
-		var rosterTableEventHandler=new RosterTableEventHandler(this.cursorCells,this,this.selectedRegion);
+		this.thisWebPageEventHandler=new ThisWebPageEventHandler(this.cursorCells,this,this.selectedRegion);
+		this.rosterTableEventHandler=new RosterTableEventHandler(this.cursorCells,this,this.selectedRegion);
 	}
 	_genYearlyStatisticReport()
 	{
