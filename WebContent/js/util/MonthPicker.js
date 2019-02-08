@@ -20,6 +20,7 @@ class MonthPicker
 		this.monthFullNames=options.monthFullNames;
 		this.monthPickTable=document.createElement("table");
 		this.monthPickTable.id="monthPickTable";
+		this.monthPickElement=$(options.elements);
 		$(this.monthPickTable).hide();
 		$("body").append(this.monthPickTable);
 		this.initYear=options.initYear;
@@ -29,12 +30,18 @@ class MonthPicker
 			self._clearMonthPickTable();
 		});
 		
-		$(options.elements).on("click",function(event){
+		$(this.monthPickElement).on("click",function(event){
 			event.stopPropagation();
 			if (self.monthPickTable.rows.length==0)
 				self._buildMonthPickTable(self.initYear,this);
 			self._showMonthPickTable(this);
 		});				
+	}
+	destroy()
+	{
+		$(document).unbind();
+		this.monthPickElement.unbind();
+		$(this.monthPickTable).remove();
 	}
 	onPick(handler)
 	{

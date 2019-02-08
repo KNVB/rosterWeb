@@ -32,6 +32,7 @@ class RosterTable
 		this.underlineTextClassName="underlineText"; 
 
 		this.dateObjList=null;
+		this.monthPicker=null;
 		this.rosterBody=document.createElement("tbody");
 		this.rosterFooter=document.createElement("tFoot");
 		this.rosterHeader=document.createElement("thead");
@@ -69,8 +70,13 @@ class RosterTable
 		this._buildTableBody();
 		this._buildTableFooter();
 
-		var mP=new MonthPicker({elements:$("#rosterMonth"),initYear:this.rosterYear,minValue: "01/2017"});
-		mP.onPick(function (year,month){
+		if (this.monthPicker!=null)
+		{	
+			this.monthPicker.destroy();
+			this.monthPicker=null;
+		}
+		this.monthPicker=new MonthPicker({elements:$("#rosterMonth"),initYear:this.rosterYear,minValue: "01/2017"});
+		this.monthPicker.onPick(function (year,month){
 			self.build(year,month);
 		});
 
