@@ -141,7 +141,9 @@ catch  (NumberFormatException nfe)
 	</tbody>
 </table>
 <% LunarDate lunarDate=myCalendarUtility.getLunarDate(LocalDate.of(2018,4,20));
-   out.println(lunarDate.solarTermInfo);
+   out.println(lunarDate.solarTermInfo+"<br>");
+   lunarDate=myCalendarUtility.getLunarDate(LocalDate.now());
+   out.println("現在是:"+lunarDate.chineseYearName+"("+lunarDate.animalOfYear+")年"+lunarDate.chineseMonthName+"月"+lunarDate.chineseDayName+"日"+lunarDate.chineseHourName+"時<br>");
 %>
 </body>
 </html>
