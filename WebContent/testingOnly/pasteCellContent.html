@@ -14,6 +14,7 @@
 		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 		<script>
 			$( document ).ready(function() {
+				$("#destTable").find("td").attr('contentEditable',true);
 				$("td").on("paste",function(event){
 					console.log("cell paste event");
 					var self = this;
@@ -21,7 +22,7 @@
 						self.blur();
 					}, 0);
 				});
-				$("body").keydown(function(event){
+				/*$("body").keydown(function(event){
 					switch (event.which)
 					{
 						case 86://v
@@ -30,17 +31,17 @@
 									pasteDemo(event);
 								}
 					}			
-				});
+				});*/
+				$("body").on("paste",pasteDemo);
 			});
 			function pasteDemo(event)
 			{
 				console.log("Body Paste Event");
 				var inputBox=document.createElement("input");
-				var cell,cellNames=["c11","c12","c13"];
+				var cell,cells,cellNames=["c11","c12","c13"];
 				var data=["QQ","SS","RR"];
 				
 				$("body").append(inputBox);
-				
 				for (var i=0;i<cellNames.length;i++)
 				{
 					cell=document.getElementById(cellNames[i]);
@@ -57,19 +58,19 @@
 	<body>
 		<table border="1" id="destTable" width="500px">
 			<tr>
-				<td id="c11" contenteditable="true"></td>
-				<td id="c12" contenteditable="true"></td>
-				<td id="c13" contenteditable="true"></td>
+				<td id="c11"></td>
+				<td id="c12"></td>
+				<td id="c13"></td>
 			</tr>
 			<tr>
-				<td id="c21" contenteditable="true"></td>
-				<td id="c22" contenteditable="true"></td>
-				<td id="c23" contenteditable="true"></td>
+				<td id="c21"></td>
+				<td id="c22"></td>
+				<td id="c23"></td>
 			</tr>
-			<tr>
-				<td id="c31" contenteditable="true"></td>
-				<td id="c32" contenteditable="true"></td>
-				<td id="c33" contenteditable="true"></td>
+			<tr> 
+				<td id="c31"></td>
+				<td id="c32"></td>
+				<td id="c33"></td>
 			</tr>
 		</table>
 	</body>
