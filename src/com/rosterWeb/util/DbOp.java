@@ -262,8 +262,8 @@ public class DbOp implements DataStore {
 				
 		logger.debug("previousMonthShiftStartDateString="+previousMonthShiftStartDateString);
 		logger.debug("previousMonthShiftEndDateString  ="+previousMonthShiftEndDateString);
-		logger.debug("thisMonthShiftEndDateString      ="+theMonthShiftEndDateString);
-		logger.debug("thisMonthShiftStartDateString    ="+theMonthShiftStartDateString);
+		logger.debug("theMonthShiftEndDateString      ="+theMonthShiftEndDateString);
+		logger.debug("theMonthShiftStartDateString    ="+theMonthShiftStartDateString);
 
 		try
 		{

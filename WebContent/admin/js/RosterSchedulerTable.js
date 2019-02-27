@@ -89,7 +89,13 @@ class RosterSchedulerTable extends RosterTable
 		theCell.contentEditable=true;
 		theCell.focus();
 	}	
-	
+	fillEmptyShiftWithO()
+	{
+		$("td."+this.shiftCellClassName).each(function(index,cell){
+			if (cell.textContent=="")
+				$(cell).text("O").blur();
+		});
+	}
 	getAllDataForSaveToDb()
 	{
 		var rosterData={},self=this;
@@ -105,10 +111,17 @@ class RosterSchedulerTable extends RosterTable
 		{
 			iTOShiftData={};
 			iTOShiftData["shiftList"]=allITOShiftData[itoId];
-			if (isNaN(self._getLastMonthBalance(itoId)))
+			/*
+			 if (isNaN(self._getLastMonthBalance(itoId)))
 				iTOShiftData["balance"]=0;
 			else
 				iTOShiftData["balance"]=self._getLastMonthBalance(itoId);
+			*/
+			if (isNaN(self._getThisMonthBalance(itoId)))
+				iTOShiftData["balance"]=0;
+			else 
+				iTOShiftData["balance"]=self._getThisMonthBalance(itoId);
+			
 			rosterData["itorosterList"][itoId]=iTOShiftData;
 			rosterData["itopreferredShiftList"][itoId]=allPreferredShiftData[itoId];
 		}	
@@ -444,7 +457,10 @@ class RosterSchedulerTable extends RosterTable
 				});
 			}
 			this.vacantShiftRow.cells[i].textContent=essentialShift;
+			if (essentialShift!="")
+				haveMissingShift=true;
 		}
+		alert("The missing shift checking has been completed.");
 		return haveMissingShift;
 	}	
 	loadRoster(finalRoster)
@@ -463,6 +479,72 @@ class RosterSchedulerTable extends RosterTable
 		this.haveMissingShift();
 	}
 	pasteDataFromClipboard(selectedRegion,dataRowList)
+	{
+		var cell,destCell,dataCell,dataDx,dataDy,dataRow,destDx,destDy;
+		var i,j,k,l,x,y,xCount,yCount;
+		dataRow=dataRowList[0];
+		destDy=selectedRegion.maxY-selectedRegion.minY+1;
+		destDx=selectedRegion.maxX-selectedRegion.minX+1;
+		dataDy=dataRowList.length;
+		dataDx=dataRow.length;
+		
+		
+		if ((destDy % dataDy==0 ) && (destDx % dataDx==0)) //if the selectedRegion width and height is multiple of the copied data
+		{
+			yCount=destDy / dataDy;
+			xCount=destDx / dataDx;
+			y=selectedRegion.minY;
+			x=selectedRegion.minX;
+			
+			//console.log(destDy,dataDy,yCount);
+			
+			for (l=0;l<yCount;l++)
+			{	
+				for (j=0;j<dataRowList.length;j++)
+				{
+					dataRow=dataRowList[j];
+					x=selectedRegion.minX;
+					for (i=0;i<xCount;i++)
+					{
+						for (k=0;k<dataRow.length;k++)
+						{
+							destCell=this.getCell(y,x++);
+							dataCell=dataRow[k];
+							$(destCell).text(dataCell.textContent).blur();
+						}
+					}
+					y++;
+				}
+			}
+		}
+		else
+		{
+			destCell=this.getCell(selectedRegion.minY,selectedRegion.minX);
+			var index=$.inArray(destCell,this.cursorCells);
+			for (i=0;i<dataRowList.length;i++)
+			{
+				dataRow=dataRowList[i];
+				for (j=0;j<dataRow.length;j++)
+				{
+					dataCell=dataRow[j];
+					destCell=this.cursorCells[index];
+					$(destCell).text(dataCell.textContent).blur();
+					index++;
+					if (index>=this.cursorCells.length)
+					{
+						index=0;
+					}	
+				}
+				index-=j;
+				index=index+Object.keys(this.dateObjList).length;
+				if (index>=this.cursorCells.length)
+				{
+					index=0;
+				}	
+			}
+		}	
+	}
+	/*pasteDataFromClipboard(selectedRegion,dataRowList)
 	{
 		var cell,destCell,dataCell,dataRow;
 		var index,self=this,x,y;
@@ -491,7 +573,7 @@ class RosterSchedulerTable extends RosterTable
 				index=0;
 			}	
 		}
-	}
+	}*/
 	selectCell(theCell)
 	{
 		theCell.focus();
@@ -987,7 +1069,18 @@ class RosterSchedulerTable extends RosterTable
 		}
 		yearlyStatisticReportDiv.append(yearlyStatisticTable);
 		return yearlyStatisticReportDiv;
-	}	
+	}
+	_getAllPreferredShiftRow()
+	{
+		var result=[];
+		var preferredShiftRow;
+		for (var itoId in this.itoList)
+		{
+			preferredShiftRow=document.getElementById("preferredShift_"+itoId);
+			result[itoId]=preferredShiftRow;
+		}
+		return result;
+	}
 	_getAllShiftRow()
 	{
 		var result=[];
@@ -1001,10 +1094,12 @@ class RosterSchedulerTable extends RosterTable
 		
 		return result;
 	}
+	
 	_getAllShiftData()
 	{
 		return this._getShiftRowData(this._getAllShiftRow(),1,Object.keys(this.dateObjList).length);
 	}
+	
 	_getData()
 	{
 		var self=this;
@@ -1017,17 +1112,6 @@ class RosterSchedulerTable extends RosterTable
 	_getLastMonthBalance(itoId)
 	{
 		return parseFloat(document.getElementById(itoId +"_lastMonthBalance").textContent);
-	}
-	_getAllPreferredShiftRow()
-	{
-		var result=[];
-		var preferredShiftRow;
-		for (var itoId in this.itoList)
-		{
-			preferredShiftRow=document.getElementById("preferredShift_"+itoId);
-			result[itoId]=preferredShiftRow;
-		}
-		return result;
 	}
 	_getShiftList(startDate,endDate)
 	{
@@ -1068,6 +1152,11 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return result;
 	}
+	_getThisMonthBalance(itoId)
+	{
+		return parseFloat(document.getElementById(itoId +"_thisMonthBalance").textContent);
+	}
+
 	_getVacantShiftData()
 	{
 		var cell,result=[];
@@ -1160,6 +1249,12 @@ class RosterSchedulerTable extends RosterTable
 		
 		autoPlannerCell=autoPlannerRow.insertCell(autoPlannerRow.cells.length);
 		autoPlannerCell.innerHTML="&nbsp;<a class=\"autoPlannerButton\">Auto Planner</a>";
+		
+		autoPlannerRow=autoPlannerTable.insertRow(autoPlannerTable.rows.length);
+		autoPlannerCell=autoPlannerRow.insertCell(autoPlannerRow.cells.length);
+		autoPlannerCell.style.textAlign="center";
+		autoPlannerCell.colSpan=3;
+		autoPlannerCell.innerHTML="<a class=\"fillEmptyShiftWithOButton\">Fill empty shift with \"O\"</a>";
 		
 		cell.append(autoPlannerTable);
 		

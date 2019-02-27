@@ -92,6 +92,10 @@ class RosterScheduler
 			alert("Export roster data to excel failure.");
 		});
 	}
+	fillEmptyShiftWithO()
+	{
+		this.rosterSchedulerTable.fillEmptyShiftWithO();
+	}
 	loadLowestSDRoster(seq)
 	{
 		this.rosterSchedulerTable.loadRoster(this.theLowestSDRosters[seq]);
@@ -120,6 +124,11 @@ class RosterScheduler
 		$(".autoPlannerButton").on("click",function(){
 			self.autoAssign();
 		});
+		
+		$(".fillEmptyShiftWithOButton").on("click",function(){
+			self.fillEmptyShiftWithO();
+		});
+		
 		
 		$(".exportButton").on("click",function(){
 			self.exportRosterToExcel();
@@ -160,6 +169,7 @@ class RosterScheduler
 			else
 			{
 				var rosterData=this.rosterSchedulerTable.getAllDataForSaveToDb();
+				
 				this.utility.saveRosterData(rosterData)
 				.done(function(serverResponse){
 					alert("All roster data are saved.");
