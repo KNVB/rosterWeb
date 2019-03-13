@@ -17,20 +17,18 @@ class RosterTableEventHandler
 			self.selectedRegion.update(this);
 			event.preventDefault();
 		});
-		cursorCells.dblclick(function(event){
+		/*cursorCells.dblclick(function(event){
 			console.log("Double click");
 			this.focus();			
-		});
+		});*/
 		cursorCells.keydown(function(event){
 			self._handleKeyDownEvent(this,event);
 		});
-		/*cursorCells.on("paste",function(event){
-			console.log("cell paste event");
-			var self = this;
-			setTimeout(function() {
-				self.blur();
-			}, 0);
-		});*/
+		cursorCells.click(function(event){
+			console.log("On click");
+			this.focus();			
+		});
+		
 	}
 	destroy()
 	{
@@ -114,6 +112,7 @@ class RosterTableEventHandler
 				nextCell=this.cursorCells[index];
 				this.selectedRegion.startSelect(nextCell);
 				this.selectedRegion.endSelect();
+				nextCell.focus();
 			}
 			else
 			{
