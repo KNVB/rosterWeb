@@ -83,7 +83,7 @@ class RosterScheduler
 	exportRosterToExcel()
 	{
 		var rosterData=this.rosterSchedulerTable.getRosterDataForExport();
-	//	console.log(rosterData);
+		console.log(rosterData);
 		this.utility.exportRosterToExcel(rosterData)
 		.done(function(){
 			alert("Export roster data to excel successfully.");
