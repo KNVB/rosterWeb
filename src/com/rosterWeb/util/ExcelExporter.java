@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,10 +15,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ComparisonOperator;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -168,6 +171,9 @@ public class ExcelExporter
 		for (int j=0;j<this.vacantShiftData.size();j++)
 		{
 			cell=vancancyShiftRow.getCell(j+1);
+			if (cell==null)
+				cell=vancancyShiftRow.createCell(j+1);
+			logger.debug("j="+j+",counter="+this.vacantShiftData.size()+",cell="+(cell==null)+","+vancancyShiftRow.getCell(j+1));
 			cell.setCellValue(this.vacantShiftData.get(j));
 		}
 		rangeString="b"+(startRowNum+1)+":af"+(startRowNum+i);

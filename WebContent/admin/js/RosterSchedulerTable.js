@@ -1162,7 +1162,8 @@ class RosterSchedulerTable extends RosterTable
 		var cell,result=[];
 		var vacancyRow=document.getElementById("vacantShiftRow");
 		var cells=$(vacancyRow).children("."+this.vacantShiftClassName);
-		for (var i=0;i<cells.length;i++)
+		
+		for (var i=0;i<Object.keys(this.dateObjList).length;i++)
 		{
 			cell=cells[i];
 			result.push(cell.textContent);
