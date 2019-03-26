@@ -13,9 +13,13 @@ class SelectedRegion
 		var dataRowList;
 		if (!this.isEmpty())
 		{
+			console.log("is copiedRegion Empty?="+this.copiedRegion.isEmpty());
 			if (!this.copiedRegion.isEmpty())
+			{	
+				console.log("Clear CopiedRegion");
+				console.log("CopiedRegion="+JSON.stringify(this.copiedRegion));
 				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
-			
+			}
 			this.copiedRegion.selectedCellList=this.selectedCellList;
 			this.copiedRegion.minX=this.minX;
 			this.copiedRegion.maxX=this.maxX;

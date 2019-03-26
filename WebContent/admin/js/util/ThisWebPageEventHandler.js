@@ -6,6 +6,7 @@ class ThisWebPageEventHandler
 		this.rosterSchedulerTable=rosterSchedulerTable;
 		this.cursorCells=cursorCells;
 		this.selectedRegion=selectedRegion;
+		//$("body").unbind();
 		$("body").mouseup(function(event){
 			event.preventDefault();
 			if (self.selectedRegion.inSelectMode)
@@ -29,6 +30,7 @@ class ThisWebPageEventHandler
 	}
 	destroy()
 	{
+		console.log("ThisWebPageEvenHandler.destroy is called.");
 		$("body").unbind();
 	}
 	_handleArrowKeyEvent(event,yOffset,xOffset)
