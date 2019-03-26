@@ -81,7 +81,7 @@ public class ExcelExporter
 		short destRowHeight;
 		String itoId,weekDayName,rangeString;
 			
-		XSSFCell cell;
+		XSSFCell cell,preCell=null;
 		XSSFColor bgColor;
 		XSSFPatternFormatting fillPattern;
 		
@@ -172,7 +172,14 @@ public class ExcelExporter
 		{
 			cell=vancancyShiftRow.getCell(j+1);
 			if (cell==null)
+			{	
 				cell=vancancyShiftRow.createCell(j+1);
+				cell.setCellStyle(preCell.getCellStyle());
+			}
+			else
+			{
+				preCell=cell;
+			}
 			logger.debug("j="+j+",counter="+this.vacantShiftData.size()+",cell="+(cell==null)+","+vancancyShiftRow.getCell(j+1));
 			cell.setCellValue(this.vacantShiftData.get(j));
 		}
