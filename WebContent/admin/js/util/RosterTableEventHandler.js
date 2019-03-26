@@ -6,7 +6,7 @@ class RosterTableEventHandler
 		this.cursorCells=cursorCells;
 		this.selectedRegion=selectedRegion;
 		this.rosterSchedulerTable=rosterSchedulerTable;
-	
+		//cursorCells.unbind();
 		cursorCells.mousedown(function(event){
 			event.preventDefault();
 		//	console.log("mouse down");
@@ -32,6 +32,7 @@ class RosterTableEventHandler
 	}
 	destroy()
 	{
+		console.log("RosterTableEventHandler.destroy is called.");
 		$(this.cursorCells).unbind();
 	}
 	_handleKeyDownEvent(theCell,event)

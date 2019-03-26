@@ -7,13 +7,17 @@ class RosterSchedulerTable extends RosterTable
 		this.errorRedBlackGroundClassName="errorRedBlackGround";
 		this.itoList;
 		this.preferredShiftList=null;
+		this.rosterTableEventHandler=null;
 		this.showNoOfPrevDate=2;
 		this.selectedRegion=null;
+		this.thisWebPageEventHandler=null;
 		this.utility=new AdminUtility();
 		this.vacantShiftClassName="vacantShift";
 		this.vacantShiftLabelClassName="vacantShiftLabel";
 		this.yearlyStatisticReportDivClassName="yearlyStatisticReportDiv";
 		this.yearlyStatisticTableClassName="yearlyStatisticTable";
+		
+
 	}
 /*==============================================================================================*
  *																				  				*
@@ -904,7 +908,16 @@ class RosterSchedulerTable extends RosterTable
 			}
 		});
 		this.cursorCells=$("td."+this.cursorCellClassName);
+		
+		if (this.thisWebPageEventHandler!=null)
+		{
+			this.thisWebPageEventHandler.destroy();
+		}	
 		this.thisWebPageEventHandler=new ThisWebPageEventHandler(this.cursorCells,this,this.selectedRegion);
+		if (this.rosterTableEventHandler!=null)
+		{
+			this.rosterTableEventHandler.destroy();
+		}
 		this.rosterTableEventHandler=new RosterTableEventHandler(this.cursorCells,this,this.selectedRegion);
 	}
 	_genYearlyStatisticReport()
