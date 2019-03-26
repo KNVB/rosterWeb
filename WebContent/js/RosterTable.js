@@ -250,7 +250,7 @@ class RosterTable
 		}	
 		var totalHour=rosterDataList.itoworkingHourPerDay*this.noOfWorkingDay;
 		thisMonthHourTotal=actualWorkingHour-totalHour;
-		thisMonthBalance=thisMonthHourTotal+rosterDataList.balance;
+		thisMonthBalance=thisMonthHourTotal+rosterDataList.lastMonthBalance;
 		cell=row.insertCell(row.cells.length);
 		cell.id=itoId+"_totalHour";
 		$(cell).addClass(this.alignCenterClassName);
@@ -301,7 +301,7 @@ class RosterTable
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 
-		this._updateShiftCount(itoId,totalHour,actualWorkingHour,rosterDataList.balance,thisMonthHourTotal,thisMonthBalance,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount);
+		this._updateShiftCount(itoId,totalHour,actualWorkingHour,rosterDataList.lastMonthBalance,thisMonthHourTotal,thisMonthBalance,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount);
 	}
 	_buildHolidayRow()
 	{
@@ -704,11 +704,11 @@ class RosterTable
 			 });
 		});
 	}
-	_updateShiftCount(itoId,totalHour,actualWorkingHour,balance,thisMonthHourTotal,thisMonthBalance,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount)
+	_updateShiftCount(itoId,totalHour,actualWorkingHour,lastMonthBalance,thisMonthHourTotal,thisMonthBalance,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount)
 	{
 		document.getElementById(itoId+"_totalHour").textContent=this.utility.roundTo(totalHour,2);
 		document.getElementById(itoId+"_actualHour").textContent=this.utility.roundTo(actualWorkingHour,2);
-		document.getElementById(itoId+"_lastMonthBalance").textContent=this.utility.roundTo(balance,2);
+		document.getElementById(itoId+"_lastMonthBalance").textContent=this.utility.roundTo(lastMonthBalance,2);
 		document.getElementById(itoId+"_thisMonthHourTotal").textContent=this.utility.roundTo(thisMonthHourTotal,2);
 		document.getElementById(itoId+"_thisMonthBalance").textContent=this.utility.roundTo(thisMonthBalance,2);
 		document.getElementById(itoId+"_aShiftCount").textContent=aShiftCount;

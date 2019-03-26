@@ -8,7 +8,7 @@ public class ITORoster
 	 * For retrieving data from database variable balance is referred to last month balance.
 	 * For update data to database variable balance is referred to this month balance
 	 */	
-	private float balance;
+	private float lastMonthBalance,thisMonthBalance;
 	private Map<Integer,String>shiftList;
 	private Map<Integer,String>previousMonthShiftList;
 	
@@ -24,13 +24,7 @@ public class ITORoster
 	 * The total no. of working hour per day for the specified ITO.
 	 */
 	private float workingHourPerDay;
-	/**
-	 * Get Balance value(For retrieving data from database variable balance is referred to last month balance.<br>For update data to database variable balance is referred to this month balance)
-	 * @return balance value  
-	 */
-	public float getBalance() {
-		return balance;
-	}
+	
 	/**
 	 * Get the name of the specified ITO.
 	 * @return the name of the specified ITO.
@@ -65,15 +59,35 @@ public class ITORoster
 	 */
 	public Map<Integer, String> getShiftList() {
 		return shiftList;
+	}	
+	/**
+	 * Get the last month balance of the ITO
+	 * @return the last month balance of the ITO
+	 */
+	public float getLastMonthBalance() {
+		return lastMonthBalance;
 	}
 	/**
-	 * Set balance value(For retrieving data from database variable balance is referred to last month balance.<br>For update data to database variable balance is referred to this month balance) 
-	 * @param balance balance value
+	 * Set the last month balance of the ITO
+	 * @param lastMonthBalance the last month balance of the ITO
 	 */
-	public void setBalance(float balance) {
-		this.balance = balance;
+	public void setLastMonthBalance(float lastMonthBalance) {
+		this.lastMonthBalance = lastMonthBalance;
 	}
-	
+	/**
+	 * Get this month balance of the ITO
+	 * @return this month balance of the ITO
+	 */
+	public float getThisMonthBalance() {
+		return thisMonthBalance;
+	}
+	/**
+	 * Set this month balance of the ITO
+	 * @param thisMonthBalance this month balance of the ITO
+	 */
+	public void setThisMonthBalance(float thisMonthBalance) {
+		this.thisMonthBalance = thisMonthBalance;
+	}
 	/**
 	 * Set Shift list
 	 * @param shiftList Shift list
