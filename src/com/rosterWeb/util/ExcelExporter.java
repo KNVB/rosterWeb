@@ -81,7 +81,7 @@ public class ExcelExporter
 		short destRowHeight;
 		String itoId,weekDayName,rangeString;
 			
-		XSSFCell cell;
+		XSSFCell cell,preCell=null;
 		XSSFColor bgColor;
 		XSSFPatternFormatting fillPattern;
 		
@@ -165,14 +165,21 @@ public class ExcelExporter
 			cell=destRow.getCell(32);
 			cell.setCellValue(ito.getWorkingHourPerDay()*noOfWorkingDay);
 			cell=destRow.getCell(34);
-			cell.setCellValue(iTORosterList.get(itoId).getBalance());
+			cell.setCellValue(iTORosterList.get(itoId).getLastMonthBalance());
 		}
 		vancancyShiftRow=sheet1.getRow(startRowNum+i);
 		for (int j=0;j<this.vacantShiftData.size();j++)
 		{
 			cell=vancancyShiftRow.getCell(j+1);
 			if (cell==null)
+			{	
 				cell=vancancyShiftRow.createCell(j+1);
+				cell.setCellStyle(preCell.getCellStyle());
+			}
+			else
+			{
+				preCell=cell;
+			}
 			logger.debug("j="+j+",counter="+this.vacantShiftData.size()+",cell="+(cell==null)+","+vancancyShiftRow.getCell(j+1));
 			cell.setCellValue(this.vacantShiftData.get(j));
 		}

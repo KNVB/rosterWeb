@@ -277,9 +277,9 @@ public class DbOp implements DataStore {
 				stmt.setString(2,theMonthShiftStartDateString);
 				rs=stmt.executeQuery();
 				if (rs.next())
-					itoRoster.setBalance(rs.getFloat("balance"));
+					itoRoster.setLastMonthBalance(rs.getFloat("balance"));
 				else
-					itoRoster.setBalance(0);
+					itoRoster.setLastMonthBalance(0);
 				stmt.close();
 				rs.close();
 				
@@ -540,16 +540,16 @@ public class DbOp implements DataStore {
 			balanceCalendar=balanceCalendar.plusMonths(1);
 			Map<String,ITORoster>iTORosterList=roster.getITORosterList();
 			Map<String,Map<Integer,String>>iTOPreferredShiftList=roster.getITOPreferredShiftList();
-			balanceCalendar.plusMonths(1);
+
 			dbConn.setAutoCommit(false);
-			
+
 			logger.info("Update roster data transaction start.");
 			logger.debug("===============================");
 			logger.debug("year="+year+",month="+month);
 			for (String itoId:iTORosterList.keySet())
 			{
 				logger.debug("itoId="+itoId);
-				logger.debug("balance="+iTORosterList.get(itoId).getBalance());
+				logger.debug("balance="+iTORosterList.get(itoId).getThisMonthBalance());
 				logger.debug("Roster Month="+calendarObj.getYear()+"/"+calendarObj.getMonthValue()+"/"+calendarObj.getDayOfMonth());
 				logger.debug("===============================");
 				
@@ -558,7 +558,7 @@ public class DbOp implements DataStore {
 				stmt=dbConn.prepareStatement(sqlString);
 				stmt.setString(1,itoId);
 				stmt.setDate(2,java.sql.Date.valueOf(balanceCalendar));
-				stmt.setFloat(3, iTORosterList.get(itoId).getBalance());
+				stmt.setFloat(3, iTORosterList.get(itoId).getThisMonthBalance());
 				stmt.executeUpdate();
 				stmt.clearParameters();
 				stmt.close();

@@ -111,16 +111,16 @@ class RosterSchedulerTable extends RosterTable
 		{
 			iTOShiftData={};
 			iTOShiftData["shiftList"]=allITOShiftData[itoId];
-			/*
+			
 			 if (isNaN(self._getLastMonthBalance(itoId)))
-				iTOShiftData["balance"]=0;
+				iTOShiftData["lastMonthBalance"]=0;
 			else
-				iTOShiftData["balance"]=self._getLastMonthBalance(itoId);
-			*/
+				iTOShiftData["lastMonthBalance"]=self._getLastMonthBalance(itoId);
+			
 			if (isNaN(self._getThisMonthBalance(itoId)))
-				iTOShiftData["balance"]=0;
+				iTOShiftData["thisMonthBalance"]=0;
 			else 
-				iTOShiftData["balance"]=self._getThisMonthBalance(itoId);
+				iTOShiftData["thisMonthBalance"]=self._getThisMonthBalance(itoId);
 			
 			rosterData["itorosterList"][itoId]=iTOShiftData;
 			rosterData["itopreferredShiftList"][itoId]=allPreferredShiftData[itoId];
