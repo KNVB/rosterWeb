@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,6 +38,7 @@ public class DbOp implements DataStore {
 	private String jdbcDriver =Utility.getParameterValue("jdbcDriver");
 	private String jdbcURL = new String("jdbc:");
 	private String sqlString;
+	private String shiftDateFormat="yyyy-MM-dd";
 	
 	private static final Logger logger = LogManager.getLogger(Class.class.getSimpleName());
 	/**
@@ -121,7 +123,7 @@ public class DbOp implements DataStore {
 	@Override
 	public Map<String, ITO> getITOList(int year, int month) {
 		ITO ito=null;
-		int lastDay;
+
 		ResultSet rs = null;
 		
 		PreparedStatement stmt = null;
@@ -130,10 +132,10 @@ public class DbOp implements DataStore {
 		LocalDate joinDate,leaveDate;
 		LocalDate theFirstDateOfTheMonth=LocalDate.of(year,month,1);
 		Map<String,ITO> result=new TreeMap<String,ITO>();
-		lastDay=theFirstDateOfTheMonth.getMonth().length(theFirstDateOfTheMonth.isLeapYear());
-		String firstDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-1";
-		String endDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-"+lastDay;
-	
+
+		String firstDateString=year+"-"+month+"-1";
+		String endDateString=theFirstDateOfTheMonth.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern(shiftDateFormat));
+		
 		logger.debug("startDateString="+firstDateString);
 		logger.debug("endDateString="+endDateString);
 		
@@ -194,15 +196,15 @@ public class DbOp implements DataStore {
 	@Override
 	public Map<String, Map<Integer, String>> getPreferredShiftList(int year, int month, String[] itoIdList)
 	{
-		LocalDate theMonthShiftStartDate=LocalDate.of(year,month,1);
+		LocalDate theMonthShiftStartDate=LocalDate.of(year,month,1);	
 		Map<Integer,String>preferredShiftList;
 		Map<String, Map<Integer, String>>result=new TreeMap<String, Map<Integer, String>>();
-		int lastDayOfThisMonth;
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
-		lastDayOfThisMonth=theMonthShiftStartDate.getMonth().length(theMonthShiftStartDate.isLeapYear());
-		String theMonthShiftEndDateString=year+"-"+month+"-"+lastDayOfThisMonth;
+		
 		String theMonthShiftStartDateString=year+"-"+month+"-1";
+		String theMonthShiftEndDateString=theMonthShiftStartDate.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern(shiftDateFormat));
+		
 		try
 		{
 			for (String itoId :itoIdList)
@@ -235,7 +237,6 @@ public class DbOp implements DataStore {
 	}
 	@Override
 	public Map<String, ITORoster> getITORosterList(int year, int month, String[] itoIdList) {
-		int lastDayOfThisMonth;
 		String temp;
 		ResultSet rs = null;
 		ITORoster itoRoster=null;
@@ -245,26 +246,22 @@ public class DbOp implements DataStore {
 		Map<Integer,String> previousMonthShiftList=new TreeMap<Integer,String>();
 		Map<String, ITORoster> result=new TreeMap<String, ITORoster>();
 		
-		LocalDate previousMonthShiftEndDate=LocalDate.of(year, month,1);
-		LocalDate previousMonthShiftStartDate=LocalDate.of(year,month,1);
 		LocalDate theMonthShiftStartDate=LocalDate.of(year,month,1);
+		LocalDate previousMonthShiftStartDate=theMonthShiftStartDate.minusDays(RosterRule.getMaxConsecutiveWorkingDay());
+		LocalDate previousMonthShiftEndDate=previousMonthShiftStartDate.with(TemporalAdjusters.lastDayOfMonth());
 		
-		previousMonthShiftStartDate=previousMonthShiftStartDate.minusDays(RosterRule.getMaxConsecutiveWorkingDay());
-		previousMonthShiftEndDate=previousMonthShiftEndDate.minusDays(1);
+		String previousMonthShiftStartDateString=previousMonthShiftStartDate.format(DateTimeFormatter.ofPattern(shiftDateFormat));
+		String previousMonthShiftEndDateString=previousMonthShiftEndDate.format(DateTimeFormatter.ofPattern(shiftDateFormat));
 		
-		lastDayOfThisMonth=theMonthShiftStartDate.getMonth().length(theMonthShiftStartDate.isLeapYear());
-		
-		String previousMonthShiftStartDateString=previousMonthShiftStartDate.getYear()+"-"+previousMonthShiftStartDate.getMonthValue()+"-"+previousMonthShiftStartDate.getDayOfMonth();
-		String previousMonthShiftEndDateString=previousMonthShiftEndDate.getYear()+"-"+previousMonthShiftEndDate.getMonthValue()+"-"+previousMonthShiftEndDate.getDayOfMonth();
-		
-		String theMonthShiftStartDateString=theMonthShiftStartDate.getYear()+"-"+theMonthShiftStartDate.getMonthValue()+"-1";
-		String theMonthShiftEndDateString=theMonthShiftStartDate.getYear()+"-"+theMonthShiftStartDate.getMonthValue()+"-"+lastDayOfThisMonth;
-				
+		String theMonthShiftStartDateString=theMonthShiftStartDate.format(DateTimeFormatter.ofPattern(shiftDateFormat));
+		String theMonthShiftEndDateString=theMonthShiftStartDate.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern(shiftDateFormat));	
+
+		logger.debug("theMonthShiftStartDateString    ="+theMonthShiftStartDateString);
+		logger.debug("theMonthShiftEndDateString      =|"+theMonthShiftEndDateString+"|");
+
 		logger.debug("previousMonthShiftStartDateString="+previousMonthShiftStartDateString);
 		logger.debug("previousMonthShiftEndDateString  ="+previousMonthShiftEndDateString);
-		logger.debug("theMonthShiftEndDateString      ="+theMonthShiftEndDateString);
-		logger.debug("theMonthShiftStartDateString    ="+theMonthShiftStartDateString);
-
+		
 		try
 		{
 			int counter;
@@ -397,15 +394,14 @@ public class DbOp implements DataStore {
 	@Override
 	public Map<String, ITOYearlyStatistic> getYearlyRosterStatistic(int year, int month) 
 	{
-		int lastDay;
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		MonthlyStatistic monthlyStatistic =null;
 		ITOYearlyStatistic iTOYearlyStatistic=null;
 		LocalDate theFirstDateOfTheMonth=LocalDate.of(year,month,1);
-		lastDay=theFirstDateOfTheMonth.getMonth().length(theFirstDateOfTheMonth.isLeapYear());
-		String startDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-1";
-		String endDateString=theFirstDateOfTheMonth.getYear()+"-"+theFirstDateOfTheMonth.getMonthValue()+"-"+lastDay;
+		
+		String startDateString=year+"-"+month+"-1";
+		String endDateString=theFirstDateOfTheMonth.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern(shiftDateFormat));
 		
 		Map<String,ITOYearlyStatistic> result=new TreeMap<String, ITOYearlyStatistic>();
 		logger.debug("startDateString="+startDateString);
@@ -470,7 +466,7 @@ public class DbOp implements DataStore {
 	@Override
 	public void updateITOInfo(ITO ito) 
 	{
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(shiftDateFormat);
 		PreparedStatement stmt=null;
 		String availableShiftList=new String();
 		StringBuilder sb = new StringBuilder();
@@ -535,9 +531,9 @@ public class DbOp implements DataStore {
 		try
 		{	
 			LocalDate calendarObj=LocalDate.of(year,month,1);
-			LocalDate balanceCalendar=LocalDate.of(year,month,1);
+			LocalDate balanceCalendar=calendarObj.plusMonths(1);
 			
-			balanceCalendar=balanceCalendar.plusMonths(1);
+			
 			Map<String,ITORoster>iTORosterList=roster.getITORosterList();
 			Map<String,Map<Integer,String>>iTOPreferredShiftList=roster.getITOPreferredShiftList();
 
@@ -571,7 +567,7 @@ public class DbOp implements DataStore {
 				stmt.executeUpdate();
 				stmt.close();
 				
-				logger.debug("Shift List:");
+				logger.debug(itoId+" Shift List:");
 				sqlString="replace into shift_record (ito_id,shift_date,shift,state) values (?,?,?,?)";
 				shiftList=iTORosterList.get(itoId).getShiftList();
 				Set<Integer> dateList =shiftList.keySet();

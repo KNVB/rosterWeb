@@ -61,6 +61,7 @@ class RosterTableEventHandler
 					break;
 			case 27://handle "Esc" key event
 					theCell.blur();
+					console.log("Esc key event in roster table");
 					event.stopPropagation();
 					break;				
 			case 46://handle delete key event
