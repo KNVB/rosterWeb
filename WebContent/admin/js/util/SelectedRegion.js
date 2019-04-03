@@ -55,6 +55,8 @@ class SelectedRegion
 	}
 	empty()
 	{
+		if (!this.copiedRegion.isEmpty())
+			this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
 		if (!this.isEmpty())
 		{
 			this.rosterSchedulerTable.clearSelectedRegion(this);

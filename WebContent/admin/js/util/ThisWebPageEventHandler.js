@@ -66,6 +66,7 @@ class ThisWebPageEventHandler
 			case 18://handle alt key	
 					break;		
 			case 27://handle "Esc" key event
+					console.log("Esc key event in web page.");
 					this.selectedRegion.empty();
 					event.stopPropagation();
 					break;
