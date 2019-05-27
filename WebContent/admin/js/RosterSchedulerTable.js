@@ -908,7 +908,7 @@ class RosterSchedulerTable extends RosterTable
 			}
 		});
 		this.cursorCells=$("td."+this.cursorCellClassName);
-		
+		/*
 		if (this.thisWebPageEventHandler!=null)
 		{
 			this.thisWebPageEventHandler.destroy();
@@ -919,6 +919,7 @@ class RosterSchedulerTable extends RosterTable
 			this.rosterTableEventHandler.destroy();
 		}
 		this.rosterTableEventHandler=new RosterTableEventHandler(this.cursorCells,this,this.selectedRegion);
+		*/
 	}
 	_genYearlyStatisticReport()
 	{
