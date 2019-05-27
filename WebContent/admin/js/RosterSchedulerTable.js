@@ -85,8 +85,8 @@ class RosterSchedulerTable extends RosterTable
 	destroy()
 	{
 		super.destroy();
-		this.thisWebPageEventHandler.destroy();
-		this.rosterTableEventHandler.destroy();
+		//this.thisWebPageEventHandler.destroy();
+		//this.rosterTableEventHandler.destroy();
 	}
 	enableEditMode(theCell)
 	{
