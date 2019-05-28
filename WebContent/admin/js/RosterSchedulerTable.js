@@ -4,20 +4,18 @@ class RosterSchedulerTable extends RosterTable
 	{
 		super(container);
 		this.cursorCells=null;
+		this.dragSelector=null;
 		this.errorRedBlackGroundClassName="errorRedBlackGround";
 		this.itoList;
 		this.preferredShiftList=null;
 		this.rosterTableEventHandler=null;
 		this.showNoOfPrevDate=2;
-		this.selectedRegion=null;
 		this.thisWebPageEventHandler=null;
 		this.utility=new AdminUtility();
 		this.vacantShiftClassName="vacantShift";
 		this.vacantShiftLabelClassName="vacantShiftLabel";
 		this.yearlyStatisticReportDivClassName="yearlyStatisticReportDiv";
 		this.yearlyStatisticTableClassName="yearlyStatisticTable";
-		
-
 	}
 /*==============================================================================================*
  *																				  				*
@@ -178,58 +176,7 @@ class RosterSchedulerTable extends RosterTable
 	{
 		return parseInt($("#iterationCount").val());
 	}
-	getNextCellInRosterTable(yOffset,xOffset)
-	{
-		var theCell=this.getCell(this.selectedRegion.minY,this.selectedRegion.minX);
-		var index;
-		var maxRowCount=Object.keys(this.itoList).length*2;
-		var orgIndex=$.inArray(theCell,this.cursorCells);
-		var nextCell;
-		
-		if (this.selectedRegion.isSingleCell())
-		{
-			var newX=orgIndex % Object.keys(this.dateObjList).length;
-			var newY=(orgIndex-newX)/Object.keys(this.dateObjList).length;
-			
-			newX+=xOffset;
-			if (newX>=Object.keys(this.dateObjList).length)
-				newX=0;
-			else
-				if (newX<0)
-					newX=Object.keys(this.dateObjList).length-1;
-			newY+=yOffset;
-			if (newY>=maxRowCount)
-				newY=0;
-			else
-				if (newY<0)
-					newY=maxRowCount-1;
-			//console.log(newX,newY);
-			index=newX+newY*Object.keys(this.dateObjList).length;
-			
-			nextCell=this.cursorCells[index];
-			return nextCell;
-		}
-	}
-	getNextCellInSelectedRegion(theCell,yOffset,xOffset)
-	{
-		var index;
-		var nextCell;
-		index=$.inArray(theCell,this.selectedRegion.selectedCellList);
-		console.log("before:"+index);
-		index+=yOffset*this.selectedRegion.colCount;
-		index+=xOffset;
-		if (index<0)
-			index=this.selectedRegion.selectedCellList.length-1;
-		else
-		{	
-			if (index>=this.selectedRegion.selectedCellList.length)
-			{
-				index=0;
-			}						
-		}
-		nextCell=this.selectedRegion.selectedCellList[index];
-		return nextCell;
-	}
+	
 	getPreviouseShiftList(startDate)
 	{
 		var i,j,itoRoster;
@@ -482,102 +429,7 @@ class RosterSchedulerTable extends RosterTable
 		}
 		this.haveMissingShift();
 	}
-	pasteDataFromClipboard(selectedRegion,dataRowList)
-	{
-		var cell,destCell,dataCell,dataDx,dataDy,dataRow,destDx,destDy;
-		var i,j,k,l,x,y,xCount,yCount;
-		dataRow=dataRowList[0];
-		destDy=selectedRegion.maxY-selectedRegion.minY+1;
-		destDx=selectedRegion.maxX-selectedRegion.minX+1;
-		dataDy=dataRowList.length;
-		dataDx=dataRow.length;
-		
-		
-		if ((destDy % dataDy==0 ) && (destDx % dataDx==0)) //if the selectedRegion width and height is multiple of the copied data
-		{
-			yCount=destDy / dataDy;
-			xCount=destDx / dataDx;
-			y=selectedRegion.minY;
-			x=selectedRegion.minX;
-			
-			//console.log(destDy,dataDy,yCount);
-			
-			for (l=0;l<yCount;l++)
-			{	
-				for (j=0;j<dataRowList.length;j++)
-				{
-					dataRow=dataRowList[j];
-					x=selectedRegion.minX;
-					for (i=0;i<xCount;i++)
-					{
-						for (k=0;k<dataRow.length;k++)
-						{
-							destCell=this.getCell(y,x++);
-							dataCell=dataRow[k];
-							$(destCell).text(dataCell.textContent).blur();
-						}
-					}
-					y++;
-				}
-			}
-		}
-		else
-		{
-			destCell=this.getCell(selectedRegion.minY,selectedRegion.minX);
-			var index=$.inArray(destCell,this.cursorCells);
-			for (i=0;i<dataRowList.length;i++)
-			{
-				dataRow=dataRowList[i];
-				for (j=0;j<dataRow.length;j++)
-				{
-					dataCell=dataRow[j];
-					destCell=this.cursorCells[index];
-					$(destCell).text(dataCell.textContent).blur();
-					index++;
-					if (index>=this.cursorCells.length)
-					{
-						index=0;
-					}	
-				}
-				index-=j;
-				index=index+Object.keys(this.dateObjList).length;
-				if (index>=this.cursorCells.length)
-				{
-					index=0;
-				}	
-			}
-		}	
-	}
-	/*pasteDataFromClipboard(selectedRegion,dataRowList)
-	{
-		var cell,destCell,dataCell,dataRow;
-		var index,self=this,x,y;
-		x=selectedRegion.minX;
-		y=selectedRegion.minY;
-		destCell=this.getCell(y,x);
-		index=$.inArray(destCell,this.cursorCells);
-		for (var i=0;i<dataRowList.length;i++)
-		{
-			dataRow=dataRowList[i];
-			for (var j=0;j<dataRow.length;j++)
-			{
-				dataCell=dataRow[j];
-				destCell=this.cursorCells[index];
-				$(destCell).text(dataCell.textContent).blur();
-				index++;
-				if (index>=this.cursorCells.length)
-				{
-					index=0;
-				}	
-			}
-			index-=j;
-			index=index+Object.keys(this.dateObjList).length;
-			if (index>=this.cursorCells.length)
-			{
-				index=0;
-			}	
-		}
-	}*/
+	
 	selectCell(theCell)
 	{
 		theCell.focus();
@@ -844,7 +696,6 @@ class RosterSchedulerTable extends RosterTable
 		for (i=Object.keys(this.dateObjList).length;i<31;i++)
 		{
 			cell=row.insertCell(row.cells.length);
-			//cell.className="alignCenter borderCell vacantShift";
 			$(cell).addClass(this.alignCenterClassName);
 			$(cell).addClass(this.borderCellClassName);
 			$(cell).addClass(this.vacantShiftClassName);
@@ -860,66 +711,36 @@ class RosterSchedulerTable extends RosterTable
 		});
 
 		cell=row.insertCell(row.cells.length);
-		//cell.className="alignCenter borderCell";
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.colSpan=5;
 				
 		cell=row.insertCell(row.cells.length);
-		//cell.className="alignCenter borderCell";
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.id="shiftAStdDev";
 		
 		cell=row.insertCell(row.cells.length);
-		//cell.className="alignCenter borderCell";
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.id="shiftBStdDev";		
 		
 		cell=row.insertCell(row.cells.length);
-		//cell.className="alignCenter borderCell";
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.id="shiftCStdDev";
 		
 		cell=row.insertCell(row.cells.length);
-		//cell.className="alignCenter borderCell";
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.id="avgStdDev";		
 
 		cell=row.insertCell(row.cells.length);
-		//cell.className="alignCenter borderCell";
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 
 		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
-		$("td."+this.cursorCellClassName).attr('contentEditable',true);
-		//var shiftCellSelector=new ShiftCellSelector(this,"cursorCell");
-		var firstCell=$("td."+this.cursorCellClassName)[0];
-		this.selectedRegion=new SelectedRegion(this);
-		$("td."+this.cursorCellClassName).focus(function (){
-			console.log("td."+self.cursorCellClassName+" on focus.");
-			if (self.selectedRegion.isEmpty())
-			{
-				self.selectedRegion.startSelect(this);
-				self.selectedRegion.endSelect();
-			}
-		});
-		this.cursorCells=$("td."+this.cursorCellClassName);
-		/*
-		if (this.thisWebPageEventHandler!=null)
-		{
-			this.thisWebPageEventHandler.destroy();
-		}	
-		this.thisWebPageEventHandler=new ThisWebPageEventHandler(this.cursorCells,this,this.selectedRegion);
-		if (this.rosterTableEventHandler!=null)
-		{
-			this.rosterTableEventHandler.destroy();
-		}
-		this.rosterTableEventHandler=new RosterTableEventHandler(this.cursorCells,this,this.selectedRegion);
-		*/
+		
 	}
 	_genYearlyStatisticReport()
 	{

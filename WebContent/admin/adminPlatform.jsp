@@ -43,11 +43,8 @@
 		<script src="<%=request.getContextPath()%>/admin/js/RosterSchedulerTable.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterScheduler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
-		<script src="<%=request.getContextPath()%>/admin/js/util/CopiedRegion.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/DragSelector.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/LoadingScreen.js"></script>
-		<script src="<%=request.getContextPath()%>/admin/js/util/RosterTableEventHandler.js"></script>
-		<script src="<%=request.getContextPath()%>/admin/js/util/SelectedRegion.js"></script>
-		<script src="<%=request.getContextPath()%>/admin/js/util/ThisWebPageEventHandler.js"></script>
 		<script>
 			var rosterScheduler=null,itoManagement=null;
 			/* Set the width of the side navigation to 250px */
