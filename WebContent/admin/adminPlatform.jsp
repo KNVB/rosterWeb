@@ -29,7 +29,7 @@
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/admin/css/style.css">
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/webjars/jquery-ui/1.12.1/jquery-ui.min.css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-		
+		<script src="https://rawcdn.githack.com/zenorocha/clipboard.js/v2.0.0/dist/clipboard.min.js"></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery/3.3.1/jquery.min.js"></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>
 		<script src="<%=request.getContextPath()%>/js/RosterRule.jsp"></script>
@@ -43,8 +43,10 @@
 		<script src="<%=request.getContextPath()%>/admin/js/RosterSchedulerTable.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterScheduler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
-		<script src="<%=request.getContextPath()%>/admin/js/util/DragSelector.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/CursorCellEventHandler.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/HtmlBodyEventHandler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/LoadingScreen.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/SelectedRegion.js"></script>
 		<script>
 			var rosterScheduler=null,itoManagement=null;
 			/* Set the width of the side navigation to 250px */

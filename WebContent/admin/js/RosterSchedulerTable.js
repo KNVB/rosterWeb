@@ -598,6 +598,13 @@ class RosterSchedulerTable extends RosterTable
 		this.genResultTable=document.getElementById("genResult");
 		$(this.genResultTable).show();
 	}
+	unselectCell(theCell)
+	{
+		$(theCell).removeClass("selectCellBorderRight");
+		$(theCell).removeClass("selectCellBorderTop");
+		$(theCell).removeClass("selectCellBorderBottom");
+		$(theCell).removeClass("selectCellBorderLeft");
+	}
 //======================================================================
 	_buildITORow(itoId)
 	{
@@ -665,21 +672,19 @@ class RosterSchedulerTable extends RosterTable
 		row.id="vacantShiftRow";
 		this.vacantShiftRow=row;
 		cell.textContent="Vacant Shifts";
-		//cell.className="vacantShiftLabel borderCell";
+		
 		$(cell).addClass(this.vacantShiftLabelClassName);
 		$(cell).addClass(this.borderCellClassName);
 		
 		for (i=0;i<this.showNoOfPrevDate;i++)
 		{
 			cell=row.insertCell(row.cells.length);
-			//cell.className="alignCenter borderCell";
-			$(cell).addClass(this.alignCenterClassName);
+					$(cell).addClass(this.alignCenterClassName);
 			$(cell).addClass(this.borderCellClassName);
 		}
 		Object.keys(this.dateObjList).forEach(function(date){
 			var essentialShift=self.rosterRule.getEssentialShift();
 			cell=row.insertCell(row.cells.length);
-			//cell.className="alignCenter borderCell vacantShift";
 			$(cell).addClass(self.alignCenterClassName);
 			$(cell).addClass(self.borderCellClassName);
 			$(cell).addClass(self.vacantShiftClassName);
@@ -741,6 +746,9 @@ class RosterSchedulerTable extends RosterTable
 
 		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
 		
+		var selectedRegion=new SelectedRegion(this);
+		this.cursorCellEventHandler=new CursorCellEventHandler($("td."+this.cursorCellClassName),this,selectedRegion);
+		this.htmlBodyEventHandler=new HtmlBodyEventHandler(this,selectedRegion);
 	}
 	_genYearlyStatisticReport()
 	{
@@ -754,44 +762,44 @@ class RosterSchedulerTable extends RosterTable
 		row=yearlyStatisticTable.insertRow(yearlyStatisticTable.rows.length);
 		
 		cell=row.insertCell(row.cells.length);
-		//cell.className="borderCell alignCenter";
+		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="ITO";
 		
 		cell=row.insertCell(row.cells.length);
-		//cell.className="borderCell alignCenter";
+		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="a";
 		
 		cell=row.insertCell(row.cells.length);
-		//cell.className="borderCell alignCenter";
+		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 
 		cell.textContent="bx";
 		
 		cell=row.insertCell(row.cells.length);
-		//cell.className="borderCell alignCenter";
+		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="c";
 		
 		cell=row.insertCell(row.cells.length);
-		//cell.className="borderCell alignCenter";
+		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="dx";
 		
 		cell=row.insertCell(row.cells.length);
-		//cell.className="borderCell alignCenter";
+		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="O";
 
 		cell=row.insertCell(row.cells.length);
-		//cell.className="borderCell alignCenter";
+		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="Total";
@@ -813,44 +821,37 @@ class RosterSchedulerTable extends RosterTable
 				}
 				row=yearlyStatisticTable.insertRow(yearlyStatisticTable.rows.length);
 				cell=row.insertCell(row.cells.length);
-				//cell.className="borderCell alignCenter";
 				$(cell).addClass(self.alignCenterClassName);
 				$(cell).addClass(self.borderCellClassName);
 				cell.textContent=self.yearlyStatistic[itoId].itoPostName;
 				
 				cell=row.insertCell(row.cells.length);
-				//cell.className="borderCell alignCenter";
 				$(cell).addClass(self.alignCenterClassName);
 				$(cell).addClass(self.borderCellClassName);
 				cell.textContent=aShiftTotal;
 
 				cell=row.insertCell(row.cells.length);
-				//cell.className="borderCell alignCenter";
 				$(cell).addClass(self.alignCenterClassName);
 				$(cell).addClass(self.borderCellClassName);				
 				cell.textContent=bxShiftTotal;
 
 				cell=row.insertCell(row.cells.length);
-				//cell.className="borderCell alignCenter";
 				$(cell).addClass(self.alignCenterClassName);
 				$(cell).addClass(self.borderCellClassName);			
 				cell.textContent=cShiftTotal;
 				
 				cell=row.insertCell(row.cells.length);
-				//cell.className="borderCell alignCenter";
 				$(cell).addClass(self.alignCenterClassName);
 				$(cell).addClass(self.borderCellClassName);
 				cell.textContent=dxShiftTotal;
 
 				cell=row.insertCell(row.cells.length);
-				//cell.className="borderCell alignCenter";
 				$(cell).addClass(self.alignCenterClassName);
 				$(cell).addClass(self.borderCellClassName);			
 				cell.textContent=oShiftTotal;
 
 				finalTotal=oShiftTotal+cShiftTotal+aShiftTotal+dxShiftTotal+bxShiftTotal;
 				cell=row.insertCell(row.cells.length);
-				//cell.className="borderCell alignCenter";
 				$(cell).addClass(self.alignCenterClassName);
 				$(cell).addClass(self.borderCellClassName);
 				cell.textContent=finalTotal;
@@ -859,43 +860,36 @@ class RosterSchedulerTable extends RosterTable
 				{
 					row=yearlyStatisticTable.insertRow(yearlyStatisticTable.rows.length);
 					cell=row.insertCell(row.cells.length);
-					//cell.className="borderCell alignCenter";
 					$(cell).addClass(self.alignCenterClassName);
 					$(cell).addClass(self.borderCellClassName);
 					cell.textContent=i+1;
 					
 					cell=row.insertCell(row.cells.length);
-					//cell.className="borderCell alignCenter";
 					$(cell).addClass(self.alignCenterClassName);
 					$(cell).addClass(self.borderCellClassName);
 					cell.textContent=itoMonthlyStatistic[i].ashiftTotal;
 					
 					cell=row.insertCell(row.cells.length);
-					//cell.className="borderCell alignCenter";
 					$(cell).addClass(self.alignCenterClassName);
 					$(cell).addClass(self.borderCellClassName);				
 					cell.textContent=itoMonthlyStatistic[i].bxShiftTotal;
 
 					cell=row.insertCell(row.cells.length);
-					//cell.className="borderCell alignCenter";
 					$(cell).addClass(self.alignCenterClassName);
 					$(cell).addClass(self.borderCellClassName);			
 					cell.textContent=itoMonthlyStatistic[i].cshiftTotal;
 
 					cell=row.insertCell(row.cells.length);
-					//cell.className="borderCell alignCenter";
 					$(cell).addClass(self.alignCenterClassName);
 					$(cell).addClass(self.borderCellClassName);
 					cell.textContent=itoMonthlyStatistic[i].dxShiftTotal;
 
 					cell=row.insertCell(row.cells.length);
-					//cell.className="borderCell alignCenter";
 					$(cell).addClass(self.alignCenterClassName);
 					$(cell).addClass(self.borderCellClassName);					
 					cell.textContent=itoMonthlyStatistic[i].oshiftTotal;
 
 					cell=row.insertCell(row.cells.length);
-					//cell.className="borderCell alignCenter";
 					$(cell).addClass(self.alignCenterClassName);
 					$(cell).addClass(self.borderCellClassName);				
 					cell.textContent=itoMonthlyStatistic[i].monthlyTotal;
