@@ -43,8 +43,6 @@
 		<script src="<%=request.getContextPath()%>/admin/js/RosterSchedulerTable.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterScheduler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
-		<script src="<%=request.getContextPath()%>/admin/js/util/CursorCellEventHandler.js"></script>
-		<script src="<%=request.getContextPath()%>/admin/js/util/HtmlBodyEventHandler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/LoadingScreen.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/SelectedRegion.js"></script>
 		<script>

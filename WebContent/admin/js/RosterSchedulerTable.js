@@ -747,8 +747,6 @@ class RosterSchedulerTable extends RosterTable
 		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
 		
 		var selectedRegion=new SelectedRegion(this);
-		this.cursorCellEventHandler=new CursorCellEventHandler($("td."+this.cursorCellClassName),this,selectedRegion);
-		this.htmlBodyEventHandler=new HtmlBodyEventHandler(this,selectedRegion);
 	}
 	_genYearlyStatisticReport()
 	{
