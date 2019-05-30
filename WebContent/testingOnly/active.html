@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Active Element testing</title>
+		<style>
+			::selection {
+			  background: none; /* WebKit/Blink Browsers */
+			}
+			::-moz-selection {
+			  background: none; /* Gecko Browsers */
+			}
+			input[type="text"]			
+			{
+				border:1px solid red;
+				//border:none;
+				height:100%;
+				width:100%;
+				text-align:center;
+				box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+			}
+			input[type="text"]:focus 
+			{
+				outline: none;
+			}
+			table
+			{
+//				width:100px;
+			}
+			td
+			{
+				position:relative;
+				width:25px;
+				padding:0px;
+				margin:0px;
+				border:1px solid blue;
+			}
+		</style>
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script>
+			$( document ).ready(function(){
+				$("input#cell").focus(function() {
+					console.log(this);
+				});
+			});
+			function go()
+			{
+				var cell=document.getElementById("cell");
+				//cell.contentEditable=true;
+				cell.select();
+			}
+		</script>
+	</head>
+	<body>
+		<table border=0>
+			<tr>
+				<td><input type="text" id="cell" value="4"></td>
+			</tr>
+		</table>
+		
+		<button onclick="go()">Go</button>	
+	</body>
+</html>	
+	
