@@ -13,22 +13,47 @@
 		</style>
 		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 		<script>
+			var clipboard;
 			$( document ).ready(function() {
-				$("body").on("copy",copy);
-				$("body").on("paste",function(event){
+				$("body").keydown(function(event){
+					event.stopPropagation();
+					switch (event.which)
+					{
+						case 67:
+								if (event.ctrlKey)//Capture Ctrl-C key
+									copy();
+								break;
+					}
+				});
+				
+				$("#destTable td").on("paste",function(event){
+					event.preventDefault();
+					var theCell=this;
 					var clipboard=event.originalEvent.clipboardData;
 					var data=clipboard.getData("text/plain");
-					var cell1=getCell("destTable",0,0);
-					var range = document.createRange();
-					var selection = window.getSelection();
-					console.log(data,cell1,clipboard);
+					var dataRows=data.trim().split("\n");
+					var firstCellIndex=theCell.cellIndex;
+					var firstRowIndex=theCell.parentElement.rowIndex;
+					var uc=document.getElementById("uc");
 					
-					range.setStart(cell1,0);
-					range.setEnd(cell1,cell1.childNodes.length);
-					selection.removeAllRanges();
-					selection.addRange(range);
-					//event.preventDefault();
-				});
+					for (var i=0;i<dataRows.length;i++)
+					{
+						dataRow=dataRows[i];
+						dataCells=dataRow.split("\t");
+						console.log(dataCells.length);
+						for (var j=0;j<dataCells.length;j++)
+						{
+							console.log(dataCells[j]);
+							uc.value=dataCells[j];
+							uc.select();
+							document.execCommand("copy"); 
+							theCell.focus();
+							document.execCommand("paste"); 
+						}
+					}
+					
+				});				
+				
 			});
 			function copy(event)
 			{
@@ -39,33 +64,28 @@
 				var range;
 				var startCol=getValue("startCol"),startRow=getValue("startRow");
 				var selection = window.getSelection();
-				
-				//console.log(startCol,startRow,endCol,endRow);
-				/*event.preventDefault();
-				for (var i=startRow;i<=endRow;i++)
+				var row;
+				var tempTable=$("#tempTable");
+				tempTable.empty();
+				for (var i=startRow ;i<=endRow;i++)
 				{
+					row=document.createElement("tr");
 					for (var j=startCol;j<=endCol;j++)
 					{
-						cell1=getCell("dataTable",i,j);
-						data+=cell1.textContent+"\t";
+						cell1=document.getElementById("c"+i+j);
+						cell2=document.createElement("td");
+						cell2.innerHTML=cell1.innerHTML;
+						$(row).append(cell2);
 					}
-					data=data.substring(0,data.length-1);
-					data+="\n";
+					tempTable.append(row);
 				}
-				var clipboard=event.originalEvent.clipboardData;
-				clipboard.clearData();
-				clipboard.setData("text/plain",data);*/
-				
+				var range = document.createRange();
+				var selection = window.getSelection();				
+				var node=document.querySelector("#tempTable");
 				selection.removeAllRanges();
-				for (var i=startRow;i<=endRow;i++)
-				{
-					range = document.createRange();
-					cell1=getCell("dataTable",i,startCol);
-					cell2=getCell("dataTable",i,endCol);
-					range.setStart(cell1,0);
-					range.setEnd(cell2,cell2.childNodes.length);
-					selection.addRange(range);
-				}
+				range.selectNode(node);
+				selection.addRange(range);
+				document.execCommand("copy");
 			}
 			
 			function copyContent()
@@ -82,8 +102,7 @@
 			function getValue(id)
 			{
 				var element=document.getElementById(id);
-				var index=element.selectedIndex;
-				return element.options[index].value;
+				return element.value;
 			}
 		</script>	
 	</head>
@@ -107,28 +126,28 @@
 		</table><br>
 		start column:
 		<select id="startCol">
-			<option value=0>1</option>
-			<option value=1 selected>2</option>
-			<option value=2>3</option>
+			<option value=1>1</option>
+			<option value=2 selected>2</option>
+			<option value=3>3</option>
 		</select>
 		end column:
 		<select id="endCol">
-			<option value=0>1</option>
-			<option value=1>2</option>
-			<option value=2 selected>3</option>
+			<option value=1>1</option>
+			<option value=2>2</option>
+			<option value=3 selected>3</option>
 		</select>
 		<br>
 		start row:
 		<select id="startRow">
-			<option value=0 selected>1</option>
-			<option value=1>2</option>
-			<option value=2>3</option>
+			<option value=1 selected>1</option>
+			<option value=2>2</option>
+			<option value=3>3</option>
 		</select>
 		end row:
 		<select id="endRow">
-			<option value=0>1</option>
-			<option value=1 selected>2</option>
-			<option value=2>3</option>
+			<option value=1>1</option>
+			<option value=2 selected>2</option>
+			<option value=3>3</option>
 		</select>
 		<br>
 		<button onclick="copyContent()">Copy</button>
@@ -149,5 +168,8 @@
 				<td id="c33" contenteditable="true"></td>
 			</tr>
 		</table>
+		<div id="tempTable">
+		</div>
+		<input type=text id="uc">
 	</body>
 </html>

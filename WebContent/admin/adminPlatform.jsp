@@ -43,7 +43,9 @@
 		<script src="<%=request.getContextPath()%>/admin/js/RosterSchedulerTable.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterScheduler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/KeyBoardEventHandler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/LoadingScreen.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/MouseEventHandler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/SelectedRegion.js"></script>
 		<script>
 			var rosterScheduler=null,itoManagement=null;
@@ -158,6 +160,5 @@
 				</tr>
 			</table>
 		</form>
-		
 	</body>
 </html>	

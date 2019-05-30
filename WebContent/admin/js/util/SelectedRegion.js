@@ -4,10 +4,7 @@ class SelectedRegion
 	{
 		this.inSelectMode=false;
 		this.rosterSchedulerTable=rosterSchedulerTable;
-		/*
-		this.clipboardJS=null;
-		var c=new ClipboardJS(document.querySelectorAll("td[class*='selectCellBorder']"));
-		*/
+		
 		this._init();
 	}
 	/*
@@ -28,7 +25,6 @@ class SelectedRegion
 				cell=this.rosterSchedulerTable.getCell(j,i);
 				if ($(cell).hasClass("cursorCell"))
 				{
-					//$(cell).empty().blur(); //<==this is old delete method.
 					sel.removeAllRanges();
 					range.selectNodeContents(cell);
 					sel.addRange(range);
