@@ -710,6 +710,7 @@ class RosterSchedulerTable extends RosterTable
 			aShiftData.push(Number(document.getElementById(itoId+"_aShiftCount").textContent));
 			bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
 			cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
+			$("#shift_"+itoId+" td.shiftCell input[type='text']").removeAttr("readonly");
 			$("#shift_"+itoId+" td.shiftCell").blur(function(){
 				self._updateValue(this,itoId);
 			});
@@ -749,6 +750,8 @@ class RosterSchedulerTable extends RosterTable
 		var selectedRegion=new SelectedRegion(this);
 		var m=new MouseEventHandler($("td."+this.cursorCellClassName),selectedRegion);
 		var k=new KeyBoardEventHandler(this,selectedRegion);
+		
+		
 	}
 	_genYearlyStatisticReport()
 	{
@@ -762,44 +765,36 @@ class RosterSchedulerTable extends RosterTable
 		row=yearlyStatisticTable.insertRow(yearlyStatisticTable.rows.length);
 		
 		cell=row.insertCell(row.cells.length);
-		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="ITO";
 		
 		cell=row.insertCell(row.cells.length);
-		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="a";
 		
 		cell=row.insertCell(row.cells.length);
-		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
-
 		cell.textContent="bx";
 		
 		cell=row.insertCell(row.cells.length);
-		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="c";
 		
 		cell=row.insertCell(row.cells.length);
-		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="dx";
 		
 		cell=row.insertCell(row.cells.length);
-		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="O";
 
 		cell=row.insertCell(row.cells.length);
-		
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
 		cell.textContent="Total";

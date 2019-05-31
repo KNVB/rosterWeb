@@ -220,11 +220,19 @@ class RosterTable
 				//cell.className+=" cursorCell shiftCell";
 				$(cell).addClass(this.cursorCellClassName);
 				$(cell).addClass(this.shiftCellClassName);
+				var inputBox=document.createElement("input");
+				inputBox.type="text";
+				inputBox.readOnly=true;
+				console.log($(cell).height());
+				$(inputBox).height($(cell).height());
+				$(cell).append(inputBox);
 				shiftType=rosterDataList.shiftList[i+1];
 				if (shiftType!=null)
 				{
-					cell.textContent=shiftType;
-					$(cell).addClass(this.utility.getShiftCssClassName(shiftType));
+					//cell.textContent=shiftType;
+					//$(cell).addClass(this.utility.getShiftCssClassName(shiftType));
+					inputBox.value=shiftType;
+					$(inputBox).addClass(this.utility.getShiftCssClassName(shiftType));
 					actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
 					switch(shiftType)
 					{

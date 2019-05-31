@@ -1,16 +1,31 @@
+input[type="text"]			
+{
+	//border:1px solid red;
+	border:none;
+	height:100%;
+	width:100%;
+	text-align:center;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+input[type="text"]:focus 
+{
+	outline: none;
+}
 table#rosterTable,
 table#yearlyStatistic 
 {
 	border-spacing: 0;
 	
-	border-collapse: separate; 
+	//border-collapse: separate; 
 	/*
 	this is workaround for chrome bug
 	https://stackoverflow.com/questions/25591499/chrome-bug-with-colspan-and-border
 	
 	border-collapse: collapse; //It hit the chrome bug
 	*/	
-	
+	border-collapse: collapse;
 	width:1660px;
 	
 }
@@ -29,6 +44,11 @@ table#yearlyStatistic
 .alignCenter
 {
 	text-align: center;
+}
+.cursorCell
+{
+	padding:0px;
+	margin:0px;
 }
 .rosterMonthSelect
 {
