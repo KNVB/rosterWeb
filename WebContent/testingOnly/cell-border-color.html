@@ -3,6 +3,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<style>
+			
 			input[type="text"][value="1"]
 			{
 				background-color:#ff99cc;
@@ -35,19 +36,18 @@
 			table
 			{
 				border:none;
-				border-spacing: 0;
+				border-spacing: 1px;
 				border-collapse: collapse;
 			}
 			td
 			{
 				margin:0px;
-				border-top:3px solid #e0e0e0;
-				border-right:3px solid #e0e0e0;
-				border-bottom:3px solid #e0e0e0;
-				border-left:3px solid #e0e0e0;
+				border:1px inset #e0e0e0;
+				
 				padding: 0px;
 				text-align: center;
 				font-size:17px;
+				
 			}
 			
 			/*
@@ -63,26 +63,27 @@
 			
 			.selectCellBorderLeft
 			{
-				border-left:3px solid black!important;
+				border-left:1px solid black!important;
 			}
 			.selectCellBorderRight
 			{
-				border-right:3px solid black!important;
+				border-right:1px solid black!important;
 			}
 			.selectCellBorderTop
 			{
-				border-top:3px solid black!important;
+				border-top:1px solid black!important;
 			}
 			.selectCellBorderBottom
 			{
-				border-bottom:3px solid black!important;
+				border-bottom:1px solid black!important;
 			}
 		</style>
 		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 		<script>
 			function go()
 			{
-				$("#target11").css("border","3px solid black");
+				var i=$("#target11").innerHeight();
+		
 				/*
 				$("#target00").addClass("selectCellBorderTop");
 				$("#target00").addClass("selectCellBorderLeft");
@@ -93,12 +94,12 @@
 				$("#target01").addClass("selectCellBorderLeft");
 				$("#target01").addClass("selectCellBorderRight");
 				$("#target01").addClass("selectCellBorderBottom");
-				
+				*/	
 				$("#target11").addClass("selectCellBorderTop");
 				$("#target11").addClass("selectCellBorderLeft");
 				$("#target11").addClass("selectCellBorderRight");
 				$("#target11").addClass("selectCellBorderBottom");
-				
+				/*
 				$("#target02").addClass("selectCellBorderTop");
 				$("#target02").addClass("selectCellBorderLeft");
 				$("#target02").addClass("selectCellBorderRight");
@@ -111,36 +112,36 @@
 		<table>
 
 			<tr>
-				<td id="target00">
-					<input type="text" value="1">
+				<td id="target00" style="background-color:#ff99cc;">
+					<input type="text" value="1" style="background-color:#ff99cc;">
 				</td>
-				<td id="target01">
-					<input type="text" value="2">
+				<td id="target01" style="background-color:#ffffcc;">
+					<input type="text" value="2" style="background-color:#ffffcc;">
 				</td>
-				<td id="target02">
-					<input type="text" value="3">
+				<td id="target02" style="background-color:#ccffcc;">
+					<input type="text" value="3" style="background-color:#ccffcc;">
 				</td>	
 			</tr>
 			<tr>
-				<td id="target10">
-					<input type="text" value="1">
+				<td id="target10" style="background-color:#ff99cc;">
+					<input type="text" value="1" style="background-color:#ff99cc;">
 				</td>
-				<td id="target11">
-					<input type="text" value="2">
+				<td id="target11" style="background-color:#ffffcc;">
+					<input type="text" value="2" style="background-color:#ffffcc;">
 				</td>
-				<td id="target12">
-					<input type="text" value="3">
+				<td id="target12" style="background-color:#ccffcc;">
+					<input type="text" value="3" style="background-color:#ccffcc;">
 				</td>	
 			</tr>
 			<tr>
-				<td>
-					<input type="text" value="1">
+				<td style="background-color:#ff99cc;">
+					<input type="text" value="1" style="background-color:#ff99cc;">
 				</td>
-				<td>
-					<input type="text" value="2">
+				<td style="background-color:#ffffcc;">
+					<input type="text" value="2" style="background-color:#ffffcc;">
 				</td>
-				<td>
-					<input type="text" value="3">
+				<td style="background-color:#ccffcc;">
+					<input type="text" value="3" style="background-color:#ccffcc;">
 				</td>	
 			</tr>
 		</table>
