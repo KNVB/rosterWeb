@@ -212,9 +212,26 @@ class RosterSchedulerTable extends RosterTable
 	}
 	pasteDataFromClipboard(selectedRegion,dataRowList)
 	{
-		var buffer=$("#buffer");
+		var buffer=$("#buffer")[0];
 		var destCell=this.getCell(selectedRegion.minY,selectedRegion.minX);
+		var dataRow=dataRowList[0];
+		var data=dataRow[0];
 		
+		console.log(buffer);
+		
+		buffer.value=data;
+		buffer.focus();
+		buffer.select();
+		
+		document.execCommand("copy");
+		/*
+		buffer=$(destCell).find("input[type='text']")[0];
+		buffer.select();
+		document.execCommand("paste");
+				
+		$(destCell).find("input[type='text']").focus();
+		document.execCommand("paste");
+		*/
 	}
 	/*
 	pasteDataFromClipboard(selectedRegion,dataRowList)

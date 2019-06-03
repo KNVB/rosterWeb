@@ -115,11 +115,17 @@ class CursorCellSelector
 					break;
 			case 67:
 					if (event.ctrlKey)
+					{	
 						this.selectedRegion.copy(); //handle Ctrl-C event
+						event.preventDefault();
+					}
 					break;
 			case 86:
 					if (event.ctrlKey)
+					{	
+						event.preventDefault();
 						this.selectedRegion.paste(); //handle Ctrl-V event
+					}
 					break;
 		}
 	}

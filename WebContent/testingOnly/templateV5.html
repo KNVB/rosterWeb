@@ -9,8 +9,7 @@
 			::-moz-selection {
 			  background: none; /* Gecko Browsers */
 			}
-
-			input[type="text"]			
+			td input[type="text"]			
 			{
 				//color:white;
 				border:none;
@@ -22,7 +21,7 @@
 				-moz-box-sizing: border-box;
 				-webkit-box-sizing: border-box;
 			}
-			input[type="text"]:focus 
+			td input[type="text"]:focus 
 			{
 				outline: none;
 			}			
@@ -184,13 +183,15 @@
 		<script src="SelectedRegion.js"></script>
 		<script>
 			$( document ).ready(function(){
-				var rosterSchedulerTable=new RosterSchedulerTable(document.body);
+				var rosterSchedulerTable=new RosterSchedulerTable(document.getElementById("container"));
 				rosterSchedulerTable.build(2019,2);
 			});		
 		</script>
 	</head>
 	<body>
-	
+		<div id="container">
+		</div>
+		
 		<input type="text" id="buffer">
 	</body>
 </html>	
