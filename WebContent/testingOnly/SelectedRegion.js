@@ -4,21 +4,37 @@ class SelectedRegion
 	{
 		this.inSelectMode=false;
 		this.rosterSchedulerTable=rosterSchedulerTable;
+		this.copiedRegion=new CopiedRegion();
 		this._init();
 	}
-	clear()
+	copy()
 	{
-//		console.log(this.isClear());
-		if (!this.isClear())
+		var self=this;
+		var cell1,cell2;
+		var dataRowList;
+		if (!this.isEmpty())
 		{
-			this.rosterSchedulerTable.clearSelectedRegion(this);
-			this._init();
+			console.log("is copiedRegion Empty?="+this.copiedRegion.isEmpty());
+			if (!this.copiedRegion.isEmpty())
+			{	
+				console.log("Clear CopiedRegion");
+				console.log("CopiedRegion="+JSON.stringify(this.copiedRegion));
+				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
+			}
+			this.copiedRegion.copyCellList=[];
+			for (var i=0;i<this.selectedCellList.length;i++)
+			{
+				this.copiedRegion.copyCellList.push(this.selectedCellList[i]);	
+			}
+			this.copiedRegion.minX=this.minX;
+			this.copiedRegion.maxX=this.maxX;
+			this.copiedRegion.minY=this.minY;
+			this.copiedRegion.maxY=this.maxY;
+			dataRowList=this.rosterSchedulerTable.getDataForCopy(this);
+			localStorage.setItem("copiedData",JSON.stringify(dataRowList));
 		}
 	}
-	copyToClipBoard()
-	{
-		
-	}
+
 	deleteContent()
 	{
 		var cell,minCell,maxCell;
@@ -31,7 +47,6 @@ class SelectedRegion
 				cell=this.rosterSchedulerTable.getCell(j,i);
 				if ($(cell).hasClass("cursorCell"))
 				{
-					//$(cell).empty().blur(); //<==this is old delete method.
 					sel.removeAllRanges();
 					range.selectNodeContents(cell);
 					sel.addRange(range);
@@ -42,6 +57,14 @@ class SelectedRegion
 		}
 		cell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
 		cell.focus();
+	}
+	empty()
+	{
+		if (!this.isEmpty())
+		{
+			this.rosterSchedulerTable.clearSelectedRegion(this);
+			this._init();
+		}
 	}
 	endSelect()
 	{
@@ -63,11 +86,11 @@ class SelectedRegion
 			if (this.selectedCellList.length>1)
 			{
 				cell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
-				cell.focus();
+				cell.firstChild.focus();
 			}
 		}
 	}	
-	isClear()
+	isEmpty()
 	{
 		return (this.selectedCellList.length<1)
 	}
@@ -75,21 +98,25 @@ class SelectedRegion
 	{
 		return (this.selectedCellList.length==1);
 	}
-	pasteFromClipBoard()
+	paste()
 	{
+		var dataRowList=JSON.parse(localStorage.getItem("copiedData"));
 		
-	}
-	redraw()
-	{
-		var cell;
-		this.rosterSchedulerTable.clearSelectedRegion(this);
-		this.rosterSchedulerTable.setSelectedRegion(this);
+		if (!this.copiedRegion.isEmpty())
+		{
+			if (!this.isEmpty())
+			{
+				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
+				this.rosterSchedulerTable.pasteDataFromClipboard(this,dataRowList);
+				this.copiedRegion.empty();		
+			}			
+		}
 	}
 	startSelect(theCell)
 	{
 		var row=theCell.parentElement;
 		
-		this.clear();
+		this.empty();
 		this.firstX=theCell.cellIndex;
 		this.firstY=row.rowIndex;
 
@@ -100,7 +127,8 @@ class SelectedRegion
 		this.rosterSchedulerTable.setSelectedRegion(this);
 		this.selectedCellList.push(theCell);
 		this.inSelectMode=true;
-
+		
+		$(theCell).find("input[type='text']:first-child").select();
 	}
 	update(theCell)
 	{
@@ -113,64 +141,59 @@ class SelectedRegion
 			var row=theCell.parentElement;
 			var rowIndex=row.rowIndex;
 			
-			if (this.inSelectMode)
+			if (cellIndex<this.firstX)
 			{
-				//console.log(cellIndex,this.minX,(cellIndex<this.minX));
-				if (cellIndex<this.firstX)
+				newMinX=cellIndex;
+				isChanged=true;
+			}
+			else
+			{
+				if (cellIndex>this.firstX)
 				{
-					newMinX=cellIndex;
+					newMaxX=cellIndex;
 					isChanged=true;
 				}
 				else
 				{
-					if (cellIndex>this.firstX)
-					{
-						newMaxX=cellIndex;
-						isChanged=true;
-					}
-					else
-					{
-						newMinX=this.firstX;
-						newMaxX=this.firstX;
-						isChanged=true;
-					}	
-				}
-				if (rowIndex>this.firstY)
-				{
-					newMaxY=rowIndex;
+					newMinX=this.firstX;
+					newMaxX=this.firstX;
 					isChanged=true;
-				}
-				else
-				{
-					if (rowIndex<this.firstY)
-					{
-						newMinY=rowIndex;
-						isChanged=true;
-					}
-					else
-					{
-						newMinY=this.firstY;
-						newMaxY=this.firstY;
-						isChanged=true;
-					}	
-				}
-				if (isChanged)
-				{
-					this.rosterSchedulerTable.clearSelectedRegion(this);
-
-					this.minX=newMinX;
-					this.maxX=newMaxX;
-					
-					this.minY=newMinY;
-					this.maxY=newMaxY;
-					//console.log("this.minX="+this.minX+",this.maxX="+this.maxX);
-					//console.log("this.minY="+this.minY+",this.maxY="+this.maxY);
-					this.rosterSchedulerTable.setSelectedRegion(this);
 				}	
 			}
+			if (rowIndex>this.firstY)
+			{
+				newMaxY=rowIndex;
+				isChanged=true;
+			}
+			else
+			{
+				if (rowIndex<this.firstY)
+				{
+					newMinY=rowIndex;
+					isChanged=true;
+				}
+				else
+				{
+					newMinY=this.firstY;
+					newMaxY=this.firstY;
+					isChanged=true;
+				}	
+			}
+			if (isChanged)
+			{
+				this.rosterSchedulerTable.clearSelectedRegion(this);
 
+				this.minX=newMinX;
+				this.maxX=newMaxX;
+				
+				this.minY=newMinY;
+				this.maxY=newMaxY;
+				//console.log("this.minX="+this.minX+",this.maxX="+this.maxX);
+				//console.log("this.minY="+this.minY+",this.maxY="+this.maxY);
+				this.rosterSchedulerTable.setSelectedRegion(this);
+			}	
 		}
-	}	
+	}
 	_init()
 	{
 		this.colCount=-1;

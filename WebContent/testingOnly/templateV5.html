@@ -1,0 +1,196 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+			::selection {
+			  background: none; /* WebKit/Blink Browsers */
+			}
+			::-moz-selection {
+			  background: none; /* Gecko Browsers */
+			}
+
+			input[type="text"]			
+			{
+				//color:white;
+				border:none;
+				//border:1px solid black;
+				height:100%;
+				width:100%;
+				text-align:center;
+				box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+			}
+			input[type="text"]:focus 
+			{
+				outline: none;
+			}			
+			table#rosterTable,
+			table#yearlyStatistic 
+			{
+				border-spacing: 0;
+				border-collapse: collapse;
+				width:1660px;
+			}
+			.alignCenter
+			{
+				text-align: center;
+			}
+			.actualHourCell
+			{
+				font-size:15px;
+				width:50px;
+			}
+			.borderCell
+			{
+				border:1px inset #e0e0e0;
+			}
+			.dateCell
+			{
+				margin:0px;
+				width:25px;
+				padding: 0px;
+				text-align: center;
+				font-size:17px;
+			}
+			.errorRedBlackGround
+			{
+				background-color:red!important;
+				animation: blinker 1s linear infinite;
+			}			
+			.lastMonthCell
+			{
+				font-size:15px;
+				width:50px;
+			}
+			.nameCell
+			{
+				padding:0px;
+				width:200px;
+				font-size:17px;
+				text-align:left;
+			}
+			.noOfWorkingDay
+			{
+				font-size:15px;
+				width:60px;
+			}
+			.phCell
+			{
+				color:#ff0000;
+				font-size:17px;
+				font-weight: bold;
+			}
+			.rosterMonthSelectCell
+			{
+				font-size:15px;
+				font-weight: bold;
+			}
+			.titleCell	
+			{
+				font-size:18px;
+				font-weight: bold;
+			}
+			.totalCell
+			{
+				font-size:15px;
+				width:50px;
+			}	
+			.totalHourCell
+			{
+				font-size:15px;
+				width:50px;
+			}
+			.totalNoOfCell
+			{
+				font-size:15px;
+				width:60px;
+			}
+			.underlineText
+			{
+				text-decoration: underline;
+			}
+			.aShiftColor
+			{
+				background-color:#ff99cc;
+			}
+			.bShiftColor
+			{ 
+				background-color:#ffffcc;
+			}
+			.cShiftColor
+			{
+				background-color:#ccffcc;
+			}
+			.oShiftColor
+			{
+				background-color:#ffffff;
+			}
+			.dShiftColor
+			{
+				background-color:#ccffff;
+			}
+			.sickLeaveColor
+			{
+				background-color:#cc99ff;
+			}
+			.vacantShiftLabel
+			{
+				color:#ff6600;
+				text-align:right!Important;
+			}
+			
+			.copyCellBorderLeft
+			{
+				border-left:1px dashed black!important;
+			}
+			.copyCellBorderRight
+			{
+				border-right:1px dashed black!important;
+			}
+			.copyCellBorderTop
+			{
+				border-top:1px dashed black!important;
+			}
+			.copyCellBorderBottom
+			{
+				border-bottom:1px dashed black!important;
+			}
+			
+			
+			.selectCellBorderLeft
+			{
+				border-left:1px solid black!important;
+			}
+			.selectCellBorderRight
+			{
+				border-right:1px solid black!important;
+			}
+			.selectCellBorderTop
+			{
+				border-top:1px solid black!important;
+			}
+			.selectCellBorderBottom
+			{
+				border-bottom:1px solid black!important;
+			}
+		</style>
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script src="CopiedRegion.js"></script>
+		<script src="CursorCellSelector.js"></script>
+		<script src="RosterTable.js"></script>
+		<script src="RosterSchedulerTable.js"></script>
+		<script src="SelectedRegion.js"></script>
+		<script>
+			$( document ).ready(function(){
+				var rosterSchedulerTable=new RosterSchedulerTable(document.body);
+				rosterSchedulerTable.build(2019,2);
+			});		
+		</script>
+	</head>
+	<body>
+	
+		<input type="text" id="buffer">
+	</body>
+</html>	
