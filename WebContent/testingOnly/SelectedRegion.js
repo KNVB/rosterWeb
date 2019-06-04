@@ -107,8 +107,8 @@ class SelectedRegion
 			if (!this.isEmpty())
 			{
 				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
-				this.rosterSchedulerTable.pasteDataFromClipboard(this,dataRowList);
-				this.copiedRegion.empty();		
+				var newSelectedRegion=this.rosterSchedulerTable.pasteDataFromClipboard(this,dataRowList);
+				this.copiedRegion.empty();
 			}			
 		}
 	}

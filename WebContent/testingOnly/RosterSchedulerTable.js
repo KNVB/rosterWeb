@@ -14,6 +14,7 @@ class RosterSchedulerTable extends RosterTable
 		this.vacantShiftClassName="vacantShift";
 		this.vacantShiftLabelClassName="vacantShiftLabel";
 		this.essentialShiftList=["a","b","c"];
+		this.shiftHourCount={"a":9.0,"b":5.75,"b1":7.25,"c":10.75,"d":9.0,"d1":8.0,"d2":8.0,"d3":7.8,"O":0.0};
 	}
 	_buildITORow(itoId)
 	{
@@ -117,7 +118,7 @@ class RosterSchedulerTable extends RosterTable
 			bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
 			cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
 			$("#shift_"+itoId+" td.shiftCell input[type='text']").removeAttr("readonly");
-			$("#shift_"+itoId+" td.shiftCell").blur(function(){
+			$("#shift_"+itoId+" td.shiftCell input[type='text']").blur(function(){
 				self._updateValue(this,itoId);
 			});
 		});
@@ -150,9 +151,87 @@ class RosterSchedulerTable extends RosterTable
 		cell=row.insertCell(row.cells.length);
 		$(cell).addClass(this.alignCenterClassName);
 		$(cell).addClass(this.borderCellClassName);
-
+		
+		this.cursorCells=$("td."+this.cursorCellClassName);
 		var m=new CursorCellSelector($("td."+this.cursorCellClassName),this);
 	}
+	_updateValue(theCell,itoId)
+	{
+		var aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
+		var	actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
+		var aShiftData=[],bShiftData=[],cShiftData=[];
+		var aShiftSD,bShiftSD,cShiftSD,avgStdDev;
+		var cell,i;
+		var ito=this.itoList[itoId];
+		var row;
+		var shiftType=theCell.textContent;
+		var vacantShift="abc";
+		var startIndex=this.showNoOfPrevDate+1;
+		var endIndex=startIndex+Object.keys(this.dateObjList).length;
+		var totalHour=Number(document.getElementById(itoId+"_totalHour").textContent);
+		var balance=Number(document.getElementById(itoId+"_lastMonthBalance").textContent);
+
+		row=theCell.parentElement.parentElement;
+		Object.keys(this.shiftHourCount).forEach(function(shiftType){
+			$(theCell).removeClass(shiftType.toLowerCase()+"ShiftColor");
+		});
+		$(theCell).removeClass(this.errorRedBlackGroundClassName);
+		
+		//if (ito.isValidShift(shiftType))
+			$(theCell).addClass(this.getShiftCssClassName(shiftType));
+		
+		for (i=startIndex;i<endIndex;i++)
+		{
+			cell=row.cells[i];
+			shiftType=$(cell).find("input[type='text']").val();
+			//if (ito.isValidShift(shiftType))
+			{
+				switch(shiftType)
+				{
+					case "a":
+							aShiftCount++;
+							break;
+					case "b":
+					case "b1":
+							bxShiftCount++;
+							break;
+					case "c":
+							cShiftCount++;
+							break;
+					case "d":
+					case "d1":
+					case "d2":
+					case "d3":
+							dxShiftCount++;
+							break;		
+				}
+				actualWorkingHour+=this.shiftHourCount[shiftType];
+			}
+		}
+		
+		thisMonthHourTotal=actualWorkingHour-totalHour;
+		thisMonthBalance=thisMonthHourTotal+balance;
+	
+		this._updateShiftCount(itoId,totalHour,actualWorkingHour,balance,thisMonthHourTotal,thisMonthBalance,aShiftCount,bxShiftCount,cShiftCount,dxShiftCount);
+
+		for (var itoId in this.itoList)
+		{
+			 var cell=document.getElementById("shift_"+itoId).cells[theCell.cellIndex];
+			 if ($(cell).find("input[type='text']").val()!="")
+			 {
+				 if ($(cell).find("input[type='text']").val()=="b1")
+					 vacantShift=vacantShift.replace("b","");
+				 else
+					 vacantShift=vacantShift.replace($(cell).find("input[type='text']").val(),"");
+			 } 
+			 aShiftData.push(Number(document.getElementById(itoId+"_aShiftCount").textContent));
+			 bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
+			 cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
+		}
+		
+		document.getElementById("vacantShiftRow").cells[theCell.parentElement.cellIndex].textContent=vacantShift;
+		//this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
+	}	
 	clearCopiedRegion(copiedRegion)
 	{
 		var cell,i,j;
@@ -210,40 +289,28 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return dataRowList;
 	}
+	/*
 	pasteDataFromClipboard(selectedRegion,dataRowList)
 	{
-		var buffer=$("#buffer")[0];
 		var destCell=this.getCell(selectedRegion.minY,selectedRegion.minX);
 		var dataRow=dataRowList[0];
 		var data=dataRow[0];
 		
-		console.log(buffer);
-		
-		buffer.value=data;
-		buffer.focus();
-		buffer.select();
-		
-		document.execCommand("copy");
-		/*
-		buffer=$(destCell).find("input[type='text']")[0];
-		buffer.select();
-		document.execCommand("paste");
-				
-		$(destCell).find("input[type='text']").focus();
-		document.execCommand("paste");
-		*/
+		$(destCell).find("input[type='text']").select();
+		document.execCommand("insertText", false, data);
+		$(destCell).find("input[type='text']").blur();
 	}
-	/*
+	*/
+
 	pasteDataFromClipboard(selectedRegion,dataRowList)
 	{
-		var cell,destCell,dataCell,dataDx,dataDy,dataRow,destDx,destDy;
-		var i,inputBox,j,k,l,x,y,xCount,yCount;
+		var cell,destCell,data,dataDx,dataDy,dataRow,destDx,destDy;
+		var i,index,j,k,l,x,y,xCount,yCount;
 		dataRow=dataRowList[0];
 		destDy=selectedRegion.maxY-selectedRegion.minY+1;
 		destDx=selectedRegion.maxX-selectedRegion.minX+1;
 		dataDy=dataRowList.length;
 		dataDx=dataRow.length;
-		
 		
 		if ((destDy % dataDy==0 ) && (destDx % dataDx==0)) //if the selectedRegion width and height is multiple of the copied data
 		{
@@ -251,8 +318,6 @@ class RosterSchedulerTable extends RosterTable
 			xCount=destDx / dataDx;
 			y=selectedRegion.minY;
 			x=selectedRegion.minX;
-			
-			//console.log(destDy,dataDy,yCount);
 			
 			for (l=0;l<yCount;l++)
 			{	
@@ -265,9 +330,11 @@ class RosterSchedulerTable extends RosterTable
 						for (k=0;k<dataRow.length;k++)
 						{
 							destCell=this.getCell(y,x++);
-							dataCell=dataRow[k];
-							$(destCell).find("input[type='text']").val(dataCell).blur();
-							//$(destCell).text(dataCell.textContent).blur();
+							data=dataRow[k];
+							
+							$(destCell).find("input[type='text']").select();
+							document.execCommand("insertText", false, data);
+							$(destCell).find("input[type='text']").blur();
 						}
 					}
 					y++;
@@ -283,10 +350,11 @@ class RosterSchedulerTable extends RosterTable
 				dataRow=dataRowList[i];
 				for (j=0;j<dataRow.length;j++)
 				{
-					dataCell=dataRow[j];
+					data=dataRow[j];
 					destCell=this.cursorCells[index];
-					//$(destCell).text(dataCell.textContent).blur();
-					$(destCell).find("input[type='text']").val(dataCell).blur();
+					$(destCell).find("input[type='text']").select();
+					document.execCommand("insertText", false, data);
+					$(destCell).find("input[type='text']").blur();
 					index++;
 					if (index>=this.cursorCells.length)
 					{
@@ -302,7 +370,7 @@ class RosterSchedulerTable extends RosterTable
 			}
 		}	
 	}
-	*/	
+	
 	setCopiedRegion(selectedRegion)
 	{
 		var cell,i;
