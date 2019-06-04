@@ -3,17 +3,11 @@
 		<meta charset="UTF-8">
 		<title>Extend Element</title>
 		<style>
-			::selection 
-			{
-			  background: none; /* WebKit/Blink Browsers */
-			}
-			::-moz-selection 
-			{
-			  background: none; /* Gecko Browsers */
-			}
 			td input[type="text"]			
 			{
+				//color:white;
 				border:none;
+				//border:1px solid black;
 				height:100%;
 				width:100%;
 				text-align:center;
@@ -72,21 +66,36 @@
 			}			
 		</style>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script src="CursorCell.js"></script>
 		<script>
-			//cell
-			class DateCell extends CursorCell{
+			//cell 
+			class DateCell extends HTMLTableCellElement {
 				constructor() {
 					super();
+					this.textBox = document.createElement("input");
+					this.textBox.type = "text";
+					this.appendChild(this.textBox);
+					$(this).addClass("borderCell");
 					$(this).addClass("dateCell");
 				}
-				get value()
+				focus(e)
 				{
-					return super.value;
+					this.textBox.focus();
+				}
+				select(e)
+				{
+					this.textBox.select();
+				}				
+				set textContent(t)
+				{
+					this.textBox.value = t;
+				}
+				get textContent()
+				{
+					return this.textBox.value ;
 				}
 				set value(v) 
 				{
-					super.value = v;
+					this.textBox.value = v;
 					switch (v)
 					{
 						case "a":
@@ -100,11 +109,14 @@
 								break;		
 					}
 				}
+				get value() {
+					return this.textBox.value;
+				}
 			}
 			customElements.define('datacell-string',
 				DateCell, {
 					extends: 'td'
-				});			
+				});
 			$(document).ready(function() {
 				var t = document.createElement("table");
 				var row = t.insertRow(t.rows);
@@ -115,14 +127,12 @@
 				row.appendChild(cell2);
 				row.appendChild(cell3);
 				
-				cell1.textContent="a";
+				$(cell1).val("a");
 				cell2.value = "c";
-				
-				$(cell3).val("b");
-				
-				$(document.body).append(t);
 				cell2.select();
-				//$(cell3).focus();
+				$(cell3).val("b");
+				$(cell3).focus();
+				$(document.body).append(t);
 				$("td").each(function(){
 					console.log(this.value);
 				});
