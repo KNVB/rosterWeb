@@ -1,6 +1,6 @@
 class RosterTable extends HTMLTableElement
 {
-	constructor(){
+	constructor(container){
 		super();
 		var self=this;
 		this.actualHourCellClassName="actualHourCell"; 
@@ -54,6 +54,7 @@ class RosterTable extends HTMLTableElement
 		this.appendChild(this.rosterHeader);
 		this.appendChild(this.rosterBody);
 		this.appendChild(this.rosterFooter);
+		container.append(this);
 	}
 	build(year,month)
 	{

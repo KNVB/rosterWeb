@@ -33,9 +33,9 @@
 		<script src="<%=request.getContextPath()%>/js/util/ShiftCellHighLighter.js"></script>
 		<script>
 			$( document ).ready(function() {
-				var rosterTable=new RosterTable();
+				var rosterTable=new RosterTable($("body"));
 				rosterTable.build(<%=rosterYear%>,<%=rosterMonth%>);
-				$("body").append(rosterTable);
+				
 			});
 		</script>
 	</head>
