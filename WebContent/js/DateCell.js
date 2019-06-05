@@ -1,11 +1,11 @@
 class DateCell extends BorderCell
 {
-	constructor(dateCellClassName) {
+	constructor() {
 		super();
-		$(this).addClass(dateCellClassName);
+		$(this).addClass(Css.dateCellClassName);
 	}
 }
-customElements.define('datacell-string',
+customElements.define('data-cell',
 		DateCell, {
 			extends: 'td'
 		});	

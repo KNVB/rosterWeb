@@ -28,6 +28,16 @@ table#yearlyStatistic
 	font-size:17px;
 	text-align:left;
 }
+.noOfWorkingDay
+{
+	font-size:15px;
+	width:60px;
+}
+.shiftCountCell
+{
+	font-size:15px;
+	width:60px;
+}
 .titleCell	
 {
 	font-size:18px;
@@ -42,14 +52,4 @@ table#yearlyStatistic
 {
 	font-size:15px;
 	width:50px;
-}
-.totalNoOfCell
-{
-	font-size:15px;
-	width:60px;
-}
-.noOfWorkingDay
-{
-	font-size:15px;
-	width:60px;
 }

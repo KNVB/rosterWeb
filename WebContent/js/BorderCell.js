@@ -1,11 +1,11 @@
 class BorderCell extends HTMLTableCellElement
 {
-	constructor(borderClassName) {
+	constructor() {
 		super();
-		$(this).addClass(borderClassName);
+		$(this).addClass(Css.borderCellClassName);
 	}
 }
-customElements.define('bordercell-string',
+customElements.define('border-cell',
 		BorderCell, {
 		extends: 'td'
 		}
