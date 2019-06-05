@@ -8,6 +8,7 @@ class CursorCell extends HTMLTableCellElement {
 		$(this).addClass("dateCell");
 		$(this).addClass("cursorCell");
 	}
+	
 	focus()
 	{
 		this.textBox.focus();
