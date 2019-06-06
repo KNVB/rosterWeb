@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Select Table Cell Content</title>
+		<style>
+			::selection 
+			{
+			  background: none; /* WebKit/Blink Browsers */
+			}
+			::-moz-selection 
+			{
+			  background: none; /* Gecko Browsers */
+			}
+			td:focus 
+			{
+				outline: none;
+			}
+		</style>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script>
+		$(document).ready(function() {
+			$("td").click(function(event){
+				event.preventDefault();
+				var range = document.createRange();
+			    range.selectNodeContents(this);
+			    var sel = window.getSelection();
+			    sel.removeAllRanges();
+			    sel.addRange(range);
+			    
+			});
+			$("td").dblclick(function(event){
+				event.preventDefault();
+				var sel = window.getSelection();
+				this.focus();
+				sel.collapse(this.firstChild, 1);
+			})
+		});
+		</script>
+	</head>
+	<body>
+		<table border=1>
+			<tr>
+				<td contenteditable=true style="width:50px">
+					content
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>	
