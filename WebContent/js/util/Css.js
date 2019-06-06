@@ -44,9 +44,9 @@ class Css
 	{
 		return"dShiftColor";
 	}
-	static get highlightClassName()
+	static get highlightCellClassName()
 	{
-	 	return"highlight";
+	 	return"highlightCell";
 	}
 	static get lastMonthCellClassName()
 	{
@@ -56,9 +56,9 @@ class Css
 	{
 	 	return"nameCell";
 	}
-	static get noOfWorkingDayClassName()
+	static get noOfWorkingDayCellClassName()
 	{
-	 	return"noOfWorkingDay";
+	 	return"noOfWorkingDayCell";
 	}
 	static get oShiftColorClassName()
 	{

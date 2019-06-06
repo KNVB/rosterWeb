@@ -13,6 +13,11 @@ table#yearlyStatistic
 {
 	text-decoration: underline;
 }
+.actualHourCell
+{
+	font-size:15px;
+	width:50px;
+}
 .borderCell
 {
 	border:1px inset #e0e0e0;
@@ -21,6 +26,29 @@ table#yearlyStatistic
 {	
 	border:2px inset transparent;
 }
+.dateCell
+{
+	padding: 0px;
+	text-align: center;
+	font-size:17px;
+	width:25px;
+}
+.highlightCell
+{
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffc477), color-stop(1, #fb9e25));
+	background:-moz-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:-webkit-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:-o-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:-ms-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:linear-gradient(to bottom, #ffc477 5%, #fb9e25 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc477', endColorstr='#fb9e25',GradientType=0);
+	background-color:#ffc477;
+}
+.lastMonthCell
+{
+	font-size:15px;
+	width:50px;
+}
 .nameCell
 {
 	padding:0px;
@@ -28,15 +56,26 @@ table#yearlyStatistic
 	font-size:17px;
 	text-align:left;
 }
-.noOfWorkingDay
+.noOfWorkingDayCell
 {
 	font-size:15px;
 	width:60px;
+}
+.phCell
+{
+	color:#ff0000;
+	font-size:17px;
+	font-weight: bold;
 }
 .shiftCountCell
 {
 	font-size:15px;
 	width:60px;
+}
+.thisMonthCell
+{
+	font-size:15px;
+	width:50px;
 }
 .titleCell	
 {
@@ -47,7 +86,7 @@ table#yearlyStatistic
 {
 	font-size:15px;
 	width:50px;
-}	
+}
 .totalHourCell
 {
 	font-size:15px;
