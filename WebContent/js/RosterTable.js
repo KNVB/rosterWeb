@@ -167,110 +167,6 @@ class RosterTable extends HTMLTableElement
 	}
 	_buildITORow(itoId)
 	{
-		var aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
-		var	actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
-
-		var cell,i;
-		var rosterDataList=this.rosterList[itoId]
-		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
-		var shiftType;
-		
-		cell=new BorderCell();
-		cell.innerHTML=rosterDataList.itoname+"<br>"+rosterDataList.itopostName+" Extn. 2458";
-		
-		row.id="shift_"+itoId;
-		row.appendChild(cell);
-		
-		var index=Object.keys(rosterDataList.previousMonthShiftList).length-this.showNoOfPrevDate+1;
-		for (i=index;i<=Object.keys(rosterDataList.previousMonthShiftList).length;i++)
-		{
-			var readOnlyShiftCell=new ReadOnlyShiftCell(rosterDataList.previousMonthShiftList[i],this.utility.getShiftCssClassName(rosterDataList.previousMonthShiftList[i]));
-			row.appendChild(readOnlyShiftCell);
-		}
-		for (i=0;i<31;i++)
-		{
-			shiftType=rosterDataList.shiftList[i+1];
-			if (shiftType!=null)
-			{
-				cell=new ReadOnlyShiftCell(shiftType,this.utility.getShiftCssClassName(shiftType));
-				actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
-				switch(shiftType)
-				{
-					case "a":
-							aShiftCount++;
-							break;
-					case "b":
-					case "b1":
-							bxShiftCount++;
-							break;
-					case "c":
-							cShiftCount++;
-							break;
-					case "d":
-					case "d1":
-					case "d2":
-					case "d3":
-							dxShiftCount++;
-							break;		
-				}
-			}
-			else
-				cell=new DateCell();
-			row.appendChild(cell);
-		}
-		var totalHour=rosterDataList.itoworkingHourPerDay*this.noOfWorkingDay;
-		thisMonthHourTotal=actualWorkingHour-totalHour;
-		thisMonthBalance=thisMonthHourTotal+rosterDataList.lastMonthBalance;
-		
-		cell=new BorderedAlignCenterCell();
-		cell.id=itoId+"_totalHour";
-		cell.textContent=this.utility.roundTo(totalHour,2);
-		row.appendChild(cell);
-		
-		cell=new BorderedAlignCenterCell();
-		cell.id=itoId+"_actualHour";
-		cell.textContent=this.utility.roundTo(actualWorkingHour,2);
-		row.appendChild(cell);
-		
-		cell=new BorderedAlignCenterCell();
-		cell.id=itoId+"_lastMonthBalance";
-		cell.textContent=this.utility.roundTo(rosterDataList.lastMonthBalance,2);
-		row.appendChild(cell);
-		
-		cell=new BorderedAlignCenterCell();
-		cell.id=itoId+"_thisMonthHourTotal";
-		cell.textContent=this.utility.roundTo(thisMonthHourTotal,2);
-		row.appendChild(cell);
-	
-		cell=new BorderedAlignCenterCell();
-		cell.id=itoId+"_thisMonthBalance";
-		cell.textContent=this.utility.roundTo(thisMonthBalance,2);
-		row.appendChild(cell);
-		
-		cell=new BorderedAlignCenterCell();
-		cell.id=itoId+"_aShiftCount";
-		cell.textContent=aShiftCount;
-		row.appendChild(cell);
-		
-		cell=new BorderedAlignCenterCell();
-		cell.id=itoId+"_bxShiftCount";
-		cell.textContent=bxShiftCount;
-		row.appendChild(cell);
-		
-		cell=new BorderedAlignCenterCell();
-		cell.id=itoId+"_cShiftCount";
-		cell.textContent=cShiftCount;
-		row.appendChild(cell);
-		
-		cell=new BorderedAlignCenterCell();
-		cell.id=itoId+"_dxShiftCount";
-		cell.textContent=dxShiftCount;
-		row.appendChild(cell);
-		
-		cell=new BorderedAlignCenterCell();
-		cell.id=itoId+"_noOfWoringDay";
-		cell.textContent=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
-		row.appendChild(cell);
 		
 	}
 	_buildNextMonth()
@@ -311,9 +207,47 @@ class RosterTable extends HTMLTableElement
 	}
 	_buildRosterRows()
 	{
-		var self=this;
+		var self=this,shiftType="",totalHour=0.0;
+		var aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
+		var	actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
 		Object.keys(this.rosterList).forEach(function(itoId){
-			self._buildITORow(itoId);
+			//console.log(itoId,self.rosterList[itoId]);
+			aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
+			actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;    
+			var rosterDataList=self.rosterList[itoId].shiftList;
+			var i=0;
+			
+			for (i=0;i<Object.keys(rosterDataList).length;i++)
+			{
+				shiftType=rosterDataList[i+1];
+				if (shiftType!=null)
+				{
+					actualWorkingHour+=self.rosterRule.shiftHourCount[shiftType];
+					switch(shiftType)
+					{
+						case "a":
+								aShiftCount++;
+								break;
+						case "b":
+						case "b1":
+								bxShiftCount++;
+								break;
+						case "c":
+								cShiftCount++;
+								break;
+						case "d":
+						case "d1":
+						case "d2":
+						case "d3":
+								dxShiftCount++;
+								break;		
+					}
+				}
+			}
+			totalHour=self.rosterList[itoId].itoworkingHourPerDay*self.noOfWorkingDay;
+			thisMonthHourTotal=actualWorkingHour-totalHour;
+			thisMonthBalance=thisMonthHourTotal+self.rosterList[itoId].lastMonthBalance;
+			//rosterDataList.lastMonthBalance
 		});
 	}
 	_buildTableBody()
