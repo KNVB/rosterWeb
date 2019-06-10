@@ -88,7 +88,7 @@ class RosterMonthSelectCell extends HTMLTableCellElement
 		
 		span=document.createElement("span");
 		span.id="rosterMonth";
-		//span.className="underlineText clickable";
+
 		$(span).addClass(Css.underlineTextClassName);
 		$(span).addClass(Css.clickableClassName);
 		span.textContent=utility.monthNames[rosterTable.rosterMonth]+" "+rosterTable.rosterYear;
@@ -96,7 +96,7 @@ class RosterMonthSelectCell extends HTMLTableCellElement
 	
 		span=document.createElement("span");
 		span.innerHTML="&nbsp;&nbsp;>";
-		//span.className="underlineText clickable";
+
 		$(span).addClass(Css.underlineTextClassName);
 		$(span).addClass(Css.clickableClassName);
 		this.append(span);		
@@ -120,6 +120,18 @@ customElements.define('shift-count-cell',
 		ShiftCountCell, {
 			extends: 'td'
 		});
+class ShiftLegendCell extends HTMLTableCellElement
+{
+	constructor() {
+		super();
+		this.colSpan=11;
+	}
+}
+customElements.define('shift-legend-cell',
+		ShiftLegendCell, {
+			extends: 'td'
+		});
+
 class ThisMonthCell extends HTMLTableCellElement
 {
 	constructor() {
@@ -157,4 +169,5 @@ customElements.define('total-cell',
 		TotalCell, {
 			extends: 'td'
 		});
+
 

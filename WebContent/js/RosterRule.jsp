@@ -1,13 +1,10 @@
 <%@ page trimDirectiveWhitespaces="true" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="application/javascript; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.rosterWeb.RosterRule"%>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper"%>
 <% 
 	ObjectMapper objectMapper = new ObjectMapper();
 %>
-/**
- * 
- */
 class RosterRule
 {
 	constructor(utility)
@@ -39,7 +36,11 @@ class RosterRule
 		});
 		return result;
 	}
-//----------------------------------------------------------------------------------------------------------------------------------	
+/*==============================================================================================*
+ *																				  				*
+ *	Private Method																				*
+ *																				  				*
+ *==============================================================================================*/
 	_getNoOfConsecutiveWorkingDay(ito,previousShiftList,thatShift)
 	{
 		var count=0,finished=false;

@@ -29,7 +29,6 @@ table#yearlyStatistic
 .dateCell
 {
 	padding: 0px;
-	text-align: center;
 	font-size:17px;
 	width:25px;
 }
@@ -96,4 +95,29 @@ table#yearlyStatistic
 {
 	font-size:15px;
 	width:50px;
+}
+/******************************************************************************************************************/
+.aShiftColor
+{
+	background-color:#ff99cc;
+}
+.bShiftColor
+{ 
+	background-color:#ffffcc;
+}
+.cShiftColor
+{
+	background-color:#ccffcc;
+}
+.oShiftColor
+{
+	background-color:#ffffff;
+}
+.dShiftColor
+{
+	background-color:#ccffff;
+}
+.sickLeaveColor
+{
+	background-color:#cc99ff;
 }

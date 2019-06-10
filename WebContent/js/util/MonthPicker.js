@@ -26,10 +26,14 @@ class MonthPicker
 		this.initYear=options.initYear;
 		this.onPickHandler=null;
 	
+		
+		
+		$(document).unbind();
 		$(document).click(function(){
 			self._clearMonthPickTable();
 		});
 		
+		this.monthPickElement.unbind();
 		$(this.monthPickElement).on("click",function(event){
 			event.stopPropagation();
 			if (self.monthPickTable.rows.length==0)

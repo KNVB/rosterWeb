@@ -1,3 +1,5 @@
+<%@ page trimDirectiveWhitespaces="true" %>
+<%@ page language="java" contentType="application/javascript; charset=UTF-8" pageEncoding="UTF-8"%>
 class Utility
 {
 	constructor()
@@ -26,7 +28,33 @@ class Utility
 							    }
 		});
 	}	
-	
+	getShiftCssClassName(shiftType)
+	{
+		var className="";
+    	switch (shiftType)
+    	{
+			case "a":
+					className="aShiftColor";
+					break;	
+			case "b":
+			case "b1":
+					className="bShiftColor";
+					break;
+			case "c":
+					className="cShiftColor";
+					break;
+			case "d":
+			case "d1":
+			case "d2":
+			case "d3":
+					 className="dShiftColor";
+					 break;
+			case  "O":
+					 className="oShiftColor";
+					 break;
+    	}
+    	return className;
+	}	
 	roundTo(theValue,decPlace)
 	{
 		var result=theValue*Math.pow(10,decPlace);

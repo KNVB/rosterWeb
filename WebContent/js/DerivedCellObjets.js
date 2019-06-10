@@ -94,6 +94,19 @@ customElements.define('no-of-working-day-count-cell',
 		NoOfWorkingDayCountCell,{
 			extends: 'td'
 		});
+class ReadOnlyShiftCell extends BorderedAlignCenterCell
+{
+	constructor(shiftType,shiftClassName) {
+		super();
+		this.textContent=shiftType;
+		$(this).addClass(shiftClassName);
+		$(this).addClass(Css.cursorCellClassName);
+	}
+}
+customElements.define('readonly-shift-cell',
+		ReadOnlyShiftCell, {
+			extends: 'td'
+		});
 class ShiftACountCell extends BorderedAlignCenterCell
 {
 	constructor() {
@@ -225,3 +238,149 @@ customElements.define('weekday-name-cell',
 		WeekDayNameCell, {
 			extends: 'td'
 		}); 
+/*==============================================================================================*
+ *																				  				*
+ *	Legend Cell  																				*
+ *																				  				*
+ *==============================================================================================*/
+class AShiftLegendCell extends ShiftLegendCell
+{
+	constructor() {
+		super();
+		$(this).addClass(Css.aShiftColorClassName);
+		this.textContent="a : 0800H - 1700H";
+		this.colSpan=11;
+	}
+}
+customElements.define('a-shift-legend-cell',
+		AShiftLegendCell, {
+		extends: 'td'
+		}
+	);
+
+class BShiftLegendCell extends ShiftLegendCell
+{
+	constructor() {
+		super();
+		$(this).addClass(Css.bShiftColorClassName);
+		this.textContent="b : 1630H - 2215H";
+		this.colSpan=11;
+	}
+}
+customElements.define('b-shift-legend-cell',
+		BShiftLegendCell, {
+		extends: 'td'
+		}
+	);
+class B1ShiftLegendCell extends ShiftLegendCell
+{
+	constructor() {
+		super();
+		$(this).addClass(Css.bShiftColorClassName);
+		this.textContent="b1 : 1630H - 2215H";
+		this.colSpan=11;
+	}
+}
+customElements.define('b1-shift-legend-cell',
+		B1ShiftLegendCell, {
+		extends: 'td'
+		}
+	);
+class CShiftLegendCell extends ShiftLegendCell
+{
+	constructor() {
+		super();
+		$(this).addClass(Css.cShiftColorClassName);
+		this.textContent="c : 2145H - 0830H (the next day)";
+		this.colSpan=11;
+	}
+}
+customElements.define('c-shift-legend-cell',
+		CShiftLegendCell, {
+		extends: 'td'
+		}
+	);
+class DShiftLegendCell extends ShiftLegendCell
+{
+	constructor() {
+		super();
+		$(this).addClass(Css.dShiftColorClassName);
+		this.colSpan=11;
+		this.textContent="d : 0800H - 1800H (on weekdays)";
+	}
+}
+customElements.define('d-shift-legend-cell',
+		DShiftLegendCell, {
+		extends: 'td'
+		}
+	);
+class D1ShiftLegendCell extends ShiftLegendCell
+{
+	constructor() {
+		super();
+		this.colSpan=11;
+		$(this).addClass(Css.dShiftColorClassName);
+		this.textContent="d1 : 0800H - 1700H (on weekdays)";
+	}
+}
+customElements.define('d1-shift-legend-cell',
+		D1ShiftLegendCell, {
+		extends: 'td'
+		}
+	);
+class D2ShiftLegendCell extends ShiftLegendCell
+{
+	constructor() {
+		super();
+		this.colSpan=11;
+		$(this).addClass(Css.dShiftColorClassName);
+		this.textContent="d2 : 0900H - 1800H (on weekdays)";
+	}
+}
+customElements.define('d2-shift-legend-cell',
+		D2ShiftLegendCell, {
+		extends: 'td'
+		}
+	);
+class D3ShiftLegendCell extends ShiftLegendCell
+{
+	constructor() {
+		super();
+		this.colSpan=11;
+		$(this).addClass(Css.dShiftColorClassName);
+		this.textContent="d3 : 0800H - 1648H (on weekdays)";
+	}
+}
+customElements.define('d3-shift-legend-cell',
+		D3ShiftLegendCell, {
+		extends: 'td'
+		}
+	);
+class OShiftLegendCell extends ShiftLegendCell
+{
+	constructor() {
+		super();
+		this.colSpan=11;
+		$(this).addClass(Css.oShiftColorClassName);
+		this.textContent="O : dayoff";
+	}
+}
+customElements.define('o-shift-legend-cell',
+		OShiftLegendCell, {
+		extends: 'td'
+		}
+	);
+class SickLeaveShiftLegendCell extends ShiftLegendCell
+{
+	constructor() {
+		super();
+		this.colSpan=11;
+		$(this).addClass(Css.sickLeaveColorClassName);
+		this.textContent="s : sick leave standby";
+	}
+}
+customElements.define('sick-leave-shift-legend-cell',
+		SickLeaveShiftLegendCell, {
+		extends: 'td'
+		}
+	);

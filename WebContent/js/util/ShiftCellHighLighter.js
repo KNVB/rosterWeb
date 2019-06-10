@@ -5,6 +5,7 @@ class ShiftCellHighLighter
 		var self=this;
 		this.selectionString="td."+targetCellClassName;
 		this.rosterTable=rosterTable;
+		$(this.selectionString).unbind();
 		/*$(selectionString).on("blur",function(){
 			self.rosterTable.updateValue(this);
 		});*/
@@ -14,5 +15,9 @@ class ShiftCellHighLighter
 		$(this.selectionString).mouseout(function(){
 			self.rosterTable.unMarkCoorindate(this);
 		});
+	}
+	destroy()
+	{
+		$(this.selectionString).unbind();
 	}
 }

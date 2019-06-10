@@ -1,0 +1,325 @@
+/* The side navigation menu */
+.sidenav {
+   font-family:Arial;
+   height: 100%; /* 100% Full-height */
+   width: 250px; /* 0 width - change this with JavaScript */
+   position: fixed; /* Stay in place */
+   z-index: 1; /* Stay on top */
+   top: 0; /* Stay at the top */
+   left: 0;
+   background-color: #ff0000; /* red*/
+   overflow-x: hidden; /* Disable horizontal scroll */
+   padding-top: 60px; /* Place content 60px from the top */
+   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 20px;
+    color:#f1f1f1;
+    display: block;
+    transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+    color: #111 ;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+.openbtn:hover
+{
+	cursor:pointer;
+}
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+    transition: margin-left .5s;
+    padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+/*******************************************************************************************************************************/
+.addBlackListShiftEntryDiv
+{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	flex:1 1;
+}
+.blackListShiftDiv
+{
+	flex-direction:row;
+	margin:0px;
+	display:flex;
+}
+.blackListShiftListDiv
+{
+	display:flex;
+	flex-direction:column;
+}
+.errorRedBlackGround
+{
+	background-color:red!important;
+	animation: blinker 1s linear infinite;
+}
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
+.fillEmptyShiftWithOButton
+{
+	/* background styles */
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: green; /*for compatibility with older browsers*/
+	background-image: linear-gradient(#FFB6C1,#CD5C5C);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+.fillEmptyShiftWithOButton:hover
+{
+	background: linear-gradient(IndianRed,lightPink);
+	cursor: pointer;
+}
+.findMissingShiftButton
+{
+	/* background styles */
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: green; /*for compatibility with older browsers*/
+	background-image: linear-gradient(green,lightgreen);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+
+.findMissingShiftButton:hover
+{
+	background: linear-gradient(#073,#0fa);
+	cursor: pointer;
+}
+.findDuplicateShiftButton
+{
+	/* background styles */
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: blue; /*for compatibility with older browsers*/
+	background-image: linear-gradient(blue,lightblue);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+.findDuplicateShiftButton:hover
+{
+	background: linear-gradient(#1f4160,#1e3460);
+	cursor: pointer;
+}
+.checkAllButton
+{
+	/* background styles */
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: purple; /*for compatibility with older browsers*/
+	background-image: linear-gradient(purple,lightpurple);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+.checkAllButton:hover
+{
+	background: linear-gradient(#663399,#7E329A);
+	cursor: pointer;
+}
+
+.clearAllButton
+{
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: #FF8500; /*for compatibility with older browsers*/
+	background-image: linear-gradient(#FF8500,lightOrange);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+.clearAllButton:hover
+{
+	background: linear-gradient(#FF8500,#F7A80A);
+	cursor: pointer;
+}
+.exportButton
+{
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: black; /*for compatibility with older browsers*/
+	background-image: linear-gradient(black,#6E685E);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+.exportButton:hover
+{
+	background: linear-gradient(#6E685E,black);
+	cursor: pointer;
+}
+.saveRosterToDBButton
+{
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: red; /*for compatibility with older browsers*/
+	background-image: linear-gradient(red,lightred);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+.saveRosterToDBButton:hover
+{
+	background: linear-gradient(pink,red);
+	cursor: pointer;
+}	
+.autoPlannerButton
+{
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: #8B4513 ; /*for compatibility with older browsers*/
+	background-image: linear-gradient(#8B4513,#A0522D);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+.autoPlannerButton:hover
+{
+	background: linear-gradient(#800000,#8B4513);
+	cursor: pointer;
+}	
+.exportButton:after,
+.clearAllButton:after,
+.checkAllButton:after,
+.autoPlannerButton:after,
+.saveRosterToDBButton:after,
+.fillEmptyShiftWithOButton:after,
+.findMissingShiftButton:after, 
+.findDuplicateShiftButton:after	
+{
+	content: '';
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: calc(100% - 4px);
+	height: 50%;
+	background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));
+}
+.vacantShiftLabel
+{
+	color:#ff6600;
+	text-align:right!Important;
+}
+.yearlyStatisticReportDiv
+{
+	height:390px;
+	overflow-y:scroll
+}
+/***********************************************************************************************************************/
+div#yearlyStatistic
+{
+	height:450px;
+	overflow-y:scroll;
+}
+table#yearlyStatisticTable
+{
+	width:500px;
+	border-collapse:collapse
+}
+tr#theLowestSD:hover,
+tr#secondLowestSD:hover,
+tr#thirdLowestSD:hover,
+tr#theLowestMissingShiftCount:hover,
+tr#theSecondLowestMissingShiftCount:hover,
+tr#theThirdLowestMissingShiftCount:hover
+{
+	cursor: pointer;
+}
