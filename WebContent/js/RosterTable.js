@@ -240,7 +240,7 @@ class RosterTable extends HTMLTableElement
 		totalCell=new TotalCell();
 		row.appendChild(totalCell);
 		
-		for (var i=0;i<3;i++)
+		for (var i=0;i<4;i++)
 		{
 			var shiftCountCell=new ShiftCountCell();
 			row.appendChild(shiftCountCell);

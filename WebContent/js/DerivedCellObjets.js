@@ -94,7 +94,7 @@ customElements.define('no-of-working-day-count-cell',
 		NoOfWorkingDayCountCell,{
 			extends: 'td'
 		});
-class ShiftACountCell extends  BorderedAlignCenterCell
+class ShiftACountCell extends BorderedAlignCenterCell
 {
 	constructor() {
 		super();
@@ -105,7 +105,7 @@ customElements.define('shift-a-count-cell',
 		ShiftACountCell, {
 			extends: 'td'
 		});
-class ShiftBxCountCell extends  BorderedAlignCenterCell
+class ShiftBxCountCell extends BorderedAlignCenterCell
 {
 	constructor() {
 		super();
@@ -116,7 +116,7 @@ customElements.define('shift-bx-count-cell',
 		ShiftBxCountCell, {
 			extends: 'td'
 		});
-class ShiftCCountCell extends  BorderedAlignCenterCell
+class ShiftCCountCell extends BorderedAlignCenterCell
 {
 	constructor() {
 		super();
@@ -127,7 +127,7 @@ customElements.define('shift-c-count-cell',
 		ShiftCCountCell, {
 			extends: 'td'
 		});
-class ShiftDxCountCell extends  BorderedAlignCenterCell
+class ShiftDxCountCell extends BorderedAlignCenterCell
 {
 	constructor() {
 		super();

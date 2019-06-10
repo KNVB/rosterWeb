@@ -67,6 +67,11 @@ table#yearlyStatistic
 	font-size:17px;
 	font-weight: bold;
 }
+.rosterMonthSelectCell
+{
+	font-size:15px;
+	font-weight: bold;
+}
 .shiftCountCell
 {
 	font-size:15px;
