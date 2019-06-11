@@ -304,10 +304,27 @@
 	overflow-y:scroll
 }
 /***********************************************************************************************************************/
+::selection 
+{
+  background: none; /* WebKit/Blink Browsers */
+}
+::-moz-selection 
+{
+  background: none; /* Gecko Browsers */
+}
+td.cursorCell:focus 
+{
+	outline: none;
+}
 div#yearlyStatistic
 {
 	height:450px;
 	overflow-y:scroll;
+}
+table#buttonTable
+{
+	width:100%;
+	border-spacing:10px;
 }
 table#yearlyStatisticTable
 {

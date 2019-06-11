@@ -31,7 +31,6 @@
 		<script src="<%=request.getContextPath()%>/js/RosterRule.jsp"></script>
 		<script src="<%=request.getContextPath()%>/js/util/Utility.jsp"></script>
 		<script src="<%=request.getContextPath()%>/js/util/MonthPicker.js"></script>
-		<script src="<%=request.getContextPath()%>/js/util/ShiftCellHighLighter.js"></script>
 		<script>
 			$( document ).ready(function() {				
 				var rosterTable=new RosterTable($("body"));

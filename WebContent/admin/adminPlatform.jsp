@@ -39,7 +39,7 @@
 		<script src="<%=request.getContextPath()%>/js/RosterTable.js"></script>
 		<script src="<%=request.getContextPath()%>/js/util/Utility.jsp"></script>
 		<script src="<%=request.getContextPath()%>/js/util/MonthPicker.js"></script>
-		<script src="<%=request.getContextPath()%>/js/util/ShiftCellHighLighter.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/AdminObjects.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/ITO.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/ITOManagement.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/Roster.js"></script>

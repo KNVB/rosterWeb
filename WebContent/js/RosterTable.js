@@ -49,7 +49,7 @@ class RosterTable extends HTMLTableElement
 		this.monthPicker=new MonthPicker({elements:$("#rosterMonth"),initYear:this.rosterYear,minValue: "01/2017"});
 		this.monthPicker.onPick(function (year,month){
 			self.build(year,month);
-		});		
+		});
 	}
 	destroy()
 	{
@@ -165,9 +165,25 @@ class RosterTable extends HTMLTableElement
 		borderCell.colSpan=10;
 		this.rosterHolidayRow.appendChild(borderCell);
 	}
-	_buildITORow(itoId)
+	_buildITORow(rosterRowData)
 	{
+		var cell=new BorderCell(),i;
+		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
 		
+		this.utility.buildPreviousMonthShiftCells(rosterRowData,this,row)
+		
+		for (i=0;i<rosterRowData.shiftList.length;i++)
+		{
+			cell=new ReadOnlyShiftCell(this);
+			cell.setShiftType(rosterRowData.shiftList[i]);
+			row.appendChild(cell);
+		}
+		for (var j=i;j<31;j++)
+		{
+			cell=new DateCell();
+			row.appendChild(cell);
+		}
+		this.utility.buildShiftCountCell(rosterRowData,row);
 	}
 	_buildNextMonth()
 	{
@@ -207,47 +223,12 @@ class RosterTable extends HTMLTableElement
 	}
 	_buildRosterRows()
 	{
-		var self=this,shiftType="",totalHour=0.0;
-		var aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
-		var	actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
+		var self=this,shiftType;
 		Object.keys(this.rosterList).forEach(function(itoId){
-			//console.log(itoId,self.rosterList[itoId]);
-			aShiftCount=0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
-			actualWorkingHour=0.0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;    
-			var rosterDataList=self.rosterList[itoId].shiftList;
-			var i=0;
-			
-			for (i=0;i<Object.keys(rosterDataList).length;i++)
-			{
-				shiftType=rosterDataList[i+1];
-				if (shiftType!=null)
-				{
-					actualWorkingHour+=self.rosterRule.shiftHourCount[shiftType];
-					switch(shiftType)
-					{
-						case "a":
-								aShiftCount++;
-								break;
-						case "b":
-						case "b1":
-								bxShiftCount++;
-								break;
-						case "c":
-								cShiftCount++;
-								break;
-						case "d":
-						case "d1":
-						case "d2":
-						case "d3":
-								dxShiftCount++;
-								break;		
-					}
-				}
-			}
-			totalHour=self.rosterList[itoId].itoworkingHourPerDay*self.noOfWorkingDay;
-			thisMonthHourTotal=actualWorkingHour-totalHour;
-			thisMonthBalance=thisMonthHourTotal+self.rosterList[itoId].lastMonthBalance;
-			//rosterDataList.lastMonthBalance
+			var rosterRowData=self.rosterList[itoId];
+			rosterRowData=self.utility.buildRosterRowData(self.rosterRule,rosterRowData,self);
+			rosterRowData["itoId"]=itoId;
+			self._buildITORow(rosterRowData);			
 		});
 	}
 	_buildTableBody()
@@ -257,7 +238,7 @@ class RosterTable extends HTMLTableElement
 		this._getData()
 		.then(function(){
 			self._buildRosterRows();
-			self.shiftCellHighLighter=new ShiftCellHighLighter(self,Css.cursorCellClassName);
+		//	self.shiftCellHighLighter=new ShiftCellHighLighter(self,Css.cursorCellClassName);
 		});
 	}
 	_buildTableCaptionRow()
@@ -300,8 +281,10 @@ class RosterTable extends HTMLTableElement
 		cell.colSpan=44+this.showNoOfPrevDate;
 		cell.innerHTML="<br>";
 		
+		cell=new AShiftLegendCell();
+		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
-		row.appendChild(new AShiftLegendCell());
+		row.appendChild(cell);
 		
 		cell=row.insertCell(row.cells.length);
 		cell.colSpan=21;
@@ -315,32 +298,50 @@ class RosterTable extends HTMLTableElement
 		cell.id="yearlyStat"; 
 		cell.style.verticalAlign="top";
 
+		cell=new BShiftLegendCell();
+		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
-		row.appendChild(new BShiftLegendCell());
+		row.appendChild(cell);
 		
+		cell=new B1ShiftLegendCell();
+		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
-		row.appendChild(new B1ShiftLegendCell());
+		row.appendChild(cell);
 		
+		cell=new CShiftLegendCell();
+		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
-		row.appendChild(new CShiftLegendCell());
+		row.appendChild(cell);
 
+		cell=new DShiftLegendCell();
+		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
-		row.appendChild(new DShiftLegendCell());
+		row.appendChild(cell);
 		
+		cell=new D1ShiftLegendCell();
+		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
-		row.appendChild(new D1ShiftLegendCell());
+		row.appendChild(cell);
 
+		cell=new D2ShiftLegendCell();
+		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
-		row.appendChild(new D2ShiftLegendCell());
+		row.appendChild(cell);
 		
+		cell=new D3ShiftLegendCell();
+		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
-		row.appendChild(new D3ShiftLegendCell());
+		row.appendChild(cell);
 		
+		cell=new  SickLeaveShiftLegendCell();
+		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
-		row.appendChild(new SickLeaveShiftLegendCell());
+		row.appendChild(cell);
 		
+		cell=new OShiftLegendCell();
+		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
-		row.appendChild(new OShiftLegendCell());
+		row.appendChild(cell);
 	}
 	_buildTableHeader()
 	{

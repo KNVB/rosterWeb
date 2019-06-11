@@ -35,7 +35,6 @@ class MonthPicker
 		
 		this.monthPickElement.unbind();
 		$(this.monthPickElement).on("click",function(event){
-			event.stopPropagation();
 			if (self.monthPickTable.rows.length==0)
 				self._buildMonthPickTable(self.initYear,this);
 			self._showMonthPickTable(this);

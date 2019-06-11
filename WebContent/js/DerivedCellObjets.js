@@ -11,6 +11,25 @@ customElements.define('actual-hour-count-cell',
 		extends: 'td'
 		}
 	);
+class CursorCell extends BorderedAlignCenterCell
+{
+	constructor(rosterTable) {
+		super();
+		var self=this;
+		this.rosterTable=rosterTable;
+		$(this).addClass(Css.cursorCellClassName);
+		$(this).mouseover(function(){
+			self.rosterTable.markCoorindate(this);
+		});
+		$(this).mouseout(function(){
+			self.rosterTable.unMarkCoorindate(this);
+		});
+	}
+}
+customElements.define('cursor-cell',
+		CursorCell, {
+			extends: 'td'
+		});
 class DateCell extends BorderedAlignCenterCell
 {
 	constructor() {
@@ -94,14 +113,18 @@ customElements.define('no-of-working-day-count-cell',
 		NoOfWorkingDayCountCell,{
 			extends: 'td'
 		});
-class ReadOnlyShiftCell extends BorderedAlignCenterCell
+class ReadOnlyShiftCell extends CursorCell
 {
-	constructor(shiftType,shiftClassName) {
-		super();
-		this.textContent=shiftType;
-		$(this).addClass(shiftClassName);
-		$(this).addClass(Css.cursorCellClassName);
+	constructor(rosterTable) {
+		super(rosterTable);
+		var self=this;
+		this.utility=rosterTable.utility;
 	}
+	setShiftType(t)
+	{
+		this.textContent=t;
+		$(this).addClass(this.utility.getShiftCssClassName(t));
+	}	
 }
 customElements.define('readonly-shift-cell',
 		ReadOnlyShiftCell, {
@@ -249,7 +272,6 @@ class AShiftLegendCell extends ShiftLegendCell
 		super();
 		$(this).addClass(Css.aShiftColorClassName);
 		this.textContent="a : 0800H - 1700H";
-		this.colSpan=11;
 	}
 }
 customElements.define('a-shift-legend-cell',
@@ -264,7 +286,6 @@ class BShiftLegendCell extends ShiftLegendCell
 		super();
 		$(this).addClass(Css.bShiftColorClassName);
 		this.textContent="b : 1630H - 2215H";
-		this.colSpan=11;
 	}
 }
 customElements.define('b-shift-legend-cell',
@@ -278,7 +299,6 @@ class B1ShiftLegendCell extends ShiftLegendCell
 		super();
 		$(this).addClass(Css.bShiftColorClassName);
 		this.textContent="b1 : 1630H - 2215H";
-		this.colSpan=11;
 	}
 }
 customElements.define('b1-shift-legend-cell',
@@ -292,7 +312,6 @@ class CShiftLegendCell extends ShiftLegendCell
 		super();
 		$(this).addClass(Css.cShiftColorClassName);
 		this.textContent="c : 2145H - 0830H (the next day)";
-		this.colSpan=11;
 	}
 }
 customElements.define('c-shift-legend-cell',
@@ -305,7 +324,6 @@ class DShiftLegendCell extends ShiftLegendCell
 	constructor() {
 		super();
 		$(this).addClass(Css.dShiftColorClassName);
-		this.colSpan=11;
 		this.textContent="d : 0800H - 1800H (on weekdays)";
 	}
 }
@@ -318,7 +336,6 @@ class D1ShiftLegendCell extends ShiftLegendCell
 {
 	constructor() {
 		super();
-		this.colSpan=11;
 		$(this).addClass(Css.dShiftColorClassName);
 		this.textContent="d1 : 0800H - 1700H (on weekdays)";
 	}
@@ -332,7 +349,6 @@ class D2ShiftLegendCell extends ShiftLegendCell
 {
 	constructor() {
 		super();
-		this.colSpan=11;
 		$(this).addClass(Css.dShiftColorClassName);
 		this.textContent="d2 : 0900H - 1800H (on weekdays)";
 	}
@@ -346,7 +362,6 @@ class D3ShiftLegendCell extends ShiftLegendCell
 {
 	constructor() {
 		super();
-		this.colSpan=11;
 		$(this).addClass(Css.dShiftColorClassName);
 		this.textContent="d3 : 0800H - 1648H (on weekdays)";
 	}
@@ -360,7 +375,6 @@ class OShiftLegendCell extends ShiftLegendCell
 {
 	constructor() {
 		super();
-		this.colSpan=11;
 		$(this).addClass(Css.oShiftColorClassName);
 		this.textContent="O : dayoff";
 	}
@@ -374,7 +388,6 @@ class SickLeaveShiftLegendCell extends ShiftLegendCell
 {
 	constructor() {
 		super();
-		this.colSpan=11;
 		$(this).addClass(Css.sickLeaveColorClassName);
 		this.textContent="s : sick leave standby";
 	}

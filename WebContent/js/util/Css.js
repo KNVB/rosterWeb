@@ -10,11 +10,11 @@ class Css
 	}
 	static get alignLeftClassName()
 	{
-		return"alignLeft";
+		return "alignLeft";
 	}
 	static get aShiftColorClassName()
 	{
-		return"aShiftColor";
+		return "aShiftColor";
 	}
 	static get bShiftColorClassName()
 	{
@@ -22,19 +22,19 @@ class Css
 	}
 	static get borderCellClassName()
 	{
-		return"borderCell";
+		return "borderCell";
 	}
 	static get clickableClassName()
 	{
-	 	return"clickable";
+	 	return "clickable";
 	}
 	static get cShiftColorClassName()
 	{
-		return"cShiftColor";
+		return "cShiftColor";
 	}
 	static get cursorCellClassName()
 	{
-		return"cursorCell";
+		return "cursorCell";
 	}	
 	static get dateCellClassName()
 	{
@@ -42,67 +42,67 @@ class Css
 	}
 	static get dShiftColorClassName()
 	{
-		return"dShiftColor";
+		return "dShiftColor";
 	}
 	static get highlightCellClassName()
 	{
-	 	return"highlightCell";
+	 	return "highlightCell";
 	}
 	static get lastMonthCellClassName()
 	{
-		return"lastMonthCell";
+		return "lastMonthCell";
 	}
 	static get nameCellClassName()
 	{
-	 	return"nameCell";
+	 	return "nameCell";
 	}
 	static get noOfWorkingDayCellClassName()
 	{
-	 	return"noOfWorkingDayCell";
+	 	return "noOfWorkingDayCell";
 	}
 	static get oShiftColorClassName()
 	{
-	 	return"oShiftColor";
+	 	return "oShiftColor";
 	}
 	static get phCellClassName()
 	{
-	 	return"phCell";
+	 	return "phCell";
 	}
 	static get rosterMonthSelectCellClassName()
 	{
-	 	return"rosterMonthSelectCell";
+	 	return "rosterMonthSelectCell";
 	}
 	static get shiftCellClassName()
 	{
-	 	return"shiftCell";
+	 	return "shiftCell";
 	}
 	static get shiftCountCellClassName()
 	{
-	 	return"shiftCountCell";
+	 	return "shiftCountCell";
 	}
 	static get sickLeaveColorClassName()
 	{
-	 	return"sickLeaveColor";
+	 	return "sickLeaveColor";
 	}
 	static get thisMonthCellClassName()
 	{
-	 	return"thisMonthCell";
+	 	return "thisMonthCell";
 	}
 	static get titleCellClassName()
 	{
-	 	return"titleCell";
+	 	return "titleCell";
 	}
 	static get totalCellClassName()
 	{
-	 	return"totalCell";
+	 	return "totalCell";
 	}
 	static get totalHourCellClassName()
 	{
-	 	return"totalHourCell";
+	 	return "totalHourCell";
 	}
 	static get underlineTextClassName()
 	{
-	 	return"underlineText";
+	 	return "underlineText";
 	}
 
 	static getShiftCssClassName(shiftType)
