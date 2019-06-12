@@ -11,25 +11,6 @@ customElements.define('actual-hour-count-cell',
 		extends: 'td'
 		}
 	);
-class CursorCell extends BorderedAlignCenterCell
-{
-	constructor(rosterTable) {
-		super();
-		var self=this;
-		this.rosterTable=rosterTable;
-		$(this).addClass(Css.cursorCellClassName);
-		$(this).mouseover(function(){
-			self.rosterTable.markCoorindate(this);
-		});
-		$(this).mouseout(function(){
-			self.rosterTable.unMarkCoorindate(this);
-		});
-	}
-}
-customElements.define('cursor-cell',
-		CursorCell, {
-			extends: 'td'
-		});
 class DateCell extends BorderedAlignCenterCell
 {
 	constructor() {
@@ -113,12 +94,13 @@ customElements.define('no-of-working-day-count-cell',
 		NoOfWorkingDayCountCell,{
 			extends: 'td'
 		});
-class ReadOnlyShiftCell extends CursorCell
+class PreviousMonthShiftCell extends BorderedAlignCenterCell
 {
 	constructor(rosterTable) {
-		super(rosterTable);
+		super();
 		var self=this;
 		this.utility=rosterTable.utility;
+		this.rosterTable=rosterTable;
 	}
 	setShiftType(t)
 	{
@@ -126,10 +108,31 @@ class ReadOnlyShiftCell extends CursorCell
 		$(this).addClass(this.utility.getShiftCssClassName(t));
 	}	
 }
+customElements.define('previous-month-shift-cell',
+		PreviousMonthShiftCell, {
+			extends: 'td'
+		});
+class ReadOnlyShiftCell extends PreviousMonthShiftCell
+{
+	constructor(rosterTable) {
+		super(rosterTable);
+		var self=this;
+	
+		$(this).addClass(Css.cursorCellClassName);
+		$(this).mouseover(function(){
+			self.rosterTable.markCoorindate(this);
+		});
+		$(this).mouseout(function(){
+			self.rosterTable.unMarkCoorindate(this);
+		});
+	}
+	
+}
 customElements.define('readonly-shift-cell',
 		ReadOnlyShiftCell, {
 			extends: 'td'
 		});
+
 class ShiftACountCell extends BorderedAlignCenterCell
 {
 	constructor() {

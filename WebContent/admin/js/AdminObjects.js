@@ -177,9 +177,13 @@ customElements.define('button-table',
 
 class EditableShiftCell extends ReadOnlyShiftCell
 {
-	constructor(rosterTable){
+	constructor(rosterTable,itoId){
 		super(rosterTable);
+		var self=this;
 		this.contentEditable="true";
+		this.itoId=itoId;
+		this.rosterTable=rosterTable;
+		$(this).addClass(AdminCss.shiftCellClassName);
 		$(this).click(function(event){
 			event.preventDefault();
 			var range = document.createRange();
@@ -196,6 +200,9 @@ class EditableShiftCell extends ReadOnlyShiftCell
 			sel.collapse(this.firstChild, 1);
 			console.log("double click");
 		});
+		$(this).blur(function(event){
+			self.rosterTable.updateValue(this);
+		})
 	}
 }
 customElements.define('editable-shift-cell',
@@ -218,7 +225,7 @@ customElements.define('fill-empty-shift-with-o-button-cell',
 		}
 	);
 
-class PreferredShiftCell extends CursorCell
+class PreferredShiftCell extends BorderedAlignCenterCell
 {
 	constructor(rosterTable){
 		super(rosterTable);

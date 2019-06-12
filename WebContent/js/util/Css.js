@@ -71,11 +71,7 @@ class Css
 	static get rosterMonthSelectCellClassName()
 	{
 	 	return "rosterMonthSelectCell";
-	}
-	static get shiftCellClassName()
-	{
-	 	return "shiftCell";
-	}
+	}	
 	static get shiftCountCellClassName()
 	{
 	 	return "shiftCountCell";

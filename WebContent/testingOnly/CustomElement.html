@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Custom Element</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script>
+			class DateCell extends HTMLTableCellElement{
+				constructor() {
+					super();
+				}
+				static get observedAttributes() {
+				  return ['shiftType'];
+				}
+				attributeChangedCallback(name, oldValue, newValue)
+				{
+					var rowIndex=this.parentElement.rowIndex;
+					var cellIndex=this.cellIndex;
+					console.log(`cell (${cellIndex},${rowIndex}) Attribute ${name} from ${oldValue} to ${newValue}`);
+				}
+				set shiftType(v) 
+				{
+					this.setAttribute("shiftType",v);
+					this.textContent=v;
+				}				
+			}
+			customElements.define('datacell-string',
+				DateCell, {
+					extends: 'td'
+				});		
+			$(document).ready(function() {
+				var t = document.createElement("table");
+				var row = t.insertRow(t.rows);
+				var cell1 = new DateCell();
+				var cell2 = new DateCell();
+				var cell3 = new DateCell();
+
+				row.id="bb";
+				row.appendChild(cell1);
+				row.appendChild(cell2);
+				row.appendChild(cell3);
+
+				
+				$("#container").append(t);
+				cell1.shiftType="a";
+				cell2.shiftType= "c";
+				$(cell3).val("b");
+			});
+		</script>
+	</head>
+	<body>
+		<div id="container">
+		</div>
+		<br>
+	</body>	
+</html>	

@@ -4,6 +4,10 @@ class AdminCss extends Css
 	{
 		return "errorRedBlackGround";
 	}
+	static get shiftCellClassName()
+	{
+	 	return "shiftCell";
+	}
 	static get vacantShiftClassName()
 	{
 		return "vacantShift";
@@ -19,5 +23,5 @@ class AdminCss extends Css
 	static get yearlyStatisticTableClassName()
 	{
 		return "yearlyStatisticTable";
-	}
+	}	
 }

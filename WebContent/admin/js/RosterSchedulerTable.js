@@ -7,7 +7,6 @@ class RosterSchedulerTable extends RosterTable
 		this.preferredShiftList=null;
 		this.showNoOfPrevDate=2;
 		this.utility=new AdminUtility();
-
 	}
 /*==============================================================================================*
  *																				  				*
@@ -30,12 +29,38 @@ class RosterSchedulerTable extends RosterTable
 		.fail(function(data){
 			alert("Failed to get yearly statistic");
 		});
-	}	
-
+	}
+	clearAllShift()
+	{
+		var i,cells;
+		$("td."+AdminCss.shiftCellClassName).text("").blur();
+	}
+	fillEmptyShiftWithO()
+	{
+		$("td."+AdminCss.shiftCellClassName).each(function(index,cell){
+			if (cell.textContent=="")
+				$(cell).text("O").blur();
+		});
+	}
 	
 	setScheduler(rosterScheduler)
 	{
 		this.rosterScheduler=rosterScheduler;
+	}
+	updateValue(theCell)
+	{
+		var cell,i;
+		var ito=this.itoList[theCell.itoId];
+		var row=theCell.parentElement;
+		Object.keys(this.rosterRule.shiftHourCount).forEach(function(shiftType){
+			$(theCell).removeClass(shiftType.toLowerCase()+"ShiftColor");
+		});
+		if (ito.isValidShift(theCell.textContent))
+		{	
+			$(theCell).addClass(this.utility.getShiftCssClassName(theCell.textContent));
+		}
+		this._updateShiftCountCells(row,this.rosterRule,ito);
+		this._updateVacantCells(theCell.cellIndex,ito);
 	}
 /*==============================================================================================*
  *																				  				*
@@ -44,31 +69,15 @@ class RosterSchedulerTable extends RosterTable
  *==============================================================================================*/
 	_buildITORow(rosterRowData)
 	{
-		var cell=new BorderCell(),i;
-		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
-	
-		
-		this.utility.buildPreviousMonthShiftCells(rosterRowData,this,row)
-		for (i=0;i<rosterRowData.shiftList.length;i++)
-		{
-			cell=new EditableShiftCell(this);
-			cell.setShiftType(rosterRowData.shiftList[i]);
-			row.appendChild(cell);
-		}
-		for (var j=i;j<31;j++)
-		{
-			cell=new DateCell();
-			row.appendChild(cell);
-		}
-		this.utility.buildShiftCountCell(rosterRowData,row);
-		this._buildPreferredShift(rosterRowData.itoId);
+		super._buildITORow(rosterRowData);
+		this._buildPreferredShiftRow(rosterRowData.itoId);
 	}
 /*==================================================================================================*
  *                                                                                                  *
  *         Generate Preferred Shift Rows                                                            *
  *                                                                                                  *
  *==================================================================================================*/
-	_buildPreferredShift(itoId)
+	_buildPreferredShiftRow(itoId)
 	{
 		var i,row;
 		var cell=new BorderCell();
@@ -83,13 +92,13 @@ class RosterSchedulerTable extends RosterTable
 			cell=new BorderCell();
 			row.appendChild(cell);
 		}
-		for (i=0;i<31;i++)
+		for (i=1;i<32;i++)
 		{
 			if (i<Object.keys(this.dateObjList).length)
 			{
 				cell=new PreferredShiftCell(this);
-				if (preferredShift[i+1]!=null)
-					cell.textContent=preferredShift[i+1];
+				if (preferredShift[i]!=null)
+					cell.textContent=preferredShift[i];
 			}
 			else
 			{
@@ -112,7 +121,66 @@ class RosterSchedulerTable extends RosterTable
 		super._buildRosterRows();
 		this._buildVacantShiftRow();
 	}
-	
+	_buildShiftCells(rosterRowData,row)
+	{
+		var cell,i;
+		var aShiftCount=0,actualWorkingHour=0.0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
+		var	noOfWorkingDay=0,thisMonthHourTotal=0.0,thisMonthBalance=0.0,totalHour=0.0;
+		var result=[],shiftType;
+		
+		for (var i=0;i<31;i++)
+		{
+			if (i<Object.keys(this.dateObjList).length)
+			{
+				cell=new EditableShiftCell(this,rosterRowData.itoId);
+				shiftType=rosterRowData.shiftList[i+1];
+				if (shiftType!=null)
+				{
+					cell.setShiftType(shiftType);
+					actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
+					switch (shiftType)
+					{
+						case "a":
+							aShiftCount++;
+							break;
+						case "b":
+						case "b1":
+								bxShiftCount++;
+								break;
+						case "c":
+								cShiftCount++;
+								break;
+						case "d":
+						case "d1":
+						case "d2":
+						case "d3":
+								dxShiftCount++;
+								break;					
+					}			
+				}	
+			}
+			else
+			{
+				cell=new DateCell();
+			}
+			row.appendChild(cell);
+		}
+		totalHour=rosterRowData.itoworkingHourPerDay*this.noOfWorkingDay;
+		thisMonthHourTotal=actualWorkingHour-totalHour;
+		thisMonthBalance=rosterRowData.lastMonthBalance+thisMonthHourTotal;
+		noOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
+		result["totalHour"]=this.utility.roundTo(totalHour,2);
+		result["lastMonthBalance"]=this.utility.roundTo(rosterRowData.lastMonthBalance,2);
+		result["actualHour"]=this.utility.roundTo(actualWorkingHour,2);
+		result["thisMonthHourTotal"]=this.utility.roundTo(thisMonthHourTotal,2);
+		result["thisMonthBalance"]=this.utility.roundTo(thisMonthBalance,2);
+		result["aShiftCount"]=aShiftCount;
+		result["bxShiftCount"]=bxShiftCount;
+		result["cShiftCount"]=cShiftCount;
+		result["dxShiftCount"]=dxShiftCount;
+		result["noOfWorkingDay"]=noOfWorkingDay;
+		return result;
+	}
 /*==================================================================================================*
  *                                                                                                  *
  *         Generate Vacant Shift Rows                                                               *
@@ -354,6 +422,67 @@ class RosterSchedulerTable extends RosterTable
 		cell.colSpan=34;
 		cell.appendChild(buttonTable);
 	}
+	_updateShiftCountCells(row,rosterRule,ito)
+	{
+		var aShiftCount=0,actualWorkingHour=0.0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
+		var balance=Number(document.getElementById(ito.itoId+"_lastMonthBalance").textContent);
+		var	noOfWorkingDay=0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
+		var result=[],self=this,shiftType;
+		var totalHour=Number(document.getElementById(ito.itoId+"_totalHour").textContent);
+		$(row).children("."+Css.cursorCellClassName).each(function(){
+			shiftType=this.textContent;
+			if (ito.isValidShift(shiftType))
+			{
+				switch(shiftType)
+				{
+					case "a":
+							aShiftCount++;
+							break;
+					case "b":
+					case "b1":
+							bxShiftCount++;
+							break;
+					case "c":
+							cShiftCount++;
+							break;
+					case "d":
+					case "d1":
+					case "d2":
+					case "d3":
+							dxShiftCount++;
+							break;		
+				}
+				actualWorkingHour+=self.rosterRule.shiftHourCount[shiftType];
+			}
+		});
+		thisMonthHourTotal=actualWorkingHour-totalHour;
+		thisMonthBalance=thisMonthHourTotal+balance;
+		noOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
+		result["totalHour"]=this.utility.roundTo(totalHour,2);
+		result["lastMonthBalance"]=this.utility.roundTo(balance,2);
+		result["actualHour"]=this.utility.roundTo(actualWorkingHour,2);
+		result["thisMonthHourTotal"]=this.utility.roundTo(thisMonthHourTotal,2);
+		result["thisMonthBalance"]=this.utility.roundTo(thisMonthBalance,2);
+		result["aShiftCount"]=aShiftCount;
+		result["bxShiftCount"]=bxShiftCount;
+		result["cShiftCount"]=cShiftCount;
+		result["dxShiftCount"]=dxShiftCount;
+		result["noOfWorkingDay"]=noOfWorkingDay;
+		this._updateShiftCountCellsContent(result,ito.itoId);
+	}
+	_updateShiftCountCellsContent(shiftCountData,itoId)
+	{
+		$("#"+itoId+"_totalHour").text(shiftCountData["totalHour"]);
+		$("#"+itoId+"_lastMonthBalance").text(shiftCountData["lastMonthBalance"]);
+		$("#"+itoId+"_actualHour").text(shiftCountData["actualHour"]);
+		$("#"+itoId+"_thisMonthHourTotal").text(shiftCountData["thisMonthHourTotal"]);
+		$("#"+itoId+"_thisMonthBalance").text(shiftCountData["thisMonthBalance"]);
+		$("#"+itoId+"_aShiftCount").text(shiftCountData["aShiftCount"]);
+		$("#"+itoId+"_bxShiftCount").text(shiftCountData["bxShiftCount"]);
+		$("#"+itoId+"_cShiftCount").text(shiftCountData["cShiftCount"]);
+		$("#"+itoId+"_dxShiftCount").text(shiftCountData["dxShiftCount"]);
+		$("#"+itoId+"_noOfWoringDay").text(shiftCountData["noOfWorkingDay"]);
+	}
 	_updateStandardDevation(aShiftData,bShiftData,cShiftData)
 	{
 		var aShiftSD=this.utility.getSD(aShiftData);
@@ -365,6 +494,28 @@ class RosterSchedulerTable extends RosterTable
 		document.getElementById("shiftBStdDev").textContent=this.utility.roundTo(bShiftSD,2);
 		document.getElementById("shiftCStdDev").textContent=this.utility.roundTo(cShiftSD,2);
 		document.getElementById("avgStdDev").textContent=this.utility.roundTo(avgStdDev,2);
+	}
+	_updateVacantCells(cellIndex,ito)
+	{
+		var aShiftData=[],bShiftData=[],cShiftData=[];
+		var aShiftSD,bShiftSD,cShiftSD,avgStdDev;
+		var vacantShift=this.rosterRule.getEssentialShift();
+		for (var itoId in this.itoList)
+		{
+			 var cell=document.getElementById("shift_"+itoId).cells[cellIndex];
+			 if ((cell.textContent!="") && ito.isValidShift(cell.textContent))
+			 {
+				 if (cell.textContent=="b1")
+					 vacantShift=vacantShift.replace("b","");
+				 else
+					 vacantShift=vacantShift.replace(cell.textContent,"");
+			 } 
+			 aShiftData.push(Number(document.getElementById(itoId+"_aShiftCount").textContent));
+			 bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
+			 cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
+		}
+		document.getElementById("vacantShiftRow").cells[cellIndex].textContent=vacantShift;
+		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
 	}
 }
 customElements.define('roster-scheduler-table',
