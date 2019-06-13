@@ -36,20 +36,10 @@ class RosterTable extends HTMLTableElement
 		this.rosterMonth=month;
 		this.noOfWorkingDay=0;
 
+		$(document).unbind();
 		this._buildTableHeader();
 		this._buildTableBody();
-		
 		this._buildTableFooter();
-
-		if (this.monthPicker!=null)
-		{	
-			this.monthPicker.destroy();
-			this.monthPicker=null;
-		}
-		this.monthPicker=new MonthPicker({elements:$("#rosterMonth"),initYear:this.rosterYear,minValue: "01/2017"});
-		this.monthPicker.onPick(function (year,month){
-			self.build(year,month);
-		});
 	}
 	destroy()
 	{
@@ -57,12 +47,7 @@ class RosterTable extends HTMLTableElement
 		{	
 			this.monthPicker.destroy();
 			this.monthPicker=null;
-		}
-		if (this.shiftCellHighLighter!=null)
-		{
-			this.shiftCellHighLighter.destroy();
-			this.shiftCellHighLighter=null;
-		}
+		}		
 	}
 	markCoorindate(theCell)
 	{

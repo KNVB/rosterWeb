@@ -48,6 +48,7 @@
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminCss.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/LoadingScreen.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/SelectedRegion.js"></script>
 		<script>
 			var rosterScheduler=null,itoManagement=null;
 			/* Set the width of the side navigation to 250px */

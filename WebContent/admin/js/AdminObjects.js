@@ -183,7 +183,13 @@ class EditableShiftCell extends ReadOnlyShiftCell
 		this.contentEditable="true";
 		this.itoId=itoId;
 		this.rosterTable=rosterTable;
+		this.selectedRegion=rosterTable.selectedRegion;
 		$(this).addClass(AdminCss.shiftCellClassName);
+		$(this).blur(function(event){
+			self.rosterTable.updateValue(this);
+			if (self.selectedRegion.isSingleCell())
+				self.rosterTable.unselectCell(this);
+		});
 		$(this).click(function(event){
 			event.preventDefault();
 			var range = document.createRange();
@@ -200,9 +206,25 @@ class EditableShiftCell extends ReadOnlyShiftCell
 			sel.collapse(this.firstChild, 1);
 			console.log("double click");
 		});
-		$(this).blur(function(event){
-			self.rosterTable.updateValue(this);
-		})
+		$(this).focus(function(event){
+			if (self.selectedRegion.isSingleCell())
+			{	
+				self.rosterTable.selectCell(this);
+				var range = document.createRange();
+			    range.selectNodeContents(this);
+			    var sel = window.getSelection();
+			    sel.removeAllRanges();
+			    sel.addRange(range);
+			}
+		});
+		$(this).mousedown(function(event){
+			event.preventDefault();
+			self.selectedRegion.startSelect(this);
+		});
+		$(this).mouseenter(function(event){
+				self.selectedRegion.update(this);
+				event.preventDefault();
+		});
 	}
 }
 customElements.define('editable-shift-cell',
@@ -229,8 +251,18 @@ class PreferredShiftCell extends BorderedAlignCenterCell
 {
 	constructor(rosterTable){
 		super(rosterTable);
+		var self=this;
 		$(this).addClass(Css.cursorCellClassName);
 		this.contentEditable="true";
+		this.selectedRegion=rosterTable.selectedRegion;
+		$(this).mousedown(function(event){
+			event.preventDefault();
+			self.selectedRegion.startSelect(this);
+		});
+		$(this).mouseenter(function(event){
+				self.selectedRegion.update(this);
+				event.preventDefault();
+		});
 	}
 }
 customElements.define('preferred-shift-cell',

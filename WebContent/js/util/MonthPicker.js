@@ -1,7 +1,8 @@
-class MonthPicker
+class MonthPicker extends HTMLTableElement
 {
 	constructor(options)
 	{
+		super();
 		var self=this;
 		var defaults={
 						minValue: "1/1000",
@@ -11,40 +12,17 @@ class MonthPicker
 						monthFullNames:['Jan','February','March','April','May','June','July','August','September','October','November','December'],
 					 };
 		options = $.extend({}, defaults, options);
-		
 		this.maxDateValue=(new Date(options.maxValue.split("/")[1],options.maxValue.split("/")[0],1)).getTime();
 		this.minDateValue=(new Date(options.minValue.split("/")[1],options.minValue.split("/")[0],1)).getTime();
 		this.maxYear=options.maxValue.split("/")[1];
 		this.minYear=options.minValue.split("/")[1];
 		this.monthNames=options.monthNames;
 		this.monthFullNames=options.monthFullNames;
-		this.monthPickTable=document.createElement("table");
-		this.monthPickTable.id="monthPickTable";
-		this.monthPickElement=$(options.elements);
-		$(this.monthPickTable).hide();
-		$("body").append(this.monthPickTable);
 		this.initYear=options.initYear;
 		this.onPickHandler=null;
-	
 		
-		
-		$(document).unbind();
-		$(document).click(function(){
-			self._clearMonthPickTable();
-		});
-		
-		this.monthPickElement.unbind();
-		$(this.monthPickElement).on("click",function(event){
-			if (self.monthPickTable.rows.length==0)
-				self._buildMonthPickTable(self.initYear,this);
-			self._showMonthPickTable(this);
-		});				
-	}
-	destroy()
-	{
-		$(document).unbind();
-		this.monthPickElement.unbind();
-		$(this.monthPickTable).remove();
+		this.id="monthPickTable";
+		this._buildMonthPickTable(this.initYear);
 	}
 	onPick(handler)
 	{
@@ -54,13 +32,13 @@ class MonthPicker
 	{
 		var cell,monthValue,row;
 		var rect,self=this,tbody,tempDateValue,thead;
-		$(this.monthPickTable).empty();
+		$(this).empty();
 		thead=document.createElement("thead");
 		$(thead).click(function(event){
 				event.stopPropagation();
 		});
 		tbody=document.createElement("tbody");
-		this.monthPickTable.append(thead);
+		this.append(thead);
 		row=thead.insertRow(thead.rows.length);
 		cell=row.insertCell(row.cells.length);
 		if (pickYear>this.minYear)
@@ -117,7 +95,7 @@ class MonthPicker
 				}						
 			}
 		}
-		this.monthPickTable.append(tbody);
+		this.append(tbody);
 	}
 	_clearMonthPickTable()
 	{
@@ -133,10 +111,7 @@ class MonthPicker
 	}
 	_showMonthPickTable(theElement)			
 	{
-		var rect = theElement.getBoundingClientRect();
-		this.monthPickTable.style.left=(rect.left + window.scrollX)+"px";
-		this.monthPickTable.style.top=(rect.top+window.scrollY+theElement.offsetHeight)+"px";
-		$(this.monthPickTable).show();
+		$(this).show();
 	}
 	_upYear(pickYearValue)				
 	{
@@ -147,3 +122,7 @@ class MonthPicker
 		}
 	}
 }
+customElements.define('month-picker-table',
+		MonthPicker, {
+			extends: 'table'
+		});

@@ -71,38 +71,72 @@ customElements.define('no-of-working-day-cell',
 		});
 class RosterMonthSelectCell extends HTMLTableCellElement
 {
-	constructor(rosterTable,utility){
+	constructor(rosterTable){
 		super();
 		$(this).addClass(Css.rosterMonthSelectCellClassName);
 		$(this).addClass(Css.alignCenterClassName);
 		this.colSpan=31;
-		var span=document.createElement("span");
-		span.innerHTML="<&nbsp;&nbsp;";
-		//span.className="underlineText clickable";
-		$(span).addClass(Css.underlineTextClassName);
-		$(span).addClass(Css.clickableClassName);
-		this.append(span);
-		$(span).click(function(){
+		var centerDiv=document.createElement("div");
+		var div=document.createElement("div");
+		var leftDiv=document.createElement("div");
+		var rightDiv=document.createElement("div");
+		var rosterMonthDiv=document.createElement("div");
+		var self=this;
+		var monthPicker;
+		var monthPickerDiv=document.createElement("div");
+		var monthPickerOption={initYear:rosterTable.rosterYear,minValue: "01/2017"};
+		
+		this.rosterTable=rosterTable;
+		div.style.display="flex";
+		div.style.justifyContent="center";
+		div.style.flexDirection="row";
+
+		leftDiv.innerHTML="<&nbsp;&nbsp;";
+		leftDiv.style.display="flex";
+		$(leftDiv).addClass(Css.underlineTextClassName);
+		$(leftDiv).addClass(Css.clickableClassName);
+		$(leftDiv).click(function(){
 			rosterTable._buildPreviousMonth();	
 		});
 		
-		span=document.createElement("span");
-		span.id="rosterMonth";
-
-		$(span).addClass(Css.underlineTextClassName);
-		$(span).addClass(Css.clickableClassName);
-		span.textContent=utility.monthNames[rosterTable.rosterMonth]+" "+rosterTable.rosterYear;
-		this.append(span);	
-	
-		span=document.createElement("span");
-		span.innerHTML="&nbsp;&nbsp;>";
-
-		$(span).addClass(Css.underlineTextClassName);
-		$(span).addClass(Css.clickableClassName);
-		this.append(span);		
-		$(span).click(function(){
+		centerDiv.style.display="flex";
+		centerDiv.style.flexDirection="column";
+		$(centerDiv).addClass(Css.clickableClassName);
+		
+		rosterMonthDiv.style.display="flex";
+		rosterMonthDiv.textContent=rosterTable.utility.monthNames[rosterTable.rosterMonth]+" "+rosterTable.rosterYear;
+		centerDiv.append(rosterMonthDiv);
+		
+		monthPicker=new MonthPicker(monthPickerOption);
+		monthPicker.onPick(function (year,month){
+			self.rosterTable.build(year,month);
+		});
+		monthPickerDiv.style.display="flex";
+		monthPickerDiv.append(monthPicker);
+		centerDiv.append(monthPickerDiv);
+		
+		$(rosterMonthDiv).click(function(event){
+			$(monthPicker).show();
+			event.stopPropagation(); 
+		});
+		$(document).click(function(){
+			$(monthPicker).hide();
+		});
+		$(centerDiv).addClass(Css.underlineTextClassName);
+		
+		
+		rightDiv.innerHTML="&nbsp;&nbsp;>";
+		rightDiv.style.display="flex";
+		$(rightDiv).addClass(Css.underlineTextClassName);
+		$(rightDiv).addClass(Css.clickableClassName);
+		$(rightDiv).click(function(){
 			rosterTable._buildNextMonth();	
 		});
+		
+		div.appendChild(leftDiv);
+		div.appendChild(centerDiv);
+		div.appendChild(rightDiv);
+		this.appendChild(div);
 	}	
 }
 customElements.define('roster-month-select-cell', 

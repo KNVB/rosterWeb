@@ -59,6 +59,50 @@
 	align-items:center;
 	flex:1 1;
 }
+.autoPlannerButton
+{
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: #8B4513 ; /*for compatibility with older browsers*/
+	background-image: linear-gradient(#8B4513,#A0522D);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+.autoPlannerButton:hover
+{
+	background: linear-gradient(#800000,#8B4513);
+	cursor: pointer;
+}	
+.checkAllButton
+{
+	/* background styles */
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: purple; /*for compatibility with older browsers*/
+	background-image: linear-gradient(purple,lightpurple);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
 .blackListShiftDiv
 {
 	flex-direction:row;
@@ -69,6 +113,59 @@
 {
 	display:flex;
 	flex-direction:column;
+}
+.checkAllButton:hover
+{
+	background: linear-gradient(#663399,#7E329A);
+	cursor: pointer;
+}
+.clearAllButton
+{
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: #FF8500; /*for compatibility with older browsers*/
+	background-image: linear-gradient(#FF8500,lightOrange);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+.clearAllButton:hover
+{
+	background: linear-gradient(#FF8500,#F7A80A);
+	cursor: pointer;
+}
+.exportButton
+{
+	position: relative;
+	display: inline-block;
+	padding: 10px 15px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	background-color: black; /*for compatibility with older browsers*/
+	background-image: linear-gradient(black,#6E685E);
+	box-shadow: 0px 1px 4px -2px #333;
+	text-shadow: 0px -1px #333;
+	/* text styles */
+	text-decoration: none;
+	color: #fff;
+	font-size: 20px;
+	font-family: sans-serif;
+	font-weight: 100;
+}
+.exportButton:hover
+{
+	background: linear-gradient(#6E685E,black);
+	cursor: pointer;
 }
 .errorRedBlackGround
 {
@@ -154,80 +251,6 @@
 	background: linear-gradient(#1f4160,#1e3460);
 	cursor: pointer;
 }
-.checkAllButton
-{
-	/* background styles */
-	position: relative;
-	display: inline-block;
-	padding: 10px 15px;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	background-color: purple; /*for compatibility with older browsers*/
-	background-image: linear-gradient(purple,lightpurple);
-	box-shadow: 0px 1px 4px -2px #333;
-	text-shadow: 0px -1px #333;
-	/* text styles */
-	text-decoration: none;
-	color: #fff;
-	font-size: 20px;
-	font-family: sans-serif;
-	font-weight: 100;
-}
-.checkAllButton:hover
-{
-	background: linear-gradient(#663399,#7E329A);
-	cursor: pointer;
-}
-
-.clearAllButton
-{
-	position: relative;
-	display: inline-block;
-	padding: 10px 15px;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	background-color: #FF8500; /*for compatibility with older browsers*/
-	background-image: linear-gradient(#FF8500,lightOrange);
-	box-shadow: 0px 1px 4px -2px #333;
-	text-shadow: 0px -1px #333;
-	/* text styles */
-	text-decoration: none;
-	color: #fff;
-	font-size: 20px;
-	font-family: sans-serif;
-	font-weight: 100;
-}
-.clearAllButton:hover
-{
-	background: linear-gradient(#FF8500,#F7A80A);
-	cursor: pointer;
-}
-.exportButton
-{
-	position: relative;
-	display: inline-block;
-	padding: 10px 15px;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	background-color: black; /*for compatibility with older browsers*/
-	background-image: linear-gradient(black,#6E685E);
-	box-shadow: 0px 1px 4px -2px #333;
-	text-shadow: 0px -1px #333;
-	/* text styles */
-	text-decoration: none;
-	color: #fff;
-	font-size: 20px;
-	font-family: sans-serif;
-	font-weight: 100;
-}
-.exportButton:hover
-{
-	background: linear-gradient(#6E685E,black);
-	cursor: pointer;
-}
 .saveRosterToDBButton
 {
 	position: relative;
@@ -252,30 +275,6 @@
 	background: linear-gradient(pink,red);
 	cursor: pointer;
 }	
-.autoPlannerButton
-{
-	position: relative;
-	display: inline-block;
-	padding: 10px 15px;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	background-color: #8B4513 ; /*for compatibility with older browsers*/
-	background-image: linear-gradient(#8B4513,#A0522D);
-	box-shadow: 0px 1px 4px -2px #333;
-	text-shadow: 0px -1px #333;
-	/* text styles */
-	text-decoration: none;
-	color: #fff;
-	font-size: 20px;
-	font-family: sans-serif;
-	font-weight: 100;
-}
-.autoPlannerButton:hover
-{
-	background: linear-gradient(#800000,#8B4513);
-	cursor: pointer;
-}	
 .exportButton:after,
 .clearAllButton:after,
 .checkAllButton:after,
@@ -293,6 +292,53 @@
 	height: 50%;
 	background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));
 }
+.modalBackground
+{
+	left:0;
+	top:0;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	position:fixed;
+	width:100%;
+	height:100%;
+	z-index:10;
+	background-color:white;
+	opacity: 0.5;
+	align-items: center;
+}
+.selectCellBorderLeft
+{
+	border-left:1px solid black!important;
+}
+.selectCellBorderLeft:after
+{
+	border-left:2px solid black!important;
+}
+.selectCellBorderRight
+{
+	border-right:1px solid black!important;
+}
+.selectCellBorderRight:after
+{
+	border-right:2px solid black!important;
+}
+.selectCellBorderTop
+{
+	border-top:1px solid black!important;
+}
+.selectCellBorderTop:after
+{
+	border-top:2px solid black!important;
+}
+.selectCellBorderBottom
+{
+	border-bottom:1px solid black!important;
+}
+.selectCellBorderBottom:after
+{
+	border-bottom:2px solid black!important;
+}			
 .vacantShiftLabel
 {
 	color:#ff6600;

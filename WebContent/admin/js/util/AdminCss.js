@@ -8,6 +8,22 @@ class AdminCss extends Css
 	{
 	 	return "shiftCell";
 	}
+	static get selectCellBorderBottomClassName()
+	{
+		return "selectCellBorderBottom";
+	}
+	static get selectCellBorderLeftClassName()
+	{
+		return "selectCellBorderLeft";
+	}
+	static get selectCellBorderRightClassName()
+	{
+		return "selectCellBorderRight";
+	}
+	static get selectCellBorderTopClassName()
+	{
+		return "selectCellBorderTop";
+	}
 	static get vacantShiftClassName()
 	{
 		return "vacantShift";
