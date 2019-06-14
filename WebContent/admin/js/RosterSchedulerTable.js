@@ -22,6 +22,7 @@ class RosterSchedulerTable extends RosterTable
 		var self=this;
 		var yearStatisticCell=document.getElementById("yearlyStat");
 		$(yearStatisticCell).empty();
+		
 		this.utility.getYearlyStatistic(this.rosterYear,this.rosterMonth)
 		.done(function(yearlyStatistic){
 			self.yearlyStatistic=yearlyStatistic;
@@ -366,14 +367,7 @@ class RosterSchedulerTable extends RosterTable
 			}
 		}
 		this.haveMissingShift();
-	}
-	selectCell(theCell)
-	{
-		$(theCell).addClass(AdminCss.selectCellBorderRightClassName);
-		$(theCell).addClass(AdminCss.selectCellBorderTopClassName);
-		$(theCell).addClass(AdminCss.selectCellBorderBottomClassName);
-		$(theCell).addClass(AdminCss.selectCellBorderLeftClassName);
-	}
+	}	
 	setLowestSDData(lowestSDData)
 	{
 		var firstRow=document.getElementById("theLowestSD");
@@ -498,13 +492,6 @@ class RosterSchedulerTable extends RosterTable
 		this.genResultTable=document.getElementById("genResult");
 		$(this.genResultTable).show();
 	}
-	unselectCell(theCell)
-	{
-		$(theCell).removeClass(AdminCss.selectCellBorderRightClassName);
-		$(theCell).removeClass(AdminCss.selectCellBorderTopClassName);
-		$(theCell).removeClass(AdminCss.selectCellBorderBottomClassName);
-		$(theCell).removeClass(AdminCss.selectCellBorderLeftClassName);
-	}		
 	updateValue(theCell)
 	{
 		var cell,i;

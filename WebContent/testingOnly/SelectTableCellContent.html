@@ -15,6 +15,54 @@
 			{
 				outline: none;
 			}
+			td
+			{
+				margin:0px;
+				width:25px;
+				padding: 0px;
+				text-align: center;
+				font-size:17px;
+				border:1px inset #e0e0e0;
+			}
+			td.cursorCell div
+			{
+				border:2px inset transparent;
+				height:100%;	
+			}
+			table 
+			{
+				border-spacing: 0;
+				border-collapse: collapse;
+			}			
+			.aShiftColor
+			{
+				background-color:#ff99cc;
+			}			
+			.bShiftColor
+			{ 
+				background-color:#ffffcc;
+			}
+			.cShiftColor
+			{
+				background-color:#ccffcc;
+			}
+			.selectCellBorderLeft
+			{
+				border-left:1px solid black!important;
+			}
+			.selectCellBorderRight
+			{
+				border-right:1px solid black!important;
+			}
+			.selectCellBorderTop
+			{
+				border-top:1px solid black!important;
+			}
+			.selectCellBorderBottom
+			{
+				border-bottom:1px solid black!important;
+			}
+			
 		</style>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script>
@@ -35,15 +83,40 @@
 				sel.collapse(this.firstChild, 1);
 			})
 		});
+		function go()
+			{
+				$.each($("tr td.cursorCell"),
+					function(i,obj){
+						$(obj).toggleClass("selectCellBorderLeft");
+						$(obj).toggleClass("selectCellBorderRight");
+						$(obj).toggleClass("selectCellBorderTop");
+						$(obj).toggleClass("selectCellBorderBottom");
+					});
+				$.each($("tr td.cursorCell div"),
+					function(i,obj){
+						$(obj).toggleClass("selectCellBorderLeft");
+						$(obj).toggleClass("selectCellBorderRight");
+						$(obj).toggleClass("selectCellBorderTop");
+						$(obj).toggleClass("selectCellBorderBottom");
+					});
+			}			
 		</script>
 	</head>
 	<body>
-		<table border=1>
+		<table>
 			<tr>
-				<td contenteditable=true style="width:50px">
-					content
+				<td class="cursorCell borderCell aShiftColor">
+					<div contenteditable=true>a</div>
 				</td>
+				<td class="cursorCell borderCell bShiftColor">
+					<div contenteditable=true>b</div>
+				</td>
+				<td class="cursorCell borderCell cShiftColor">
+					<div contenteditable=true>c</div>
+				</td>				
 			</tr>
 		</table>
+		<br>
+		<button onclick="go()">Go</button>
 	</body>
 </html>	

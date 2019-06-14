@@ -191,7 +191,7 @@ class RosterTable extends HTMLTableElement
 		row.appendChild(cell);
 		for (i=index;i<=Object.keys(rosterRowData.previousMonthShiftList).length;i++)
 		{
-			cell=new PreviousMonthShiftCell(rosterTable);
+			cell=new ShiftCell(rosterTable);
 			cell.setShiftType(rosterRowData.previousMonthShiftList[i]);
 			row.appendChild(cell);
 		}

@@ -181,41 +181,33 @@ class EditableShiftCell extends ReadOnlyShiftCell
 		super(rosterTable);
 		var self=this;
 		this.contentEditable="true";
+		this.firstInput=false;
 		this.itoId=itoId;
 		this.rosterTable=rosterTable;
 		this.selectedRegion=rosterTable.selectedRegion;
 		$(this).addClass(AdminCss.shiftCellClassName);
 		$(this).blur(function(event){
 			self.rosterTable.updateValue(this);
-			if (self.selectedRegion.isSingleCell())
-				self.rosterTable.unselectCell(this);
 		});
 		$(this).click(function(event){
-			event.preventDefault();
-			var range = document.createRange();
-		    range.selectNodeContents(this);
-		    var sel = window.getSelection();
-		    sel.removeAllRanges();
-		    sel.addRange(range);
-		    console.log("click");
+			this.select();
+			console.log("click");
+			self.firstInput=true;
 		});
 		$(this).dblclick(function(event){
 			event.preventDefault();
 			var sel = window.getSelection();
 			this.focus();
+			
 			sel.collapse(this.firstChild, 1);
 			console.log("double click");
 		});
+		
 		$(this).focus(function(event){
-			if (self.selectedRegion.isSingleCell())
-			{	
-				self.rosterTable.selectCell(this);
-				var range = document.createRange();
-			    range.selectNodeContents(this);
-			    var sel = window.getSelection();
-			    sel.removeAllRanges();
-			    sel.addRange(range);
-			}
+			self.firstInput=false;
+		});
+		$(this).keydown(function(event){
+			self._handleKeyDownEvent(this,event);
 		});
 		$(this).mousedown(function(event){
 			event.preventDefault();
@@ -225,6 +217,59 @@ class EditableShiftCell extends ReadOnlyShiftCell
 				self.selectedRegion.update(this);
 				event.preventDefault();
 		});
+	}
+	_handleEscKeyEvent()
+	{
+		this.select();
+		self.firstInput=true;
+	}
+	_handleTabKeyEvent(event)
+	{
+		var cell;
+		var cursorCellList=$("td."+Css.cursorCellClassName);
+		var index=$.inArray(this,cursorCellList);
+		if (event.shiftKey)
+			index--;
+		else
+			index++;
+		if (index=>cursorCellList.length)
+			index=0;
+		else
+			if (index<0)
+				index=cursorCellList.length-1;
+		cell=cursorCellList[index];
+		cell.click();
+		event.preventDefault();
+	}
+	_handleKeyDownEvent(theCell,event)
+	{
+		switch (event.which)
+		{
+			case  9://handle tab key
+					this._handleTabKeyEvent(event);
+					break;
+			case 27://handle "Esc" key event
+					this._handleEscKeyEvent();
+					break;
+			default:if (this.firstInput)
+					{
+						
+					}
+					else
+					{
+						
+					}
+					break;
+		}	
+	}
+	select()
+	{
+		event.preventDefault();
+		var range = document.createRange();
+	    range.selectNodeContents(this);
+	    var sel = window.getSelection();
+	    sel.removeAllRanges();
+	    sel.addRange(range);
 	}
 }
 customElements.define('editable-shift-cell',

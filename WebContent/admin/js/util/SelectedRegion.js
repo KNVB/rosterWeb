@@ -61,8 +61,7 @@ class SelectedRegion
 		this.rosterSchedulerTable.setSelectedRegion(this);
 		this.selectedCellList.push(theCell);
 		this.inSelectMode=true;
-		
-		$(theCell).click();
+
 	}
 	update(theCell)
 	{
