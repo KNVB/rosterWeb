@@ -229,7 +229,7 @@ class RosterTable extends HTMLTableElement
 		for (i=1;i<=Object.keys(rosterRowData.shiftList).length;i++)
 		{
 			shiftType=rosterRowData.shiftList[i];
-			cell=new ReadOnlyShiftCell(this);
+			cell=new CursoredShiftCell(this);
 			cell.setShiftType(shiftType);
 			actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
 			switch (shiftType)

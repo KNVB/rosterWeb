@@ -175,108 +175,6 @@ customElements.define('button-table',
 		}
 	);
 
-class EditableShiftCell extends ReadOnlyShiftCell
-{
-	constructor(rosterTable,itoId){
-		super(rosterTable);
-		var self=this;
-		this.contentEditable="true";
-		this.firstInput=false;
-		this.itoId=itoId;
-		this.rosterTable=rosterTable;
-		this.selectedRegion=rosterTable.selectedRegion;
-		$(this).addClass(AdminCss.shiftCellClassName);
-		$(this).blur(function(event){
-			self.rosterTable.updateValue(this);
-		});
-		$(this).click(function(event){
-			this.select();
-			console.log("click");
-			self.firstInput=true;
-		});
-		$(this).dblclick(function(event){
-			event.preventDefault();
-			var sel = window.getSelection();
-			this.focus();
-			
-			sel.collapse(this.firstChild, 1);
-			console.log("double click");
-		});
-		
-		$(this).focus(function(event){
-			self.firstInput=false;
-		});
-		$(this).keydown(function(event){
-			self._handleKeyDownEvent(this,event);
-		});
-		$(this).mousedown(function(event){
-			event.preventDefault();
-			self.selectedRegion.startSelect(this);
-		});
-		$(this).mouseenter(function(event){
-				self.selectedRegion.update(this);
-				event.preventDefault();
-		});
-	}
-	_handleEscKeyEvent()
-	{
-		this.select();
-		self.firstInput=true;
-	}
-	_handleTabKeyEvent(event)
-	{
-		var cell;
-		var cursorCellList=$("td."+Css.cursorCellClassName);
-		var index=$.inArray(this,cursorCellList);
-		if (event.shiftKey)
-			index--;
-		else
-			index++;
-		if (index=>cursorCellList.length)
-			index=0;
-		else
-			if (index<0)
-				index=cursorCellList.length-1;
-		cell=cursorCellList[index];
-		cell.click();
-		event.preventDefault();
-	}
-	_handleKeyDownEvent(theCell,event)
-	{
-		switch (event.which)
-		{
-			case  9://handle tab key
-					this._handleTabKeyEvent(event);
-					break;
-			case 27://handle "Esc" key event
-					this._handleEscKeyEvent();
-					break;
-			default:if (this.firstInput)
-					{
-						
-					}
-					else
-					{
-						
-					}
-					break;
-		}	
-	}
-	select()
-	{
-		event.preventDefault();
-		var range = document.createRange();
-	    range.selectNodeContents(this);
-	    var sel = window.getSelection();
-	    sel.removeAllRanges();
-	    sel.addRange(range);
-	}
-}
-customElements.define('editable-shift-cell',
-		EditableShiftCell, {
-		extends: 'td'
-		}
-	);
 class FillEmptyShiftWithOButtonCell extends HTMLTableCellElement
 {
 	constructor(){
@@ -292,29 +190,6 @@ customElements.define('fill-empty-shift-with-o-button-cell',
 		}
 	);
 
-class PreferredShiftCell extends BorderedAlignCenterCell
-{
-	constructor(rosterTable){
-		super(rosterTable);
-		var self=this;
-		$(this).addClass(Css.cursorCellClassName);
-		this.contentEditable="true";
-		this.selectedRegion=rosterTable.selectedRegion;
-		$(this).mousedown(function(event){
-			event.preventDefault();
-			self.selectedRegion.startSelect(this);
-		});
-		$(this).mouseenter(function(event){
-				self.selectedRegion.update(this);
-				event.preventDefault();
-		});
-	}
-}
-customElements.define('preferred-shift-cell',
-		PreferredShiftCell, {
-		extends: 'td'
-		}
-	);
 class VacantShiftCell extends BorderedAlignCenterCell
 {
 	constructor() {
