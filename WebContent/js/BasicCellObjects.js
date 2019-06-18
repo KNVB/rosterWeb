@@ -27,6 +27,25 @@ customElements.define('bordered-align-center-cell',
 		extends: 'td'
 		}
 	);
+class CursoredCell extends HTMLTableCellElement
+{
+	constructor(rosterTable) {
+		super(rosterTable);
+		$(this).addClass(Css.cursorCellClassName);
+		
+		$(this).mouseover(function(){
+			rosterTable.markCoorindate(this);
+		});
+		$(this).mouseout(function(){
+			rosterTable.unMarkCoorindate(this);
+		});
+	}
+}
+customElements.define('cursored-cell',
+		CursoredCell, {
+			extends: 'td'
+		});
+
 class ShiftLegendCell extends HTMLTableCellElement
 {
 	constructor() {
