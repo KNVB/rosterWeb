@@ -32,6 +32,11 @@ td.cursorCell
 {	
 	border:2px inset transparent;
 }
+.captionCell	
+{
+	font-size:18px;
+	font-weight: bold;
+}
 .dateCell
 {
 	padding: 0px;
@@ -72,7 +77,7 @@ td.cursorCell
 	font-size:17px;
 	font-weight: bold;
 }
-.rosterMonthSelectCell
+.selectRosterMonthCell
 {
 	font-size:15px;
 	font-weight: bold;
@@ -86,11 +91,6 @@ td.cursorCell
 {
 	font-size:15px;
 	width:50px;
-}
-.titleCell	
-{
-	font-size:18px;
-	font-weight: bold;
 }
 .totalCell
 {

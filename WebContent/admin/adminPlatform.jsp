@@ -75,7 +75,8 @@
 				closeNav();
 				var itoManagement=new ITOManagement($("#main")[0]);
 				itoManagement.showITOTable();
-				rosterScheduler.destroy();
+				if (rosterScheduler!=null)
+					rosterScheduler.destroy();
 				rosterScheduler=null;
 			}
 			
