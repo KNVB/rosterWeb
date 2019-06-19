@@ -140,18 +140,7 @@ customElements.define('ph-cell',
 		PHCell, {
 			extends: 'td'
 		});
-/*
-class CursoredShiftCell extends ShiftCell
-{
-	constructor(rosterTable) {
-		super(rosterTable);
-	}
-}
-customElements.define('cursored-shift-cell',
-		CursoredShiftCell, {
-			extends: 'td'
-		});
-*/		
+
 class SelectRosterMonthCell extends HTMLTableCellElement
 {
 	constructor(rosterTable){
@@ -226,25 +215,7 @@ customElements.define('select-roster-month-cell',
 		SelectRosterMonthCell,{
 			extends: 'td'
 		});
-class ShiftCell extends BorderedAlignCenterCell
-{
-	constructor(rosterTable) {
-		super();
-		var self=this;
-		this.utility=rosterTable.utility;
-		this.rosterTable=rosterTable;
-	}
-	setShiftType(t)
-	{
-		this.textContent=t;
-		$(this).addClass(this.utility.getShiftCssClassName(t));
-	}
-}
-customElements.define('shift-cell',
-		ShiftCell, {
-		extends: 'td'
-		}
-	);
+
 class ShiftACountCell  extends ShiftCountCell
 {
 	constructor() {

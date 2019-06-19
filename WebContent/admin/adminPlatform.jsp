@@ -33,20 +33,24 @@
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery/3.3.1/jquery.min.js"></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>
 		<script src="<%=request.getContextPath()%>/js/util/Css.js"></script>
-		<script src="<%=request.getContextPath()%>/js/BasicCellObjects.js"></script>
-		<script src="<%=request.getContextPath()%>/js/DerivedCellObjets.js"></script>
-		<script src="<%=request.getContextPath()%>/js/RosterRule.jsp"></script>
-		<script src="<%=request.getContextPath()%>/js/RosterTable.js"></script>
+		<script src="<%=request.getContextPath()%>/js/util/CellEventUtil.js"></script>
+		<script src="<%=request.getContextPath()%>/js/util/CellObjects.js"></script>
+		<script src="<%=request.getContextPath()%>/js/util/SimpleCellFactory.js"></script>
 		<script src="<%=request.getContextPath()%>/js/util/Utility.jsp"></script>
 		<script src="<%=request.getContextPath()%>/js/util/MonthPicker.js"></script>
-		<script src="<%=request.getContextPath()%>/admin/js/AdminObjects.js"></script>
+		<script src="<%=request.getContextPath()%>/js/RosterRule.jsp"></script>
+		<script src="<%=request.getContextPath()%>/js/RosterTable.js"></script>
+		
 		<script src="<%=request.getContextPath()%>/admin/js/ITO.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/ITOManagement.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/Roster.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterSchedulerTable.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/RosterScheduler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminCss.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/AdminCellEventUtil.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/AdminCellFactory.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/EditableCellHandler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/LoadingScreen.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/SelectedRegion.js"></script>
 		<script>

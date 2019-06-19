@@ -121,4 +121,12 @@ class Css
 	{
 		return "dShiftColor";
 	}
+	static get oShiftColorClassName()
+	{
+		return "oShiftColor";
+	}
+	static get sickLeaveColorClassName()
+	{
+		return "sickLeaveColor";
+	}
 }

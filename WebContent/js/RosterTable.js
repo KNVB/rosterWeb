@@ -13,10 +13,9 @@ class RosterTable extends HTMLTableElement
 		this.rosterMonthRow,this.rosterHolidayRow,this.rosterWeekDayRow,this.rosterDateRow;
 		this.rosterList=null;
 		this.rosterRule=new RosterRule();
-		this.shiftCellHighLighter=null;
 		this.showNoOfPrevDate=0;
 		this.utility=new Utility();
-
+		
 		this.rosterBody.id="rosterBody";
 		this.rosterFooter.id="rosterFooter";
 		this.rosterHeader.id="rosterHeader";
@@ -77,26 +76,26 @@ class RosterTable extends HTMLTableElement
 	_buildDateRow()
 	{
 		var now=new Date();
-		var borderedLastMonthCell=new  BorderedLastMonthCell();
-		var borderedThisMonthCell=new BorderedThisMonthCell();
-		var borderedTotalCell=new BorderedTotalCell();
-		var dateNameCell=new DateNameCell();
-		var noOfWorkingDayCountCell=new NoOfWorkingDayCountCell();
-		var shiftACountCell=new ShiftACountCell();
-		var shiftBxCountCell=new ShiftBxCountCell();
-		var shiftCCountCell=new ShiftCCountCell();
-		var shiftDxCountCell=new ShiftDxCountCell();
+		var borderedLastMonthCell=SimpleCellFactory.BorderedLastMonthCell;
+		var borderedThisMonthCell=SimpleCellFactory.BorderedThisMonthCell;
+		var borderedTotalCell=SimpleCellFactory.BorderedTotalCell;
+		var dateNameCell=SimpleCellFactory.DateNameCell;
+		var noOfWorkingDayCountCell=SimpleCellFactory.NoOfWorkingDayCountCell;
+		var shiftACountCell=SimpleCellFactory.ShiftACountCell;
+		var shiftBxCountCell=SimpleCellFactory.ShiftBxCountCell;
+		var shiftCCountCell=SimpleCellFactory.ShiftCCountCell;
+		var shiftDxCountCell=SimpleCellFactory.ShiftDxCountCell;
 		
 		$(this.rosterDateRow).empty();
 		this.rosterDateRow.appendChild(dateNameCell);
 		for (var i=0;i<this.showNoOfPrevDate;i++)
 		{
-			var dateCell=new DateCell();
+			var dateCell=SimpleCellFactory.DateCell;
 			this.rosterDateRow.appendChild(dateCell);
 		}
 		for (var i=0;i<31;i++)
 		{
-			var dateCell=new DateCell();
+			var dateCell=SimpleCellFactory.DateCell;
 			this.rosterDateRow.appendChild(dateCell);
 			if (i<Object.keys(this.dateObjList).length)
 			{
@@ -120,19 +119,19 @@ class RosterTable extends HTMLTableElement
 	_buildHolidayRow()
 	{
 		var dateObj;
-		var borderCell=new BorderCell();
-		var holidayCell=new HolidayCell();
+		var borderCell=SimpleCellFactory.BorderCell;
+		var holidayCell=SimpleCellFactory.HolidayCell;
 
 		$(this.rosterHolidayRow).empty();
 		this.rosterHolidayRow.appendChild(holidayCell);
 		for (var i=0;i<this.showNoOfPrevDate;i++)
 		{
-			var dateCell=new DateCell();
+			var dateCell=SimpleCellFactory.DateCell;
 			this.rosterHolidayRow.appendChild(dateCell);
 		}
 		for (var i=0;i<31;i++)
 		{
-			var phCell=new PHCell();
+			var phCell=SimpleCellFactory.PHCell;
 			this.rosterHolidayRow.appendChild(phCell);
 			if (i<Object.keys(this.dateObjList).length)
 			{
@@ -148,7 +147,7 @@ class RosterTable extends HTMLTableElement
 	}
 	_buildITORow(rosterRowData,calculateResult)
 	{
-		var cell=new BorderCell(),i,calculateResult=[];
+		var cell=SimpleCellFactory.BorderCell,i,calculateResult=[];
 		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
 
 		row.id="shift_"+rosterRowData.itoId;
@@ -180,7 +179,7 @@ class RosterTable extends HTMLTableElement
 	}
 	_buildPreviousMonthShiftCells(rosterRowData,row)
 	{
-		var cell=new BorderCell(),i;
+		var cell=SimpleCellFactory.BorderCell,i;
 		var index=Object.keys(rosterRowData.previousMonthShiftList).length-this.showNoOfPrevDate+1;
 		cell.innerHTML=rosterRowData.itoname+"<br>"+rosterRowData.itopostName+" Extn. 2458";
 		row.appendChild(cell);
@@ -204,8 +203,8 @@ class RosterTable extends HTMLTableElement
 	_buildSelectRosterMonthRow()
 	{
 		$(this.rosterMonthRow).empty();
-		var nameCell=new NameCell();
-		var selectRosterMonthCell=new SelectRosterMonthCell(this,this.utility);
+		var nameCell=SimpleCellFactory.NameCell;
+		var selectRosterMonthCell=SimpleCellFactory.getSelectRosterMonthCell(this);
 		this.rosterMonthRow.appendChild(nameCell);
 		for (var i=0;i<this.showNoOfPrevDate;i++)
 		{
@@ -225,8 +224,9 @@ class RosterTable extends HTMLTableElement
 		for (i=1;i<=Object.keys(rosterRowData.shiftList).length;i++)
 		{
 			shiftType=rosterRowData.shiftList[i];
-			cell=new CursoredShiftCell(this);
+			cell=new ShiftCell(this);
 			cell.setShiftType(shiftType);
+			CellEventUtil.addCursorEventHandler(cell);
 			actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
 			switch (shiftType)
 			{
@@ -251,7 +251,7 @@ class RosterTable extends HTMLTableElement
 		}
 		for (var j=i;j<32;j++)
 		{
-			cell=new DateCell();
+			cell=SimpleCellFactory.DateCell;
 			row.appendChild(cell);
 		}
 		thisMonthHourTotal=actualWorkingHour-totalHour;
@@ -271,52 +271,52 @@ class RosterTable extends HTMLTableElement
 	}
 	_buildShiftCountCells(row,shiftCountData,itoId)
 	{
-		var cell=new BorderedAlignCenterCell();
+		var cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.id=itoId+"_totalHour";
 		cell.textContent=shiftCountData["totalHour"];
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.id=itoId+"_actualHour";
 		cell.textContent=shiftCountData["actualHour"];
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.id=itoId+"_lastMonthBalance";
 		cell.textContent=shiftCountData["lastMonthBalance"];
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.id=itoId+"_thisMonthHourTotal";
 		cell.textContent=shiftCountData["thisMonthHourTotal"];
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.id=itoId+"_thisMonthBalance";
 		cell.textContent=shiftCountData["thisMonthBalance"];
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.id=itoId+"_aShiftCount";
 		cell.textContent=shiftCountData["aShiftCount"];
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.id=itoId+"_bxShiftCount";
 		cell.textContent=shiftCountData["bxShiftCount"];
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.id=itoId+"_cShiftCount";
 		cell.textContent=shiftCountData["cShiftCount"];
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.id=itoId+"_dxShiftCount";
 		cell.textContent=shiftCountData["dxShiftCount"];
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.id=itoId+"_noOfWoringDay";
 		cell.textContent=shiftCountData["noOfWorkingDay"];
 		row.appendChild(cell);
@@ -333,20 +333,20 @@ class RosterTable extends HTMLTableElement
 	_buildTableCaptionRow()
 	{
 		var cell,row=this.rosterHeader.insertRow(this.rosterHeader.rows.length);
-		var actualHourCell =new ActualHourCell();
-		var lastMonthCell=new LastMonthCell();
-		var nameCell=new NameCell();
-		var noOfWorkingDayCell=new NoOfWorkingDayCell(); 
-		var thisMonthCell=new ThisMonthCell();
-		var titleCell=new CaptionCell();
-		var totalCell=new TotalCell();
-		var totalHourCell=new TotalHourCell();
+		var actualHourCell =SimpleCellFactory.ActualHourCell;
+		var lastMonthCell=SimpleCellFactory.LastMonthCell;
+		var nameCell=SimpleCellFactory.NameCell;
+		var noOfWorkingDayCell=SimpleCellFactory.NoOfWorkingDayCell; 
+		var thisMonthCell=SimpleCellFactory.ThisMonthCell;
+		var captionCell=SimpleCellFactory.CaptionCell;
+		var totalCell=SimpleCellFactory.TotalCell;
+		var totalHourCell=SimpleCellFactory.TotalHourCell;
 		row.appendChild(nameCell);
 		for (var i=0;i<this.showNoOfPrevDate;i++)
 		{
 			cell=row.insertCell(row.cells.length);
 		}
-		row.appendChild(titleCell);
+		row.appendChild(captionCell);
 		row.appendChild(totalHourCell);
 		row.appendChild(actualHourCell);
 		row.appendChild(lastMonthCell);
@@ -355,7 +355,7 @@ class RosterTable extends HTMLTableElement
 
 		for (var i=0;i<4;i++)
 		{
-			var shiftCountCell=new ShiftCountCell();
+			var shiftCountCell=SimpleCellFactory.ShiftCountCell;
 			row.appendChild(shiftCountCell);
 		}
 		row.appendChild(noOfWorkingDayCell);
@@ -369,7 +369,7 @@ class RosterTable extends HTMLTableElement
 		cell.colSpan=44+this.showNoOfPrevDate;
 		cell.innerHTML="<br>";
 
-		cell=new AShiftLegendCell();
+		cell=SimpleCellFactory.AShiftLegendCell;
 		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		row.appendChild(cell);
@@ -386,47 +386,47 @@ class RosterTable extends HTMLTableElement
 		cell.id="yearlyStat"; 
 		cell.style.verticalAlign="top";
 
-		cell=new BShiftLegendCell();
+		cell=SimpleCellFactory.BShiftLegendCell;
 		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		row.appendChild(cell);
 
-		cell=new B1ShiftLegendCell();
+		cell=SimpleCellFactory.B1ShiftLegendCell;
 		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		row.appendChild(cell);
 
-		cell=new CShiftLegendCell();
+		cell=SimpleCellFactory.CShiftLegendCell;
 		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		row.appendChild(cell);
 
-		cell=new DShiftLegendCell();
+		cell=SimpleCellFactory.DShiftLegendCell;
 		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		row.appendChild(cell);
 
-		cell=new D1ShiftLegendCell();
+		cell=SimpleCellFactory.D1ShiftLegendCell;
 		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		row.appendChild(cell);
 
-		cell=new D2ShiftLegendCell();
+		cell=SimpleCellFactory.D2ShiftLegendCell;
 		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		row.appendChild(cell);
 
-		cell=new D3ShiftLegendCell();
+		cell=SimpleCellFactory.D3ShiftLegendCell;
 		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		row.appendChild(cell);
 
-		cell=new  SickLeaveShiftLegendCell();
+		cell=SimpleCellFactory.SickLeaveShiftLegendCell;
 		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		row.appendChild(cell);
 
-		cell=new OShiftLegendCell();
+		cell=SimpleCellFactory.OShiftLegendCell;
 		cell.colSpan=shiftCellColSpan;
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		row.appendChild(cell);
@@ -460,10 +460,10 @@ class RosterTable extends HTMLTableElement
 	_buildWeekDayRow()
 	{
 		var dateObj;
-		var borderedActualHourCell=new BorderedActualHourCell();
-		var hourOffDueCell=new HourOffDueCell();
-		var borderedTotalHourCell=new BorderedTotalHourCell();
-		var weekDayNameCell=new WeekDayNameCell();
+		var borderedActualHourCell=SimpleCellFactory.BorderedActualHourCell;
+		var hourOffDueCell=SimpleCellFactory.HourOffDueCell;
+		var borderedTotalHourCell=SimpleCellFactory.BorderedTotalHourCell;
+		var weekDayNameCell=SimpleCellFactory.WeekDayNameCell;
 		$(this.rosterWeekDayRow).empty();
 		
 		borderedActualHourCell.innerHTML="Actual<br>Hour";
@@ -473,7 +473,7 @@ class RosterTable extends HTMLTableElement
 		this.rosterWeekDayRow.appendChild(weekDayNameCell);
 		for (var i=0;i<this.showNoOfPrevDate;i++)
 		{
-			var dateCell=new DateCell();
+			var dateCell=SimpleCellFactory.DateCell;
 			this.rosterWeekDayRow.appendChild(dateCell);
 		}
 		for (var i=0;i<31;i++)

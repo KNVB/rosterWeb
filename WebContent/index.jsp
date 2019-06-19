@@ -25,8 +25,9 @@
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/MonthPick.css">
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery/3.3.1/jquery.min.js"></script>
 		<script src="<%=request.getContextPath()%>/js/util/Css.js"></script>
-		<script src="<%=request.getContextPath()%>/js/BasicCellObjects.js"></script>
-		<script src="<%=request.getContextPath()%>/js/DerivedCellObjets.js"></script>
+		<script src="<%=request.getContextPath()%>/js/util/CellEventUtil.js"></script>
+		<script src="<%=request.getContextPath()%>/js/util/CellObjects.js"></script>
+		<script src="<%=request.getContextPath()%>/js/util/SimpleCellFactory.js"></script>
 		<script src="<%=request.getContextPath()%>/js/RosterTable.js"></script>
 		<script src="<%=request.getContextPath()%>/js/RosterRule.jsp"></script>
 		<script src="<%=request.getContextPath()%>/js/util/Utility.jsp"></script>

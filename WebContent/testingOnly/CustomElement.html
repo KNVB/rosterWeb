@@ -8,26 +8,19 @@
 				constructor() {
 					super();
 				}
-				static get observedAttributes() {
-				  return ['shiftType'];
-				}
-				attributeChangedCallback(name, oldValue, newValue)
-				{
-					var rowIndex=this.parentElement.rowIndex;
-					var cellIndex=this.cellIndex;
-					console.log(`cell (${cellIndex},${rowIndex}) Attribute ${name} from ${oldValue} to ${newValue}`);
-				}
-				set shiftType(v) 
-				{
-					this.setAttribute("shiftType",v);
-					this.textContent=v;
-				}				
 			}
 			customElements.define('datacell-string',
 				DateCell, {
 					extends: 'td'
 				});		
+			function mutate(mutations) {
+			  mutations.forEach(function(mutation) {
+				console.log(mutation+","+mutation.target.textContent);
+			  });
+			}	
 			$(document).ready(function() {
+				var observer = new MutationObserver( mutate );
+				var config = { characterData: false, attributes: false, childList: true, subtree: false };
 				var t = document.createElement("table");
 				var row = t.insertRow(t.rows);
 				var cell1 = new DateCell();
@@ -39,11 +32,14 @@
 				row.appendChild(cell2);
 				row.appendChild(cell3);
 
+				observer.observe(cell1, config);
 				
 				$("#container").append(t);
-				cell1.shiftType="a";
-				cell2.shiftType= "c";
-				$(cell3).val("b");
+				cell1.textContent="a";
+				cell2.textContent="c";
+				cell3.textContent="b";
+				
+				
 			});
 		</script>
 	</head>

@@ -73,6 +73,42 @@ class RosterSchedulerTable extends RosterTable
 		var cell=row.cells[cellIndex];
 		return cell;
 	}
+	getIterationCount()
+	{
+		return parseInt($("#iterationCount").val());
+	}
+	getNextCellInRosterTable(yOffset,xOffset)
+	{
+		var theCell=this.getCell(this.selectedRegion.minY,this.selectedRegion.minX);
+		var index;
+		var maxRowCount=Object.keys(this.itoList).length*2;
+		var orgIndex=$.inArray(theCell,this.cursorCells);
+		var nextCell;
+		
+		if (this.selectedRegion.isSingleCell())
+		{
+			var newX=orgIndex % Object.keys(this.dateObjList).length;
+			var newY=(orgIndex-newX)/Object.keys(this.dateObjList).length;
+			
+			newX+=xOffset;
+			if (newX>=Object.keys(this.dateObjList).length)
+				newX=0;
+			else
+				if (newX<0)
+					newX=Object.keys(this.dateObjList).length-1;
+			newY+=yOffset;
+			if (newY>=maxRowCount)
+				newY=0;
+			else
+				if (newY<0)
+					newY=maxRowCount-1;
+			//console.log(newX,newY);
+			index=newX+newY*Object.keys(this.dateObjList).length;
+			
+			nextCell=this.cursorCells[index];
+			return nextCell;
+		}
+	}
 	setScheduler(rosterScheduler)
 	{
 		this.rosterScheduler=rosterScheduler;
@@ -113,6 +149,22 @@ class RosterSchedulerTable extends RosterTable
 			$(cell).addClass(AdminCss.selectCellBorderBottomClassName);
 		}
 	}
+	updateValue(theCell,itoId)
+	{
+		var cell,i;
+		var ito=this.itoList[itoId];
+		var row=theCell.parentElement;
+		Object.keys(this.rosterRule.shiftHourCount).forEach(function(shiftType){
+			$(theCell).removeClass(shiftType.toLowerCase()+"ShiftColor");
+		});
+		if (ito.isValidShift(theCell.textContent))
+		{	
+			$(theCell).addClass(this.utility.getShiftCssClassName(theCell.textContent));
+			$(theCell).removeClass(AdminCss.errorRedBlackGroundClassName);
+		}
+		this._updateShiftCountCells(row,this.rosterRule,ito);
+		this._updateVacantCells(theCell.cellIndex,ito);
+	}
 /*==============================================================================================*
  *																				  				*
  *	Private Method																				*
@@ -130,12 +182,25 @@ class RosterSchedulerTable extends RosterTable
  *==================================================================================================*/
 	_buildPreferredShiftRow(itoId)
 	{	
+		var i,row;
+		var preferredShift=this.preferredShiftList[itoId];
+		var cell=AdminCellFactory.PreferredShiftNameCell;
 		
+		row=this.rosterBody.insertRow(this.rosterBody.rows.length);
+		row.id="preferredShift_"+itoId;
+		row.appendChild(cell);
+		
+		for (i=0;i<this.showNoOfPrevDate;i++)
+		{
+			cell=AdminCellFactory.BorderCell;
+			row.appendChild(cell);
+		}
 	}
 	_buildRosterRows()
 	{
 		super._buildRosterRows();
 		this._buildVacantShiftRow();
+		this.cursorCells=$("td."+Css.cursorCellClassName);
 	}
 	_buildShiftCells(rosterRowData,row)
 	{
@@ -148,12 +213,11 @@ class RosterSchedulerTable extends RosterTable
 		{
 			if (i<Object.keys(this.dateObjList).length)
 			{
-				//cell=new EditableShiftCell(this,rosterRowData.itoId);
-				cell=new EditableCell(this,rosterRowData.itoId);
+				cell=AdminCellFactory.getEditableShiftCell(this,rosterRowData.itoId);
 				shiftType=rosterRowData.shiftList[i+1];
 				if (shiftType!=null)
 				{
-					//cell.setShiftType(shiftType);
+					cell.setShiftType(shiftType);
 					actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
 					switch (shiftType)
 					{
@@ -178,7 +242,7 @@ class RosterSchedulerTable extends RosterTable
 			}
 			else
 			{
-				cell=new DateCell();
+				cell=AdminCellFactory.DateCell;
 			}
 			row.appendChild(cell);
 		}
@@ -200,7 +264,73 @@ class RosterSchedulerTable extends RosterTable
 	}
 	_buildVacantShiftRow()
 	{
+		var aShiftData=[],bShiftData=[],cShiftData=[];
+		var aShiftSD,bShiftSD,cShiftSD,avgStdDev;
+		var i,self=this,shiftType,cell;
+		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
+		row.id="vacantShiftRow";
+
+		this.vacantShiftRow=row;
+		cell=AdminCellFactory.VacantShiftLabelCell;
+		row.appendChild(cell);
 		
+		for (i=0;i<this.showNoOfPrevDate;i++)
+		{
+			cell=AdminCellFactory.BorderCell;
+			row.appendChild(cell);
+		}
+		
+		Object.keys(this.dateObjList).forEach(function(date){
+			var essentialShift=self.rosterRule.getEssentialShift();
+			cell=AdminCellFactory.VacantShiftCell;
+			row.appendChild(cell);
+
+			Object.keys(self.rosterList).forEach(function(itoId){
+				shiftType=self.rosterList[itoId].shiftList[date];
+				if (shiftType=="b1")
+					essentialShift=essentialShift.replace("b","");
+				else
+					essentialShift=essentialShift.replace(shiftType,"");
+			});
+			cell.textContent=essentialShift;
+		});
+
+		for (i=Object.keys(this.dateObjList).length;i<31;i++)
+		{
+			cell=AdminCellFactory.VacantShiftCell;
+			row.appendChild(cell);		
+		}
+
+		Object.keys(self.itoList).forEach(function(itoId){
+			aShiftData.push(Number(document.getElementById(itoId+"_aShiftCount").textContent));
+			bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
+			cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
+		});
+
+		cell=AdminCellFactory.BorderedAlignCenterCell;
+		cell.colSpan=5;
+		row.appendChild(cell);
+
+		cell=AdminCellFactory.BorderedAlignCenterCell;
+		cell.id="shiftAStdDev";
+		row.appendChild(cell);
+
+		cell=AdminCellFactory.BorderedAlignCenterCell;
+		cell.id="shiftBStdDev";
+		row.appendChild(cell);
+
+		cell=AdminCellFactory.BorderedAlignCenterCell;
+		cell.id="shiftCStdDev";
+		row.appendChild(cell);
+
+		cell=AdminCellFactory.BorderedAlignCenterCell;
+		cell.id="avgStdDev";
+		row.appendChild(cell);
+
+		cell=AdminCellFactory.BorderedAlignCenterCell;
+		row.appendChild(cell);
+
+		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
 	}
 	_getData()
 	{
@@ -222,31 +352,31 @@ class RosterSchedulerTable extends RosterTable
 		yearlyStatisticTable.className=AdminCss.yearlyStatisticTableClassName;
 		row=yearlyStatisticTable.insertRow(yearlyStatisticTable.rows.length);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.textContent="ITO";
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.textContent="a";
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.textContent="bx";
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.textContent="c";
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.textContent="dx";
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.textContent="O";
 		row.appendChild(cell);
 
-		cell=new BorderedAlignCenterCell();
+		cell=SimpleCellFactory.BorderedAlignCenterCell;
 		cell.textContent="Total";
 		row.appendChild(cell);
 
@@ -268,63 +398,63 @@ class RosterSchedulerTable extends RosterTable
 				}
 				row=yearlyStatisticTable.insertRow(yearlyStatisticTable.rows.length);
 
-				cell=new BorderedAlignCenterCell();
+				cell=SimpleCellFactory.BorderedAlignCenterCell;
 				cell.textContent=self.yearlyStatistic[itoId].itoPostName;
 				row.appendChild(cell);
 
-				cell=new BorderedAlignCenterCell();
+				cell=SimpleCellFactory.BorderedAlignCenterCell;
 				cell.textContent=aShiftTotal;
 				row.appendChild(cell);
 
-				cell=new BorderedAlignCenterCell();
+				cell=SimpleCellFactory.BorderedAlignCenterCell;
 				cell.textContent=bxShiftTotal;
 				row.appendChild(cell);
 
-				cell=new BorderedAlignCenterCell();
+				cell=SimpleCellFactory.BorderedAlignCenterCell;
 				cell.textContent=cShiftTotal;
 				row.appendChild(cell);
 
-				cell=new BorderedAlignCenterCell();
+				cell=SimpleCellFactory.BorderedAlignCenterCell;
 				cell.textContent=dxShiftTotal;
 				row.appendChild(cell);
 
-				cell=new BorderedAlignCenterCell();		
+				cell=SimpleCellFactory.BorderedAlignCenterCell;
 				cell.textContent=oShiftTotal;
 				row.appendChild(cell);
 
 				finalTotal=oShiftTotal+cShiftTotal+aShiftTotal+dxShiftTotal+bxShiftTotal;
-				cell=new BorderedAlignCenterCell();	
+				cell=SimpleCellFactory.BorderedAlignCenterCell;
 				cell.textContent=finalTotal;
 				row.appendChild(cell);
 
 				for (i=0;i<itoMonthlyStatistic.length;i++)
 				{
 					row=yearlyStatisticTable.insertRow(yearlyStatisticTable.rows.length);
-					cell=new BorderedAlignCenterCell();	
+					cell=SimpleCellFactory.BorderedAlignCenterCell;	
 					cell.textContent=i+1;
 					row.appendChild(cell);
 
-					cell=new BorderedAlignCenterCell();	
+					cell=SimpleCellFactory.BorderedAlignCenterCell;	
 					cell.textContent=itoMonthlyStatistic[i].ashiftTotal;
 					row.appendChild(cell);
 
-					cell=new BorderedAlignCenterCell();			
+					cell=SimpleCellFactory.BorderedAlignCenterCell;
 					cell.textContent=itoMonthlyStatistic[i].bxShiftTotal;
 					row.appendChild(cell);
 
-					cell=new BorderedAlignCenterCell();		
+					cell=SimpleCellFactory.BorderedAlignCenterCell;
 					cell.textContent=itoMonthlyStatistic[i].cshiftTotal;
 					row.appendChild(cell);
 
-					cell=new BorderedAlignCenterCell();	
+					cell=SimpleCellFactory.BorderedAlignCenterCell;
 					cell.textContent=itoMonthlyStatistic[i].dxShiftTotal;
 					row.appendChild(cell);
 
-					cell=new BorderedAlignCenterCell();					
+					cell=SimpleCellFactory.BorderedAlignCenterCell;			
 					cell.textContent=itoMonthlyStatistic[i].oshiftTotal;
 					row.appendChild(cell);
 
-					cell=new BorderedAlignCenterCell();				
+					cell=SimpleCellFactory.BorderedAlignCenterCell;		
 					cell.textContent=itoMonthlyStatistic[i].monthlyTotal;
 					row.appendChild(cell);
 				}
@@ -336,18 +466,18 @@ class RosterSchedulerTable extends RosterTable
 	_showButtons()
 	{
 		var autoSchedulerCell=document.getElementById("autoScheduler");
-		var autoPlannerButtonCell=new AutoPlannerButtonCell();
-		var autoPlannerIterationCell=new AutoPlannerIterationCell();
+		var autoPlannerButtonCell=AdminCellFactory.AutoPlannerButtonCell;
+		var autoPlannerIterationCell=AdminCellFactory.AutoPlannerIterationCell;
 		var autoPlannerTable=document.createElement("table");
 		var autoPlannerRow=autoPlannerTable.insertRow(autoPlannerTable.rows.length);
-		var autoSchedulerResultDiv=new AutoSchedulerResultDiv();
-		var buttonTable =new ButtonTable();
+		var autoSchedulerResultDiv=AdminCellFactory.AutoSchedulerResultDiv;
+		var buttonTable =AdminCellFactory.ButtonTable;
 		var cell=autoPlannerRow.insertCell(autoPlannerRow.cells.length);
-		var fillEmptyShiftWithOButtonCell=new FillEmptyShiftWithOButtonCell();
+		var fillEmptyShiftWithOButtonCell=AdminCellFactory.FillEmptyShiftWithOButtonCell;
 		var row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		cell.textContent="Auto Planning Start From:";
 		autoPlannerRow.appendChild(cell);
-		autoPlannerRow.appendChild(new AutoPlannerSelectCell(this.dateObjList));
+		autoPlannerRow.appendChild(AdminCellFactory.getAutoPlannerSelectCell(this.dateObjList));
 
 		autoPlannerRow=autoPlannerTable.insertRow(autoPlannerTable.rows.length);
 		cell=autoPlannerRow.insertCell(autoPlannerRow.cells.length);
@@ -360,12 +490,110 @@ class RosterSchedulerTable extends RosterTable
 		autoPlannerRow.appendChild(fillEmptyShiftWithOButtonCell);
 
 		autoSchedulerCell.append(autoPlannerTable);
-		autoSchedulerResultDiv=new AutoSchedulerResultDiv();
+		autoSchedulerResultDiv=AdminCellFactory.AutoSchedulerResultDiv;
 		autoSchedulerCell.appendChild(autoSchedulerResultDiv);
 
 		cell=row.insertCell(row.cells.length);
 		cell.colSpan=34;
 		cell.appendChild(buttonTable);
+	}
+	_updateShiftCountCells(row,rosterRule,ito)
+	{
+		var aShiftCount=0,actualWorkingHour=0.0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
+		var balance=Number(document.getElementById(ito.itoId+"_lastMonthBalance").textContent);
+		var	noOfWorkingDay=0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
+		var result=[],self=this,shiftType;
+		var totalHour=Number(document.getElementById(ito.itoId+"_totalHour").textContent);
+		$(row).children("."+Css.cursorCellClassName).each(function(){
+			shiftType=this.textContent;
+			if (ito.isValidShift(shiftType))
+			{
+				switch(shiftType)
+				{
+					case "a":
+							aShiftCount++;
+							break;
+					case "b":
+					case "b1":
+							bxShiftCount++;
+							break;
+					case "c":
+							cShiftCount++;
+							break;
+					case "d":
+					case "d1":
+					case "d2":
+					case "d3":
+							dxShiftCount++;
+							break;		
+				}
+				actualWorkingHour+=self.rosterRule.shiftHourCount[shiftType];
+			}
+		});
+		thisMonthHourTotal=actualWorkingHour-totalHour;
+		thisMonthBalance=thisMonthHourTotal+balance;
+		noOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
+		result["totalHour"]=this.utility.roundTo(totalHour,2);
+		result["lastMonthBalance"]=this.utility.roundTo(balance,2);
+		result["actualHour"]=this.utility.roundTo(actualWorkingHour,2);
+		result["thisMonthHourTotal"]=this.utility.roundTo(thisMonthHourTotal,2);
+		result["thisMonthBalance"]=this.utility.roundTo(thisMonthBalance,2);
+		result["aShiftCount"]=aShiftCount;
+		result["bxShiftCount"]=bxShiftCount;
+		result["cShiftCount"]=cShiftCount;
+		result["dxShiftCount"]=dxShiftCount;
+		result["noOfWorkingDay"]=noOfWorkingDay;
+		this._updateShiftCountCellsContent(result,ito.itoId);
+	}
+	_updateShiftCountCellsContent(shiftCountData,itoId)
+	{
+		$("#"+itoId+"_totalHour").text(shiftCountData["totalHour"]);
+		$("#"+itoId+"_lastMonthBalance").text(shiftCountData["lastMonthBalance"]);
+		$("#"+itoId+"_actualHour").text(shiftCountData["actualHour"]);
+		$("#"+itoId+"_thisMonthHourTotal").text(shiftCountData["thisMonthHourTotal"]);
+		$("#"+itoId+"_thisMonthBalance").text(shiftCountData["thisMonthBalance"]);
+		$("#"+itoId+"_aShiftCount").text(shiftCountData["aShiftCount"]);
+		$("#"+itoId+"_bxShiftCount").text(shiftCountData["bxShiftCount"]);
+		$("#"+itoId+"_cShiftCount").text(shiftCountData["cShiftCount"]);
+		$("#"+itoId+"_dxShiftCount").text(shiftCountData["dxShiftCount"]);
+		$("#"+itoId+"_noOfWoringDay").text(shiftCountData["noOfWorkingDay"]);
+	}
+	_updateStandardDevation(aShiftData,bShiftData,cShiftData)
+	{
+		var aShiftSD=this.utility.getSD(aShiftData);
+		var bShiftSD=this.utility.getSD(bShiftData);
+		var cShiftSD=this.utility.getSD(cShiftData);
+		var avgStdDev=(aShiftSD+bShiftSD+cShiftSD)/3;
+
+		document.getElementById("shiftAStdDev").textContent=this.utility.roundTo(aShiftSD,2);
+		document.getElementById("shiftBStdDev").textContent=this.utility.roundTo(bShiftSD,2);
+		document.getElementById("shiftCStdDev").textContent=this.utility.roundTo(cShiftSD,2);
+		document.getElementById("avgStdDev").textContent=this.utility.roundTo(avgStdDev,2);
+	}
+	_updateVacantCells(cellIndex,ito)
+	{
+		var aShiftData=[],bShiftData=[],cShiftData=[];
+		var aShiftSD,bShiftSD,cShiftSD,avgStdDev;
+		var cell,ito,shiftType;
+		var vacantShift=this.rosterRule.getEssentialShift();
+		for (var itoId in this.itoList)
+		{
+			 cell=document.getElementById("shift_"+itoId).cells[cellIndex];
+			 ito=this.itoList[itoId];
+			 shiftType=cell.textContent;
+			 if ((shiftType!="") && ito.isValidShift(shiftType))
+			 {
+				 if (cell.textContent=="b1")
+					 vacantShift=vacantShift.replace("b","");
+				 else
+					 vacantShift=vacantShift.replace(shiftType,"");
+			 } 
+			 aShiftData.push(Number(document.getElementById(itoId+"_aShiftCount").textContent));
+			 bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
+			 cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
+		}
+		document.getElementById("vacantShiftRow").cells[cellIndex].textContent=vacantShift;
+		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
 	}
 }
 customElements.define('roster-scheduler-table',
