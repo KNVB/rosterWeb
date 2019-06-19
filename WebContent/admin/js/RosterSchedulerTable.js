@@ -195,6 +195,33 @@ class RosterSchedulerTable extends RosterTable
 			cell=AdminCellFactory.BorderCell;
 			row.appendChild(cell);
 		}
+		for (i=1;i<32;i++)
+		{
+			if (i<=Object.keys(this.dateObjList).length)
+			{
+				/*cell=new PreferredShiftCell(this);
+				if (preferredShift[i]!=null)
+					cell.textContent=preferredShift[i];
+				*/	
+				cell=AdminCellFactory.DateCell;
+				if (preferredShift[i]!=null)
+					cell.textContent=preferredShift[i];
+			}
+			else
+			{
+				cell=AdminCellFactory.DateCell;
+			}
+			row.appendChild(cell);
+		}
+		cell=AdminCellFactory.BorderCell;
+		cell.colSpan=5;
+		row.appendChild(cell);
+
+		for (i=0;i<5;i++)
+		{
+			cell=AdminCellFactory.BorderCell;
+			row.appendChild(cell);
+		}
 	}
 	_buildRosterRows()
 	{
