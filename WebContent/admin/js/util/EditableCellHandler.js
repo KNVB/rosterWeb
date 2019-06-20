@@ -24,6 +24,7 @@ class EditableCellHandler
 		});
 	
 		$(cell).keydown(function(event){
+			console.log("key down");
 			self._handleKeyDownEvent(this,event);
 		});
 		$(cell).mousedown(function(event){

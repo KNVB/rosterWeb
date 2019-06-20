@@ -618,12 +618,22 @@ class RosterSchedulerTable extends RosterTable
 			row.appendChild(cell);
 		}
 	}
+/*==================================================================================================*
+ *                                                                                                  *
+ *         Generate Roster Rows                                                                     *
+ *                                                                                                  *
+ *==================================================================================================*/	
 	_buildRosterRows()
 	{
 		super._buildRosterRows();
 		this._buildVacantShiftRow();
 		this.cursorCells=$("td."+Css.cursorCellClassName);
 	}
+/*==================================================================================================*
+ *                                                                                                  *
+ *         Generate Shift Rows                                                                      * 
+ *                                                                                                  *
+ *==================================================================================================*/	
 	_buildShiftCells(rosterRowData,row)
 	{
 		var cell,i;
