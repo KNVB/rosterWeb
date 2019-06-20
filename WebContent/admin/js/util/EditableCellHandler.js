@@ -28,10 +28,12 @@ class EditableCellHandler
 		});
 		$(cell).mousedown(function(event){
 			event.preventDefault();
+			console.log("mouse down");
 			self.selectedRegion.startSelect(this);
 		});
 		$(cell).mouseenter(function(event){
 			self.selectedRegion.update(this);
+			console.log("mouse enter");
 			event.preventDefault();
 		});
 	}
@@ -72,7 +74,9 @@ class EditableCellHandler
 			case 39://handle right arrow key event
 					this._handleArrowKeyEvent(event,0,1);
 					break;
-			case 13://handle "Enter" key event		
+
+			case 13://handle "Enter" key event	
+					this.select();
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
 					break;		
@@ -89,7 +93,7 @@ class EditableCellHandler
 	}
 	select()
 	{
-		console.log("Select Method called");
+		console.log("select Method called");
 		console.log(`this.firstInput=${this.firstInput}`);
 		event.preventDefault();
 		var range = document.createRange();

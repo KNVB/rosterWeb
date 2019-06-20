@@ -35,6 +35,7 @@ class RosterSchedulerTable extends RosterTable
 		});
 		$(document).mouseup(function(){
 			event.preventDefault();
+			console.log("mouse up");
 			if (self.selectedRegion.inSelectMode)
 				self.selectedRegion.endSelect();
 		});
