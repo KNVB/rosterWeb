@@ -46,8 +46,10 @@ class EditableCellHandler
 		{	
 			event.preventDefault();
 			var nextCell=this.rosterSchedulerTable.getNextCellInRosterTable(yOffset,xOffset);
+			
 			this.selectedRegion.startSelect(nextCell);
 			this.selectedRegion.endSelect();
+			
 			nextCell.click();
 		}
 	}
@@ -60,7 +62,7 @@ class EditableCellHandler
 		switch (event.which)
 		{
 			case  9://handle tab key
-					this._handleTabKeyEvent(event);
+					this._handleTabKeyEvent(event,theCell);
 					break;
 			case 27://handle "Esc" key event
 					this._handleEscKeyEvent(theCell);
@@ -82,14 +84,34 @@ class EditableCellHandler
 					break;		
 		}	
 	}
-	_handleTabKeyEvent(event)
+	_handleTabKeyEvent(event,theCell)
 	{
 		console.log("Tab key");
 		console.log(`this.firstInput=${this.firstInput}`);
+		var yOffset,xOffset;
+		this.select();
+		event.preventDefault();
 		if (event.shiftKey)
-			this._handleArrowKeyEvent(event,0,-1);
+		{	
+			yOffset=0;
+			xOffset=-1;
+		}
 		else
-			this._handleArrowKeyEvent(event,0,1);
+		{	
+			yOffset=0;
+			xOffset=1;
+		}			
+		if (this.selectedRegion.isSingleCell())
+			this._handleArrowKeyEvent(event,yOffset,xOffset);
+		else
+		{
+			var nextCell=this.rosterSchedulerTable.getNextCellInSelectedRegion(theCell,yOffset,xOffset);
+			var range = document.createRange();
+			var sel = window.getSelection();
+			range.selectNodeContents(nextCell);
+		    sel.removeAllRanges();
+		    sel.addRange(range);
+		}
 	}
 	select()
 	{
