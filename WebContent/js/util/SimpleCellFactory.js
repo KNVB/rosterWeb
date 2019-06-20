@@ -270,6 +270,22 @@ class SimpleCellFactory
  *  Select Roster Month Cell                                                           *
  *                                                                                     * 
  ***************************************************************************************/
+	static _addCursorEventHandler(cell,rosterTable)
+	{
+		$(cell).addClass(Css.cursorCellClassName);
+		$(cell).mouseover(function(){
+			rosterTable.markCoorindate(this);
+		});
+		$(cell).mouseout(function(){
+			rosterTable.unMarkCoorindate(this);
+		});
+	}
+	static getCursoredShiftCell(rosterTable)
+	{
+		var cell=new ShiftCell(rosterTable.utility);
+		this._addCursorEventHandler(cell,rosterTable);
+		return cell;
+	}
 	static getSelectRosterMonthCell(rosterTable)
 	{
 		var cell=this.AlignCenterCell;

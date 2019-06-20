@@ -34,7 +34,7 @@ class SelectedRegion
 			if (this.selectedCellList.length>1)
 			{
 				cell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
-				cell.focus();
+				cell.click();
 			}
 		}
 	}	

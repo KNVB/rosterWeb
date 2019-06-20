@@ -185,7 +185,7 @@ class RosterTable extends HTMLTableElement
 		row.appendChild(cell);
 		for (i=index;i<=Object.keys(rosterRowData.previousMonthShiftList).length;i++)
 		{
-			cell=new ShiftCell(rosterTable);
+			cell=new ShiftCell(this.utility);
 			cell.setShiftType(rosterRowData.previousMonthShiftList[i]);
 			row.appendChild(cell);
 		}
@@ -224,9 +224,8 @@ class RosterTable extends HTMLTableElement
 		for (i=1;i<=Object.keys(rosterRowData.shiftList).length;i++)
 		{
 			shiftType=rosterRowData.shiftList[i];
-			cell=new ShiftCell(this);
+			cell=SimpleCellFactory.getCursoredShiftCell(this);
 			cell.setShiftType(shiftType);
-			CellEventUtil.addCursorEventHandler(cell);
 			actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
 			switch (shiftType)
 			{

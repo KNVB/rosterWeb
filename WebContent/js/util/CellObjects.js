@@ -1,12 +1,11 @@
 class ShiftCell extends HTMLTableCellElement 
 {
-	constructor(rosterTable) {
+	constructor(utility) {
 		super();
 		var self=this;
-		this.utility=rosterTable.utility;
+		this.utility=utility;
 		$(this).addClass(Css.borderCellClassName);
 		$(this).addClass(Css.alignCenterClassName);
-		this.rosterTable=rosterTable;
 	}
 	setShiftType(t)
 	{

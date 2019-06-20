@@ -181,12 +181,21 @@ class AdminCellFactory extends SimpleCellFactory
 		cell.colSpan=2;
 		return cell;
 	}
-	static getEditableShiftCell(rostable,itoId)
+	static getEditableShiftCell(rosterSchedulerTable,itoId)
 	{
-		var cell=new ShiftCell(rostable);
-		var editableCellHandler=new EditableCellHandler(cell);
-		AdminCellEventUtil.addCursorEventHandler(cell);
-		AdminCellEventUtil.addAutoUpdateHandler(cell,itoId);
+		var cell=this.getCursoredShiftCell(rosterSchedulerTable);
+		var editableCellHandler=new EditableCellHandler(cell,rosterSchedulerTable);
+		$(cell).addClass(AdminCss.shiftCellClassName);
+		$(cell).blur(function(event){
+			rosterSchedulerTable.updateValue(this,itoId);
+		});
+		return cell;
+	}
+	static getPreferredShiftCell(rosterSchedulerTable)
+	{
+		var cell=this.BorderedAlignCenterCell;
+		var editableCellHandler=new EditableCellHandler(cell,rosterSchedulerTable);
+		this._addCursorEventHandler(cell,rosterSchedulerTable);
 		return cell;
 	}
 }

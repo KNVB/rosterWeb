@@ -1,18 +1,17 @@
 class EditableCellHandler
 {
-	constructor(cell)
+	constructor(cell,rosterSchedulerTable)
 	{
 		var self=this;
 		this.cell=cell;
 		this.cell.contentEditable="true";
 		this.firstInput=false;
-		this.rosterSchedulerTable=cell.rosterTable;
+		this.rosterSchedulerTable=rosterSchedulerTable;
 		this.selectedRegion=rosterTable.selectedRegion;
 		
 		$(cell).click(function(event){
 			self.select();
 			console.log("click");
-			self.firstInput=true;
 		});
 		$(cell).dblclick(function(event){
 			event.preventDefault();
@@ -38,8 +37,9 @@ class EditableCellHandler
 	}
 	_handleArrowKeyEvent(event,yOffset,xOffset)
 	{
-		console.log("Body Arrow Key");
+		console.log("Arrow Key");
 		console.log(`this.firstInput=${this.firstInput}`);
+		
 		if (this.firstInput)
 		{	
 			event.preventDefault();
@@ -49,6 +49,10 @@ class EditableCellHandler
 			nextCell.click();
 		}
 	}
+	_handleEscKeyEvent(theCell)
+	{
+		this.select();
+	}
 	_handleKeyDownEvent(theCell,event)
 	{
 		switch (event.which)
@@ -57,7 +61,7 @@ class EditableCellHandler
 					this._handleTabKeyEvent(event);
 					break;
 			case 27://handle "Esc" key event
-					this._handleEscKeyEvent();
+					this._handleEscKeyEvent(theCell);
 					break;
 			case 37://handle left arrow key event
 					this._handleArrowKeyEvent(event,0,-1);
@@ -68,6 +72,7 @@ class EditableCellHandler
 			case 39://handle right arrow key event
 					this._handleArrowKeyEvent(event,0,1);
 					break;
+			case 13://handle "Enter" key event		
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
 					break;		
@@ -75,8 +80,8 @@ class EditableCellHandler
 	}
 	_handleTabKeyEvent(event)
 	{
-		console.log("Body Tab key");
-		
+		console.log("Tab key");
+		console.log(`this.firstInput=${this.firstInput}`);
 		if (event.shiftKey)
 			this._handleArrowKeyEvent(event,0,-1);
 		else
@@ -84,11 +89,14 @@ class EditableCellHandler
 	}
 	select()
 	{
+		console.log("Select Method called");
+		console.log(`this.firstInput=${this.firstInput}`);
 		event.preventDefault();
 		var range = document.createRange();
-	    range.selectNodeContents(this.cell);
-	    var sel = window.getSelection();
+		var sel = window.getSelection();
+		range.selectNodeContents(this.cell);
 	    sel.removeAllRanges();
 	    sel.addRange(range);
+	    this.firstInput=true;
 	}	
 }
