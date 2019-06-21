@@ -2,9 +2,37 @@ class SelectedRegion
 {
 	constructor(rosterSchedulerTable)
 	{
+		this.firstInput=false;
 		this.inSelectMode=false;
 		this.rosterSchedulerTable=rosterSchedulerTable;
+		this.copiedRegion=new CopiedRegion();
 		this._init();
+	}
+	copy()
+	{
+		var cell1,cell2;
+		var dataRowList;
+		var self=this;
+		if (!this.isEmpty())
+		{
+			console.log("is copiedRegion Empty?="+this.copiedRegion.isEmpty());
+			if (!this.copiedRegion.isEmpty())
+			{	
+				console.log("Clear CopiedRegion");
+				//console.log("CopiedRegion="+JSON.stringify(this.copiedRegion));
+				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
+			}
+			this.copiedRegion.empty();
+			this.selectedCellList.forEach(function(element){
+				self.copiedRegion.selectedCellList.push(element);
+			});
+			this.copiedRegion.minX=this.minX;
+			this.copiedRegion.maxX=this.maxX;
+			this.copiedRegion.minY=this.minY;
+			this.copiedRegion.maxY=this.maxY;
+			this.rosterSchedulerTable.setCopiedRegion(this);
+			//this.rosterSchedulerTable.clearSelectedRegion(this);
+		}
 	}
 	empty()
 	{
@@ -12,6 +40,16 @@ class SelectedRegion
 		{
 			this.rosterSchedulerTable.clearSelectedRegion(this);
 			this._init();
+		}
+	}
+	emptyCopiedRegion()
+	{
+		if (!this.copiedRegion.isEmpty())
+		{	
+			console.log("Clear CopiedRegion");
+			//console.log("CopiedRegion="+JSON.stringify(this.copiedRegion));
+			this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
+			this.copiedRegion.empty();
 		}
 	}
 	endSelect()
@@ -31,11 +69,17 @@ class SelectedRegion
 					this.selectedCellList.push(cell);
 				}					
 			}
-			if (this.selectedCellList.length>1)
+			cell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
+			var range = document.createRange();
+			var sel = window.getSelection();
+			range.selectNodeContents(cell);
+		    sel.removeAllRanges();
+		    sel.addRange(range);
+			if (!this.copiedRegion.isEmpty())
 			{
-				cell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
-				cell.click();
+				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
 			}
+			this.firstInput=true;
 		}
 	}	
 	isEmpty()
@@ -45,6 +89,41 @@ class SelectedRegion
 	isSingleCell()
 	{
 		return (this.selectedCellList.length==1);
+	}
+	setFocusCell(theCell)
+	{
+		var sel = window.getSelection();
+		theCell.focus();
+		sel.collapse(theCell.firstChild, 1);
+		this.firstInput=false;
+	}
+	selectCell(theCell)
+	{
+		this.empty();
+		this.emptyCopiedRegion();
+		this.startSelect(theCell);
+		this.update(theCell);
+		this.endSelect();
+	}
+	selectNextCell(event,yOffset,xOffset)
+	{
+		console.log(`this.firstInput=${this.firstInput}`);
+		if (this.firstInput)
+		{
+			var nextCell=this.rosterSchedulerTable.getNextCellInRosterTable(yOffset,xOffset);
+			this.selectCell(nextCell);
+			event.preventDefault();
+		}
+	}
+	selectNextCellInSelectedRegion(theCell,yOffset,xOffset)
+	{
+		var nextCell=this.rosterSchedulerTable.getNextCellInSelectedRegion(theCell,yOffset,xOffset);
+		var range = document.createRange();
+		var sel = window.getSelection();
+		range.selectNodeContents(nextCell);
+	    sel.removeAllRanges();
+	    sel.addRange(range);
+	    this.firstInput=true;
 	}
 	startSelect(theCell)
 	{
@@ -61,7 +140,14 @@ class SelectedRegion
 		this.rosterSchedulerTable.setSelectedRegion(this);
 		this.selectedCellList.push(theCell);
 		this.inSelectMode=true;
-
+		
+		/*
+		if (!this.copiedRegion.isEmpty())
+		{	
+			this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
+			this.copiedRegion.empty();
+		}
+		*/
 	}
 	update(theCell)
 	{

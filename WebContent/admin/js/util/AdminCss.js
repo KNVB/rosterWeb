@@ -1,5 +1,21 @@
 class AdminCss extends Css
 {
+	static get copiedCellBorderBottomClassName()
+	{
+		return "copiedCellBorderBottom";
+	}
+	static get copiedCellBorderLeftClassName()
+	{
+		return "copiedCellBorderLeft";
+	}
+	static get copiedCellBorderRightClassName()
+	{
+		return "copiedCellBorderRight";
+	}
+	static get copiedCellBorderTopClassName()
+	{
+		return "copiedCellBorderTop";
+	}
 	static get errorRedBlackGroundClassName()
 	{
 		return "errorRedBlackGround";

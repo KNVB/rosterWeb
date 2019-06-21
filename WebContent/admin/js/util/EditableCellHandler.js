@@ -5,24 +5,15 @@ class EditableCellHandler
 		var self=this;
 		this.cell=cell;
 		this.cell.contentEditable="true";
-		this.firstInput=false;
+		
 		this.rosterSchedulerTable=rosterSchedulerTable;
 		this.selectedRegion=rosterTable.selectedRegion;
 		
-		$(cell).click(function(event){
-			self.select();
-			console.log("click");
-		});
 		$(cell).dblclick(function(event){
 			event.preventDefault();
-			var sel = window.getSelection();
-			this.focus();
-	
-			sel.collapse(this.firstChild, 1);
 			console.log("double click");
-			self.firstInput=false;
+			self.selectedRegion.setFocusCell(this);
 		});
-	
 		$(cell).keydown(function(event){
 			self._handleKeyDownEvent(this,event);
 		});
@@ -34,25 +25,15 @@ class EditableCellHandler
 			self.selectedRegion.update(this);
 			event.preventDefault();
 		});
+		
 	}
+	
 	_handleArrowKeyEvent(event,yOffset,xOffset)
 	{
 		console.log("Arrow Key");
-		console.log(`this.firstInput=${this.firstInput}`);
-		
-		if (this.firstInput)
-		{	
-			event.preventDefault();
-			var nextCell=this.rosterSchedulerTable.getNextCellInRosterTable(yOffset,xOffset);
-			this.selectedRegion.startSelect(nextCell);
-			this.selectedRegion.endSelect();
-			nextCell.click();
-		}
+		this.selectedRegion.selectNextCell(event,yOffset,xOffset);
 	}
-	_handleEscKeyEvent(theCell)
-	{
-		this.select();
-	}
+	
 	_handleKeyDownEvent(theCell,event)
 	{
 		switch (event.which)
@@ -60,8 +41,9 @@ class EditableCellHandler
 			case  9://handle tab key
 					this._handleTabKeyEvent(event,theCell);
 					break;
+			
 			case 27://handle "Esc" key event
-					this.select();
+					this.selectedRegion.selectCell(theCell);
 					break;
 			case 37://handle left arrow key event
 					this._handleArrowKeyEvent(event,0,-1);
@@ -73,7 +55,7 @@ class EditableCellHandler
 					this._handleArrowKeyEvent(event,0,1);
 					break;
 			case 13://handle "Enter" key event
-					this.select();
+					this.selectedRegion.selectCell(theCell);
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
 					break;
@@ -82,6 +64,7 @@ class EditableCellHandler
 					{
 						//handle Ctrl-C event
 						event.preventDefault();
+						this.selectedRegion.copy();
 					}
 					break;
 			case 86:
@@ -113,26 +96,8 @@ class EditableCellHandler
 			this._handleArrowKeyEvent(event,yOffset,xOffset);
 		else
 		{
-			var nextCell=this.rosterSchedulerTable.getNextCellInSelectedRegion(theCell,yOffset,xOffset);
 			event.preventDefault();
-			var range = document.createRange();
-			var sel = window.getSelection();
-			range.selectNodeContents(nextCell);
-		    sel.removeAllRanges();
-		    sel.addRange(range);
-		    this.firstInput=true;
+			this.selectedRegion.selectNextCellInSelectedRegion(theCell,yOffset,xOffset);
 		}
-	}
-	select()
-	{
-		console.log("Select Method called");
-		console.log(`this.firstInput=${this.firstInput}`);
-		event.preventDefault();
-		var range = document.createRange();
-		var sel = window.getSelection();
-		range.selectNodeContents(this.cell);
-	    sel.removeAllRanges();
-	    sel.addRange(range);
-	    this.firstInput=true;
 	}	
 }

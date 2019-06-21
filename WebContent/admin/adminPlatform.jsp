@@ -48,6 +48,7 @@
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminCss.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminCellFactory.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/AdminUtility.js"></script>
+		<script src="<%=request.getContextPath()%>/admin/js/util/CopiedRegion.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/EditableCellHandler.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/LoadingScreen.js"></script>
 		<script src="<%=request.getContextPath()%>/admin/js/util/SelectedRegion.js"></script>

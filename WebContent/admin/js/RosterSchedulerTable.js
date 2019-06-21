@@ -44,6 +44,22 @@ class RosterSchedulerTable extends RosterTable
 		var i,cells;
 		$("td."+AdminCss.shiftCellClassName).text("").blur();
 	}
+	clearCopiedRegion(copiedRegion)
+	{
+		var cell,i,j;
+		for (i=copiedRegion.minY;i<=copiedRegion.maxY;i++)
+		{
+			for (j=copiedRegion.minX;j<=copiedRegion.maxX;j++)
+			{
+				cell=this.getCell(i,j);
+				cell.blur();
+				$(cell).removeClass(AdminCss.copiedCellBorderRightClassName);   
+				$(cell).removeClass(AdminCss.copiedCellBorderTopClassName);     
+				$(cell).removeClass(AdminCss.copiedCellBorderBottomClassName);  
+				$(cell).removeClass(AdminCss.copiedCellBorderLeftClassName);
+			}	
+		}
+	}
 	clearSelectedRegion(selectedRegion)
 	{
 		var cell,i,j;
@@ -422,7 +438,45 @@ class RosterSchedulerTable extends RosterTable
 			}
 		}
 		this.haveMissingShift();
-	}	
+	}
+	setCopiedRegion(selectedRegion)
+	{
+		var cell,i;
+		this.clearSelectedRegion(selectedRegion);
+		cell=this.getCell(selectedRegion.minY,selectedRegion.minX);
+		$(cell).addClass(AdminCss.copiedCellBorderTopClassName);
+		$(cell).addClass(AdminCss.copiedCellBorderLeftClassName);
+
+		cell=this.getCell(selectedRegion.minY,selectedRegion.maxX);
+		$(cell).addClass(AdminCss.copiedCellBorderTopClassName);
+		$(cell).addClass(AdminCss.copiedCellBorderRightClassName);
+
+		cell=this.getCell(selectedRegion.maxY,selectedRegion.minX);
+		$(cell).addClass(AdminCss.copiedCellBorderBottomClassName);
+		$(cell).addClass(AdminCss.copiedCellBorderLeftClassName);
+
+		cell=this.getCell(selectedRegion.maxY,selectedRegion.maxX);
+		$(cell).addClass(AdminCss.copiedCellBorderBottomClassName);
+		$(cell).addClass(AdminCss.copiedCellBorderRightClassName);
+
+		for (i=selectedRegion.minY+1;i<selectedRegion.maxY;i++)
+		{
+			cell=this.getCell(i,selectedRegion.minX);
+			$(cell).addClass(AdminCss.copiedCellBorderLeftClassName);
+
+			cell=this.getCell(i,selectedRegion.maxX);
+			$(cell).addClass(AdminCss.copiedCellBorderRightClassName);
+		}
+		for (i=selectedRegion.minX+1;i<selectedRegion.maxX;i++)
+		{
+			cell=this.getCell(selectedRegion.minY,i);
+			$(cell).addClass(AdminCss.copiedCellBorderTopClassName);
+
+			cell=this.getCell(selectedRegion.maxY,i);
+			$(cell).addClass(AdminCss.copiedCellBorderBottomClassName);
+		}
+
+	}
 	setLowestSDData(lowestSDData)
 	{
 		var firstRow=document.getElementById("theLowestSD");
