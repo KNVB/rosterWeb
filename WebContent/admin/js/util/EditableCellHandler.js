@@ -58,7 +58,7 @@ class EditableCellHandler
 		switch (event.which)
 		{
 			case  9://handle tab key
-					this._handleTabKeyEvent(event);
+					this._handleTabKeyEvent(event,theCell);
 					break;
 			case 27://handle "Esc" key event
 					this.select();
@@ -76,17 +76,52 @@ class EditableCellHandler
 					this.select();
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
-					break;		
+					break;
+			case 67:
+					if (event.ctrlKey)
+					{
+						//handle Ctrl-C event
+						event.preventDefault();
+					}
+					break;
+			case 86:
+					if (event.ctrlKey)
+					{
+						//handle Ctrl-V event
+						event.preventDefault();
+					}
+					break;
+					
 		}	
 	}
-	_handleTabKeyEvent(event)
+	_handleTabKeyEvent(event,theCell)
 	{
 		console.log("Tab key");
 		console.log(`this.firstInput=${this.firstInput}`);
+		var yOffset,xOffset;
 		if (event.shiftKey)
-			this._handleArrowKeyEvent(event,0,-1);
+		{
+			yOffset=0;
+			xOffset=-1;
+		}	
 		else
-			this._handleArrowKeyEvent(event,0,1);
+		{
+			yOffset=0;
+			xOffset=1;
+		}
+		if (this.selectedRegion.isSingleCell())
+			this._handleArrowKeyEvent(event,yOffset,xOffset);
+		else
+		{
+			var nextCell=this.rosterSchedulerTable.getNextCellInSelectedRegion(theCell,yOffset,xOffset);
+			event.preventDefault();
+			var range = document.createRange();
+			var sel = window.getSelection();
+			range.selectNodeContents(nextCell);
+		    sel.removeAllRanges();
+		    sel.addRange(range);
+		    this.firstInput=true;
+		}
 	}
 	select()
 	{

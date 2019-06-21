@@ -153,6 +153,27 @@ class RosterSchedulerTable extends RosterTable
 			return nextCell;
 		}
 	}
+	getNextCellInSelectedRegion(theCell,yOffset,xOffset)
+	{
+		var index;
+		var nextCell;
+		index=$.inArray(theCell,this.selectedRegion.selectedCellList);
+		console.log("before:"+index);
+		index+=yOffset*this.selectedRegion.colCount;
+		index+=xOffset;
+		if (index<0)
+			index=this.selectedRegion.selectedCellList.length-1;
+		else
+		{	
+			if (index>=this.selectedRegion.selectedCellList.length)
+			{
+				index=0;
+			}						
+		}
+		nextCell=this.selectedRegion.selectedCellList[index];
+		return nextCell;
+	}
+
 	getPreviouseShiftList(startDate)
 	{
 		var i,j,itoRoster;
