@@ -67,6 +67,38 @@ class RosterSchedulerTable extends RosterTable
 				$(cell).text("O").blur();
 		});
 	}
+	getAllDataForSaveToDb()
+	{
+		var rosterData={},self=this;
+		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
+		var allITOShiftData=this._getAllShiftData();
+		var allPreferredShiftData=this.getAllPreferredShiftData();
+		rosterData["rosterYear"]=this.rosterYear;
+		rosterData["rosterMonth"]=this.rosterMonth;
+		rosterData["itorosterList"]={};
+		rosterData["itopreferredShiftList"]={};
+
+		for (var itoId in this.itoList)
+		{
+			iTOShiftData={};
+			iTOShiftData["shiftList"]=allITOShiftData[itoId];
+
+			 if (isNaN(self._getLastMonthBalance(itoId)))
+				iTOShiftData["lastMonthBalance"]=0;
+			else
+				iTOShiftData["lastMonthBalance"]=self._getLastMonthBalance(itoId);
+
+			if (isNaN(self._getThisMonthBalance(itoId)))
+				iTOShiftData["thisMonthBalance"]=0;
+			else 
+				iTOShiftData["thisMonthBalance"]=self._getThisMonthBalance(itoId);
+
+			rosterData["itorosterList"][itoId]=iTOShiftData;
+			rosterData["itopreferredShiftList"][itoId]=allPreferredShiftData[itoId];
+		}	
+		return(rosterData);
+	}
+
 	getAllPreferredShiftData()
 	{
 		return this._getShiftRowData(this._getAllPreferredShiftRow(),1,Object.keys(this.dateObjList).length);
@@ -88,37 +120,6 @@ class RosterSchedulerTable extends RosterTable
 	getIterationCount()
 	{
 		return parseInt($("#iterationCount").val());
-	}
-	getPreviouseShiftList(startDate)
-	{
-		var i,j,itoRoster;
-		var result=[];
-		var shiftDataList,resultList=[];
-		var startIndex=startDate-this.rosterRule.maxConsecutiveWorkingDay-1;
-		var allITOShiftList=this._getShiftList(1,startDate);
-		for (var itoId in this.itoList)
-		{
-			result=[];
-			shiftDataList=allITOShiftList[itoId];
-			itoRoster=this.rosterList[itoId];
-			if (startIndex<1)
-			{
-				j=startDate;
-				for (i=j;i<this.rosterRule.maxConsecutiveWorkingDay;i++)
-				{
-					result.push(itoRoster.previousMonthShiftList[i+1]);
-				}
-			}
-			if (shiftDataList!=null)
-			{
-				for (i=1;i<startDate;i++)
-				{
-					result.push(shiftDataList[i]);
-				}	
-			}	
-			resultList[itoId]=result;
-		}
-		return resultList;
 	}
 	getNextCellInRosterTable(yOffset,xOffset)
 	{
@@ -152,35 +153,41 @@ class RosterSchedulerTable extends RosterTable
 			return nextCell;
 		}
 	}
-	getAllDataForSaveToDb()
+	getPreviouseShiftList(startDate)
 	{
-		var rosterData={},self=this;
-		var iTOShiftData,preferredShiftData,iTOPreferredShiftData;
-		var allITOShiftData=this._getAllShiftData();
-		var allPreferredShiftData=this.getAllPreferredShiftData();
-		rosterData["rosterYear"]=this.rosterYear;
-		rosterData["rosterMonth"]=this.rosterMonth;
-		rosterData["itorosterList"]={};
-		rosterData["itopreferredShiftList"]={};
-
+		var i,j,itoRoster;
+		var result=[];
+		var shiftDataList,resultList=[];
+		var startIndex=startDate-this.rosterRule.maxConsecutiveWorkingDay-1;
+		var allITOShiftList=this._getShiftList(1,startDate);
 		for (var itoId in this.itoList)
 		{
-			iTOShiftData={};
-			iTOShiftData["shiftList"]=allITOShiftData[itoId];
-
-			 if (isNaN(self._getLastMonthBalance(itoId)))
-				iTOShiftData["lastMonthBalance"]=0;
-			else
-				iTOShiftData["lastMonthBalance"]=self._getLastMonthBalance(itoId);
-
-			if (isNaN(self._getThisMonthBalance(itoId)))
-				iTOShiftData["thisMonthBalance"]=0;
-			else 
-				iTOShiftData["thisMonthBalance"]=self._getThisMonthBalance(itoId);
-
-			rosterData["itorosterList"][itoId]=iTOShiftData;
-			rosterData["itopreferredShiftList"][itoId]=allPreferredShiftData[itoId];
-		}	
+			result=[];
+			shiftDataList=allITOShiftList[itoId];
+			itoRoster=this.rosterList[itoId];
+			if (startIndex<1)
+			{
+				j=startDate;
+				for (i=j;i<this.rosterRule.maxConsecutiveWorkingDay;i++)
+				{
+					result.push(itoRoster.previousMonthShiftList[i+1]);
+				}
+			}
+			if (shiftDataList!=null)
+			{
+				for (i=1;i<startDate;i++)
+				{
+					result.push(shiftDataList[i]);
+				}	
+			}	
+			resultList[itoId]=result;
+		}
+		return resultList;
+	}
+	getRosterDataForExport()
+	{
+		var rosterData=this.getAllDataForSaveToDb();
+		rosterData["vacantShiftData"]=this._getVacantShiftData();
 		return(rosterData);
 	}
 	haveBlackListedShiftPattern()
@@ -379,12 +386,7 @@ class RosterSchedulerTable extends RosterTable
 		alert("The missing shift checking has been completed.");
 		return haveMissingShift;
 	}
-	getRosterDataForExport()
-	{
-		var rosterData=this.getAllDataForSaveToDb();
-		rosterData["vacantShiftData"]=this._getVacantShiftData();
-		return(rosterData);
-	}
+	
 	loadRoster(finalRoster)
 	{
 		var row,cell,thisITOShiftList;

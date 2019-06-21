@@ -61,7 +61,7 @@ class EditableCellHandler
 					this._handleTabKeyEvent(event);
 					break;
 			case 27://handle "Esc" key event
-					this._handleEscKeyEvent(theCell);
+					this.select();
 					break;
 			case 37://handle left arrow key event
 					this._handleArrowKeyEvent(event,0,-1);
@@ -72,7 +72,8 @@ class EditableCellHandler
 			case 39://handle right arrow key event
 					this._handleArrowKeyEvent(event,0,1);
 					break;
-			case 13://handle "Enter" key event		
+			case 13://handle "Enter" key event
+					this.select();
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
 					break;		
