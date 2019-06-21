@@ -33,7 +33,12 @@ class EditableCellHandler
 		console.log("Arrow Key");
 		this.selectedRegion.selectNextCell(event,yOffset,xOffset);
 	}
-	
+	_handleEscKeyEvent(event,theCell)
+	{
+		this.selectedRegion.emptyCopiedRegion();
+		this.selectedRegion.reDraw();
+		event.preventDefault();
+	}
 	_handleKeyDownEvent(theCell,event)
 	{
 		switch (event.which)
@@ -41,9 +46,8 @@ class EditableCellHandler
 			case  9://handle tab key
 					this._handleTabKeyEvent(event,theCell);
 					break;
-			
 			case 27://handle "Esc" key event
-					this.selectedRegion.selectCell(theCell);
+					this._handleEscKeyEvent(event,theCell);
 					break;
 			case 37://handle left arrow key event
 					this._handleArrowKeyEvent(event,0,-1);
@@ -60,9 +64,11 @@ class EditableCellHandler
 					this._handleArrowKeyEvent(event,1,0);
 					break;
 			case 67:
+					console.log("C key pressed");
 					if (event.ctrlKey)
 					{
 						//handle Ctrl-C event
+						console.log("Ctlr C key pressed");
 						event.preventDefault();
 						this.selectedRegion.copy();
 					}
@@ -71,6 +77,7 @@ class EditableCellHandler
 					if (event.ctrlKey)
 					{
 						//handle Ctrl-V event
+						console.log("Ctlr V key pressed");
 						event.preventDefault();
 					}
 					break;
@@ -80,7 +87,6 @@ class EditableCellHandler
 	_handleTabKeyEvent(event,theCell)
 	{
 		console.log("Tab key");
-		console.log(`this.firstInput=${this.firstInput}`);
 		var yOffset,xOffset;
 		if (event.shiftKey)
 		{
@@ -93,7 +99,10 @@ class EditableCellHandler
 			xOffset=1;
 		}
 		if (this.selectedRegion.isSingleCell())
+		{	
+			this.selectedRegion.selectCell(theCell);
 			this._handleArrowKeyEvent(event,yOffset,xOffset);
+		}
 		else
 		{
 			event.preventDefault();

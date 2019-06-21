@@ -13,6 +13,7 @@ class SelectedRegion
 		var cell1,cell2;
 		var dataRowList;
 		var self=this;
+		console.log("is selectedRegion Empty?="+this.isEmpty());
 		if (!this.isEmpty())
 		{
 			console.log("is copiedRegion Empty?="+this.copiedRegion.isEmpty());
@@ -50,6 +51,7 @@ class SelectedRegion
 			//console.log("CopiedRegion="+JSON.stringify(this.copiedRegion));
 			this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
 			this.copiedRegion.empty();
+			
 		}
 	}
 	endSelect()
@@ -75,10 +77,6 @@ class SelectedRegion
 			range.selectNodeContents(cell);
 		    sel.removeAllRanges();
 		    sel.addRange(range);
-			if (!this.copiedRegion.isEmpty())
-			{
-				this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
-			}
 			this.firstInput=true;
 		}
 	}	
@@ -89,6 +87,12 @@ class SelectedRegion
 	isSingleCell()
 	{
 		return (this.selectedCellList.length==1);
+	}
+	reDraw()
+	{
+		console.log("Before is selectedRegion Empty?="+this.isEmpty());
+		this.rosterSchedulerTable.setSelectedRegion(this);
+		console.log("After is selectedRegion Empty?="+this.isEmpty());
 	}
 	setFocusCell(theCell)
 	{

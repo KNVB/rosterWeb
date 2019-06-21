@@ -52,7 +52,6 @@ class RosterSchedulerTable extends RosterTable
 			for (j=copiedRegion.minX;j<=copiedRegion.maxX;j++)
 			{
 				cell=this.getCell(i,j);
-				cell.blur();
 				$(cell).removeClass(AdminCss.copiedCellBorderRightClassName);   
 				$(cell).removeClass(AdminCss.copiedCellBorderTopClassName);     
 				$(cell).removeClass(AdminCss.copiedCellBorderBottomClassName);  
@@ -68,7 +67,6 @@ class RosterSchedulerTable extends RosterTable
 			for (j=selectedRegion.minX;j<=selectedRegion.maxX;j++)
 			{
 				cell=this.getCell(i,j);
-				//cell.blur();
 				$(cell).removeClass(AdminCss.selectCellBorderRightClassName);   
 				$(cell).removeClass(AdminCss.selectCellBorderTopClassName);     
 				$(cell).removeClass(AdminCss.selectCellBorderBottomClassName);  
