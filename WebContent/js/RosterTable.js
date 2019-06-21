@@ -103,7 +103,7 @@ class RosterTable extends HTMLTableElement
 				if ((this.rosterYear==now.getFullYear()) &&
 						(this.rosterMonth==(1+now.getMonth())) &&
 						((i+1)==(now.getDate())))
-						$(dateCell).addClass(Css.highlightCellClassName);	
+						$(dateCell).addClass(Css.todayCellClassName);	
 			}
 		}
 		this.rosterDateRow.appendChild(borderedLastMonthCell);

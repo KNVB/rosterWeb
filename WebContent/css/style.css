@@ -1,16 +1,3 @@
-table#rosterTable,
-table#yearlyStatistic 
-{
-	border-spacing: 0;
-	border-collapse: collapse;
-	width:1660px;
-}
-td.cursorCell
-{
-	margin:0px;
-	padding: 0px;
-	font-size:17px;
-}
 .alignCenter
 {
 	text-align: center;
@@ -92,6 +79,11 @@ td.cursorCell
 	font-size:15px;
 	width:50px;
 }
+.todayCell
+{
+	background-color:#B5E4F9;
+	font-color:#ffff;
+}
 .totalCell
 {
 	font-size:15px;
@@ -102,7 +94,24 @@ td.cursorCell
 	font-size:15px;
 	width:50px;
 }
-/******************************************************************************************************************/
+table#rosterTable,
+table#yearlyStatistic 
+{
+	border-spacing: 0;
+	border-collapse: collapse;
+	width:1660px;
+}
+td.cursorCell
+{
+	margin:0px;
+	padding: 0px;
+	font-size:17px;
+}
+/*******************************************************************************************************
+ *                                                                                                     *
+ *    Shift color style                                                                                *
+ *                                                                                                     *
+ *******************************************************************************************************/
 .aShiftColor
 {
 	background-color:#ff99cc;

@@ -60,6 +60,10 @@ class Css
 	{
 	 	return "thisMonthCell";
 	}
+	static get todayCellClassName()
+	{
+		return "todayCell";
+	}
 	static get totalCellClassName()
 	{
 	 	return "totalCell";
