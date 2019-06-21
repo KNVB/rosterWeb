@@ -79,6 +79,7 @@ class EditableCellHandler
 						//handle Ctrl-V event
 						console.log("Ctlr V key pressed");
 						event.preventDefault();
+						this.selectedRegion.paste();
 					}
 					break;
 					
