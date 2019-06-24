@@ -1108,7 +1108,7 @@ class RosterSchedulerTable extends RosterTable
 		var aShiftCount=0,actualWorkingHour=0.0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
 		var balance=Number(document.getElementById(ito.itoId+"_lastMonthBalance").textContent);
 		var	noOfWorkingDay=0,thisMonthHourTotal=0.0,thisMonthBalance=0.0;
-		var result=[],self=this,shiftTypeList;
+		var self=this,shiftTypeList;
 		var totalHour=Number(document.getElementById(ito.itoId+"_totalHour").textContent);
 		$(row).children("."+Css.cursorCellClassName).each(function(){
 			shiftTypeList=this.textContent.split("\+");
@@ -1141,30 +1141,19 @@ class RosterSchedulerTable extends RosterTable
 		thisMonthHourTotal=actualWorkingHour-totalHour;
 		thisMonthBalance=thisMonthHourTotal+balance;
 		noOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
-		result["totalHour"]=this.utility.roundTo(totalHour,2);
-		result["lastMonthBalance"]=this.utility.roundTo(balance,2);
-		result["actualHour"]=this.utility.roundTo(actualWorkingHour,2);
-		result["thisMonthHourTotal"]=this.utility.roundTo(thisMonthHourTotal,2);
-		result["thisMonthBalance"]=this.utility.roundTo(thisMonthBalance,2);
-		result["aShiftCount"]=aShiftCount;
-		result["bxShiftCount"]=bxShiftCount;
-		result["cShiftCount"]=cShiftCount;
-		result["dxShiftCount"]=dxShiftCount;
-		result["noOfWorkingDay"]=noOfWorkingDay;
-		this._updateShiftCountCellsContent(result,ito.itoId);
-	}
-	_updateShiftCountCellsContent(shiftCountData,itoId)
-	{
-		$("#"+itoId+"_totalHour").text(shiftCountData["totalHour"]);
-		$("#"+itoId+"_lastMonthBalance").text(shiftCountData["lastMonthBalance"]);
-		$("#"+itoId+"_actualHour").text(shiftCountData["actualHour"]);
-		$("#"+itoId+"_thisMonthHourTotal").text(shiftCountData["thisMonthHourTotal"]);
-		$("#"+itoId+"_thisMonthBalance").text(shiftCountData["thisMonthBalance"]);
-		$("#"+itoId+"_aShiftCount").text(shiftCountData["aShiftCount"]);
-		$("#"+itoId+"_bxShiftCount").text(shiftCountData["bxShiftCount"]);
-		$("#"+itoId+"_cShiftCount").text(shiftCountData["cShiftCount"]);
-		$("#"+itoId+"_dxShiftCount").text(shiftCountData["dxShiftCount"]);
-		$("#"+itoId+"_noOfWoringDay").text(shiftCountData["noOfWorkingDay"]);
+		
+		$("#"+ito.itoId+"_totalHour").text(this.utility.roundTo(totalHour,2));
+		$("#"+ito.itoId+"_lastMonthBalance").text(this.utility.roundTo(balance,2));
+		$("#"+ito.itoId+"_actualHour").text(this.utility.roundTo(actualWorkingHour,2));
+		$("#"+ito.itoId+"_thisMonthHourTotal").text(this.utility.roundTo(thisMonthHourTotal,2));
+		$("#"+ito.itoId+"_thisMonthBalance").text(this.utility.roundTo(thisMonthBalance,2));
+		
+		$("#"+ito.itoId+"_aShiftCount").text(aShiftCount);
+		$("#"+ito.itoId+"_bxShiftCount").text(bxShiftCount);
+		$("#"+ito.itoId+"_cShiftCount").text(cShiftCount);
+		$("#"+ito.itoId+"_dxShiftCount").text(dxShiftCount);
+		$("#"+ito.itoId+"_noOfWoringDay").text(noOfWorkingDay);
+
 	}
 	_updateStandardDevation(aShiftData,bShiftData,cShiftData)
 	{
