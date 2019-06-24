@@ -48,6 +48,9 @@ class EditableCellHandler
 			case  9://handle tab key
 					this._handleTabKeyEvent(event,theCell);
 					break;
+			case 13://handle "Enter" key event
+					this._handleEnterKeyEvent(theCell);
+					break;
 			case 27://handle "Esc" key event
 					this._handleEscKeyEvent(event,theCell);
 					break;
@@ -60,8 +63,7 @@ class EditableCellHandler
 			case 39://handle right arrow key event
 					this._handleArrowKeyEvent(event,0,1);
 					break;
-			case 13://handle "Enter" key event
-					this.selectedRegion.selectCell(theCell);
+			
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
 					break;
@@ -87,10 +89,28 @@ class EditableCellHandler
 					
 		}	
 	}
+	_handleEnterKeyEvent(theCell)
+	{
+		this.selectedRegion.selectCell(theCell);
+		var yOffset,xOffset;
+		event.preventDefault();
+		if (event.shiftKey)
+		{
+			yOffset=-1;
+			xOffset=0;
+		}	
+		else
+		{
+			yOffset=1;
+			xOffset=0;
+		}
+		this._handleArrowKeyEvent(event,yOffset,xOffset);
+	}
 	_handleTabKeyEvent(event,theCell)
 	{
 		console.log("Tab key");
 		var yOffset,xOffset;
+		event.preventDefault();
 		if (event.shiftKey)
 		{
 			yOffset=0;
@@ -108,7 +128,7 @@ class EditableCellHandler
 		}
 		else
 		{
-			event.preventDefault();
+			
 			this.selectedRegion.selectNextCellInSelectedRegion(theCell,yOffset,xOffset);
 		}
 	}	
