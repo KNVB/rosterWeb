@@ -30,7 +30,6 @@ class EditableCellHandler
 		});
 		
 	}
-	
 	_handleArrowKeyEvent(event,yOffset,xOffset)
 	{
 		console.log("Arrow Key");
@@ -39,7 +38,7 @@ class EditableCellHandler
 	_handleEscKeyEvent(event,theCell)
 	{
 		this.selectedRegion.emptyCopiedRegion();
-		this.selectedRegion.reDraw();
+		this.selectedRegion.reSelect();
 		event.preventDefault();
 	}
 	_handleKeyDownEvent(theCell,event)

@@ -112,12 +112,16 @@ class SelectedRegion
 			this.rosterSchedulerTable.clearSelectedRegion(this);
 			this.maxX=this.minX+(this.copiedRegion.maxX-this.copiedRegion.minX);
 			this.maxY=destCellY-1;
-			this.reDraw();
+			this.reSelect();
 		}	
 	}
-	reDraw()
+	reSelect()
 	{
-		this.rosterSchedulerTable.setSelectedRegion(this);
+		var theCell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
+		this.startSelect(theCell);
+		theCell=this.rosterSchedulerTable.getCell(this.maxY,this.maxX);
+		this.update(theCell);
+		this.endSelect();
 	}
 	setFocusCell(theCell)
 	{
