@@ -696,10 +696,11 @@ class RosterSchedulerTable extends RosterTable
 			if (i<Object.keys(this.dateObjList).length)
 			{
 				cell=AdminCellFactory.getEditableShiftCell(this,rosterRowData.itoId);
-				shiftTypeList=rosterRowData.shiftList[i+1].split("\+");
-				shiftTypeList.forEach(function(shiftType){
-					if (shiftType!=null)
-					{
+				shiftTypeList=rosterRowData.shiftList[i+1];
+				if (shiftTypeList!=null)
+				{
+					shiftTypeList=shiftTypeList.split("\+");
+					shiftTypeList.forEach(function(shiftType){
 						cell.setShiftType(rosterRowData.shiftList[i+1]);
 						actualWorkingHour+=self.rosterRule.shiftHourCount[shiftType];
 						switch (shiftType)
@@ -721,8 +722,8 @@ class RosterSchedulerTable extends RosterTable
 									dxShiftCount++;
 									break;					
 						}			
-					}
-				});
+					});
+				}	
 			}
 			else
 			{
@@ -770,13 +771,17 @@ class RosterSchedulerTable extends RosterTable
 			row.appendChild(cell);
 
 			Object.keys(self.rosterList).forEach(function(itoId){
-				shiftTypeList=self.rosterList[itoId].shiftList[date].split("\+");
-				shiftTypeList.forEach(function(shiftType){
-					if (shiftType=="b1")
-						essentialShift=essentialShift.replace("b","");
-					else
-						essentialShift=essentialShift.replace(shiftType,"");
-				});
+				shiftTypeList=self.rosterList[itoId].shiftList[date];
+				if (shiftTypeList!=null)
+				{
+					shiftTypeList=shiftTypeList.split("\+");
+					shiftTypeList.forEach(function(shiftType){
+						if (shiftType=="b1")
+							essentialShift=essentialShift.replace("b","");
+						else
+							essentialShift=essentialShift.replace(shiftType,"");
+					});
+				}	
 			});
 			cell.textContent=essentialShift;
 		});
