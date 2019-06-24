@@ -15,14 +15,17 @@ class EditableCellHandler
 			self.selectedRegion.setFocusCell(this);
 		});
 		$(cell).keydown(function(event){
+			console.log("key down");
 			self._handleKeyDownEvent(this,event);
 		});
 		$(cell).mousedown(function(event){
 			event.preventDefault();
+			console.log("mouse down");
 			self.selectedRegion.startSelect(this);
 		});
 		$(cell).mouseenter(function(event){
 			self.selectedRegion.update(this);
+			console.log("mouse enter");
 			event.preventDefault();
 		});
 		
