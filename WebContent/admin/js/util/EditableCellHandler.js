@@ -28,7 +28,14 @@ class EditableCellHandler
 			console.log("mouse enter");
 			event.preventDefault();
 		});
-		
+		$(cell).on("copy",function(event){
+			event.preventDefault();
+			self.selectedRegion.copy();
+		});
+		$(cell).on("paste",function(event){
+			event.preventDefault();
+			self.selectedRegion.paste();
+		});
 	}
 	_handleArrowKeyEvent(event,yOffset,xOffset)
 	{
@@ -67,6 +74,7 @@ class EditableCellHandler
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
 					break;
+/*					
 			case 67:
 					console.log("C key pressed");
 					if (event.ctrlKey)
@@ -86,7 +94,7 @@ class EditableCellHandler
 						this.selectedRegion.paste();
 					}
 					break;
-					
+			*/		
 		}	
 	}
 	_handleEnterKeyEvent(theCell)
