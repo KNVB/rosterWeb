@@ -33,6 +33,30 @@ class SelectedRegion
 			this.rosterSchedulerTable.setCopiedRegion(this);
 		}
 	}
+	deleteContent()
+	{
+		var cell,minCell,maxCell;
+		var sel = window.getSelection();
+		var range = document.createRange();
+		for (var j=this.maxY;j>=this.minY;j--)
+		{
+			for (var i=this.maxX;i>=this.minX;i--)
+			{
+				cell=this.rosterSchedulerTable.getCell(j,i);
+				if ($(cell).hasClass("cursorCell"))
+				{
+					//$(cell).empty().blur(); //<==this is old delete method.
+					sel.removeAllRanges();
+					range.selectNodeContents(cell);
+					sel.addRange(range);
+					document.execCommand("delete",false,null);
+					$(cell).blur();
+				}
+			}	
+		}
+		cell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
+		//this.selectCell(cell);
+	}
 	empty()
 	{
 		if (!this.isEmpty())

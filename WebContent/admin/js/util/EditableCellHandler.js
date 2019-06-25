@@ -74,6 +74,9 @@ class EditableCellHandler
 			case 40://handle down arrow key event
 					this._handleArrowKeyEvent(event,1,0);
 					break;
+			case 46://handle delete key event
+					this._handleDeleteKeyEvent(event);
+					break;		
 /*					
 			case 67:
 					console.log("C key pressed");
@@ -96,6 +99,15 @@ class EditableCellHandler
 					break;
 			*/		
 		}	
+	}
+	_handleDeleteKeyEvent(event)
+	{
+		if (!this.selectedRegion.isSingleCell())
+		{
+			event.preventDefault();
+			this.selectedRegion.deleteContent();
+			event.stopPropagation();
+		}				
 	}
 	_handleEnterKeyEvent(theCell)
 	{
@@ -136,7 +148,6 @@ class EditableCellHandler
 		}
 		else
 		{
-			
 			this.selectedRegion.selectNextCellInSelectedRegion(theCell,yOffset,xOffset);
 		}
 	}	
