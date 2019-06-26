@@ -479,7 +479,7 @@ public class DbOp implements DataStore {
 		availableShiftList=availableShiftList.substring(0, availableShiftList.length()-1);
 		logger.debug(availableShiftList);		
 		sqlString="replace into ito_info (ito_id,ito_name,post_name,join_date,leave_date,available_shift,working_hour_per_day) values (?,?,?,?,?,?,?)";
-		
+		logger.debug("ITOName="+ito.getITOName());
 		try 
 		{
 			dbConn.setAutoCommit(false);

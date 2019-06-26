@@ -308,11 +308,11 @@
 	height:390px;
 	overflow-y:scroll
 }
-::selection 
+td.cursorCell::selection 
 {
   background: none; /* WebKit/Blink Browsers */
 }
-::-moz-selection 
+td.cursorCell::-moz-selection 
 {
   background: none; /* Gecko Browsers */
 }
