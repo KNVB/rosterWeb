@@ -256,11 +256,13 @@ class RosterTable extends HTMLTableElement
 		thisMonthHourTotal=actualWorkingHour-totalHour;
 		thisMonthBalance=rosterRowData.lastMonthBalance+thisMonthHourTotal;
 		noOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
-		result["totalHour"]=this.utility.roundTo(totalHour,2);
-		result["lastMonthBalance"]=this.utility.roundTo(rosterRowData.lastMonthBalance,2);
-		result["actualHour"]=this.utility.roundTo(actualWorkingHour,2);
-		result["thisMonthHourTotal"]=this.utility.roundTo(thisMonthHourTotal,2);
-		result["thisMonthBalance"]=this.utility.roundTo(thisMonthBalance,2);
+		
+		result["totalHour"]=totalHour.toFixed(2);
+		result["lastMonthBalance"]=rosterRowData.lastMonthBalance.toFixed(2);
+		result["actualHour"]=actualWorkingHour.toFixed(2);
+		result["thisMonthHourTotal"]=thisMonthHourTotal.toFixed(2);
+		result["thisMonthBalance"]=thisMonthBalance.toFixed(2);
+		
 		result["aShiftCount"]=aShiftCount;
 		result["bxShiftCount"]=bxShiftCount;
 		result["cShiftCount"]=cShiftCount;

@@ -59,7 +59,7 @@ class Roster
 		this.shiftAStdDev=utility.getSD(shiftAData);
 		this.shiftBStdDev=utility.getSD(shiftBData);
 		this.shiftCStdDev=utility.getSD(shiftCData);
-		this.averageShiftStdDev=utility.roundTo(utility.getMean([this.shiftAStdDev,this.shiftBStdDev,this.shiftCStdDev]),3);
+		this.averageShiftStdDev=utility.getMean([this.shiftAStdDev,this.shiftBStdDev,this.shiftCStdDev]).toFixed(3);
 	}
 /*==============================================================================================*
  *																				  				*

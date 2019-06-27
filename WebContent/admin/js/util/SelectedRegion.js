@@ -112,31 +112,13 @@ class SelectedRegion
 	{
 		if (!this.isEmpty() && !this.copiedRegion.isEmpty())
 		{
-			var destCellY=this.minY,destCellX=this.minX;
-			var theCell,destCell=this.rosterSchedulerTable.getCell(destCellY,destCellX);
+			var destWidth=this.maxX-this.minX+1;
+			var destHeight=this.maxY-this.minY+1;
+			var srcWidth=this.copiedRegion.maxX-this.copiedRegion.minX+1;
+			var srcHeight=this.copiedRegion.maxY-this.copiedRegion.minY+1;
 			
-			for (var y=this.copiedRegion.minY;y<=this.copiedRegion.maxY;y++)
-			{	
-				var row=[];
-				for (var x=this.copiedRegion.minX;x<=this.copiedRegion.maxX;x++)
-				{
-					theCell=this.rosterSchedulerTable.getCell(y,x);
-					destCell=this.rosterSchedulerTable.getCell(destCellY,destCellX++);
-					var range = document.createRange();
-					var sel = window.getSelection();
-				    destCell.focus();
-				    range.selectNodeContents(destCell);
-				    sel.removeAllRanges();
-				    sel.addRange(range);
-				    console.log(document.execCommand("insertText",false,theCell.textContent));
-				}
-				destCellY++;
-				destCellX=this.minX;
-			}
-			this.rosterSchedulerTable.clearSelectedRegion(this);
-			this.maxX=this.minX+(this.copiedRegion.maxX-this.copiedRegion.minX);
-			this.maxY=destCellY-1;
-			this.reSelect();
+			var horizontalCopyTime=(destWidth/srcWidth);
+			var verticalCopyTime=(destHeight/srcHeight);
 		}	
 	}
 	reSelect()

@@ -735,11 +735,13 @@ class RosterSchedulerTable extends RosterTable
 		thisMonthHourTotal=actualWorkingHour-totalHour;
 		thisMonthBalance=rosterRowData.lastMonthBalance+thisMonthHourTotal;
 		noOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
-		result["totalHour"]=this.utility.roundTo(totalHour,2);
-		result["lastMonthBalance"]=this.utility.roundTo(rosterRowData.lastMonthBalance,2);
-		result["actualHour"]=this.utility.roundTo(actualWorkingHour,2);
-		result["thisMonthHourTotal"]=this.utility.roundTo(thisMonthHourTotal,2);
-		result["thisMonthBalance"]=this.utility.roundTo(thisMonthBalance,2);
+		
+		result["totalHour"]=totalHour.toFixed(2);
+		result["lastMonthBalance"]=rosterRowData.lastMonthBalance.toFixed(2);
+		result["actualHour"]=actualWorkingHour.toFixed(2);
+		result["thisMonthHourTotal"]=thisMonthHourTotal.toFixed(2);
+		result["thisMonthBalance"]=thisMonthBalance.toFixed(2);
+		
 		result["aShiftCount"]=aShiftCount;
 		result["bxShiftCount"]=bxShiftCount;
 		result["cShiftCount"]=cShiftCount;
@@ -1142,11 +1144,11 @@ class RosterSchedulerTable extends RosterTable
 		thisMonthBalance=thisMonthHourTotal+balance;
 		noOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
 		
-		$("#"+ito.itoId+"_totalHour").text(this.utility.roundTo(totalHour,2));
-		$("#"+ito.itoId+"_lastMonthBalance").text(this.utility.roundTo(balance,2));
-		$("#"+ito.itoId+"_actualHour").text(this.utility.roundTo(actualWorkingHour,2));
-		$("#"+ito.itoId+"_thisMonthHourTotal").text(this.utility.roundTo(thisMonthHourTotal,2));
-		$("#"+ito.itoId+"_thisMonthBalance").text(this.utility.roundTo(thisMonthBalance,2));
+		$("#"+ito.itoId+"_totalHour").text(totalHour.toFixed(2));
+		$("#"+ito.itoId+"_lastMonthBalance").text(balance.toFixed(2));
+		$("#"+ito.itoId+"_actualHour").text(actualWorkingHour.toFixed(2));
+		$("#"+ito.itoId+"_thisMonthHourTotal").text(thisMonthHourTotal.toFixed(2));
+		$("#"+ito.itoId+"_thisMonthBalance").text(thisMonthBalance.toFixed(2));
 		
 		$("#"+ito.itoId+"_aShiftCount").text(aShiftCount);
 		$("#"+ito.itoId+"_bxShiftCount").text(bxShiftCount);
@@ -1162,10 +1164,10 @@ class RosterSchedulerTable extends RosterTable
 		var cShiftSD=this.utility.getSD(cShiftData);
 		var avgStdDev=(aShiftSD+bShiftSD+cShiftSD)/3;
 
-		document.getElementById("shiftAStdDev").textContent=this.utility.roundTo(aShiftSD,2);
-		document.getElementById("shiftBStdDev").textContent=this.utility.roundTo(bShiftSD,2);
-		document.getElementById("shiftCStdDev").textContent=this.utility.roundTo(cShiftSD,2);
-		document.getElementById("avgStdDev").textContent=this.utility.roundTo(avgStdDev,2);
+		document.getElementById("shiftAStdDev").textContent=aShiftSD.toFixed(2);
+		document.getElementById("shiftBStdDev").textContent=bShiftSD.toFixed(2);
+		document.getElementById("shiftCStdDev").textContent=cShiftSD.toFixed(2);
+		document.getElementById("avgStdDev").textContent=avgStdDev.toFixed(2);				
 	}
 	_updateVacantCells(cellIndex,ito)
 	{
