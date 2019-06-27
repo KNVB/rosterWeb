@@ -155,13 +155,22 @@ class SelectedRegion
 		sel.collapse(theCell.firstChild, 1);
 		this.firstInput=false;
 	}
+	selectCell(theCell)
+	{
+		this.empty();
+		this.emptyCopiedRegion();
+		this.startSelect(theCell);
+		this.update(theCell);
+		this.endSelect();
+	}
 	selectNextCell(event,yOffset,xOffset)
 	{
 		console.log(`this.firstInput=${this.firstInput}`);
 		if (this.firstInput)
 		{
 			var nextCell=this.rosterSchedulerTable.getNextCellInRosterTable(yOffset,xOffset);
-			this.selectCell(nextCell);
+			this.startSelect(nextCell);
+			this.endSelect();
 			event.preventDefault();
 		}
 	}
