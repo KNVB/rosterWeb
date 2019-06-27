@@ -44,8 +44,7 @@ class EditableCellHandler
 	}
 	_handleEscKeyEvent(event,theCell)
 	{
-		this.selectedRegion.emptyCopiedRegion();
-		this.selectedRegion.reSelect();
+		this.selectedRegion.selectCell(theCell);
 		event.preventDefault();
 	}
 	_handleKeyDownEvent(theCell,event)

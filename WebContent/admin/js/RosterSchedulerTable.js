@@ -75,6 +75,30 @@ class RosterSchedulerTable extends RosterTable
 			}	
 		}
 	}
+	doCopy(copiedRegion,inDestY,inDestX)
+	{
+		var destCell;
+		var destCellY=inDestY,destCellX=inDestX;
+		var theCell;
+		for (var y=copiedRegion.minY;y<=copiedRegion.maxY;y++)
+		{	
+			var row=[];
+			for (var x=copiedRegion.minX;x<=copiedRegion.maxX;x++)
+			{
+				theCell=this.getCell(y,x);
+				destCell=this.getCell(destCellY,destCellX++);
+				var range = document.createRange();
+				var sel = window.getSelection();
+			    destCell.focus();
+			    range.selectNodeContents(destCell);
+			    sel.removeAllRanges();
+			    sel.addRange(range);
+			    console.log(document.execCommand("insertText",false,theCell.textContent));
+			}
+			destCellY++;
+			destCellX=inDestX;
+		}
+	}
 	fillEmptyShiftWithO()
 	{
 		$("td."+AdminCss.shiftCellClassName).each(function(index,cell){

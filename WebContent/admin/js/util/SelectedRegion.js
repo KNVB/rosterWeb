@@ -45,7 +45,6 @@ class SelectedRegion
 				cell=this.rosterSchedulerTable.getCell(j,i);
 				if ($(cell).hasClass("cursorCell"))
 				{
-					//$(cell).empty().blur(); //<==this is old delete method.
 					sel.removeAllRanges();
 					range.selectNodeContents(cell);
 					sel.addRange(range);
@@ -54,8 +53,6 @@ class SelectedRegion
 				}
 			}	
 		}
-		cell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
-		//this.selectCell(cell);
 	}
 	empty()
 	{
@@ -91,13 +88,7 @@ class SelectedRegion
 					this.selectedCellList.push(cell);
 				}					
 			}
-			cell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
-			var range = document.createRange();
-			var sel = window.getSelection();
-			range.selectNodeContents(cell);
-		    sel.removeAllRanges();
-		    sel.addRange(range);
-			this.firstInput=true;
+			this.selectFirstCell();
 		}
 	}	
 	isEmpty()
@@ -112,22 +103,42 @@ class SelectedRegion
 	{
 		if (!this.isEmpty() && !this.copiedRegion.isEmpty())
 		{
+			var destCell;
+			var destCellY=this.minY,destCellX=this.minX;
 			var destWidth=this.maxX-this.minX+1;
 			var destHeight=this.maxY-this.minY+1;
 			var srcWidth=this.copiedRegion.maxX-this.copiedRegion.minX+1;
 			var srcHeight=this.copiedRegion.maxY-this.copiedRegion.minY+1;
 			
-			var horizontalCopyTime=(destWidth/srcWidth);
-			var verticalCopyTime=(destHeight/srcHeight);
+			var horizontalCopyTime=Math.floor(destWidth/srcWidth);
+			var verticalCopyTime=Math.floor(destHeight/srcHeight);
+			
+			if (verticalCopyTime==0)
+				verticalCopyTime=1;
+			if (horizontalCopyTime==0)
+				horizontalCopyTime=1;
+			console.log(`srcWidth=${srcWidth},destWidth=${destWidth},horizontalCopyTime=${horizontalCopyTime}`);
+			console.log(`srcHeight=${srcHeight},destHeight=${destHeight},verticalCopyTime=${verticalCopyTime}`);
+			console.log(`this.minY=${this.minY},this.minX=${this.minX}`);
+			console.log(`this.maxY=${this.maxY},this.maxX=${this.maxX}`);
+			for (var j=0;j<verticalCopyTime;j++)
+			{
+				for (var i=0;i<horizontalCopyTime;i++)
+				{
+					console.log(`destCellY=${destCellY},destCellX=${destCellX}`);
+					this.rosterSchedulerTable.doCopy(this.copiedRegion,destCellY,destCellX);
+					destCellX+=srcWidth;
+				}
+				destCellX=this.minX;
+				destCellY+=srcHeight;
+			}	
+			this.rosterSchedulerTable.clearSelectedRegion(this);
+			this.maxX=this.minX+horizontalCopyTime*srcWidth-1;
+			this.maxY=destCellY-1;
+			
+			this.rosterSchedulerTable.setSelectedRegion(this);
+			this.selectFirstCell();
 		}	
-	}
-	reSelect()
-	{
-		var theCell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
-		this.startSelect(theCell);
-		theCell=this.rosterSchedulerTable.getCell(this.maxY,this.maxX);
-		this.update(theCell);
-		this.endSelect();
 	}
 	setFocusCell(theCell)
 	{
@@ -135,6 +146,16 @@ class SelectedRegion
 		theCell.focus();
 		sel.collapse(theCell.firstChild, 1);
 		this.firstInput=false;
+	}
+	selectFirstCell()
+	{
+		var cell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
+		var range = document.createRange();
+		var sel = window.getSelection();
+		range.selectNodeContents(cell);
+	    sel.removeAllRanges();
+	    sel.addRange(range);
+		this.firstInput=true;
 	}
 	selectCell(theCell)
 	{
