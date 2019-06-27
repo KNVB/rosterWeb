@@ -93,7 +93,7 @@ class RosterSchedulerTable extends RosterTable
 			    range.selectNodeContents(destCell);
 			    sel.removeAllRanges();
 			    sel.addRange(range);
-			    console.log(document.execCommand("insertText",false,srcCell.textContent));
+			    document.execCommand("insertText",false,srcCell.textContent);
 			}
 			destCellY++;
 			destCellX=inDestX;
