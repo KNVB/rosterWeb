@@ -103,7 +103,7 @@ class SelectedRegion
 	{
 		if (!this.isEmpty() && !this.copiedRegion.isEmpty())
 		{
-			var destCell;
+			var destCell=this.rosterSchedulerTable.getCell(this.minY,this.minX);
 			var destCellY=this.minY,destCellX=this.minX;
 			var destWidth=this.maxX-this.minX+1;
 			var destHeight=this.maxY-this.minY+1;
@@ -133,11 +133,12 @@ class SelectedRegion
 				destCellY+=srcHeight;
 			}	
 			this.rosterSchedulerTable.clearSelectedRegion(this);
+			this.startSelect(destCell);
 			this.maxX=this.minX+horizontalCopyTime*srcWidth-1;
 			this.maxY=destCellY-1;
-			
-			this.rosterSchedulerTable.setSelectedRegion(this);
-			this.selectFirstCell();
+			destCell=this.rosterSchedulerTable.getCell(this.maxY,this.maxX);
+			this.update(destCell);
+			this.endSelect();
 		}	
 	}
 	setFocusCell(theCell)
