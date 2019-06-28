@@ -1,0 +1,106 @@
+<html>
+	<head>
+		<script src="../webjars/jquery/3.3.1/jquery.min.js"></script>
+		<script>
+			class Utility
+			{
+				constructor()
+				{
+					
+				}
+				getDateList(year,month)
+				{
+					return jQuery.ajax({"url": "../getDateList.jsp",
+											data:{"year":year,"month":month},
+											method:"POST",
+											dataType:"json",
+											error: function(xhr) {
+											      console.log('error', xhr);
+											    }
+						});
+				}
+				getPreferredShiftList(rosterYear,rosterMonth)
+				{
+					return jQuery.ajax({"url": "../admin/getPreferredShiftList.jsp",
+						data:{"year":rosterYear,"month":rosterMonth},
+						method:"POST",
+						dataType:"json",
+					});
+				}
+				getRosterList(year,month)
+				{
+					return jQuery.ajax({"url": "../getRosterList.jsp",
+										data:{"year":year,"month":month},
+										method:"POST",
+										dataType:"json",
+					});
+				}	
+			}
+			class Abc
+			{
+				constructor()
+				{
+					this.dateObjList=null;
+					this.preferredShiftList=null;
+					this.rosterList=null;
+					this.utility=new Utility();
+				}
+				build(year,month)
+				{
+					this.rosterYear=year;
+					this.rosterMonth=month;
+					this.noOfWorkingDay=0;
+
+					$(document).unbind();
+					
+					this._getData()
+					.then(function(){
+						
+					}) 
+					.catch(function(error){
+							console.log(error.readyState);
+							//location.href="../";
+						   });
+				}
+				_getData()
+				{	
+					var self=this;
+					
+					return this.utility.getDateList(self.rosterYear,self.rosterMonth)
+					.then((dateObjList)=>self.dateObjList=dateObjList)
+					.then(()=>self.utility.getRosterList(self.rosterYear,self.rosterMonth))
+					.then((rosterList)=>self.rosterList=rosterList)
+					.then(()=>self.utility.getPreferredShiftList(self.rosterYear,self.rosterMonth))
+					.then((preferredShiftList)=>self.preferredShiftList=preferredShiftList);
+					
+					
+					
+					/*
+					return this.utility.getPreferredShiftList(this.rosterYear,this.rosterMonth)
+					.then((preferredShiftList)=>self.preferredShiftList=preferredShiftList)
+					.then(()=>self.utility.getDateList(self.rosterYear,self.rosterMonth))
+					.then((dateObjList)=>self.dateObjList=dateObjList)
+					.then(()=>self.utility.getRosterList(self.rosterYear,self.rosterMonth))
+					.then((rosterList)=>console.log(rosterList))
+					*/
+					
+					
+					/*
+					var x=await this.utility.getDateList(year,month);
+					console.log("ab:"+new Date());
+					console.log(x);
+					*/
+				}
+			}
+			function go()
+			{
+				var abc=new Abc();
+				abc.build(2019,7);
+				console.log("document:"+new Date());
+			}
+		</script>
+	</head>
+	<body>
+		<button onclick="go()">Go</button>
+	</body>
+</html>			

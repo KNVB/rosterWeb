@@ -1,0 +1,75 @@
+<html>
+	<head>
+		<script src="../webjars/jquery/3.3.1/jquery.min.js"></script>
+		<script>
+			class Utility
+			{
+				constructor()
+				{
+					
+				}
+				getDateList(year,month)
+				{
+					return jQuery.ajax({"url": "../getDateList.jsp",
+											data:{"year":year,"month":month},
+											method:"POST",
+											dataType:"json",
+											error: function(xhr) {
+											      console.log('error', xhr);
+											    }
+						});
+				}	
+				getRosterList(year,month)
+				{
+					return jQuery.ajax({"url": "../getRosterList.jsp",
+										data:{"year":year,"month":month},
+										method:"POST",
+										dataType:"json",
+										error: function(xhr) {
+										      console.log('error', xhr);
+										    }
+					});
+				}	
+			}
+			class Abc
+			{
+				constructor()
+				{
+					this.dateObjList=null;
+					this.rosterList=null;
+					this.utility=new Utility();
+				}
+				build(year,month)
+				{
+					var self=this;
+					this.rosterYear=year;
+					this.rosterMonth=month;
+					this.noOfWorkingDay=0;
+
+					$(document).unbind();
+					this.getData()
+					.then(function(){
+						console.log(self.rosterList);
+						console.log(self.dateObjList);
+					});
+				}
+				getData()
+				{
+					var self=this;
+					return this.utility.getDateList(this.rosterYear,this.rosterMonth)
+					.then((dateObjList)=>self.dateObjList=dateObjList)
+					.then(()=>self.utility.getRosterList(self.rosterYear,self.rosterMonth))
+					.then((rosterList)=>self.rosterList=rosterList);
+				}
+			}
+			$( document ).ready(function(){
+				var abc=new Abc();
+				abc.build(2019,7);
+				
+				
+			});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>	

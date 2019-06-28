@@ -84,7 +84,8 @@ public class AdminFilter implements Filter {
 			{
 				if ("XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"))) //<== this ajax call
 				{		
-					httpResponse.setStatus(440); // return status code 440. That mean client's session has expired and must log in again.
+					// return status code 440. That mean client's session has expired and must log in again.
+					httpResponse.sendError(440, "The client's session has expired and must log in again.");
 				}
 				else
 				{	
