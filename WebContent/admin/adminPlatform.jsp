@@ -28,7 +28,7 @@
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/MonthPick.css">
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/admin/css/style.css">
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/webjars/jquery-ui/1.12.1/jquery-ui.min.css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/webjars/font-awesome/5.6.3/css/all.css">
 		
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery/3.3.1/jquery.min.js"></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>
