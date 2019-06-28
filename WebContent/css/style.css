@@ -96,8 +96,7 @@
 	font-size:15px;
 	width:50px;
 }
-table#rosterTable,
-table#yearlyStatistic 
+table#rosterTable
 {
 	border-spacing: 0;
 	border-collapse: collapse;

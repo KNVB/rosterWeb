@@ -142,13 +142,14 @@ public class DbOp implements DataStore {
 		sqlString ="SELECT join_date,leave_date,ito_info.ito_id,post_name,ito_name,available_shift,working_hour_per_day,black_list_pattern from ";
 		sqlString+="ito_info inner join black_list_pattern ";
 		sqlString+="on ito_info.ito_id=black_list_pattern.ito_id ";
-		sqlString+="where join_date<? and leave_date >? ";
+		sqlString+="where join_date<=? and leave_date >=? ";
 		sqlString+="order by ito_info.ito_id";
 		try
 		{
 			stmt=dbConn.prepareStatement(sqlString);
-			stmt.setString(1,firstDateString);
-			stmt.setString(2,endDateString);
+			stmt.setString(1,endDateString);
+			stmt.setString(2,firstDateString);
+			
 			rs=stmt.executeQuery();
 			while (rs.next())
 			{
