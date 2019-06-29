@@ -72,21 +72,20 @@
 				rosterScheduler=new RosterScheduler();
 				rosterScheduler.buildRosterTable(<%=rosterYear%>,<%=rosterMonth%>);
 				itoManagement=null;
+				document.getElementById("main").style.alignItems="stretch";
+				document.getElementById("main").style.justifyContent="flex-start";
 			}
 			function loadITOManagementPanel()
 			{
 				closeNav();
 				var itoManagement=new ITOManagement($("#main")[0]);
 				itoManagement.showITOTable();
+				
 				if (rosterScheduler!=null)
 					rosterScheduler.destroy();
 				rosterScheduler=null;
+				document.getElementById("main").style.alignItems="center";
 			}
-			
-			$( document ).ready(function() {
-				$( "#datepicker" ).datepicker({dateFormat:"yy-mm-dd","defaultDate":new Date(1999,1,1)});
-			});
-			
 		</script>
 	</head>
 	<body>
@@ -105,7 +104,7 @@
 				<div style="display:flex;flex:1 1 auto;margin:0px;justify-content:center;">
 					<h1 style="padding:0px;margin:0px;">EMSTF Roster Admin. Page</h1>
 				</div>
-				<div style="display:flex;flex:1 1 auto;margin:0px;padding:0px;justify-content:flex-start;flex-direction:column" id="main">
+				<div style="display:flex;flex:1 1 auto;margin:0px;padding:0px;flex-direction:column" id="main">
 				</div>
 			</div>
 		</div>
