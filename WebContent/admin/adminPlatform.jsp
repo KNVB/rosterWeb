@@ -90,6 +90,7 @@
 		</script>
 	</head>
 	<body>
+		
 		<div id="mySidenav" class="sidenav">
 		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		  <a href="javascript:loadScheduler()" >Roster Scheduler</a>
@@ -100,14 +101,15 @@
 			<div style="display:flex;flex:1 1 auto;margin:0px;">
 				<span onclick="openNav()" class="openbtn" style="padding:0px;margin:0px">&#9776;</span>
 			</div>
-			<div style="width:100%;margin:0px;display:flex;align-items:center;flex-direction:column">
-				<div style="display:flex;flex:1 1 auto;margin:0px;">
+			<div style="width:100%;margin:0px;display:flex;flex-direction:column">
+				<div style="display:flex;flex:1 1 auto;margin:0px;justify-content:center;">
 					<h1 style="padding:0px;margin:0px;">EMSTF Roster Admin. Page</h1>
 				</div>
-				<div style="display:flex;flex:1 1 auto;margin:0px;align-items:center;flex-direction:column" id="main">
+				<div style="display:flex;flex:1 1 auto;margin:0px;padding:0px;justify-content:flex-start;flex-direction:column" id="main">
 				</div>
 			</div>
-		</div>	
+		</div>
+			
 		<form id="updateITOInfoFormTemplate" style="display:none" method="post">
 			<input type="hidden" name="itoId">
 			<table border="1">
