@@ -29,16 +29,39 @@ class RosterTable extends HTMLTableElement
 		this.appendChild(this.rosterFooter);
 		container.append(this);
 	}
-	build(year,month)
+	async build(year,month)
 	{
+		var self=this;
 		this.rosterYear=year;
 		this.rosterMonth=month;
 		this.noOfWorkingDay=0;
 
 		$(document).unbind();
-		this._buildTableHeader();
-		this._buildTableBody();
-		this._buildTableFooter();
+		
+		return this._getData()    
+		.then(function(){
+			self._buildTableHeader();
+			self._buildTableBody();
+			self._buildTableFooter();
+		}) 
+		.catch(function(error){
+				if(error.readyState!=4)
+				{
+					alert("Ops! Something Wrong, please try again later.\nreadyState="+error.readyState);
+				}	
+				else
+				{
+					if (error.status==440)
+					{
+						alert("The client's session has expired, please login again.");
+						location.href="./";
+					}
+					else
+					{
+						alert("status code="+error.status);
+					}
+				}
+			   });
 	}
 	destroy()
 	{
@@ -326,10 +349,8 @@ class RosterTable extends HTMLTableElement
 	{
 		var self=this;
 		$(this.rosterBody).empty();
-		this._getData()
-		.then(function(){
-			self._buildRosterRows();
-		});
+		this._buildRosterRows();
+	
 	}
 	_buildTableCaptionRow()
 	{
@@ -447,16 +468,11 @@ class RosterTable extends HTMLTableElement
 		this.rosterWeekDayRow.id="dayRow";
 		this.rosterDateRow.id="dateRow";
 		this._buildSelectRosterMonthRow();
-		this.utility.getDateList(this.rosterYear,this.rosterMonth)
-		.done(function(dateObjList){
-			self.dateObjList=dateObjList;
-			self._buildHolidayRow();
-			self._buildWeekDayRow();
-			self._buildDateRow();
-		})
-		.fail(function(data){
-			alert("Fail to get Date Object List");
-		});
+		
+		this._buildHolidayRow();
+		this._buildWeekDayRow();
+		this._buildDateRow();
+		
 	}
 	_buildWeekDayRow()
 	{
@@ -497,20 +513,12 @@ class RosterTable extends HTMLTableElement
 		this.rosterWeekDayRow.appendChild(borderedActualHourCell);
 		this.rosterWeekDayRow.appendChild(hourOffDueCell);
 	}
-	_getData()
+	async _getData()
 	{
 		var self=this;
-		return new Promise((resolve, reject) =>{
-			 this.utility.getRosterList(this.rosterYear,this.rosterMonth)
-			 .done(function(rosterList){
-				 self.rosterList=rosterList;
-				 resolve();
-			 })
-			 .fail(function(data){
-				 alert("Failed to get roster list.");
-				 reject();
-			 });
-		});
+		
+		this.dateObjList=await this.utility.getDateList(this.rosterYear,this.rosterMonth); 
+		this.rosterList=await this.utility.getRosterList(this.rosterYear,this.rosterMonth);
 	}
 }
 customElements.define('roster-table',

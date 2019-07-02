@@ -8,68 +8,86 @@
 				{
 					
 				}
+				getPreferredShiftList(rosterYear,rosterMonth)
+				{
+					return jQuery.ajax({"url": "../admin/getPreferredShiftList.jsp",
+							data:{"year":rosterYear,"month":rosterMonth},
+							method:"POST",
+							dataType:"json",
+						});
+				}
 				getDateList(year,month)
 				{
 					return jQuery.ajax({"url": "../getDateList.jsp",
-											data:{"year":year,"month":month},
-											method:"POST",
-											dataType:"json",
-											error: function(xhr) {
-											      console.log('error', xhr);
-											    }
-						});
-				}	
-				getRosterList(year,month)
-				{
-					return jQuery.ajax({"url": "../getRosterList.jsp",
-										data:{"year":year,"month":month},
-										method:"POST",
-										dataType:"json",
-										error: function(xhr) {
-										      console.log('error', xhr);
-										    }
+						data:{"year":year,"month":month},
+						method:"POST",
+						dataType:"json",
 					});
-				}	
+				}		
 			}
 			class Abc
 			{
 				constructor()
 				{
 					this.dateObjList=null;
+					this.preferredShiftList=null;
 					this.rosterList=null;
 					this.utility=new Utility();
 				}
 				build(year,month)
 				{
-					var self=this;
 					this.rosterYear=year;
 					this.rosterMonth=month;
 					this.noOfWorkingDay=0;
 
 					$(document).unbind();
-					this.getData()
-					.then(function(){
-						console.log(self.rosterList);
-						console.log(self.dateObjList);
-					});
+					
+					try
+					{
+						this._getData();
+					}
+					catch(error)
+					{
+						if(error.readyState!=4)
+						{
+							alert("Ops! Something Wrong, please try again later.\nreadyState="+error.readyState);
+						}	
+						else
+						{
+							if (error.status==440)
+							{
+								alert("The client's session has expired, please login again.");
+							}
+							else
+							{
+								alert("status code="+error.status);
+							}
+						}
+					}
 				}
-				getData()
-				{
+				async _getData()
+				{	
 					var self=this;
-					return this.utility.getDateList(this.rosterYear,this.rosterMonth)
-					.then((dateObjList)=>self.dateObjList=dateObjList)
-					.then(()=>self.utility.getRosterList(self.rosterYear,self.rosterMonth))
-					.then((rosterList)=>self.rosterList=rosterList);
+					try
+					{
+						this.dateObjList=await this.utility.getDateList(this.rosterYear,this.rosterMonth);
+						this.preferredShiftList=await this.utility.getPreferredShiftList(this.rosterYear,this.rosterMonth);
+					}
+					catch(error)
+					{
+						throw error;
+					}
 				}
 			}
-			$( document ).ready(function(){
+			function go()
+			{
 				var abc=new Abc();
 				abc.build(2019,7);
-				
-				
-			});
+				console.log("document:"+new Date());
+			}
 		</script>
 	</head>
 	<body>
+		<button onclick="go()">Go</button>
 	</body>
-</html>	
+</html>			

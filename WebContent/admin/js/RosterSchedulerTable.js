@@ -16,23 +16,16 @@ class RosterSchedulerTable extends RosterTable
  *	Public Method																				*
  *																				  				*
  *==============================================================================================*/	
-	build(year,month)
+	async build(year,month)
 	{
-		super.build(year,month);
 		var self=this;
+		await super.build(year,month);
+		
 		var yearStatisticCell=document.getElementById("yearlyStat");
-		$(yearStatisticCell).empty();
-
-		this.utility.getYearlyStatistic(this.rosterYear,this.rosterMonth)
-		.done(function(yearlyStatistic){
-			self.yearlyStatistic=yearlyStatistic;
-			yearStatisticCell.append(self._genYearlyStatisticReport());
-			self._showButtons();
-			self.rosterScheduler.initButton();
-		})
-		.fail(function(data){
-			alert("Failed to get yearly statistic");
-		});
+		yearStatisticCell.append(this._genYearlyStatisticReport());
+		this._showButtons();
+		this.rosterScheduler.initButton();
+		
 		$(document).mouseup(function(){
 			event.preventDefault();
 			console.log("mouse up");
@@ -1000,14 +993,14 @@ class RosterSchedulerTable extends RosterTable
 
 		return result;
 	}
-	_getData()
+	async _getData()
 	{
 		var self=this;
-		return super._getData()
-		.then(()=>self.utility.getITOList(self.rosterYear,self.rosterMonth))
-		.then((itoList)=>self.itoList=itoList)
-		.then(()=>self.utility.getPreferredShiftList(self.rosterYear,self.rosterMonth))
-		.then((preferredShiftList)=>self.preferredShiftList=preferredShiftList);
+		await super._getData();
+		
+		this.itoList=await this.utility.getITOList(this.rosterYear,this.rosterMonth);
+		this.preferredShiftList=await this.utility.getPreferredShiftList(self.rosterYear,self.rosterMonth);
+		this.yearlyStatistic=await this.utility.getYearlyStatistic(self.rosterYear,self.rosterMonth);
 	}
 	_getLastMonthBalance(itoId)
 	{

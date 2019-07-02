@@ -108,7 +108,6 @@
 				</div>
 			</div>
 		</div>
-			
 		<form id="updateITOInfoFormTemplate" style="display:none" method="post">
 			<input type="hidden" name="itoId">
 			<table border="1">
