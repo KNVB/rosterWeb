@@ -5,7 +5,6 @@ class EditableCellHandler
 		var self=this;
 		this.cell=cell;
 		this.cell.contentEditable="true";
-		this.cell.innerHTML="&nbsp;";
 		
 		this.rosterSchedulerTable=rosterSchedulerTable;
 		this.selectedRegion=rosterTable.selectedRegion;

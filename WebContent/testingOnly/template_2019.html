@@ -6,6 +6,22 @@
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" type="text/css" href="../css/MonthPick.css">
     <link rel="stylesheet" type="text/css" href="v5.css">
+	<script>
+		function go()
+		{
+			var table=document.getElementById("rosterTable");
+			var cell=table.rows[6].cells[4];
+			var div=document.createElement("div");
+			div.style.backgroundColor="black";
+			div.style.height="6px";
+			div.style.width="6px";
+			document.body.append(div);
+			div.style.position = "absolute";
+			div.style.top=(cell.getBoundingClientRect().bottom-3)+"px";
+			div.style.left=(cell.getBoundingClientRect().right-3)+"px";
+			console.log(cell.getBoundingClientRect());
+		}
+	</script>
   </head>
   <body>
           <table is="roster-scheduler-table" id="rosterTable">
@@ -214,8 +230,10 @@
                 <td class="borderCell"></td>
                 <td class="borderCell"></td>
                 <td class="borderCell alignCenter cursorCell" contenteditable="true">o</td>
-                <td style="position:relative" class="borderCell alignCenter cursorCell selectCellBorderTop selectCellBorderLeft selectCellBorderRight selectCellBorderBottom " contenteditable="true">
+                <td class="borderCell alignCenter cursorCell selectCellBorderTop selectCellBorderLeft selectCellBorderRight selectCellBorderBottom " contenteditable="true">
+					<!--
 					<div contenteditable="false" style="position:absolute;width:5px;height:5px;background-color:black;bottom:-3;right:-3;z-index:100"></div>
+					-->
 				</td>
                 <td class="borderCell alignCenter cursorCell" contenteditable="true"></td>
                 <td class="borderCell alignCenter cursorCell" contenteditable="true"></td>
@@ -651,6 +669,9 @@
             <tfoot id="rosterFooter">
               <tr>
                 <td colspan="46"><br></td>
+              </tr>
+			  <tr>
+                <td colspan="46"><button onclick="go()">Go</button></td>
               </tr>
               <tr>
                 <td colspan="13" class="aShiftColor">a : 0800H - 1700H</td>

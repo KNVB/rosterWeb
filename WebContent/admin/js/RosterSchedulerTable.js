@@ -67,12 +67,7 @@ class RosterSchedulerTable extends RosterTable
 				$(cell).removeClass(AdminCss.selectCellBorderLeftClassName);
 			}	
 		}
-		/*
-		cell=this.getCell(selectedRegion.maxY,selectedRegion.maxX);
-		j=cell.textContent;
-		$(cell).empty();
-		cell.textContent=j;
-		*/
+		$("div.littleSquareDiv").remove();
 	}
 	doCopy(copiedRegion,inDestY,inDestX)
 	{
@@ -597,16 +592,16 @@ class RosterSchedulerTable extends RosterTable
 		$(cell).addClass(AdminCss.selectCellBorderLeftClassName);
 
 		cell=this.getCell(selectedRegion.maxY,selectedRegion.maxX);
-		
 		$(cell).addClass(AdminCss.selectCellBorderBottomClassName);
 		$(cell).addClass(AdminCss.selectCellBorderRightClassName);
 		
-		/*
 		littleSquareDiv=document.createElement("div");
 		littleSquareDiv.contentEditable=false;
 		littleSquareDiv.className="littleSquareDiv";
-		$(cell).append(littleSquareDiv);
-		*/
+		
+		$("body").append(littleSquareDiv);
+		littleSquareDiv.style.top=(cell.getBoundingClientRect().bottom-3)+"px";
+		littleSquareDiv.style.left=(cell.getBoundingClientRect().right-3)+"px";
 		
 		for (i=selectedRegion.minY+1;i<selectedRegion.maxY;i++)
 		{

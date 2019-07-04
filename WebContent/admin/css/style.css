@@ -330,12 +330,9 @@ td.cursorCell:focus
 div.littleSquareDiv
 {
 	position:absolute;
-	width:5px;
-	height:5px;
+	width:6px;
+	height:6px;
 	background-color:black;
-	bottom:-3px;
-	right:-3px;
-	z-index:100	
 }
 div.littleSquareDiv:hover
 {

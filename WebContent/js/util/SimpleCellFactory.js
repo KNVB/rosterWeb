@@ -216,7 +216,7 @@ class SimpleCellFactory
 	static get B1ShiftLegendCell()
 	{
 		var cell=this.BShiftLegendCell;
-		cell.textContent="b1 : 1630H - 2215H";
+		cell.textContent="b1 : 1500H - 2215H";
 		return cell;
 	}
 	static get CShiftLegendCell()
