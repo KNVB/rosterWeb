@@ -94,7 +94,7 @@ class SelectedRegion
 			range.selectNodeContents(cell);
 		    sel.removeAllRanges();
 		    sel.addRange(range);
-			this.firstInput=true;
+			this.firstInput=true;			
 		}
 	}	
 	isEmpty()

@@ -5,6 +5,7 @@ class EditableCellHandler
 		var self=this;
 		this.cell=cell;
 		this.cell.contentEditable="true";
+		this.cell.innerHTML="&nbsp;";
 		
 		this.rosterSchedulerTable=rosterSchedulerTable;
 		this.selectedRegion=rosterTable.selectedRegion;
@@ -75,7 +76,12 @@ class EditableCellHandler
 					break;
 			case 46://handle delete key event
 					this._handleDeleteKeyEvent(event);
-					break;		
+					break;
+			/*		
+			case 90: //Handle ctrl-z event
+					console.log(document.activeElement);
+					break;
+			*/		
 		}	
 	}
 	_handleDeleteKeyEvent(event)

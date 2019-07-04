@@ -308,14 +308,17 @@
 	height:390px;
 	overflow-y:scroll
 }
+*
 td.cursorCell::selection 
 {
   background: none; /* WebKit/Blink Browsers */
 }
+
 td.cursorCell::-moz-selection 
 {
   background: none; /* Gecko Browsers */
 }
+
 td.cursorCell:hover
 {
 	cursor: cell;
@@ -323,6 +326,20 @@ td.cursorCell:hover
 td.cursorCell:focus 
 {
 	outline: none;
+}
+div.littleSquareDiv
+{
+	position:absolute;
+	width:5px;
+	height:5px;
+	background-color:black;
+	bottom:-3px;
+	right:-3px;
+	z-index:100	
+}
+div.littleSquareDiv:hover
+{
+	cursor: crosshair;
 }
 /*******************************************************************************************************
  *                                                                                                     *

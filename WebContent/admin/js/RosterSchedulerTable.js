@@ -67,6 +67,12 @@ class RosterSchedulerTable extends RosterTable
 				$(cell).removeClass(AdminCss.selectCellBorderLeftClassName);
 			}	
 		}
+		/*
+		cell=this.getCell(selectedRegion.maxY,selectedRegion.maxX);
+		j=cell.textContent;
+		$(cell).empty();
+		cell.textContent=j;
+		*/
 	}
 	doCopy(copiedRegion,inDestY,inDestX)
 	{
@@ -576,11 +582,12 @@ class RosterSchedulerTable extends RosterTable
 	}
 	setSelectedRegion(selectedRegion)
 	{
-		var cell,i;
+		var cell,i,littleSquareDiv;
 		cell=this.getCell(selectedRegion.minY,selectedRegion.minX);
 		$(cell).addClass(AdminCss.selectCellBorderTopClassName);
 		$(cell).addClass(AdminCss.selectCellBorderLeftClassName);
-
+		$(cell).children("div.littleSquareDiv").remove();
+		
 		cell=this.getCell(selectedRegion.minY,selectedRegion.maxX);
 		$(cell).addClass(AdminCss.selectCellBorderTopClassName);
 		$(cell).addClass(AdminCss.selectCellBorderRightClassName);
@@ -590,9 +597,17 @@ class RosterSchedulerTable extends RosterTable
 		$(cell).addClass(AdminCss.selectCellBorderLeftClassName);
 
 		cell=this.getCell(selectedRegion.maxY,selectedRegion.maxX);
+		
 		$(cell).addClass(AdminCss.selectCellBorderBottomClassName);
 		$(cell).addClass(AdminCss.selectCellBorderRightClassName);
-
+		
+		/*
+		littleSquareDiv=document.createElement("div");
+		littleSquareDiv.contentEditable=false;
+		littleSquareDiv.className="littleSquareDiv";
+		$(cell).append(littleSquareDiv);
+		*/
+		
 		for (i=selectedRegion.minY+1;i<selectedRegion.maxY;i++)
 		{
 			cell=this.getCell(i,selectedRegion.minX);
