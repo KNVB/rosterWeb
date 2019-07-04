@@ -76,27 +76,6 @@ class EditableCellHandler
 			case 46://handle delete key event
 					this._handleDeleteKeyEvent(event);
 					break;		
-/*					
-			case 67:
-					console.log("C key pressed");
-					if (event.ctrlKey)
-					{
-						//handle Ctrl-C event
-						console.log("Ctlr C key pressed");
-						event.preventDefault();
-						this.selectedRegion.copy();
-					}
-					break;
-			case 86:
-					if (event.ctrlKey)
-					{
-						//handle Ctrl-V event
-						console.log("Ctlr V key pressed");
-						event.preventDefault();
-						this.selectedRegion.paste();
-					}
-					break;
-			*/		
 		}	
 	}
 	_handleDeleteKeyEvent(event)

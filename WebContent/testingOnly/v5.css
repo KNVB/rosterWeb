@@ -316,10 +316,6 @@ td.cursorCell::-moz-selection
 {
   background: none; /* Gecko Browsers */
 }
-td.cursorCell:hover
-{
-	cursor: cell;
-}
 td.cursorCell:focus 
 {
 	outline: none;
