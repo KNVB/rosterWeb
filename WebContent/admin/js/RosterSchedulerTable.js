@@ -20,8 +20,9 @@ class RosterSchedulerTable extends RosterTable
 	{
 		var self=this;
 		await super.build(year,month);
-		
 		var yearStatisticCell=document.getElementById("yearlyStat");
+		$("div.littleSquareDiv").remove();
+		
 		yearStatisticCell.append(this._genYearlyStatisticReport());
 		this._showButtons();
 		this.rosterScheduler.initButton();
@@ -581,7 +582,6 @@ class RosterSchedulerTable extends RosterTable
 		cell=this.getCell(selectedRegion.minY,selectedRegion.minX);
 		$(cell).addClass(AdminCss.selectCellBorderTopClassName);
 		$(cell).addClass(AdminCss.selectCellBorderLeftClassName);
-		$(cell).children("div.littleSquareDiv").remove();
 		
 		cell=this.getCell(selectedRegion.minY,selectedRegion.maxX);
 		$(cell).addClass(AdminCss.selectCellBorderTopClassName);
