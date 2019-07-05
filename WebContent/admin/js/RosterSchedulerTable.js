@@ -9,7 +9,11 @@ class RosterSchedulerTable extends RosterTable
 		this.showNoOfPrevDate=2;
 		this.utility=new AdminUtility();
 		this.selectedRegion=new SelectedRegion(this);
-
+		this.littleSquareDiv=document.createElement("div");
+		this.littleSquareDiv.contentEditable=false;
+		this.littleSquareDiv.className="littleSquareDiv";
+		
+		$(container).append(this.littleSquareDiv);
 	}
 /*==============================================================================================*
  *																				  				*
@@ -21,7 +25,7 @@ class RosterSchedulerTable extends RosterTable
 		var self=this;
 		await super.build(year,month);
 		var yearStatisticCell=document.getElementById("yearlyStat");
-		$("div.littleSquareDiv").remove();
+		$(this.littleSquareDiv).hide();
 		
 		yearStatisticCell.append(this._genYearlyStatisticReport());
 		this._showButtons();
@@ -68,7 +72,7 @@ class RosterSchedulerTable extends RosterTable
 				$(cell).removeClass(AdminCss.selectCellBorderLeftClassName);
 			}	
 		}
-		$("div.littleSquareDiv").remove();
+		$(this.littleSquareDiv).hide();
 	}
 	doCopy(copiedRegion,inDestY,inDestX)
 	{
@@ -595,13 +599,10 @@ class RosterSchedulerTable extends RosterTable
 		$(cell).addClass(AdminCss.selectCellBorderBottomClassName);
 		$(cell).addClass(AdminCss.selectCellBorderRightClassName);
 		
-		littleSquareDiv=document.createElement("div");
-		littleSquareDiv.contentEditable=false;
-		littleSquareDiv.className="littleSquareDiv";
 		
-		$("body").append(littleSquareDiv);
-		littleSquareDiv.style.top=(cell.getBoundingClientRect().bottom-3)+"px";
-		littleSquareDiv.style.left=(cell.getBoundingClientRect().right-3)+"px";
+		this.littleSquareDiv.style.top=(cell.getBoundingClientRect().bottom-3)+"px";
+		this.littleSquareDiv.style.left=(cell.getBoundingClientRect().right-3)+"px";
+		$(this.littleSquareDiv).show();
 		
 		for (i=selectedRegion.minY+1;i<selectedRegion.maxY;i++)
 		{

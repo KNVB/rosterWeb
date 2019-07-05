@@ -333,6 +333,7 @@ div.littleSquareDiv
 	width:6px;
 	height:6px;
 	background-color:black;
+	display:none;
 }
 div.littleSquareDiv:hover
 {
