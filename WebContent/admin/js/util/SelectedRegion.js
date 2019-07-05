@@ -169,7 +169,7 @@ class SelectedRegion
 		if (this.firstInput)
 		{
 			var nextCell=this.rosterSchedulerTable.getNextCellInRosterTable(yOffset,xOffset);
-			if (event.shiftKey)
+			if ((event.shiftKey) && (event.which!=9) && (event.which!=13))
 			{
 				var firstCell=this.rosterSchedulerTable.getCell(this.firstY,this.firstX);
 				this.startSelect(firstCell);
