@@ -160,35 +160,41 @@ class RosterSchedulerTable extends RosterTable
 	}
 	getNextCellInRosterTable(yOffset,xOffset)
 	{
-		var theCell=this.getCell(this.selectedRegion.minY,this.selectedRegion.minX);
-		var index;
-		var maxRowCount=Object.keys(this.itoList).length*2;
-		var orgIndex=$.inArray(theCell,this.cursorCells);
-		var nextCell;
+		var index,maxRowCount,newX,newY;
+		var nextCell,orgIndex,theCell,x,y;
 		
-		//if (this.selectedRegion.isSingleCell())
-		{
-			var newX=orgIndex % Object.keys(this.dateObjList).length;
-			var newY=(orgIndex-newX)/Object.keys(this.dateObjList).length;
-			
-			newX+=xOffset;
-			if (newX>=Object.keys(this.dateObjList).length)
-				newX=0;
-			else
-				if (newX<0)
-					newX=Object.keys(this.dateObjList).length-1;
-			newY+=yOffset;
-			if (newY>=maxRowCount)
-				newY=0;
-			else
-				if (newY<0)
-					newY=maxRowCount-1;
-			//console.log(newX,newY);
-			index=newX+newY*Object.keys(this.dateObjList).length;
-			
-			nextCell=this.cursorCells[index];
-			return nextCell;
-		}
+		if (this.selectedRegion.minX<this.selectedRegion.firstX)
+			x=this.selectedRegion.minX;
+		else
+			x=this.selectedRegion.maxX;
+		if (this.selectedRegion.minY<this.selectedRegion.firstY)
+			y=this.selectedRegion.minY;
+		else
+			y=this.selectedRegion.maxY;
+
+		theCell=this.getCell(y,x);
+		maxRowCount=Object.keys(this.itoList).length*2;
+		orgIndex=$.inArray(theCell,this.cursorCells);
+		newX=orgIndex % Object.keys(this.dateObjList).length;
+		newY=(orgIndex-newX)/Object.keys(this.dateObjList).length;
+
+		newX+=xOffset;
+		if (newX>=Object.keys(this.dateObjList).length)
+			newX=0;
+		else
+			if (newX<0)
+				newX=Object.keys(this.dateObjList).length-1;
+		newY+=yOffset;
+		if (newY>=maxRowCount)
+			newY=0;
+		else
+			if (newY<0)
+				newY=maxRowCount-1;
+		//console.log(newX,newY);
+		index=newX+newY*Object.keys(this.dateObjList).length;
+		
+		nextCell=this.cursorCells[index];
+		return nextCell;
 	}
 	getNextCellInSelectedRegion(theCell,yOffset,xOffset)
 	{

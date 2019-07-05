@@ -165,11 +165,19 @@ class SelectedRegion
 	}
 	selectNextCell(event,yOffset,xOffset)
 	{
-		console.log(`this.firstInput=${this.firstInput}`);
+		console.log(`this.firstInput=${this.firstInput},yOffset=${yOffset},xOffset=${xOffset}`);
 		if (this.firstInput)
 		{
 			var nextCell=this.rosterSchedulerTable.getNextCellInRosterTable(yOffset,xOffset);
-			this.startSelect(nextCell);
+			if (event.shiftKey)
+			{
+				var firstCell=this.rosterSchedulerTable.getCell(this.firstY,this.firstX);
+				this.startSelect(firstCell);
+				this.update(nextCell);
+			}	
+			else
+				this.startSelect(nextCell);
+			
 			this.endSelect();
 			event.preventDefault();
 		}
@@ -266,8 +274,8 @@ class SelectedRegion
 				
 				this.minY=newMinY;
 				this.maxY=newMaxY;
-				//console.log("this.minX="+this.minX+",this.maxX="+this.maxX);
-				//console.log("this.minY="+this.minY+",this.maxY="+this.maxY);
+				console.log("this.minX="+this.minX+",this.maxX="+this.maxX);
+				console.log("this.minY="+this.minY+",this.maxY="+this.maxY);
 				this.rosterSchedulerTable.setSelectedRegion(this);
 			}	
 		}
