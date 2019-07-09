@@ -1,3 +1,9 @@
+/*==============================================================================================*
+ *																				  				*
+ *	This is shift cell object.									                  	            *
+ *	It is read only, the background color of the cell would depend on the shift type.			*
+ *																								*
+ *==============================================================================================*/
 class ShiftCell extends HTMLTableCellElement 
 {
 	constructor(utility) {
@@ -10,7 +16,7 @@ class ShiftCell extends HTMLTableCellElement
 	setShiftType(t)
 	{
 		this.textContent=t;
-		$(this).addClass(this.utility.getShiftCssClassName(t));
+		$(this).addClass(Css.getShiftCssClassName(t));
 	}
 }
 customElements.define('shift-cell',
@@ -18,6 +24,12 @@ customElements.define('shift-cell',
 		extends: 'td'
 		}
 	);
+/*==============================================================================================*
+ *																				  				*
+ *	This is week day cell object.									                            *
+ *	It is read only cell.																		*
+ *																								*
+ *==============================================================================================*/
 class WeekDayCell extends HTMLTableCellElement
 {
 	constructor() {

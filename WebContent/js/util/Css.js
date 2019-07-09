@@ -1,3 +1,8 @@
+/*==============================================================================================*
+ *																				  				*
+ *	This is CSS class name factory object.									                  	*
+ *																								*
+ *==============================================================================================*/
 class Css
 {
 	static get actualHourCellClassName()
@@ -76,7 +81,11 @@ class Css
 	{
 	 	return "underlineText";
 	}
-
+	/****************************************************************************************
+	 *                                                                                      * 
+	 * It base on the given shift type returns the corresponding background color class name*
+	 * 																		                * 
+	 ****************************************************************************************/
 	static getShiftCssClassName(shiftType)
 	{
 		var className="";

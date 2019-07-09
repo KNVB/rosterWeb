@@ -1,3 +1,8 @@
+/*==============================================================================================*
+ *																				  				*
+ *	It denote a roster table                                                 	                *
+ *																				  				*
+ *==============================================================================================*/
 class RosterTable extends HTMLTableElement
 {
 	constructor(container){
@@ -29,6 +34,11 @@ class RosterTable extends HTMLTableElement
 		this.appendChild(this.rosterFooter);
 		container.append(this);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To build the roster table for the given year and month                  	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	async build(year,month)
 	{
 		var self=this;
@@ -63,6 +73,11 @@ class RosterTable extends HTMLTableElement
 				}
 			   });
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Destroy rosterTable object related object                               	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	destroy()
 	{
 		if (this.monthPicker!=null)
@@ -71,6 +86,11 @@ class RosterTable extends HTMLTableElement
 			this.monthPicker=null;
 		}		
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	High light the date and the ITO name for the specified shift/roster cell   	                *
+	 *																				  				*
+	 *==============================================================================================*/	
 	markCoorindate(theCell)
 	{
 		var row=theCell.parentElement;
@@ -81,6 +101,11 @@ class RosterTable extends HTMLTableElement
 		cell=row.cells[0];
 		$(cell).addClass(Css.highlightCellClassName);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Remove high light from the specified shift/roster cell                  	                *
+	 *																				  				*
+	 *==============================================================================================*/	
 	unMarkCoorindate(theCell)
 	{
 		var row=theCell.parentElement;
@@ -96,6 +121,11 @@ class RosterTable extends HTMLTableElement
  *    Private method                                                                                   *
  *                                                                                                     *
  *******************************************************************************************************/
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build the date row                   					                  	                *
+	 *																				  				*
+	 *==============================================================================================*/	
 	_buildDateRow()
 	{
 		var now=new Date();
@@ -139,6 +169,11 @@ class RosterTable extends HTMLTableElement
 		this.rosterDateRow.appendChild(shiftDxCountCell);
 		this.rosterDateRow.appendChild(noOfWorkingDayCountCell);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build the holiday row                  					                  	                *
+	 *																				  				*
+	 *==============================================================================================*/	
 	_buildHolidayRow()
 	{
 		var dateObj;
@@ -168,6 +203,11 @@ class RosterTable extends HTMLTableElement
 		borderCell.colSpan=10;
 		this.rosterHolidayRow.appendChild(borderCell);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build a shift row                   					                  	                *
+	 *																				  				*
+	 *==============================================================================================*/	
 	_buildITORow(rosterRowData,calculateResult)
 	{
 		var cell=SimpleCellFactory.BorderCell,i,calculateResult=[];
@@ -178,6 +218,11 @@ class RosterTable extends HTMLTableElement
 		var shiftCountData=this._buildShiftCells(rosterRowData,row);
 		this._buildShiftCountCells(row,shiftCountData,rosterRowData.itoId);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Re build the roster table for the next month      					                  	    *
+	 *																				  				*
+	 *==============================================================================================*/	
 	_buildNextMonth()
 	{
 		if (this.rosterMonth==12)
@@ -189,6 +234,11 @@ class RosterTable extends HTMLTableElement
 			this.rosterMonth++;
 		this.build(this.rosterYear,this.rosterMonth);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Re build the roster table for the previous month   					                  	    *
+	 *																				  				*
+	 *==============================================================================================*/		
 	_buildPreviousMonth()
 	{
 		if (this.rosterMonth==1)
@@ -200,6 +250,11 @@ class RosterTable extends HTMLTableElement
 			this.rosterMonth--;
 		this.build(this.rosterYear,this.rosterMonth);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build the roster cell for the previous month     					                  	    *
+	 *																				  				*
+	 *==============================================================================================*/		
 	_buildPreviousMonthShiftCells(rosterRowData,row)
 	{
 		var cell=SimpleCellFactory.BorderCell,i;
@@ -213,6 +268,11 @@ class RosterTable extends HTMLTableElement
 			row.appendChild(cell);
 		}
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build the roster rows for each ITO  								                  	    *
+	 *																				  				*
+	 *==============================================================================================*/		
 	_buildRosterRows()
 	{
 		var self=this,shiftType;
@@ -222,7 +282,11 @@ class RosterTable extends HTMLTableElement
 			self._buildITORow(rosterRowData);			
 		});
 	}
-	
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build a table row for roster date selector							                  	    *
+	 *																				  				*
+	 *==============================================================================================*/
 	_buildSelectRosterMonthRow()
 	{
 		$(this.rosterMonthRow).empty();
@@ -237,6 +301,11 @@ class RosterTable extends HTMLTableElement
 		var cell=this.rosterMonthRow.insertCell(this.rosterMonthRow.cells.length);
 		cell.colSpan=10;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build table cells for the given roster shift data					                  	    *
+	 *																				  				*
+	 *==============================================================================================*/
 	_buildShiftCells(rosterRowData,row)
 	{
 		var cell,i;
@@ -293,6 +362,11 @@ class RosterTable extends HTMLTableElement
 		result["noOfWorkingDay"]=noOfWorkingDay;
 		return result;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build table cells for the shift count data					                  	    		*
+	 *																				  				*
+	 *==============================================================================================*/
 	_buildShiftCountCells(row,shiftCountData,itoId)
 	{
 		var cell=SimpleCellFactory.BorderedAlignCenterCell;
@@ -345,6 +419,11 @@ class RosterTable extends HTMLTableElement
 		cell.textContent=shiftCountData["noOfWorkingDay"];
 		row.appendChild(cell);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build Roster table body												                  	    *
+	 *																				  				*
+	 *==============================================================================================*/
 	_buildTableBody()
 	{
 		var self=this;
@@ -352,6 +431,11 @@ class RosterTable extends HTMLTableElement
 		this._buildRosterRows();
 	
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build Roster table caption row										                  	    *
+	 *																				  				*
+	 *==============================================================================================*/
 	_buildTableCaptionRow()
 	{
 		var cell,row=this.rosterHeader.insertRow(this.rosterHeader.rows.length);
@@ -382,6 +466,11 @@ class RosterTable extends HTMLTableElement
 		}
 		row.appendChild(noOfWorkingDayCell);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build Roster table footer row										                  	    *
+	 *																				  				*
+	 *==============================================================================================*/
 	_buildTableFooter()
 	{
 		$(this.rosterFooter).empty();
@@ -453,6 +542,11 @@ class RosterTable extends HTMLTableElement
 		row=this.rosterFooter.insertRow(this.rosterFooter.rows.length);
 		row.appendChild(cell);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build Roster table header row										                  	    *
+	 *																				  				*
+	 *==============================================================================================*/
 	_buildTableHeader()
 	{
 		var self=this;
@@ -474,6 +568,11 @@ class RosterTable extends HTMLTableElement
 		this._buildDateRow();
 		
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build the week day row										                  	            *
+	 *																				  				*
+	 *==============================================================================================*/
 	_buildWeekDayRow()
 	{
 		var dateObj;
@@ -513,6 +612,11 @@ class RosterTable extends HTMLTableElement
 		this.rosterWeekDayRow.appendChild(borderedActualHourCell);
 		this.rosterWeekDayRow.appendChild(hourOffDueCell);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get date object list and Roster data list							                  	    *
+	 *																				  				*
+	 *==============================================================================================*/
 	async _getData()
 	{
 		var self=this;

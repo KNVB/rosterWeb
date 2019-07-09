@@ -1,11 +1,23 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ page language="java" contentType="application/javascript; charset=UTF-8" pageEncoding="UTF-8"%>
+/***********************************************************************************
+ *                                                                                 * 
+ * This is utility object.	                                                       *
+ * It is provide different type of utility function.							   *
+ * 																		           * 
+ ***********************************************************************************/
 class Utility
 {
 	constructor()
 	{
 		this.monthNames={1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"};
 	}
+	/***********************************************************************************
+	 *                                                                                 * 
+	 * It returns the date object list for the given year and month                    *
+	 * It get the date object list from server side.								   *
+	 * 																		           * 
+	 ***********************************************************************************/
 	getDateList(year,month)
 	{
 		return jQuery.ajax({"url": "<%=request.getContextPath()%>/getDateList.jsp",
@@ -17,6 +29,12 @@ class Utility
 							    }
 		});
 	}
+	/***********************************************************************************
+	 *                                                                                 * 
+	 * It returns the roster data list for the given year and month                    *
+	 * It get the roster data list from server side.								   *
+	 * 																		           * 
+	 ***********************************************************************************/
 	getRosterList(year,month)
 	{
 		return jQuery.ajax({"url": "<%=request.getContextPath()%>/getRosterList.jsp",
@@ -27,34 +45,7 @@ class Utility
 							      console.log('error', xhr);
 							    }
 		});
-	}	
-	getShiftCssClassName(shiftType)
-	{
-		var className="";
-    	switch (shiftType)
-    	{
-			case "a":
-					className="aShiftColor";
-					break;	
-			case "b":
-			case "b1":
-					className="bShiftColor";
-					break;
-			case "c":
-					className="cShiftColor";
-					break;
-			case "d":
-			case "d1":
-			case "d2":
-			case "d3":
-					 className="dShiftColor";
-					 break;
-			case  "O":
-					 className="oShiftColor";
-					 break;
-    	}
-    	return className;
-	}	
+	}
 	roundTo(theValue,decPlace)
 	{
 		var result=theValue*Math.pow(10,decPlace);

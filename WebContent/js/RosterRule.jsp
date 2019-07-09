@@ -5,6 +5,11 @@
 <% 
 	ObjectMapper objectMapper = new ObjectMapper();
 %>
+/*==============================================================================================*
+ *																				  				*
+ *	It is denote a set of Roster rules														    *
+ *																				  				*
+ *==============================================================================================*/
 class RosterRule
 {
 	constructor(utility)
@@ -14,6 +19,11 @@ class RosterRule
 		this.shiftHourCount=<%=objectMapper.writeValueAsString(RosterRule.getShiftHourCount())%>;
 		this.utility=utility;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It return a set of essential shifts for every day							                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getEssentialShift()
 	{
 		var result="";
@@ -22,6 +32,11 @@ class RosterRule
 		});
 		return result;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It returns all available shifts of a specified ITO on specified date		                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getITOAvailableShiftList(index,ito,preferredShift,previousShiftList,resultantShiftList)
 	{
 		var result=[];
@@ -41,6 +56,11 @@ class RosterRule
  *	Private Method																				*
  *																				  				*
  *==============================================================================================*/
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It returns the no. of consecutive working day of a specified ITO			                *
+	 *																				  				*
+	 *==============================================================================================*/
 	_getNoOfConsecutiveWorkingDay(ito,previousShiftList,thatShift)
 	{
 		var count=0,finished=false;
@@ -67,6 +87,11 @@ class RosterRule
 		
 		return count;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It returns the total no. of shifts have been assigned           			                *
+	 *																				  				*
+	 *==============================================================================================*/
 	_getTotalNoOfThatShiftAssigned(resultantShiftList,thatShift)
 	{
 		var count=0;
@@ -76,6 +101,11 @@ class RosterRule
 		});
 		return count;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To check whether the given shift is conflict with the preferred shift.    	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	_isConflictWithPreferredShift(preferredShift,thatShift)
 	{
 		var result=false;
@@ -109,6 +139,11 @@ class RosterRule
 		}
 		return result;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To check whether the given shift is can form an black listed shift pattern.	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	_isThatShiftFormBlackListedShiftPattern(ito,previousShiftList,thatShift)
 	{
 		var shiftPattern="",indices=[];
@@ -122,7 +157,11 @@ class RosterRule
 		else
 			return false;	
 	}
-	
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To check whether the given shift is available for assignment.            	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	_isThatShiftOkForAssign(resultantShiftList,previousShiftList,preferredShift,index,ito,thatShift)
 	{
 		var result=true;

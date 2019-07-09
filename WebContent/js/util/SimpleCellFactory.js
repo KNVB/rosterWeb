@@ -1,3 +1,9 @@
+/*==============================================================================================*
+ *																				  				*
+ *	This is Simple Cell object factory.											              	*
+ *	It generates different type of cells										  				*
+ *																								*
+ *==============================================================================================*/
 class SimpleCellFactory
 {
 	static get ActualHourCell()
@@ -267,9 +273,14 @@ class SimpleCellFactory
 	}
 /***************************************************************************************
  *                                                                                     * 
- *  Select Roster Month Cell                                                           *
+ *  Cursor Cell related				                                                   *
  *                                                                                     * 
  ***************************************************************************************/
+	/***********************************************************************************
+	 *                                                                                 * 
+	 * It add the event handler for the cursor cell.                                   *
+	 * 																		           * 
+	 ***********************************************************************************/	
 	static _addCursorEventHandler(cell,rosterTable)
 	{
 		$(cell).addClass(Css.cursorCellClassName);
@@ -280,12 +291,24 @@ class SimpleCellFactory
 			rosterTable.unMarkCoorindate(this);
 		});
 	}
+	/***********************************************************************************
+	 *                                                                                 * 
+	 * It returns a cursor shift cell.                                                 *
+	 * If mouse over on this type of cell, 											   *
+	 * the related date cell and ito cell would be high lighted.					   *
+	 * 																		           * 
+	 ***********************************************************************************/
 	static getCursoredShiftCell(rosterTable)
 	{
 		var cell=new ShiftCell(rosterTable.utility);
 		this._addCursorEventHandler(cell,rosterTable);
 		return cell;
 	}
+/***************************************************************************************
+ *                                                                                     * 
+ *  Select Roster Month Cell                                                           *
+ *                                                                                     * 
+ ***************************************************************************************/
 	static getSelectRosterMonthCell(rosterTable)
 	{
 		var cell=this.AlignCenterCell;

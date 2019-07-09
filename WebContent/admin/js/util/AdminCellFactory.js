@@ -1,3 +1,10 @@
+/*==============================================================================================*
+ *																				  				*
+ *	This is Admin Cell object factory, which is extends from SimpleCellFactory object          	*
+ *	It generates different type of admin. cells									  				*
+ *																								*
+ *==============================================================================================*/
+
 class AdminCellFactory extends SimpleCellFactory
 {
 	static get AutoPlannerButtonCell()
@@ -181,6 +188,15 @@ class AdminCellFactory extends SimpleCellFactory
 		cell.colSpan=2;
 		return cell;
 	}
+	/***********************************************************************************
+	 *                                                                                 * 
+	 * It returns a editable shift cell.                  	                           *
+	 * If mouse over on this type of cell, 											   *
+	 * the related date cell and ito cell would be high lighted.					   *
+	 * The content of this type of shift cell is editable.							   *	
+	 * The background color of this type of cell will be changed when shift type change*
+	 *                                                                                 * 
+	 ***********************************************************************************/
 	static getEditableShiftCell(rosterSchedulerTable,itoId)
 	{
 		var cell=this.getCursoredShiftCell(rosterSchedulerTable);
@@ -191,6 +207,14 @@ class AdminCellFactory extends SimpleCellFactory
 		});
 		return cell;
 	}
+	/***********************************************************************************
+	 *                                                                                 * 
+	 * It returns a preferred shift cell.                                              *
+	 * If mouse over on this type of cell, 											   *
+	 * the related date cell and ito cell would be high lighted.					   *
+	 * The content of this type of shift cell is editable					           *
+	 *                                                                                 * 
+	 ***********************************************************************************/
 	static getPreferredShiftCell(rosterSchedulerTable)
 	{
 		var cell=this.BorderedAlignCenterCell;

@@ -1,3 +1,8 @@
+/*==============================================================================================*
+ *																				  				*
+ *	It denote a roster scheduler table, which is extends from rosterTable object                *
+ *																				  				*
+ *==============================================================================================*/
 class RosterSchedulerTable extends RosterTable
 {
 	constructor(container)
@@ -20,6 +25,11 @@ class RosterSchedulerTable extends RosterTable
  *	Public Method																				*
  *																				  				*
  *==============================================================================================*/	
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To build the roster scheduler table for the given year and month.          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	async build(year,month)
 	{
 		var self=this;
@@ -38,11 +48,21 @@ class RosterSchedulerTable extends RosterTable
 				self.selectedRegion.endSelect();
 		});
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Clear all the shift content										          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	clearAllShift()
 	{
 		var i,cells;
 		$("td."+AdminCss.shiftCellClassName).text("").blur();
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Clear copied region 											          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	clearCopiedRegion(copiedRegion)
 	{
 		var cell,i,j;
@@ -58,6 +78,11 @@ class RosterSchedulerTable extends RosterTable
 			}	
 		}
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Clear selected region 											          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	clearSelectedRegion(selectedRegion)
 	{
 		var cell,i,j;
@@ -74,6 +99,11 @@ class RosterSchedulerTable extends RosterTable
 		}
 		$(this.littleSquareDiv).hide();
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Copy the copied region cells content to start cell				          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	doCopy(copiedRegion,inDestY,inDestX)
 	{
 		var destCell;
@@ -98,6 +128,11 @@ class RosterSchedulerTable extends RosterTable
 			destCellX=inDestX;
 		}
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Fill all empty shift cell with "O"								          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	fillEmptyShiftWithO()
 	{
 		$("td."+AdminCss.shiftCellClassName).each(function(index,cell){
@@ -105,6 +140,11 @@ class RosterSchedulerTable extends RosterTable
 				$(cell).text("O").blur();
 		});
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Generate data for upload roster data to database				          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getAllDataForSaveToDb()
 	{
 		var rosterData={},self=this;
@@ -136,28 +176,59 @@ class RosterSchedulerTable extends RosterTable
 		}	
 		return(rosterData);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get all the preferred shift data 								          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getAllPreferredShiftData()
 	{
 		return this._getShiftRowData(this._getAllPreferredShiftRow(),1,Object.keys(this.dateObjList).length);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the end date for the auto shift assignment					          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getAutoPlanEndDate()
 	{
 		return parseInt($("#autoPlanEndDate").val());
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the start date for the auto shift assignment				          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getAutoPlanStartDate()
 	{
 		return parseInt($("#autoPlanStartDate").val());
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the cell object for the given row index and column index	          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getCell(rowIndex,cellIndex)
 	{
 		var row=this.rows[rowIndex];
 		var cell=row.cells[cellIndex];
 		return cell;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the no. of iteration for auto shift assignment				          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getIterationCount()
 	{
 		return parseInt($("#iterationCount").val());
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the next cell for the given column and row offset of current cell with in the roster	*
+	 *	scheduler table only.																		*
+	 *														  										*
+	 *==============================================================================================*/
 	getNextCellInRosterTable(yOffset,xOffset)
 	{
 		var index,maxRowCount,newX,newY;
@@ -196,6 +267,12 @@ class RosterSchedulerTable extends RosterTable
 		nextCell=this.cursorCells[index];
 		return nextCell;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the next cell for the given column and row offset of current cell with in the selected	*
+	 *  region only.														      	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getNextCellInSelectedRegion(theCell,yOffset,xOffset)
 	{
 		var index;
@@ -216,6 +293,11 @@ class RosterSchedulerTable extends RosterTable
 		nextCell=this.selectedRegion.selectedCellList[index];
 		return nextCell;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the previous shift list for the given date												*
+	 *																				  				*
+	 *==============================================================================================*/
 	getPreviouseShiftList(startDate)
 	{
 		var i,j,itoRoster;
@@ -247,12 +329,22 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return resultList;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Generate data for generate roster data in excel format			          	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getRosterDataForExport()
 	{
 		var rosterData=this.getAllDataForSaveToDb();
 		rosterData["vacantShiftData"]=this._getVacantShiftData();
 		return(rosterData);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To determine whether the roster contains black listed shift									*
+	 *																				  				*
+	 *==============================================================================================*/
 	haveBlackListedShiftPattern()
 	{
 		var cell;
@@ -288,6 +380,11 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return result;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To determine whether the roster contains duplicated shift									*
+	 *																				  				*
+	 *==============================================================================================*/
 	haveDuplicateShift()
 	{
 		var cell;
@@ -363,10 +460,20 @@ class RosterSchedulerTable extends RosterTable
 			}
 		}
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To determine whether the roster contains invalid preferred shift							*
+	 *																				  				*
+	 *==============================================================================================*/
 	haveInvalidPreferredShift()
 	{
 		return this._haveInvalidPreferredShift(1,Object.keys(this.dateObjList).length);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To determine whether the roster contains invalid shift										*
+	 *																				  				*
+	 *==============================================================================================*/
 	haveInvalidShift()
 	{
 		var cell,cells;
@@ -396,6 +503,11 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return result;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To determine whether the roster contains missing shift										*
+	 *																				  				*
+	 *==============================================================================================*/
 	haveMissingShift()
 	{
 		var cell,essentialShift;
@@ -449,7 +561,11 @@ class RosterSchedulerTable extends RosterTable
 		alert("The missing shift checking has been completed.");
 		return haveMissingShift;
 	}
-	
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Load the automatic shift assignment result			 										*
+	 *																				  				*
+	 *==============================================================================================*/
 	loadRoster(finalRoster)
 	{
 		var row,cell,thisITOShiftList;
@@ -465,6 +581,11 @@ class RosterSchedulerTable extends RosterTable
 		}
 		this.haveMissingShift();
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	High light the copied region						 										*
+	 *																				  				*
+	 *==============================================================================================*/
 	setCopiedRegion(selectedRegion)
 	{
 		var cell,i;
@@ -503,6 +624,11 @@ class RosterSchedulerTable extends RosterTable
 		}
 
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Display the automatic shift result(base on the lowest standard deviation)					*
+	 *																				  				*
+	 *==============================================================================================*/
 	setLowestSDData(lowestSDData)
 	{
 		var firstRow=document.getElementById("theLowestSD");
@@ -543,6 +669,11 @@ class RosterSchedulerTable extends RosterTable
 			cell.innerHTML="Missing shift count:N.A.";
 		}
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Display the automatic shift result(base on the least missing shift count)					*
+	 *																				  				*
+	 *==============================================================================================*/
 	setMissingShiftData(missingShiftData)
 	{
 		var firstRow=document.getElementById("theLowestMissingShiftCount");
@@ -581,11 +712,20 @@ class RosterSchedulerTable extends RosterTable
 			cell.innerHTML="SD:N.A.";
 		}	
 	}
-
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Set the scheduler																			*
+	 *																				  				*
+	 *==============================================================================================*/
 	setScheduler(rosterScheduler)
 	{
 		this.rosterScheduler=rosterScheduler;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	High light the selected region						 										*
+	 *																				  				*
+	 *==============================================================================================*/
 	setSelectedRegion(selectedRegion)
 	{
 		var cell,i,littleSquareDiv;
@@ -627,11 +767,21 @@ class RosterSchedulerTable extends RosterTable
 			$(cell).addClass(AdminCss.selectCellBorderBottomClassName);
 		}
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Display the automatic shift assignement result		 										*
+	 *																				  				*
+	 *==============================================================================================*/
 	showGenResultTable()
 	{
 		this.genResultTable=document.getElementById("genResult");
 		$(this.genResultTable).show();
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Base on the shift type change, update the related value accordingly.						*
+	 *																				  				*
+	 *==============================================================================================*/
 	updateValue(theCell,itoId)
 	{
 		var cell,i;
@@ -642,7 +792,7 @@ class RosterSchedulerTable extends RosterTable
 		});
 		if (ito.isValidShift(theCell.textContent))
 		{	
-			$(theCell).addClass(this.utility.getShiftCssClassName(theCell.textContent));
+			$(theCell).addClass(Css.getShiftCssClassName(theCell.textContent));
 			$(theCell).removeClass(AdminCss.errorRedBlackGroundClassName);
 		}
 		this._updateShiftCountCells(row,this.rosterRule,ito);
@@ -653,6 +803,11 @@ class RosterSchedulerTable extends RosterTable
  *	Private Method																				*
  *																				  				*
  *==============================================================================================*/
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build an ITO row.																			*
+	 *																				  				*
+	 *==============================================================================================*/
 	_buildITORow(rosterRowData)
 	{
 		super._buildITORow(rosterRowData);
@@ -783,6 +938,11 @@ class RosterSchedulerTable extends RosterTable
 		result["noOfWorkingDay"]=noOfWorkingDay;
 		return result;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Build an vacant shift row.																	*
+	 *																				  				*
+	 *==============================================================================================*/
 	_buildVacantShiftRow()
 	{
 		var aShiftData=[],bShiftData=[],cShiftData=[];
@@ -859,6 +1019,11 @@ class RosterSchedulerTable extends RosterTable
 
 		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Generate a yearly statistic report															*
+	 *																				  				*
+	 *==============================================================================================*/
 	_genYearlyStatisticReport()
 	{
 		var cell,i,self=this,row;
@@ -981,7 +1146,11 @@ class RosterSchedulerTable extends RosterTable
 		yearlyStatisticReportDiv.append(yearlyStatisticTable);
 		return yearlyStatisticReportDiv;
 	}
-
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get all preferred shift row																	*
+	 *																				  				*
+	 *==============================================================================================*/
 	_getAllPreferredShiftRow()
 	{
 		var result=[];
@@ -993,10 +1162,20 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return result;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get all shift data																			*
+	 *																				  				*
+	 *==============================================================================================*/
 	_getAllShiftData()
 	{
 		return this._getShiftRowData(this._getAllShiftRow(),1,Object.keys(this.dateObjList).length);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get all shift row																			*
+	 *																				  				*
+	 *==============================================================================================*/
 	_getAllShiftRow()
 	{
 		var result=[];
@@ -1010,6 +1189,13 @@ class RosterSchedulerTable extends RosterTable
 
 		return result;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get ITO information list																	*
+	 *  Get Preferred shift information for each ITO.												*
+	 *  Get Data for yearly statistic information generation.										*
+	 *																				  				*
+	 *==============================================================================================*/
 	async _getData()
 	{
 		var self=this;
@@ -1019,14 +1205,25 @@ class RosterSchedulerTable extends RosterTable
 		this.preferredShiftList=await this.utility.getPreferredShiftList(self.rosterYear,self.rosterMonth);
 		this.yearlyStatistic=await this.utility.getYearlyStatistic(self.rosterYear,self.rosterMonth);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the last month balance for the given ITO.												*
+	 *																				  				*
+	 *==============================================================================================*/
 	_getLastMonthBalance(itoId)
 	{
 		return parseFloat(document.getElementById(itoId +"_lastMonthBalance").textContent);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the shift list with in the given start date and end date.								*
+	 *																				  				*
+	 *==============================================================================================*/
 	_getShiftList(startDate,endDate)
 	{
 		return this._getShiftRowData(this._getAllShiftRow(),startDate,endDate);
 	}
+	
 	_getShiftPattern(shiftRow,endIndex)
 	{
 		var shiftPattern="",cell;
@@ -1038,6 +1235,11 @@ class RosterSchedulerTable extends RosterTable
 		shiftPattern=shiftPattern.substring(0,shiftPattern.length-1);
 		return shiftPattern;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the specified shift row data with in the given start date and end date.					*
+	 *																				  				*
+	 *==============================================================================================*/
 	_getShiftRowData(shiftRowList,startIndex,endIndex)
 	{
 		var result={};
@@ -1060,10 +1262,20 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return result;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the this month balance for the given ITO.												*
+	 *																				  				*
+	 *==============================================================================================*/
 	_getThisMonthBalance(itoId)
 	{
 		return parseFloat(document.getElementById(itoId +"_thisMonthBalance").textContent);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get the vacant shift data.																	*
+	 *																				  				*
+	 *==============================================================================================*/
 	_getVacantShiftData()
 	{
 		var cell,result=[];
@@ -1077,6 +1289,12 @@ class RosterSchedulerTable extends RosterTable
 		}
 		return result;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To determine whether the roster contains invalid preferred shift with in the given start and*
+	 *	end date.																	  				*
+	 *																				  				*
+	 *==============================================================================================*/
 	_haveInvalidPreferredShift(startDate,endDate)
 	{
 		var cell,ito,itoId,cells;
@@ -1105,6 +1323,11 @@ class RosterSchedulerTable extends RosterTable
 
 		return result;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Show all button 																			*
+	 *																				  				*
+	 *==============================================================================================*/
 	_showButtons()
 	{
 		var autoSchedulerCell=document.getElementById("autoScheduler");
@@ -1139,6 +1362,11 @@ class RosterSchedulerTable extends RosterTable
 		cell.colSpan=34;
 		cell.appendChild(buttonTable);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Update the Shift count 																		*
+	 *																				  				*
+	 *==============================================================================================*/
 	_updateShiftCountCells(row,rosterRule,ito)
 	{
 		var aShiftCount=0,actualWorkingHour=0.0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
@@ -1191,6 +1419,11 @@ class RosterSchedulerTable extends RosterTable
 		$("#"+ito.itoId+"_noOfWoringDay").text(noOfWorkingDay);
 
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Base on the change of shift count, it update the standard deviation accordingly.			*
+	 *																				  				*
+	 *==============================================================================================*/
 	_updateStandardDevation(aShiftData,bShiftData,cShiftData)
 	{
 		var aShiftSD=this.utility.getSD(aShiftData);
@@ -1203,6 +1436,11 @@ class RosterSchedulerTable extends RosterTable
 		document.getElementById("shiftCStdDev").textContent=cShiftSD.toFixed(2);
 		document.getElementById("avgStdDev").textContent=avgStdDev.toFixed(2);				
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Base on the change of shift count, it update the vacant shift accordingly.					*
+	 *																				  				*
+	 *==============================================================================================*/
 	_updateVacantCells(cellIndex,ito)
 	{
 		var aShiftData=[],bShiftData=[],cShiftData=[];

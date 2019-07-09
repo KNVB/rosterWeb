@@ -1,3 +1,8 @@
+/*==============================================================================================*
+ *																				  				*
+ *	It is the Admin. utility object , which is extends from utility object		                *
+ *																				  				*
+ *==============================================================================================*/
 class AdminUtility  extends Utility
 {
 	constructor()
@@ -11,7 +16,12 @@ class AdminUtility  extends Utility
 	    return (value);
 	    //console.log(after,obj);
 	  });
-	}	
+	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Submit roster data to server, then server generate an excel file for download.              *
+	 *																				  				*
+	 *==============================================================================================*/
 	exportRosterToExcel(rosterData)
 	{
 		return jQuery.ajax({"url": "exportRosterToExcel.jsp",
@@ -35,6 +45,11 @@ class AdminUtility  extends Utility
 			}	 
 		});
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get All ITO information from server.										                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getAllITOInfo()
 	{
 		var self=this;
@@ -75,6 +90,11 @@ class AdminUtility  extends Utility
 		var dateElements=date.split("-");
 		return Date.UTC(dateElements[0],dateElements[1]-1,dateElements[2]);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get All valid ITO information with in the given year and month from server.	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getITOList(year,month)
 	{
 		var jsITOList={};
@@ -109,7 +129,11 @@ class AdminUtility  extends Utility
 			});
 		});
 	}
-
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Get a Preferred shift list with in the given year and month from server.	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	getPreferredShiftList(rosterYear,rosterMonth)
 	{
 		return jQuery.ajax({"url": "getPreferredShiftList.jsp",
@@ -149,6 +173,11 @@ class AdminUtility  extends Utility
 			    }
 		});
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Submit roster data to server, then server save the data to database.			            *
+	 *																				  				*
+	 *==============================================================================================*/
 	saveRosterData(rosterData)
 	{
 		//console.log(rosterData);
@@ -173,6 +202,11 @@ class AdminUtility  extends Utility
         }
         return new_obj;	
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Submit an ITO information to server, then server save the data to database.		            *
+	 *																				  				*
+	 *==============================================================================================*/
 	updateITOInfo(ito)
 	{
 		console.log(JSON.stringify(ito));

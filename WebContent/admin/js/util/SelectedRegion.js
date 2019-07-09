@@ -1,3 +1,8 @@
+/*==============================================================================================*
+ *																				  				*
+ *	It denote a Selected region                                                 	                *
+ *																				  				*
+ *==============================================================================================*/
 class SelectedRegion
 {
 	constructor(rosterSchedulerTable)
@@ -8,6 +13,11 @@ class SelectedRegion
 		this.copiedRegion=new CopiedRegion();
 		this._init();
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It perform "copy" action for the selected region		                  	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	copy()
 	{
 		var cell1,cell2;
@@ -33,6 +43,12 @@ class SelectedRegion
 			this.rosterSchedulerTable.setCopiedRegion(this);
 		}
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It delete all content in the selected region.												*
+	 *  (This action can be roll back)							                  	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	deleteContent()
 	{
 		var cell,minCell,maxCell;
@@ -54,6 +70,11 @@ class SelectedRegion
 			}	
 		}
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It clear the selected region.																*
+	 *																				  				*
+	 *==============================================================================================*/
 	empty()
 	{
 		if (!this.isEmpty())
@@ -62,6 +83,11 @@ class SelectedRegion
 			this._init();
 		}
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It clear the selected region.																*
+	 *																				  				*
+	 *==============================================================================================*/
 	emptyCopiedRegion()
 	{
 		if (!this.copiedRegion.isEmpty())
@@ -71,6 +97,11 @@ class SelectedRegion
 			this.copiedRegion.empty();
 		}
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It end the region selection.																*
+	 *																				  				*
+	 *==============================================================================================*/
 	endSelect()
 	{
 		var cell;
@@ -96,15 +127,31 @@ class SelectedRegion
 		    sel.addRange(range);
 			this.firstInput=true;			
 		}
-	}	
+	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To determine whether selected region is empty.												*
+	 *																				  				*
+	 *==============================================================================================*/
 	isEmpty()
 	{
 		return (this.selectedCellList.length<1)
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	To determine whether selected region is a single cell.										*
+	 *																				  				*
+	 *==============================================================================================*/
 	isSingleCell()
 	{
 		return (this.selectedCellList.length==1);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It perform "paste" action to the selected region		                  	                *
+	 *  (This action can be roll back)							                  	                *
+	 *  																			  				*
+	 *==============================================================================================*/
 	paste()
 	{
 		if (!this.isEmpty() && !this.copiedRegion.isEmpty())
@@ -148,6 +195,11 @@ class SelectedRegion
 			this.endSelect();
 		}	
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Set the focus to the given cell							                  	                *
+	 *  																			  				*
+	 *==============================================================================================*/
 	setFocusCell(theCell)
 	{
 		var sel = window.getSelection();
@@ -155,6 +207,11 @@ class SelectedRegion
 		sel.collapse(theCell.firstChild, 1);
 		this.firstInput=false;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Select the given cell									                  	                *
+	 *  																			  				*
+	 *==============================================================================================*/
 	selectCell(theCell)
 	{
 		this.empty();
@@ -163,6 +220,11 @@ class SelectedRegion
 		this.update(theCell);
 		this.endSelect();
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	According to the given offset, select the next cell in roster table        	                *
+	 *  																			  				*
+	 *==============================================================================================*/
 	selectNextCell(event,yOffset,xOffset)
 	{
 		console.log(`this.firstInput=${this.firstInput},yOffset=${yOffset},xOffset=${xOffset}`);
@@ -182,6 +244,11 @@ class SelectedRegion
 			event.preventDefault();
 		}
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	According to the given offset, select the next cell in selected region     	                *
+	 *  																			  				*
+	 *==============================================================================================*/
 	selectNextCellInSelectedRegion(theCell,yOffset,xOffset)
 	{
 		var nextCell=this.rosterSchedulerTable.getNextCellInSelectedRegion(theCell,yOffset,xOffset);
@@ -192,6 +259,11 @@ class SelectedRegion
 	    sel.addRange(range);
 	    this.firstInput=true;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Start selected region												     	                *
+	 *  																			  				*
+	 *==============================================================================================*/
 	startSelect(theCell)
 	{
 		var row=theCell.parentElement;
@@ -208,14 +280,12 @@ class SelectedRegion
 		this.selectedCellList.push(theCell);
 		this.inSelectMode=true;
 		
-		/*
-		if (!this.copiedRegion.isEmpty())
-		{	
-			this.rosterSchedulerTable.clearCopiedRegion(this.copiedRegion);
-			this.copiedRegion.empty();
-		}
-		*/
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Update the selected region											     	                *
+	 *  																			  				*
+	 *==============================================================================================*/
 	update(theCell)
 	{
 		if (this.inSelectMode)

@@ -1,3 +1,8 @@
+/*==============================================================================================*
+ *																				  				*
+ *	It is the Admin. Css class name factory object, which is extends from Css object            *
+ *																				  				*
+ *==============================================================================================*/
 class AdminCss extends Css
 {
 	static get copiedCellBorderBottomClassName()
