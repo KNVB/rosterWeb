@@ -42,16 +42,31 @@ class EditableCellHandler
 			self.selectedRegion.paste();
 		});
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It handles the arrow key event.																*
+	 *																				  				*
+	 *==============================================================================================*/
 	_handleArrowKeyEvent(event,yOffset,xOffset)
 	{
 		console.log("Arrow Key");
 		this.selectedRegion.selectNextCell(event,yOffset,xOffset);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It handles the escape key event.															*
+	 *																				  				*
+	 *==============================================================================================*/
 	_handleEscKeyEvent(event,theCell)
 	{
 		this.selectedRegion.selectCell(theCell);
 		event.preventDefault();
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It handles the key down event.																*
+	 *																				  				*
+	 *==============================================================================================*/
 	_handleKeyDownEvent(theCell,event)
 	{
 		switch (event.which)
@@ -88,6 +103,11 @@ class EditableCellHandler
 			*/		
 		}	
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It handles the delete key event.															*
+	 *																				  				*
+	 *==============================================================================================*/
 	_handleDeleteKeyEvent(event)
 	{
 		if (!this.selectedRegion.isSingleCell())
@@ -97,6 +117,11 @@ class EditableCellHandler
 			event.stopPropagation();
 		}				
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It handles the enter key event.																*
+	 *																				  				*
+	 *==============================================================================================*/
 	_handleEnterKeyEvent(theCell)
 	{
 		this.selectedRegion.selectCell(theCell);
@@ -114,6 +139,11 @@ class EditableCellHandler
 		}
 		this._handleArrowKeyEvent(event,yOffset,xOffset);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It handles the tab key event.																*
+	 *																				  				*
+	 *==============================================================================================*/
 	_handleTabKeyEvent(event,theCell)
 	{
 		console.log("Tab key");

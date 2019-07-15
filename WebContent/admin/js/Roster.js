@@ -1,8 +1,13 @@
+/*==============================================================================================*
+ *																				  				*
+ *	It denote a collection of roster related data.												*
+ *																				  				*
+ *==============================================================================================*/
 class Roster
 {
 	constructor(startDate,rosterData,utility,rosterRule,rosterDataLength)
 	{
-		this.startDate=startDate;
+		this.startDate=startDate;	
 		this.rosterData=rosterData;
 		this.shiftAStdDev=0.0;
 		this.shiftBStdDev=0.0;
@@ -66,6 +71,11 @@ class Roster
  *	Private Method																				*
  *																				  				*
  *==============================================================================================*/
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It return the total no. of specified shift for the given ITO.								*
+	 *																				  				*
+	 *==============================================================================================*/
 	_calShiftCount(shift,itoId)
 	{
 		var myShift=shift.toUpperCase();

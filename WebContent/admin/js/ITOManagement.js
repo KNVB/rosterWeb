@@ -1,3 +1,8 @@
+/*==============================================================================================*
+ *																				  				*
+ *	This is ITO management object. It generates ITO management interface.						*
+ *																				  				*
+ *==============================================================================================*/
 class ITOManagement
 {
 	constructor(container)
@@ -5,7 +10,12 @@ class ITOManagement
 		this.adminUtility=new AdminUtility();
 		this.container=container;
 		this.rosterRule=new RosterRule();
-	}	
+	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It shows ITO management interface.															*
+	 *																				  				*
+	 *==============================================================================================*/
 	showITOTable()
 	{
 		var cell;
@@ -41,6 +51,11 @@ class ITOManagement
 			//alert(xhr.status);
 		});
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It adds black list shift pattern entry for the specified ITO.								*
+	 *																				  				*
+	 *==============================================================================================*/
 	_addBlackListShiftPatternEntry(blackListShiftPattern,blackListShiftListDiv)
 	{
 		var div=document.createElement("div");
@@ -61,6 +76,11 @@ class ITOManagement
 		div.append(span);
 		blackListShiftListDiv.append(div);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Load the ITO data for the specified ITO ID into the ITO management interface.				*
+	 *																				  				*
+	 *==============================================================================================*/
 	_loadITOInfo(itoId)
 	{
 		var availableShiftList,addBlackListShiftEntryDiv;
@@ -101,6 +121,11 @@ class ITOManagement
 				                      "defaultDate":ito.leaveDate,});
 		form.submitButton.value="Update";
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It displays a list of ITO data.																*
+	 *																				  				*
+	 *==============================================================================================*/
 	_showITOList(itoTable,form)
 	{
 		var addbtn,cell,firstITOId=null;
@@ -178,6 +203,11 @@ class ITOManagement
 			}
 		});
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It reset the ITO information update form.													*
+	 *																				  				*
+	 *==============================================================================================*/
 	_resetUpdateITOInfoForm()
 	{
 		var self=this;
@@ -200,6 +230,11 @@ class ITOManagement
 		self._addBlackListShiftPatternEntry("",blackListShiftListDiv);
 		form.submitButton.value="Add";
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It saves the specified ITO information to database.											*
+	 *																				  				*
+	 *==============================================================================================*/
 	_submitITOInfoToServer(ito)
 	{
 		var self=this;
@@ -212,6 +247,11 @@ class ITOManagement
 			alert("The ITO information update failure.");
 		});
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It validate the ITO information update form.												*
+	 *																				  				*
+	 *==============================================================================================*/
 	_validateITOInfoForm(form)
 	{
 		var availableShiftList=[];

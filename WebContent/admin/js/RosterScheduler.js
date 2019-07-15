@@ -1,3 +1,8 @@
+/*==============================================================================================*
+ *																				  				*
+ *	This is roster scheduler object. It is handling several buttons event.						*
+ *																				  				*
+ *==============================================================================================*/
 class RosterScheduler
 {	
 	constructor()
@@ -12,6 +17,13 @@ class RosterScheduler
  *	Public Method																				*
  *																				  				*
  *==============================================================================================*/
+	/*==============================================================================================*
+	 *																				  				*
+	 *It is automatic ITO shift assignment method.													*
+	 *It iterates the shift assignment with the specified iteration count, and then find out 3 		*
+	 *rosters that have the smallest standard deviation and missing shift count.					*
+	 *																				  				* 
+	 *==============================================================================================*/
 	autoAssign()
 	{
 		var startDate=this.rosterSchedulerTable.getAutoPlanStartDate();
@@ -66,6 +78,11 @@ class RosterScheduler
 			}	
 		}
 	}	
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It rebuild the roster table.																*
+	 *																				  				*
+	 *==============================================================================================*/
 	buildRosterTable(year,month)
 	{
 		this.rosterYear=year;
@@ -73,6 +90,11 @@ class RosterScheduler
 		this.rosterSchedulerTable.setScheduler(this);
 		this.rosterSchedulerTable.build(year,month);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	Destroy roster scheduler object related object.                            	                *
+	 *																				  				*
+	 *==============================================================================================*/
 	destroy()
 	{
 		this.rosterSchedulerTable.destroy();
@@ -80,6 +102,11 @@ class RosterScheduler
 		this.utility=null;
 		this.rosterRule=null;
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It export the roster to an excel file.														*
+	 *																				  				*
+	 *==============================================================================================*/
 	exportRosterToExcel()
 	{
 		var rosterData=this.rosterSchedulerTable.getRosterDataForExport();
@@ -92,18 +119,38 @@ class RosterScheduler
 			alert("Export roster data to excel failure.");
 		});
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It fills empty shift cell with "O"															*
+	 *																				  				*
+	 *==============================================================================================*/
 	fillEmptyShiftWithO()
 	{
 		this.rosterSchedulerTable.fillEmptyShiftWithO();
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It loads the lowest SD roster to roster table												*
+	 *																				  				*
+	 *==============================================================================================*/
 	loadLowestSDRoster(seq)
 	{
 		this.rosterSchedulerTable.loadRoster(this.theLowestSDRosters[seq]);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It loads the lowest missing shift count roster to roster table								*
+	 *																				  				*
+	 *==============================================================================================*/
 	loadMissingShiftRoster(seq)
 	{
 		this.rosterSchedulerTable.loadRoster(this.theLowestMissingShiftRosters[seq]);
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It initialize the button click handler														*
+	 *																				  				*
+	 *==============================================================================================*/
 	initButton()
 	{
 		var self=this;
@@ -158,6 +205,11 @@ class RosterScheduler
 			self.loadMissingShiftRoster(2);
 		});
 	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It save the data in roster table to data base												*
+	 *																				  				*
+	 *==============================================================================================*/
 	saveAllData()
 	{
 		if (this.rosterSchedulerTable.haveInvalidPreferredShift())
@@ -179,7 +231,12 @@ class RosterScheduler
 				});
 			}
 		}
-	}	
+	}
+	/*==============================================================================================*
+	 *																				  				*
+	 *	It validate the data in roster table.														*
+	 *																				  				*
+	 *==============================================================================================*/
 	validate()
 	{
 		var result=true;
@@ -214,6 +271,11 @@ class RosterScheduler
  *	Private Method																				*
  *																				  				*
  *==============================================================================================*/
+		/*==============================================================================================*
+		 *																				  				*
+		 *	It generates roster for the specified start date and end date.								*
+		 *																				  				*
+		 *==============================================================================================*/
 		_genRoster(startDate,endDate)
 		{
 			var allPreviousShiftList,comparetor,dateIndex
@@ -322,10 +384,20 @@ class RosterScheduler
 			}
 			return resultantRoster;
 		}
+		/*==============================================================================================*
+		 *																				  				*
+		 *	It get the previous shift list started form the specified start date.						*
+		 *																				  				*
+		 *==============================================================================================*/
 		_getPreviouseShiftList(startDate)
 		{
 			return this.rosterSchedulerTable.getPreviouseShiftList(startDate);
 		}
+		/*==============================================================================================*
+		 *																				  				*
+		 *	It compares the given rosters by missing shift count.										*
+		 *																				  				*
+		 *==============================================================================================*/
 		_sortByMissingShift(a,b)
 		{
 			let comparison = 0;
@@ -348,6 +420,11 @@ class RosterScheduler
 			}	
 			return comparison;
 		}
+		/*==============================================================================================*
+		 *																				  				*
+		 *	It compares the given rosters by the standard deviation.									*
+		 *																				  				*
+		 *==============================================================================================*/
 		_sortBySD(a,b)
 		{
 			let comparison = 0;
