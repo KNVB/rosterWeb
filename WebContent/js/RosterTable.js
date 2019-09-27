@@ -34,12 +34,12 @@ class RosterTable extends HTMLTableElement
 		this.appendChild(this.rosterFooter);
 		container.append(this);
 	}
-	/*==============================================================================================*
-	 *																				  				*
-	 *	To build the roster table for the given year and month                  	                *
-	 *																				  				*
-	 *==============================================================================================*/
-	async build(year,month)
+/*==============================================================================================*
+ *																				  				*
+ *	To build the roster table for the given year and month                  	                *
+ *																				  				*
+ *==============================================================================================*/
+	build(year,month)
 	{
 		var self=this;
 		this.rosterYear=year;
