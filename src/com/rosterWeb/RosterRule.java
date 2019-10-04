@@ -74,7 +74,7 @@ public class RosterRule
 		tempString=rosterRule.get("ConsecutiveWorkingDay").get(0);
 		temp=tempString.split(escapChar);
 		maxConsecutiveWorkingDay=Integer.valueOf(temp[1]);
-		tempString=rosterRule.get("shifList").get(0);
+		tempString=rosterRule.get("shiftList").get(0);
 		temp=tempString.split(escapChar);
 		tempString=temp[1];
 		essentialShiftList=tempString.split(",");
