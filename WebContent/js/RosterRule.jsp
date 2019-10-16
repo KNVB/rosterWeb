@@ -16,6 +16,7 @@ class RosterRule
 	{
 		this.essentialShiftList=<%=objectMapper.writeValueAsString(RosterRule.getEssentialShiftList()).replace("\\\"", "")%>;
 		this.maxConsecutiveWorkingDay=<%=objectMapper.writeValueAsString(RosterRule.getMaxConsecutiveWorkingDay())%>;
+		this.activeShiftList=<%=objectMapper.writeValueAsString(RosterRule.getActiveShiftList())%>;
 		this.shiftHourCount=<%=objectMapper.writeValueAsString(RosterRule.getShiftHourCount())%>;
 		this.utility=utility;
 	}

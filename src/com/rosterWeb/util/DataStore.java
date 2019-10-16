@@ -2,6 +2,7 @@ package com.rosterWeb.util;
 import com.rosterWeb.ITO;
 import com.rosterWeb.ITORoster;
 import com.rosterWeb.Roster;
+import com.rosterWeb.Shift;
 import com.rosterWeb.rosterStatistic.ITOYearlyStatistic;
 
 import java.util.ArrayList;
@@ -17,6 +18,11 @@ import java.util.Map;
  * 
  */
 public interface DataStore {
+	/**
+	 * Get a list of active shift  
+	 * @return List of Shift object
+	 */
+	public Shift[] getActiveShiftList();
 	/**
 	 * Get a list of all ITO Object stored in data store.
 	 * @return List of ITO object
@@ -75,6 +81,7 @@ public interface DataStore {
 	 * @throws Exception if a data store access error occurs
 	 */
 	public void close()throws Exception;
+
 	
 
 }

@@ -4,6 +4,7 @@ import com.rosterWeb.ITO;
 import com.rosterWeb.ITORoster;
 import com.rosterWeb.Roster;
 import com.rosterWeb.RosterRule;
+import com.rosterWeb.Shift;
 import com.rosterWeb.Utility;
 import com.rosterWeb.rosterStatistic.ITOYearlyStatistic;
 import com.rosterWeb.rosterStatistic.MonthlyStatistic;
@@ -56,6 +57,37 @@ public class DbOp implements DataStore {
 		Class.forName(jdbcDriver);
 		dbConn= DriverManager.getConnection(jdbcURL,dbUserName,dbUserPwd);
 	}
+	
+	public Shift[] getActiveShiftList() {
+		Shift tempShift;
+		ArrayList <Shift>activeShiftList=new ArrayList<Shift>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		sqlString ="select * from shift_info where active=1 order by shift_type";
+		try {
+			stmt=dbConn.prepareStatement(sqlString);
+			rs=stmt.executeQuery();
+			while (rs.next()) {
+				tempShift=new Shift();
+				if (rs.getBoolean("is_essential"))
+					tempShift.setEssential(true);
+				tempShift.setShiftType(rs.getString("shift_type"));
+				tempShift.setCssClassName(rs.getString("css_class_name"));
+				tempShift.setShiftLength(rs.getFloat("shift_length"));
+				activeShiftList.add(tempShift);
+			}
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		} 
+		finally 
+		{
+			releaseResource(rs, stmt);
+		}
+		return activeShiftList.toArray();
+	}
+	
 	
 	@Override
 	public Map<String,ITO>getAllITOInfo(){

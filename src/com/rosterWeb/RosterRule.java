@@ -17,6 +17,10 @@ public class RosterRule
 	private static final Logger logger = LogManager.getLogger("RosterRule");
 	
 	/**
+	 * It stores the list of active Shift object
+	 */
+	private static Shift activeShiftList[];
+	/**
 	 * It stores the shift to hour count mapping
 	 */
 	private static Map<String,Float>shiftHourCount=new TreeMap<String,Float>(String.CASE_INSENSITIVE_ORDER);
@@ -61,23 +65,35 @@ public class RosterRule
 		String []temp;
 		String tempString;
 		String escapChar=String.valueOf((char)27);
-		
+		ArrayList <String>tempShiftList=new ArrayList<String>(); 
 		DataStore dataStore=Utility.getDataStore();
+		
 		Map<String,ArrayList<String>>rosterRule=dataStore.getRosterRule();
 		dataStore.close();
 		dataStore=null;
-		for (String shift:rosterRule.get("shiftHour"))
-		{
-			temp=shift.split(escapChar);
-			shiftHourCount.put(temp[0],Float.valueOf(temp[1]));
-		}
+		
 		tempString=rosterRule.get("ConsecutiveWorkingDay").get(0);
 		temp=tempString.split(escapChar);
 		maxConsecutiveWorkingDay=Integer.valueOf(temp[1]);
-		tempString=rosterRule.get("shiftList").get(0);
-		temp=tempString.split(escapChar);
-		tempString=temp[1];
-		essentialShiftList=tempString.split(",");
+		
+		Shift shift=new Shift();
+		activeShiftList=shift.getActiveShiftList();
+		shiftHourCount.clear();
+		activeShiftList.forEach((tempShift) -> {
+			shiftHourCount.put(tempShift.getShiftType(), tempShift.getShiftLength());
+			if (tempShift.isEssential()) {
+				tempShiftList.add(tempShift.getShiftType());
+			}
+		});
+		essentialShiftList=tempShiftList.toArray(new String[0]);
+	}
+	/**
+	 * Get the list of active Shift object
+	 * @return the list of active Shift object
+	 */
+	public static ArrayList <Shift>getActiveShiftList()
+	{
+		return activeShiftList;
 	}
 	/**
 	 * Get the maximum no.of consecutive working day
