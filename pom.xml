@@ -27,31 +27,6 @@
   </build>
   <dependencies>
   	<dependency>
-	    <groupId>com.fasterxml.jackson.core</groupId>
-	    <artifactId>jackson-core</artifactId>
-	    <version>2.10.0</version>
-	</dependency>
-	<dependency>
-	    <groupId>com.fasterxml.jackson.core</groupId>
-	    <artifactId>jackson-databind</artifactId>
-	    <version>2.10.0</version>
-	</dependency>
-	<dependency>
-	    <groupId>com.fasterxml.jackson.core</groupId>
-	    <artifactId>jackson-annotations</artifactId>
-	    <version>2.10.0</version>
-	</dependency>
-	<dependency>
-	    <groupId>com.fasterxml.jackson.module</groupId>
-	    <artifactId>jackson-module-parameter-names</artifactId>
-	    <version>2.10.0</version>
-	</dependency>
-	<dependency>
-	    <groupId>com.fasterxml.jackson.datatype</groupId>
-	    <artifactId>jackson-datatype-jsr310</artifactId>
-	    <version>2.10.0</version>
-	</dependency>
-  	<dependency>
   		<groupId>mysql</groupId>
   		<artifactId>mysql-connector-java</artifactId>
   		<version>5.1.8</version>
@@ -76,20 +51,30 @@
   		<artifactId>poi-ooxml-schemas</artifactId>
   		<version>3.17</version>
   	</dependency>
-	<dependency>
-  		<groupId>org.webjars</groupId>
-  		<artifactId>jquery</artifactId>
-  		<version>3.3.1</version>
+  	<dependency>
+  		<groupId>org.glassfish.jersey.containers</groupId>
+  		<artifactId>jersey-container-servlet</artifactId>
+  		<version>2.29.1</version>
   	</dependency>
-	<dependency>
-		<groupId>org.webjars</groupId>
-		<artifactId>jquery-ui</artifactId>
-		<version>1.12.1</version>
-	</dependency>
-	<dependency>
-		<groupId>org.webjars</groupId>
-		<artifactId>font-awesome</artifactId>
-		<version>5.6.3</version>
-	</dependency>
+  	<dependency>
+  		<groupId>org.glassfish.jersey.inject</groupId>
+  		<artifactId>jersey-hk2</artifactId>
+  		<version>2.29.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.glassfish.jersey.media</groupId>
+  		<artifactId>jersey-media-json-jackson</artifactId>
+  		<version>2.29.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.auth0</groupId>
+  		<artifactId>java-jwt</artifactId>
+  		<version>3.8.3</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.glassfish.jersey.core</groupId>
+  		<artifactId>jersey-common</artifactId>
+  		<version>2.29.1</version>
+  	</dependency>  	
   </dependencies>
 </project>
