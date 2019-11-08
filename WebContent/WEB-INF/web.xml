@@ -10,5 +10,21 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>rosterViewer</welcome-file>
   </welcome-file-list>
- 	 
+  <servlet>
+  	<servlet-name>RestfulServices</servlet-name>
+  	<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+  	<init-param>
+    	<param-name>jersey.config.server.provider.packages</param-name>
+    	<param-value>com.rosterWeb.dataServices</param-value>
+    </init-param>
+    <init-param> 
+     <param-name>jersey.config.server.provider.classnames</param-name> 
+     <param-value>com.rosterWeb.filter.RestfulServicesFilter</param-value> 
+    </init-param> 
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>RestfulServices</servlet-name>
+  	<url-pattern>/RestfulServices/*</url-pattern>
+  </servlet-mapping>
 </web-app>

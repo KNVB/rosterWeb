@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rosterWeb.util.DataStore;
+import com_old.rosterWeb.util.DataStore;
 /**
  * It denote a set of roster rules.
  * All parameters are read from DataStore object
