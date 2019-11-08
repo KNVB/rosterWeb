@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.YearMonth;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Stack;
 import java.util.TreeMap;
 
 public class CalendarUtility {
@@ -35,27 +33,13 @@ public class CalendarUtility {
 								0xd520};
 	private String nStr1[] = {"日","一","二","三","四","五","六","七","八","九","十"};
 	private String nStr2[] = {"初","十","廿","卅","卌"};
-	private String solarTerm[] ={"小寒","大寒","立春","雨水","驚蟄","春分","清明","穀雨","立夏","小滿","芒種","夏至","小暑","大暑","立秋","處暑","白露","秋分","寒露","霜降","立冬","小雪","大雪","冬至"};
-	private TreeMap <String,String>lunarHolidayList=new TreeMap<String,String>();
-	private TreeMap <String,String>solarHolidayList=new TreeMap<String,String>();
+	public String solarTerm[] ={"小寒","大寒","立春","雨水","驚蟄","春分","清明","穀雨","立夏","小滿","芒種","夏至","小暑","大暑","立秋","處暑","白露","秋分","寒露","霜降","立冬","小雪","大雪","冬至"};
+	
 	private LocalDateTime solarStartDate=LocalDateTime.of(1900, 1, 31,0,0,0);
-	private TreeMap <DayOfWeek,String> weekDayNames=new TreeMap <DayOfWeek,String>();
-	private TreeMap <Month,String>monthNames=new TreeMap<Month,String>();
+	public TreeMap <DayOfWeek,String> weekDayNames=new TreeMap <DayOfWeek,String>();
+	public TreeMap <Month,String>monthNames=new TreeMap<Month,String>();
 	public CalendarUtility() {
-		lunarHolidayList.put("0101","大年初一");
-		lunarHolidayList.put("0102","年初二");
-		lunarHolidayList.put("0103","年初三");
-		lunarHolidayList.put("0408","佛誕");
-		lunarHolidayList.put("0505","端午節");
-		lunarHolidayList.put("0816","中秋節翌日");
-		lunarHolidayList.put("0909","重陽節");
-
-		solarHolidayList.put("0101","新曆新年");
-		solarHolidayList.put("0501","勞動節");
-		solarHolidayList.put("0701","香港特別行政區成立紀念日");
-		solarHolidayList.put("1001","國慶日");
-		solarHolidayList.put("1225","聖誕節");
-		solarHolidayList.put("1226","聖誕節翌日");
+		
 		
 		weekDayNames.put(DayOfWeek.SUNDAY, "Su");
 		weekDayNames.put(DayOfWeek.MONDAY, "M");
@@ -253,13 +237,13 @@ public class CalendarUtility {
 	 * 傳回西曆 y年某month月的天數
 	 * @return 該月的天數
 	 */
-	private int getMonthLength(int year,int month) 
+	public int getMonthLength(int year,int month) 
 	{
 		YearMonth yearMonthObject = YearMonth.of(year, month);
 		return yearMonthObject.lengthOfMonth(); 
 	}
 	
-	private LocalDate getEasterDateByYear(int year) {
+	public LocalDate getEasterDateByYear(int year) {
 		int lMlen,term2=sTerm(year,5); //取得春分日期
 		LocalDate dayTerm2=LocalDate.of(year,3, term2);//取得春分的國曆日期物件(春分一定出現在3月)
 		CalendarObj lDayTerm2 = getCalendarObj(dayTerm2.atStartOfDay()); //取得取得春分農曆
@@ -288,165 +272,7 @@ public class CalendarUtility {
 		}
 		return dayTerm2;
 	}
-	private void updateHolidayList(TreeMap<Integer,String>holidayDateList,int inDate,String festivalInfo) {
-		String temp;
-		if (holidayDateList.containsKey(inDate)) {
-			temp=holidayDateList.get(inDate);
-			holidayDateList.put(inDate, festivalInfo);
-			updateHolidayList(holidayDateList,inDate+1,temp);
-		} else {
-			holidayDateList.put(inDate, festivalInfo);
-		}
-	}
-	private void processEasterHoliday(TreeMap<Integer, String> holidayDateList, int year, int month) {
-		LocalDate goodFriday,holySaturday,easterMonday;
-		LocalDate easterDate=getEasterDateByYear(year);
-		
-		goodFriday=easterDate.minusDays(2);
-		holySaturday=easterDate.minusDays(1);
-		easterMonday=easterDate.plusDays(1);
-		
-		if (goodFriday.getMonthValue()==month)
-			updateHolidayList(holidayDateList,goodFriday.getDayOfMonth(),"Good Friday");
-		if (holySaturday.getMonthValue()==month)
-			updateHolidayList(holidayDateList,holySaturday.getDayOfMonth(),"Holy Saturday");
-		
-		if (easterDate.getMonthValue()==month)
-			updateHolidayList(holidayDateList,easterDate.getDayOfMonth(),"Easter");
-			
-		if (easterMonday.getMonthValue()==month)
-			updateHolidayList(holidayDateList,easterMonday.getDayOfMonth(),"Easter Monday");
-	}
-	/*
-	private TreeMap<Integer,Stack<String>>processHolidayDateList(TreeMap<Integer,Stack<String>>holidayDateList,CalendarObj[] calendarObjList) {
-		int date;
-		CalendarObj calendarObj;
-		TreeMap<Integer,Stack<String>>result=new TreeMap<Integer,Stack<String>>();
-		Stack<String> preHolidayInfoList,postHolidayInfoList;
-		for (Integer holidayDate : holidayDateList.keySet()) {
-			preHolidayInfoList=holidayDateList.get(holidayDate);
-			calendarObj=calendarObjList[holidayDate-1];
-			if (calendarObj.dayOfWeek.equals(DayOfWeek.SUNDAY)) {
-				if (holidayDateList.get(holidayDate+1)==null) {
-					postHolidayInfoList=new Stack<String>();
-				} else {
-					postHolidayInfoList=holidayDateList.get(holidayDate+1);
-				}
-				for (int i=0;i<preHolidayInfoList.size();i++)
-				{
-					postHolidayInfoList.push(preHolidayInfoList.get(i)+"補假");
-				}
-				result.put(holidayDate+1,postHolidayInfoList);
-			} else {
-				result.put(holidayDate,preHolidayInfoList);
-			}
-		}
-		return result;
-	}*/
-	/**
-	 * 傳回整個月的日期資料物件<br>
-	 * It returns a MonthlyCalendar object when a year and month parameter is provided.
-	 * @param year 年份
-	 * @param month 月份
-	 * @return MonthlyCalendar object
-	 */
-	public MonthlyCalendar getMonthlyCalendar(int year,int month) {
-		int i,tempDate;
-		CalendarObj calendarObj;
-		CalendarObj[] calendarObjList=new CalendarObj[31];
-		MonthlyCalendar mc=new MonthlyCalendar();
-		LocalDateTime sDObj=null;
-		String lunarDatePattern=new String(),solarDatePattern=new String();
-		TreeMap<Integer,String>holidayDateList=new TreeMap<Integer,String>();
-		
-		for (i=1;i<=getMonthLength(year,month);i++) {
-			sDObj = LocalDateTime.of(year,month,i,0,0,0);
-			calendarObj=getCalendarObj(sDObj);
-			lunarDatePattern=String.format("%02d", calendarObj.lunarMonth)+String.format("%02d", calendarObj.lunarDate);
-			if (lunarHolidayList.containsKey(lunarDatePattern)) {
-				updateHolidayList(holidayDateList,i,lunarHolidayList.get(lunarDatePattern)); 
-			}
-			solarDatePattern=String.format("%02d",month)+String.format("%02d",calendarObj.solarDate);
-			if (solarHolidayList.containsKey(solarDatePattern)) {
-				updateHolidayList(holidayDateList,i,solarHolidayList.get(solarDatePattern)); 
-			}
-			calendarObjList[i-1]=calendarObj;	
-		}
-		switch (month)
-		{
-			case 3: processEasterHoliday(holidayDateList,year,month);//復活節只出現在3或4月
-					break;
-			case 4:	processEasterHoliday(holidayDateList,year,month);//復活節只出現在3或4月
-					tempDate=sTerm(year,(month-1)*2); //取得清明節日期
-					updateHolidayList(holidayDateList,tempDate,solarTerm[(month-1)*2]+"節");
-					break;
-		}
-		/*
-		for (Integer date:holidayDateList.keySet()) {
-			calendarObj=calendarObjList[date-1];
-			Stack<String> holidayInfoList=holidayDateList.get(date);
-			System.out.printf("新曆%s年%s月%s日 %s\n",year,month,date,calendarObj.dayOfWeekName);
-			System.out.printf("農曆%s年%s月%s日\n",calendarObj.lunarYear,calendarObj.lunarMonth,calendarObj.lunarDate);
-			while (!holidayInfoList.empty()) {
-				System.out.println("festival Info="+holidayInfoList.pop());
-			}
-			System.out.println("===================================================");	
-		}
-		System.out.println("===================================================");
-		*/
-		//holidayDateList=processHolidayDateList(holidayDateList,calendarObjList);
-		for (Integer date:holidayDateList.keySet()) {
-			calendarObj=calendarObjList[date-1];
-			String holidayInfo=holidayDateList.get(date);
-			System.out.printf("新曆%s年%s月%s日 %s\n",year,month,date,calendarObj.dayOfWeekName);
-			System.out.printf("農曆%s年%s月%s日\n",calendarObj.lunarYear,calendarObj.lunarMonth,calendarObj.lunarDate);
-			System.out.println("festival Info="+holidayInfo);
-			System.out.println("===================================================");	
-		}
-		mc.monthName=monthNames.get(sDObj.getMonth())+ " " +year;
-		mc.month=month;
-		mc.year=year;
-		mc.calendarObjList=calendarObjList;
-		for (i=0;i<31;i++) {
-			calendarObj=calendarObjList[i];
-			if (calendarObj==null) {
-				break;
-			} else {
-				if ((!calendarObj.isPublicHoliday) || 
-					(!calendarObj.dayOfWeek.equals(DayOfWeek.SATURDAY))|| 
-					(!calendarObj.dayOfWeek.equals(DayOfWeek.SUNDAY))) {
-					mc.noOfWorkingDay++;
-				}
-			}
-		}		
-		return mc;
-	}
-	
-	public static void main(String[] args) {
-
-		int year=2015,month=4; //復活節清明節overlap
-		//int year=2018,month=4;
-		//LocalDateTime now=LocalDateTime.now();
-		LocalDateTime now=LocalDateTime.of(year,month,1,0,0,0);
-		CalendarUtility cu=new CalendarUtility();
-		CalendarObj calendarObj=cu.getCalendarObj(now);
-		System.out.printf("新曆%s年%s月%s日 \n",calendarObj.solarYear,calendarObj.solarMonth,calendarObj.solarDate);
-		System.out.printf("農曆%s年%s月%s日\n",calendarObj.lunarYear,calendarObj.lunarMonth,calendarObj.lunarDate);
-		System.out.println("===================================================");
-		MonthlyCalendar mc=cu.getMonthlyCalendar(now.getYear(), now.getMonthValue()); 
-		System.out.println("No. of Working days="+mc.noOfWorkingDay);
-		/*
-		for (int i=1;i<=31;i++)
-		{
-			calendarObj=mc.calendarObjList[i-1];
-			if (calendarObj!=null) {
-				System.out.println("i="+i+",Solar Date="+calendarObj.solarYear);
-				System.out.println("Solar Date="+calendarObj.solarYear+"/"+calendarObj.solarMonth+"/"+calendarObj.solarDate+" "+calendarObj.dayOfWeekName);
-				System.out.println("Lunar Date="+calendarObj.lunarYear+"年"+cu.numToChineseNum(calendarObj.lunarMonth)+"月"+cu.numToChineseNum(calendarObj.lunarDate)+"日");
-				System.out.println("Festival Info="+calendarObj.festivalInfo);
-				System.out.println("is Holiday="+calendarObj.isPublicHoliday);
-				System.out.println("===================================================");
-			}
-		}*/
+	public int getChingMingDate(int year) {
+		return sTerm(year,6); 
 	}
 }
