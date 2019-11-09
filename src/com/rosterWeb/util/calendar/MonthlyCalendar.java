@@ -12,10 +12,27 @@ public class MonthlyCalendar {
 	public CalendarObj[] calendarObjList=new CalendarObj[31];
 	public int noOfWorkingDay=0;
 	private CalendarUtility cu=new CalendarUtility();
+	private TreeMap<Integer,ArrayList<String>>holidayList=new TreeMap<Integer,ArrayList<String>>();
 	private TreeMap <String,String>lunarHolidayList=new TreeMap<String,String>();
 	private TreeMap <String,String>solarHolidayList=new TreeMap<String,String>();
 	
 	public MonthlyCalendar(int year,int month) {
+		init(year,month);
+		initHolidayList();
+		CalendarObj calendarObj;
+		for (Integer date : holidayList.keySet()) {
+			calendarObj=calendarObjList[date-1];
+			ArrayList<String> holidayInfoList=holidayList.get(date);
+			System.out.printf("新曆%s年%s月%s日 %s\n",year,month,date,calendarObj.dayOfWeekName);
+			System.out.printf("農曆%s年%s月%s日\n",calendarObj.lunarYear,calendarObj.lunarMonth,calendarObj.lunarDate);
+			for(String holidayInfo:holidayInfoList) {
+				System.out.println("festival Info="+holidayInfo);
+			}
+			System.out.println("===================================================");	
+		}
+		initNoOfWorkingDay();
+	}
+	private void init(int year,int month) {
 		lunarHolidayList.put("0101","大年初一");
 		lunarHolidayList.put("0102","年初二");
 		lunarHolidayList.put("0103","年初三");
@@ -32,52 +49,22 @@ public class MonthlyCalendar {
 		solarHolidayList.put("1226","聖誕節翌日");
 		solarHolidayList.put("0408","testing");
 		solarHolidayList.put("0409","測試");		
-		
+
 		CalendarObj calendarObj;
-		LocalDateTime sDObj=null;
-		String lunarDatePattern=new String(),solarDatePattern=new String();
-		TreeMap<Integer,ArrayList<String>>holidayDateList=new TreeMap<Integer,ArrayList<String>>();
-		int i,tempDate;
+		LocalDateTime sDObj= LocalDateTime.of(year,month,1,0,0,0);;
 		this.noOfWorkingDay=cu.getMonthLength(year,month);
-		for (i=1;i<=noOfWorkingDay;i++) {
-			sDObj = LocalDateTime.of(year,month,i,0,0,0);
-			calendarObj=cu.getCalendarObj(sDObj);
-			lunarDatePattern=String.format("%02d", calendarObj.lunarMonth)+String.format("%02d", calendarObj.lunarDate);
-			if (lunarHolidayList.containsKey(lunarDatePattern)) {
-				buildHolidayList(holidayDateList,i,lunarHolidayList.get(lunarDatePattern)); 
-			}
-			solarDatePattern=String.format("%02d",month)+String.format("%02d",calendarObj.solarDate);
-			if (solarHolidayList.containsKey(solarDatePattern)) {
-				buildHolidayList(holidayDateList,i,solarHolidayList.get(solarDatePattern)); 
-			}
-			calendarObjList[i-1]=calendarObj;	
-		}
-		switch (month)
-		{
-			case 3: processEasterHoliday(holidayDateList,year,month);//復活節只出現在3或4月
-					break;
-			case 4:	processEasterHoliday(holidayDateList,year,month);//復活節只出現在3或4月
-					tempDate=cu.getChingMingDate(year);//取得清明節日期
-					buildHolidayList(holidayDateList,tempDate,cu.solarTerm[(month-1)*2]+"節");
-					break;
-		}
-		holidayCompensation(holidayDateList);
-		
-		for (Integer date:holidayDateList.keySet()) {
-			calendarObj=calendarObjList[date-1];
-			ArrayList<String> holidayInfoList=holidayDateList.get(date);
-			System.out.printf("新曆%s年%s月%s日 %s\n",year,month,date,calendarObj.dayOfWeekName);
-			System.out.printf("農曆%s年%s月%s日\n",calendarObj.lunarYear,calendarObj.lunarMonth,calendarObj.lunarDate);
-			for(String holidayInfo:holidayInfoList) {
-				System.out.println("festival Info="+holidayInfo);
-			}
-			System.out.println("===================================================");	
-		}
-		
 		this.monthName=cu.monthNames.get(sDObj.getMonth())+ " " +year;
 		this.month=month;
 		this.year=year;
-		for (i=0;i<31;i++) {
+		
+		for (int i=1;i<=noOfWorkingDay;i++) {
+			calendarObj=cu.getCalendarObj(LocalDateTime.of(year,month,i,0,0,0));
+			calendarObjList[i-1]=calendarObj;	
+		}	
+	}
+	private void initNoOfWorkingDay() {
+		CalendarObj calendarObj;
+		for (int i=0;i<31;i++) {
 			calendarObj=calendarObjList[i];
 			if (calendarObj==null) {
 				break;
@@ -88,86 +75,45 @@ public class MonthlyCalendar {
 					this.noOfWorkingDay--;
 				}
 			}
-		}		
+		}
 	}
-	private void holidayCompensation(TreeMap<Integer,ArrayList<String>>holidayDateList) {
+	private void initHolidayList() {
 		CalendarObj calendarObj;
-		ArrayList<String> thisDateHolidayList,nextDateHolidayList;
-		String temp=new String();
-		for (Integer date : holidayDateList.keySet()) {
-			calendarObj=calendarObjList[date-1];
-			if (calendarObj.dayOfWeek.equals(DayOfWeek.SUNDAY)) {
-				thisDateHolidayList= holidayDateList.get(date);
-				nextDateHolidayList= holidayDateList.get(date+1);
-				if (nextDateHolidayList==null) {
-					nextDateHolidayList=new ArrayList<String> (thisDateHolidayList.size());
-					for(String holidayInfo:thisDateHolidayList) {
-						if (holidayInfo.endsWith("補假"))
-							nextDateHolidayList.add(holidayInfo);
-						else
-							nextDateHolidayList.add(holidayInfo+"補假");
-					}
-					holidayDateList.put(date+1,nextDateHolidayList);
-					thisDateHolidayList.clear();
-					holidayDateList.put(date,thisDateHolidayList);
-				} else {
-					for(String holidayInfo:nextDateHolidayList) {
-						thisDateHolidayList.add(holidayInfo);
-					}
-					for (int i=0;i<thisDateHolidayList.size();i++) 
-					{
-						temp=thisDateHolidayList.get(i);
-						if (!temp.endsWith("補假"))
-							temp+="補假";
-						thisDateHolidayList.set(i,temp);
-					}
-					holidayDateList.put(date+1,thisDateHolidayList);
-					nextDateHolidayList.clear();
-					holidayDateList.put(date,nextDateHolidayList);
+		String lunarDatePattern=new String(),solarDatePattern=new String();
+		for (int i=1;i<=31;i++) {
+			calendarObj=calendarObjList[i-1];
+			if (calendarObj!=null) {
+				lunarDatePattern=String.format("%02d", calendarObj.lunarMonth)+String.format("%02d", calendarObj.lunarDate);
+				if (lunarHolidayList.containsKey(lunarDatePattern)) {
+					buildHolidayList(i,lunarHolidayList.get(lunarDatePattern)); 
+				}
+				solarDatePattern=String.format("%02d",calendarObj.solarMonth)+String.format("%02d",calendarObj.solarDate);
+				if (solarHolidayList.containsKey(solarDatePattern)) {
+					buildHolidayList(i,solarHolidayList.get(solarDatePattern)); 
 				}
 			}
 		}
-		for (Integer date : holidayDateList.keySet()) {
-			
-		}
 	}
-	private void buildHolidayList(TreeMap<Integer,ArrayList<String>>holidayDateList,int inDate,String festivalInfo) {
-		ArrayList<String>holidayInfoList;
-		if (holidayDateList.containsKey(inDate)) {
-			holidayInfoList=holidayDateList.remove(inDate);
-			if (!festivalInfo.endsWith("補假"))
-				festivalInfo+="補假";
-		} else {
-			holidayInfoList=new ArrayList<String>();
+	private void buildHolidayList(int inDate, String festivalInfo) {
+		if (calendarObjList[inDate-1]!=null) {
+			CalendarObj calendarObj=calendarObjList[inDate-1];
+			if (calendarObj.dayOfWeek.equals(DayOfWeek.SUNDAY)) {
+				buildHolidayList(inDate+1,festivalInfo+"補假");
+			} else {
+				ArrayList<String>holidayInfoList=new ArrayList<String>();
+				if (holidayList.containsKey(inDate)) {
+					holidayInfoList=holidayList.remove(inDate);
+				}
+				holidayInfoList.add(festivalInfo);
+				holidayList.put(inDate,holidayInfoList);
+			}
 		}
-		holidayInfoList.add(festivalInfo);
-		holidayDateList.put(inDate,holidayInfoList);
-	}
-	
-	private void processEasterHoliday(TreeMap<Integer, ArrayList<String>> holidayDateList, int year, int month) {
-		LocalDate goodFriday,holySaturday,easterMonday;
-		LocalDate easterDate=cu.getEasterDateByYear(year);
-		
-		goodFriday=easterDate.minusDays(2);
-		holySaturday=easterDate.minusDays(1);
-		easterMonday=easterDate.plusDays(1);
-		
-		if (goodFriday.getMonthValue()==month)
-			buildHolidayList(holidayDateList,goodFriday.getDayOfMonth(),"Good Friday");
-		if (holySaturday.getMonthValue()==month)
-			buildHolidayList(holidayDateList,holySaturday.getDayOfMonth(),"Holy Saturday");
-		
-		if (easterDate.getMonthValue()==month)
-			buildHolidayList(holidayDateList,easterDate.getDayOfMonth(),"Easter");
-			
-		if (easterMonday.getMonthValue()==month)
-			buildHolidayList(holidayDateList,easterMonday.getDayOfMonth(),"Easter Monday");
 	}
 	public static void main(String[] args) {
 
 		int year=2015,month=4; //復活節清明節overlap
-		//int year=2018,month=7;
-		//int year=2017,month=4;//
+		//int year=2018,month=7;//西曆假期補假
+		//int year=2017,month=1;//農曆假期補假
 		//int year=2013,month=3;//復活節撗跨3,4月
 		//LocalDateTime now=LocalDateTime.now();
 		LocalDateTime now=LocalDateTime.of(year,month,1,0,0,0);
@@ -190,6 +136,6 @@ public class MonthlyCalendar {
 				System.out.println("is Holiday="+calendarObj.isPublicHoliday);
 				System.out.println("===================================================");
 			}
-		}*/		
+		}*/
 	}
 }
