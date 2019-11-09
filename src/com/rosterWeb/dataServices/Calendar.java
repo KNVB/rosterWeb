@@ -2,9 +2,11 @@ package com.rosterWeb.dataServices;
 import java.time.LocalDate;
 
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -16,9 +18,9 @@ public class Calendar {
 	public Calendar() {
 		// TODO Auto-generated constructor stub
 	}
-	@POST
+	@GET
     @Produces(MediaType.APPLICATION_JSON)
-	public Response get(@FormParam("year") String yearStr, @FormParam("month") String monthStr) {
+	public Response get(@QueryParam("year") String yearStr, @QueryParam("month") String monthStr) {
 		int rosterMonth=0,rosterYear=0;
 		LocalDate now=LocalDate.now();
 		try
@@ -31,10 +33,9 @@ public class Calendar {
 			rosterYear=now.getYear();
 			rosterMonth=now.getMonthValue();
 		}
-/*
-		MyCalendarUtility myDateUtility=new MyCalendarUtility();
-		MonthlyCalendar mc=myDateUtility.getMonthlyCalendar(rosterYear,rosterMonth);
-		return Response.ok(mc).build();*/
+
+		MonthlyCalendar mc=new MonthlyCalendar(rosterYear,rosterMonth);
+		return Response.ok(mc).build();
 		
 	}
 }
