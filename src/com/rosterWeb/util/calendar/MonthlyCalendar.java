@@ -20,17 +20,7 @@ public class MonthlyCalendar {
 	public MonthlyCalendar(int year,int month) {
 		init(year,month);
 		initHolidayList();
-		CalendarObj calendarObj;
-		for (Integer date : holidayList.keySet()) {
-			calendarObj=calendarObjList[date-1];
-			ArrayList<String> holidayInfoList=holidayList.get(date);
-			System.out.printf("新曆%s年%s月%s日 %s\n",year,month,date,calendarObj.dayOfWeekName);
-			System.out.printf("農曆%s年%s月%s日\n",calendarObj.lunarYear,calendarObj.lunarMonth,calendarObj.lunarDate);
-			for (String holidayInfo:holidayInfoList) {
-				System.out.println("festival Info="+holidayInfo);
-			}
-			System.out.println("===================================================");	
-		}
+		updateCalendarObjList();
 		initNoOfWorkingDay();
 	}
 	private void init(int year,int month) {
@@ -118,10 +108,10 @@ public class MonthlyCalendar {
 			buildHolidayList(goodFriday.getDayOfMonth(),"Good Friday");
 		if (holySaturday.getMonthValue()==this.month)
 			buildHolidayList(holySaturday.getDayOfMonth(),"Holy Saturday");
-		
+		/*
 		if (easterDate.getMonthValue()==this.month)
 			buildHolidayList(easterDate.getDayOfMonth(),"Easter");
-			
+		*/	
 		if (easterMonday.getMonthValue()==this.month)
 			buildHolidayList(easterMonday.getDayOfMonth(),"Easter Monday");
 	}
@@ -135,6 +125,9 @@ public class MonthlyCalendar {
 				holidayInfoList.add(festivalInfo);
 				holidayList.put(inDate,holidayInfoList);
 	}
+	/**
+	 * Move All Sunday's holidayInfoList to Monday
+	 */
 	private void consolidateHolidayList() {
 		String temp;
 		CalendarObj calendarObj;
@@ -173,12 +166,68 @@ public class MonthlyCalendar {
 			}
 		}
 	}
+	private void updateCalendarObjList() {
+		int vDate;
+		
+		ArrayList<String>holidayInfoList;
+		for (Integer date : holidayList.keySet()) {
+			holidayInfoList=holidayList.get(date);
+			vDate=date;
+			if (!holidayInfoList.isEmpty()) {
+				for (String holidayInfo: holidayInfoList) {
+					if (vDate<=this.noOfWorkingDay) {
+						setHoliday(vDate,holidayInfo);
+						vDate++;
+					} else {
+						break;
+					}
+				}
+			}
+		}
+	}
+	private void setHoliday(int date,String holidayInfo) {
+		CalendarObj calendarObj=calendarObjList[date-1];	
+		if (calendarObj!=null) {
+			if ((!calendarObj.isPublicHoliday) &&
+					(calendarObj.festivalInfo.isEmpty())) {
+					calendarObj.isPublicHoliday=true;
+					calendarObj.festivalInfo=holidayInfo;
+					calendarObjList[date-1]=calendarObj;
+				} else {
+					String temp=calendarObj.festivalInfo;
+					if (!temp.endsWith("補假"))
+						temp+="補假";
+					if (!holidayInfo.endsWith("補假"))
+						holidayInfo+="補假";
+					if (holidayList.containsKey(date)) { 
+						setHoliday(date+1,holidayInfo);
+					} else {
+						calendarObj.festivalInfo=holidayInfo;
+						calendarObjList[date-1]=calendarObj;
+						setHoliday(date+1,temp);
+					}
+				}
+		}		
+	}
+	public void printHolidayList() {
+		CalendarObj calendarObj;
+		for (Integer date : holidayList.keySet()) {
+			calendarObj=calendarObjList[date-1];
+			ArrayList<String> holidayInfoList=holidayList.get(date);
+			System.out.printf("新曆%s年%s月%s日 %s\n",year,month,date,calendarObj.dayOfWeekName);
+			System.out.printf("農曆%s年%s月%s日\n",calendarObj.lunarYear,calendarObj.lunarMonth,calendarObj.lunarDate);
+			for (String holidayInfo:holidayInfoList) {
+				System.out.println("festival Info="+holidayInfo);
+			}
+			System.out.println("===================================================");	
+		}
+	}
 	public static void main(String[] args) {
 
-		int year=2015,month=4; //復活節清明節overlap
+		//int year=2015,month=4; //復活節清明節overlap
 		//int year=2018,month=7;//西曆假期補假
 		//int year=2017,month=1;//農曆假期補假
-		//int year=2013,month=3;//復活節撗跨3,4月
+		int year=2013,month=3;//復活節撗跨3,4月
 		//LocalDateTime now=LocalDateTime.now();
 		LocalDateTime now=LocalDateTime.of(year,month,1,0,0,0);
 		CalendarUtility cu=new CalendarUtility();
@@ -189,7 +238,7 @@ public class MonthlyCalendar {
 		MonthlyCalendar mc=new MonthlyCalendar(now.getYear(), now.getMonthValue()); 
 		System.out.println("Month Name="+mc.monthName);
 		System.out.println("No. of Working days="+mc.noOfWorkingDay);
-		/*
+		System.out.println("===================================================");
 		for (int i=1;i<=31;i++)
 		{
 			calendarObj=mc.calendarObjList[i-1];
@@ -201,6 +250,6 @@ public class MonthlyCalendar {
 				System.out.println("is Holiday="+calendarObj.isPublicHoliday);
 				System.out.println("===================================================");
 			}
-		}*/
+		}
 	}
 }
