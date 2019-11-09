@@ -13,7 +13,7 @@ public class MonthlyCalendar {
 	public CalendarObj[] calendarObjList=new CalendarObj[31];
 	public int noOfWorkingDay=0;
 	private CalendarUtility cu=new CalendarUtility();
-	private TreeMap<Integer,Stack<String>>holidayList=new TreeMap<Integer,Stack<String>>();
+	private TreeMap<Integer,ArrayList<String>>holidayList=new TreeMap<Integer,ArrayList<String>>();
 	private TreeMap <String,String>lunarHolidayList=new TreeMap<String,String>();
 	private TreeMap <String,String>solarHolidayList=new TreeMap<String,String>();
 	
@@ -23,11 +23,11 @@ public class MonthlyCalendar {
 		CalendarObj calendarObj;
 		for (Integer date : holidayList.keySet()) {
 			calendarObj=calendarObjList[date-1];
-			Stack<String> holidayInfoList=holidayList.get(date);
+			ArrayList<String> holidayInfoList=holidayList.get(date);
 			System.out.printf("新曆%s年%s月%s日 %s\n",year,month,date,calendarObj.dayOfWeekName);
 			System.out.printf("農曆%s年%s月%s日\n",calendarObj.lunarYear,calendarObj.lunarMonth,calendarObj.lunarDate);
-			while(!holidayInfoList.empty()) {
-				System.out.println("festival Info="+holidayInfoList.pop());
+			for (String holidayInfo:holidayInfoList) {
+				System.out.println("festival Info="+holidayInfo);
 			}
 			System.out.println("===================================================");	
 		}
@@ -104,6 +104,7 @@ public class MonthlyCalendar {
 					buildHolidayList(tempDate,cu.solarTerm[(month-1)*2]+"節");
 					break;
 		}
+		consolidateHolidayList();
 	}
 	private void processEasterHoliday() {
 		LocalDate goodFriday,holySaturday,easterMonday;
@@ -125,19 +126,50 @@ public class MonthlyCalendar {
 			buildHolidayList(easterMonday.getDayOfMonth(),"Easter Monday");
 	}
 	private void buildHolidayList(int inDate, String festivalInfo) {
-		if (calendarObjList[inDate-1]!=null) {
-			CalendarObj calendarObj=calendarObjList[inDate-1];
-			if (calendarObj.dayOfWeek.equals(DayOfWeek.SUNDAY)) {
-				buildHolidayList(inDate+1,festivalInfo+"補假");
-			} else {
-				Stack<String>holidayInfoList=new Stack<String>();
+				ArrayList<String>holidayInfoList=new ArrayList<String>();
 				if (holidayList.containsKey(inDate)) {
 					holidayInfoList=holidayList.remove(inDate);
 					if (!festivalInfo.endsWith("補假"))
 						festivalInfo+="補假";
 				}
-				holidayInfoList.push(festivalInfo);
+				holidayInfoList.add(festivalInfo);
 				holidayList.put(inDate,holidayInfoList);
+	}
+	private void consolidateHolidayList() {
+		String temp;
+		CalendarObj calendarObj;
+		ArrayList<String>thisDateHolidayInfoList,nextDateHolidayInfoList;
+		for (Integer date : holidayList.keySet()) {
+			calendarObj=calendarObjList[date-1];
+			if (calendarObj.dayOfWeek.equals(DayOfWeek.SUNDAY) && (date < this.noOfWorkingDay)) {
+				thisDateHolidayInfoList= holidayList.get(date);
+				nextDateHolidayInfoList= holidayList.get(date+1);
+				if (nextDateHolidayInfoList==null) {
+					nextDateHolidayInfoList=new ArrayList<String> (thisDateHolidayInfoList.size());
+					for(String holidayInfo:thisDateHolidayInfoList) {
+						if (holidayInfo.endsWith("補假"))
+							nextDateHolidayInfoList.add(holidayInfo);
+						else
+							nextDateHolidayInfoList.add(holidayInfo+"補假");
+					}
+					holidayList.put(date+1,nextDateHolidayInfoList);
+					thisDateHolidayInfoList.clear();
+					holidayList.put(date,thisDateHolidayInfoList);
+				} else {
+					for(String holidayInfo:nextDateHolidayInfoList) {
+						thisDateHolidayInfoList.add(holidayInfo);
+					}
+					for (int i=0;i<thisDateHolidayInfoList.size();i++) 
+					{
+						temp=thisDateHolidayInfoList.get(i);
+						if (!temp.endsWith("補假"))
+							temp+="補假";
+						thisDateHolidayInfoList.set(i,temp);
+					}
+					holidayList.put(date+1,thisDateHolidayInfoList);
+					nextDateHolidayInfoList.clear();
+					holidayList.put(date,nextDateHolidayInfoList);
+				}
 			}
 		}
 	}
