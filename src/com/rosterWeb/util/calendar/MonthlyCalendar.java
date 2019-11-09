@@ -3,6 +3,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Stack;
 import java.util.TreeMap;
 
 public class MonthlyCalendar {
@@ -12,7 +13,7 @@ public class MonthlyCalendar {
 	public CalendarObj[] calendarObjList=new CalendarObj[31];
 	public int noOfWorkingDay=0;
 	private CalendarUtility cu=new CalendarUtility();
-	private TreeMap<Integer,ArrayList<String>>holidayList=new TreeMap<Integer,ArrayList<String>>();
+	private TreeMap<Integer,Stack<String>>holidayList=new TreeMap<Integer,Stack<String>>();
 	private TreeMap <String,String>lunarHolidayList=new TreeMap<String,String>();
 	private TreeMap <String,String>solarHolidayList=new TreeMap<String,String>();
 	
@@ -22,11 +23,11 @@ public class MonthlyCalendar {
 		CalendarObj calendarObj;
 		for (Integer date : holidayList.keySet()) {
 			calendarObj=calendarObjList[date-1];
-			ArrayList<String> holidayInfoList=holidayList.get(date);
+			Stack<String> holidayInfoList=holidayList.get(date);
 			System.out.printf("新曆%s年%s月%s日 %s\n",year,month,date,calendarObj.dayOfWeekName);
 			System.out.printf("農曆%s年%s月%s日\n",calendarObj.lunarYear,calendarObj.lunarMonth,calendarObj.lunarDate);
-			for(String holidayInfo:holidayInfoList) {
-				System.out.println("festival Info="+holidayInfo);
+			while(!holidayInfoList.empty()) {
+				System.out.println("festival Info="+holidayInfoList.pop());
 			}
 			System.out.println("===================================================");	
 		}
@@ -47,11 +48,12 @@ public class MonthlyCalendar {
 		solarHolidayList.put("1001","國慶日");
 		solarHolidayList.put("1225","聖誕節");
 		solarHolidayList.put("1226","聖誕節翌日");
+		
 		solarHolidayList.put("0408","testing");
 		solarHolidayList.put("0409","測試");		
-
+       
 		CalendarObj calendarObj;
-		LocalDateTime sDObj= LocalDateTime.of(year,month,1,0,0,0);;
+		LocalDateTime sDObj= LocalDateTime.of(year,month,1,0,0,0);
 		this.noOfWorkingDay=cu.getMonthLength(year,month);
 		this.monthName=cu.monthNames.get(sDObj.getMonth())+ " " +year;
 		this.month=month;
@@ -93,6 +95,34 @@ public class MonthlyCalendar {
 				}
 			}
 		}
+		switch (this.month)
+		{
+			case 3: processEasterHoliday();//復活節只出現在3或4月
+					break;
+			case 4:	processEasterHoliday();//復活節只出現在3或4月
+					int tempDate=cu.getChingMingDate(year);//取得清明節日期
+					buildHolidayList(tempDate,cu.solarTerm[(month-1)*2]+"節");
+					break;
+		}
+	}
+	private void processEasterHoliday() {
+		LocalDate goodFriday,holySaturday,easterMonday;
+		LocalDate easterDate=cu.getEasterDateByYear(this.year);
+		
+		goodFriday=easterDate.minusDays(2);
+		holySaturday=easterDate.minusDays(1);
+		easterMonday=easterDate.plusDays(1);
+		
+		if (goodFriday.getMonthValue()==this.month)
+			buildHolidayList(goodFriday.getDayOfMonth(),"Good Friday");
+		if (holySaturday.getMonthValue()==this.month)
+			buildHolidayList(holySaturday.getDayOfMonth(),"Holy Saturday");
+		
+		if (easterDate.getMonthValue()==this.month)
+			buildHolidayList(easterDate.getDayOfMonth(),"Easter");
+			
+		if (easterMonday.getMonthValue()==this.month)
+			buildHolidayList(easterMonday.getDayOfMonth(),"Easter Monday");
 	}
 	private void buildHolidayList(int inDate, String festivalInfo) {
 		if (calendarObjList[inDate-1]!=null) {
@@ -100,11 +130,13 @@ public class MonthlyCalendar {
 			if (calendarObj.dayOfWeek.equals(DayOfWeek.SUNDAY)) {
 				buildHolidayList(inDate+1,festivalInfo+"補假");
 			} else {
-				ArrayList<String>holidayInfoList=new ArrayList<String>();
+				Stack<String>holidayInfoList=new Stack<String>();
 				if (holidayList.containsKey(inDate)) {
 					holidayInfoList=holidayList.remove(inDate);
+					if (!festivalInfo.endsWith("補假"))
+						festivalInfo+="補假";
 				}
-				holidayInfoList.add(festivalInfo);
+				holidayInfoList.push(festivalInfo);
 				holidayList.put(inDate,holidayInfoList);
 			}
 		}
@@ -123,6 +155,7 @@ public class MonthlyCalendar {
 		System.out.printf("農曆%s年%s月%s日\n",calendarObj.lunarYear,calendarObj.lunarMonth,calendarObj.lunarDate);
 		System.out.println("===================================================");
 		MonthlyCalendar mc=new MonthlyCalendar(now.getYear(), now.getMonthValue()); 
+		System.out.println("Month Name="+mc.monthName);
 		System.out.println("No. of Working days="+mc.noOfWorkingDay);
 		/*
 		for (int i=1;i<=31;i++)
