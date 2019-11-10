@@ -132,10 +132,11 @@ public class MonthlyCalendar {
 		String temp;
 		CalendarObj calendarObj;
 		ArrayList<String>thisDateHolidayInfoList,nextDateHolidayInfoList;
-		for (Integer date : holidayList.keySet()) {
+		Integer []dates=holidayList.keySet().toArray(new Integer[holidayList.size()]);
+		for (Integer date : dates) {
 			calendarObj=calendarObjList[date-1];
 			if (calendarObj.dayOfWeek.equals(DayOfWeek.SUNDAY) && (date < this.noOfWorkingDay)) {
-				thisDateHolidayInfoList= holidayList.get(date);
+				thisDateHolidayInfoList= holidayList.remove(date);
 				nextDateHolidayInfoList= holidayList.get(date+1);
 				if (nextDateHolidayInfoList==null) {
 					nextDateHolidayInfoList=new ArrayList<String> (thisDateHolidayInfoList.size());
@@ -147,7 +148,7 @@ public class MonthlyCalendar {
 					}
 					holidayList.put(date+1,nextDateHolidayInfoList);
 					thisDateHolidayInfoList.clear();
-					holidayList.put(date,thisDateHolidayInfoList);
+					
 				} else {
 					for(String holidayInfo:nextDateHolidayInfoList) {
 						thisDateHolidayInfoList.add(holidayInfo);
@@ -161,7 +162,6 @@ public class MonthlyCalendar {
 					}
 					holidayList.put(date+1,thisDateHolidayInfoList);
 					nextDateHolidayInfoList.clear();
-					holidayList.put(date,nextDateHolidayInfoList);
 				}
 			}
 		}
@@ -239,6 +239,8 @@ public class MonthlyCalendar {
 		System.out.println("Month Name="+mc.monthName);
 		System.out.println("No. of Working days="+mc.noOfWorkingDay);
 		System.out.println("===================================================");
+		mc.printHolidayList();
+		
 		for (int i=1;i<=31;i++)
 		{
 			calendarObj=mc.calendarObjList[i-1];
