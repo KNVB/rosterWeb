@@ -7,7 +7,18 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.TreeMap;
-
+/**
+ * 
+ * 日曆工具物件<br> 	
+ * <br>
+ * 本程式參考自Sean Lin (林洵賢)先生的農曆月曆與世界時間DHTML程式(AD1900至AD2100)<br>
+ * http://sean.o4u.com/2008/04/dhtml.html<br><br>
+ * 
+ * The program is inspired by Sean Lin DHTML web page:<br>
+ * http://sean.o4u.com/2008/04/dhtml.html
+ *
+ * @author Roy Tsang
+ */
 public class CalendarUtility {
 
 	private int lunarInfo[]={0x4bd8,0x4ae0,0xa570,0x54d5,0xd260,0xd950,0x5554,0x56af,0x9ad0,0x55d2,
@@ -161,10 +172,10 @@ public class CalendarUtility {
 			return 29;	  
 	}
 	/**
-	 * 傳入LocalDate物件, 傳回LunarDate物件<br>
-	 * It returns a corresponding LunarDate object when a LocalDate object is given.
-	 * @param inLocalDateObj LocalDate物件
-	 * @return LunarDate物件<br>
+	 * 傳入LocalDate物件, 傳回CalendarObj物件<br>
+	 * It returns a corresponding CalendarObj object when a LocalDateTime object is given.
+	 * @param inLocalDateObj LocalDateTime物件
+	 * @return CalendarObj物件<br>
 	 * A corresponding LunarDate object when a LocalDate object is given.
 	 */
 	public CalendarObj getCalendarObj(LocalDateTime inLocalDateObj)
@@ -234,7 +245,8 @@ public class CalendarUtility {
 		return result;
 	}
 	/**
-	 * 傳回西曆 y年某month月的天數
+	 * 傳回西曆 y年某month月的天數<br>
+	 * It returns the no. of day of the given month
 	 * @return 該月的天數
 	 */
 	public int getMonthLength(int year,int month) 
@@ -242,7 +254,12 @@ public class CalendarUtility {
 		YearMonth yearMonthObject = YearMonth.of(year, month);
 		return yearMonthObject.lengthOfMonth(); 
 	}
-	
+	/**
+	 * 傳回該年的復活節LocalDate物件(春分後第一次滿月週後的第一主日)<br>
+	 * It returns a LocalDate object which devote the date of easter of the given year
+	 * @param y 年份
+	 * @return 傳回該年復活節LocalDate物件
+	 */
 	public LocalDate getEasterDateByYear(int year) {
 		int lMlen,term2=sTerm(year,5); //取得春分日期
 		LocalDate dayTerm2=LocalDate.of(year,3, term2);//取得春分的國曆日期物件(春分一定出現在3月)
@@ -272,7 +289,13 @@ public class CalendarUtility {
 		}
 		return dayTerm2;
 	}
-	public int getChingMingDate(int year) {
+	/**
+	 * 傳回該年的清明節日期<br>
+	 * It returns a LocalDate object which devote the date of Ching Ming Festival of the given year
+	 * @param y 年份
+	 * @return 傳回該年的清明節日期
+	 */
+	public int getChingMingDateByYear(int year) {
 		return sTerm(year,6); 
 	}
 }

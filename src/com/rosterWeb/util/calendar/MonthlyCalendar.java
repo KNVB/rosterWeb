@@ -90,7 +90,7 @@ public class MonthlyCalendar {
 			case 3: processEasterHoliday();//復活節只出現在3或4月
 					break;
 			case 4:	processEasterHoliday();//復活節只出現在3或4月
-					int tempDate=cu.getChingMingDate(year);//取得清明節日期
+					int tempDate=cu.getChingMingDateByYear(year);//取得清明節日期
 					buildHolidayList(tempDate,cu.solarTerm[(month-1)*2]+"節");
 					break;
 		}
@@ -147,8 +147,6 @@ public class MonthlyCalendar {
 							nextDateHolidayInfoList.add(holidayInfo+"補假");
 					}
 					holidayList.put(date+1,nextDateHolidayInfoList);
-					thisDateHolidayInfoList.clear();
-					
 				} else {
 					for(String holidayInfo:nextDateHolidayInfoList) {
 						thisDateHolidayInfoList.add(holidayInfo);
@@ -161,7 +159,6 @@ public class MonthlyCalendar {
 						thisDateHolidayInfoList.set(i,temp);
 					}
 					holidayList.put(date+1,thisDateHolidayInfoList);
-					nextDateHolidayInfoList.clear();
 				}
 			}
 		}
@@ -224,10 +221,11 @@ public class MonthlyCalendar {
 	}
 	public static void main(String[] args) {
 
-		//int year=2015,month=4; //復活節清明節overlap
+		int year=2015,month=4; //復活節清明節overlap
+		//int year=2018,month=2;
 		//int year=2018,month=7;//西曆假期補假
 		//int year=2017,month=1;//農曆假期補假
-		int year=2013,month=3;//復活節撗跨3,4月
+		//int year=2013,month=3;//復活節撗跨3,4月
 		//LocalDateTime now=LocalDateTime.now();
 		LocalDateTime now=LocalDateTime.of(year,month,1,0,0,0);
 		CalendarUtility cu=new CalendarUtility();
