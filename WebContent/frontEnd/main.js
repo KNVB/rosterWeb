@@ -32,7 +32,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<p>admin works!</p>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<p>admin works!</p>\r\n");
 
 /***/ }),
 
@@ -45,7 +45,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<router-outlet></router-outlet>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<router-outlet></router-outlet>");
 
 /***/ }),
 
@@ -58,7 +58,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<p>roster-table works!</p>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<table id=\"rosterTable\">\r\n    <thead id=\"rosterHeader\">\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText\" colspan=\"31\">Computer Operation Support Services Team Roster</td>\r\n          <td class=\"alignCenter totalHourCell\"></td>\r\n          <td class=\"alignCenter actualHourCell\"></td>\r\n          <td class=\"alignCenter lastMonthCell\"></td>\r\n          <td class=\"alignCenter thisMonthCell\"></td>\r\n          <td class=\"alignCenter totalCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter noOfWorkingDayCell\"></td>\r\n        </tr>\r\n    </thead>\r\n</table>");
 
 /***/ }),
 
@@ -71,7 +71,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<app-roster-table></app-roster-table>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<app-roster-table></app-roster-table>\r\n");
 
 /***/ }),
 
@@ -639,13 +639,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RosterTableComponent", function() { return RosterTableComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var src_app_services_calendar_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/services/calendar.service */ "./src/app/services/calendar.service.ts");
+
 
 
 let RosterTableComponent = class RosterTableComponent {
-    constructor() { }
+    constructor(calendarService) {
+        this.calendarService = calendarService;
+    }
     ngOnInit() {
     }
 };
+RosterTableComponent.ctorParameters = () => [
+    { type: src_app_services_calendar_service__WEBPACK_IMPORTED_MODULE_2__["CalendarService"] }
+];
 RosterTableComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-roster-table',
@@ -653,6 +660,51 @@ RosterTableComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         styles: [tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! ./roster-table.component.css */ "./src/app/components/roster-table/roster-table.component.css")).default]
     })
 ], RosterTableComponent);
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/calendar.service.ts":
+/*!**********************************************!*\
+  !*** ./src/app/services/calendar.service.ts ***!
+  \**********************************************/
+/*! exports provided: CalendarService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CalendarService", function() { return CalendarService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
+
+
+
+
+let CalendarService = class CalendarService {
+    constructor(http) {
+        this.http = http;
+    }
+    getMonthlyCalendar(year, month) {
+        const formData = new FormData();
+        const url = '../../RestfulServices/Calendar';
+        if ((year !== null) || (month !== null)) {
+            formData.append('year', year.toString());
+            formData.append('month', month.toString());
+        }
+        return this.http.post(url, formData).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])((res) => res));
+    }
+};
+CalendarService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
+];
+CalendarService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    })
+], CalendarService);
 
 
 
@@ -775,6 +827,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _show_roster_routing_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./show-roster-routing.module */ "./src/app/show-roster/show-roster-routing.module.ts");
 /* harmony import */ var _show_roster_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./show-roster.component */ "./src/app/show-roster/show-roster.component.ts");
 /* harmony import */ var _components_roster_table_roster_table_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/roster-table/roster-table.component */ "./src/app/components/roster-table/roster-table.component.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+
 
 
 
@@ -789,7 +843,8 @@ ShowRosterModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _components_roster_table_roster_table_component__WEBPACK_IMPORTED_MODULE_5__["RosterTableComponent"]],
         imports: [
             _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
-            _show_roster_routing_module__WEBPACK_IMPORTED_MODULE_3__["ShowRosterRoutingModule"]
+            _show_roster_routing_module__WEBPACK_IMPORTED_MODULE_3__["ShowRosterRoutingModule"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_6__["HttpClientModule"]
         ]
     })
 ], ShowRosterModule);
@@ -863,7 +918,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_2__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\Users\cstsang\workspace\rosterWeb\angularSrc\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! D:\Users\Roy\workspace\RosterWeb\angularSrc\src\main.ts */"./src/main.ts");
 
 
 /***/ })

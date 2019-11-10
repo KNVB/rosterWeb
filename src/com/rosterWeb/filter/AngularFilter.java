@@ -61,6 +61,7 @@ public class AngularFilter implements Filter {
 			if (angularRootPath.equals("")) {
 				httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
 			} else {
+				System.out.println("Forward "+destination+" to "+angularRootPath+"/index.html");
 				filterConfig.getServletContext().getRequestDispatcher(angularRootPath+"/index.html").forward(request,response);
 			}
 		}

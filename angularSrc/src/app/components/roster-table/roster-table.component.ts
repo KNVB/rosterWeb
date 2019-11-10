@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CalendarService } from 'src/app/services/calendar.service';
 
 @Component({
   selector: 'app-roster-table',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RosterTableComponent implements OnInit {
 
-  constructor() { }
+  constructor(private calendarService:CalendarService) { }
 
   ngOnInit() {
   }
