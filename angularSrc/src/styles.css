@@ -1,1 +1,85 @@
-/* You can add global styles to this file, and also import other style files */
+.alignCenter
+{
+	text-align: center;
+}
+.underlineText
+{
+	text-decoration: underline;
+}
+.clickable:hover
+{
+	background-color:white;
+	color:black;
+}
+.clickable
+{
+	cursor: pointer;
+}
+table#rosterTable
+{
+  border-spacing: 0;
+  border-collapse: collapse;
+  width:1660px;
+}
+.actualHourCell
+{
+	font-size:15px;
+	width:50px;
+}
+.captionCell
+{
+	font-size:18px;
+	font-weight: bold;
+}
+.lastMonthCell
+{
+	font-size:15px;
+	width:50px;
+}
+.nameCell
+{
+	padding:0px;
+	width:200px;
+	font-size:17px;
+	text-align:left;
+}
+.noOfWorkingDayCell
+{
+	font-size:15px;
+	width:60px;
+}
+.selectRosterMonthCell
+{
+	font-size:15px;
+	font-weight: bold;
+}
+.shiftCountCell
+{
+	font-size:15px;
+	width:60px;
+}
+.thisMonthCell
+{
+	font-size:15px;
+	width:50px;
+}
+.todayCell
+{
+	background-color:#11ACF0;
+	color:#ffff;
+	font-weight: 100;
+	font-family: sans-serif;
+}
+.totalCell
+{
+	font-size:15px;
+	width:50px;
+}
+.totalHourCell
+{
+	font-size:15px;
+	width:50px;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

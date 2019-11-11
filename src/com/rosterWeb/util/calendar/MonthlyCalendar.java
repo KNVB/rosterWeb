@@ -8,9 +8,10 @@ import java.util.TreeMap;
 
 public class MonthlyCalendar {
 	public int month;
-	public String monthName="";
+	public String currentMonthName="";
 	public int year;
 	public CalendarObj[] calendarObjList=new CalendarObj[31];
+	public String[] monthNames; 
 	public int noOfWorkingDay=0;
 	private CalendarUtility cu=new CalendarUtility();
 	private TreeMap<Integer,ArrayList<String>>holidayList=new TreeMap<Integer,ArrayList<String>>();
@@ -45,7 +46,7 @@ public class MonthlyCalendar {
 		CalendarObj calendarObj;
 		LocalDateTime sDObj= LocalDateTime.of(year,month,1,0,0,0);
 		this.noOfWorkingDay=cu.getMonthLength(year,month);
-		this.monthName=cu.monthNames.get(sDObj.getMonth())+ " " +year;
+		this.currentMonthName=cu.monthNames.get(sDObj.getMonth())+ " " +year;
 		this.month=month;
 		this.year=year;
 		
@@ -53,6 +54,8 @@ public class MonthlyCalendar {
 			calendarObj=cu.getCalendarObj(LocalDateTime.of(year,month,i,0,0,0));
 			calendarObjList[i-1]=calendarObj;	
 		}	
+		this.monthNames = new String[] {"January", "February", "March", "April", "May", "June", "July", "August",
+                "September", "October", "November", "December"};
 	}
 	private void initNoOfWorkingDay() {
 		CalendarObj calendarObj;
@@ -234,7 +237,7 @@ public class MonthlyCalendar {
 		System.out.printf("農曆%s年%s月%s日\n",calendarObj.lunarYear,calendarObj.lunarMonth,calendarObj.lunarDate);
 		System.out.println("===================================================");
 		MonthlyCalendar mc=new MonthlyCalendar(now.getYear(), now.getMonthValue()); 
-		System.out.println("Month Name="+mc.monthName);
+		System.out.println("Current Month Name="+mc.currentMonthName);
 		System.out.println("No. of Working days="+mc.noOfWorkingDay);
 		System.out.println("===================================================");
 		mc.printHolidayList();

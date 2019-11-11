@@ -1,11 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminModule } from './admin/admin.module';
 import { ShowRosterModule } from './show-roster/show-roster.module';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -15,7 +14,8 @@ import { ShowRosterModule } from './show-roster/show-roster.module';
     BrowserModule,
     AppRoutingModule,
     AdminModule,
-    ShowRosterModule
+    ShowRosterModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

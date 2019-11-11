@@ -10,19 +10,23 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.rosterWeb.util.calendar.*;
 
 @Path("/Calendar")
 public class Calendar {
-
+	private static final Logger logger = LogManager.getLogger(Class.class.getSimpleName());
 	public Calendar() {
 		// TODO Auto-generated constructor stub
 	}
-	@GET
+	@POST
     @Produces(MediaType.APPLICATION_JSON)
-	public Response get(@QueryParam("year") String yearStr, @QueryParam("month") String monthStr) {
+	public Response get(@FormParam("year") String yearStr, @FormParam("month") String monthStr) {
 		int rosterMonth=0,rosterYear=0;
 		LocalDate now=LocalDate.now();
+		logger.debug("yearStr="+yearStr+",month="+monthStr);
 		try
 		{
 			rosterYear=Integer.parseInt(yearStr);
@@ -33,7 +37,7 @@ public class Calendar {
 			rosterYear=now.getYear();
 			rosterMonth=now.getMonthValue();
 		}
-
+		logger.debug("year="+rosterYear+",month="+rosterMonth);
 		MonthlyCalendar mc=new MonthlyCalendar(rosterYear,rosterMonth);
 		return Response.ok(mc).build();
 		
