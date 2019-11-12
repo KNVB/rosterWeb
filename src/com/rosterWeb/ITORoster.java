@@ -26,10 +26,17 @@ public class ITORoster {
 	 * The total no. of working hour per day for the specified ITO.
 	 */
 	private float workingHourPerDay;
-	
+	/**
+	 * Get the ITO Id of the specified ITO.
+	 * @return the ITO Id of the specified ITO.
+	 */
 	public String getItoId() {
 		return itoId;
 	}
+	/**
+	 * Set the ITO Id of the specified ITO.
+	 * @param itoName the name of the specified ITO.
+	 */
 	public void setItoId(String itoId) {
 		this.itoId = itoId;
 	}

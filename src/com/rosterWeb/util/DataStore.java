@@ -27,7 +27,7 @@ public interface DataStore {
 	 * @param itoIdList ito id list
 	 * @return roster data
 	 */
-	public TreeMap<String,ITORoster> getITORosterList(int year,int month,String[] itoIdList);
+	public ITORoster[] getITORosterList(int year,int month,String[] itoIdList);
 	/**
 	 * Close the DataStore
 	 * @throws Exception if a data store access error occurs

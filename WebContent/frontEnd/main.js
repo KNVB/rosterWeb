@@ -344,7 +344,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<p>itoroster-row works!</p>\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<td class=\"borderCell\">\r\n    {{itoRoster.itoname}}<br>\r\n    {{itoRoster.itopostName}} Extn. 2458\r\n</td>\r\n");
 
 /***/ }),
 
@@ -370,7 +370,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<tr app-itoroster-row *ngFor=\"let itoRoster of this.itoRosterList\"\r\n  [id]=\"'shift_' + itoRoster.itoId\"\r\n  [noOfWorkingDay]=\"this.monthlyCalendar.noOfWorkingDay\"\r\n  >\r\n</tr>\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<tr app-itoroster-row *ngFor=\"let itoRoster of this.itoRosterList\"\r\n  [id]=\"'shift_' + itoRoster.itoId\"\r\n  [itoRoster]=\"itoRoster\"\r\n  >\r\n</tr>\r\n");
 
 /***/ }),
 
@@ -973,10 +973,14 @@ let ITORosterRowComponent = class ITORosterRowComponent {
     constructor() { }
     ngOnInit() {
     }
+    ngOnChanges() {
+        if (this.itoRoster !== undefined) {
+        }
+    }
 };
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
-], ITORosterRowComponent.prototype, "noOfWorkingDay", void 0);
+], ITORosterRowComponent.prototype, "itoRoster", void 0);
 ITORosterRowComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: '[app-itoroster-row]',
@@ -1595,7 +1599,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_3__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\Users\cstsang\workspace\rosterWeb\angularSrc\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! D:\Users\Roy\workspace\RosterWeb\angularSrc\src\main.ts */"./src/main.ts");
 
 
 /***/ })

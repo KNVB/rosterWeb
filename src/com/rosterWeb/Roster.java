@@ -14,11 +14,11 @@ public class Roster {
 	public Roster() {
 		// TODO Auto-generated constructor stub
 	}
-	public TreeMap<String,ITORoster>getRosterTable(int year,int month,String[] itoIdList) throws Exception
+	public ITORoster[]getRosterTable(int year,int month,String[] itoIdList) throws Exception
 	{
 		logger.info("Roster.getRosterTable("+year+","+ month+") is called");
 		dataStore=Utility.getDataStore();
-		TreeMap<String,ITORoster> result=dataStore.getITORosterList(year, month, itoIdList);
+		ITORoster[] result=dataStore.getITORosterList(year, month, itoIdList);
 		dataStore.close();
 		return result;
 	}

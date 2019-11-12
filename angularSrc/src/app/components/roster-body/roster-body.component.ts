@@ -1,6 +1,5 @@
 import { Component, OnChanges,  OnInit, Input } from '@angular/core';
 import { MonthlyCalendar } from 'src/app/classes/monthly-calendar';
-import { RosterTable } from 'src/app/classes/roster-table';
 import { RosterService } from 'src/app/services/roster.service';
 import { ITORoster } from 'src/app/classes/itoroster';
 

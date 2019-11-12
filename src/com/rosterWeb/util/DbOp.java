@@ -126,15 +126,16 @@ public class DbOp implements DataStore{
 
 	
 	@Override
-	public TreeMap<String,ITORoster> getITORosterList(int year,int month,String[] itoIdList)
+	public ITORoster[] getITORosterList(int year,int month,String[] itoIdList)
 	{
 		String temp;
 		ResultSet rs = null;
 		ITORoster itoRoster=null;
 		PreparedStatement stmt = null;
 		String [] shiftList;
+		ITORoster [] resultArray=null;
 		TreeMap <Integer,String>shiftMap=new TreeMap<Integer,String>();
-		TreeMap<String, ITORoster> result=new TreeMap<String, ITORoster>();
+		ArrayList<ITORoster> result=new ArrayList<ITORoster>();
 		
 		LocalDate theMonthShiftStartDate=LocalDate.of(year,month,1);
 		String theMonthShiftStartDateString=theMonthShiftStartDate.format(DateTimeFormatter.ofPattern(shiftDateFormat));
@@ -191,11 +192,13 @@ public class DbOp implements DataStore{
 				{
 					itoRoster.setITOWorkingHourPerDay(rs.getFloat("working_hour_per_day"));
 					itoRoster.setITOName(rs.getString("ito_name"));
+					itoRoster.setItoId(itoId);
 					itoRoster.setITOPostName(rs.getString("post_name"));
 				}
 				stmt.close();
 				rs.close();
-				result.put(itoId,itoRoster);
+				result.add(itoRoster);
+				resultArray=result.toArray(new ITORoster[0]);
 			}
 		}
 		catch (Exception e) 
@@ -206,7 +209,7 @@ public class DbOp implements DataStore{
 		{
 			releaseResource(rs, stmt);
 		}
-		return result;
+		return resultArray;
 	}
 	/**
 	 * Release resource for 
