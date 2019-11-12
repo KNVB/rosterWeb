@@ -44,9 +44,6 @@ public class RosterService {
 		logger.debug("year="+rosterYear+",month="+rosterMonth);
 		ITO ito=new ITO();
 		TreeMap<String,ITO> itoList=ito.getITOList(rosterYear,rosterMonth);
-		RosterTable rosterTable=new RosterTable();
-		rosterTable.monthlyCalendar=new MonthlyCalendar(rosterYear,rosterMonth);
-		rosterTable.itoRosterList=roster.getRosterTable(rosterYear, rosterMonth, itoList.keySet().toArray(new String[0]));
-		return Response.ok(rosterTable).build();
+		return Response.ok(roster.getRosterTable(rosterYear, rosterMonth, itoList.keySet().toArray(new String[0]))).build();
 	}
 }

@@ -370,7 +370,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<tr app-itoroster-row *ngFor=\"let itoRoster of this.itoRosterList\"\r\n  [id]=\"'shift_' + itoRoster.itoId\"\r\n  [noOfWorkingDay]=\"(this.monthlyCalendar)?.noOfWorkingDay\"\r\n>\r\n</tr>\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<tr app-itoroster-row *ngFor=\"let itoRoster of this.itoRosterList\"\r\n  [id]=\"'shift_' + itoRoster.itoId\"\r\n  [noOfWorkingDay]=\"this.monthlyCalendar.noOfWorkingDay\"\r\n  >\r\n</tr>\r\n");
 
 /***/ }),
 
@@ -383,7 +383,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<table id=\"rosterTable\">\r\n    <thead id=\"rosterHeader\">\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText\" colspan=\"31\">EMSTF Resident Support & Computer Operation Support Services Team Roster</td>\r\n          <td class=\"alignCenter totalHourCell\"></td>\r\n          <td class=\"alignCenter actualHourCell\"></td>\r\n          <td class=\"alignCenter lastMonthCell\"></td>\r\n          <td class=\"alignCenter thisMonthCell\"></td>\r\n          <td class=\"alignCenter totalCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter noOfWorkingDayCell\"></td>\r\n        </tr>\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText selectRosterMonthCell\" colspan=\"31\">\r\n            <app-month-picker [monthlyCalendar]=\"(this.monthlyCalendar)\"></app-month-picker>\r\n          </td>\r\n          <td colspan=\"10\"></td>\r\n        </tr>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Holiday</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter phCell borderCell dateCell\">\r\n              <span *ngIf=\"(calendarObj !== null) && calendarObj.isPublicHoliday\">PH</span>\r\n          </td>\r\n          <td colspan=\"10\" class=\"borderCell\"></td>\r\n        </tR>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Days</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n            <span *ngIf=\"(calendarObj !== null)\" [class]=\"(((calendarObj.isPublicHoliday)||\r\n                                                            (calendarObj.dayOfWeek=='SUNDAY')||\r\n                                                            (calendarObj.dayOfWeek=='SATURDAY'))?'phCell':'')\">\r\n              {{ calendarObj.dayOfWeekName }}\r\n            </span>\r\n          </td>\r\n          <td class=\"alignCenter totalHourCell borderCell\" rowspan=\"2\">Total<br>Hour</td>\r\n          <td class=\"alignCenter actualHourCell borderCell\" rowspan=\"2\">Actual<br>Hour</td>\r\n          <td class=\"borderCell alignCenter\" colspan=\"8\">Hour Off Due</td>\r\n      </tR>\r\n      <tr>\r\n        <td class=\"nameCell borderCell\">Resident Support<br>Team Members</td>\r\n        <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n          <span *ngIf=\"(calendarObj !== null)\">{{ calendarObj.solarDate }}</span>\r\n        </td>\r\n        <td class=\"alignCenter lastMonthCell borderCell\">Last<br>Month</td>\r\n        <td class=\"alignCenter thisMonthCell borderCell\">This<br>Month</td>\r\n        <td class=\"alignCenter totalCell borderCell\">Total</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>A Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Bx Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>C Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Dx Shift</td>\r\n        <td class=\"alignCenter noOfWorkingDayCell borderCell\">No. of <br>working<br>day</td>\r\n      </tr>\r\n    </thead>\r\n    <tbody app-roster-body></tbody>\r\n</table>\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<table id=\"rosterTable\">\r\n    <thead id=\"rosterHeader\">\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText\" colspan=\"31\">EMSTF Resident Support & Computer Operation Support Services Team Roster</td>\r\n          <td class=\"alignCenter totalHourCell\"></td>\r\n          <td class=\"alignCenter actualHourCell\"></td>\r\n          <td class=\"alignCenter lastMonthCell\"></td>\r\n          <td class=\"alignCenter thisMonthCell\"></td>\r\n          <td class=\"alignCenter totalCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter noOfWorkingDayCell\"></td>\r\n        </tr>\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText selectRosterMonthCell\" colspan=\"31\">\r\n            <app-month-picker [monthlyCalendar]=\"(this.monthlyCalendar)\"></app-month-picker>\r\n          </td>\r\n          <td colspan=\"10\"></td>\r\n        </tr>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Holiday</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter phCell borderCell dateCell\">\r\n              <span *ngIf=\"(calendarObj !== null) && calendarObj.isPublicHoliday\">PH</span>\r\n          </td>\r\n          <td colspan=\"10\" class=\"borderCell\"></td>\r\n        </tR>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Days</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n            <span *ngIf=\"(calendarObj !== null)\" [class]=\"(((calendarObj.isPublicHoliday)||\r\n                                                            (calendarObj.dayOfWeek=='SUNDAY')||\r\n                                                            (calendarObj.dayOfWeek=='SATURDAY'))?'phCell':'')\">\r\n              {{ calendarObj.dayOfWeekName }}\r\n            </span>\r\n          </td>\r\n          <td class=\"alignCenter totalHourCell borderCell\" rowspan=\"2\">Total<br>Hour</td>\r\n          <td class=\"alignCenter actualHourCell borderCell\" rowspan=\"2\">Actual<br>Hour</td>\r\n          <td class=\"borderCell alignCenter\" colspan=\"8\">Hour Off Due</td>\r\n      </tR>\r\n      <tr>\r\n        <td class=\"nameCell borderCell\">Resident Support<br>Team Members</td>\r\n        <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n          <span *ngIf=\"(calendarObj !== null)\">{{ calendarObj.solarDate }}</span>\r\n        </td>\r\n        <td class=\"alignCenter lastMonthCell borderCell\">Last<br>Month</td>\r\n        <td class=\"alignCenter thisMonthCell borderCell\">This<br>Month</td>\r\n        <td class=\"alignCenter totalCell borderCell\">Total</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>A Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Bx Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>C Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Dx Shift</td>\r\n        <td class=\"alignCenter noOfWorkingDayCell borderCell\">No. of <br>working<br>day</td>\r\n      </tr>\r\n    </thead>\r\n    <tbody app-roster-body [monthlyCalendar]=\"(this.monthlyCalendar)\"></tbody>\r\n</table>\r\n");
 
 /***/ }),
 
@@ -1118,19 +1118,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RosterBodyComponent", function() { return RosterBodyComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/services/roster.service */ "./src/app/services/roster.service.ts");
+
 
 
 let RosterBodyComponent = class RosterBodyComponent {
-    constructor() { }
+    constructor(rosterService) {
+        this.rosterService = rosterService;
+    }
     ngOnInit() {
     }
+    ngOnChanges() {
+        if (this.monthlyCalendar !== undefined) {
+            this.rosterService.getRosterTable(this.monthlyCalendar.year, this.monthlyCalendar.month).subscribe((res) => {
+                this.itoRosterList = res;
+            });
+        }
+    }
 };
+RosterBodyComponent.ctorParameters = () => [
+    { type: src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_2__["RosterService"] }
+];
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
 ], RosterBodyComponent.prototype, "monthlyCalendar", void 0);
-tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
-], RosterBodyComponent.prototype, "itoRosterList", void 0);
 RosterBodyComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: '[app-roster-body]',
@@ -1298,6 +1309,54 @@ CalendarService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         providedIn: 'root'
     })
 ], CalendarService);
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/roster.service.ts":
+/*!********************************************!*\
+  !*** ./src/app/services/roster.service.ts ***!
+  \********************************************/
+/*! exports provided: RosterService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RosterService", function() { return RosterService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
+
+
+
+
+let RosterService = class RosterService {
+    constructor(http) {
+        this.http = http;
+    }
+    getRosterTable(year, month) {
+        let requestParams = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]();
+        const url = '../RestfulServices/Roster/getRosterTable';
+        // console.log('year=' + year + ',month=' + month);
+        if (year !== null) {
+            requestParams = requestParams.append('year', String(year));
+        }
+        if (month !== null) {
+            requestParams = requestParams.append('month', String(month));
+        }
+        return this.http.post(url, requestParams).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])((res) => res));
+    }
+};
+RosterService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
+];
+RosterService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    })
+], RosterService);
 
 
 

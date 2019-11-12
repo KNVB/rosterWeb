@@ -10,7 +10,10 @@ public class ITORoster {
 	 */	
 	private float lastMonthBalance,thisMonthBalance;
 	private String[] shiftList;
-	
+	/**
+	 * The ITO Id of the specified ITO.
+	 */
+	private String itoId;
 	/**
 	 * The name of the specified ITO.
 	 */
@@ -24,6 +27,12 @@ public class ITORoster {
 	 */
 	private float workingHourPerDay;
 	
+	public String getItoId() {
+		return itoId;
+	}
+	public void setItoId(String itoId) {
+		this.itoId = itoId;
+	}
 	/**
 	 * Get the name of the specified ITO.
 	 * @return the name of the specified ITO.
