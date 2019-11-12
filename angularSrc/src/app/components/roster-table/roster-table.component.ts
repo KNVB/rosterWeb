@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { MonthlyCalendar } from 'src/app/classes/monthly-calendar';
-import { TransferObjectService } from 'src/app/services/transfer-object.service';
+
 
 @Component({
   selector: 'app-roster-table',
@@ -10,8 +10,7 @@ import { TransferObjectService } from 'src/app/services/transfer-object.service'
 })
 export class RosterTableComponent implements OnInit {
   monthlyCalendar: MonthlyCalendar;
-  constructor(private calendarService: CalendarService,
-              private transferObjectService: TransferObjectService) {
+  constructor(private calendarService: CalendarService) {
     this.getData(null, null);
   }
 
@@ -20,7 +19,7 @@ export class RosterTableComponent implements OnInit {
   getData(year: number, month: number) {
     this.calendarService.getMonthlyCalendar(year, month).subscribe((res: MonthlyCalendar) => {
       this.monthlyCalendar = res;
-      this.transferObjectService.sendObj(res);
+
     });
   }
   nextMonth() {

@@ -11,9 +11,13 @@ import { MatDatepickerModule,
   MatInputModule } from '@angular/material';
 import { MaterialModule } from '../material.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {RosterBodyComponent} from '../components/roster-body/roster-body.component';
+import {ITORosterRowComponent} from '../components/itoroster-row/itoroster-row.component';
 @NgModule({
   declarations: [MonthPickerComponent,
                  ShowRosterComponent,
+                 ITORosterRowComponent,
+                 RosterBodyComponent,
                  RosterTableComponent],
   imports: [
     CommonModule,

@@ -17,9 +17,44 @@
         <tr>
           <td class="nameCell"></td>
           <td class="alignCenter captionCell underlineText selectRosterMonthCell" colspan="31">
-            <app-month-picker></app-month-picker>
+            <app-month-picker [monthlyCalendar]="(this.monthlyCalendar)"></app-month-picker>
           </td>
           <td colspan="10"></td>
         </tr>
+        <tR>
+          <td class="nameCell borderCell">Holiday</td>
+          <td *ngFor="let calendarObj of ((this.monthlyCalendar)?.calendarObjList)" class="alignCenter phCell borderCell dateCell">
+              <span *ngIf="(calendarObj !== null) && calendarObj.isPublicHoliday">PH</span>
+          </td>
+          <td colspan="10" class="borderCell"></td>
+        </tR>
+        <tR>
+          <td class="nameCell borderCell">Days</td>
+          <td *ngFor="let calendarObj of ((this.monthlyCalendar)?.calendarObjList)" class="alignCenter borderCell dateCell">
+            <span *ngIf="(calendarObj !== null)" [class]="(((calendarObj.isPublicHoliday)||
+                                                            (calendarObj.dayOfWeek=='SUNDAY')||
+                                                            (calendarObj.dayOfWeek=='SATURDAY'))?'phCell':'')">
+              {{ calendarObj.dayOfWeekName }}
+            </span>
+          </td>
+          <td class="alignCenter totalHourCell borderCell" rowspan="2">Total<br>Hour</td>
+          <td class="alignCenter actualHourCell borderCell" rowspan="2">Actual<br>Hour</td>
+          <td class="borderCell alignCenter" colspan="8">Hour Off Due</td>
+      </tR>
+      <tr>
+        <td class="nameCell borderCell">Resident Support<br>Team Members</td>
+        <td *ngFor="let calendarObj of ((this.monthlyCalendar)?.calendarObjList)" class="alignCenter borderCell dateCell">
+          <span *ngIf="(calendarObj !== null)">{{ calendarObj.solarDate }}</span>
+        </td>
+        <td class="alignCenter lastMonthCell borderCell">Last<br>Month</td>
+        <td class="alignCenter thisMonthCell borderCell">This<br>Month</td>
+        <td class="alignCenter totalCell borderCell">Total</td>
+        <td class="alignCenter shiftCountCell borderCell">Total No. of <br>A Shift</td>
+        <td class="alignCenter shiftCountCell borderCell">Total No. of <br>Bx Shift</td>
+        <td class="alignCenter shiftCountCell borderCell">Total No. of <br>C Shift</td>
+        <td class="alignCenter shiftCountCell borderCell">Total No. of <br>Dx Shift</td>
+        <td class="alignCenter noOfWorkingDayCell borderCell">No. of <br>working<br>day</td>
+      </tr>
     </thead>
+    <tbody app-roster-body></tbody>
 </table>

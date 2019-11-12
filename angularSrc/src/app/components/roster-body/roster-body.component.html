@@ -1,0 +1,5 @@
+<tr app-itoroster-row *ngFor="let itoRoster of this.itoRosterList"
+  [id]="'shift_' + itoRoster.itoId"
+  [noOfWorkingDay]="(this.monthlyCalendar)?.noOfWorkingDay"
+>
+</tr>

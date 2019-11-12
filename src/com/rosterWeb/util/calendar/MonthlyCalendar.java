@@ -39,9 +39,6 @@ public class MonthlyCalendar {
 		solarHolidayList.put("1001","國慶日");
 		solarHolidayList.put("1225","聖誕節");
 		solarHolidayList.put("1226","聖誕節翌日");
-		
-		solarHolidayList.put("0408","testing");
-		solarHolidayList.put("0409","測試");		
        
 		CalendarObj calendarObj;
 		LocalDateTime sDObj= LocalDateTime.of(year,month,1,0,0,0);
@@ -224,7 +221,8 @@ public class MonthlyCalendar {
 	}
 	public static void main(String[] args) {
 
-		int year=2015,month=4; //復活節清明節overlap
+		//int year=2015,month=4; //復活節清明節overlap
+		int year=2019,month=4;
 		//int year=2018,month=2;
 		//int year=2018,month=7;//西曆假期補假
 		//int year=2017,month=1;//農曆假期補假
@@ -241,7 +239,7 @@ public class MonthlyCalendar {
 		System.out.println("No. of Working days="+mc.noOfWorkingDay);
 		System.out.println("===================================================");
 		mc.printHolidayList();
-		
+		/*
 		for (int i=1;i<=31;i++)
 		{
 			calendarObj=mc.calendarObjList[i-1];
@@ -253,6 +251,6 @@ public class MonthlyCalendar {
 				System.out.println("is Holiday="+calendarObj.isPublicHoliday);
 				System.out.println("===================================================");
 			}
-		}
+		}*/
 	}
 }

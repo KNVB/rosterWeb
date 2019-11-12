@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MonthlyCalendar } from 'src/app/classes/monthly-calendar';
+import {Component, OnInit, Input, OnChanges } from '@angular/core';
 import {MatDatepicker} from '@angular/material/datepicker';
 import { FormControl } from '@angular/forms';
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
@@ -7,6 +6,8 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/
 import * as _moment from 'moment';
 import {Moment} from 'moment';
 import { TransferObjectService } from 'src/app/services/transfer-object.service';
+import { MonthlyCalendar } from 'src/app/classes/monthly-calendar';
+import { RosterTableComponent } from '../roster-table/roster-table.component';
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -41,26 +42,30 @@ export const MY_FORMATS = {
 
 
 
-export class MonthPickerComponent implements OnInit {
-  monthlyCalendar: MonthlyCalendar;
+export class MonthPickerComponent implements OnInit, OnChanges {
+  @Input() monthlyCalendar: MonthlyCalendar;
   date = new FormControl(moment());
   subscription;
-  constructor(private transferObjectService: TransferObjectService) { }
+  constructor(private rosterTableComponent: RosterTableComponent) {
+  }
 
   ngOnInit() {
-    this.subscription = this.transferObjectService.accessObj().subscribe((res: MonthlyCalendar) => {
-      this.monthlyCalendar = res;
+
+  }
+  ngOnChanges() {
+    if (this.monthlyCalendar !== undefined) {
       this.date = new FormControl(moment()
                                   .year(this.monthlyCalendar.year)
                                   .month(this.monthlyCalendar.month - 1)
                                   .date(1));
-    });
-
+    }
   }
   chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.date.value;
     ctrlValue.month(normalizedMonth.month());
     this.date.setValue(ctrlValue);
     datepicker.close();
+    console.log (normalizedMonth.month() + ',' + normalizedMonth.year());
+    this.rosterTableComponent.getData(normalizedMonth.year(), normalizedMonth.month() + 1);
   }
 }
