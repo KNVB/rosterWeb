@@ -344,7 +344,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<td class=\"borderCell\">\r\n    {{itoRoster.itoName}}<br>\r\n    {{itoRoster.itoPostName}} Extn. 2458\r\n</td>\r\n<td app-shift-cell *ngFor=\"let shiftType of itoRoster.shiftList\" class=\"borderCell alignCenter cursorCell\" [shiftType]=\"shiftType\"></td>\r\n<td [id]=\"itoRoster.itoId + '_totalHour'\"class=\"borderCell alignCenter\" >{{ this.shiftCount.totalHour|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_actualHour'\" class=\"borderCell alignCenter\"> {{ this.shiftCount.actualHour|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_lastMonthBalance'\" class=\"borderCell alignCenter\">{{ this.shiftCount.lastMonthBalance|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_thisMonthHourTotal'\" class=\"borderCell alignCenter\">{{ this.shiftCount.thisMonthHourTotal|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_thisMonthBalance'\" class=\"borderCell alignCenter\">{{ this.shiftCount.thisMonthBalance|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_aShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.aShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_bxShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.bxShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_cShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.cShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_dxShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.dxShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_noOfWorkingDay'\" class=\"borderCell alignCenter\">{{ this.shiftCount.noOfWorkingDay }}</td>\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<td class=\"borderCell\">\r\n    {{itoRoster.itoName}}<br>\r\n    {{itoRoster.itoPostName}} Extn. 2458\r\n</td>\r\n<td app-shift-cell *ngFor=\"let shiftType of itoRoster.shiftList\"\r\n                    [shiftType]=\"shiftType\"\r\n                    [rosterRule]=\"rosterRule\"\r\n                    [class]=\"rosterRule.getCssClassNameByShiftType(shiftType) + ' borderCell alignCenter cursorCell'\"></td>\r\n<td [id]=\"itoRoster.itoId + '_totalHour'\"class=\"borderCell alignCenter\" >{{ this.shiftCount.totalHour|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_actualHour'\" class=\"borderCell alignCenter\"> {{ this.shiftCount.actualHour|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_lastMonthBalance'\" class=\"borderCell alignCenter\">{{ this.shiftCount.lastMonthBalance|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_thisMonthHourTotal'\" class=\"borderCell alignCenter\">{{ this.shiftCount.thisMonthHourTotal|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_thisMonthBalance'\" class=\"borderCell alignCenter\">{{ this.shiftCount.thisMonthBalance|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_aShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.aShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_bxShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.bxShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_cShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.cShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_dxShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.dxShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_noOfWorkingDay'\" class=\"borderCell alignCenter\">{{ this.shiftCount.noOfWorkingDay }}</td>\r\n");
 
 /***/ }),
 
@@ -383,7 +383,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<table id=\"rosterTable\">\r\n    <thead id=\"rosterHeader\">\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText\" colspan=\"31\">EMSTF Resident Support & Computer Operation Support Services Team Roster</td>\r\n          <td class=\"alignCenter totalHourCell\"></td>\r\n          <td class=\"alignCenter actualHourCell\"></td>\r\n          <td class=\"alignCenter lastMonthCell\"></td>\r\n          <td class=\"alignCenter thisMonthCell\"></td>\r\n          <td class=\"alignCenter totalCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter noOfWorkingDayCell\"></td>\r\n        </tr>\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText selectRosterMonthCell\" colspan=\"31\">\r\n            <app-month-picker [monthlyCalendar]=\"(this.monthlyCalendar)\"></app-month-picker>\r\n          </td>\r\n          <td colspan=\"10\"></td>\r\n        </tr>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Holiday</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter phCell borderCell dateCell\">\r\n              <span *ngIf=\"(calendarObj !== null) && calendarObj.isPublicHoliday\">PH</span>\r\n          </td>\r\n          <td colspan=\"10\" class=\"borderCell\"></td>\r\n        </tR>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Days</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n            <span *ngIf=\"(calendarObj !== null)\" [class]=\"(((calendarObj.isPublicHoliday)||\r\n                                                            (calendarObj.dayOfWeek=='SUNDAY')||\r\n                                                            (calendarObj.dayOfWeek=='SATURDAY'))?'phCell':'')\">\r\n              {{ calendarObj.dayOfWeekName }}\r\n            </span>\r\n          </td>\r\n          <td class=\"alignCenter totalHourCell borderCell\" rowspan=\"2\">Total<br>Hour</td>\r\n          <td class=\"alignCenter actualHourCell borderCell\" rowspan=\"2\">Actual<br>Hour</td>\r\n          <td class=\"borderCell alignCenter\" colspan=\"8\">Hour Off Due</td>\r\n      </tR>\r\n      <tr>\r\n        <td class=\"nameCell borderCell\">Resident Support<br>Team Members</td>\r\n        <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n          <span *ngIf=\"(calendarObj !== null)\">{{ calendarObj.solarDate }}</span>\r\n        </td>\r\n        <td class=\"alignCenter lastMonthCell borderCell\">Last<br>Month</td>\r\n        <td class=\"alignCenter thisMonthCell borderCell\">This<br>Month</td>\r\n        <td class=\"alignCenter totalCell borderCell\">Total</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>A Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Bx Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>C Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Dx Shift</td>\r\n        <td class=\"alignCenter noOfWorkingDayCell borderCell\">No. of <br>working<br>day</td>\r\n      </tr>\r\n    </thead>\r\n    <tbody app-roster-body [monthlyCalendar]=\"(this.monthlyCalendar)\"></tbody>\r\n</table>\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<table id=\"rosterTable\">\r\n    <thead id=\"rosterHeader\">\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText\" colspan=\"31\">EMSTF Resident Support & Computer Operation Support Services Team Roster</td>\r\n          <td class=\"alignCenter totalHourCell\"></td>\r\n          <td class=\"alignCenter actualHourCell\"></td>\r\n          <td class=\"alignCenter lastMonthCell\"></td>\r\n          <td class=\"alignCenter thisMonthCell\"></td>\r\n          <td class=\"alignCenter totalCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter noOfWorkingDayCell\"></td>\r\n        </tr>\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText selectRosterMonthCell\" colspan=\"31\">\r\n            <app-month-picker [monthlyCalendar]=\"(this.monthlyCalendar)\"></app-month-picker>\r\n          </td>\r\n          <td colspan=\"10\"></td>\r\n        </tr>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Holiday</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter phCell borderCell dateCell\">\r\n              <span *ngIf=\"(calendarObj !== null) && calendarObj.isPublicHoliday\">PH</span>\r\n          </td>\r\n          <td colspan=\"10\" class=\"borderCell\"></td>\r\n        </tR>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Days</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n            <span *ngIf=\"(calendarObj !== null)\" [class]=\"(((calendarObj.isPublicHoliday)||\r\n                                                            (calendarObj.dayOfWeek=='SUNDAY')||\r\n                                                            (calendarObj.dayOfWeek=='SATURDAY'))?'phCell':'')\">\r\n              {{ calendarObj.dayOfWeekName }}\r\n            </span>\r\n          </td>\r\n          <td class=\"alignCenter totalHourCell borderCell\" rowspan=\"2\">Total<br>Hour</td>\r\n          <td class=\"alignCenter actualHourCell borderCell\" rowspan=\"2\">Actual<br>Hour</td>\r\n          <td class=\"borderCell alignCenter\" colspan=\"8\">Hour Off Due</td>\r\n      </tR>\r\n      <tr>\r\n        <td class=\"nameCell borderCell\">Resident Support<br>Team Members</td>\r\n        <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n          <span *ngIf=\"(calendarObj !== null)\">{{ calendarObj.solarDate }}</span>\r\n        </td>\r\n        <td class=\"alignCenter lastMonthCell borderCell\">Last<br>Month</td>\r\n        <td class=\"alignCenter thisMonthCell borderCell\">This<br>Month</td>\r\n        <td class=\"alignCenter totalCell borderCell\">Total</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>A Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Bx Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>C Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Dx Shift</td>\r\n        <td class=\"alignCenter noOfWorkingDayCell borderCell\">No. of <br>working<br>day</td>\r\n      </tr>\r\n    </thead>\r\n    <tbody app-roster-body [monthlyCalendar]=\"(this.monthlyCalendar)\" [rosterRule]=\"rosterRule\"></tbody>\r\n</table>\r\n");
 
 /***/ }),
 
@@ -1004,6 +1004,12 @@ class RosterRule {
     getHourCountByShifType(shiftType) {
         return this.shiftHourCount[shiftType];
     }
+    getCssClassNameByShiftType(shiftType) {
+        if ((shiftType != null) && (shiftType in this.shiftCssClassName))
+            return this.shiftCssClassName[shiftType];
+        else
+            return "";
+    }
 }
 
 
@@ -1018,7 +1024,7 @@ class RosterRule {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvaXRvcm9zdGVyLXJvdy9pdG9yb3N0ZXItcm93LmNvbXBvbmVudC5jc3MifQ== */");
+/* harmony default export */ __webpack_exports__["default"] = ("/*******************************************************************************************************\r\n *                                                                                                     *\r\n *    Shift color style                                                                                *\r\n *                                                                                                     *\r\n *******************************************************************************************************/\r\n .aShiftColor\r\n {\r\n     background-color:#ff99cc;\r\n }\r\n .bShiftColor\r\n {\r\n     background-color:#ffffcc;\r\n }\r\n .cShiftColor\r\n {\r\n     background-color:#ccffcc;\r\n }\r\n .oShiftColor\r\n {\r\n     background-color:#ffffff;\r\n }\r\n .dShiftColor\r\n {\r\n     background-color:#ccffff;\r\n }\r\n .sickLeaveColor\r\n {\r\n     background-color:#cc99ff;\r\n }\r\n \r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9pdG9yb3N0ZXItcm93L2l0b3Jvc3Rlci1yb3cuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTs7Ozt3R0FJd0c7Q0FDdkc7O0tBRUksd0JBQXdCO0NBQzVCO0NBQ0E7O0tBRUksd0JBQXdCO0NBQzVCO0NBQ0E7O0tBRUksd0JBQXdCO0NBQzVCO0NBQ0E7O0tBRUksd0JBQXdCO0NBQzVCO0NBQ0E7O0tBRUksd0JBQXdCO0NBQzVCO0NBQ0E7O0tBRUksd0JBQXdCO0NBQzVCIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50cy9pdG9yb3N0ZXItcm93L2l0b3Jvc3Rlci1yb3cuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi8qKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqXHJcbiAqICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAqXHJcbiAqICAgIFNoaWZ0IGNvbG9yIHN0eWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAqXHJcbiAqICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAqXHJcbiAqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqL1xyXG4gLmFTaGlmdENvbG9yXHJcbiB7XHJcbiAgICAgYmFja2dyb3VuZC1jb2xvcjojZmY5OWNjO1xyXG4gfVxyXG4gLmJTaGlmdENvbG9yXHJcbiB7XHJcbiAgICAgYmFja2dyb3VuZC1jb2xvcjojZmZmZmNjO1xyXG4gfVxyXG4gLmNTaGlmdENvbG9yXHJcbiB7XHJcbiAgICAgYmFja2dyb3VuZC1jb2xvcjojY2NmZmNjO1xyXG4gfVxyXG4gLm9TaGlmdENvbG9yXHJcbiB7XHJcbiAgICAgYmFja2dyb3VuZC1jb2xvcjojZmZmZmZmO1xyXG4gfVxyXG4gLmRTaGlmdENvbG9yXHJcbiB7XHJcbiAgICAgYmFja2dyb3VuZC1jb2xvcjojY2NmZmZmO1xyXG4gfVxyXG4gLnNpY2tMZWF2ZUNvbG9yXHJcbiB7XHJcbiAgICAgYmFja2dyb3VuZC1jb2xvcjojY2M5OWZmO1xyXG4gfVxyXG4gIl19 */");
 
 /***/ }),
 
@@ -1051,29 +1057,26 @@ let ITORosterRowComponent = class ITORosterRowComponent {
             this.shiftCount.lastMonthBalance = this.itoRoster.lastMonthBalance;
             this.shiftCount.thisMonthHourTotal = this.shiftCount.actualHour - this.shiftCount.totalHour;
             this.shiftCount.thisMonthBalance = this.shiftCount.thisMonthHourTotal - this.shiftCount.lastMonthBalance;
-            console.log(this.rosterRule.getHourCountByShifType('a'));
-            /*
-             this.shiftCount.aShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'a');
-             this.shiftCount.bxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'b');
-             this.shiftCount.cShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'c');
-             this.shiftCount.dxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'd');
-             this.shiftCount.noOfWorkingDay = this.getNoOfWorkingDay(this.itoRoster.shiftList);
-             */
+            this.shiftCount.aShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'a');
+            this.shiftCount.bxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'b');
+            this.shiftCount.cShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'c');
+            this.shiftCount.dxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'd');
+            this.shiftCount.noOfWorkingDay = this.getNoOfWorkingDay(this.itoRoster.shiftList);
         }
     }
     getActualHour(shiftList, rosterRule) {
         let actualHour = 0;
-        Object.keys(shiftList).forEach((key) => {
-            if (shiftList[key] !== 'null') {
-                actualHour += parseFloat(rosterRule.shiftHourCount[shiftList[key]]);
+        shiftList.forEach((shiftType) => {
+            if (shiftType !== null) {
+                actualHour += parseFloat(rosterRule.getHourCountByShifType(shiftType));
             }
         });
         return actualHour;
     }
     getNoOfWorkingDay(shiftList) {
         let noOfWorkingDay = 0;
-        Object.keys(shiftList).forEach((key) => {
-            if ((shiftList[key] !== 'O') && (shiftList[key] !== 'null')) {
+        shiftList.forEach((shiftType) => {
+            if ((shiftType !== 'O') && (shiftType !== null)) {
                 noOfWorkingDay++;
             }
         });
@@ -1081,16 +1084,17 @@ let ITORosterRowComponent = class ITORosterRowComponent {
     }
     getShiftCount(shiftList, shiftType) {
         let result = 0;
-        Object.keys(shiftList).forEach((key) => {
-            const shift = shiftList[key];
-            if ((shiftType === 'b') || (shiftType === 'd')) {
-                if (shift.startsWith(shiftType)) {
-                    result++;
+        shiftList.forEach((shift) => {
+            if (shift != null) {
+                if ((shiftType === 'b') || (shiftType === 'd')) {
+                    if ((shift != null) && shift.startsWith(shiftType)) {
+                        result++;
+                    }
                 }
-            }
-            else {
-                if (shift === shiftType) {
-                    result++;
+                else {
+                    if (shift === shiftType) {
+                        result++;
+                    }
                 }
             }
         });
@@ -1247,23 +1251,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RosterBodyComponent", function() { return RosterBodyComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var src_app_classes_roster_rule__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/classes/roster-rule */ "./src/app/classes/roster-rule.ts");
-/* harmony import */ var src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/services/roster.service */ "./src/app/services/roster.service.ts");
-
+/* harmony import */ var src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/services/roster.service */ "./src/app/services/roster.service.ts");
 
 
 
 let RosterBodyComponent = class RosterBodyComponent {
     constructor(rosterService) {
         this.rosterService = rosterService;
-        this.rosterService.getRosterRule().subscribe((res) => {
-            this.rosterRule = new src_app_classes_roster_rule__WEBPACK_IMPORTED_MODULE_2__["RosterRule"]();
-            this.rosterRule.essentialShiftList = res.essentialShiftList;
-            this.rosterRule.maxConsecutiveWorkingDay = res.maxConsecutiveWorkingDay;
-            this.rosterRule.shiftHourCount = res.shiftHourCount;
-            this.rosterRule.shiftTimeSlot = res.shiftTimeSlot;
-            this.rosterRule.shiftCssClassName = res.shiftCssClassName;
-        });
     }
     ngOnInit() {
     }
@@ -1276,11 +1270,14 @@ let RosterBodyComponent = class RosterBodyComponent {
     }
 };
 RosterBodyComponent.ctorParameters = () => [
-    { type: src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_3__["RosterService"] }
+    { type: src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_2__["RosterService"] }
 ];
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
 ], RosterBodyComponent.prototype, "monthlyCalendar", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
+], RosterBodyComponent.prototype, "rosterRule", void 0);
 RosterBodyComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: '[app-roster-body]',
@@ -1319,17 +1316,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var src_app_services_calendar_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/services/calendar.service */ "./src/app/services/calendar.service.ts");
+/* harmony import */ var src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/services/roster.service */ "./src/app/services/roster.service.ts");
+/* harmony import */ var src_app_classes_roster_rule__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/classes/roster-rule */ "./src/app/classes/roster-rule.ts");
+
+
 
 
 
 let RosterTableComponent = class RosterTableComponent {
-    constructor(calendarService) {
+    constructor(calendarService, rosterService) {
         this.calendarService = calendarService;
+        this.rosterService = rosterService;
         this.getData(null, null);
     }
     ngOnInit() {
     }
     getData(year, month) {
+        this.rosterService.getRosterRule().subscribe((res) => {
+            this.rosterRule = new src_app_classes_roster_rule__WEBPACK_IMPORTED_MODULE_4__["RosterRule"]();
+            this.rosterRule.essentialShiftList = res.essentialShiftList;
+            this.rosterRule.maxConsecutiveWorkingDay = res.maxConsecutiveWorkingDay;
+            this.rosterRule.shiftHourCount = res.shiftHourCount;
+            this.rosterRule.shiftTimeSlot = res.shiftTimeSlot;
+            this.rosterRule.shiftCssClassName = res.shiftCssClassName;
+        });
         this.calendarService.getMonthlyCalendar(year, month).subscribe((res) => {
             this.monthlyCalendar = res;
         });
@@ -1356,7 +1366,8 @@ let RosterTableComponent = class RosterTableComponent {
     }
 };
 RosterTableComponent.ctorParameters = () => [
-    { type: src_app_services_calendar_service__WEBPACK_IMPORTED_MODULE_2__["CalendarService"] }
+    { type: src_app_services_calendar_service__WEBPACK_IMPORTED_MODULE_2__["CalendarService"] },
+    { type: src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_3__["RosterService"] }
 ];
 RosterTableComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -1398,13 +1409,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let ShiftCellComponent = class ShiftCellComponent {
-    constructor() { }
+    constructor(elRef, renderer) {
+        this.elRef = elRef;
+        this.renderer = renderer;
+    }
     ngOnInit() {
     }
 };
+ShiftCellComponent.ctorParameters = () => [
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ElementRef"] },
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Renderer2"] }
+];
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
 ], ShiftCellComponent.prototype, "shiftType", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
+], ShiftCellComponent.prototype, "rosterRule", void 0);
 ShiftCellComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: '[app-shift-cell]',
@@ -1789,7 +1810,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_3__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\Users\cstsang\workspace\rosterWeb\angularSrc\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! D:\Users\Roy\workspace\RosterWeb\angularSrc\src\main.ts */"./src/main.ts");
 
 
 /***/ })

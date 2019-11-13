@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { MonthlyCalendar } from 'src/app/classes/monthly-calendar';
+import { RosterService } from 'src/app/services/roster.service';
+import { RosterRule } from 'src/app/classes/roster-rule';
 
 
 @Component({
@@ -10,16 +12,24 @@ import { MonthlyCalendar } from 'src/app/classes/monthly-calendar';
 })
 export class RosterTableComponent implements OnInit {
   monthlyCalendar: MonthlyCalendar;
-  constructor(private calendarService: CalendarService) {
+  rosterRule: RosterRule
+  constructor(private calendarService: CalendarService,private rosterService: RosterService) {
     this.getData(null, null);
   }
 
   ngOnInit() {
   }
   getData(year: number, month: number) {
+    this.rosterService.getRosterRule().subscribe((res: RosterRule) => {
+      this.rosterRule = new RosterRule();
+      this.rosterRule.essentialShiftList = res.essentialShiftList;
+      this.rosterRule.maxConsecutiveWorkingDay = res.maxConsecutiveWorkingDay;
+      this.rosterRule.shiftHourCount = res.shiftHourCount;
+      this.rosterRule.shiftTimeSlot = res.shiftTimeSlot;
+      this.rosterRule.shiftCssClassName = res.shiftCssClassName;
+    });
     this.calendarService.getMonthlyCalendar(year, month).subscribe((res: MonthlyCalendar) => {
       this.monthlyCalendar = res;
-
     });
   }
   nextMonth() {

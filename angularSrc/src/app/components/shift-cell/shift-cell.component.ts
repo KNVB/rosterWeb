@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, Renderer2 } from '@angular/core';
+import { RosterRule } from 'src/app/classes/roster-rule';
 
 @Component({
   selector: '[app-shift-cell]',
@@ -7,9 +8,11 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ShiftCellComponent implements OnInit {
   @Input() shiftType: string;
-  constructor() { }
+  @Input() rosterRule:RosterRule;
+  constructor(private elRef: ElementRef, private renderer: Renderer2) { }
 
   ngOnInit() {
+    
   }
 
 }

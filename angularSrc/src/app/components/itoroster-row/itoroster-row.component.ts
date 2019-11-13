@@ -23,29 +23,28 @@ export class ITORosterRowComponent implements OnInit, OnChanges {
       this.shiftCount.lastMonthBalance = this.itoRoster.lastMonthBalance;
       this.shiftCount.thisMonthHourTotal = this.shiftCount.actualHour - this.shiftCount.totalHour;
       this.shiftCount.thisMonthBalance =  this.shiftCount.thisMonthHourTotal - this.shiftCount.lastMonthBalance;
-      console.log(this.rosterRule.getHourCountByShifType('a'));
-     /*
+     
       this.shiftCount.aShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'a');
       this.shiftCount.bxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'b');
       this.shiftCount.cShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'c');
       this.shiftCount.dxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'd');
       this.shiftCount.noOfWorkingDay = this.getNoOfWorkingDay(this.itoRoster.shiftList);
-      */
+      
     }
   }
   private getActualHour(shiftList, rosterRule) {
     let actualHour = 0;
-    Object.keys(shiftList).forEach((key) => {
-        if (shiftList[key] !== 'null') {
-          actualHour += parseFloat(rosterRule.shiftHourCount[shiftList[key]]);
-        }
+    shiftList.forEach((shiftType)=>{
+      if (shiftType!==null) {
+        actualHour += parseFloat(rosterRule.getHourCountByShifType(shiftType));
+      }
     });
     return actualHour;
   }
   public getNoOfWorkingDay(shiftList) {
     let noOfWorkingDay = 0;
-    Object.keys(shiftList).forEach((key) => {
-      if ((shiftList[key] !== 'O') && (shiftList[key] !== 'null')) {
+     shiftList.forEach((shiftType)=>{
+      if ((shiftType !== 'O') && (shiftType !== null)) {
         noOfWorkingDay++;
       }
     });
@@ -53,15 +52,16 @@ export class ITORosterRowComponent implements OnInit, OnChanges {
   }
   private getShiftCount(shiftList, shiftType: string) {
     let result = 0;
-    Object.keys(shiftList).forEach((key) => {
-      const shift = shiftList[key];
-      if ((shiftType === 'b') || (shiftType === 'd')) {
-        if (shift.startsWith(shiftType)) {
-          result++;
-        }
-      } else {
-        if (shift === shiftType) {
-          result++;
+    shiftList.forEach((shift)=>{
+      if (shift!=null) {
+        if ((shiftType === 'b') || (shiftType === 'd')) {
+          if ((shift!=null) && shift.startsWith(shiftType)) {
+            result++;
+          }  
+        } else {
+          if (shift === shiftType) {
+            result++;
+          }
         }
       }
     });

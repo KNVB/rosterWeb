@@ -13,21 +13,15 @@ import { RosterService } from 'src/app/services/roster.service';
 })
 export class RosterBodyComponent implements OnInit, OnChanges {
   @Input() monthlyCalendar: MonthlyCalendar;
+  @Input()rosterRule: RosterRule;
   itoRosterList: ITORoster[];
-  rosterRule: RosterRule;
+  
   constructor(private rosterService: RosterService) {
-    this.rosterService.getRosterRule().subscribe((res: RosterRule) => {
-      this.rosterRule = new RosterRule();
-      this.rosterRule.essentialShiftList = res.essentialShiftList;
-      this.rosterRule.maxConsecutiveWorkingDay = res.maxConsecutiveWorkingDay;
-      this.rosterRule.shiftHourCount = res.shiftHourCount;
-      this.rosterRule.shiftTimeSlot = res.shiftTimeSlot;
-      this.rosterRule.shiftCssClassName = res.shiftCssClassName;
-    });
   }
 
   ngOnInit() {
   }
+  
   ngOnChanges() {
     if (this.monthlyCalendar !== undefined) {
       this.rosterService.getRosterTable(this.monthlyCalendar.year, this.monthlyCalendar.month).subscribe((res: any) => {

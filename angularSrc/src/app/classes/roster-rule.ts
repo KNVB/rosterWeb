@@ -10,4 +10,10 @@ export class RosterRule {
   public getHourCountByShifType(shiftType: string){
     return this.shiftHourCount[shiftType];
   }
+  public getCssClassNameByShiftType(shiftType: string){
+    if ((shiftType!=null)  && (shiftType in this.shiftCssClassName))
+      return this.shiftCssClassName[shiftType];
+    else
+      return "";  
+  }
 }
