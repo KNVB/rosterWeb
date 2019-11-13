@@ -13,8 +13,10 @@ import { MaterialModule } from '../material.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RosterBodyComponent} from '../components/roster-body/roster-body.component';
 import {ITORosterRowComponent} from '../components/itoroster-row/itoroster-row.component';
+import { ShiftCellComponent } from '../components/shift-cell/shift-cell.component';
 @NgModule({
   declarations: [MonthPickerComponent,
+                 ShiftCellComponent,
                  ShowRosterComponent,
                  ITORosterRowComponent,
                  RosterBodyComponent,

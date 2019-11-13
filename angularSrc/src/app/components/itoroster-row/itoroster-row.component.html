@@ -1,4 +1,15 @@
 <td class="borderCell">
-    {{itoRoster.itoname}}<br>
-    {{itoRoster.itopostName}} Extn. 2458
+    {{itoRoster.itoName}}<br>
+    {{itoRoster.itoPostName}} Extn. 2458
 </td>
+<td app-shift-cell *ngFor="let shiftType of itoRoster.shiftList" class="borderCell alignCenter cursorCell" [shiftType]="shiftType"></td>
+<td [id]="itoRoster.itoId + '_totalHour'"class="borderCell alignCenter" >{{ this.shiftCount.totalHour|number:'.2-2' }}</td>
+<td [id]="itoRoster.itoId + '_actualHour'" class="borderCell alignCenter"> {{ this.shiftCount.actualHour|number:'.2-2' }}</td>
+<td [id]="itoRoster.itoId + '_lastMonthBalance'" class="borderCell alignCenter">{{ this.shiftCount.lastMonthBalance|number:'.2-2' }}</td>
+<td [id]="itoRoster.itoId + '_thisMonthHourTotal'" class="borderCell alignCenter">{{ this.shiftCount.thisMonthHourTotal|number:'.2-2' }}</td>
+<td [id]="itoRoster.itoId + '_thisMonthBalance'" class="borderCell alignCenter">{{ this.shiftCount.thisMonthBalance|number:'.2-2' }}</td>
+<td [id]="itoRoster.itoId + '_aShiftCount'" class="borderCell alignCenter">{{ this.shiftCount.aShiftCount }}</td>
+<td [id]="itoRoster.itoId + '_bxShiftCount'" class="borderCell alignCenter">{{ this.shiftCount.bxShiftCount }}</td>
+<td [id]="itoRoster.itoId + '_cShiftCount'" class="borderCell alignCenter">{{ this.shiftCount.cShiftCount }}</td>
+<td [id]="itoRoster.itoId + '_dxShiftCount'" class="borderCell alignCenter">{{ this.shiftCount.dxShiftCount }}</td>
+<td [id]="itoRoster.itoId + '_noOfWorkingDay'" class="borderCell alignCenter">{{ this.shiftCount.noOfWorkingDay }}</td>

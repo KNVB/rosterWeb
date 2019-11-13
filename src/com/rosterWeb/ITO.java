@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rosterWeb.util.DataStore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,7 @@ public class ITO {
 	/**
 	 * The name of the specified ITO.
 	 */
+	@JsonProperty("itoName")
 	private String itoName=new String();
 	/**
 	 * The post name of the specified ITO

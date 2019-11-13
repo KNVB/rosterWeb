@@ -344,7 +344,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<td class=\"borderCell\">\r\n    {{itoRoster.itoname}}<br>\r\n    {{itoRoster.itopostName}} Extn. 2458\r\n</td>\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<td class=\"borderCell\">\r\n    {{itoRoster.itoName}}<br>\r\n    {{itoRoster.itoPostName}} Extn. 2458\r\n</td>\r\n<td app-shift-cell *ngFor=\"let shiftType of itoRoster.shiftList\" class=\"borderCell alignCenter cursorCell\" [shiftType]=\"shiftType\"></td>\r\n<td [id]=\"itoRoster.itoId + '_totalHour'\"class=\"borderCell alignCenter\" >{{ this.shiftCount.totalHour|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_actualHour'\" class=\"borderCell alignCenter\"> {{ this.shiftCount.actualHour|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_lastMonthBalance'\" class=\"borderCell alignCenter\">{{ this.shiftCount.lastMonthBalance|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_thisMonthHourTotal'\" class=\"borderCell alignCenter\">{{ this.shiftCount.thisMonthHourTotal|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_thisMonthBalance'\" class=\"borderCell alignCenter\">{{ this.shiftCount.thisMonthBalance|number:'.2-2' }}</td>\r\n<td [id]=\"itoRoster.itoId + '_aShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.aShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_bxShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.bxShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_cShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.cShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_dxShiftCount'\" class=\"borderCell alignCenter\">{{ this.shiftCount.dxShiftCount }}</td>\r\n<td [id]=\"itoRoster.itoId + '_noOfWorkingDay'\" class=\"borderCell alignCenter\">{{ this.shiftCount.noOfWorkingDay }}</td>\r\n");
 
 /***/ }),
 
@@ -384,6 +384,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ("<table id=\"rosterTable\">\r\n    <thead id=\"rosterHeader\">\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText\" colspan=\"31\">EMSTF Resident Support & Computer Operation Support Services Team Roster</td>\r\n          <td class=\"alignCenter totalHourCell\"></td>\r\n          <td class=\"alignCenter actualHourCell\"></td>\r\n          <td class=\"alignCenter lastMonthCell\"></td>\r\n          <td class=\"alignCenter thisMonthCell\"></td>\r\n          <td class=\"alignCenter totalCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter noOfWorkingDayCell\"></td>\r\n        </tr>\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText selectRosterMonthCell\" colspan=\"31\">\r\n            <app-month-picker [monthlyCalendar]=\"(this.monthlyCalendar)\"></app-month-picker>\r\n          </td>\r\n          <td colspan=\"10\"></td>\r\n        </tr>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Holiday</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter phCell borderCell dateCell\">\r\n              <span *ngIf=\"(calendarObj !== null) && calendarObj.isPublicHoliday\">PH</span>\r\n          </td>\r\n          <td colspan=\"10\" class=\"borderCell\"></td>\r\n        </tR>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Days</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n            <span *ngIf=\"(calendarObj !== null)\" [class]=\"(((calendarObj.isPublicHoliday)||\r\n                                                            (calendarObj.dayOfWeek=='SUNDAY')||\r\n                                                            (calendarObj.dayOfWeek=='SATURDAY'))?'phCell':'')\">\r\n              {{ calendarObj.dayOfWeekName }}\r\n            </span>\r\n          </td>\r\n          <td class=\"alignCenter totalHourCell borderCell\" rowspan=\"2\">Total<br>Hour</td>\r\n          <td class=\"alignCenter actualHourCell borderCell\" rowspan=\"2\">Actual<br>Hour</td>\r\n          <td class=\"borderCell alignCenter\" colspan=\"8\">Hour Off Due</td>\r\n      </tR>\r\n      <tr>\r\n        <td class=\"nameCell borderCell\">Resident Support<br>Team Members</td>\r\n        <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n          <span *ngIf=\"(calendarObj !== null)\">{{ calendarObj.solarDate }}</span>\r\n        </td>\r\n        <td class=\"alignCenter lastMonthCell borderCell\">Last<br>Month</td>\r\n        <td class=\"alignCenter thisMonthCell borderCell\">This<br>Month</td>\r\n        <td class=\"alignCenter totalCell borderCell\">Total</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>A Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Bx Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>C Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Dx Shift</td>\r\n        <td class=\"alignCenter noOfWorkingDayCell borderCell\">No. of <br>working<br>day</td>\r\n      </tr>\r\n    </thead>\r\n    <tbody app-roster-body [monthlyCalendar]=\"(this.monthlyCalendar)\"></tbody>\r\n</table>\r\n");
+
+/***/ }),
+
+/***/ "./node_modules/raw-loader/dist/cjs.js!./src/app/components/shift-cell/shift-cell.component.html":
+/*!*******************************************************************************************************!*\
+  !*** ./node_modules/raw-loader/dist/cjs.js!./src/app/components/shift-cell/shift-cell.component.html ***!
+  \*******************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ("{{ (shiftType ==='null')?'':shiftType }}\r\n");
 
 /***/ }),
 
@@ -942,6 +955,36 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 /***/ }),
 
+/***/ "./src/app/classes/itoshift-count.ts":
+/*!*******************************************!*\
+  !*** ./src/app/classes/itoshift-count.ts ***!
+  \*******************************************/
+/*! exports provided: ITOShiftCount */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ITOShiftCount", function() { return ITOShiftCount; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+
+class ITOShiftCount {
+    constructor() {
+        this.actualHour = 0;
+        this.totalHour = 0;
+        this.thisMonthHourTotal = 0;
+        this.thisMonthBalance = 0;
+        this.aShiftCount = 0;
+        this.bxShiftCount = 0;
+        this.cShiftCount = 0;
+        this.dxShiftCount = 0;
+        this.noOfWorkingDay = 0;
+        this.lastMonthBalance = 0;
+    }
+}
+
+
+/***/ }),
+
 /***/ "./src/app/components/itoroster-row/itoroster-row.component.css":
 /*!**********************************************************************!*\
   !*** ./src/app/components/itoroster-row/itoroster-row.component.css ***!
@@ -967,20 +1010,77 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ITORosterRowComponent", function() { return ITORosterRowComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var src_app_classes_itoshift_count__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/classes/itoshift-count */ "./src/app/classes/itoshift-count.ts");
+
 
 
 let ITORosterRowComponent = class ITORosterRowComponent {
-    constructor() { }
+    constructor() {
+        this.shiftCount = new src_app_classes_itoshift_count__WEBPACK_IMPORTED_MODULE_2__["ITOShiftCount"]();
+    }
     ngOnInit() {
     }
     ngOnChanges() {
         if (this.itoRoster !== undefined) {
+            /*
+            this.shiftCount.actualHour = this.getActualHour(this.itoRoster.shiftList, this.rosterRule);
+            this.shiftCount.totalHour = this.itoRoster.workingHourPerDay * this.noOfWorkingDay;
+            this.shiftCount.lastMonthBalance = this.itoRoster.lastMonthBalance;
+            this.shiftCount.thisMonthHourTotal = this.shiftCount.actualHour - this.shiftCount.totalHour;
+            this.shiftCount.thisMonthBalance =  this.shiftCount.thisMonthHourTotal - this.shiftCount.lastMonthBalance;
+            this.shiftCount.aShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'a');
+            this.shiftCount.bxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'b');
+            this.shiftCount.cShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'c');
+            this.shiftCount.dxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'd');
+            this.shiftCount.noOfWorkingDay = this.getNoOfWorkingDay(this.itoRoster.shiftList);
+            */
         }
+    }
+    getActualHour(shiftList, rosterRule) {
+        let actualHour = 0;
+        Object.keys(shiftList).forEach((key) => {
+            if (shiftList[key] !== 'null') {
+                actualHour += parseFloat(rosterRule.shiftHourCount[shiftList[key]]);
+            }
+        });
+        return actualHour;
+    }
+    getNoOfWorkingDay(shiftList) {
+        let noOfWorkingDay = 0;
+        Object.keys(shiftList).forEach((key) => {
+            if ((shiftList[key] !== 'O') && (shiftList[key] !== 'null')) {
+                noOfWorkingDay++;
+            }
+        });
+        return noOfWorkingDay;
+    }
+    getShiftCount(shiftList, shiftType) {
+        let result = 0;
+        Object.keys(shiftList).forEach((key) => {
+            const shift = shiftList[key];
+            if ((shiftType === 'b') || (shiftType === 'd')) {
+                if (shift.startsWith(shiftType)) {
+                    result++;
+                }
+            }
+            else {
+                if (shift === shiftType) {
+                    result++;
+                }
+            }
+        });
+        return result;
     }
 };
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
 ], ITORosterRowComponent.prototype, "itoRoster", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
+], ITORosterRowComponent.prototype, "noOfWorkingDay", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
+], ITORosterRowComponent.prototype, "rosterRule", void 0);
 ITORosterRowComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: '[app-itoroster-row]',
@@ -1230,6 +1330,53 @@ RosterTableComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         styles: [tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! ./roster-table.component.css */ "./src/app/components/roster-table/roster-table.component.css")).default]
     })
 ], RosterTableComponent);
+
+
+
+/***/ }),
+
+/***/ "./src/app/components/shift-cell/shift-cell.component.css":
+/*!****************************************************************!*\
+  !*** ./src/app/components/shift-cell/shift-cell.component.css ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ("\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvc2hpZnQtY2VsbC9zaGlmdC1jZWxsLmNvbXBvbmVudC5jc3MifQ== */");
+
+/***/ }),
+
+/***/ "./src/app/components/shift-cell/shift-cell.component.ts":
+/*!***************************************************************!*\
+  !*** ./src/app/components/shift-cell/shift-cell.component.ts ***!
+  \***************************************************************/
+/*! exports provided: ShiftCellComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ShiftCellComponent", function() { return ShiftCellComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+
+
+let ShiftCellComponent = class ShiftCellComponent {
+    constructor() { }
+    ngOnInit() {
+    }
+};
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
+], ShiftCellComponent.prototype, "shiftType", void 0);
+ShiftCellComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: '[app-shift-cell]',
+        template: tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! raw-loader!./shift-cell.component.html */ "./node_modules/raw-loader/dist/cjs.js!./src/app/components/shift-cell/shift-cell.component.html")).default,
+        styles: [tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! ./shift-cell.component.css */ "./src/app/components/shift-cell/shift-cell.component.css")).default]
+    })
+], ShiftCellComponent);
 
 
 
@@ -1490,6 +1637,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm2015/forms.js");
 /* harmony import */ var _components_roster_body_roster_body_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../components/roster-body/roster-body.component */ "./src/app/components/roster-body/roster-body.component.ts");
 /* harmony import */ var _components_itoroster_row_itoroster_row_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../components/itoroster-row/itoroster-row.component */ "./src/app/components/itoroster-row/itoroster-row.component.ts");
+/* harmony import */ var _components_shift_cell_shift_cell_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../components/shift-cell/shift-cell.component */ "./src/app/components/shift-cell/shift-cell.component.ts");
+
 
 
 
@@ -1508,6 +1657,7 @@ let ShowRosterModule = class ShowRosterModule {
 ShowRosterModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
         declarations: [_components_month_picker_month_picker_component__WEBPACK_IMPORTED_MODULE_7__["MonthPickerComponent"],
+            _components_shift_cell_shift_cell_component__WEBPACK_IMPORTED_MODULE_13__["ShiftCellComponent"],
             _show_roster_component__WEBPACK_IMPORTED_MODULE_4__["ShowRosterComponent"],
             _components_itoroster_row_itoroster_row_component__WEBPACK_IMPORTED_MODULE_12__["ITORosterRowComponent"],
             _components_roster_body_roster_body_component__WEBPACK_IMPORTED_MODULE_11__["RosterBodyComponent"],
@@ -1599,7 +1749,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_3__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\Users\Roy\workspace\RosterWeb\angularSrc\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! E:\Users\cstsang\workspace\rosterWeb\angularSrc\src\main.ts */"./src/main.ts");
 
 
 /***/ })

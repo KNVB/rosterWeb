@@ -12,8 +12,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.rosterWeb.*;
-import com.rosterWeb.util.calendar.MonthlyCalendar;
+import com.rosterWeb.util.ITOSerializer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +28,7 @@ public class RosterService {
 	}
 	@Path("/getRosterTable")
 	@POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
 	public Response getRosterTable(@FormParam("year") String yearStr, @FormParam("month") String monthStr) throws Exception {
 		int rosterMonth=0,rosterYear=0;
 		LocalDate now=LocalDate.now();
@@ -41,9 +43,12 @@ public class RosterService {
 			rosterYear=now.getYear();
 			rosterMonth=now.getMonthValue();
 		}
+		ObjectMapper mapper = new ObjectMapper();
+		SimpleModule module = new SimpleModule();
+		module.addSerializer(ITORoster.class, new ITOSerializer());
+		mapper.registerModule(module);
 		logger.debug("year="+rosterYear+",month="+rosterMonth);
-		ITO ito=new ITO();
-		TreeMap<String,ITO> itoList=ito.getITOList(rosterYear,rosterMonth);
-		return Response.ok(roster.getRosterTable(rosterYear, rosterMonth, itoList.keySet().toArray(new String[0]))).build();
+		ITORoster[] rosterTable=roster.getRosterTable(rosterYear, rosterMonth);
+		return Response.ok(mapper.writeValueAsString(rosterTable)).build();
 	}
 }

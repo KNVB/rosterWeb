@@ -1,6 +1,5 @@
 package com.rosterWeb;
 
-import java.util.TreeMap;
 import com.rosterWeb.util.DataStore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,9 +13,11 @@ public class Roster {
 	public Roster() {
 		// TODO Auto-generated constructor stub
 	}
-	public ITORoster[]getRosterTable(int year,int month,String[] itoIdList) throws Exception
+	public ITORoster[]getRosterTable(int year,int month) throws Exception
 	{
 		logger.info("Roster.getRosterTable("+year+","+ month+") is called");
+		ITO ito=new ITO();
+		String[]itoIdList=ito.getITOList(year,month).keySet().toArray(new String[0]);
 		dataStore=Utility.getDataStore();
 		ITORoster[] result=dataStore.getITORosterList(year, month, itoIdList);
 		dataStore.close();

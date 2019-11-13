@@ -9,7 +9,7 @@ public class ITORoster {
 	 * For update data to database variable balance is referred to this month balance
 	 */	
 	private float lastMonthBalance,thisMonthBalance;
-	private String[] shiftList;
+	private String[] shiftList=new String[31];
 	/**
 	 * The ITO Id of the specified ITO.
 	 */
@@ -30,14 +30,14 @@ public class ITORoster {
 	 * Get the ITO Id of the specified ITO.
 	 * @return the ITO Id of the specified ITO.
 	 */
-	public String getItoId() {
+	public String getITOId() {
 		return itoId;
 	}
 	/**
 	 * Set the ITO Id of the specified ITO.
 	 * @param itoName the name of the specified ITO.
 	 */
-	public void setItoId(String itoId) {
+	public void setITOId(String itoId) {
 		this.itoId = itoId;
 	}
 	/**

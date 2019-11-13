@@ -192,14 +192,14 @@ public class DbOp implements DataStore{
 				{
 					itoRoster.setITOWorkingHourPerDay(rs.getFloat("working_hour_per_day"));
 					itoRoster.setITOName(rs.getString("ito_name"));
-					itoRoster.setItoId(itoId);
+					itoRoster.setITOId(itoId);
 					itoRoster.setITOPostName(rs.getString("post_name"));
 				}
 				stmt.close();
 				rs.close();
 				result.add(itoRoster);
-				resultArray=result.toArray(new ITORoster[0]);
 			}
+			resultArray=result.toArray(new ITORoster[0]);
 		}
 		catch (Exception e) 
 		{
