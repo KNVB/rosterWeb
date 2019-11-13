@@ -1,7 +1,9 @@
 import { Component, OnChanges,  OnInit, Input } from '@angular/core';
-import { MonthlyCalendar } from 'src/app/classes/monthly-calendar';
-import { RosterService } from 'src/app/services/roster.service';
 import { ITORoster } from 'src/app/classes/itoroster';
+import { MonthlyCalendar } from 'src/app/classes/monthly-calendar';
+import { RosterRule } from 'src/app/classes/roster-rule';
+import { RosterService } from 'src/app/services/roster.service';
+
 
 
 @Component({
@@ -12,7 +14,17 @@ import { ITORoster } from 'src/app/classes/itoroster';
 export class RosterBodyComponent implements OnInit, OnChanges {
   @Input() monthlyCalendar: MonthlyCalendar;
   itoRosterList: ITORoster[];
-  constructor(private rosterService: RosterService) { }
+  rosterRule: RosterRule;
+  constructor(private rosterService: RosterService) {
+    this.rosterService.getRosterRule().subscribe((res: RosterRule) => {
+      this.rosterRule = new RosterRule();
+      this.rosterRule.essentialShiftList = res.essentialShiftList;
+      this.rosterRule.maxConsecutiveWorkingDay = res.maxConsecutiveWorkingDay;
+      this.rosterRule.shiftHourCount = res.shiftHourCount;
+      this.rosterRule.shiftTimeSlot = res.shiftTimeSlot;
+      this.rosterRule.shiftCssClassName = res.shiftCssClassName;
+    });
+  }
 
   ngOnInit() {
   }

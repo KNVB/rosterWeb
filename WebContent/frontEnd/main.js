@@ -370,7 +370,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<tr app-itoroster-row *ngFor=\"let itoRoster of this.itoRosterList\"\r\n  [id]=\"'shift_' + itoRoster.itoId\"\r\n  [itoRoster]=\"itoRoster\"\r\n  >\r\n</tr>\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<tr app-itoroster-row *ngFor=\"let itoRoster of this.itoRosterList\"\r\n  [id]=\"'shift_' + itoRoster.itoId\"\r\n  [itoRoster]=\"itoRoster\"\r\n  [rosterRule]=\"rosterRule\"\r\n  [noOfWorkingDay]=\"monthlyCalendar.noOfWorkingDay\"\r\n  >\r\n</tr>\r\n");
 
 /***/ }),
 
@@ -985,6 +985,30 @@ class ITOShiftCount {
 
 /***/ }),
 
+/***/ "./src/app/classes/roster-rule.ts":
+/*!****************************************!*\
+  !*** ./src/app/classes/roster-rule.ts ***!
+  \****************************************/
+/*! exports provided: RosterRule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RosterRule", function() { return RosterRule; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+
+class RosterRule {
+    constructor() {
+        this.maxConsecutiveWorkingDay = 0;
+    }
+    getHourCountByShifType(shiftType) {
+        return this.shiftHourCount[shiftType];
+    }
+}
+
+
+/***/ }),
+
 /***/ "./src/app/components/itoroster-row/itoroster-row.component.css":
 /*!**********************************************************************!*\
   !*** ./src/app/components/itoroster-row/itoroster-row.component.css ***!
@@ -1021,19 +1045,20 @@ let ITORosterRowComponent = class ITORosterRowComponent {
     ngOnInit() {
     }
     ngOnChanges() {
-        if (this.itoRoster !== undefined) {
-            /*
+        if ((this.itoRoster !== undefined) && (this.rosterRule !== undefined)) {
             this.shiftCount.actualHour = this.getActualHour(this.itoRoster.shiftList, this.rosterRule);
             this.shiftCount.totalHour = this.itoRoster.workingHourPerDay * this.noOfWorkingDay;
             this.shiftCount.lastMonthBalance = this.itoRoster.lastMonthBalance;
             this.shiftCount.thisMonthHourTotal = this.shiftCount.actualHour - this.shiftCount.totalHour;
-            this.shiftCount.thisMonthBalance =  this.shiftCount.thisMonthHourTotal - this.shiftCount.lastMonthBalance;
-            this.shiftCount.aShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'a');
-            this.shiftCount.bxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'b');
-            this.shiftCount.cShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'c');
-            this.shiftCount.dxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'd');
-            this.shiftCount.noOfWorkingDay = this.getNoOfWorkingDay(this.itoRoster.shiftList);
-            */
+            this.shiftCount.thisMonthBalance = this.shiftCount.thisMonthHourTotal - this.shiftCount.lastMonthBalance;
+            console.log(this.rosterRule.getHourCountByShifType('a'));
+            /*
+             this.shiftCount.aShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'a');
+             this.shiftCount.bxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'b');
+             this.shiftCount.cShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'c');
+             this.shiftCount.dxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'd');
+             this.shiftCount.noOfWorkingDay = this.getNoOfWorkingDay(this.itoRoster.shiftList);
+             */
         }
     }
     getActualHour(shiftList, rosterRule) {
@@ -1222,13 +1247,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RosterBodyComponent", function() { return RosterBodyComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/services/roster.service */ "./src/app/services/roster.service.ts");
+/* harmony import */ var src_app_classes_roster_rule__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/classes/roster-rule */ "./src/app/classes/roster-rule.ts");
+/* harmony import */ var src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/services/roster.service */ "./src/app/services/roster.service.ts");
+
 
 
 
 let RosterBodyComponent = class RosterBodyComponent {
     constructor(rosterService) {
         this.rosterService = rosterService;
+        this.rosterService.getRosterRule().subscribe((res) => {
+            this.rosterRule = new src_app_classes_roster_rule__WEBPACK_IMPORTED_MODULE_2__["RosterRule"]();
+            this.rosterRule.essentialShiftList = res.essentialShiftList;
+            this.rosterRule.maxConsecutiveWorkingDay = res.maxConsecutiveWorkingDay;
+            this.rosterRule.shiftHourCount = res.shiftHourCount;
+            this.rosterRule.shiftTimeSlot = res.shiftTimeSlot;
+            this.rosterRule.shiftCssClassName = res.shiftCssClassName;
+        });
     }
     ngOnInit() {
     }
@@ -1241,7 +1276,7 @@ let RosterBodyComponent = class RosterBodyComponent {
     }
 };
 RosterBodyComponent.ctorParameters = () => [
-    { type: src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_2__["RosterService"] }
+    { type: src_app_services_roster_service__WEBPACK_IMPORTED_MODULE_3__["RosterService"] }
 ];
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
@@ -1497,6 +1532,11 @@ let RosterService = class RosterService {
         if (month !== null) {
             requestParams = requestParams.append('month', String(month));
         }
+        return this.http.post(url, requestParams).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])((res) => res));
+    }
+    getRosterRule() {
+        const url = '../RestfulServices/Roster/getRosterRule';
+        let requestParams = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]();
         return this.http.post(url, requestParams).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])((res) => res));
     }
 };

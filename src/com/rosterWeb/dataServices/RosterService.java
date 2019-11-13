@@ -1,6 +1,7 @@
 package com.rosterWeb.dataServices;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.ws.rs.FormParam;
@@ -15,7 +16,7 @@ import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.rosterWeb.*;
-import com.rosterWeb.util.ITOSerializer;
+import com.rosterWeb.util.ITORosterSerializer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,10 +46,22 @@ public class RosterService {
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		SimpleModule module = new SimpleModule();
-		module.addSerializer(ITORoster.class, new ITOSerializer());
+		module.addSerializer(ITORoster.class, new ITORosterSerializer());
 		mapper.registerModule(module);
 		logger.debug("year="+rosterYear+",month="+rosterMonth);
 		ITORoster[] rosterTable=roster.getRosterTable(rosterYear, rosterMonth);
 		return Response.ok(mapper.writeValueAsString(rosterTable)).build();
+	}
+	@Path("/getRosterRule")
+	@POST
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getRosterRule()throws Exception {
+		Map<String,Object> rosterRule=new TreeMap<String,Object>();
+		rosterRule.put("essentialShiftList", RosterRule.getEssentialShiftList());
+		rosterRule.put("maxConsecutiveWorkingDay", RosterRule.getMaxConsecutiveWorkingDay());
+		rosterRule.put("shiftHourCount",RosterRule.getShiftHourCount());
+		rosterRule.put("shiftCssClassName",RosterRule.getShiftCssClassName());
+		rosterRule.put("shiftTimeSlot",RosterRule.getShiftTimeSlot());
+		return Response.ok(rosterRule).build();
 	}
 }

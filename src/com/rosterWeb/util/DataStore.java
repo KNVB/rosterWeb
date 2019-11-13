@@ -1,9 +1,11 @@
 package com.rosterWeb.util;
-
-import java.util.TreeMap;
 import com.rosterWeb.ITO;
 import com.rosterWeb.ITORoster;
+import com.rosterWeb.RosterRule;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 /**
  * It is an interface for retrieving/saving all data.
  * @author SITO3
@@ -28,6 +30,18 @@ public interface DataStore {
 	 * @return roster data
 	 */
 	public ITORoster[] getITORosterList(int year,int month,String[] itoIdList);
+	/**
+	 * Reading roster rules from data store
+	 * @return roster rules
+	 */
+	public void initRosterRule();
+	
+	/**
+	 * Reading shift information from data store
+	 * @return shift information
+	 */
+	public void getShiftInfo();
+
 	/**
 	 * Close the DataStore
 	 * @throws Exception if a data store access error occurs

@@ -17,13 +17,14 @@ export class ITORosterRowComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
   ngOnChanges() {
-    if (this.itoRoster !== undefined) {
-      /*
+    if ((this.itoRoster !== undefined) && (this.rosterRule !== undefined)){
       this.shiftCount.actualHour = this.getActualHour(this.itoRoster.shiftList, this.rosterRule);
       this.shiftCount.totalHour = this.itoRoster.workingHourPerDay * this.noOfWorkingDay;
       this.shiftCount.lastMonthBalance = this.itoRoster.lastMonthBalance;
       this.shiftCount.thisMonthHourTotal = this.shiftCount.actualHour - this.shiftCount.totalHour;
       this.shiftCount.thisMonthBalance =  this.shiftCount.thisMonthHourTotal - this.shiftCount.lastMonthBalance;
+      console.log(this.rosterRule.getHourCountByShifType('a'));
+     /*
       this.shiftCount.aShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'a');
       this.shiftCount.bxShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'b');
       this.shiftCount.cShiftCount = this.getShiftCount(this.itoRoster.shiftList, 'c');

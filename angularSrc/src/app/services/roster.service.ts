@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RosterTable } from '../classes/roster-table';
-
+import { RosterRule } from '../classes/roster-rule';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,5 +21,10 @@ export class RosterService {
       requestParams = requestParams.append('month', String(month));
     }
     return this.http.post(url , requestParams).pipe(map((res: RosterTable) => res));
+  }
+  getRosterRule(): Observable<RosterRule>{
+    const url = '../RestfulServices/Roster/getRosterRule';
+    let requestParams = new HttpParams();
+    return this.http.post(url , requestParams).pipe(map((res: RosterRule) => res));
   }
 }

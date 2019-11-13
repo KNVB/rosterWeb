@@ -12,15 +12,15 @@ import com.rosterWeb.ITO;
 import com.rosterWeb.ITORoster;
 import com.rosterWeb.Roster;
 
-public class ITOSerializer extends StdSerializer<ITORoster> {
+public class ITORosterSerializer extends StdSerializer<ITORoster> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6984155114871137168L;
-	public ITOSerializer() {
+	public ITORosterSerializer() {
         this(null);
     }
-	public ITOSerializer(Class<ITORoster> itoRoster) {
+	public ITORosterSerializer(Class<ITORoster> itoRoster) {
         super(itoRoster);
     }
 	@Override
@@ -45,7 +45,7 @@ public class ITOSerializer extends StdSerializer<ITORoster> {
 		ITO ito=new ITO();
 		ObjectMapper mapper = new ObjectMapper();
 		SimpleModule module = new SimpleModule();
-		module.addSerializer(ITORoster.class, new ITOSerializer());
+		module.addSerializer(ITORoster.class, new ITORosterSerializer());
 		mapper.registerModule(module);
 		try {
 			int rosterYear=2019,rosterMonth=11;

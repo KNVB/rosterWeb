@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +19,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.rosterWeb.ITO;
 import com.rosterWeb.ITORoster;
+import com.rosterWeb.RosterRule;
+import com.rosterWeb.Shift;
 import com.rosterWeb.Utility;
 
 public class DbOp implements DataStore{
@@ -210,6 +213,58 @@ public class DbOp implements DataStore{
 			releaseResource(rs, stmt);
 		}
 		return resultArray;
+	}
+	@Override
+	public void initRosterRule()
+	{
+		ResultSet rs = null;
+		PreparedStatement stmt = null;
+		Map<String, Shift>shiftInfoList =new TreeMap<String, Shift>();
+		Shift shiftInfo;
+		try
+		{
+			sqlString="select rule_value from roster_rule where rule_type='ConsecutiveWorkingDay' and rule_key='max'";
+			stmt=dbConn.prepareStatement(sqlString);
+			rs=stmt.executeQuery();
+			rs.next();
+			RosterRule.setMaxConsecutiveWorkingDay(rs.getInt("rule_value"));
+			stmt.close();
+			rs.close();
+			sqlString="select * from shift_info where active=? order by shift_type";
+			stmt=dbConn.prepareStatement(sqlString);
+			stmt.setInt(1,1);
+			rs=stmt.executeQuery();
+			while (rs.next()) {
+				shiftInfo=new Shift();
+				if (rs.getInt("is_essential")==1)
+					shiftInfo.setEssential(true);
+				else
+					shiftInfo.setEssential(false);
+				shiftInfo.setShiftType(rs.getString("shift_type"));
+				shiftInfo.setShiftDuration(rs.getFloat("shift_duration"));
+				shiftInfo.setCssClassName(rs.getString("css_class_name"));
+				if (rs.getInt("active")==1)
+					shiftInfo.setActive(true);
+				else
+					shiftInfo.setActive(false);
+				shiftInfo.setTimeSlot(rs.getString("time_slot"));
+				shiftInfoList.put(rs.getString("shift_type"), shiftInfo);
+			}
+			RosterRule.setShiftInfoList(shiftInfoList);
+			stmt.close();
+			rs.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			releaseResource(rs, stmt);
+		}
+	}
+	public void getShiftInfo() {
+		
 	}
 	/**
 	 * Release resource for 
