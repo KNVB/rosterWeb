@@ -12,14 +12,9 @@ import { RosterRule } from 'src/app/classes/roster-rule';
 })
 export class RosterTableComponent implements OnInit {
   monthlyCalendar: MonthlyCalendar;
-  rosterRule: RosterRule
+  rosterRule: RosterRule;
+  toDayDate = new Date().getDate();
   constructor(private calendarService: CalendarService,private rosterService: RosterService) {
-    this.getData(null, null);
-  }
-
-  ngOnInit() {
-  }
-  getData(year: number, month: number) {
     this.rosterService.getRosterRule().subscribe((res: RosterRule) => {
       this.rosterRule = new RosterRule();
       this.rosterRule.essentialShiftList = res.essentialShiftList;
@@ -28,6 +23,12 @@ export class RosterTableComponent implements OnInit {
       this.rosterRule.shiftTimeSlot = res.shiftTimeSlot;
       this.rosterRule.shiftCssClassName = res.shiftCssClassName;
     });
+    this.getData(null, null);
+  }
+
+  ngOnInit() {
+  }
+  getData(year: number, month: number) {
     this.calendarService.getMonthlyCalendar(year, month).subscribe((res: MonthlyCalendar) => {
       this.monthlyCalendar = res;
     });

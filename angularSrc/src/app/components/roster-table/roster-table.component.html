@@ -43,7 +43,9 @@
       </tR>
       <tr>
         <td class="nameCell borderCell">Resident Support<br>Team Members</td>
-        <td *ngFor="let calendarObj of ((this.monthlyCalendar)?.calendarObjList)" class="alignCenter borderCell dateCell">
+        <td *ngFor="let calendarObj of ((this.monthlyCalendar)?.calendarObjList);"
+             class="alignCenter borderCell dateCell"
+             [ngClass]="(((calendarObj !== null) && ((toDayDate)==calendarObj.solarDate))?'todayCell':'')">
           <span *ngIf="(calendarObj !== null)">{{ calendarObj.solarDate }}</span>
         </td>
         <td class="alignCenter lastMonthCell borderCell">Last<br>Month</td>
