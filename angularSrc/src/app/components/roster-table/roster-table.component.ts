@@ -44,6 +44,17 @@ export class RosterTableComponent implements OnInit {
     }
     return result;
   }
+  isPH(calendarObj) {
+    let result = false;
+    if (calendarObj !== null) {
+      if(((calendarObj.isPublicHoliday)||
+          (calendarObj.dayOfWeek === 'SUNDAY')||
+          (calendarObj.dayOfWeek === 'SATURDAY'))) {
+            result = true;
+          }
+    }
+    return result;
+  }
   nextMonth() {
     let month = this.monthlyCalendar.month;
     let year = this.monthlyCalendar.year;

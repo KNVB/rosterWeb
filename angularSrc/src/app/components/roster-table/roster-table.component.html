@@ -31,9 +31,7 @@
         <tR>
           <td class="nameCell borderCell">Days</td>
           <td *ngFor="let calendarObj of ((this.monthlyCalendar)?.calendarObjList)" class="alignCenter borderCell dateCell">
-            <span *ngIf="(calendarObj !== null)" [class]="(((calendarObj.isPublicHoliday)||
-                                                            (calendarObj.dayOfWeek=='SUNDAY')||
-                                                            (calendarObj.dayOfWeek=='SATURDAY'))?'phCell':'')">
+            <span *ngIf="(calendarObj !== null)" [class]="((isPH(calendarObj))?'phCell':'')">
               {{ calendarObj.dayOfWeekName }}
             </span>
           </td>
