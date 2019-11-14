@@ -33,6 +33,17 @@ export class RosterTableComponent implements OnInit {
       this.monthlyCalendar = res;
     });
   }
+  isToDay(calendarObj) {
+    let result = false;
+    if (calendarObj !== null) {
+      if ((calendarObj.solarDate === this.toDayDate.getDate())  &&
+      (calendarObj.solarYear === this.toDayDate.getFullYear()) &&
+      (calendarObj.solarMonth === this.toDayDate.getMonth() + 1)) {
+        result = true;
+      }
+    }
+    return result;
+  }
   nextMonth() {
     let month = this.monthlyCalendar.month;
     let year = this.monthlyCalendar.year;
