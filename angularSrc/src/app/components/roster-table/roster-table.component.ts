@@ -12,11 +12,10 @@ import { RosterRule } from 'src/app/classes/roster-rule';
 })
 export class RosterTableComponent implements OnInit {
   monthlyCalendar: MonthlyCalendar;
-  rosterRule: RosterRule;
+  rosterRule = new RosterRule();
   toDayDate = new Date();
   constructor(private calendarService: CalendarService, private rosterService: RosterService) {
     this.rosterService.getRosterRule().subscribe((res: RosterRule) => {
-      this.rosterRule = new RosterRule();
       this.rosterRule.essentialShiftList = res.essentialShiftList;
       this.rosterRule.maxConsecutiveWorkingDay = res.maxConsecutiveWorkingDay;
       this.rosterRule.shiftHourCount = res.shiftHourCount;
