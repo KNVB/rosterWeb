@@ -383,7 +383,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<table id=\"rosterTable\">\r\n    <thead id=\"rosterHeader\">\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText\" colspan=\"31\">EMSTF Resident Support & Computer Operation Support Services Team Roster</td>\r\n          <td class=\"alignCenter totalHourCell\"></td>\r\n          <td class=\"alignCenter actualHourCell\"></td>\r\n          <td class=\"alignCenter lastMonthCell\"></td>\r\n          <td class=\"alignCenter thisMonthCell\"></td>\r\n          <td class=\"alignCenter totalCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter noOfWorkingDayCell\"></td>\r\n        </tr>\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText selectRosterMonthCell\" colspan=\"31\">\r\n            <app-month-picker [monthlyCalendar]=\"(this.monthlyCalendar)\"></app-month-picker>\r\n          </td>\r\n          <td colspan=\"10\"></td>\r\n        </tr>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Holiday</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter phCell borderCell dateCell\">\r\n              <span *ngIf=\"(calendarObj !== null) && calendarObj.isPublicHoliday\" title=\"{{calendarObj.festivalInfo}}\">PH</span>\r\n          </td>\r\n          <td colspan=\"10\" class=\"borderCell\"></td>\r\n        </tR>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Days</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n            <span *ngIf=\"(calendarObj !== null)\" [class]=\"((isPH(calendarObj))?'phCell':'')\">\r\n              {{ calendarObj.dayOfWeekName }}\r\n            </span>\r\n          </td>\r\n          <td class=\"alignCenter totalHourCell borderCell\" rowspan=\"2\">Total<br>Hour</td>\r\n          <td class=\"alignCenter actualHourCell borderCell\" rowspan=\"2\">Actual<br>Hour</td>\r\n          <td class=\"borderCell alignCenter\" colspan=\"8\">Hour Off Due</td>\r\n      </tR>\r\n      <tr>\r\n        <td class=\"nameCell borderCell\">Resident Support<br>Team Members</td>\r\n        <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList);\"\r\n             class=\"alignCenter borderCell dateCell\"\r\n             [ngClass]=\"((isToDay(calendarObj))?'todayCell':'')\">\r\n          <span *ngIf=\"(calendarObj !== null)\">{{ calendarObj.solarDate }}</span>\r\n        </td>\r\n        <td class=\"alignCenter lastMonthCell borderCell\">Last<br>Month</td>\r\n        <td class=\"alignCenter thisMonthCell borderCell\">This<br>Month</td>\r\n        <td class=\"alignCenter totalCell borderCell\">Total</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>A Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Bx Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>C Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Dx Shift</td>\r\n        <td class=\"alignCenter noOfWorkingDayCell borderCell\">No. of <br>working<br>day</td>\r\n      </tr>\r\n    </thead>\r\n    <tbody app-roster-body [monthlyCalendar]=\"(this.monthlyCalendar)\" [rosterRule]=\"rosterRule\"></tbody>\r\n    <tfoot id=\"rosterFooter\">\r\n      <tr>\r\n        <td colspan=\"42\"><br></td>\r\n      </tr>\r\n    </tfoot>\r\n</table>\r\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<table id=\"rosterTable\">\r\n    <thead id=\"rosterHeader\">\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText\" colspan=\"31\">EMSTF Resident Support & Computer Operation Support Services Team Roster</td>\r\n          <td class=\"alignCenter totalHourCell\"></td>\r\n          <td class=\"alignCenter actualHourCell\"></td>\r\n          <td class=\"alignCenter lastMonthCell\"></td>\r\n          <td class=\"alignCenter thisMonthCell\"></td>\r\n          <td class=\"alignCenter totalCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter shiftCountCell\"></td>\r\n          <td class=\"alignCenter noOfWorkingDayCell\"></td>\r\n        </tr>\r\n        <tr>\r\n          <td class=\"nameCell\"></td>\r\n          <td class=\"alignCenter captionCell underlineText selectRosterMonthCell\" colspan=\"31\">\r\n            <app-month-picker [monthlyCalendar]=\"(this.monthlyCalendar)\"></app-month-picker>\r\n          </td>\r\n          <td colspan=\"10\"></td>\r\n        </tr>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Holiday</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter phCell borderCell dateCell\">\r\n              <span *ngIf=\"(calendarObj !== null) && calendarObj.isPublicHoliday\" title=\"{{calendarObj.festivalInfo}}\">PH</span>\r\n          </td>\r\n          <td colspan=\"10\" class=\"borderCell\"></td>\r\n        </tR>\r\n        <tR>\r\n          <td class=\"nameCell borderCell\">Days</td>\r\n          <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList)\" class=\"alignCenter borderCell dateCell\">\r\n            <span *ngIf=\"(calendarObj !== null)\" [class]=\"((isPH(calendarObj))?'phCell':'')\">\r\n              {{ calendarObj.dayOfWeekName }}\r\n            </span>\r\n          </td>\r\n          <td class=\"alignCenter totalHourCell borderCell\" rowspan=\"2\">Total<br>Hour</td>\r\n          <td class=\"alignCenter actualHourCell borderCell\" rowspan=\"2\">Actual<br>Hour</td>\r\n          <td class=\"borderCell alignCenter\" colspan=\"8\">Hour Off Due</td>\r\n      </tR>\r\n      <tr>\r\n        <td class=\"nameCell borderCell\">Resident Support<br>Team Members</td>\r\n        <td *ngFor=\"let calendarObj of ((this.monthlyCalendar)?.calendarObjList);\"\r\n             class=\"alignCenter borderCell dateCell\"\r\n             [ngClass]=\"((isToDay(calendarObj))?'todayCell':'')\">\r\n          <span *ngIf=\"(calendarObj !== null)\">{{ calendarObj.solarDate }}</span>\r\n        </td>\r\n        <td class=\"alignCenter lastMonthCell borderCell\">Last<br>Month</td>\r\n        <td class=\"alignCenter thisMonthCell borderCell\">This<br>Month</td>\r\n        <td class=\"alignCenter totalCell borderCell\">Total</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>A Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Bx Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>C Shift</td>\r\n        <td class=\"alignCenter shiftCountCell borderCell\">Total No. of <br>Dx Shift</td>\r\n        <td class=\"alignCenter noOfWorkingDayCell borderCell\">No. of <br>working<br>day</td>\r\n      </tr>\r\n    </thead>\r\n    <tbody app-roster-body [monthlyCalendar]=\"(this.monthlyCalendar)\" [rosterRule]=\"rosterRule\"></tbody>\r\n    <tfoot id=\"rosterFooter\">\r\n      <tr>\r\n        <td colspan=\"42\"><br></td>\r\n      </tr>\r\n      <tr>\r\n        <td colspan=\"11\">\r\n          <app-shift-info-table [rosterRule]=\"rosterRule\"></app-shift-info-table>\r\n        </td>\r\n        <td colspan=\"21\" id=\"autoScheduler\" style=\"vertical-align: top;\"></td>\r\n        <td colspan=\"10\" id=\"yearlyStat\" style=\"vertical-align: top;\"></td>\r\n      </tr>\r\n    </tfoot>\r\n</table>\r\n");
 
 /***/ }),
 
@@ -397,6 +397,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ("{{ (shiftType ==='null')?'':shiftType }}\r\n");
+
+/***/ }),
+
+/***/ "./node_modules/raw-loader/dist/cjs.js!./src/app/components/shift-info-table/shift-info-table.component.html":
+/*!*******************************************************************************************************************!*\
+  !*** ./node_modules/raw-loader/dist/cjs.js!./src/app/components/shift-info-table/shift-info-table.component.html ***!
+  \*******************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ("<table style=\"border-spacing: 0;border-collapse: collapse;\" width=\"100%\">\r\n  <tr *ngFor=\"let shiftInfo of rosterRule.getShiftInfoList()\">\r\n    <td class=\"{{shiftInfo.cssClassName}}\">{{shiftInfo.shiftType}}:{{shiftInfo.timeSlot}}</td>\r\n  </tr>\r\n</table>\r\n\r\n");
 
 /***/ }),
 
@@ -999,16 +1012,37 @@ __webpack_require__.r(__webpack_exports__);
 
 class RosterRule {
     constructor() {
+        this.essentialShiftList = [];
         this.maxConsecutiveWorkingDay = 0;
+        this.shiftInfoList = [];
+        this.shiftHourCount = {};
+        this.shiftCssClassName = {};
+        this.shiftTimeSlot = {};
+    }
+    setShiftInfoList(shiftInfoList) {
+        this.shiftInfoList = shiftInfoList;
+        this.shiftInfoList.forEach((shiftInfo) => {
+            if (shiftInfo.essential) {
+                this.essentialShiftList.push(shiftInfo.shiftType);
+            }
+            this.shiftHourCount[shiftInfo.shiftType] = shiftInfo.shiftDuration;
+            this.shiftCssClassName[shiftInfo.shiftType] = shiftInfo.cssClassName;
+            this.shiftTimeSlot[shiftInfo.shiftType] = shiftInfo.timeSlot;
+        });
+    }
+    getShiftInfoList() {
+        return this.shiftInfoList;
     }
     getHourCountByShifType(shiftType) {
         return this.shiftHourCount[shiftType];
     }
     getCssClassNameByShiftType(shiftType) {
-        if ((shiftType != null) && (shiftType in this.shiftCssClassName))
+        if ((shiftType != null) && (shiftType in this.shiftCssClassName)) {
             return this.shiftCssClassName[shiftType];
-        else
-            return "";
+        }
+        else {
+            return '';
+        }
     }
 }
 
@@ -1330,11 +1364,8 @@ let RosterTableComponent = class RosterTableComponent {
         this.rosterRule = new src_app_classes_roster_rule__WEBPACK_IMPORTED_MODULE_4__["RosterRule"]();
         this.toDayDate = new Date();
         this.rosterService.getRosterRule().subscribe((res) => {
-            this.rosterRule.essentialShiftList = res.essentialShiftList;
             this.rosterRule.maxConsecutiveWorkingDay = res.maxConsecutiveWorkingDay;
-            this.rosterRule.shiftHourCount = res.shiftHourCount;
-            this.rosterRule.shiftTimeSlot = res.shiftTimeSlot;
-            this.rosterRule.shiftCssClassName = res.shiftCssClassName;
+            this.rosterRule.setShiftInfoList(res.shiftInfoList);
         });
         this.getData(null, null);
     }
@@ -1461,6 +1492,53 @@ ShiftCellComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 /***/ }),
 
+/***/ "./src/app/components/shift-info-table/shift-info-table.component.css":
+/*!****************************************************************************!*\
+  !*** ./src/app/components/shift-info-table/shift-info-table.component.css ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ("\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvc2hpZnQtaW5mby10YWJsZS9zaGlmdC1pbmZvLXRhYmxlLmNvbXBvbmVudC5jc3MifQ== */");
+
+/***/ }),
+
+/***/ "./src/app/components/shift-info-table/shift-info-table.component.ts":
+/*!***************************************************************************!*\
+  !*** ./src/app/components/shift-info-table/shift-info-table.component.ts ***!
+  \***************************************************************************/
+/*! exports provided: ShiftInfoTableComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ShiftInfoTableComponent", function() { return ShiftInfoTableComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+
+
+let ShiftInfoTableComponent = class ShiftInfoTableComponent {
+    constructor() { }
+    ngOnInit() {
+    }
+};
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
+], ShiftInfoTableComponent.prototype, "rosterRule", void 0);
+ShiftInfoTableComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: 'app-shift-info-table',
+        template: tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! raw-loader!./shift-info-table.component.html */ "./node_modules/raw-loader/dist/cjs.js!./src/app/components/shift-info-table/shift-info-table.component.html")).default,
+        styles: [tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! ./shift-info-table.component.css */ "./src/app/components/shift-info-table/shift-info-table.component.css")).default]
+    })
+], ShiftInfoTableComponent);
+
+
+
+/***/ }),
+
 /***/ "./src/app/material.module.ts":
 /*!************************************!*\
   !*** ./src/app/material.module.ts ***!
@@ -1490,6 +1568,37 @@ MaterialModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         ]
     })
 ], MaterialModule);
+
+
+
+/***/ }),
+
+/***/ "./src/app/pipe/toArrayPipe.ts":
+/*!*************************************!*\
+  !*** ./src/app/pipe/toArrayPipe.ts ***!
+  \*************************************/
+/*! exports provided: ToArrayPipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToArrayPipe", function() { return ToArrayPipe; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+
+
+let ToArrayPipe = class ToArrayPipe {
+    transform(value, args) {
+        if (value != null) {
+            return Object.values(value);
+        }
+    }
+};
+ToArrayPipe = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Pipe"])({
+        name: 'toArray'
+    })
+], ToArrayPipe);
 
 
 
@@ -1722,6 +1831,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_roster_body_roster_body_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../components/roster-body/roster-body.component */ "./src/app/components/roster-body/roster-body.component.ts");
 /* harmony import */ var _components_itoroster_row_itoroster_row_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../components/itoroster-row/itoroster-row.component */ "./src/app/components/itoroster-row/itoroster-row.component.ts");
 /* harmony import */ var _components_shift_cell_shift_cell_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../components/shift-cell/shift-cell.component */ "./src/app/components/shift-cell/shift-cell.component.ts");
+/* harmony import */ var _components_shift_info_table_shift_info_table_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../components/shift-info-table/shift-info-table.component */ "./src/app/components/shift-info-table/shift-info-table.component.ts");
+/* harmony import */ var _pipe_toArrayPipe__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../pipe/toArrayPipe */ "./src/app/pipe/toArrayPipe.ts");
+
+
 
 
 
@@ -1740,12 +1853,16 @@ let ShowRosterModule = class ShowRosterModule {
 };
 ShowRosterModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-        declarations: [_components_month_picker_month_picker_component__WEBPACK_IMPORTED_MODULE_7__["MonthPickerComponent"],
-            _components_shift_cell_shift_cell_component__WEBPACK_IMPORTED_MODULE_13__["ShiftCellComponent"],
-            _show_roster_component__WEBPACK_IMPORTED_MODULE_4__["ShowRosterComponent"],
+        declarations: [
             _components_itoroster_row_itoroster_row_component__WEBPACK_IMPORTED_MODULE_12__["ITORosterRowComponent"],
+            _components_month_picker_month_picker_component__WEBPACK_IMPORTED_MODULE_7__["MonthPickerComponent"],
             _components_roster_body_roster_body_component__WEBPACK_IMPORTED_MODULE_11__["RosterBodyComponent"],
-            _components_roster_table_roster_table_component__WEBPACK_IMPORTED_MODULE_5__["RosterTableComponent"]],
+            _components_roster_table_roster_table_component__WEBPACK_IMPORTED_MODULE_5__["RosterTableComponent"],
+            _components_shift_cell_shift_cell_component__WEBPACK_IMPORTED_MODULE_13__["ShiftCellComponent"],
+            _components_shift_info_table_shift_info_table_component__WEBPACK_IMPORTED_MODULE_14__["ShiftInfoTableComponent"],
+            _show_roster_component__WEBPACK_IMPORTED_MODULE_4__["ShowRosterComponent"],
+            _pipe_toArrayPipe__WEBPACK_IMPORTED_MODULE_15__["ToArrayPipe"]
+        ],
         imports: [
             _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
             _show_roster_routing_module__WEBPACK_IMPORTED_MODULE_3__["ShowRosterRoutingModule"],

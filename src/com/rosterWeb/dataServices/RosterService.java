@@ -57,11 +57,15 @@ public class RosterService {
     @Produces(MediaType.APPLICATION_JSON)
 	public Response getRosterRule()throws Exception {
 		Map<String,Object> rosterRule=new TreeMap<String,Object>();
-		rosterRule.put("essentialShiftList", RosterRule.getEssentialShiftList());
 		rosterRule.put("maxConsecutiveWorkingDay", RosterRule.getMaxConsecutiveWorkingDay());
+		/*
+		rosterRule.put("essentialShiftList", RosterRule.getEssentialShiftList());
 		rosterRule.put("shiftHourCount",RosterRule.getShiftHourCount());
 		rosterRule.put("shiftCssClassName",RosterRule.getShiftCssClassName());
 		rosterRule.put("shiftTimeSlot",RosterRule.getShiftTimeSlot());
+		*/
+		rosterRule.put("shiftInfoList",RosterRule.getShiftInfoList());
+		
 		return Response.ok(rosterRule).build();
 	}
 }

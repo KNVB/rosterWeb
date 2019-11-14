@@ -14,13 +14,19 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RosterBodyComponent} from '../components/roster-body/roster-body.component';
 import {ITORosterRowComponent} from '../components/itoroster-row/itoroster-row.component';
 import { ShiftCellComponent } from '../components/shift-cell/shift-cell.component';
+import { ShiftInfoTableComponent } from '../components/shift-info-table/shift-info-table.component';
+
+import {ToArrayPipe} from '../pipe/toArrayPipe';
 @NgModule({
-  declarations: [MonthPickerComponent,
-                 ShiftCellComponent,
-                 ShowRosterComponent,
+  declarations: [
                  ITORosterRowComponent,
+                 MonthPickerComponent,
                  RosterBodyComponent,
-                 RosterTableComponent],
+                 RosterTableComponent,
+                 ShiftCellComponent,
+                 ShiftInfoTableComponent,
+                 ShowRosterComponent,
+                 ToArrayPipe ],
   imports: [
     CommonModule,
     ShowRosterRoutingModule,

@@ -1,0 +1,6 @@
+<table style="border-spacing: 0;border-collapse: collapse;" width="100%">
+  <tr *ngFor="let shiftInfo of rosterRule.getShiftInfoList()">
+    <td class="{{shiftInfo.cssClassName}}">{{shiftInfo.shiftType}}:{{shiftInfo.timeSlot}}</td>
+  </tr>
+</table>
+

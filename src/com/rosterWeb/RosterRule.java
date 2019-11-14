@@ -14,19 +14,13 @@ import com.rosterWeb.util.DataStore;
  */
 public class RosterRule 
 {
-	private static final Logger logger = LogManager.getLogger("RosterRule");
-	private static Map<String, Float>shiftHourCount; 
-	private static Map<String, String>shiftCssClassName;
-	private static Map<String, String>shiftTimeSlot;
-	/**
-	 * It stores the essential shift of every day
-	 */
-	private static String essentialShiftList[];
-
 	/**
 	 * It stores the maximum no. of consecutive working day
 	 */
 	private static int maxConsecutiveWorkingDay;
+	private static final Logger logger = LogManager.getLogger("RosterRule");
+	private static Shift[]shiftInfoList;
+
 	private static RosterRule instance;
 	 static 
 	    {
@@ -77,42 +71,10 @@ public class RosterRule
 		maxConsecutiveWorkingDay=max;
 	}
 
-	/**
-	 * Get the Essential Shift List
-	 * @return the Essential Shift List
-	 */
-	public static String[] getEssentialShiftList() 
-	{
-		return essentialShiftList;
+	public static void setShiftInfoList(Shift[] shiftInfoList) {
+		RosterRule.shiftInfoList=shiftInfoList;
 	}	
-	public static void setShiftInfoList(Map<String, Shift> shiftInfoList) {
-		Shift shiftInfo;
-		ArrayList<String> essentialShift=new ArrayList<String>();
-		shiftHourCount=new TreeMap<String, Float>();
-		shiftCssClassName=new TreeMap<String, String>();
-		shiftTimeSlot=new TreeMap<String, String>();
-		for (String shiftType : shiftInfoList.keySet()) {
-			shiftInfo=shiftInfoList.get(shiftType);
-			if (shiftInfo.isEssential()) {
-				essentialShift.add(shiftType);
-			}
-			RosterRule.shiftHourCount.put(shiftType,shiftInfo.getShiftDuration());
-			RosterRule.shiftCssClassName.put(shiftType, shiftInfo.getCssClassName());
-			RosterRule.shiftTimeSlot.put(shiftType, shiftInfo.getTimeSlot());
-		}
-		RosterRule.essentialShiftList=essentialShift.toArray(new String[0]);
-	}
-	public static Map<String, Float> getShiftHourCount() {
-		return shiftHourCount;
-	}
-	public static Map<String, String> getShiftCssClassName() {
-		return shiftCssClassName;
-	}
-	public static Map<String, String> getShiftTimeSlot() {
-		return shiftTimeSlot;
-	}
-	public static void main(String[] args) {
-		System.out.println(RosterRule.getMaxConsecutiveWorkingDay());
-		System.out.println(RosterRule.getEssentialShiftList()[0]);
-	}
+	public static Shift[] getShiftInfoList() {
+		return shiftInfoList;
+	}	
 }

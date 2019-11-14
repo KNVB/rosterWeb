@@ -219,7 +219,7 @@ public class DbOp implements DataStore{
 	{
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
-		Map<String, Shift>shiftInfoList =new TreeMap<String, Shift>();
+		ArrayList<Shift>shiftInfoList =new ArrayList<Shift>();
 		Shift shiftInfo;
 		try
 		{
@@ -236,6 +236,7 @@ public class DbOp implements DataStore{
 			rs=stmt.executeQuery();
 			while (rs.next()) {
 				shiftInfo=new Shift();
+				
 				if (rs.getInt("is_essential")==1)
 					shiftInfo.setEssential(true);
 				else
@@ -248,9 +249,9 @@ public class DbOp implements DataStore{
 				else
 					shiftInfo.setActive(false);
 				shiftInfo.setTimeSlot(rs.getString("time_slot"));
-				shiftInfoList.put(rs.getString("shift_type"), shiftInfo);
+				shiftInfoList.add(shiftInfo);
 			}
-			RosterRule.setShiftInfoList(shiftInfoList);
+			RosterRule.setShiftInfoList(shiftInfoList.toArray(new Shift[0]));
 			stmt.close();
 			rs.close();
 		}

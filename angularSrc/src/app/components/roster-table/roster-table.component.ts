@@ -15,12 +15,9 @@ export class RosterTableComponent implements OnInit {
   rosterRule = new RosterRule();
   toDayDate = new Date();
   constructor(private calendarService: CalendarService, private rosterService: RosterService) {
-    this.rosterService.getRosterRule().subscribe((res: RosterRule) => {
-      this.rosterRule.essentialShiftList = res.essentialShiftList;
+    this.rosterService.getRosterRule().subscribe((res: any) => {
       this.rosterRule.maxConsecutiveWorkingDay = res.maxConsecutiveWorkingDay;
-      this.rosterRule.shiftHourCount = res.shiftHourCount;
-      this.rosterRule.shiftTimeSlot = res.shiftTimeSlot;
-      this.rosterRule.shiftCssClassName = res.shiftCssClassName;
+      this.rosterRule.setShiftInfoList(res.shiftInfoList);
     });
     this.getData(null, null);
   }
