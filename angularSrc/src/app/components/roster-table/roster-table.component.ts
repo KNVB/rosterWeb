@@ -14,7 +14,7 @@ export class RosterTableComponent implements OnInit {
   monthlyCalendar: MonthlyCalendar;
   rosterRule: RosterRule;
   toDayDate = new Date();
-  constructor(private calendarService: CalendarService,private rosterService: RosterService) {
+  constructor(private calendarService: CalendarService, private rosterService: RosterService) {
     this.rosterService.getRosterRule().subscribe((res: RosterRule) => {
       this.rosterRule = new RosterRule();
       this.rosterRule.essentialShiftList = res.essentialShiftList;
@@ -47,8 +47,8 @@ export class RosterTableComponent implements OnInit {
   isPH(calendarObj) {
     let result = false;
     if (calendarObj !== null) {
-      if(((calendarObj.isPublicHoliday)||
-          (calendarObj.dayOfWeek === 'SUNDAY')||
+      if (((calendarObj.isPublicHoliday) ||
+          (calendarObj.dayOfWeek === 'SUNDAY') ||
           (calendarObj.dayOfWeek === 'SATURDAY'))) {
             result = true;
           }

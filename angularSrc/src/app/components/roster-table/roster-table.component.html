@@ -24,7 +24,7 @@
         <tR>
           <td class="nameCell borderCell">Holiday</td>
           <td *ngFor="let calendarObj of ((this.monthlyCalendar)?.calendarObjList)" class="alignCenter phCell borderCell dateCell">
-              <span *ngIf="(calendarObj !== null) && calendarObj.isPublicHoliday">PH</span>
+              <span *ngIf="(calendarObj !== null) && calendarObj.isPublicHoliday" title="{{calendarObj.festivalInfo}}">PH</span>
           </td>
           <td colspan="10" class="borderCell"></td>
         </tR>
@@ -57,4 +57,9 @@
       </tr>
     </thead>
     <tbody app-roster-body [monthlyCalendar]="(this.monthlyCalendar)" [rosterRule]="rosterRule"></tbody>
+    <tfoot id="rosterFooter">
+      <tr>
+        <td colspan="44"><br></td>
+      </tr>
+    </tfoot>
 </table>
