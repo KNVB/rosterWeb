@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShowRosterRoutingModule} from './show-roster-routing.module';
 import { ShowRosterComponent } from './show-roster.component';
@@ -15,10 +15,14 @@ import {RosterBodyComponent} from '../components/roster-body/roster-body.compone
 import {ITORosterRowComponent} from '../components/itoroster-row/itoroster-row.component';
 import { ShiftCellComponent } from '../components/shift-cell/shift-cell.component';
 import { ShiftInfoTableComponent } from '../components/shift-info-table/shift-info-table.component';
-
 import {ToArrayPipe} from '../pipe/toArrayPipe';
+import { DateRowComponent } from '../components/date-row/date-row.component';
+import { CursorHighLighterDirective } from '../directives/cursor-high-lighter.directive';
+
 @NgModule({
   declarations: [
+                 CursorHighLighterDirective,
+                 DateRowComponent, 
                  ITORosterRowComponent,
                  MonthPickerComponent,
                  RosterBodyComponent,
@@ -38,6 +42,8 @@ import {ToArrayPipe} from '../pipe/toArrayPipe';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-  ]
+  ],
+  providers:[DateRowComponent]
+
 })
 export class ShowRosterModule { }
