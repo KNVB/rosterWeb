@@ -16,13 +16,11 @@ import {ITORosterRowComponent} from '../components/itoroster-row/itoroster-row.c
 import { ShiftCellComponent } from '../components/shift-cell/shift-cell.component';
 import { ShiftInfoTableComponent } from '../components/shift-info-table/shift-info-table.component';
 import {ToArrayPipe} from '../pipe/toArrayPipe';
-import { DateRowComponent } from '../components/date-row/date-row.component';
 import { CursorHighLighterDirective } from '../directives/cursor-high-lighter.directive';
 
 @NgModule({
   declarations: [
                  CursorHighLighterDirective,
-                 DateRowComponent, 
                  ITORosterRowComponent,
                  MonthPickerComponent,
                  RosterBodyComponent,
@@ -43,7 +41,7 @@ import { CursorHighLighterDirective } from '../directives/cursor-high-lighter.di
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers:[DateRowComponent]
+  providers:[]
 
 })
 export class ShowRosterModule { }

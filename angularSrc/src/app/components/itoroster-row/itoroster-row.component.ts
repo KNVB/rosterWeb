@@ -8,9 +8,11 @@ import { RosterRule } from 'src/app/classes/roster-rule';
   styleUrls: ['./itoroster-row.component.css']
 })
 export class ITORosterRowComponent implements OnInit, OnChanges {
+  @Input() id:string;
   @Input() itoRoster: ITORoster;
   @Input() noOfWorkingDay: number;
   @Input() rosterRule: RosterRule;
+  public rowId=-1;
   shiftCount = new ITOShiftCount();
   constructor() { }
 

@@ -39,7 +39,23 @@
           <td class="alignCenter actualHourCell borderCell" rowspan="2">Actual<br>Hour</td>
           <td class="borderCell alignCenter" colspan="8">Hour Off Due</td>
       </tR>
-      <tr app-date-row [calendarObjList]="((this.monthlyCalendar)?.calendarObjList)"></tr>
+      <tr>
+          <td class="nameCell borderCell">Resident Support<br>Team Members</td>
+          <td *ngFor="let calendarObj of ((this.monthlyCalendar)?.calendarObjList);let columnIndex = index"
+              class="alignCenter borderCell dateCell"             
+              [ngClass]="{'todayCell':isToDay(calendarObj),
+                          'highlightCursor':isHighLightColumn(calendarObj,columnIndex)}">
+              {{ ((calendarObj!=null)?calendarObj.solarDate:'')}}
+          </td>
+          <td class="alignCenter lastMonthCell borderCell">Last<br>Month</td>
+          <td class="alignCenter thisMonthCell borderCell">This<br>Month</td>
+          <td class="alignCenter totalCell borderCell">Total</td>
+          <td class="alignCenter shiftCountCell borderCell">Total No. of <br>A Shift</td>
+          <td class="alignCenter shiftCountCell borderCell">Total No. of <br>Bx Shift</td>
+          <td class="alignCenter shiftCountCell borderCell">Total No. of <br>C Shift</td>
+          <td class="alignCenter shiftCountCell borderCell">Total No. of <br>Dx Shift</td>
+          <td class="alignCenter noOfWorkingDayCell borderCell">No. of <br>working<br>day</td>
+      </tr>  
     </thead>
     <tbody app-roster-body [monthlyCalendar]="(this.monthlyCalendar)" [rosterRule]="rosterRule"></tbody>
     <tfoot id="rosterFooter">

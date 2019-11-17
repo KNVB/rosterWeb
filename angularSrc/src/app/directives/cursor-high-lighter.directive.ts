@@ -1,17 +1,26 @@
-import { Directive, HostListener, ElementRef } from '@angular/core';
-import { TransferObjectService } from '../services/transfer-object.service';
+import { Directive, HostListener, Input } from '@angular/core';
+import { RosterTableComponent } from '../components/roster-table/roster-table.component';
 
 @Directive({
   selector: '[appCursorHighLighter]'
 })
 export class CursorHighLighterDirective {
+  @Input() columnIndex:number;
+  @Input () shiftType:string;
+  @Input() id:string;
+  @Input() rowComponent;
+  constructor(private rosterTableComponent:RosterTableComponent) { }
   
-  constructor(private el: ElementRef,
-              private transferObjectService: TransferObjectService ) { }
   @HostListener('mouseover') onMouseOver() {
-   console.log('Hello'); 
-    this.transferObjectService.sendObj(this.el.nativeElement.cellIndex);
-    //=this.el.nativeElement.cellIndex;
+   if (this.shiftType!=null){  
+     this.rowComponent.rowId=this.id;  
+     this.rosterTableComponent.highlightColumnIndex=this.columnIndex;
+   }
   }
 
+  @HostListener('mouseleave') onMouseLeave() {
+    if (this.shiftType!=null){    
+      this.rosterTableComponent.highlightColumnIndex=-1;
+    }
+  }
 }

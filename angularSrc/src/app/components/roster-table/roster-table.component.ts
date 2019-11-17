@@ -13,8 +13,10 @@ import { RosterRule } from 'src/app/classes/roster-rule';
 export class RosterTableComponent implements OnInit {
   monthlyCalendar: MonthlyCalendar;
   rosterRule = new RosterRule();
-  
-  constructor(private calendarService: CalendarService, private rosterService: RosterService) {
+  toDayDate = new Date();
+  public highlightColumnIndex=-1;
+  constructor(private calendarService: CalendarService, 
+              private rosterService: RosterService) {
     this.rosterService.getRosterRule().subscribe((res: any) => {
       this.rosterRule.maxConsecutiveWorkingDay = res.maxConsecutiveWorkingDay;
       this.rosterRule.setShiftInfoList(res.shiftInfoList);
@@ -29,7 +31,13 @@ export class RosterTableComponent implements OnInit {
       this.monthlyCalendar = res;
     });
   }
- 
+  isHighLightColumn(calendarObj, columnIndex) {
+    let result = false;
+    if (calendarObj !== null) {
+      result=(this.highlightColumnIndex==columnIndex);
+    }
+    return result;
+  }
   isPH(calendarObj) {
     let result = false;
     if (calendarObj !== null) {
@@ -38,6 +46,18 @@ export class RosterTableComponent implements OnInit {
           (calendarObj.dayOfWeek === 'SATURDAY'))) {
             result = true;
           }
+    }
+    return result;
+  }
+  
+  isToDay(calendarObj) {
+    let result = false;
+    if (calendarObj !== null) {
+      if ((calendarObj.solarDate === this.toDayDate.getDate())  &&
+      (calendarObj.solarYear === this.toDayDate.getFullYear()) &&
+      (calendarObj.solarMonth === this.toDayDate.getMonth() + 1)) {
+        result = true;
+      }
     }
     return result;
   }
