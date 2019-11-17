@@ -1580,6 +1580,7 @@ let CursorHighLighterDirective = class CursorHighLighterDirective {
     onMouseLeave() {
         if (this.shiftType != null) {
             this.rosterTableComponent.highlightColumnIndex = -1;
+            this.rowComponent.rowId = -1;
         }
     }
 };
