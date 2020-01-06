@@ -208,7 +208,7 @@ class RosterTable extends HTMLTableElement
 	 *	Build a shift row                   					                  	                *
 	 *																				  				*
 	 *==============================================================================================*/	
-	_buildITORow(rosterRowData,calculateResult)
+	_buildITORow(rosterRowData)
 	{
 		var cell=SimpleCellFactory.BorderCell,i,calculateResult=[];
 		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
@@ -311,33 +311,35 @@ class RosterTable extends HTMLTableElement
 		var cell,i;
 		var aShiftCount=0,actualWorkingHour=0.0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
 		var	noOfWorkingDay=0,thisMonthHourTotal=0.0,thisMonthBalance=0.0,totalHour=0.0;
-		var result=[],shiftType;
+		var result=[],shiftType,shiftTypeList;
 		totalHour=rosterRowData.itoworkingHourPerDay*this.noOfWorkingDay;
 		for (i=1;i<=Object.keys(rosterRowData.shiftList).length;i++)
 		{
-			shiftType=rosterRowData.shiftList[i];
+			shiftTypeList=rosterRowData.shiftList[i].split("\+");
 			cell=SimpleCellFactory.getCursoredShiftCell(this);
-			cell.setShiftType(shiftType);
-			actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
-			switch (shiftType)
-			{
-				case "a":
-					aShiftCount++;
-					break;
-				case "b":
-				case "b1":
-						bxShiftCount++;
+			cell.setShiftType(rosterRowData.shiftList[i]);
+			shiftTypeList.forEach((shiftType) => {
+				actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
+				switch (shiftType)
+				{
+					case "a":
+						aShiftCount++;
 						break;
-				case "c":
-						cShiftCount++;
-						break;
-				case "d":
-				case "d1":
-				case "d2":
-				case "d3":
-						dxShiftCount++;
-						break;					
-			}
+					case "b":
+					case "b1":
+							bxShiftCount++;
+							break;
+					case "c":
+							cShiftCount++;
+							break;
+					case "d":
+					case "d1":
+					case "d2":
+					case "d3":
+							dxShiftCount++;
+							break;					
+				}
+			});
 			row.appendChild(cell);
 		}
 		for (var j=i;j<32;j++)
