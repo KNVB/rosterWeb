@@ -320,6 +320,7 @@ class RosterTable extends HTMLTableElement
 			cell.setShiftType(rosterRowData.shiftList[i]);
 			shiftTypeList.forEach((shiftType) => {
 				actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
+				console.log("shiftType="+shiftType+","+this.rosterRule.shiftHourCount[shiftType]);
 				switch (shiftType)
 				{
 					case "a":

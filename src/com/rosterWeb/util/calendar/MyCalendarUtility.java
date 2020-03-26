@@ -276,7 +276,7 @@ public class MyCalendarUtility {
 		for(i=1; i<13 && offset>0; i++) 
 		{
 			//閏月
-			if(lunarLeapMonth>0 && i==(lunarLeapMonth) && result.isLeap==false)
+			if(lunarLeapMonth>0 && i==(lunarLeapMonth+1) && result.isLeap==false)
 			{ 
 				--i; 
 				result.isLeap = true; 
@@ -288,12 +288,12 @@ public class MyCalendarUtility {
 			}
 
 			//解除閏月
-			if(result.isLeap==true && i==(lunarLeapMonth)) 
+			if(result.isLeap==true && i==(lunarLeapMonth+1)) 
 				result.isLeap = false;
 
 			offset -= temp;
 		}
-		if(offset==0L && lunarLeapMonth>0 && i==lunarLeapMonth)
+		if(offset==0L && lunarLeapMonth>0 && i==lunarLeapMonth+1)
 			if(result.isLeap)
 			{
 				result.isLeap = false; 
@@ -431,19 +431,24 @@ public class MyCalendarUtility {
 		 */
 		mc.firstWeekDay=sDObj.getDayOfWeek();
 		Hashtable<Integer,MyDate>myCalendarList=new Hashtable<Integer,MyDate>();
-		
+		//處理農曆假期
 		for (i=1;i<=mc.length;i++)
 		{
-			
 			sDObj = LocalDate.of(year,month,i);
 			lDObj=getLunarDate(sDObj);
 			//System.out.printf("%d-%d-%d %s年%s月%s日 %d-%d\n",year,month,i,lDObj.chineseYearName,lDObj.chineseMonthName,lDObj.chineseDayName,lDObj.month,lDObj.date);
 			lunarPattern=String.format("%02d", lDObj.month)+String.format("%02d", lDObj.date);
-			if (lunarHolidayList.containsKey(lunarPattern))
+			
+			if (lunarHolidayList.containsKey(lunarPattern)  && !lDObj.isLeap)
+			{	
+				//System.out.printf("%d-%d-%d %s月%s日\n",year,month,i,lDObj.month,lDObj.date);
+				//System.out.println("lunarPattern="+lunarPattern+","+lunarHolidayList.containsKey(lunarPattern));
 				lunarHolidayDates.put(i,lunarHolidayList.get(lunarPattern));
+			}
 			m=new MyDate(sDObj,lDObj);
 			myCalendarList.put(i,m);
 		}
+		 
 		
 		//處理西曆假期
 		for (Enumeration<String> keys = solarHolidayList.keys(); keys.hasMoreElements();)
@@ -466,11 +471,12 @@ public class MyCalendarUtility {
 			case 4:	tempDate=sTerm(year,(month-1)*2); //取得清明節日期
 					processHoliday(myCalendarList,solarTerm[(month-1)*2]+"節",tempDate);
 					processEasterHoliday(myCalendarList,year,month);//復活節只出現在3或4月
-					break;
-			default://處理其餘理農曆假期
+			default:
+					//處理其餘理農曆假期
 					for (Enumeration<Integer>dates=lunarHolidayDates.keys();dates.hasMoreElements();)
 					{
 						tempDate=dates.nextElement();
+						System.out.printf("%s,%d\n",lunarHolidayDates.get(tempDate),tempDate);
 						processHoliday(myCalendarList,lunarHolidayDates.get(tempDate),tempDate);
 					}
 		}
@@ -641,10 +647,11 @@ public class MyCalendarUtility {
 		//int year=2017,month=4;//
 		//int year=2015,month=3;//復活節清明節overlap
 		//int year=2013,month=3;//復活節撗跨3,4月
-		int year=2018,month=12;
+		//int year=2018,month=2;//農曆新年補假
+		int year=2020,month=6,date=25;
 		MyCalendarUtility cu=new MyCalendarUtility();
-		LocalDate now=LocalDate.now();
-		//LocalDate now=LocalDate.of(year,month,5);
+		//LocalDate now=LocalDate.now();
+		LocalDate now=LocalDate.of(year,month,date);
 		LunarDate lc=cu.getLunarDate(now);
 		LocalDate easterDate=cu.getEasterDateByYear(year);
 		System.out.println("Solar Date="+now.getYear()+"/"+now.getMonthValue()+"/"+now.getDayOfMonth());
@@ -655,6 +662,7 @@ public class MyCalendarUtility {
 		System.out.println("AnimalOfYear="+lc.animalOfYear);
 		System.out.println("Easter Date for "+year+"/"+easterDate.getMonthValue()+"/"+easterDate.getDayOfMonth());
 		System.out.println("===================================================");
+		/*
 		MonthlyCalendar mc=cu.getMonthlyCalendar(now.getYear(), now.getMonthValue());
 		for (int i=1;i<=mc.length;i++)
 		{
@@ -667,7 +675,7 @@ public class MyCalendarUtility {
 			System.out.println("Festival Info="+myLocalDate.getFestivalInfo());
 			System.out.println("is Holiday="+myLocalDate.isPublicHoliday());
 			System.out.println("===================================================");
-		}
+		}*/
 	}
 
 }
