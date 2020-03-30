@@ -58,6 +58,7 @@ class RosterTable extends HTMLTableElement
 				if(error.readyState!=4)
 				{
 					alert("Ops! Something Wrong, please try again later.\nreadyState="+error.readyState);
+					console.log(error);
 				}	
 				else
 				{
@@ -128,7 +129,6 @@ class RosterTable extends HTMLTableElement
 	 *==============================================================================================*/	
 	_buildDateRow()
 	{
-		var now=new Date();
 		var borderedLastMonthCell=SimpleCellFactory.BorderedLastMonthCell;
 		var borderedThisMonthCell=SimpleCellFactory.BorderedThisMonthCell;
 		var borderedTotalCell=SimpleCellFactory.BorderedTotalCell;
@@ -152,11 +152,9 @@ class RosterTable extends HTMLTableElement
 			this.rosterDateRow.appendChild(dateCell);
 			if (i<Object.keys(this.dateObjList).length)
 			{
-				dateCell.textContent=(i+1);
-				if ((this.rosterYear==now.getFullYear()) &&
-						(this.rosterMonth==(1+now.getMonth())) &&
-						((i+1)==(now.getDate())))
-						$(dateCell).addClass(Css.todayCellClassName);	
+				dateCell.textContent=this.dateObjList[i].dateOfMonth;
+				if (this.dateObjList[i].today)
+					$(dateCell).addClass(Css.todayCellClassName);
 			}
 		}
 		this.rosterDateRow.appendChild(borderedLastMonthCell);
@@ -193,7 +191,7 @@ class RosterTable extends HTMLTableElement
 			this.rosterHolidayRow.appendChild(phCell);
 			if (i<Object.keys(this.dateObjList).length)
 			{
-				dateObj=this.dateObjList[i+1];
+				dateObj=this.dateObjList[i];
 				if(dateObj.publicHoliday==true)
 				{
 					phCell.textContent="PH";
@@ -601,9 +599,9 @@ class RosterTable extends HTMLTableElement
 			this.rosterWeekDayRow.appendChild(weekDayCell);
 			if (i<Object.keys(this.dateObjList).length)
 			{
-				dateObj=this.dateObjList[i+1];
+				dateObj=this.dateObjList[i];
 				weekDayCell.setDateObj(dateObj);
-				if ((dateObj.publicHoliday==true)||(dateObj.dayOfWeek=="SATURDAY")||(dateObj.dayOfWeek=="SUNDAY"))
+				if ((dateObj.publicHoliday==true)||(dateObj.dayOfWeek=="S")||(dateObj.dayOfWeek=="Su"))
 				{
 					$(weekDayCell).addClass(Css.phCellClassName);
 				}

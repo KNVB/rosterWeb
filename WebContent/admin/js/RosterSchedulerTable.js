@@ -873,6 +873,7 @@ class RosterSchedulerTable extends RosterTable
  *         Generate Shift Rows                                                                      * 
  *                                                                                                  *
  *==================================================================================================*/	
+	/*
 	_buildShiftCells(rosterRowData,row)
 	{
 		var cell,i;
@@ -937,7 +938,7 @@ class RosterSchedulerTable extends RosterTable
 		result["dxShiftCount"]=dxShiftCount;
 		result["noOfWorkingDay"]=noOfWorkingDay;
 		return result;
-	}
+	}*/
 	/*==============================================================================================*
 	 *																				  				*
 	 *	Build an vacant shift row.																	*

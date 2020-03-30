@@ -40,30 +40,7 @@ class WeekDayCell extends HTMLTableCellElement
 	}
 	setDateObj(dateObj)
 	{
-		switch (dateObj.dayOfWeek)
-		{
-			case "MONDAY":
-						this.textContent="M";
-						break;	
-			case "TUESDAY":
-						this.textContent="T";
-						break;	
-			case "WEDNESDAY":
-						this.textContent="W";
-						break;	
-			case "THURSDAY":
-						this.textContent="Th";
-						break;	
-			case "FRIDAY":
-						this.textContent="F";
-						break;	
-			case "SATURDAY":
-						this.textContent="S";
-						break;	
-			case "SUNDAY":
-						this.textContent="Su";
-						break;	
-		}					
+		this.textContent=dateObj.dayOfWeek;
 	}
 }
 customElements.define('weekday-cell',
