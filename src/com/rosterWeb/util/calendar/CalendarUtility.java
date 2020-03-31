@@ -375,7 +375,7 @@ public class CalendarUtility {
 		result.date = (int) (offset + 1);
 		result.chineseYearName=getCyclical(result.year-1900+36);
 		
-		firstNode = this.sTerm(inYear,inMonth*2); //傳回當月「節」為幾日開始
+		firstNode = this.sTerm(inYear,(inMonth-1)*2); //傳回當月「節」為幾日開始
 		//System.out.println("firstNode="+offset);
 		
 		if(firstNode<inDate) {
@@ -569,7 +569,7 @@ public class CalendarUtility {
 		// year=2014;month=1;date=24;//農曆,西曆都有
 		// year=2018;month=2;date=24;//農曆新年補假
 		//year=2020;month=4;date=15;//佛誕問題
-		year=2020;month=3;date=24;
+		year=2020;month=12;date=24;
 		/*
 		LocalDateTime now=LocalDateTime.of(year,month,date,2,0,0);
 		LunarDate lc=cu.getLunarDate(now);
@@ -580,16 +580,16 @@ public class CalendarUtility {
 		System.out.println("isLeapMonth="+lc.isLeap);
 		System.out.println("===================================================");
 		*/
-		/*
+		
 		CalendarElement calendarElementList[]=cu.getMonthlyCalendar( year,  month);
-		calendarElementList.forEach((calendar)-> {
-			System.out.println("Date Of Month="+calendar.getDateOfMonth());
-			System.out.println("Day Of Week="+calendar.getDayOfWeek());
-			System.out.println("Festival Info="+calendar.getFestivalInfo());
-			System.out.println("is Holiday="+calendar.isPublicHoliday());
-			System.out.println("is Today="+calendar.isToday());
+		for (int i=0;i<calendarElementList.length;i++) {
+			System.out.println("Date Of Month="+calendarElementList[i].getDateOfMonth());
+			System.out.println("Day Of Week="+calendarElementList[i].getDayOfWeek());
+			System.out.println("Festival Info="+calendarElementList[i].getFestivalInfo());
+			System.out.println("is Holiday="+calendarElementList[i].isPublicHoliday());
+			System.out.println("is Today="+calendarElementList[i].isToday());
 			System.out.println("===================================================");
-		});
-		*/
+		}
+		
 	}
 }

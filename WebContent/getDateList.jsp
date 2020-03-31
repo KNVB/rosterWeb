@@ -7,8 +7,11 @@
 <%
 int rosterYear=Integer.parseInt(request.getParameter("year"));
 int rosterMonth=Integer.parseInt(request.getParameter("month"));
+System.out.printf("year=%d,month=%d\n",rosterYear,rosterMonth);
+
 ObjectMapper objectMapper = new ObjectMapper();
 CalendarUtility calendarUtility=new CalendarUtility();
 CalendarElement calendarElementList[]=calendarUtility.getMonthlyCalendar(rosterYear,rosterMonth);
+
 out.println(objectMapper.writeValueAsString(calendarElementList));
 %>

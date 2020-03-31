@@ -794,6 +794,9 @@ class RosterSchedulerTable extends RosterTable
 		{	
 			$(theCell).addClass(Css.getShiftCssClassName(theCell.textContent));
 			$(theCell).removeClass(AdminCss.errorRedBlackGroundClassName);
+		} else {
+			if (theCell.textContent=="")
+				$(theCell).removeClass(AdminCss.errorRedBlackGroundClassName);
 		}
 		this._updateShiftCountCells(row,this.rosterRule,ito);
 		this._updateVacantCells(theCell.cellIndex,ito);
@@ -873,72 +876,22 @@ class RosterSchedulerTable extends RosterTable
  *         Generate Shift Rows                                                                      * 
  *                                                                                                  *
  *==================================================================================================*/	
-	/*
 	_buildShiftCells(rosterRowData,row)
 	{
-		var cell,i;
-		var aShiftCount=0,actualWorkingHour=0.0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
-		var	noOfWorkingDay=0,thisMonthHourTotal=0.0,thisMonthBalance=0.0,totalHour=0.0;
-		var result=[],self=this,shiftTypeList;
-
 		for (var i=0;i<31;i++)
 		{
 			if (i<Object.keys(this.dateObjList).length)
 			{
-				cell=AdminCellFactory.getEditableShiftCell(this,rosterRowData.itoId);
-				shiftTypeList=rosterRowData.shiftList[i+1];
-				if (shiftTypeList!=null)
-				{
-					shiftTypeList=shiftTypeList.split("\+");
-					shiftTypeList.forEach(function(shiftType){
-						cell.setShiftType(rosterRowData.shiftList[i+1]);
-						actualWorkingHour+=self.rosterRule.shiftHourCount[shiftType];
-						switch (shiftType)
-						{
-							case "a":
-								aShiftCount++;
-								break;
-							case "b":
-							case "b1":
-									bxShiftCount++;
-									break;
-							case "c":
-									cShiftCount++;
-									break;
-							case "d":
-							case "d1":
-							case "d2":
-							case "d3":
-									dxShiftCount++;
-									break;					
-						}			
-					});
-				}	
+				var cell=AdminCellFactory.getEditableShiftCell(this,rosterRowData.itoId);
+				cell.setShiftType(rosterRowData.shiftList[i+1]);
 			}
 			else
 			{
 				cell=AdminCellFactory.DateCell;
 			}
 			row.appendChild(cell);
-		}
-		totalHour=rosterRowData.itoworkingHourPerDay*this.noOfWorkingDay;
-		thisMonthHourTotal=actualWorkingHour-totalHour;
-		thisMonthBalance=rosterRowData.lastMonthBalance+thisMonthHourTotal;
-		noOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
-		
-		result["totalHour"]=totalHour.toFixed(2);
-		result["lastMonthBalance"]=rosterRowData.lastMonthBalance.toFixed(2);
-		result["actualHour"]=actualWorkingHour.toFixed(2);
-		result["thisMonthHourTotal"]=thisMonthHourTotal.toFixed(2);
-		result["thisMonthBalance"]=thisMonthBalance.toFixed(2);
-		
-		result["aShiftCount"]=aShiftCount;
-		result["bxShiftCount"]=bxShiftCount;
-		result["cShiftCount"]=cShiftCount;
-		result["dxShiftCount"]=dxShiftCount;
-		result["noOfWorkingDay"]=noOfWorkingDay;
-		return result;
-	}*/
+		}	
+	}
 	/*==============================================================================================*
 	 *																				  				*
 	 *	Build an vacant shift row.																	*

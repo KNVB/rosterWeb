@@ -11,6 +11,7 @@ class RosterTable extends HTMLTableElement
 
 		this.dateObjList=null;
 		this.monthPicker=null;
+		this.noOfWorkingDay=0;
 		this.rosterBody=document.createElement("tbody");
 		this.rosterFooter=document.createElement("tFoot");
 		this.rosterHeader=document.createElement("thead");
@@ -192,9 +193,10 @@ class RosterTable extends HTMLTableElement
 			if (i<Object.keys(this.dateObjList).length)
 			{
 				dateObj=this.dateObjList[i];
-				if(dateObj.publicHoliday==true)
+				if((dateObj.publicHoliday==true) && (dateObj.dayOfWeek!="S")&& (dateObj.dayOfWeek!="Su"))
 				{
 					phCell.textContent="PH";
+					phCell.title=dateObj.festivalInfo;
 				}
 			}
 		}
@@ -212,8 +214,17 @@ class RosterTable extends HTMLTableElement
 		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
 
 		row.id="shift_"+rosterRowData.itoId;
+		
+		var cell=SimpleCellFactory.BorderCell,i;
+
+		cell.innerHTML=rosterRowData.itoname+"<br>"+rosterRowData.itopostName+" Extn. 2458";
+		row.appendChild(cell);
+
 		this._buildPreviousMonthShiftCells(rosterRowData,row);
-		var shiftCountData=this._buildShiftCells(rosterRowData,row);
+		this._buildShiftCells(rosterRowData,row);
+		//console.log("noOfWorkingDay="+this.noOfWorkingDay);
+		var shiftCountData=this.utility.calculateShiftStat(this.noOfWorkingDay,rosterRowData,this.rosterRule.shiftHourCount);
+		//console.log("shiftCountData.totalHour="+shiftCountData.totalHour);
 		this._buildShiftCountCells(row,shiftCountData,rosterRowData.itoId);
 	}
 	/*==============================================================================================*
@@ -255,13 +266,10 @@ class RosterTable extends HTMLTableElement
 	 *==============================================================================================*/		
 	_buildPreviousMonthShiftCells(rosterRowData,row)
 	{
-		var cell=SimpleCellFactory.BorderCell,i;
 		var index=Object.keys(rosterRowData.previousMonthShiftList).length-this.showNoOfPrevDate+1;
-		cell.innerHTML=rosterRowData.itoname+"<br>"+rosterRowData.itopostName+" Extn. 2458";
-		row.appendChild(cell);
-		for (i=index;i<=Object.keys(rosterRowData.previousMonthShiftList).length;i++)
+		for (var i=index;i<=Object.keys(rosterRowData.previousMonthShiftList).length;i++)
 		{
-			cell=new ShiftCell(this.utility);
+			var cell=new ShiftCell(this.utility);
 			cell.setShiftType(rosterRowData.previousMonthShiftList[i]);
 			row.appendChild(cell);
 		}
@@ -307,38 +315,10 @@ class RosterTable extends HTMLTableElement
 	_buildShiftCells(rosterRowData,row)
 	{
 		var cell,i;
-		var aShiftCount=0,actualWorkingHour=0.0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
-		var	noOfWorkingDay=0,thisMonthHourTotal=0.0,thisMonthBalance=0.0,totalHour=0.0;
-		var result=[],shiftType,shiftTypeList;
-		totalHour=rosterRowData.itoworkingHourPerDay*this.noOfWorkingDay;
 		for (i=1;i<=Object.keys(rosterRowData.shiftList).length;i++)
 		{
-			shiftTypeList=rosterRowData.shiftList[i].split("\+");
 			cell=SimpleCellFactory.getCursoredShiftCell(this);
 			cell.setShiftType(rosterRowData.shiftList[i]);
-			shiftTypeList.forEach((shiftType) => {
-				actualWorkingHour+=this.rosterRule.shiftHourCount[shiftType];
-				console.log("shiftType="+shiftType+","+this.rosterRule.shiftHourCount[shiftType]);
-				switch (shiftType)
-				{
-					case "a":
-						aShiftCount++;
-						break;
-					case "b":
-					case "b1":
-							bxShiftCount++;
-							break;
-					case "c":
-							cShiftCount++;
-							break;
-					case "d":
-					case "d1":
-					case "d2":
-					case "d3":
-							dxShiftCount++;
-							break;					
-				}
-			});
 			row.appendChild(cell);
 		}
 		for (var j=i;j<32;j++)
@@ -346,22 +326,6 @@ class RosterTable extends HTMLTableElement
 			cell=SimpleCellFactory.DateCell;
 			row.appendChild(cell);
 		}
-		thisMonthHourTotal=actualWorkingHour-totalHour;
-		thisMonthBalance=rosterRowData.lastMonthBalance+thisMonthHourTotal;
-		noOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
-		
-		result["totalHour"]=totalHour.toFixed(2);
-		result["lastMonthBalance"]=rosterRowData.lastMonthBalance.toFixed(2);
-		result["actualHour"]=actualWorkingHour.toFixed(2);
-		result["thisMonthHourTotal"]=thisMonthHourTotal.toFixed(2);
-		result["thisMonthBalance"]=thisMonthBalance.toFixed(2);
-		
-		result["aShiftCount"]=aShiftCount;
-		result["bxShiftCount"]=bxShiftCount;
-		result["cShiftCount"]=cShiftCount;
-		result["dxShiftCount"]=dxShiftCount;
-		result["noOfWorkingDay"]=noOfWorkingDay;
-		return result;
 	}
 	/*==============================================================================================*
 	 *																				  				*
