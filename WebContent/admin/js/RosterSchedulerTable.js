@@ -57,6 +57,7 @@ class RosterSchedulerTable extends RosterTable
 	{
 		var i,cells;
 		$("td."+AdminCss.shiftCellClassName).text("").blur();
+		$(this.littleSquareDiv).hide();
 	}
 	/*==============================================================================================*
 	 *																				  				*
@@ -745,9 +746,12 @@ class RosterSchedulerTable extends RosterTable
 		$(cell).addClass(AdminCss.selectCellBorderBottomClassName);
 		$(cell).addClass(AdminCss.selectCellBorderRightClassName);
 		
-		
-		this.littleSquareDiv.style.top=(cell.getBoundingClientRect().bottom-3)+"px";
-		this.littleSquareDiv.style.left=(cell.getBoundingClientRect().right-3)+"px";
+		/**
+		 * Please refer the following URL for detail:
+		 * https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+		**/
+		this.littleSquareDiv.style.top=(cell.getBoundingClientRect().bottom+window.pageYOffset-3)+"px";
+		this.littleSquareDiv.style.left=(cell.getBoundingClientRect().right+window.pageXOffset-3)+"px";
 		$(this.littleSquareDiv).show();
 		
 		for (i=selectedRegion.minY+1;i<selectedRegion.maxY;i++)
