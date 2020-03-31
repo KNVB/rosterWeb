@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Iterator;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,12 +15,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ComparisonOperator;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -34,16 +32,16 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.rosterWeb.ITO;
 import com.rosterWeb.ITORoster;
-import com.rosterWeb.util.calendar.MonthlyCalendar;
-import com.rosterWeb.util.calendar.MyCalendarUtility;
-import com.rosterWeb.util.calendar.MyDate;
+import com.rosterWeb.util.calendar.CalendarElement;
+import com.rosterWeb.util.calendar.CalendarUtility;
+
 
 public class ExcelExporter 
 {
-	private MonthlyCalendar monthlyCalendar;
+	private CalendarElement[] calendarElementList;
 	private int rosterYear,rosterMonth;
 	private ArrayList<String> vacantShiftData;
-	private MyCalendarUtility myCalendarUtility=new MyCalendarUtility();
+	private CalendarUtility myCalendarUtility=new CalendarUtility();
     
 	private String sampleExcelFilePath,tempOutputExcelFilePath;
 	private Map<String, ITO> itoList;
@@ -55,7 +53,7 @@ public class ExcelExporter
 		this.rosterYear = rosterYear;
 		this.rosterMonth = rosterMonth;
 		logger.debug("rosterYear="+this.rosterYear+",rosterMonth="+this.rosterMonth);
-		this.monthlyCalendar=myCalendarUtility.getMonthlyCalendar(this.rosterYear, this.rosterMonth);
+		this.calendarElementList=myCalendarUtility.getMonthlyCalendar(this.rosterYear, this.rosterMonth);
 	}
 	public void setSampleExcelFilePath(String inputFilePath) {
 		this.sampleExcelFilePath=inputFilePath;
@@ -111,30 +109,30 @@ public class ExcelExporter
         style.setBorderRight(BorderStyle.THIN);
         
         //Print the calendar for the specified roster month
-        for (i=1;i<=this.monthlyCalendar.length;i++)
-		{
+        for (i=0;i<this.calendarElementList.length;i++) {
         	noOfWorkingDay++;
-        	MyDate myDate=this.monthlyCalendar.getMonthlyCalendar().get(i);
-        	weekDayName=myCalendarUtility.weekDayNames.get(myDate.getDayOfWeek());
-        	logger.debug("i="+i+",is PH="+myDate.isPublicHoliday());
-        	cell=sheet1.getRow(3).getCell(i);
-        	if (myDate.isPublicHoliday())
+        	CalendarElement calendarElement=this.calendarElementList[i];
+        	weekDayName=calendarElement.getDayOfWeek();
+        	logger.debug("i="+i+",is PH="+calendarElement.isPublicHoliday());
+        	cell=sheet1.getRow(3).getCell(i+1);
+        	if (calendarElement.isPublicHoliday())
         	{	
         		cell.setCellValue("PH");
         	}
-        	cell=sheet1.getRow(4).getCell(i);
-        	if (weekDayName.equals("S")||weekDayName.equals("Su")||myDate.isPublicHoliday())
+        	cell=sheet1.getRow(4).getCell(i+1);
+        	if (weekDayName.equals("S")||weekDayName.equals("Su")||calendarElement.isPublicHoliday())
         	{
         		cell.setCellStyle(style);
         	}
-        	if (weekDayName.equals("S")||weekDayName.equals("Su")||myDate.isPublicHoliday())
+        	if (weekDayName.equals("S")||weekDayName.equals("Su")||calendarElement.isPublicHoliday())
         	{
         		noOfWorkingDay--;
         	}
         	cell.setCellValue(weekDayName);
-        	cell=sheet1.getRow(5).getCell(i);
-        	cell.setCellValue(i);
-		}
+        	cell=sheet1.getRow(5).getCell(i+1);
+        	cell.setCellValue(i+1);
+        }
+        
         
         //Prepare for copy rows from sheet2 to sheet1
 		String[] itoIdList = this.itoList.keySet().toArray(new String[0]);
@@ -157,7 +155,7 @@ public class ExcelExporter
 			cell=destRow.getCell(0);
 			cell.setCellValue(ito.getITOName()+"\n"+ito.getPostName()+" Extn. 2458");
 			shiftList=iTORosterList.get(itoId).getShiftList();
-			for (int j=1;j<=this.monthlyCalendar.length;j++)
+			for (int j=1;j<=this.calendarElementList.length;j++)
 			{
 				cell=destRow.getCell(j);
 				cell.setCellValue(shiftList.get(j));
