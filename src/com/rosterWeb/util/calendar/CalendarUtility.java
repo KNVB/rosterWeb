@@ -230,10 +230,10 @@ public class CalendarUtility {
 	/**
 	 * 
 	 * 傳回西曆 y年某month月的CalendarElement ArrayList 物件<br>
-	 * It returns the array list of CalendarElement of the given year y and month m.
+	 * It returns the array list of CalendarElement for the given year y and month m.
 	 * @param y 年份
 	 * @param m 月份
-	 * @return  An array of CalendarElement of the given year y and month m.
+	 * @return  An array of CalendarElement for the given year y and month m.
 	 */
 	public CalendarElement[] getMonthlyCalendar(int y,int m) {
 		CalendarElement ce;

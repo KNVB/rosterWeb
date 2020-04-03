@@ -27,7 +27,7 @@ public class Roster
 		
 	}
 	/**
-	 * Instantiate Roster object in the specified year and month value.  
+	 * Obtains an instance of Roster from a year, month and day.  
 	 * @param year year
 	 * @param month month
 	 */
