@@ -315,15 +315,14 @@ class RosterTable extends HTMLTableElement
 	_buildShiftCells(rosterRowData,row)
 	{
 		var cell,i;
-		for (i=1;i<=Object.keys(rosterRowData.shiftList).length;i++)
-		{
-			cell=SimpleCellFactory.getCursoredShiftCell(this);
-			cell.setShiftType(rosterRowData.shiftList[i]);
-			row.appendChild(cell);
-		}
-		for (var j=i;j<32;j++)
-		{
-			cell=SimpleCellFactory.DateCell;
+		var shiftList=rosterRowData.shiftList;
+		for (var i=1;i<32;i++) {
+			if (shiftList[i]) {
+				cell=SimpleCellFactory.getCursoredShiftCell(this);
+				cell.setShiftType(rosterRowData.shiftList[i]);
+			} else {
+				cell=SimpleCellFactory.DateCell;
+			}
 			row.appendChild(cell);
 		}
 	}

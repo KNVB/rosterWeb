@@ -882,19 +882,21 @@ class RosterSchedulerTable extends RosterTable
  *==================================================================================================*/	
 	_buildShiftCells(rosterRowData,row)
 	{
+		//console.log("rosterRowData="+JSON.stringify(rosterRowData));
 		for (var i=0;i<31;i++)
 		{
 			if (i<Object.keys(this.dateObjList).length)
 			{
 				var cell=AdminCellFactory.getEditableShiftCell(this,rosterRowData.itoId);
-				cell.setShiftType(rosterRowData.shiftList[i+1]);
+				if (rosterRowData.shiftList[i+1])
+					cell.setShiftType(rosterRowData.shiftList[i+1]);
 			}
 			else
 			{
 				cell=AdminCellFactory.DateCell;
 			}
 			row.appendChild(cell);
-		}	
+		}
 	}
 	/*==============================================================================================*
 	 *																				  				*

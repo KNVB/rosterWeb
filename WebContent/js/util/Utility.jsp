@@ -19,33 +19,34 @@ class Utility
 		var i,result={},shiftType,shiftTypeList;
 		totalHour=rosterRowData.itoworkingHourPerDay*noOfWorkingDay;
 		//console.log(rosterRowData.itoworkingHourPerDay,noOfWorkingDay);
-		for (i=1;i<=Object.keys(rosterRowData.shiftList).length;i++)
-		{
-			shiftTypeList=rosterRowData.shiftList[i].split("\+");
-			shiftTypeList.forEach((shiftType) => {
-				actualWorkingHour+=shiftHourCount[shiftType];
-				// console.log("shiftType="+shiftType+","+shiftHourCount[shiftType]);
-				switch (shiftType)
-				{
-					case "a":
-								aShiftCount++;
-								break;
-					case "b":
-					case "b1":
-								bxShiftCount++;
-								break;
-					case "c":
-								cShiftCount++;
-								break;
-					case "d":
-					case "d1":
-					case "d2":
-					case "d3":
-								dxShiftCount++;
-								break;					
-				}
-			});
-		}
+		
+		Object.keys(rosterRowData.shiftList).forEach((date)=>{
+			shiftTypeList=rosterRowData.shiftList[date].split("\+");
+				shiftTypeList.forEach((shiftType) => {
+					actualWorkingHour+=shiftHourCount[shiftType];
+					// console.log("shiftType="+shiftType+","+shiftHourCount[shiftType]);
+					switch (shiftType)
+					{
+						case "a":
+									aShiftCount++;
+									break;
+						case "b":
+						case "b1":
+									bxShiftCount++;
+									break;
+						case "c":
+									cShiftCount++;
+									break;
+						case "d":
+						case "d1":
+						case "d2":
+						case "d3":
+									dxShiftCount++;
+									break;					
+					}
+				});
+		});
+		
 		thisMonthHourTotal=actualWorkingHour-totalHour;
 		thisMonthBalance=rosterRowData.lastMonthBalance+thisMonthHourTotal;
 		//noOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
