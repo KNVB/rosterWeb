@@ -15,7 +15,7 @@ class Utility
 	calculateShiftStat(noOfWorkingDay,rosterRowData,shiftHourCount)
 	{
 		var aShiftCount=0,actualWorkingHour=0.0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0,balance=0.0;
-		var	thisMonthHourTotal=0.0,thisMonthBalance=0.0,totalHour=0.0;
+		var	thisMonthHourTotal=0.0,thisMonthBalance=0.0,totalHour=0.0,actualNoOfWorkingDay=0;
 		var i,result={},shiftType,shiftTypeList;
 		totalHour=rosterRowData.itoworkingHourPerDay*noOfWorkingDay;
 		//console.log(rosterRowData.itoworkingHourPerDay,noOfWorkingDay);
@@ -49,7 +49,7 @@ class Utility
 		
 		thisMonthHourTotal=actualWorkingHour-totalHour;
 		thisMonthBalance=rosterRowData.lastMonthBalance+thisMonthHourTotal;
-		//noOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
+		actualNoOfWorkingDay=aShiftCount+bxShiftCount+cShiftCount+dxShiftCount;
 		
 		result.totalHour=totalHour.toFixed(2);
 		result.lastMonthBalance=rosterRowData.lastMonthBalance.toFixed(2);
@@ -61,7 +61,7 @@ class Utility
 		result.bxShiftCount=bxShiftCount;
 		result.cShiftCount=cShiftCount;
 		result.dxShiftCount=dxShiftCount;
-		result.noOfWorkingDay=noOfWorkingDay;
+		result.noOfWorkingDay=actualNoOfWorkingDay;
 		return result;
 	}
 	/***********************************************************************************

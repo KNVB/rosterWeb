@@ -803,7 +803,7 @@ class RosterSchedulerTable extends RosterTable
 				$(theCell).removeClass(AdminCss.errorRedBlackGroundClassName);
 		}
 		this._updateShiftCountCells(row,this.rosterRule,ito);
-		this._updateVacantCells(theCell.cellIndex,ito);
+		this._updateVacantCells(theCell.cellIndex);
 	}
 /*==============================================================================================*
  *																				  				*
@@ -907,10 +907,11 @@ class RosterSchedulerTable extends RosterTable
 	{
 		var aShiftData=[],bShiftData=[],cShiftData=[];
 		var aShiftSD,bShiftSD,cShiftSD,avgStdDev;
-		var i,self=this,shiftType,shiftTypeList,cell;
+		var i,self=this,shiftType,shiftTypeList,cell,startCellIndex,endCellIndex;
 		var row=this.rosterBody.insertRow(this.rosterBody.rows.length);
 		row.id="vacantShiftRow";
 
+		startCellIndex=-1,endCellIndex=-1;
 		this.vacantShiftRow=row;
 		cell=AdminCellFactory.VacantShiftLabelCell;
 		row.appendChild(cell);
@@ -921,39 +922,24 @@ class RosterSchedulerTable extends RosterTable
 			row.appendChild(cell);
 		}
 		
-		Object.keys(this.dateObjList).forEach(function(date){
+		Object.keys(this.dateObjList).forEach(function(index){
 			var essentialShift=self.rosterRule.getEssentialShift();
 			cell=AdminCellFactory.VacantShiftCell;
 			row.appendChild(cell);
-
-			Object.keys(self.rosterList).forEach(function(itoId){
-				shiftTypeList=self.rosterList[itoId].shiftList[date];
-				if (shiftTypeList!=null)
-				{
-					shiftTypeList=shiftTypeList.split("\+");
-					shiftTypeList.forEach(function(shiftType){
-						if (shiftType=="b1")
-							essentialShift=essentialShift.replace("b","");
-						else
-							essentialShift=essentialShift.replace(shiftType,"");
-					});
-				}	
-			});
-			cell.textContent=essentialShift;
+			if (startCellIndex<0) {
+				startCellIndex=cell.cellIndex;
+			}
+			if (cell.cellIndex>endCellIndex) {
+				endCellIndex=cell.cellIndex;
+			}
 		});
-
+		
 		for (i=Object.keys(this.dateObjList).length;i<31;i++)
 		{
 			cell=AdminCellFactory.VacantShiftCell;
 			row.appendChild(cell);		
 		}
-
-		Object.keys(self.itoList).forEach(function(itoId){
-			aShiftData.push(Number(document.getElementById(itoId+"_aShiftCount").textContent));
-			bShiftData.push(Number(document.getElementById(itoId+"_bxShiftCount").textContent));
-			cShiftData.push(Number(document.getElementById(itoId+"_cShiftCount").textContent));
-		});
-
+		
 		cell=AdminCellFactory.BorderedAlignCenterCell;
 		cell.colSpan=5;
 		row.appendChild(cell);
@@ -977,7 +963,9 @@ class RosterSchedulerTable extends RosterTable
 		cell=AdminCellFactory.BorderedAlignCenterCell;
 		row.appendChild(cell);
 
-		this._updateStandardDevation(aShiftData,bShiftData,cShiftData);
+		for (i=startCellIndex;i<=endCellIndex;i++){
+			this._updateVacantCells(i);
+		}
 	}
 	/*==============================================================================================*
 	 *																				  				*
@@ -1401,7 +1389,7 @@ class RosterSchedulerTable extends RosterTable
 	 *	Base on the change of shift count, it update the vacant shift accordingly.					*
 	 *																				  				*
 	 *==============================================================================================*/
-	_updateVacantCells(cellIndex,ito)
+	_updateVacantCells(cellIndex)
 	{
 		var aShiftData=[],bShiftData=[],cShiftData=[];
 		var aShiftSD,bShiftSD,cShiftSD,avgStdDev;
