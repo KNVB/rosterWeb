@@ -29,14 +29,11 @@ import org.apache.logging.log4j.Logger;
 
 public class DbOp implements DataStore {
 	private Connection dbConn = null;
-	
-	private String dbServerName=Utility.getParameterValue("dbServerName");
-	private	String dbms=Utility.getParameterValue("dbms");
-	private String dbName=Utility.getParameterValue("dbName");
 	private String dbUserName=Utility.getParameterValue("dbUserName");
 	private String dbUserPwd=Utility.getParameterValue("dbUserPwd");
 	private String jdbcDriver =Utility.getParameterValue("jdbcDriver");
-	private String jdbcURL = new String("jdbc:");
+	private String jdbcURL =Utility.getParameterValue("jdbcURL");
+	
 	private String sqlString;
 	private String shiftDateFormat="yyyy-MM-dd";
 	
@@ -51,8 +48,8 @@ public class DbOp implements DataStore {
 	 */	
 	public DbOp() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
-		jdbcURL =jdbcURL +dbms+"://";
-		jdbcURL =jdbcURL +dbServerName+"/"+dbName+"?useUnicode=true&characterEncoding=UTF-8";
+		logger.debug("jdbcDriver="+jdbcDriver);
+		logger.debug("jdbcURL="+jdbcURL);
 		Class.forName(jdbcDriver);
 		dbConn= DriverManager.getConnection(jdbcURL,dbUserName,dbUserPwd);
 	}
