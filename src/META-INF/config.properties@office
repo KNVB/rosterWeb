@@ -1,5 +1,0 @@
-DataStoreImplementationClassName = com.rosterWeb.util.DbOp
-dbUserName=operator
-dbUserPwd=f5P@ssword
-jdbcDriver = com.mysql.jdbc.Driver
-jdbcURL=jdbc:mysql://f5vm9:3306/operator_roster?useUnicode=true&characterEncoding=UTF-8
