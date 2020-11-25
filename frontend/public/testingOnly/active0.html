@@ -1,0 +1,191 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Active Element testing</title>
+		<style>
+			::selection {
+			  background: none; /* WebKit/Blink Browsers */
+			}
+			::-moz-selection {
+			  background: none; /* Gecko Browsers */
+			}
+			input[type="text"]			
+			{
+				//border:1px solid red;
+				border:none;
+				background-color:#ff99cc;
+				height:100%;
+				width:100%;
+				text-align:center;
+				box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+			}
+			input[type="text"]:focus 
+			{
+				outline: none;
+			}
+			#table
+			{
+				padding:0px;
+				border-spacing: 0px;
+				border-right:1px solid #e0e0e0;
+				border-bottom:1px solid #e0e0e0;
+				border-collapse:collapse;
+				margin:0px;
+			}
+			
+			.cell
+			{
+				width:50px;
+				//height:30px;
+				padding:0px;
+				margin:0px;
+				
+				border-spacing: 0px;
+				border-top:1px solid #e0e0e0;
+				border-left:1px solid #e0e0e0;
+			}
+			.selectCellBorderLeft
+			{
+				border-left:3px solid black!important;
+			}
+			.selectCellBorderRight
+			{
+				border-right:3px solid black!important;
+			}
+			.selectCellBorderTop
+			{
+				border-top:3px solid black!important;
+			}
+			.selectCellBorderBottom
+			{
+				border-bottom:3px solid black!important;
+			}
+		</style>
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script>
+			$( document ).ready(function(){
+				var t=new TextBoxEventHandler();
+			});
+			class TextBoxEventHandler
+			{
+				constructor()
+				{
+					var self=this;
+					this.isFirstInput=true;
+					this.selectedCell=null;
+					$("input[type='text']").keydown(function(event){
+						self._handleKeyDownEvent(event);
+					});
+					$("input[type='text']").click(function(event){
+						event.stopPropagation();
+						self.selectInput(this);
+						console.log("input click");
+					});
+					$("input[type='text']").dblclick(function(event){
+						console.log("Double click");
+						self.isFirstInput=false;
+						this.focus();			
+					});
+					$("input[type='text']").blur(function(event){
+						self.unselectCell(this.parentElement);
+					});
+				}
+				selectInput(thisInput)
+				{
+					this.isFirstInput=true;
+					this.selectedCell=thisInput.parentElement;
+					$(this.selectedCell).addClass("selectCellBorderRight");
+					$(this.selectedCell).addClass("selectCellBorderTop");
+					$(this.selectedCell).addClass("selectCellBorderBottom");
+					$(this.selectedCell).addClass("selectCellBorderLeft");
+					thisInput.select();
+				}
+				unselectCell(cell)
+				{
+					this.isFirstInput=false;
+					$(cell).removeClass("selectCellBorderRight");   
+					$(cell).removeClass("selectCellBorderTop");     
+					$(cell).removeClass("selectCellBorderBottom");  
+					$(cell).removeClass("selectCellBorderLeft");
+				}
+				_handleKeyDownEvent(event)
+				{
+					var index,orgIndex;
+					event.stopPropagation();
+					if(this.isFirstInput)
+					{
+						switch (event.which)
+						{
+							case 37://handle left arrow key event
+									this._handleArrowKeyEvent(event,0,-1);
+									break;
+							case 38://handle up arrow key event
+									this._handleArrowKeyEvent(event,-1,0);
+									break;
+							case 39://handle right arrow key event
+									this._handleArrowKeyEvent(event,0,1);
+									break;
+							case 40://handle down arrow key event
+									this._handleArrowKeyEvent(event,1,0);
+									break;					
+						}			
+					}
+					
+				}
+				_handleArrowKeyEvent(event,yOffset,xOffset)
+				{
+					var rowIndex=this.selectedCell.parentElement.rowIndex;
+					var cellIndex=this.selectedCell.cellIndex;
+					
+					var newX=(cellIndex+xOffset)%5;
+					var newY=(rowIndex+yOffset)%4;
+					var table=document.getElementById("table");
+					var theCell=table.rows[(newY<0?3:newY)].cells[(newX<0?4:newX)];
+					console.log("rowIndex="+rowIndex+",yOffset="+yOffset+",cellIndex="+cellIndex+",xOffset="+xOffset);
+					console.log("newY="+newY+",newX="+newX);
+					console.log(theCell);
+					var inputElement=$(this.selectedCell).find("input[type='text']");
+					inputElement.blur();	
+					inputElement=$(theCell).find("input[type='text']");
+					this.selectInput(inputElement[0]);
+					event.preventDefault();
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<table id="table">
+			<tr>
+				<td class="cell"><input type="text" value="1"></td>
+				<td class="cell"><input type="text" value="2"></td>
+				<td class="cell"><input type="text" value="3"></td>
+				<td class="cell"><input type="text" value="4"></td>
+				<td class="cell"><input type="text" value="5"></td>
+			</tr>
+			<tr>
+				<td class="cell"><input type="text" value="11"></td>
+				<td class="cell"><input type="text" value="12"></td>
+				<td class="cell"><input type="text" value="13"></td>
+				<td class="cell"><input type="text" value="14"></td>
+				<td class="cell"><input type="text" value="15"></td>
+			</tr>
+			<tr>
+				<td class="cell"><input type="text" value="21"></td>
+				<td class="cell"><input type="text" value="22"></td>
+				<td class="cell"><input type="text" value="23"></td>
+				<td class="cell"><input type="text" value="24"></td>
+				<td class="cell"><input type="text" value="25"></td>
+			</tr>
+			<tr>
+				<td class="cell"><input type="text" value="31"></td>
+				<td class="cell"><input type="text" value="32"></td>
+				<td class="cell"><input type="text" value="33"></td>
+				<td class="cell"><input type="text" value="34"></td>
+				<td class="cell"><input type="text" value="35"></td>
+			</tr>
+		</table>		
+	</body>
+</html>	
+	

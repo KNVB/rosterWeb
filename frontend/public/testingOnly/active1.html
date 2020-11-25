@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		
+		<title>Active Element testing</title>
+		<style>
+			::selection {
+			  background: none; /* WebKit/Blink Browsers */
+			}
+			::-moz-selection {
+			  background: none; /* Gecko Browsers */
+			}
+			input[type="text"]			
+			{
+				//border:1px solid red;
+				border:none;
+				background-color:#ff99cc;
+				height:100%;
+				width:100%;
+				text-align:center;
+				box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+			}
+			input[type="text"]:focus 
+			{
+				outline: none;
+			}
+			#table
+			{
+				padding:0px;
+				border-spacing: 0px;
+				border-right:1px solid #e0e0e0;
+				border-bottom:1px solid #e0e0e0;
+				border-collapse:collapse;
+				margin:0px;
+			}
+			
+			.cell
+			{
+				position:relative;
+				width:50px;
+				padding:0px;
+				margin:0px;
+				
+				border-spacing: 0px;
+				border-top:1px solid #e0e0e0;
+				border-left:1px solid #e0e0e0;
+			}
+			.selectCellBorderLeft
+			{
+				border-left:3px solid black!important;
+			}
+			.selectCellBorderRight
+			{
+				border-right:3px solid black!important;
+			}
+			.selectCellBorderTop
+			{
+				border-top:3px solid black!important;
+			}
+			.selectCellBorderBottom
+			{
+				border-bottom:3px solid black!important;
+			}
+		</style>
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script>
+			$( document ).ready(function(){
+				var t=new Table();
+			});
+			class Table
+			{
+				constructor()
+				{
+					var cell,row;
+					var table=document.createElement("Table");
+					var tbody=document.createElement("Tbody");
+					var thead=document.createElement("Thead");
+					var tfoot=document.createElement("Tfoot");
+					
+					table.appendChild(thead);
+					row=thead.insertRow(thead.rows.length);
+					cell=row.insertCell(row.cells.length);
+					cell.colSpan=31;
+					cell.textContent="EMSTF Resident Support & Computer Operation Support Services Team Roster";
+					document.body.appendChild(table);
+				}
+			}
+		</script>
+	</head>	
+	<body>
+	</body>	
+</html>

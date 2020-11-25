@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>MonthPick</title>
+		<link rel="stylesheet" type="text/css" href="../css/style.css">
+		<style>
+			table#calendarTable
+			{
+			    background-color:black;
+				border-spacing: 0;
+				border-collapse: separate;
+				color:white;
+				font-family:Comic Sans MS;
+				z-index:100;
+				border:solid 1px black;
+				position:absolute;
+				box-shadow: 5px 5px 5px grey;
+				width:200px;
+			}
+			.clickable
+			{
+				cursor: pointer;
+			}
+			.downYearButton			
+			{
+				float:left;
+			}
+			.notAvailable
+			{
+				color:grey;
+			}
+			.upYearButton			
+			{
+				float:right;
+			}
+			#calendarTable>tbody td:first-child,
+			#calendarTable>tbody td:nth-child(2),
+			#calendarTable>tbody td:last-child
+			{
+				text-align:center;
+				border-left:1px solid #e0e0e0;
+				border-top:1px solid #e0e0e0;
+				width:33%;
+			}			
+			#calendarTable>tbody td:last-child
+			{
+				border-right:1px solid #e0e0e0;
+			}
+			#calendarTable>tbody tr:last-child td:first-child,
+			#calendarTable>tbody tr:last-child td:nth-child(2),
+			#calendarTable>tbody tr:last-child td:last-child
+			{
+				border-bottom:1px solid #e0e0e0;
+			}
+			#pickYear
+			{
+				text-align:center;
+			}
+		</style>
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script>
+		class MonthPicker
+		{
+			constructor(options)
+			{
+				var self=this;
+				var defaults={
+								minValue: "1/1000",
+								maxValue: "12/9999",
+								initYear:new Date().getFullYear(),
+								monthNames:['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'],
+							 };
+				options = $.extend({}, defaults, options);
+				
+				this.maxDateValue=(new Date(options.maxValue.split("/")[1],options.maxValue.split("/")[0],1)).getTime();
+				this.minDateValue=(new Date(options.minValue.split("/")[1],options.minValue.split("/")[0],1)).getTime();
+				this.maxYear=options.maxValue.split("/")[1];
+				this.minYear=options.minValue.split("/")[1];
+				this.monthNames=options.monthNames;
+				this.monthPickTable=document.createElement("table");
+				this.monthPickTable.id="calendarTable";
+				this.initYear=options.initYear;
+				this.onPickHandler=null;
+				//this.targetElements=options.elements;
+				$(document).click(function(){
+					self._clearMonthPickTable();
+				});
+				
+				$(options.elements).on("click",function(event){
+					event.stopPropagation();
+					if (self.monthPickTable.rows.length==0)
+						self._buildMonthPickTable(self.initYear,this);
+					else
+						self._showMonthPickTable(this);		
+				});				
+			}
+			onPick(handler)
+			{
+				this.onPickHandler=handler;	
+			}
+			_buildMonthPickTable(pickYear,theElement)
+			{
+				var cell,monthValue,rect,row,self=this,tempDateValue,tbody,thead;
+				$(this.monthPickTable).empty();
+				
+				thead=document.createElement("thead");
+				$(thead).click(function(event){
+						event.stopPropagation();
+				});
+				tbody=document.createElement("tbody");
+				this.monthPickTable.append(thead);
+				
+				row=thead.insertRow(thead.rows.length);
+				cell=row.insertCell(row.cells.length);
+				if (pickYear>this.minYear)
+				{
+					cell.innerHTML="<button class=\"downYearButton\"><</button>";
+				}
+				cell=row.insertCell(row.cells.length);
+				cell.id="pickYear";
+				cell.innerHTML=pickYear;
+				cell=row.insertCell(row.cells.length);
+				if (pickYear<this.maxYear)
+				{
+					cell.innerHTML="<button class=\"upYearButton\">></button>";
+				}
+				for (var i=0;i<4;i++)
+				{
+					row=tbody.insertRow(tbody.rows.length);
+					for (var j=0;j<3;j++)
+					{
+						let monthValue=i*3+j;
+						cell=row.insertCell(row.cells.length);
+						cell.innerHTML=this.monthNames[monthValue++];
+						tempDateValue=(new Date(pickYear,monthValue,1)).getTime();
+						if ((tempDateValue>=this.minDateValue) && (tempDateValue<=this.maxDateValue))
+						{	
+							cell.className="clickable";
+							$(cell).click(function(){
+								if (self.onPickHandler!=null)
+								{
+									self.onPickHandler(pickYear,monthValue,self.monthNames[monthValue-1]);
+								}
+							});
+						}
+						else
+						{	
+							cell.className="notAvailable";
+							$(cell).click(function(event){
+									event.stopPropagation();
+							});
+						}						
+					}
+				}
+				this.monthPickTable.append(tbody);
+				this._showMonthPickTable(theElement);
+				$("body").append(this.monthPickTable);
+				$(".downYearButton").on("click",function(event){
+						event.stopPropagation();
+						self._downYear(pickYear,theElement);
+				});
+				$(".upYearButton").on("click",function(event){
+						event.stopPropagation();
+						self._upYear(pickYear,theElement);
+				});
+			}
+			_clearMonthPickTable()
+			{
+				$(this.monthPickTable).hide();			
+			}
+			_downYear(pickYearValue,theElement)
+			{
+				if (pickYearValue>this.minYear)
+				{
+					pickYearValue--;
+					this._buildMonthPickTable(pickYearValue,theElement);
+				}
+			}
+			_showMonthPickTable(theElement)			
+			{
+				var rect = theElement.getBoundingClientRect();
+				this.monthPickTable.style.left=(rect.left + window.scrollX)+"px";
+				this.monthPickTable.style.top=(rect.top+window.scrollY+theElement.offsetHeight)+"px";
+				$(this.monthPickTable).show();
+			}
+			_upYear(pickYearValue,theElement)
+			{
+				if (pickYearValue<this.maxYear)
+				{
+					pickYearValue++;
+					this._buildMonthPickTable(pickYearValue,theElement);
+				}
+			}
+
+		}
+		$( document ).ready(function() {
+			var mP=new MonthPicker({elements:$("#rosterMonth"),
+									initYear:2018,
+									//monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+									minValue: "04/2017",
+									maxValue: "07/2019"
+									});
+			mP.onPick(function(year,month,monthName){
+				console.log(year,month,monthName);
+			});					
+		});
+		</script>
+	</head>
+	<body>
+		<table border="0" id="rosterTable">
+			<thead id="rosterHeader">
+				<tr>
+					<td class="nameCell"></td>
+					<td colspan="2"></td>
+					<td class="alignCenter titleCell underlineText" colspan="31">
+							EMSTF Resident Support &amp; Computer Operation Support Services Team Roster
+					</td>
+					<td class="totalHourCell"><br></td>
+					<td class="actualHourCell"><br></td>
+					<td class="lastMonthCell"><br></td>
+					<td class="thisMonthCell"><br></td>
+					<td class="totalCell"><br></td>
+					<td class="totalNoOfCell"><br></td>
+					<td class="totalNoOfCell"><br></td>
+					<td class="totalNoOfCell"><br></td>
+					<td class="totalNoOfCell"><br></td><td class="noOfWorkingDay"><br></td>
+				</tr>
+				<tr id="rosterMonthRow">
+					<td class="nameCell">
+					</td>
+					<td colspan="2"></td>
+					<td colspan="31" class="alignCenter rosterMonthSelectCell">
+						<span id="rosterMonth">2018</span> 
+					</td>
+					<td colspan="10"></td>
+				</tr>
+				<tr id="holidayRow">
+					<td class="nameCell borderCell">Holiday</td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell">PH</td>
+					<td class="dataCell alignCenter borderCell phCell">PH</td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="dataCell alignCenter borderCell phCell"></td>
+					<td class="borderCell" colspan="10"></td>
+				</tr>
+				<tr id="dayRow">
+					<td class="nameCell borderCell">Days</td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell phCell">S</td>
+					<td class="dataCell alignCenter borderCell phCell">Su</td>
+					<td class="dataCell alignCenter borderCell">M</td>
+					<td class="dataCell alignCenter borderCell">T</td>
+					<td class="dataCell alignCenter borderCell">W</td>
+					<td class="dataCell alignCenter borderCell">Th</td>
+					<td class="dataCell alignCenter borderCell">F</td>
+					<td class="dataCell alignCenter borderCell phCell">S</td>
+					<td class="dataCell alignCenter borderCell phCell">Su</td>
+					<td class="dataCell alignCenter borderCell">M</td>
+					<td class="dataCell alignCenter borderCell">T</td>
+					<td class="dataCell alignCenter borderCell">W</td>
+					<td class="dataCell alignCenter borderCell">Th</td>
+					<td class="dataCell alignCenter borderCell">F</td>
+					<td class="dataCell alignCenter borderCell phCell">S</td>
+					<td class="dataCell alignCenter borderCell phCell">Su</td>
+					<td class="dataCell alignCenter borderCell">M</td>
+					<td class="dataCell alignCenter borderCell">T</td>
+					<td class="dataCell alignCenter borderCell">W</td>
+					<td class="dataCell alignCenter borderCell">Th</td>
+					<td class="dataCell alignCenter borderCell">F</td>
+					<td class="dataCell alignCenter borderCell phCell">S</td>
+					<td class="dataCell alignCenter borderCell phCell">Su</td>
+					<td class="dataCell alignCenter borderCell">M</td>
+					<td class="dataCell alignCenter borderCell phCell">T</td>
+					<td class="dataCell alignCenter borderCell phCell">W</td>
+					<td class="dataCell alignCenter borderCell">Th</td>
+					<td class="dataCell alignCenter borderCell">F</td>
+					<td class="dataCell alignCenter borderCell phCell">S</td>
+					<td class="dataCell alignCenter borderCell phCell">Su</td>
+					<td class="dataCell alignCenter borderCell">M</td>
+					<td class="alignCenter borderCell" rowspan="2">Total<br>Hour</td>
+					<td class="alignCenter borderCell" rowspan="2">Actual<br>Hour</td>
+					<td class="alignCenter borderCell" colspan="8">Hour Off Due</td>
+				</tr>
+				<tr id="dateRow">
+					<td class="nameCell borderCell">Resident Support<br>Team Members</td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell"></td>
+					<td class="dataCell alignCenter borderCell">1</td>
+					<td class="dataCell alignCenter borderCell">2</td>
+					<td class="dataCell alignCenter borderCell">3</td>
+					<td class="dataCell alignCenter borderCell">4</td>
+					<td class="dataCell alignCenter borderCell">5</td>
+					<td class="dataCell alignCenter borderCell highlight">6</td>
+					<td class="dataCell alignCenter borderCell">7</td>
+					<td class="dataCell alignCenter borderCell">8</td>
+					<td class="dataCell alignCenter borderCell">9</td>
+					<td class="dataCell alignCenter borderCell">10</td>
+					<td class="dataCell alignCenter borderCell">11</td>
+					<td class="dataCell alignCenter borderCell">12</td>
+					<td class="dataCell alignCenter borderCell">13</td>
+					<td class="dataCell alignCenter borderCell">14</td>
+					<td class="dataCell alignCenter borderCell">15</td>
+					<td class="dataCell alignCenter borderCell">16</td>
+					<td class="dataCell alignCenter borderCell">17</td>
+					<td class="dataCell alignCenter borderCell">18</td>
+					<td class="dataCell alignCenter borderCell">19</td>
+					<td class="dataCell alignCenter borderCell">20</td>
+					<td class="dataCell alignCenter borderCell">21</td>
+					<td class="dataCell alignCenter borderCell">22</td>
+					<td class="dataCell alignCenter borderCell">23</td>
+					<td class="dataCell alignCenter borderCell">24</td>
+					<td class="dataCell alignCenter borderCell">25</td>
+					<td class="dataCell alignCenter borderCell">26</td>
+					<td class="dataCell alignCenter borderCell">27</td>
+					<td class="dataCell alignCenter borderCell">28</td>
+					<td class="dataCell alignCenter borderCell">29</td>
+					<td class="dataCell alignCenter borderCell">30</td>
+					<td class="dataCell alignCenter borderCell">31</td>
+					<td class="alignCenter borderCell">Last<br>Month</td>
+					<td class="alignCenter borderCell">This<br>Month</td>
+					<td class="alignCenter borderCell">Total</td>
+					<td class="alignCenter borderCell">Total No. of<br>A shift</td>
+					<td class="alignCenter borderCell">Total No. of<br>Bx shift</td>
+					<td class="alignCenter borderCell">Total No. of<br>C shift</td>
+					<td class="alignCenter borderCell">Total No. of<br>Dx shift</td>
+					<td class="alignCenter borderCell">No. of<br>working<br>day</td>
+				</tr>
+			</thead>
+			<tbody id="rosterBody">
+			</tbody>
+			<tfoot id="rosterFooter">
+				<tr>
+					<td colspan="44"><br></td>
+				</tr>
+				<tr>
+					<td colspan=13 class="aShiftColor">
+						a : 0800H - 1700H
+					</td>
+					<td colspan="20" rowspan=10 id="autoScheduler" style="vertical-align:top">
+					</td>
+					<td colspan="11" rowspan=20 id="yearlyStat" style="vertical-align:top">
+					</td>
+				</tr>
+				<tr>
+					<td colspan=13 class="bShiftColor">
+						b : 1630H - 2215H
+					</td>
+				</tr>
+				<tr>
+					<td colspan=13 class="bShiftColor">
+						b1: 1500H - 2215H
+					</td>
+				</tr>
+				<tr>
+					<td colspan=13 class="cShiftColor">
+						c : 2145H - 0830H (the next day)
+					</td>
+				</tr>
+				<tr>
+					<td colspan=13 class="dxShiftColor">
+						d : 0800H - 1800H (on weekdays)
+					</td>
+				</tr>
+				<tr>
+					<td colspan=13 class="dxShiftColor">
+						d1 : 0800H - 1700H (on weekdays)
+					</td>
+				</tr>
+				<tr>
+					<td colspan=13 class="dxShiftColor">
+						d2 : 0900H - 1800H (on weekdays)
+					</td>
+				</tr>
+				<tr>
+					<td colspan=13 class="dxShiftColor">
+						d3 : 0800H - 1648H (on weekdays)
+					</td>
+				</tr>
+				<tr>
+					<td colspan=13 class="sickLeaveColor">
+						s : sick leave standby
+					</td>
+				</tr>
+				<tr>
+					<td colspan=13 class="oShiftColor">
+						O : dayoff
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</body>
+</html>

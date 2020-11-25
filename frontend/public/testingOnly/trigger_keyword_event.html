@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Trigger Keyboard event</title>
+		<style>
+			/*::selection {
+			  background: none; /* WebKit/Blink Browsers */
+			}
+			::-moz-selection {
+			  background: none; /* Gecko Browsers */
+			}*/		
+		</style>
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script>
+			function go()
+			{
+				var e=$.Event("keydown");
+				e.keyCode=65;
+				//console.log($("#c11"));
+				$("#c11").focus().trigger(e);
+				
+				//jQuery.event.trigger({ type: 'keydown', which: 77 });
+			}
+		</script>
+	</head>
+	<body>
+		<table border="1" id="dataTable">
+			<tr>
+				<td id="c11" contenteditable="true"></td>
+				<td id="c12" contenteditable="true"></td>
+				<td id="c13" contenteditable="true"></td>
+			</tr>
+		</table>
+		<button onclick="go()">Copy</button>
+	</body>
+</html>	

@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Clipboard JS</title>
+		<style>
+			/*::selection {
+			  background: none; /* WebKit/Blink Browsers */
+			}
+			::-moz-selection {
+			  background: none; /* Gecko Browsers */
+			}*/		
+		</style>
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+		<script>
+			$( document ).ready(function() {
+				
+			});
+		</script>	
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td id="target00">
+					<input type="text" value="1" style="background-color:#ff99cc;">
+				</td>
+				<td id="target01">
+					<input type="text" value="2" style="background-color:#ffffcc;">
+				</td>
+				<td id="target02">
+					<input type="text" value="3" style="background-color:#ccffcc;">
+				</td>	
+			</tr>
+			<tr>
+				<td id="target10">
+					<input type="text" value="1" style="background-color:#ff99cc;">
+				</td>
+				<td id="target11">
+					<input type="text" value="2" style="background-color:#ffffcc;">
+				</td>
+				<td id="target12" style="background-color:#ccffcc;">
+					<input type="text" value="3" style="background-color:#ccffcc;">
+				</td>	
+			</tr>
+			<tr>
+				<td>
+					<input type="text" value="1" style="background-color:#ff99cc;">
+				</td>
+				<td>
+					<input type="text" value="2" style="background-color:#ffffcc;">
+				</td>
+				<td>
+					<input type="text" value="3" style="background-color:#ccffcc;">
+				</td>	
+			</tr>
+		</table>
+		<button id="go" onclick="go()">Go</button> 
+	</body>
+</htMl>	
