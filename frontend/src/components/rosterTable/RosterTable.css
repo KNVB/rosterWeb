@@ -1,0 +1,39 @@
+.tableContainer{
+  font-family:Times New Roman;
+}
+.tableCaption{
+  font-size:18px
+}
+.rosterMonth
+{
+  font-size:15px
+}
+/*******************************************************************************************************
+ *                                                                                                     *
+ *    Shift color style                                                                                *
+ *                                                                                                     *
+ *******************************************************************************************************/
+ .aShiftColor
+ {
+   background-color:#ff99cc;
+ }
+ .bShiftColor
+ { 
+   background-color:#ffffcc;
+ }
+ .cShiftColor
+ {
+   background-color:#ccffcc;
+ }
+ .oShiftColor
+ {
+   background-color:#ffffff;
+ }
+ .dShiftColor
+ {
+   background-color:#ccffff;
+ }
+ .sickLeaveColor
+ {
+   background-color:#cc99ff;
+ }
