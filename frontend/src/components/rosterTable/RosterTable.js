@@ -9,8 +9,8 @@ import { useState,useEffect } from 'react';
 function RosterTable(){
     const [rosterDate,setRosterMonth]=useState(new Date());
     const calendarUtility=new CalendarUtility();
-    //let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterDate.getFullYear(),rosterDate.getMonth());
-    let monthlyCalendar=calendarUtility.getMonthlyCalendar(2015,3);
+    let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterDate.getFullYear(),rosterDate.getMonth());
+    //let monthlyCalendar=calendarUtility.getMonthlyCalendar(2015,3);
     return (
         <Container fluid={true} className="tableContainer">
             <Row>
@@ -27,7 +27,7 @@ function RosterTable(){
             </Row>
             <Row>
                 <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                    <table className="w-100">
+                    <table id="rosterTable">
                         <TableHeader monthlyCalendar={monthlyCalendar} calendarUtility={calendarUtility}/>
                         <TableBody rosterYear={rosterDate.getFullYear()} rosterMonth={rosterDate.getMonth()}/>
                         <TableFooter/>

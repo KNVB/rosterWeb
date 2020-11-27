@@ -37,3 +37,9 @@
  {
    background-color:#cc99ff;
  }
+ /********************************************************************************************************/
+ table#rosterTable {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 1660px;
+}

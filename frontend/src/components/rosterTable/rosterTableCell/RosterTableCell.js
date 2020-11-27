@@ -1,16 +1,18 @@
 import './RosterTableCell.css';
 function RosterTableCell(props){
-    let classNames="rosterTableCell";
-    console.log(props);
-    if (props.className!==null){
-        console.log(props.className);
-        classNames+=" "+props.className;
-    }
-
-    return (
-        <td className={classNames}>            
-            {props.content}
-        </td>
-    )
+  let myProps={};
+  Object.keys(props).forEach(key=>{
+    myProps[key]=props[key];
+  })
+  if (props.className!==undefined){
+    myProps.className+=" rosterTableCell";
+  } else {
+    myProps.className="rosterTableCell";
+  }
+  return(
+    <td {...myProps}>
+      {props.content}
+    </td>
+  )
 }
 export default RosterTableCell;

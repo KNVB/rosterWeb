@@ -1,3 +1,4 @@
+import DateRow from './dateRow/DateRow';
 import HolidayRow from './holidayRow/HolidayRow';
 import WeekDayRow from './weekDayRow/WeekDayRow';
 function TableHeader(props){
@@ -6,6 +7,7 @@ function TableHeader(props){
         <thead>
             <HolidayRow monthlyCalendar={props.monthlyCalendar}/>
             <WeekDayRow calendarUtility={props.calendarUtility} monthlyCalendar={props.monthlyCalendar}/>
+            <DateRow monthlyCalendar={props.monthlyCalendar}/>
         </thead>
     )
 }
