@@ -1,7 +1,10 @@
+import RosterTableCell from '../rosterTableCell/RosterTableCell';
 function TableBody(){
     return (
         <tbody>
-            <tr><td>Body</td></tr>
+            <tr>
+                <RosterTableCell content="Body"/>
+            </tr>
         </tbody>
     )
 }

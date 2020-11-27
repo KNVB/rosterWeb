@@ -1,6 +1,7 @@
+import './TableFooter.css';
 function TableFooter(){
     return (
-        <tfoot>
+        <tfoot className="tableFooter">
             <tr>
                 <td colSpan="44"><br/></td>
             </tr>

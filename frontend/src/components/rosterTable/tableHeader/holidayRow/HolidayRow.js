@@ -6,7 +6,7 @@ function HolidayRow(props){
     let holidayRow=[];
     for (let i=0;i<31;i++){
         if (props.monthlyCalendar[i]){
-            console.log(props.monthlyCalendar[i]);
+            //console.log(props.monthlyCalendar[i]);
             let content=((props.monthlyCalendar[i].festivalInfo)?"PH":"");                
             holidayRow.push(
                 <PHCell content={content} key={"PH_"+i} title={props.monthlyCalendar[i].festivalInfo}/>

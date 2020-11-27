@@ -1,6 +1,6 @@
 import './RosterTable.css';
 import {Col,Container,Row} from 'react-bootstrap';
-import CalendarUtility from '../utils/calendar/CalendarUtility';
+import CalendarUtility from '../../utils/calendar/CalendarUtility';
 import TableHeader from './tableHeader/TableHeader'; 
 import TableBody   from './tableBody/TableBody';
 import TableFooter from './TableFooter'; 
