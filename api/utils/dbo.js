@@ -36,6 +36,20 @@ class DBO
 			const startDateString=year+"-"+month+"-01";
 			const endDateString=moment(startDateString).add(1,"M").add(-1,"d").format('YYYY-MM-DD');
 		}
+		this.getRosterRule=async()=>{
+			let sqlString ="select * from roster_rule order by rule_type,rule_key,rule_value";
+			try{
+				const result=await query({sql:sqlString});
+				return result;
+			} catch (error) {
+				throw error;
+			} finally{
+				connection.end(err=>{
+				if (err) throw err;
+					console.log("Disconnect from "+dbConfig.host+" successfully!");
+				});
+			}
+		}
 		this.close=()=>{
 			connection.end(err=>{
 				if (err) throw err;
