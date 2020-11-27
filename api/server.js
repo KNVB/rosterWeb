@@ -28,9 +28,10 @@ if (process.env.NODE_ENV=="development"){
 }
 //================================================================
 app.use('/api', apiRouter);
-apiRouter.get('/getPlaineRoster',function(req,res){
+apiRouter.get('/getRosterList',function(req,res){
 	//res.send(meetingManager.initMeeting(req.body));
 	console.log(req.query);
+	res.send(rosterManager.getRosterList(req.query.year,req.query.month));
 });
 httpServer.listen(httpServerPort, function() {
   console.log('server up and running at %s port', httpServerPort);

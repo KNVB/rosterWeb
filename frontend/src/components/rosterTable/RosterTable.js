@@ -29,7 +29,7 @@ function RosterTable(){
                 <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
                     <table id="rosterTable">
                         <TableHeader monthlyCalendar={monthlyCalendar} calendarUtility={calendarUtility}/>
-                        <TableBody rosterYear={rosterDate.getFullYear()} rosterMonth={rosterDate.getMonth()}/>
+                        <TableBody rosterYear={rosterDate.getFullYear()} rosterMonth={rosterDate.getMonth()+1}/>
                         <TableFooter/>
                     </table>
                 </Col>

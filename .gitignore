@@ -2,3 +2,5 @@
 /api/.env.production
 /frontend/.env.production
 /frontend/.env.development
+/api/node_modules
+/frontend/node_modules
