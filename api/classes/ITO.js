@@ -43,7 +43,11 @@ class ITO
 					if (err){
 						reject(err);
 					}else {
-						resolve(result);
+						if (result.length>0){
+							resolve(result[0].balance);
+						} else {
+							resolve(0.0);
+						}
 					}
 				})
 			})

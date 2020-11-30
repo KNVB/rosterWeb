@@ -17,8 +17,8 @@ class DBO
                     if (err) {
                         throw err;
                     } else {						
-                        callBack(err,results[0].balance);
-                        console.log("Get Roster successfully!");
+                        callBack(err,results);
+                        console.log("Get Last Month balance successfully!");
                     }
                 });
             });
