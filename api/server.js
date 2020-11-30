@@ -3,7 +3,7 @@ require('dotenv-flow').config();
 let bodyParser = require('body-parser')
 let cors = require('cors')
 let express = require('express');
-let rosterManager=new (require("./classes/RosterManager.js"));
+let rosterManager=new (require("./classes/rosterManager.js"));
 let path = require('path')
 
 //===============================================================
@@ -28,10 +28,11 @@ if (process.env.NODE_ENV=="development"){
 }
 //================================================================
 app.use('/api', apiRouter);
-apiRouter.get('/getRosterList',function(req,res){
+apiRouter.get('/getITORosterList',async function(req,res){
 	//res.send(meetingManager.initMeeting(req.body));
 	console.log(req.query);
-	res.send(rosterManager.getRosterList(req.query.year,req.query.month));
+	let result=await rosterManager.getRosterList(req.query.year,req.query.month);
+	res.send(result);
 });
 httpServer.listen(httpServerPort, function() {
   console.log('server up and running at %s port', httpServerPort);

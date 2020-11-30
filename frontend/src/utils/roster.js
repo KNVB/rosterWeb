@@ -2,7 +2,7 @@ import fetchApi from './fetch';
 class Roster{
     constructor(){
         this.get=(year,month)=>{
-            fetchApi('/getRosterList','GET',{"year":year,"month":month})
+            fetchApi('/getITORosterList','GET',{"year":year,"month":month})
                     .then(x=>{
                         console.log(x);
                     })
