@@ -9,7 +9,20 @@ class DBO
 		const util =require('util');
 		const connection = mysql.createConnection(dbConfig);
 		//const query = util.promisify(connection.query).bind(connection);
-		
+		this.getLastMonthBalance=(year,month,itoId,callBack)=>{
+			const startDateString=year+"-"+month+"-01";
+			let sqlString='select balance from last_month_balance where ito_Id=? and shift_month=?';
+			connection.execute(sqlString,[itoId,startDateString],(err, results, fields)=>{
+                connection.end(err=>{
+                    if (err) {
+                        throw err;
+                    } else {						
+                        callBack(err,results[0].balance);
+                        console.log("Get Roster successfully!");
+                    }
+                });
+            });
+		}
 		this.getITOList=(year,month,callBack)=>{
             const startDateString=year+"-"+month+"-01";
             const endDateString=moment(startDateString).add(1,"M").add(-1,"d").format('YYYY-MM-DD');
@@ -31,25 +44,20 @@ class DBO
                 });
             });
         }
-		this.getITORoster=(year, month,itoId,callBack)=>{
+		this.getRoster=(year,month,itoId,callBack)=>{
+			let sqlString ="select day(shift_date) as d,shift from shift_record where ito_Id=? and (shift_record.shift_date between ? and ?)";
 			const startDateString=year+"-"+month+"-01";
             const endDateString=moment(startDateString).add(1,"M").add(-1,"d").format('YYYY-MM-DD');
-			let sqlString ="select balance,day(shift_date) as d,shift ";
-			sqlString+='from shift_record where ito_id=? ';
-			sqlString+='and (shift_date between ?  and ?)';
-			
-			connection.execute(	sqlString,
-								[itoId,startDateString,endDateString],
-								(err, results, fields)=>{
-									connection.end(err=>{
-										if (err) {
-											throw err;
-										} else {
-											callBack(err,results);
-											console.log("Get ITO Roster successfully.");
-										}
-									});
-								});
+			connection.execute(sqlString,[itoId,startDateString,endDateString],(err, results, fields)=>{
+                connection.end(err=>{
+                    if (err) {
+                        throw err;
+                    } else {
+                        callBack(err,results);
+                        console.log("Get Roster successfully!");
+                    }
+                });
+            });
 		}
 		this.getRosterRule=(callBack)=>{
             let sqlString ="select * from roster_rule order by rule_type,rule_key,rule_value";

@@ -5,16 +5,23 @@ class RosterManager
 		let ITO=require("./ITO.js");
 		const RosterRule = require('./RosterRule');
 		this.getRosterList=async (year,month)=>{
-			let dboObj=new DBO();
-			let itoList=await ITO.getITOList(year, month);		
-			let rosterList={};
-			Object.keys(itoList).forEach(async itoId=>{
-				let itoRoster=await ITO.getITORoster(year, month,itoList[itoId]);	
-				rosterList[itoId]=itoRoster;
-				console.log(itoList[itoId].itoName,itoRoster)
-			});
-			console.log(rosterList);
-			return rosterList;
+			try{
+				let dboObj=new DBO();
+				
+				let itoList=await ITO.getITOList(year, month);
+				let rosterList={};
+				let itoIdList=Object.keys(itoList);
+				for (var i=0;i<itoIdList.length;i++){
+					var ito=itoList[itoIdList[i]];
+					var roster=await ito.getRoster(year,month);
+					var lastMonthBalance=await ito.getLastMonthBalance(year,month);
+					roster.lastMonthBalance=parseFloat(lastMonthBalance);
+					rosterList[itoIdList[i]]=roster;
+				}
+				return rosterList;
+			} catch (error){
+				console.log("Something wrong when getting Roster list:"+error);
+			}		
 		}
 	}
 }

@@ -1,6 +1,8 @@
 class ITO
 {
 	constructor(){
+		let DBO=require("../utils/dbo.js");
+		let ITORoster = require('./ITORoster');
 		/**
 		 * The ITO Id of the specified ITO.
 		 */
@@ -33,7 +35,36 @@ class ITO
 		/**
 		 * The black listed shift pattern list of the specified ITO.	
 		 */
-		this.blackListedShiftPatternList=[];		
+		this.blackListedShiftPatternList=[];
+		this.getLastMonthBalance=(year,month)=>{
+			let dboObj=new DBO();
+			return new Promise((resolve, reject) => {
+				dboObj.getLastMonthBalance(year,month,this.itoId,(err,result)=>{
+					if (err){
+						reject(err);
+					}else {
+						resolve(result);
+					}
+				})
+			})
+		}
+		this.getRoster=(year,month)=>{
+			let dboObj=new DBO();
+			return new Promise((resolve, reject) => {
+				dboObj.getRoster(year,month,this.itoId,(err,result)=>{
+					if (err){
+						reject(err);
+					}else {
+						let itoRoster=new ITORoster();
+						itoRoster.itoName=this.itoName;
+						itoRoster.itoPostName=this.postName;
+						itoRoster.workingHourPerDay=this.workingHourPerDay;
+						itoRoster.shiftList=result;
+						resolve(itoRoster);
+					}
+				})
+			});			
+		}
 	}
 	static getITOList(year, month){
 		let DBO=require("../utils/dbo.js");
@@ -66,25 +97,6 @@ class ITO
 				}
 			});
 		});
-	}
-	static getITORoster(year, month,ito){
-		let DBO=require("../utils/dbo.js");
-		let ITORoster = require('./ITORoster');
-		let dboObj=new DBO();
-		return new Promise((resolve, reject) => {
-			dboObj.getITORoster(year, month,ito.itoId,(err,resultList)=>{
-				if (err){
-				  reject(err);
-				}else {
-					let itoRoster=new ITORoster();
-					itoRoster.itoName=ito.itoName;
-					itoRoster.itoPostName=ito.postName;
-					itoRoster.workingHourPerDay=ito.workingHourPerDay;
-					itoRoster.shiftList=resultList;
-					resolve(itoRoster);
-				}
-			})
-		})
-	}
+	}	
 }
 module.exports = ITO;
