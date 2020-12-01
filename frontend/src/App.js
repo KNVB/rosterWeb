@@ -1,9 +1,17 @@
+import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
 import RosterTable from './components/rosterTable/RosterTable';
 function App() {
   return (
-    <div className="App p-1">
-      <RosterTable/>
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path='/' render={() => 
+            (
+              <Redirect to="/rosterWeb"/>
+            )
+        }/>
+        <Route exact path='/rosterWeb' component={RosterTable} />
+      </Switch>
+   </Router>
   ); 
 }
 
