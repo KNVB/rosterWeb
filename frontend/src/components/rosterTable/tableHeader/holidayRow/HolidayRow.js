@@ -1,6 +1,6 @@
-import NameCell from '../../nameCell/NameCell';
+import NameCell from '../../cells/nameCell/NameCell';
 import PHCell from './PHCell';
-import RosterTableCell from '../../rosterTableCell/RosterTableCell'
+import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell'
 import './HolidayRow.css';
 function HolidayRow(props){
     let holidayRow=[];

@@ -6,10 +6,11 @@ import TableBody   from './tableBody/TableBody';
 import TableFooter from './TableFooter'; 
 
 import { useState,useEffect } from 'react';
-function RosterTable(){
+function RosterTable_Component(){
     const [rosterDate,setRosterMonth]=useState(new Date());
     const calendarUtility=new CalendarUtility();
-    let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterDate.getFullYear(),rosterDate.getMonth());
+    let result=calendarUtility.getMonthlyCalendar(rosterDate.getFullYear(),rosterDate.getMonth());
+    let monthlyCalendar=result.monthlyCalendar;
     //let monthlyCalendar=calendarUtility.getMonthlyCalendar(2015,3);
     return (
         <div className="App p-1">
@@ -30,7 +31,7 @@ function RosterTable(){
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
                         <table id="rosterTable">
                             <TableHeader monthlyCalendar={monthlyCalendar} calendarUtility={calendarUtility}/>
-                            <TableBody rosterYear={rosterDate.getFullYear()} rosterMonth={rosterDate.getMonth()+1}/>
+                            <TableBody noOfWorkingDay={result.noOfWorkingDay} rosterYear={rosterDate.getFullYear()} rosterMonth={rosterDate.getMonth()+1}/>
                             <TableFooter/>
                         </table>
                     </Col>
@@ -39,4 +40,4 @@ function RosterTable(){
         </div>
     );
 }
-export default RosterTable;
+export default RosterTable_Component;

@@ -28,6 +28,9 @@ if (process.env.NODE_ENV=="development"){
 }
 //================================================================
 app.use('/rosterWeb/api', apiRouter);
+apiRouter.get('/getRosterRule',(req,res)=>{
+	res.send(rosterManager.getRosterRule());
+})
 apiRouter.get('/getITORosterList',async function(req,res){
 	//res.send(meetingManager.initMeeting(req.body));
 	console.log(req.query);

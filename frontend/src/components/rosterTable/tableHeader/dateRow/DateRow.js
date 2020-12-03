@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
 import DateCell from './DateCell';
-import BalanceCell from './BalanceCell';
-import NameCell from '../../nameCell/NameCell';
-import ShiftCountCell from './ShiftCountCell';
+import BalanceCell from '../../cells/balanceCell/BalanceCell';
+import NameCell from '../../cells/nameCell/NameCell';
+import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
 function DateRow(props){
     let dateRow=[];
     for (let i=0;i<31;i++){

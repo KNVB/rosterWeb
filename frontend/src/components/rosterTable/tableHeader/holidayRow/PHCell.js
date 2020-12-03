@@ -1,4 +1,4 @@
-import RosterTableCell from '../../rosterTableCell/RosterTableCell';
+import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
 function PHCell(props){
     return (
         <RosterTableCell title={props.title} className="font-weight-bold phCell text-center" content={props.content}/>

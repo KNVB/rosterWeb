@@ -1,4 +1,4 @@
-import RosterTableCell from '../../rosterTableCell/RosterTableCell';
+import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
 function DateCell(props){
     return (
         <RosterTableCell className="text-center" content={props.content}/>

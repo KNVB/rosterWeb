@@ -1,6 +1,6 @@
 import HourCell from './HourCell';
 import HourOffDueCell from './HourOffDueCell';
-import NameCell from '../../nameCell/NameCell';
+import NameCell from '../../cells/nameCell/NameCell';
 import WeekDayCell from './WeekDayCell';
 import { Fragment } from 'react';
 function WeekDayRow(props){
@@ -10,7 +10,7 @@ function WeekDayRow(props){
             //console.log(props.monthlyCalendar[i]);
             var content=props.calendarUtility.weekdayNames[props.monthlyCalendar[i].dayOfWeek];
             var className="",title="";
-            if ((content==="Su") || (props.monthlyCalendar[i].publicHoliday))
+            if ((content==="S") || (content==="Su") || (props.monthlyCalendar[i].publicHoliday))
                 className="font-weight-bold phCell";
             if  (props.monthlyCalendar[i].publicHoliday){
                 title=props.monthlyCalendar[i].festivalInfo;

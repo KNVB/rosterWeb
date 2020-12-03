@@ -53,11 +53,11 @@ class CalendarUtility {
         this.weekdayNames=['Su','M','T','W','Th','F','S']
         //=================================================================================================
         this.getMonthlyCalendar=(y,m)=>{
-            let publicHolidayList=[],result=[];
+            let monthlyCalendar=[],noOfWorkingDay=0,publicHolidayList=[],result={};
 		    let length,lunarDate,solarDate,firstSolarTermDate,secondSolarTermDate;
 		    let ce,lDObj,sDObj;
             length=solarDays(y,m);    //國曆當月天數
-            
+            noOfWorkingDay=length;
             for(let i=0;i<length;i++) {
                 sDObj = new Date(y,m,i+1);    		//當月一日日期
                 lDObj =this.getLunarDate(sDObj);	//農曆
@@ -72,7 +72,6 @@ class CalendarUtility {
                     solarDate="0"+(ce.month+1);
                 else
                     solarDate=(ce.month+1).toString();
-
                 if (ce.dateOfMonth<10)
                     solarDate+="0"+ce.dateOfMonth;
                 else
@@ -103,7 +102,7 @@ class CalendarUtility {
                 if (ce.dayOfWeek===0) // 如果當日是星期日
                     ce.publicHoliday=true; // 設定為公眾假期
 
-                result.push(ce);
+                monthlyCalendar.push(ce);
             }
             //復活節只出現在3或4月
             if(m===2 || m===3) {
@@ -131,14 +130,23 @@ class CalendarUtility {
             secondSolarTermDate=sTerm(y,m*2+1)-1;
             //console.log((m+1)+"月第一節氣日子:"+firstSolarTermDate);
             //console.log((m+1)+"月第二節氣日子:"+secondSolarTermDate);
-            result[firstSolarTermDate].solarTermInfo=solarTerm[m*2];
-            result[secondSolarTermDate].solarTermInfo = solarTerm[m*2+1];
+            monthlyCalendar[firstSolarTermDate].solarTermInfo=solarTerm[m*2];
+            monthlyCalendar[secondSolarTermDate].solarTermInfo = solarTerm[m*2+1];
             
-            if (result[firstSolarTermDate].solarTermInfo==="清明") {
-                pushDataToObj(publicHolidayList,firstSolarTermDate,result[firstSolarTermDate].solarTermInfo+"節"); 
+            if (monthlyCalendar[firstSolarTermDate].solarTermInfo==="清明") {
+                pushDataToObj(publicHolidayList,firstSolarTermDate,monthlyCalendar[firstSolarTermDate].solarTermInfo+"節"); 
             }			
             //console.log(publicHolidayList);
-            processHoliday(publicHolidayList,result);
+            processHoliday(publicHolidayList,monthlyCalendar);
+            
+            monthlyCalendar.forEach(calendarDate=>{
+                if ((calendarDate.dayOfWeek===0) || (calendarDate.dayOfWeek===6)||(calendarDate.publicHoliday)){
+                    noOfWorkingDay--;
+                }
+            })
+            
+            result["monthlyCalendar"]=monthlyCalendar;
+            result["noOfWorkingDay"]=noOfWorkingDay;
             return result;
         }
         //====================================== 算出農曆, 傳入日期物件, 傳回農曆日期物件

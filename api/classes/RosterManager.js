@@ -23,6 +23,9 @@ class RosterManager
 				console.log("Something wrong when getting Roster list:"+error);
 			}		
 		}
+		this.getRosterRule=()=>{
+			return RosterRule;
+		}
 	}
 }
 module.exports = RosterManager;

@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
-import RosterTable from './components/rosterTable/RosterTable';
+import RosterTable from './components/rosterTable/RosterTable.';
 function App() {
   return (
     <Router>

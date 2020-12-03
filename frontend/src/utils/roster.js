@@ -4,6 +4,9 @@ class Roster{
         this.get=(year,month)=>{
            return fetchApi('/getITORosterList','GET',{"year":year,"month":month})                   
         }
+        this.getRosterRule=()=>{
+            return fetchApi('/getRosterRule','GET');
+        }
     }
 }
 export default Roster;
