@@ -6,7 +6,7 @@ class ITORoster{
 		this.shiftList={};
 		
 		this.itoName="";
-		this.itoPostName="";
+		this.itoPostName="";		
 	}
 }
 module.exports = ITORoster;

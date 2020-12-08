@@ -19,7 +19,8 @@ let httpServerPort = process.env["HTTP_PORT"];
 /*****************************************************************/
 let http =require('http');
 let httpServer= http.createServer(app);
-console.log(process.env.NODE_ENV);
+console.log(process.env.NODE_ENV+" Mode");
+console.log("DB server name="+process.env.DATABASE_HOST);
 //================================================================
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());

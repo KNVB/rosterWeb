@@ -72,6 +72,8 @@ class CalendarUtility {
                     solarDate="0"+(ce.month+1);
                 else
                     solarDate=(ce.month+1).toString();
+                ce.today=isToday(sDObj);
+                
                 if (ce.dateOfMonth<10)
                     solarDate+="0"+ce.dateOfMonth;
                 else
@@ -266,7 +268,12 @@ class CalendarUtility {
             result.chineseHourName=Zhi[i];                
             return result;	
         }            
-
+        function isToday(someDate){
+            const today = new Date()
+            return someDate.getDate() === today.getDate() &&
+              someDate.getMonth() === today.getMonth() &&
+              someDate.getFullYear() === today.getFullYear()
+        }
         //====================================== 傳回農曆 y年的總天數
         function lYearDays(y) {
             let i, sum = 348;

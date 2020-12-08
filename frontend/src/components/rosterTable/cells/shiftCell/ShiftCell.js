@@ -22,6 +22,8 @@ function ShiftCell(props){
         case  "O":
             shiftClass+=" oShiftColor";
             break;
+        default:
+            break;    
     }
     return (
         <RosterTableCell className={shiftClass} content={props.content}/>

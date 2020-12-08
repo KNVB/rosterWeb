@@ -12,7 +12,7 @@ function RosterRow(props) {
         j++;
     })
     for (var i=shiftCellList.length;i<31;i++){
-        shiftCellList.push(<RosterTableCell key={props.key+"_shift_"+i} />);
+        shiftCellList.push(<RosterTableCell key={props.itoId+"_shift_"+i} />);
     }
     return(
         <tr>

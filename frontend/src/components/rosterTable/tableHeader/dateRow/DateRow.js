@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import './DateCell.css';
 import DateCell from './DateCell';
 import BalanceCell from '../../cells/balanceCell/BalanceCell';
 import NameCell from '../../cells/nameCell/NameCell';
@@ -7,8 +8,9 @@ function DateRow(props){
     let dateRow=[];
     for (let i=0;i<31;i++){
         if (props.monthlyCalendar[i]){
-            var content=[props.monthlyCalendar[i].dateOfMonth];
-            dateRow.push(<DateCell content={content} key={"date_"+i}/>);
+            //if (.today){
+            dateRow.push(<DateCell dateData={props.monthlyCalendar[i]} key={"date_"+i}/>);
+            
         } else {
             dateRow.push(<DateCell key={"date_"+i}/>);
         }

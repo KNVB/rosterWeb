@@ -1,17 +1,25 @@
 import './RosterTable.css';
 import {Col,Container,Row} from 'react-bootstrap';
 import CalendarUtility from '../../utils/calendar/CalendarUtility';
+import MonthPicker from '../monthPicker/MonthPicker';
 import TableHeader from './tableHeader/TableHeader'; 
 import TableBody   from './tableBody/TableBody';
 import TableFooter from './TableFooter'; 
 
-import { useState,useEffect } from 'react';
+import { useState} from 'react';
 function RosterTable_Component(){
     const [rosterDate,setRosterMonth]=useState(new Date());
     const calendarUtility=new CalendarUtility();
     let result=calendarUtility.getMonthlyCalendar(rosterDate.getFullYear(),rosterDate.getMonth());
     let monthlyCalendar=result.monthlyCalendar;
     //let monthlyCalendar=calendarUtility.getMonthlyCalendar(2015,3);
+    let updateMonth=(year,month)=>{
+        console.log("updateMonth="+year+","+month);
+        let newDate=new Date();
+        newDate.setFullYear(year);
+        newDate.setMonth(month);
+        setRosterMonth(newDate);
+    }
     return (
         <div className="App p-1">
             <Container fluid={true} className="tableContainer">
@@ -21,10 +29,8 @@ function RosterTable_Component(){
                     </Col>
                 </Row>
                 <Row>
-                    <Col className="font-weight-bold rosterMonth text-center" md={12} lg={12} sm={12} xl={12} xs={12}>
-                        <u>
-                            &lt; {calendarUtility.monthNames[rosterDate.getMonth()+1]} {rosterDate.getFullYear()} &gt;
-                        </u>
+                    <Col md={12} lg={12} sm={12} xl={12} xs={12}>
+                        <MonthPicker onSelect={updateMonth}/>                        
                     </Col>
                 </Row>
                 <Row>

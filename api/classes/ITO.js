@@ -55,15 +55,23 @@ class ITO
 		this.getRoster=(year,month)=>{
 			let dboObj=new DBO();
 			return new Promise((resolve, reject) => {
-				dboObj.getRoster(year,month,this.itoId,(err,result)=>{
+				dboObj.getRoster(year,month,this.itoId,(err,resultList)=>{
 					if (err){
 						reject(err);
 					}else {
 						let itoRoster=new ITORoster();
+						let shiftList=[];
 						itoRoster.itoName=this.itoName;
 						itoRoster.itoPostName=this.postName;
 						itoRoster.workingHourPerDay=this.workingHourPerDay;
-						itoRoster.shiftList=result;
+						resultList.forEach(result=>{
+							if (shiftList[result.d-1]){
+								shiftList[result.d-1].shift=shiftList[result.d-1].shift+"+"+result.shift;
+							}else {
+								shiftList.push(result)
+							}
+						});
+						itoRoster.shiftList=shiftList;
 						resolve(itoRoster);
 					}
 				})
