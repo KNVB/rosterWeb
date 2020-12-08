@@ -11,10 +11,10 @@ function TableBody(props){
         let rosterRule = await roster.getRosterRule();
         let rows=[];
         
-        console.log(rosterData);
+        //console.log(rosterData);
         Object.keys(rosterData).forEach(itoId=>{
           let result=Utility.calculateShiftStat(props.noOfWorkingDay,rosterData[itoId],rosterRule.shiftHourCount);
-          console.log(itoId,result);
+          //console.log(itoId,result);
           rows.push(<RosterRow 
                       itoId={itoId} 
                       itoRoster={result} 
@@ -25,7 +25,7 @@ function TableBody(props){
         setRosterList(rows);
       };
       getData();
-    }, [props.noOfWorkingDay,props.rosterYear, props.rosterMonth]);
+    }, [props.noOfWorkingDay,props.rosterYear, props.rosterMonth,props.setHightLightCellIndex]);
     return (
         <tbody>
           {rosterList}

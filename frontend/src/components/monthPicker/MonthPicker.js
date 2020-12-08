@@ -5,8 +5,8 @@ class MonthPicker extends React.Component {
     super(props);
     this.calendarDate = this.initialDate;
     this.initialDate = this.props.initialDate || new Date();
-    this.maxDate=this.props.maxDate||new Date(2021,5,30);
-    this.minDate=this.props.minDate||new Date(2020,2,1);
+    this.maxDate=this.props.maxDate||new Date(9999,11,31);
+    this.minDate=this.props.minDate||new Date(1000,0,1);
     
     this.monthFullName = this.props.monthFullName || [
       "January",
@@ -119,7 +119,7 @@ class MonthPicker extends React.Component {
       }
     }
     monthRowList.push(<div className="d-flex flex-row justify-content-around" key={"monthRow_4"}>{monthCellList}</div>);
-    //console.log("before="+this.state.currentDate);
+    
     let nextMonthDate=new Date(this.state.currentDate.getFullYear(),this.state.currentDate.getMonth(),1);
     nextMonthDate.setMonth(nextMonthDate.getMonth()+1);
     nextMonthDate.setDate(1);
@@ -128,7 +128,7 @@ class MonthPicker extends React.Component {
     } else {
       nextMonthBtn=<div className="disabledBtn">&gt;</div>
     }
-    //console.log("after="+this.state.currentDate);
+    
     let nextYearDate=new Date(this.state.currentDate.getFullYear()+1,0,1);
     //console.log(nextYearDate);
     if ((nextYearDate>=this.minDate)&& (nextYearDate<=this.maxDate)){
@@ -144,12 +144,14 @@ class MonthPicker extends React.Component {
     }else {
       prevMonthBtn=<div className="disabledBtn">&lt;</div>
     }
-    let prevYearDate=new Date(this.state.currentDate.getFullYear()-1,0,1);    
+
+    let prevYearDate=new Date(this.state.currentDate.getFullYear()-1,11,31);    
     if ((prevYearDate>=this.minDate)&&(prevYearDate<=this.maxDate)){
       prevYearBtn=<div className="changeBtn" onClick={this.minusAYear}>&lt;</div>
     }else {
       prevYearBtn=<div className="disabledBtn">&lt;</div>
     }
+    
     return (
       <div ref={this.obj}>
         <div className="align-items-center d-flex justify-content-center result">
