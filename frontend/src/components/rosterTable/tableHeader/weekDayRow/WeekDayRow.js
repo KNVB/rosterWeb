@@ -8,13 +8,13 @@ function WeekDayRow(props){
     for (let i=0;i<31;i++){
         if (props.monthlyCalendar[i]){
             //console.log(props.monthlyCalendar[i]);
-            var content=props.calendarUtility.weekdayNames[props.monthlyCalendar[i].dayOfWeek];
-            var className="",title="";
+            let content=props.calendarUtility.weekdayNames[props.monthlyCalendar[i].dayOfWeek];
+            let className="",title="";
             if ((content==="S") || (content==="Su") || (props.monthlyCalendar[i].publicHoliday))
                 className="font-weight-bold phCell";
             if  (props.monthlyCalendar[i].publicHoliday){
                 title=props.monthlyCalendar[i].festivalInfo;
-            }   
+            }            
             weekdayRow.push(<WeekDayCell className={className} content={content} key={"weekDay_"+i} title={title}/>);
         } else {
             weekdayRow.push(<WeekDayCell className="" key={"weekDay_"+i}/>);

@@ -8,9 +8,7 @@ function DateRow(props){
     let dateRow=[];
     for (let i=0;i<31;i++){
         if (props.monthlyCalendar[i]){
-            //if (.today){
-            dateRow.push(<DateCell dateData={props.monthlyCalendar[i]} key={"date_"+i}/>);
-            
+            dateRow.push(<DateCell dateData={props.monthlyCalendar[i]} hightLightCellIndex={props.hightLightCellIndex} key={"date_"+i}/>);
         } else {
             dateRow.push(<DateCell key={"date_"+i}/>);
         }

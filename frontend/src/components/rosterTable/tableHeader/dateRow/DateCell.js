@@ -3,11 +3,16 @@ function DateCell(props){
     let className="text-center";
     
     let dateData=props.dateData;
-    if (dateData.today)
-        className+=" todayCell";
-    
+    let dateOfMonth="";
+    if (dateData){
+        dateOfMonth=dateData.dateOfMonth;
+        if (dateData.today)
+            className+=" todayCell";
+        if (dateOfMonth===props.hightLightCellIndex)
+            className+=" highlightCell";
+    }
     return (
-        <RosterTableCell className={className} content={dateData.dateOfMonth}/>
+        <RosterTableCell className={className} content={dateOfMonth}/>
     )
 }
 export default DateCell

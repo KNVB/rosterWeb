@@ -9,6 +9,7 @@ import TableFooter from './TableFooter';
 import { useState} from 'react';
 function RosterTable_Component(){
     const [rosterDate,setRosterMonth]=useState(new Date());
+    const [hightLightCellIndex,setHightLightCellIndex]=useState(-1);
     const calendarUtility=new CalendarUtility();
     let result=calendarUtility.getMonthlyCalendar(rosterDate.getFullYear(),rosterDate.getMonth());
     let monthlyCalendar=result.monthlyCalendar;
@@ -36,8 +37,15 @@ function RosterTable_Component(){
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
                         <table id="rosterTable">
-                            <TableHeader monthlyCalendar={monthlyCalendar} calendarUtility={calendarUtility}/>
-                            <TableBody noOfWorkingDay={result.noOfWorkingDay} rosterYear={rosterDate.getFullYear()} rosterMonth={rosterDate.getMonth()+1}/>
+                            <TableHeader 
+                                calendarUtility={calendarUtility} 
+                                hightLightCellIndex={hightLightCellIndex} 
+                                monthlyCalendar={monthlyCalendar}/>
+                            <TableBody 
+                                noOfWorkingDay={result.noOfWorkingDay} 
+                                rosterYear={rosterDate.getFullYear()} 
+                                rosterMonth={rosterDate.getMonth()+1} 
+                                setHightLightCellIndex={setHightLightCellIndex} />
                             <TableFooter/>
                         </table>
                     </Col>

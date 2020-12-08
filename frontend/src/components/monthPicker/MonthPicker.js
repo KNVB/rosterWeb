@@ -3,8 +3,10 @@ import "./MonthPicker.css";
 class MonthPicker extends React.Component {
   constructor(props) {
     super(props);
-    this.initialDate = this.props.initialDate || new Date();
     this.calendarDate = this.initialDate;
+    this.initialDate = this.props.initialDate || new Date();
+    this.maxDate=this.props.maxDate||new Date(9999,11,31);
+    this.minDate=this.props.minDate||new Date(1000,0,1);
     this.monthFullName = this.props.monthFullName || [
       "January",
       "February",
@@ -20,19 +22,18 @@ class MonthPicker extends React.Component {
       "December"
     ];
     this.monthShortName = this.props.monthShortName || [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
+      'JAN',
+      'FEB',
+      'MAR',
+      'APR',
+      'MAY',
+      'JUN',
+      'JUL',
+      'AUG',
+      'SEP',
+      'OCT',
+      'NOV',
+      'DEC'];
     this.obj = React.createRef();
     this.state = {"currentDate": this.initialDate, showCalendar: false };
     this.resultDate= this.monthFullName[this.state.currentDate.getMonth()]+" "+this.state.currentDate.getFullYear();

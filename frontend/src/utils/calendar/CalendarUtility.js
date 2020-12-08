@@ -65,6 +65,7 @@ class CalendarUtility {
                 ce.animalOfYear=getAnimalOfYear(lDObj.year);
                 ce.dateOfMonth=sDObj.getDate();
                 ce.dayOfWeek=sDObj.getDay();
+                ce.today=isToday(sDObj);
                 ce.month=sDObj.getMonth();
                 ce.year=sDObj.getFullYear();
              
@@ -72,7 +73,7 @@ class CalendarUtility {
                     solarDate="0"+(ce.month+1);
                 else
                     solarDate=(ce.month+1).toString();
-                ce.today=isToday(sDObj);
+                
                 
                 if (ce.dateOfMonth<10)
                     solarDate+="0"+ce.dateOfMonth;

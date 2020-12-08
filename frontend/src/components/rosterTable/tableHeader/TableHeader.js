@@ -6,8 +6,12 @@ function TableHeader(props){
     return (
         <thead>
             <HolidayRow monthlyCalendar={props.monthlyCalendar}/>
-            <WeekDayRow calendarUtility={props.calendarUtility} monthlyCalendar={props.monthlyCalendar}/>
-            <DateRow monthlyCalendar={props.monthlyCalendar}/>
+            <WeekDayRow
+                calendarUtility={props.calendarUtility}
+                monthlyCalendar={props.monthlyCalendar}/>
+            <DateRow 
+                hightLightCellIndex={props.hightLightCellIndex}
+                monthlyCalendar={props.monthlyCalendar}/>
         </thead>
     )
 }

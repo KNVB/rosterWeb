@@ -4,7 +4,6 @@ import Roster from '../../../utils/roster';
 import RosterRow from './RosterRow';
 function TableBody(props){
     const [rosterList, setRosterList] = useState([]);
-  
     useEffect(() => {
       const getData = async () => {
         let roster = new Roster();
@@ -16,7 +15,11 @@ function TableBody(props){
         Object.keys(rosterData).forEach(itoId=>{
           let result=Utility.calculateShiftStat(props.noOfWorkingDay,rosterData[itoId],rosterRule.shiftHourCount);
           console.log(itoId,result);
-          rows.push(<RosterRow key={itoId} itoId={itoId} itoRoster={result}/>);
+          rows.push(<RosterRow 
+                      itoId={itoId} 
+                      itoRoster={result} 
+                      key={itoId} 
+                      setHightLightCellIndex={props.setHightLightCellIndex}/>);
         });
         
         setRosterList(rows);
