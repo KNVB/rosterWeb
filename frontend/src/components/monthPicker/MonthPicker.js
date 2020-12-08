@@ -5,8 +5,9 @@ class MonthPicker extends React.Component {
     super(props);
     this.calendarDate = this.initialDate;
     this.initialDate = this.props.initialDate || new Date();
-    this.maxDate=this.props.maxDate||new Date(9999,11,31);
-    this.minDate=this.props.minDate||new Date(1000,0,1);
+    this.maxDate=this.props.maxDate||new Date(2021,5,30);
+    this.minDate=this.props.minDate||new Date(2020,2,1);
+    
     this.monthFullName = this.props.monthFullName || [
       "January",
       "February",
@@ -34,9 +35,11 @@ class MonthPicker extends React.Component {
       'OCT',
       'NOV',
       'DEC'];
+   
     this.obj = React.createRef();
     this.state = {"currentDate": this.initialDate, showCalendar: false };
-    this.resultDate= this.monthFullName[this.state.currentDate.getMonth()]+" "+this.state.currentDate.getFullYear();
+    this.resultDate= this.monthFullName[this.state.currentDate.getMonth()]+" "+this.state.currentDate.getFullYear();    
+//======================================================================================================================    
     this.addAMonth=()=>{
       let newDate=this.state.currentDate;
       let newMonth=newDate.getMonth()+1;
@@ -71,7 +74,8 @@ class MonthPicker extends React.Component {
       this.setState({"currentDate": newDate});
     };
     this.handleClick = e => {
-      if (!this.obj.current.contains(e.target)) {
+      if(!this.obj.current.contains(e.target)) {
+        console.log(this.state.showCalendar);
         this.setState({ showCalendar: false });
       }
     };    
@@ -96,103 +100,74 @@ class MonthPicker extends React.Component {
     document.removeEventListener("mouseup", this.handleClick);
   }
   render() {
+    let theDate,monthCellList=[],monthRowList=[];
+    let nextMonthBtn,nextYearBtn,prevMonthBtn,prevYearBtn;
+    for (let i=0;i<12;i++){
+      if ((i>0)&&((i %3)===0)){
+        monthRowList.push(<div className="d-flex flex-row justify-content-around" key={"monthRow_"+(i/3)}>{monthCellList}</div>);
+        monthCellList=[];
+      }
+      theDate=new Date(this.state.currentDate.getFullYear(),i,1);
+      if ((theDate>=this.minDate) && (theDate<=this.maxDate)){
+        monthCellList.push(<div className="p-1 monthCell" key={"monthCell_"+(i)} onClick={() => this.updateMonth(i)}>
+          {this.monthShortName[i]}
+        </div>);
+      } else {
+        monthCellList.push(<div className="p-1 disabledBtn" key={"monthCell_"+(i)}>
+          {this.monthShortName[i]}
+        </div>);
+      }
+    }
+    monthRowList.push(<div className="d-flex flex-row justify-content-around" key={"monthRow_4"}>{monthCellList}</div>);
+    //console.log("before="+this.state.currentDate);
+    let nextMonthDate=new Date(this.state.currentDate.getFullYear(),this.state.currentDate.getMonth(),1);
+    nextMonthDate.setMonth(nextMonthDate.getMonth()+1);
+    nextMonthDate.setDate(1);
+    if ((nextMonthDate>=this.minDate)&&(nextMonthDate<=this.maxDate)){
+      nextMonthBtn=<div className="changeBtn p-1" onClick={this.addAMonth}>&gt;</div>
+    } else {
+      nextMonthBtn=<div className="disabledBtn">&gt;</div>
+    }
+    //console.log("after="+this.state.currentDate);
+    let nextYearDate=new Date(this.state.currentDate.getFullYear()+1,0,1);
+    //console.log(nextYearDate);
+    if ((nextYearDate>=this.minDate)&& (nextYearDate<=this.maxDate)){
+      nextYearBtn=<div className="changeBtn" onClick={this.addAYear}>&gt;</div>
+    } else {
+      nextYearBtn=<div className="disabledBtn">&gt;</div>
+    }
+    
+    let prevMonthDate=new Date(this.state.currentDate.getFullYear(),this.state.currentDate.getMonth(),1);
+    prevMonthDate.setMonth(prevMonthDate.getMonth()-1);
+    if ((prevMonthDate>=this.minDate)&&(prevMonthDate<=this.maxDate)){
+      prevMonthBtn=<div className="changeBtn p-1" onClick={this.minusAMonth}>&lt;</div>
+    }else {
+      prevMonthBtn=<div className="disabledBtn">&lt;</div>
+    }
+    let prevYearDate=new Date(this.state.currentDate.getFullYear()-1,0,1);    
+    if ((prevYearDate>=this.minDate)&&(prevYearDate<=this.maxDate)){
+      prevYearBtn=<div className="changeBtn" onClick={this.minusAYear}>&lt;</div>
+    }else {
+      prevYearBtn=<div className="disabledBtn">&lt;</div>
+    }
     return (
       <div ref={this.obj}>
-        <div className="d-flex justify-content-center result">
-          <div className="changeBtn p-1" onClick={this.minusAMonth}>&lt;</div>
+        <div className="align-items-center d-flex justify-content-center result">
+          {prevMonthBtn}
           <div className="changeBtn p-1" onClick={this.toggleCalendar}>
             {this.resultDate}   
           </div>
-          <div className="changeBtn p-1" onClick={this.addAMonth}>&gt;</div>
+          {nextMonthBtn}
         </div>
         {this.state.showCalendar ? (
           <div className="d-flex justify-content-center position-relative">
             <div className="popup">
               <div className="d-flex flex-row justify-content-around">
-                <div className="changeBtn" onClick={this.minusAYear}>&lt;</div>
+                {prevYearBtn}
                 <div>{this.state.currentDate.getFullYear()}</div>
-                <div className="changeBtn" onClick={this.addAYear}>&gt;</div>
+                {nextYearBtn}
               </div>
-              <div className="d-flex flex-row justify-content-around">
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(0)}
-                >
-                  {this.monthShortName[0]}
-                </div>
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(1)}
-                >
-                  {this.monthShortName[1]}
-                </div>
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(2)}
-                >
-                  {this.monthShortName[2]}
-                </div>
-              </div>
-              <div className="d-flex flex-row justify-content-around">
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(3)}
-                >
-                  {this.monthShortName[3]}
-                </div>
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(4)}
-                >
-                  {this.monthShortName[4]}
-                </div>
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(5)}
-                >
-                  {this.monthShortName[5]}
-                </div>
-              </div>
-              <div className="d-flex flex-row justify-content-around">
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(6)}
-                >
-                  {this.monthShortName[6]}
-                </div>
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(7)}
-                >
-                  {this.monthShortName[7]}
-                </div>
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(8)}
-                >
-                  {this.monthShortName[8]}
-                </div>
-              </div>
-              <div className="d-flex flex-row justify-content-around">
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(9)}
-                >
-                  {this.monthShortName[9]}
-                </div>
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(10)}
-                >
-                  {this.monthShortName[10]}
-                </div>
-                <div
-                  className="p-1 monthCell"
-                  onClick={() => this.updateMonth(11)}
-                >
-                  {this.monthShortName[11]}
-                </div>
-              </div>
+              {monthRowList}
             </div>
           </div>
         ) : null}

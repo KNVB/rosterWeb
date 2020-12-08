@@ -1,12 +1,6 @@
-.popup {
-    background-color: black;
-    color:white;
-    font-size:20px;
-    font-family:Arial;
-    font-weight: bold;
-    position:absolute;
-    z-index: 10;
-  }
+.disabledBtn{
+  color:grey;
+}
 .changeBtn,
 .monthCell{
   cursor: pointer;
@@ -14,6 +8,15 @@
 .monthCell:hover{
   background-color: white;
   color:black;
+}
+.popup {
+  background-color: black;
+  color:white;
+  font-size:20px;
+  font-family:Arial;
+  font-weight: bold;
+  position:absolute;
+  z-index: 10;
 }
 .result{
   font-family:'Times New Roman';
