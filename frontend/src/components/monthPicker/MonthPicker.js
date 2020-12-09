@@ -3,7 +3,6 @@ import "./MonthPicker.css";
 class MonthPicker extends React.Component {
   constructor(props) {
     super(props);
-    this.calendarDate = this.initialDate;
     this.initialDate = this.props.initialDate || new Date();
     this.maxDate=this.props.maxDate||new Date(9999,11,31);
     this.minDate=this.props.minDate||new Date(1000,0,1);
@@ -40,7 +39,7 @@ class MonthPicker extends React.Component {
     this.state = {"currentDate": this.initialDate, showCalendar: false };
     this.resultDate= this.monthFullName[this.state.currentDate.getMonth()]+" "+this.state.currentDate.getFullYear();    
 //======================================================================================================================    
-    this.addAMonth=()=>{
+    this.nextMonth=()=>{
       let newDate=this.state.currentDate;
       let newMonth=newDate.getMonth()+1;
       newDate.setMonth(newMonth);
@@ -50,14 +49,14 @@ class MonthPicker extends React.Component {
         this.props.onSelect(newDate.getFullYear(),newDate.getMonth());
       }
     };
-    this.addAYear=()=>{
+    this.nextYear=()=>{
       let newDate=this.state.currentDate;
       let newYear=newDate.getFullYear()+1;
       newDate.setFullYear(newYear);
       this.setState({"currentDate": newDate});
     };    
     
-    this.minusAMonth=()=>{
+    this.prevMonth=()=>{
       let newDate=this.state.currentDate;
       let newMonth=newDate.getMonth()-1;
       newDate.setMonth(newMonth);
@@ -67,15 +66,14 @@ class MonthPicker extends React.Component {
         this.props.onSelect(newDate.getFullYear(),newDate.getMonth());
       }
     }
-    this.minusAYear=()=>{
+    this.prevYear=()=>{
       let newDate=this.state.currentDate;
       let newYear=newDate.getFullYear()-1;
       newDate.setFullYear(newYear);
       this.setState({"currentDate": newDate});
     };
     this.handleClick = e => {
-      if(!this.obj.current.contains(e.target)) {
-        console.log(this.state.showCalendar);
+      if(this.state.showCalendar && (!this.obj.current.contains(e.target))) {
         this.setState({ showCalendar: false });
       }
     };    
@@ -120,36 +118,50 @@ class MonthPicker extends React.Component {
     }
     monthRowList.push(<div className="d-flex flex-row justify-content-around" key={"monthRow_4"}>{monthCellList}</div>);
     
+    /*****************************************************************
+     * if the first day of the next month does not within the range, *
+     * the next month button should be disabled.                     *
+     *****************************************************************/  
     let nextMonthDate=new Date(this.state.currentDate.getFullYear(),this.state.currentDate.getMonth(),1);
     nextMonthDate.setMonth(nextMonthDate.getMonth()+1);
-    nextMonthDate.setDate(1);
     if ((nextMonthDate>=this.minDate)&&(nextMonthDate<=this.maxDate)){
-      nextMonthBtn=<div className="changeBtn p-1" onClick={this.addAMonth}>&gt;</div>
+      nextMonthBtn=<div className="changeBtn p-1" onClick={this.nextMonth} title="Next Month">&gt;</div>
     } else {
-      nextMonthBtn=<div className="disabledBtn">&gt;</div>
+      nextMonthBtn=<div className="disabledBtn" title="Next Month">&gt;</div>
     }
     
+    /****************************************************************
+     * if the first day of the next year does not within the range, *
+     * the next year button should be disabled.                     *
+     ****************************************************************/
     let nextYearDate=new Date(this.state.currentDate.getFullYear()+1,0,1);
-    //console.log(nextYearDate);
     if ((nextYearDate>=this.minDate)&& (nextYearDate<=this.maxDate)){
-      nextYearBtn=<div className="changeBtn" onClick={this.addAYear}>&gt;</div>
+      nextYearBtn=<div className="changeBtn" onClick={this.nextYear} title="Next Year">&gt;</div>
     } else {
-      nextYearBtn=<div className="disabledBtn">&gt;</div>
-    }
-    
-    let prevMonthDate=new Date(this.state.currentDate.getFullYear(),this.state.currentDate.getMonth(),1);
-    prevMonthDate.setMonth(prevMonthDate.getMonth()-1);
-    if ((prevMonthDate>=this.minDate)&&(prevMonthDate<=this.maxDate)){
-      prevMonthBtn=<div className="changeBtn p-1" onClick={this.minusAMonth}>&lt;</div>
-    }else {
-      prevMonthBtn=<div className="disabledBtn">&lt;</div>
+      nextYearBtn=<div className="disabledBtn" title="Next Year">&gt;</div>
     }
 
+    /*******************************************************************
+     * if the last day of the previous month does not within the range, *
+     * the previous month button should be disabled.                    *
+     *******************************************************************/    
+    let prevMonthDate=new Date(this.state.currentDate.getFullYear(),this.state.currentDate.getMonth(),1);
+    prevMonthDate.setDate(prevMonthDate.getDate()-1);
+    if ((prevMonthDate>=this.minDate)&&(prevMonthDate<=this.maxDate)){
+      prevMonthBtn=<div className="changeBtn p-1" onClick={this.prevMonth} title="Previous Month">&lt;</div>
+    }else {
+      prevMonthBtn=<div className="disabledBtn" title="Previous Month">&lt;</div>
+    }
+
+    /*******************************************************************
+     * if the last day of the previous year does not within the range, *
+     * the previous year button should be disabled.                    *
+     *******************************************************************/
     let prevYearDate=new Date(this.state.currentDate.getFullYear()-1,11,31);    
     if ((prevYearDate>=this.minDate)&&(prevYearDate<=this.maxDate)){
-      prevYearBtn=<div className="changeBtn" onClick={this.minusAYear}>&lt;</div>
+      prevYearBtn=<div className="changeBtn" onClick={this.prevYear} title="Previous Year">&lt;</div>
     }else {
-      prevYearBtn=<div className="disabledBtn">&lt;</div>
+      prevYearBtn=<div className="disabledBtn" title="Previous Year">&lt;</div>
     }
     
     return (

@@ -1,5 +1,6 @@
 import './RosterTable.css';
 import {Col,Container,Row} from 'react-bootstrap';
+import config from '../../utils/config'
 import CalendarUtility from '../../utils/calendar/CalendarUtility';
 import MonthPicker from '../monthPicker/MonthPicker';
 import TableHeader from './tableHeader/TableHeader'; 
@@ -13,9 +14,11 @@ function RosterTable_Component(){
     const calendarUtility=new CalendarUtility();
     let result=calendarUtility.getMonthlyCalendar(rosterDate.getFullYear(),rosterDate.getMonth());
     let monthlyCalendar=result.monthlyCalendar;
+    let monthPickerMinDate=JSON.parse(config.MIN_DATE);
+    monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
     //let monthlyCalendar=calendarUtility.getMonthlyCalendar(2015,3);
     let updateMonth=(year,month)=>{
-        console.log("updateMonth="+year+","+month);
+        //console.log("updateMonth="+year+","+month);
         let newDate=new Date();
         newDate.setFullYear(year);
         newDate.setMonth(month);
@@ -31,7 +34,9 @@ function RosterTable_Component(){
                 </Row>
                 <Row>
                     <Col md={12} lg={12} sm={12} xl={12} xs={12}>
-                        <MonthPicker onSelect={updateMonth}/>                        
+                        <MonthPicker 
+                            minDate={monthPickerMinDate}
+                            onSelect={updateMonth} />                        
                     </Col>
                 </Row>
                 <Row>

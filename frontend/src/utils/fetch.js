@@ -4,7 +4,7 @@ export const API_URL = config.API_URL;
 export default function fetchApi (endpoint, method, params, payload, contentType) {
   contentType = contentType || 'json'
   const paramsObject = new URLSearchParams(params)
-  const paramsString = paramsObject.toString()
+  const paramsString = paramsObject.toString()  
   return fetch(API_URL + endpoint + '?' + paramsString, {
     method: method || 'GET',
     headers: {
