@@ -24,15 +24,21 @@ class DBO
             });
 		}
 		this.getITOList=(year,month,callBack)=>{
-            const startDateString=year+"-"+month+"-01";
+            let startDateString=year+"-";
+			if (month<10) {
+				startDateString+="0"+month;
+			} else {
+				startDateString+=month;
+			}
+			startDateString+="-01";
 			const endDateString=moment(startDateString).endOf('month').format('YYYY-MM-DD');            
-            
+			
             let sqlString ="SELECT join_date,leave_date,ito_info.ito_id,post_name,ito_name,available_shift,working_hour_per_day,black_list_pattern from ";
             sqlString+="ito_info inner join black_list_pattern ";
             sqlString+="on ito_info.ito_id=black_list_pattern.ito_id ";
             sqlString+="where join_date<=? and leave_date >=? ";
             sqlString+="order by ito_info.ito_id";
-            console.log("startDateString="+startDateString+",endDateString="+endDateString);
+            //console.log("getITOList startDateString="+startDateString+",endDateString="+endDateString);
             connection.execute(sqlString,[startDateString,endDateString],(err, results, fields)=>{
                 connection.end(err=>{
                     if (err) {
@@ -45,9 +51,15 @@ class DBO
             });
         }
 		this.getRoster=(year,month,itoId,callBack)=>{
-			let sqlString ="select day(shift_date) as d,shift from shift_record where ito_Id=? and (shift_record.shift_date between ? and ?)";
-			const startDateString=year+"-"+month+"-01";
+			let startDateString=year+"-";
+			if (month<10) {
+				startDateString+="0"+month;
+			} else {
+				startDateString+=month;
+			}
+			startDateString+="-01";
             const endDateString=moment(startDateString).endOf('month').format('YYYY-MM-DD');
+			let sqlString ="select day(shift_date) as d,shift from shift_record where ito_Id=? and (shift_record.shift_date between ? and ?)";
 			connection.execute(sqlString,[itoId,startDateString,endDateString],(err, results, fields)=>{
                 connection.end(err=>{
                     if (err) {

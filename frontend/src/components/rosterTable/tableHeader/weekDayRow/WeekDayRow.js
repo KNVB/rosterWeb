@@ -1,8 +1,7 @@
 import HourCell from './HourCell';
 import HourOffDueCell from './HourOffDueCell';
-import NameCell from '../../cells/nameCell/NameCell';
+import NameCell from '../../../cells/nameCell/NameCell';
 import WeekDayCell from './WeekDayCell';
-import { Fragment } from 'react';
 function WeekDayRow(props){
     let weekdayRow=[];
     for (let i=0;i<31;i++){
@@ -15,17 +14,27 @@ function WeekDayRow(props){
             if  (props.monthlyCalendar[i].publicHoliday){
                 title=props.monthlyCalendar[i].festivalInfo;
             }            
-            weekdayRow.push(<WeekDayCell className={className} content={content} key={"weekDay_"+i} title={title}/>);
+            weekdayRow.push(
+                <WeekDayCell className={className} key={"weekDay_"+i} title={title}>
+                    {content}
+                </WeekDayCell>    
+            );
         } else {
             weekdayRow.push(<WeekDayCell className="" key={"weekDay_"+i}/>);
         }
     }        
     return (
         <tr>
-            <NameCell content="Days"/>
+            <NameCell>
+                Days
+            </NameCell>    
             {weekdayRow}
-            <HourCell content={<Fragment>Total<br/>Hour</Fragment>}/>
-            <HourCell content={<Fragment>Actual<br/>Hour</Fragment>}/>
+            <HourCell>
+                Total<br/>Hour
+            </HourCell>
+            <HourCell>
+                Actual<br/>Hour
+            </HourCell>
             <HourOffDueCell/>
         </tr>
     )

@@ -6,7 +6,9 @@ function ShiftCountCell(props){
         finalClassName+=" "+props.className;
     }
     return (
-        <RosterTableCell className={finalClassName} content={props.content}/>
+        <RosterTableCell className={finalClassName} >
+            {props.children}
+        </RosterTableCell>    
     )
 }
 export default ShiftCountCell;

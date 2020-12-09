@@ -4,14 +4,14 @@ function RosterTableCell(props){
   Object.keys(props).forEach(key=>{
     myProps[key]=props[key];
   })
-  if (props.className!==undefined){
-    myProps.className+=" rosterTableCell";
+  if (props.className===undefined){
+    myProps.className="rosterTableCell";    
   } else {
-    myProps.className="rosterTableCell";
+    myProps.className+=" rosterTableCell";
   }
   return(
     <td {...myProps}>
-      {props.content}
+      {props.children}
     </td>
   )
 }

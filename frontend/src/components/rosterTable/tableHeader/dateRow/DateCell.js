@@ -1,6 +1,6 @@
-import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
+import RosterTableCell from '../../../cells/rosterTableCell/RosterTableCell';
 function DateCell(props){
-    let className="text-center";
+    let className="p-0 text-center";
     
     let dateData=props.dateData;
     let dateOfMonth="";
@@ -12,7 +12,9 @@ function DateCell(props){
             className+=" highlightCell";
     }
     return (
-        <RosterTableCell className={className} content={dateOfMonth}/>
+        <RosterTableCell className={className}>
+            {dateOfMonth}
+        </RosterTableCell>    
     )
 }
 export default DateCell
