@@ -8,7 +8,7 @@ import TableBody   from './tableBody/TableBody';
 import TableFooter from './TableFooter'; 
 
 import { useState} from 'react';
-function RosterTable_Component(){
+function RosterTable(){
     const [rosterDate,setRosterMonth]=useState(new Date());
     const [hightLightCellIndex,setHightLightCellIndex]=useState(-1);
     const calendarUtility=new CalendarUtility();
@@ -59,4 +59,4 @@ function RosterTable_Component(){
         </div>
     );
 }
-export default RosterTable_Component;
+export default RosterTable;
