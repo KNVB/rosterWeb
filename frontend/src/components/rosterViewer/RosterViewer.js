@@ -3,6 +3,7 @@ import {useState} from 'react';
 import config from '../../utils/config'
 import MonthPicker from '../monthPicker/MonthPicker';
 import RosterTable from '../rosterTable/RosterTable';
+import './RosterViewer.css';
 function RosterViewer(){
     const [rosterDate,setRosterMonth]=useState(new Date());
     let monthPickerMinDate=JSON.parse(config.MIN_DATE);
