@@ -142,42 +142,33 @@ public class CalendarUtility {
 	}
 	
 	/**
-	 * 傳回該年的復活節LocalDate物件(春分後第一次滿月週後的第一主日)<br>
+	 * 傳回該年的復活節LocalDate物件<br>
 	 * It returns a LocalDate object which devote the date of easter of given year
+	 * 
+	 * This is "Meeus/Jones/Butcher" algorithm.
+	 * 
+	 * Reference URL:
+	 * https://en.wikipedia.org/wiki/Computus
+	 * 
 	 * @param y 年份
 	 * @return 傳回該年復活節LocalDate物件
 	 */
 	public LocalDate getEasterDateByYear(int y) {
-		int lMlen,term2=sTerm(y,5); //取得春分日期
-		LocalDate dayTerm2=LocalDate.of(y,3, term2);//取得春分的國曆日期物件(春分一定出現在3月)
-		LunarDate lDayTerm2 = getPrivateLunarDate(dayTerm2.atStartOfDay()); //取得取得春分農曆
+		int a,b,c,d,e,f,g,h,i,k,l,m;
+		int month,date,subtotal;
 		
-		if (lDayTerm2.date<15)//取得下個月圓的相差天數
-		{
-			lMlen=15-lDayTerm2.date;
-		}
-		else
-		{
-			if (lDayTerm2.isLeap)
-			{
-				lMlen=leapDays(y);//農曆 y年閏月的天數
-			}
-			else
-			{
-				lMlen=lunarMonthDayCount(lDayTerm2.year,lDayTerm2.month);//農曆 y年m月的總天數
-			}
-			lMlen=lMlen-lDayTerm2.date + 15;
-		}
-		dayTerm2=dayTerm2.plusDays(lMlen);
-		if (dayTerm2.getDayOfWeek()==DayOfWeek.SUNDAY)
-		{
-			dayTerm2=dayTerm2.plusDays(1);
-		}
-		while (dayTerm2.getDayOfWeek()!=DayOfWeek.SUNDAY)
-		{
-			dayTerm2=dayTerm2.plusDays(1);
-		}
-		return dayTerm2;	 
+		a=y %19; b=y/100; c=y % 100;
+		d=b /4; e=b %4;f=(b+8)/25;
+		g=(b-f+1)/3;
+		h = (19*a + b-d-g + 15)% 30;
+		i=c/4;k=c %4;
+		l = (32 + 2*e + 2*i -h - k) % 7;
+		m = (a + 11*h + 22*l) / 451;
+		subtotal=(h + l - 7*m + 114);
+		month=subtotal/31;
+		date=(subtotal % 31)+1;
+		LocalDate result=LocalDate.of(y,month,date);
+		return result;
 	}
 	/**
 	 * 傳入LocalDate物件, 傳回LunarDate物件.這個LunarDate物件包含節氣資料<br>
@@ -273,8 +264,10 @@ public class CalendarUtility {
 			//Easter/復活節日期
 			LocalDate easterDate=getEasterDateByYear(y);
 			
+			System.out.println("Easter Date="+easterDate);
 			//Good Friday日期
 			tempDateObj=easterDate.minusDays(2);
+			
 			if (tempDateObj.getMonthValue()==m) {
 				recordFestivalInfo(publicHolidayList, tempDateObj.getDayOfMonth(),"耶穌受難節");
 			}
@@ -569,7 +562,8 @@ public class CalendarUtility {
 		// year=2014;month=1;date=24;//農曆,西曆都有
 		// year=2018;month=2;date=24;//農曆新年補假
 		//year=2020;month=4;date=15;//佛誕問題
-		year=2020;month=12;date=24;
+		//year=2020;month=12;date=24;
+		year=2021;month=4;//復活節清明節overlap
 		/*
 		LocalDateTime now=LocalDateTime.of(year,month,date,2,0,0);
 		LunarDate lc=cu.getLunarDate(now);
@@ -582,6 +576,7 @@ public class CalendarUtility {
 		*/
 		
 		CalendarElement calendarElementList[]=cu.getMonthlyCalendar( year,  month);
+		/*
 		for (int i=0;i<calendarElementList.length;i++) {
 			System.out.println("Date Of Month="+calendarElementList[i].getDateOfMonth());
 			System.out.println("Day Of Week="+calendarElementList[i].getDayOfWeek());
@@ -590,6 +585,6 @@ public class CalendarUtility {
 			System.out.println("is Today="+calendarElementList[i].isToday());
 			System.out.println("===================================================");
 		}
-		
+		*/
 	}
 }
