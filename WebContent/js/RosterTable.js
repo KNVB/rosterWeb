@@ -193,7 +193,7 @@ class RosterTable extends HTMLTableElement
 			if (i<Object.keys(this.dateObjList).length)
 			{
 				dateObj=this.dateObjList[i];
-				if((dateObj.publicHoliday==true) && (dateObj.dayOfWeek!="S")&& (dateObj.dayOfWeek!="Su"))
+				if((dateObj.publicHoliday==true) && (dateObj.festivalInfo!=""))
 				{
 					phCell.textContent="PH";
 					phCell.title=dateObj.festivalInfo;

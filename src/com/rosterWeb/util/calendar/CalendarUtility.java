@@ -290,7 +290,7 @@ public class CalendarUtility {
 				recordFestivalInfo(publicHolidayList, index,solarTermInfo+"節");
 			}
 		});
-		//System.out.println(publicHolidayList.toString());
+		System.out.println(publicHolidayList.toString());
 		processHoliday(publicHolidayList,result);
 		return result.toArray(new CalendarElement[0]);
 	}
@@ -563,7 +563,7 @@ public class CalendarUtility {
 		// year=2018;month=2;date=24;//農曆新年補假
 		//year=2020;month=4;date=15;//佛誕問題
 		//year=2020;month=12;date=24;
-		year=2021;month=4;//復活節清明節overlap
+		//year=2020;month=4;//復活節清明節overlap
 		/*
 		LocalDateTime now=LocalDateTime.of(year,month,date,2,0,0);
 		LunarDate lc=cu.getLunarDate(now);
