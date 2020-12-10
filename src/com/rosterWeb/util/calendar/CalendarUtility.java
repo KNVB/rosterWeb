@@ -563,7 +563,7 @@ public class CalendarUtility {
 		// year=2018;month=2;date=24;//農曆新年補假
 		//year=2020;month=4;date=15;//佛誕問題
 		//year=2020;month=12;date=24;
-		//year=2020;month=4;//復活節清明節overlap
+		year=2021;month=4;//復活節清明節overlap
 		/*
 		LocalDateTime now=LocalDateTime.of(year,month,date,2,0,0);
 		LunarDate lc=cu.getLunarDate(now);
@@ -576,7 +576,6 @@ public class CalendarUtility {
 		*/
 		
 		CalendarElement calendarElementList[]=cu.getMonthlyCalendar( year,  month);
-		/*
 		for (int i=0;i<calendarElementList.length;i++) {
 			System.out.println("Date Of Month="+calendarElementList[i].getDateOfMonth());
 			System.out.println("Day Of Week="+calendarElementList[i].getDayOfWeek());
@@ -584,7 +583,6 @@ public class CalendarUtility {
 			System.out.println("is Holiday="+calendarElementList[i].isPublicHoliday());
 			System.out.println("is Today="+calendarElementList[i].isToday());
 			System.out.println("===================================================");
-		}
-		*/
+		}		
 	}
 }
