@@ -7,7 +7,7 @@ function HolidayRow(props){
     for (let i=0;i<31;i++){
         if (props.monthlyCalendar[i]){
             //console.log(props.monthlyCalendar[i]);
-            let content=((props.monthlyCalendar[i].festivalInfo)?"PH":"");                
+            let content=(((props.monthlyCalendar[i].festivalInfo) &&(props.monthlyCalendar[i].publicHoliday))?"PH":"");                
             holidayRow.push(
                 <PHCell key={"PH_"+i} title={props.monthlyCalendar[i].festivalInfo}>
                     {content}
