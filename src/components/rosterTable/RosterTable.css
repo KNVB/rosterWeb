@@ -1,0 +1,46 @@
+.highlightCell
+{
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffc477), color-stop(1, #fb9e25));
+	background:-moz-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:-webkit-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:-o-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:-ms-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
+	background:linear-gradient(to bottom, #ffc477 5%, #fb9e25 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc477', endColorstr='#fb9e25',GradientType=0);
+	background-color:#ffc477;
+}
+/*******************************************************************************************************
+ *                                                                                                     *
+ *    Shift color style                                                                                *
+ *                                                                                                     *
+ *******************************************************************************************************/
+ .aShiftColor
+ {
+   background-color:#ff99cc;
+ }
+ .bShiftColor
+ { 
+   background-color:#ffffcc;
+ }
+ .cShiftColor
+ {
+   background-color:#ccffcc;
+ }
+ .oShiftColor
+ {
+   background-color:#ffffff;
+ }
+ .dShiftColor
+ {
+   background-color:#ccffff;
+ }
+ .sickLeaveColor
+ {
+   background-color:#cc99ff;
+ }
+ /********************************************************************************************************/
+ table#rosterTable {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 1660px;
+}
