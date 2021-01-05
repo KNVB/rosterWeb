@@ -59,6 +59,7 @@ class Utility{
             const queryString = paramsObject.toString();  
             url+="?"+queryString;
         }
+        url="/rosterWeb"+url;
         console.log("=======================");
         console.log("url="+url);
         console.log("method="+method);

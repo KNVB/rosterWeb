@@ -1,12 +1,16 @@
 require('dotenv-flow').config();
 //===============================================================
 let bodyParser = require('body-parser')
+let cookierParser = require('cookie-parser');
 let express = require('express');
-let PublicAPI = require('./PublicAPI.js');
+let PrivateAPI = require('./utils/privateAPI.js');
+let PublicAPI = require('./utils/publicAPI.js');
 let rosterManager=new (require("./classes/rosterManager.js"));
+let privateAPI =new PrivateAPI(rosterManager);
 let publicAPI=new PublicAPI(rosterManager);
 //===============================================================
 let app = express();
+let privateAPIRouter= express.Router();
 let publicAPIRouter= express.Router();
 let httpServerPort = process.env["HTTP_PORT"];
 
@@ -23,9 +27,13 @@ console.log("DB server name="+process.env.DATABASE_HOST);
 //================================================================
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
-app.use('/publicAPI',publicAPIRouter);
+app.use(cookierParser('SD@FD{S=*(^dsv$bm%dl&kf}')); //signed cookie key
+app.use('/rosterWeb/publicAPI',publicAPIRouter);
+app.use('/rosterWeb/privateAPI',privateAPIRouter);
 publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
 publicAPIRouter.get('/getRosterRule',publicAPI.getRosterRule);
+publicAPIRouter.post('/adminLogin',publicAPI.adminLogin);
+privateAPIRouter.post('/logout',privateAPI.logout);
 httpServer.listen(httpServerPort, function() {
   console.log('server up and running at %s port', httpServerPort);
 });
