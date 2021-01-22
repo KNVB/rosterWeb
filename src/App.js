@@ -13,7 +13,7 @@ function App() {
           )
         }/>
         <Route exact path='/rosterWeb' component={RosterViewer} />
-        <Route exact path='/rosterWeb/admin/*' component={RosterAdmin} />
+        <Route path='/rosterWeb/admin' component={RosterAdmin} />
       </Switch>
     </Router>
   );

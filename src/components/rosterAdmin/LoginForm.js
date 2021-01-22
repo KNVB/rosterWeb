@@ -12,7 +12,7 @@ function LoginForm(props) {
 
 			Utility.fetchAPI('/publicAPI/adminLogin','POST',null,data)
 			.then(data=>{
-				props.auth(true);
+				props.auth("true");
 			})
 			.catch(error=>{
 				switch(error.message){

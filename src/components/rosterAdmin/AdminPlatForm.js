@@ -3,7 +3,7 @@ function AdminPlatForm(props){
     function logout(){
         Utility.fetchAPI('/privateAPI/logout','POST')
         .then(result=>{
-            props.auth(false);
+            props.auth("false");
         })
         .catch(err=>{
           alert("Something wrong when logout the system: "+err.message);  

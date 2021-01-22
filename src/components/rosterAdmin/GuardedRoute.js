@@ -1,12 +1,15 @@
 import React from 'react';
 import { Route, Redirect } from "react-router-dom";
 
-const GuardedRoute = ({ component: Component, auth, ...rest }) => (
-    <Route {...rest} render={(props) => (
-        auth === true
-            ? <Component {...props} />
-            : <Redirect to='/' />
-    )} />
-)
+const GuardedRoute = ({ component: Component, auth, ...rest }) =>{
+    console.log(auth);
+    return (
+        <Route {...rest} render={(props) => (
+            auth === "true"
+                ? <Component {...props} />
+                : <Redirect to='/rosterWeb/admin/' />
+        )} />
+    )
+}
 
 export default GuardedRoute;
