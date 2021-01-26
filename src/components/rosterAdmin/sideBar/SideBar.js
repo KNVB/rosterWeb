@@ -13,14 +13,14 @@ function SideBar(props){
         })
     }
     return (
-        <Menu disableAutoFocus>
+        <Menu disableAutoFocus width={ '250px' }>
             <a className="menu-item" href="/rosterWeb/admin/rosterScheduler">
                 Roster Scheduler
             </a>
             <a className="menu-item" href="/rosterWeb/admin/itoManagement">
                 ITO Management
             </a>
-            <a href="#" className="menu-item" onClick={logout}>
+            <a className="menu-item pointer" onClick={logout}>
                 Logout
             </a>
         </Menu>

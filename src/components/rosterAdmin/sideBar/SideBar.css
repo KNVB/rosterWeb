@@ -34,16 +34,14 @@
   */
   .bm-menu-wrap {
     position: fixed;
-    height: 100%;
-    width:250px!important;
+    height: 100%;    
   }
   
   /* General sidebar styles */
   .bm-menu {
     background: red;
     padding: 2.5em 1.5em 0;
-    font-size: 1.15em;
-    width:250px;
+    font-size: 1.15em;   
   }
   
   /* Morph shape necessary with bubble or elastic */
@@ -80,4 +78,7 @@
   
   .bm-item:hover {
     color:#111;
+  }
+  .pointer{
+    cursor: pointer; 
   }
