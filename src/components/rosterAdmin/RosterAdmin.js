@@ -10,7 +10,6 @@ function RosterAdmin(){
 		} else {
 			sessionStorage.clear();
 		}
-		
 		setIsLoggedin(v);
 	}
 	const[isLoggedin, setIsLoggedin] = useState(sessionStorage.getItem("isLoggedIn"));
