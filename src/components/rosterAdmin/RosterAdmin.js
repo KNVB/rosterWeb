@@ -20,8 +20,7 @@ function RosterAdmin(){
 				<GuardedRoute 
 					auth={isLoggedin}
 					component={()=><AdminPlatForm auth={changeLoggedInFlag}/>}
-					path='/rosterWeb/admin/adminPlatform'/>
-				<Redirect to='/rosterWeb/admin/adminPlatform/main'/>
+					path='/rosterWeb/admin/'/>				
 			</Router>
 		);
 	} else {

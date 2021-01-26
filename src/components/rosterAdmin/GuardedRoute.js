@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Redirect } from "react-router-dom";
 
 const GuardedRoute = ({ component: Component, auth, ...rest }) =>{
-    console.log(auth);
+    console.log(auth === "true");
     return (
         <Route {...rest} render={(props) => (
             auth === "true"

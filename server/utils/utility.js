@@ -26,7 +26,7 @@ function checkToken(req,res,next){
 function adminLogin(req,res){
     let loginName=req.body.loginName;
     let password=req.body.adminPwd;
-    console.log("ADMIN_LOGIN_NAME="+process.env['ADMIN_LOGIN_NAME']);
+    //console.log("ADMIN_LOGIN_NAME="+process.env['ADMIN_LOGIN_NAME']);
     if ((process.env['ADMIN_LOGIN_NAME']===loginName) && (process.env['ADMIN_LOGIN_PASSWORD']===password)){
         const accessToken = jwt.sign({ admin: true }, accessTokenSecret,{ expiresIn: '1h' });
         res.cookie('isAdmin',accessToken,{
