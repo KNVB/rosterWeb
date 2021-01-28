@@ -1,3 +1,6 @@
+const { rejects } = require('assert');
+const { resolve } = require('path');
+
 class DBO
 {
 	constructor(){
@@ -70,8 +73,43 @@ class DBO
                     }
                 });
             });
-		}
-		this.getRosterRule=(callBack)=>{
+        }
+        /*****************
+         * It will returns error when no shift record found
+         */
+        this.getRosterList=(year,month)=>{
+            let startDateString=year+"-";
+			if (month<10) {
+				startDateString+="0"+month;
+			} else {
+				startDateString+=month;
+			}
+			startDateString+="-01";
+            const endDateString=moment(startDateString).endOf('month').format('YYYY-MM-DD');
+            
+            let sqlString ="SELECT ito_info.ito_id,post_name,ito_name,working_hour_per_day,";
+            sqlString+="day(shift_date) as d,shift,balance ";
+            sqlString+="from ito_info inner join shift_record on ";  
+            sqlString+="ito_info.ito_id = shift_record.ito_id and ";
+            sqlString+="(shift_record.shift_date between ? and ?) and ";
+            sqlString+="ito_info.join_date<=? and ito_info.leave_date >=?"; 
+            sqlString+="inner join last_month_balance on ";
+            sqlString+="last_month_balance.ITO_id=ito_info.ito_id and ";
+            sqlString+="shift_month=?";
+
+            return connection.promise().query(sqlString,[startDateString,endDateString,startDateString,endDateString,startDateString])
+            .then(([rows]) => {
+                return(rows)
+            })
+            .catch(err=>{
+                throw(err);
+            })
+            .finally(()=>{
+                console.log("End Connection.")
+                connection.end();
+            })
+        }
+        this.getRosterRule=(callBack)=>{
             let sqlString ="select * from roster_rule order by rule_type,rule_key,rule_value";
             connection.execute(sqlString,(err, results, fields)=>{
                 connection.end(err=>{

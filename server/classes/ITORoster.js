@@ -3,7 +3,7 @@ class ITORoster{
 		this.lastMonthBalance=0.0;
 		this.thisMonthBalance=0.0;
 		this.workingHourPerDay=0.0;
-		this.shiftList={};
+		this.shiftList=[];
 		
 		this.itoName="";
 		this.itoPostName="";		
