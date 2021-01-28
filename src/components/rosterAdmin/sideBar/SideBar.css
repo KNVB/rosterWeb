@@ -1,8 +1,8 @@
 /* Position and sizing of burger button */
 .bm-burger-button {
     position: fixed;
-    width: 36px;
-    height: 30px;
+    width: 21px;
+    height: 15px;
     left: 10px;
     top: 10px;
   }
@@ -78,6 +78,7 @@
   
   .bm-item:hover {
     color:#111;
+    text-decoration: underline;
   }
   .pointer{
     cursor: pointer; 

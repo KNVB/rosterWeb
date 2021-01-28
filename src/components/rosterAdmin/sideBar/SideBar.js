@@ -20,9 +20,9 @@ function SideBar(props){
             <a className="menu-item" href="/rosterWeb/admin/itoManagement">
                 ITO Management
             </a>
-            <a className="menu-item pointer" onClick={logout}>
+            <div className="menu-item pointer" onClick={logout}>
                 Logout
-            </a>
+            </div>
         </Menu>
     );
 }
