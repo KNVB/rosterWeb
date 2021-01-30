@@ -82,32 +82,34 @@ class ITO
 		let DBO=require("../utils/dbo.js");
 		let dboObj=new DBO();
 		let resultObj={};
-		return new Promise((resolve, reject) => {
-			dboObj.getITOList(year,month,(err,resultList)=>{
-				if (err){
-				  reject(err);
+
+		dboObj.getITOList(year, month)
+		.then(resultList=>{
+			resultList.forEach(ito=>{
+				let itoObj;
+				if (resultObj[ito.ito_id]){
+					itoObj=resultObj[ito.ito_id];
+					itoObj.blackListedShiftPatternList.push(ito.black_list_pattern);
 				}else {
-				  resultList.forEach(ito=>{
-					  let itoObj;
-					  if (resultObj[ito.ito_id]){
-						  itoObj=resultObj[ito.ito_id];
-						  itoObj.blackListedShiftPatternList.push(ito.black_list_pattern);
-					  }else {
-						  itoObj=new ITO();
-						  itoObj.itoId=ito.ito_id;
-						  itoObj.itoName=ito.ito_name;
-						  itoObj.postName=ito.post_name;
-						  itoObj.workingHourPerDay=parseFloat(ito.working_hour_per_day.toFixed(2));
-						  itoObj.joinDate=new Date(ito.join_date);
-						  itoObj.leaveDate=new Date(ito.leave_date);
-						  itoObj.availableShiftList=ito.available_shift.split(",");
-						  itoObj.blackListedShiftPatternList.push(ito.black_list_pattern);
-					  }
-					  resultObj[ito.ito_id]=itoObj;
-				  });
-				  resolve(resultObj);               
+					itoObj=new ITO();
+					itoObj.itoId=ito.ito_id;
+					itoObj.itoName=ito.ito_name;
+					itoObj.postName=ito.post_name;
+					itoObj.workingHourPerDay=parseFloat(ito.working_hour_per_day.toFixed(2));
+					itoObj.joinDate=new Date(ito.join_date);
+					itoObj.leaveDate=new Date(ito.leave_date);
+					itoObj.availableShiftList=ito.available_shift.split(",");
+					itoObj.blackListedShiftPatternList.push(ito.black_list_pattern);
 				}
+				resultObj[ito.ito_id]=itoObj;
 			});
+			return resultObj;
+		})
+		.catch(err=>{
+			console.log("Some wrong when getting data:"+err);
+		})
+		.finally(()=>{
+			dboObj.close();
 		});
 	}	
 }

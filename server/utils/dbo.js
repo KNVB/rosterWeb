@@ -1,6 +1,3 @@
-const { rejects } = require('assert');
-const { resolve } = require('path');
-
 class DBO
 {
 	constructor(){
@@ -9,24 +6,9 @@ class DBO
 		dbConfig["insecureAuth"]=true;
 		const moment = require('moment');
 		const mysql = require('mysql2');
-		const util =require('util');
-		const connection = mysql.createConnection(dbConfig);
-		//const query = util.promisify(connection.query).bind(connection);
-		this.getLastMonthBalance=(year,month,itoId,callBack)=>{
-			const startDateString=year+"-"+month+"-01";
-			let sqlString='select balance from last_month_balance where ito_Id=? and shift_month=?';
-			connection.execute(sqlString,[itoId,startDateString],(err, results, fields)=>{
-                connection.end(err=>{
-                    if (err) {
-                        throw err;
-                    } else {						
-                        callBack(err,results);
-                        console.log("Get Last Month balance successfully!");
-                    }
-                });
-            });
-		}
-		this.getITOList=(year,month,callBack)=>{
+
+        const connection = mysql.createConnection(dbConfig);
+        this.getITOList=async(year, month)=>{
             let startDateString=year+"-";
 			if (month<10) {
 				startDateString+="0"+month;
@@ -41,94 +23,28 @@ class DBO
             sqlString+="on ito_info.ito_id=black_list_pattern.ito_id ";
             sqlString+="where join_date<=? and leave_date >=? ";
             sqlString+="order by ito_info.ito_id";
-            //console.log("getITOList startDateString="+startDateString+",endDateString="+endDateString);
-            connection.execute(sqlString,[startDateString,endDateString],(err, results, fields)=>{
-                connection.end(err=>{
-                    if (err) {
-                        throw err;
-                    } else {
-                        callBack(err,results);
-                        console.log("Get ITO List successfully.");
-                    }
-                });
-            });
-        }
-		this.getRoster=(year,month,itoId,callBack)=>{
-			let startDateString=year+"-";
-			if (month<10) {
-				startDateString+="0"+month;
-			} else {
-				startDateString+=month;
-			}
-			startDateString+="-01";
-            const endDateString=moment(startDateString).endOf('month').format('YYYY-MM-DD');
-			let sqlString ="select day(shift_date) as d,shift from shift_record where ito_Id=? and (shift_record.shift_date between ? and ?)";
-			connection.execute(sqlString,[itoId,startDateString,endDateString],(err, results, fields)=>{
-                connection.end(err=>{
-                    if (err) {
-                        throw err;
-                    } else {
-                        callBack(err,results);
-                        console.log("Get Roster successfully!");
-                    }
-                });
-            });
-        }
-        /*****************
-         * It will returns error when no shift record found
-         */
-        this.getRosterList=(year,month)=>{
-            let startDateString=year+"-";
-			if (month<10) {
-				startDateString+="0"+month;
-			} else {
-				startDateString+=month;
-			}
-			startDateString+="-01";
-            const endDateString=moment(startDateString).endOf('month').format('YYYY-MM-DD');
-            
-            let sqlString ="SELECT ito_info.ito_id,post_name,ito_name,working_hour_per_day,";
-            sqlString+="day(shift_date) as d,shift,balance ";
-            sqlString+="from ito_info inner join shift_record on ";  
-            sqlString+="ito_info.ito_id = shift_record.ito_id and ";
-            sqlString+="(shift_record.shift_date between ? and ?) and ";
-            sqlString+="ito_info.join_date<=? and ito_info.leave_date >=?"; 
-            sqlString+="inner join last_month_balance on ";
-            sqlString+="last_month_balance.ITO_id=ito_info.ito_id and ";
-            sqlString+="shift_month=?";
 
-            return connection.promise().query(sqlString,[startDateString,endDateString,startDateString,endDateString,startDateString])
-            .then(([rows]) => {
-                return(rows)
-            })
-            .catch(err=>{
-                throw(err);
-            })
-            .finally(()=>{
-                console.log("End Connection.")
-                connection.end();
-            })
+            return await executeQuery(sqlString,[startDateString,endDateString]);
         }
-        this.getRosterRule=(callBack)=>{
-            let sqlString ="select * from roster_rule order by rule_type,rule_key,rule_value";
-            connection.execute(sqlString,(err, results, fields)=>{
-                connection.end(err=>{
-                    if (err) {
-                        throw err;
-                    } else {
-                        callBack(err,results);
-                        console.log("Get Roster Rule successfully!");
-                    }
-                });
-            });
-        }
-		
+        this.getRosterRule=async()=>{
+			let sqlString ="select * from roster_rule order by rule_type,rule_key,rule_value";
+			return await executeQuery(sqlString);
+		}
 		this.close=()=>{
 			connection.end(err=>{
 				if (err) throw err;
-				console.log("Disconnect form "+process.env["DATABASE_HOST"]+" successfully!");
+				console.log("Disconnect from "+dbConfig["host"]+" successfully!");
 			});
-		}		
-	}
+		}
+		function executeQuery(sql,para){
+			return connection.promise().query(sql,para)
+            .then(([rows]) => {
+				return rows
+			})
+            .catch(err=>{                
+               throw(err);
+            })	
+		}
+    }
 }
-module.exports = DBO;
+module.exports = DBO;    
