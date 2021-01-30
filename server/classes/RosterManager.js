@@ -6,7 +6,7 @@ class RosterManager
 		let ITORoster = require('./ITORoster');
 
 		const RosterRule = require('./RosterRule');
-		/*	
+		
 		this.getRosterList=async (year,month)=>{
 			let dboObj=new DBO();
 			let itoRoster=null;
@@ -20,7 +20,8 @@ class RosterManager
 						itoRoster.itoName=record.ito_name;
 						itoRoster.itoPostName=record.post_name;
 						itoRoster.workingHourPerDay=parseFloat(record.working_hour_per_day);
-						itoRoster.lastMonthBalance=parseFloat(record.balance);
+						if (record.balance)
+							itoRoster.lastMonthBalance=parseFloat(record.balance);
 					} else {
 						itoRoster=rosterList[record.ito_id];
 					}
@@ -31,32 +32,19 @@ class RosterManager
 					}					
 					rosterList[record.ito_id]=itoRoster;
 				});
+				console.log("Get Roster List successfully!");
 				return rosterList;
 			} 
 			catch (error){
 				console.log("Something wrong when getting Roster list:"+error);
 				console.log(rosterList);
-			}	
-		}
-		*/
+			}
+			finally{
+				dboObj.close();
+			};	
+		}		
 
-		this.getRosterList=async (year,month)=>{
-			try{
-				let itoList=await ITO.getITOList(year, month);
-				let rosterList={};
-				let itoIdList=Object.keys(itoList);
-				for (var i=0;i<itoIdList.length;i++){
-					var ito=itoList[itoIdList[i]];
-					var roster=await ito.getRoster(year,month);
-					var lastMonthBalance=await ito.getLastMonthBalance(year,month);
-					roster.lastMonthBalance=parseFloat(lastMonthBalance);
-					rosterList[itoIdList[i]]=roster;
-				}
-				return rosterList;
-			} catch (error){
-				console.log("Something wrong when getting Roster list:"+error);
-			}		
-		}
+		
 		
 		this.getRosterRule=()=>{
 			return RosterRule;

@@ -78,13 +78,13 @@ class ITO
 			});			
 		}
 	}
-	static getITOList(year, month){
+	static async getITOList(year, month){
 		let DBO=require("../utils/dbo.js");
 		let dboObj=new DBO();
 		let resultObj={};
-
-		dboObj.getITOList(year, month)
-		.then(resultList=>{
+	
+		try{
+			let resultList=await dboObj.getITOList(2021,1);
 			resultList.forEach(ito=>{
 				let itoObj;
 				if (resultObj[ito.ito_id]){
@@ -104,13 +104,14 @@ class ITO
 				resultObj[ito.ito_id]=itoObj;
 			});
 			return resultObj;
-		})
-		.catch(err=>{
-			console.log("Some wrong when getting data:"+err);
-		})
-		.finally(()=>{
+		}
+		catch(err){
+			throw(err);
+		}
+		finally{
 			dboObj.close();
-		});
+		}
+		
 	}	
 }
 module.exports = ITO;

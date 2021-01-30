@@ -26,6 +26,28 @@ class DBO
 
             return await executeQuery(sqlString,[startDateString,endDateString]);
         }
+        this.getRosterList=async(year,month)=>{
+            let startDateString=year+"-";
+			if (month<10) {
+				startDateString+="0"+month;
+			} else {
+				startDateString+=month;
+			}
+			startDateString+="-01";
+            const endDateString=moment(startDateString).endOf('month').format('YYYY-MM-DD');
+
+            let sqlString="select v.ito_id,post_name,ito_name,working_hour_per_day,balance,day(Shift_date) as d,shift ";
+            sqlString+="from (";
+            sqlString+="SELECT ito_info.ito_id,post_name,ito_name,working_hour_per_day ";
+            sqlString+="from ito_info ";
+            sqlString+="where ito_info.join_date<=? and ito_info.leave_date >=?";
+            sqlString+=") as v left join shift_record "; 
+            sqlString+="on v.ito_id=shift_record.ITO_ID and  (shift_record.shift_date between ? and ?)";
+            sqlString+="left join last_month_balance on v.ito_id=last_month_balance.ITO_ID and shift_month=? ";
+            sqlString+="order by v.ito_id,shift_date";
+
+            return await executeQuery(sqlString,[startDateString,endDateString,startDateString,endDateString,startDateString]);
+        }
         this.getRosterRule=async()=>{
 			let sqlString ="select * from roster_rule order by rule_type,rule_key,rule_value";
 			return await executeQuery(sqlString);
