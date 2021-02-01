@@ -1,8 +1,8 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useState} from 'react';
 import AppConfig from '../../utils/AppConfig';
-import MonthPicker from '../monthPicker/MonthPicker';
-import RosterTable from '../rosterTable/RosterTable';
+import MonthPicker from '../commonTableComponent/monthPicker/MonthPicker';
+import RosterTable from './rosterTable/RosterTable';
 import './RosterViewer.css';
 function RosterViewer(){
     const [rosterDate,setRosterMonth]=useState(new Date());

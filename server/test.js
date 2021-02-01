@@ -1,7 +1,6 @@
 class DBO
 {
 	constructor(){
-		
 		const moment = require('moment');
 		const mysql = require('mysql2');
 		const dbConfig={
