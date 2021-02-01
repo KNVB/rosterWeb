@@ -32,20 +32,17 @@ class RosterManager
 					}					
 					rosterList[record.ito_id]=itoRoster;
 				});
-				console.log("Get Roster List successfully!");
+				console.log("Get ("+year+","+month+") Roster List successfully!");
 				return rosterList;
 			} 
 			catch (error){
-				console.log("Something wrong when getting Roster list:"+error);
+				console.log("Something wrong when getting ("+year+","+month+") roster list:"+error);
 				console.log(rosterList);
 			}
 			finally{
 				dboObj.close();
 			};	
-		}		
-
-		
-		
+		}
 		this.getRosterRule=()=>{
 			return RosterRule;
 		}
