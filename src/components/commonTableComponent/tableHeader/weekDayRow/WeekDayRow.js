@@ -1,9 +1,14 @@
 import HourCell from './HourCell';
 import HourOffDueCell from './HourOffDueCell';
-import NameCell from '../../../../commonTableComponent/cells/nameCell/NameCell';
+import NameCell from '../../cells/nameCell/NameCell';
 import WeekDayCell from './WeekDayCell';
 function WeekDayRow(props){
     let weekdayRow=[];
+    for (let i=props.noOfPrevDate;i>0;i--){
+        weekdayRow.push(
+            <WeekDayCell key={"weekDay_-"+i}/>
+        )
+    }
     for (let i=0;i<31;i++){
         if (props.monthlyCalendar[i]){
             //console.log(props.monthlyCalendar[i]);

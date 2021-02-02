@@ -3,7 +3,7 @@ import './RosterTable.css';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import TableBody   from './tableBody/TableBody';
 import TableFooter from './TableFooter'; 
-import TableHeader from './tableHeader/TableHeader'; 
+import TableHeader from '../../commonTableComponent/tableHeader/TableHeader'; 
 function RosterTable(props){
     const [hightLightCellIndex,setHightLightCellIndex]=useState(-1);
     const calendarUtility=new CalendarUtility();
@@ -14,8 +14,10 @@ function RosterTable(props){
              <TableHeader 
                 calendarUtility={calendarUtility} 
                 hightLightCellIndex={hightLightCellIndex} 
-                monthlyCalendar={monthlyCalendar}/>
+                monthlyCalendar={monthlyCalendar}
+                noOfPrevDate={0}/>
             <TableBody 
+                noOfPrevDate={0}
                 noOfWorkingDay={result.noOfWorkingDay} 
                 rosterYear={props.rosterDate.getFullYear()} 
                 rosterMonth={props.rosterDate.getMonth()+1} 

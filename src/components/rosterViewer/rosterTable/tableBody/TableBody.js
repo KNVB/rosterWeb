@@ -18,14 +18,15 @@ function TableBody(props){
           rows.push(<RosterRow 
                       itoId={itoId} 
                       itoRoster={result} 
-                      key={itoId} 
+                      key={itoId}
+                      noOfPrevDate={props.noOfPrevDate} 
                       setHightLightCellIndex={props.setHightLightCellIndex}/>);
         });
         
         setRosterList(rows);
       };
       getData();
-    }, [props.noOfWorkingDay,props.rosterYear, props.rosterMonth,props.setHightLightCellIndex]);
+    }, [props.noOfWorkingDay,props.rosterYear, props.rosterMonth,props.setHightLightCellIndex,props.noOfPrevDate]);
     return (
         <tbody>
           {rosterList}

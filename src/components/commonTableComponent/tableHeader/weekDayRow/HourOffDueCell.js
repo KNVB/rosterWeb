@@ -1,4 +1,4 @@
-import RosterTableCell from '../../../../commonTableComponent/cells/rosterTableCell/RosterTableCell';
+import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
 function HourOffDueCell(props){
     return (
         <RosterTableCell className="p-0 tailCell text-center" colSpan="8">

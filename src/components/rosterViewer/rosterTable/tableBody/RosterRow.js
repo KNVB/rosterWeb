@@ -10,6 +10,11 @@ function RosterRow(props) {
     let content=parse(props.itoRoster.itoName+"<br>"+props.itoRoster.itoPostName+" Extn. 2458");
     let j=0,shiftCellList=[];
     
+    for (let i=props.noOfPrevDate;i>0;i--){
+        shiftCellList.push(
+            <ShiftCell key={props.itoId+"_shift-"+i}/>    
+        )
+    }
     props.itoRoster.shiftList.forEach(itoShift=>{
         shiftCellList.push(<ShiftCell 
                                 key={props.itoId+"_shift_"+j} 
@@ -19,7 +24,7 @@ function RosterRow(props) {
                            </ShiftCell>);
         j++;
     })
-    for (var i=shiftCellList.length;i<31;i++){
+    for (var i=props.itoRoster.shiftList.length;i<31;i++){
         shiftCellList.push(<RosterTableCell key={props.itoId+"_shift_"+i} />);
     }
     return(

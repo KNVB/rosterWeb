@@ -5,13 +5,17 @@ function TableHeader(props){
     //console.log(props.monthlyCalendar);
     return (
         <thead>
-            <HolidayRow monthlyCalendar={props.monthlyCalendar}/>
+            <HolidayRow 
+                monthlyCalendar={props.monthlyCalendar}
+                noOfPrevDate={props.noOfPrevDate}/>
             <WeekDayRow
                 calendarUtility={props.calendarUtility}
-                monthlyCalendar={props.monthlyCalendar}/>
+                monthlyCalendar={props.monthlyCalendar}
+                noOfPrevDate={props.noOfPrevDate}/>
             <DateRow 
                 hightLightCellIndex={props.hightLightCellIndex}
-                monthlyCalendar={props.monthlyCalendar}/>
+                monthlyCalendar={props.monthlyCalendar}
+                noOfPrevDate={props.noOfPrevDate}/>
         </thead>
     )
 }

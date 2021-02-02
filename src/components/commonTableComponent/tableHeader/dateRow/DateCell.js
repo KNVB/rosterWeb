@@ -1,4 +1,4 @@
-import RosterTableCell from '../../../../commonTableComponent/cells/rosterTableCell/RosterTableCell';
+import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
 function DateCell(props){
     let className="p-0 text-center";
     

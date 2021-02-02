@@ -1,5 +1,5 @@
 import './HourCell.css';
-import RosterTableCell from '../../../../commonTableComponent/cells/rosterTableCell/RosterTableCell';
+import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
 function HourCell(props){
     return (
         <RosterTableCell className="hourCell p-0 text-center" rowSpan="2">

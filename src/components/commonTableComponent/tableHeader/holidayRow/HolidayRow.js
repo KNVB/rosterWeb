@@ -1,9 +1,15 @@
-import NameCell from '../../../../commonTableComponent/cells/nameCell/NameCell';
+import NameCell from '../../cells/nameCell/NameCell';
 import PHCell from './PHCell';
-import RosterTableCell from '../../../../commonTableComponent/cells/rosterTableCell/RosterTableCell'
+import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell'
 import './HolidayRow.css';
 function HolidayRow(props){
     let holidayRow=[];
+    console.log(props.noOfPrevDate);
+    for (let i=props.noOfPrevDate;i>0;i--){
+        holidayRow.push(
+            <PHCell key={"PH_-"+i}/>    
+        )
+    }
     for (let i=0;i<31;i++){
         if (props.monthlyCalendar[i]){
             //console.log(props.monthlyCalendar[i]);
