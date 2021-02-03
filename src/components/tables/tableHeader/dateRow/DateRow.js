@@ -5,14 +5,11 @@ import NameCell from '../../cells/nameCell/NameCell';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
 function DateRow(props){
     let dateRow=[];
-    for (let i=props.noOfPrevDate;i>0;i--){
-        dateRow.push(
-            <DateCell key={"date_-"+i}/>    
-        )
-    }
+    let rosterParam=props.rosterParam;
+    let monthlyCalendar=props.monthlyCalendar;
     for (let i=0;i<31;i++){
-        if (props.monthlyCalendar[i]){
-            dateRow.push(<DateCell dateData={props.monthlyCalendar[i]} hightLightCellIndex={props.hightLightCellIndex} key={"date_"+i}/>);
+        if (monthlyCalendar.calendarDateList[i]){
+            dateRow.push(<DateCell dateData={monthlyCalendar.calendarDateList[i]} hightLightCellIndex={props.hightLightCellIndex} key={"date_"+i}/>);
         } else {
             dateRow.push(<DateCell key={"date_"+i}/>);
         }

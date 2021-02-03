@@ -53,7 +53,7 @@ class CalendarUtility {
         this.weekdayNames=['Su','M','T','W','Th','F','S']
         //=================================================================================================
         this.getMonthlyCalendar=(y,m)=>{
-            let monthlyCalendar=[],noOfWorkingDay=0,publicHolidayList=[],result={};
+            let calendarDateList=[],noOfWorkingDay=0,publicHolidayList=[],result={};
 		    let length,lunarDate,solarDate,firstSolarTermDate,secondSolarTermDate;
 		    let ce,lDObj,sDObj;
             length=solarDays(y,m);    //國曆當月天數
@@ -105,7 +105,7 @@ class CalendarUtility {
                 if (ce.dayOfWeek===0) // 如果當日是星期日
                     ce.publicHoliday=true; // 設定為公眾假期
 
-                monthlyCalendar.push(ce);
+                calendarDateList.push(ce);
             }
             //復活節只出現在3或4月
             if(m===2 || m===3) {
@@ -133,22 +133,22 @@ class CalendarUtility {
             secondSolarTermDate=sTerm(y,m*2+1)-1;
             //console.log((m+1)+"月第一節氣日子:"+firstSolarTermDate);
             //console.log((m+1)+"月第二節氣日子:"+secondSolarTermDate);
-            monthlyCalendar[firstSolarTermDate].solarTermInfo=solarTerm[m*2];
-            monthlyCalendar[secondSolarTermDate].solarTermInfo = solarTerm[m*2+1];
+            calendarDateList[firstSolarTermDate].solarTermInfo=solarTerm[m*2];
+            calendarDateList[secondSolarTermDate].solarTermInfo = solarTerm[m*2+1];
             
-            if (monthlyCalendar[firstSolarTermDate].solarTermInfo==="清明") {
-                pushDataToObj(publicHolidayList,firstSolarTermDate,monthlyCalendar[firstSolarTermDate].solarTermInfo+"節"); 
+            if (calendarDateList[firstSolarTermDate].solarTermInfo==="清明") {
+                pushDataToObj(publicHolidayList,firstSolarTermDate,calendarDateList[firstSolarTermDate].solarTermInfo+"節"); 
             }			
             //console.log(publicHolidayList);
-            processHoliday(publicHolidayList,monthlyCalendar);
+            processHoliday(publicHolidayList,calendarDateList);
             
-            monthlyCalendar.forEach(calendarDate=>{
+            calendarDateList.forEach(calendarDate=>{
                 if ((calendarDate.dayOfWeek===0) || (calendarDate.dayOfWeek===6)||(calendarDate.publicHoliday)){
                     noOfWorkingDay--;
                 }
             })
             
-            result["monthlyCalendar"]=monthlyCalendar;
+            result["calendarDateList"]=calendarDateList;
             result["noOfWorkingDay"]=noOfWorkingDay;
             return result;
         }
