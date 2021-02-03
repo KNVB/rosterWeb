@@ -1,9 +1,9 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useState} from 'react';
 import AppConfig from '../../../utils/AppConfig';
-import MonthPicker from '../../commonTableComponent/monthPicker/MonthPicker';
+import MonthPicker from '../../monthPicker/MonthPicker';
 import React from 'react';
-import SchedulerTable from './schedulerTable/SchedulerTable';
+import SchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
 function RosterScheduler(){
     const [rosterDate,setRosterMonth]=useState(new Date());
     let monthPickerMinDate=JSON.parse(AppConfig.MIN_DATE);

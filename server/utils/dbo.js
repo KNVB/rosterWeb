@@ -48,8 +48,8 @@ class DBO
 
             return await executeQuery(sqlString,[startDateString,endDateString,startDateString,endDateString,startDateString]);
         }
-        this.getRosterRule=async()=>{
-			let sqlString ="select * from roster_rule order by rule_type,rule_key,rule_value";
+        this.getRosterParam=async()=>{
+			let sqlString ="select * from roster_param order by param_type,param_key,param_value";
 			return await executeQuery(sqlString);
 		}
 		this.close=()=>{

@@ -5,7 +5,7 @@ class RosterManager
 		let ITO = require('./ITO');
 		let ITORoster = require('./ITORoster');
 
-		const RosterRule = require('./RosterRule');
+		const RosterParam = require('./RosterParam');
 		
 		this.getRosterList=async (year,month)=>{
 			let dboObj=new DBO();
@@ -43,8 +43,8 @@ class RosterManager
 				dboObj.close();
 			};	
 		}
-		this.getRosterRule=()=>{
-			return RosterRule;
+		this.getRosterParam=()=>{
+			return RosterParam;
 		}
 	}
 }

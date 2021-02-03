@@ -4,8 +4,8 @@ class Roster{
         this.get=(year,month)=>{
            return Utility.fetchAPI('/publicAPI/getITORosterList','GET',{"year":year,"month":month})                   
         }
-        this.getRosterRule=()=>{
-            return Utility.fetchAPI('/publicAPI/getRosterRule','GET');
+        this.getRosterParam=()=>{
+            return Utility.fetchAPI('/publicAPI/getRosterParam','GET');
         }
     }
 }

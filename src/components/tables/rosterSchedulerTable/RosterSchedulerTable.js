@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import AppConfig from '../../../../utils/AppConfig';
-import CalendarUtility from '../../../../utils/calendar/CalendarUtility';
+import AppConfig from '../../../utils/AppConfig';
+import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import React from 'react';
-import TableHeader from '../../../commonTableComponent/tableHeader/TableHeader'; 
-import '../../../rosterViewer/rosterTable/RosterTable.css';
+import TableHeader from '../tableHeader/TableHeader'; 
+import '../tables.css';
 
-function SchedulerTable(props){
+function RosterSchedulerTable(props){
     const [hightLightCellIndex,setHightLightCellIndex]=useState(-1);
     const calendarUtility=new CalendarUtility();
     let result=calendarUtility.getMonthlyCalendar(props.rosterDate.getFullYear(),props.rosterDate.getMonth());
@@ -20,4 +20,4 @@ function SchedulerTable(props){
         </table>
     )
 }
-export default SchedulerTable;
+export default RosterSchedulerTable;

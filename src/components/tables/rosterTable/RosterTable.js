@@ -1,9 +1,9 @@
 import { useState} from 'react';
-import './RosterTable.css';
+import '../tables.css';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import TableBody   from './tableBody/TableBody';
 import TableFooter from './TableFooter'; 
-import TableHeader from '../../commonTableComponent/tableHeader/TableHeader'; 
+import TableHeader from '../tableHeader/TableHeader'; 
 function RosterTable(props){
     const [hightLightCellIndex,setHightLightCellIndex]=useState(-1);
     const calendarUtility=new CalendarUtility();

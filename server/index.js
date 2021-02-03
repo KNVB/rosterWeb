@@ -35,7 +35,7 @@ app.use(cookierParser(accessTokenSecret)); //signed cookie key
 app.use('/rosterWeb/publicAPI',publicAPIRouter);
 app.use('/rosterWeb/privateAPI',util.checkToken,privateAPIRouter);
 publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
-publicAPIRouter.get('/getRosterRule',publicAPI.getRosterRule);
+publicAPIRouter.get('/getRosterParam',publicAPI.getRosterParam);
 publicAPIRouter.post('/adminLogin',util.adminLogin);
 privateAPIRouter.post('/logout',privateAPI.logout);
 httpServer.listen(httpServerPort, function() {

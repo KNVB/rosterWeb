@@ -4,8 +4,8 @@ class PublicAPI{
             let result=await rosterManager.getRosterList(req.query.year,req.query.month);
             res.send(result);
         };
-        this.getRosterRule = (req, res) =>{
-            res.send(rosterManager.getRosterRule());
+        this.getRosterParam = (req, res) =>{
+            res.send(rosterManager.getRosterParam());
         };
     }
 }

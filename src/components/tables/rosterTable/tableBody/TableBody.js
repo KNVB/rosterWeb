@@ -8,12 +8,12 @@ function TableBody(props){
       const getData = async () => {
         let roster = new Roster();
         let rosterData = await roster.get(props.rosterYear, props.rosterMonth);
-        let rosterRule = await roster.getRosterRule();
+        let rosterParam = await roster.getRosterParam();
         let rows=[];
         
         //console.log(rosterData);
         Object.keys(rosterData).forEach(itoId=>{
-          let result=Utility.calculateShiftStat(props.noOfWorkingDay,rosterData[itoId],rosterRule.shiftHourCount);
+          let result=Utility.calculateShiftStat(props.noOfWorkingDay,rosterData[itoId],rosterParam.shiftHourCount);
           //console.log(itoId,result);
           rows.push(<RosterRow 
                       itoId={itoId} 
