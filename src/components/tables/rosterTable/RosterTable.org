@@ -1,16 +1,14 @@
 import { useState} from 'react';
 import '../tables.css';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
-import Roster from '../../../utils/roster';
 import TableBody   from './tableBody/TableBody';
 import TableFooter from './TableFooter'; 
 import TableHeader from '../tableHeader/TableHeader'; 
 function RosterTable(props){
     const [hightLightCellIndex,setHightLightCellIndex]=useState(-1);
     const calendarUtility=new CalendarUtility();
-    
-    return (<div></div>);
-    /*
+    let result=calendarUtility.getMonthlyCalendar(props.rosterDate.getFullYear(),props.rosterDate.getMonth());
+    let monthlyCalendar=result.monthlyCalendar;
     return (
         <table id="rosterTable">
              <TableHeader 
@@ -27,6 +25,5 @@ function RosterTable(props){
             <TableFooter/>
         </table>
     );
-    */
 }
 export default RosterTable;
