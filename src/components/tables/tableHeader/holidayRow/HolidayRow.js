@@ -4,11 +4,9 @@ import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell'
 import './HolidayRow.css';
 function HolidayRow(props){
     let holidayRow=[];
-    let rosterParam=props.rosterParam;
     let monthlyCalendar=props.monthlyCalendar;
 
-    console.log("rosterParam="+JSON.stringify(rosterParam));
-    console.log("monthlyCalendar="+JSON.stringify(monthlyCalendar));
+    //console.log("monthlyCalendar="+JSON.stringify(monthlyCalendar));
 
     for (let i=0;i<31;i++){
         if (monthlyCalendar.calendarDateList[i]){

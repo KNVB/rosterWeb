@@ -4,8 +4,8 @@ import NameCell from '../../cells/nameCell/NameCell';
 import WeekDayCell from './WeekDayCell';
 function WeekDayRow(props){
     let weekdayRow=[];
-    let rosterParam=props.rosterParam;
     let monthlyCalendar=props.monthlyCalendar;
+
     for (let i=0;i<31;i++){
         if (monthlyCalendar.calendarDateList[i]){
             //console.log(props.monthlyCalendar[i]);

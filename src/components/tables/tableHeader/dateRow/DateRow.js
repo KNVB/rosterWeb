@@ -5,8 +5,9 @@ import NameCell from '../../cells/nameCell/NameCell';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
 function DateRow(props){
     let dateRow=[];
-    let rosterParam=props.rosterParam;
     let monthlyCalendar=props.monthlyCalendar;
+
+    console.log(props.hightLightCellIndex);
     for (let i=0;i<31;i++){
         if (monthlyCalendar.calendarDateList[i]){
             dateRow.push(<DateCell dateData={monthlyCalendar.calendarDateList[i]} hightLightCellIndex={props.hightLightCellIndex} key={"date_"+i}/>);
