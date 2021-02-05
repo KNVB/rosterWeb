@@ -3,7 +3,7 @@ import {useState} from 'react';
 import AppConfig from '../../../utils/AppConfig';
 import MonthPicker from '../../monthPicker/MonthPicker';
 import React from 'react';
-import SchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
+import RosterSchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
 function RosterScheduler(){
     const [rosterDate,setRosterMonth]=useState(new Date());
     let monthPickerMinDate=JSON.parse(AppConfig.MIN_DATE);
@@ -32,7 +32,7 @@ function RosterScheduler(){
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                        <SchedulerTable rosterDate={rosterDate}/>
+                        <RosterSchedulerTable rosterDate={rosterDate}/>
                     </Col>
                 </Row>
             </Container>

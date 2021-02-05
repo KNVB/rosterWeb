@@ -2,11 +2,16 @@ import RosterTableCell from '../rosterTableCell/RosterTableCell';
 import './ShiftCell.css';
 function ShiftCell(props){
     let shiftClass="p-0 text-center shiftCell";
-    //console.log(props);
-    let myProps={};
-    Object.keys(props).forEach(key=>{
-        myProps[key]=props[key];
-    })
+    let deHightLight=(e)=>{
+        props.setHightLightRowIndex(-1);
+        props.setHightLightCellIndex(-1);
+    }
+    let hightLight=(e)=>{
+        //console.log(e.target.cellIndex);
+        //console.log(JSON.stringify(e.target));
+        props.setHightLightCellIndex(e.target.cellIndex);
+        props.setHightLightRowIndex(1);
+    }
     switch (props.children){
         case "a":
             shiftClass+=" aShiftColor";
@@ -32,8 +37,9 @@ function ShiftCell(props){
     }
     return (
         <RosterTableCell 
-            {...myProps}
-            className={shiftClass}>
+            className={shiftClass} 
+            onMouseOut={deHightLight}
+            onMouseOver={hightLight}>
             {props.children}
         </RosterTableCell>
     )

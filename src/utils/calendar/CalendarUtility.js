@@ -1,10 +1,6 @@
 import CalendarDate from './CalendarDate';
 import LunarDate from './LunarDate';
 class CalendarUtility {
-    //===================================================================================================
-    static monthNames={1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"};    
-    static weekdayNames=['Su','M','T','W','Th','F','S']
-
     constructor (){
         let Animals=["鼠","牛","虎","兔","龍","蛇","馬","羊","猴","雞","狗","豬"];	
         let Gan=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
@@ -52,9 +48,12 @@ class CalendarUtility {
 		solarHolidayList["1225"]="聖誕節";
         solarHolidayList["1226"]="聖誕節翌日";
 
+//===================================================================================================
+        this.monthNames={1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"};    
+        this.weekdayNames=['Su','M','T','W','Th','F','S']
         //=================================================================================================
         this.getMonthlyCalendar=(y,m)=>{
-            let calendarDateList=[],noOfWorkingDay=0,publicHolidayList=[],result={};
+            let monthlyCalendar=[],noOfWorkingDay=0,publicHolidayList=[],result={};
 		    let length,lunarDate,solarDate,firstSolarTermDate,secondSolarTermDate;
 		    let ce,lDObj,sDObj;
             length=solarDays(y,m);    //國曆當月天數
@@ -106,7 +105,7 @@ class CalendarUtility {
                 if (ce.dayOfWeek===0) // 如果當日是星期日
                     ce.publicHoliday=true; // 設定為公眾假期
 
-                calendarDateList.push(ce);
+                monthlyCalendar.push(ce);
             }
             //復活節只出現在3或4月
             if(m===2 || m===3) {
@@ -134,22 +133,22 @@ class CalendarUtility {
             secondSolarTermDate=sTerm(y,m*2+1)-1;
             //console.log((m+1)+"月第一節氣日子:"+firstSolarTermDate);
             //console.log((m+1)+"月第二節氣日子:"+secondSolarTermDate);
-            calendarDateList[firstSolarTermDate].solarTermInfo=solarTerm[m*2];
-            calendarDateList[secondSolarTermDate].solarTermInfo = solarTerm[m*2+1];
+            monthlyCalendar[firstSolarTermDate].solarTermInfo=solarTerm[m*2];
+            monthlyCalendar[secondSolarTermDate].solarTermInfo = solarTerm[m*2+1];
             
-            if (calendarDateList[firstSolarTermDate].solarTermInfo==="清明") {
-                pushDataToObj(publicHolidayList,firstSolarTermDate,calendarDateList[firstSolarTermDate].solarTermInfo+"節"); 
+            if (monthlyCalendar[firstSolarTermDate].solarTermInfo==="清明") {
+                pushDataToObj(publicHolidayList,firstSolarTermDate,monthlyCalendar[firstSolarTermDate].solarTermInfo+"節"); 
             }			
             //console.log(publicHolidayList);
-            processHoliday(publicHolidayList,calendarDateList);
+            processHoliday(publicHolidayList,monthlyCalendar);
             
-            calendarDateList.forEach(calendarDate=>{
+            monthlyCalendar.forEach(calendarDate=>{
                 if ((calendarDate.dayOfWeek===0) || (calendarDate.dayOfWeek===6)||(calendarDate.publicHoliday)){
                     noOfWorkingDay--;
                 }
             })
             
-            result["calendarDateList"]=calendarDateList;
+            result["monthlyCalendar"]=monthlyCalendar;
             result["noOfWorkingDay"]=noOfWorkingDay;
             return result;
         }

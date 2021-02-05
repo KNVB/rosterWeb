@@ -4,19 +4,22 @@ import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell'
 import './HolidayRow.css';
 function HolidayRow(props){
     let holidayRow=[];
-    let monthlyCalendar=props.monthlyCalendar;
-
-    //console.log("monthlyCalendar="+JSON.stringify(monthlyCalendar));
-
+    //console.log(props.noOfPrevDate);
+    for (let i=props.noOfPrevDate;i>0;i--){
+        holidayRow.push(
+            <PHCell key={"PH_-"+i}/>    
+        )
+    }
     for (let i=0;i<31;i++){
-        if (monthlyCalendar.calendarDateList[i]){
-            let content=(((monthlyCalendar.calendarDateList[i].festivalInfo) &&(monthlyCalendar.calendarDateList[i].publicHoliday))?"PH":"");
+        if (props.monthlyCalendar[i]){
+            //console.log(props.monthlyCalendar[i]);
+            let content=(((props.monthlyCalendar[i].festivalInfo) &&(props.monthlyCalendar[i].publicHoliday))?"PH":"");                
             holidayRow.push(
-                <PHCell key={"PH_"+i} title={monthlyCalendar.calendarDateList[i].festivalInfo}>
+                <PHCell key={"PH_"+i} title={props.monthlyCalendar[i].festivalInfo}>
                     {content}
                 </PHCell>    
-            )    
-        }else {
+            )
+        } else {
             holidayRow.push(
                 <PHCell key={"PH_"+i}/>
             )

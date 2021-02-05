@@ -2,20 +2,20 @@ import DateRow from './dateRow/DateRow';
 import HolidayRow from './holidayRow/HolidayRow';
 import WeekDayRow from './weekDayRow/WeekDayRow';
 function TableHeader(props){
-    console.log(props.hightLightCellIndex);
+    //console.log(props.monthlyCalendar);
     return (
         <thead>
-           <HolidayRow
+            <HolidayRow 
                 monthlyCalendar={props.monthlyCalendar}
-                rosterParam={props.rosterParam}/>
+                noOfPrevDate={props.noOfPrevDate}/>
             <WeekDayRow
-                calendarUtility={props.calendarUtility} 
+                calendarUtility={props.calendarUtility}
                 monthlyCalendar={props.monthlyCalendar}
-                rosterParam={props.rosterParam}/>
-             <DateRow 
+                noOfPrevDate={props.noOfPrevDate}/>
+            <DateRow 
                 hightLightCellIndex={props.hightLightCellIndex}
                 monthlyCalendar={props.monthlyCalendar}
-                rosterParam={props.rosterParam}/>        
+                noOfPrevDate={props.noOfPrevDate}/>
         </thead>
     )
 }

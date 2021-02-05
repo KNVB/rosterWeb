@@ -5,7 +5,7 @@ import MonthPicker from '../monthPicker/MonthPicker';
 import RosterTable from '../tables/rosterTable/RosterTable';
 import './RosterViewer.css';
 function RosterViewer(){
-    const [rosterMonth,setRosterMonth]=useState(new Date());
+    const [rosterDate,setRosterMonth]=useState(new Date());
     let monthPickerMinDate=JSON.parse(AppConfig.MIN_DATE);
     monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
     let updateMonth=(year,month)=>{
@@ -32,7 +32,7 @@ function RosterViewer(){
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                        <RosterTable rosterMonth={rosterMonth}/>
+                        <RosterTable rosterDate={rosterDate}/>
                     </Col>
                 </Row>
             </Container>        
