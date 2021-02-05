@@ -8,11 +8,6 @@ import TableHeader from '../tableHeader/TableHeader';
 function RosterTable(props){
     const [hightLightCellIndex,setHightLightCellIndex]=useState(-1);
     const [tableContent,setTableContent]=useState([]);
-    /*
-    const [monthlyCalendar,setMonthlyCalendar]=useState();
-    const [rosterData,setRosterData]=useState({});
-    const [rosterParam,setRosterParam]=useState();
-    */
     useEffect(()=>{
       const genTableContent = async () => {
         console.log(props.rosterMonth);
@@ -31,10 +26,21 @@ function RosterTable(props){
                 monthlyCalendar={monthlyCalendar}
                 rosterParam={rosterParam}
                 hightLightCellIndex={hightLightCellIndex}/>);
+        temp.push(
+            <TableBody 
+                key="body"
+                monthlyCalendar={monthlyCalendar}
+                rosterData={rosterData}
+                rosterParam={rosterParam}
+                setHightLightCellIndex={setHightLightCellIndex}/>
+        );
+        temp.push(
+            <TableFooter key="footer"/>
+        );         
         setTableContent(temp);        
       }
       genTableContent();
-    },[props.rosterMonth]);
+    },[props.rosterMonth,hightLightCellIndex]);
     
     return (
         <table id="rosterTable">

@@ -1,6 +1,10 @@
 import CalendarDate from './CalendarDate';
 import LunarDate from './LunarDate';
 class CalendarUtility {
+    //===================================================================================================
+    static monthNames={1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"};    
+    static weekdayNames=['Su','M','T','W','Th','F','S']
+
     constructor (){
         let Animals=["鼠","牛","虎","兔","龍","蛇","馬","羊","猴","雞","狗","豬"];	
         let Gan=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
@@ -48,9 +52,6 @@ class CalendarUtility {
 		solarHolidayList["1225"]="聖誕節";
         solarHolidayList["1226"]="聖誕節翌日";
 
-//===================================================================================================
-        this.monthNames={1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"};    
-        this.weekdayNames=['Su','M','T','W','Th','F','S']
         //=================================================================================================
         this.getMonthlyCalendar=(y,m)=>{
             let calendarDateList=[],noOfWorkingDay=0,publicHolidayList=[],result={};
