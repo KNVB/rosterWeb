@@ -7,20 +7,18 @@ import TableHeader from '../tableHeader/TableHeader';
 function RosterTable(props){
     const [hightLightCellIndex,setHightLightCellIndex]=useState(-1);
     const calendarUtility=new CalendarUtility();
-    let result=calendarUtility.getMonthlyCalendar(props.rosterDate.getFullYear(),props.rosterDate.getMonth());
-    let monthlyCalendar=result.monthlyCalendar;
     return (
         <table id="rosterTable">
              <TableHeader 
                 calendarUtility={calendarUtility} 
                 hightLightCellIndex={hightLightCellIndex} 
-                monthlyCalendar={monthlyCalendar}
+                monthlyCalendar={props.rosterTableData.result.monthlyCalendar}
                 noOfPrevDate={0}/>
             <TableBody 
                 noOfPrevDate={0}
-                noOfWorkingDay={result.noOfWorkingDay} 
-                rosterYear={props.rosterDate.getFullYear()} 
-                rosterMonth={props.rosterDate.getMonth()+1} 
+                noOfWorkingDay={props.rosterTableData.result.noOfWorkingDay}
+                rosterData={props.rosterTableData.rosterData}
+                rosterParam={props.rosterTableData.rosterParam}
                 setHightLightCellIndex={setHightLightCellIndex} />    
             <TableFooter/>
         </table>

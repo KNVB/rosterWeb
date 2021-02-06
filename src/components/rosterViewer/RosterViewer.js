@@ -1,11 +1,14 @@
 import {Col,Container,Row} from 'react-bootstrap';
-import {useState} from 'react';
+import {useEffect,useState} from 'react';
 import AppConfig from '../../utils/AppConfig';
+import CalendarUtility from '../../utils/calendar/CalendarUtility';
 import MonthPicker from '../monthPicker/MonthPicker';
+import Roster from '../../utils/Roster';
 import RosterTable from '../tables/rosterTable/RosterTable';
 import './RosterViewer.css';
 function RosterViewer(){
-    const [rosterDate,setRosterMonth]=useState(new Date());
+    const [rosterMonth,setRosterMonth]=useState(new Date());
+    const[rosterTableData,setRosterTableData]=useState();
     let monthPickerMinDate=JSON.parse(AppConfig.MIN_DATE);
     monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
     let updateMonth=(year,month)=>{
@@ -15,6 +18,23 @@ function RosterViewer(){
         newDate.setMonth(month);
         setRosterMonth(newDate);
     }
+    useEffect(()=>{
+        const getData = async () => {
+            let calendarUtility=new CalendarUtility();
+            let result=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
+            let roster = new Roster();
+            let rosterData = await roster.get(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
+            let rosterParam = await roster.getRosterParam();
+            setRosterTableData(
+               {
+                "result":result,
+                "rosterData":rosterData,
+                "rosterParam":rosterParam
+               }
+            )
+        }
+        getData();    
+    },[rosterMonth]);
     return (
         <div className="App p-1">
             <Container fluid={true} className="tableContainer">
@@ -32,7 +52,7 @@ function RosterViewer(){
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                        <RosterTable rosterDate={rosterDate}/>
+                        {rosterTableData && <RosterTable rosterTableData={rosterTableData}/>}
                     </Col>
                 </Row>
             </Container>        

@@ -13,7 +13,7 @@ function App() {
             <Redirect to="/rosterWeb"/>
           )
         }/>
-        <Route exact path='/rosterWeb' component={AA} />
+        <Route exact path='/rosterWeb' component={RosterViewer} />
         <Route path='/rosterWeb/admin' component={RosterAdmin} />
       </Switch>
     </Router>
