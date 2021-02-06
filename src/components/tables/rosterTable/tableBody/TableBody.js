@@ -1,6 +1,4 @@
-import { useEffect,useState} from 'react';
 import Utility from '../../../../utils/Utility';
-import Roster from '../../../../utils/Roster';
 import RosterRow from './RosterRow';
 function TableBody(props){
   let rosterRowList=[];
