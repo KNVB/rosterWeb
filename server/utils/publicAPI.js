@@ -7,6 +7,9 @@ class PublicAPI{
         this.getRosterParam = (req, res) =>{
             res.send(rosterManager.getRosterParam());
         };
+        this.getSystemParam=(req,res)=>{
+            res.senStatus(200)
+        }
     }
 }
 

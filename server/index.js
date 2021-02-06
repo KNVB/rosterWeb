@@ -34,9 +34,12 @@ app.use(bodyParser.json());
 app.use(cookierParser(accessTokenSecret)); //signed cookie key
 app.use('/rosterWeb/publicAPI',publicAPIRouter);
 app.use('/rosterWeb/privateAPI',util.checkToken,privateAPIRouter);
+
+publicAPIRouter.post('/adminLogin',util.adminLogin);
 publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
 publicAPIRouter.get('/getRosterParam',publicAPI.getRosterParam);
-publicAPIRouter.post('/adminLogin',util.adminLogin);
+publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);
+
 privateAPIRouter.post('/logout',privateAPI.logout);
 httpServer.listen(httpServerPort, function() {
   console.log('server up and running at %s port', httpServerPort);

@@ -2,7 +2,7 @@ import Utility from '../../../../utils/Utility';
 import RosterRow from './RosterRow';
 function TableBody(props){
   let rosterRowList=[];
-  console.log(props);
+  //console.log(props);
     
   Object.keys(props.rosterData).forEach(itoId=>{
       let result=Utility.calculateShiftStat(props.noOfWorkingDay,props.rosterData[itoId],props.rosterParam.shiftHourCount);

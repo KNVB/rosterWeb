@@ -27,7 +27,7 @@ class SystemParam{
             console.log("Get Roster Parameter successfully!");
         })
         .catch(err=>{
-            console.log("Some wrong when getting Roster Parameter:"+err);
+            console.log("Some wrong when getting System Parameter:"+err);
         })
         .finally(()=>{
             dboObj.close();
