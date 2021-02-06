@@ -1,6 +1,6 @@
 import { useEffect,useState} from 'react';
 import Utility from '../../../../utils/Utility';
-import Roster from '../../../../utils/roster';
+import Roster from '../../../../utils/Roster';
 import RosterRow from './RosterRow';
 function TableBody(props){
     const [rosterList, setRosterList] = useState([]);
