@@ -6,7 +6,6 @@ class RosterManager
 		let ITORoster = require('./ITORoster');
 		let Shift =require('./Shift');
 		const RosterParam = require('./RosterParam');
-		const SystemParam= require('./SystemParam');
 		
 		this.getRosterList=async (year,month)=>{
 			let dboObj=new DBO();
@@ -61,7 +60,8 @@ class RosterManager
 					shift.timeSlot=record.time_slot;
 					shift.type=record.shift_type;
 					shiftInfoList[shift.type]=shift;
-				})
+				});
+				console.log("Get All Active Shift Info. success.");
 				return shiftInfoList;
 			}
 			catch (error){
@@ -72,7 +72,6 @@ class RosterManager
 				dboObj.close();
 			};	
 		}
-
 	}
 }
 module.exports = RosterManager;

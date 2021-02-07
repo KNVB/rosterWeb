@@ -12,7 +12,8 @@ function TableBody(props){
                   itoRoster={result} 
                   key={itoId}
                   noOfPrevDate={props.noOfPrevDate} 
-                  setHightLightCellIndex={props.setHightLightCellIndex}/>);
+                  setHightLightCellIndex={props.setHightLightCellIndex}
+                  shiftInfoList={props.shiftInfoList} />);
     });  
     return (
         <tbody>

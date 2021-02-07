@@ -1,5 +1,6 @@
 import parse from 'html-react-parser'
 import BalanceCell from '../../cells/balanceCell/BalanceCell';
+import CursoredShiftCell from '../../cells/cursoredShiftCell/CursoredShiftCell';
 import NameCell from '../../cells/nameCell/NameCell';
 import RosterTableCell from '../..//cells/rosterTableCell/RosterTableCell';
 import ShiftCell from '../../cells/shiftCell/ShiftCell';
@@ -12,16 +13,19 @@ function RosterRow(props) {
     
     for (let i=props.noOfPrevDate;i>0;i--){
         shiftCellList.push(
-            <ShiftCell key={props.itoId+"_shift-"+i}/>    
+            <ShiftCell
+                key={props.itoId+"_shift-"+i}
+                shiftInfoList={props.shiftInfoList}/>    
         )
     }
     props.itoRoster.shiftList.forEach(itoShift=>{
-        shiftCellList.push(<ShiftCell 
+        shiftCellList.push(<CursoredShiftCell 
                                 key={props.itoId+"_shift_"+j} 
                                 setHightLightCellIndex={props.setHightLightCellIndex}
-                                setHightLightRowIndex={setHightLightRowIndex}>
+                                setHightLightRowIndex={setHightLightRowIndex}
+                                shiftInfoList={props.shiftInfoList}>
                                 {itoShift} 
-                           </ShiftCell>);
+                           </CursoredShiftCell>);
         j++;
     })
     for (var i=props.itoRoster.shiftList.length;i<31;i++){

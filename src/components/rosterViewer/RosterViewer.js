@@ -1,16 +1,19 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useEffect,useState} from 'react';
-import AppConfig from '../../utils/AppConfig';
+
 import CalendarUtility from '../../utils/calendar/CalendarUtility';
 import MonthPicker from '../monthPicker/MonthPicker';
 import Roster from '../../utils/Roster';
 import RosterTable from '../tables/rosterTable/RosterTable';
 import './RosterViewer.css';
-function RosterViewer(){
+function RosterViewer(props){
     const [rosterMonth,setRosterMonth]=useState(new Date());
     const[rosterTableData,setRosterTableData]=useState();
-    let monthPickerMinDate=JSON.parse(AppConfig.MIN_DATE);
+
+    let monthPickerMinDate=props.systemParam.monthPickerMinDate;
     monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
+    //console.log(props);
+    //console.log(props.systemParam.monthSelectorMinDate);
     let updateMonth=(year,month)=>{
         //console.log("updateMonth="+year+","+month);
         let newDate=new Date();
@@ -25,11 +28,14 @@ function RosterViewer(){
             let roster = new Roster();
             let rosterData = await roster.get(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
             let rosterParam = await roster.getRosterParam();
+            let shiftInfoList= await roster.getAllActiveShiftInfo();
             setRosterTableData(
                {
+                "noOfPrevDate":0,
                 "result":result,
                 "rosterData":rosterData,
-                "rosterParam":rosterParam
+                "rosterParam":rosterParam,
+                "shiftInfoList":shiftInfoList
                }
             )
         }

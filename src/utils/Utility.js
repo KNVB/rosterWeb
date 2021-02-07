@@ -83,5 +83,8 @@ class Utility{
                     }
                 })
     }
+    static getSystemParam(){
+        return Utility.fetchAPI('/publicAPI/getSystemParam','GET');
+    }
 }
 export default Utility;

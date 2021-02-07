@@ -3,9 +3,8 @@ class SystemParam{
 		let DBO=require("../utils/dbo.js");
 		let dboObj=new DBO();        
 		this.maxConsecutiveWorkingDay=0;
-        this.monthSelectorMinDate={};
+        this.monthPickerMinDate={};
         this.noOfPrevDate=0;
-        this.shiftHourCount={};
 
         dboObj.getSystemParam()
         .then(resultList=>{
@@ -14,8 +13,8 @@ class SystemParam{
                     case 'ConsecutiveWorkingDay':
                         this.maxConsecutiveWorkingDay=parseInt(result.param_value);
                         break;
-                    case 'monthSelector':
-                        this.monthSelectorMinDate=JSON.parse(result.param_value);
+                    case 'monthPicker':
+                        this.monthPickerMinDate=JSON.parse(result.param_value);
                         break;
                     case 'tables':
                         this.noOfPrevDate=parseInt(result.param_value);
@@ -24,7 +23,7 @@ class SystemParam{
                         break;    
                 }
             })
-            console.log("Get Roster Parameter successfully!");
+            console.log("Get System Parameter successfully!");
         })
         .catch(err=>{
             console.log("Some wrong when getting System Parameter:"+err);
@@ -35,4 +34,4 @@ class SystemParam{
 
     }
 }
-module.exports =new SystemParam();
+module.exports =SystemParam;

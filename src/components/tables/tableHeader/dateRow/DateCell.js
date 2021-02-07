@@ -8,7 +8,7 @@ function DateCell(props){
         dateOfMonth=dateData.dateOfMonth;
         if (dateData.today)
             className+=" todayCell";
-        if (dateOfMonth===props.hightLightCellIndex)
+        if ((dateOfMonth+props.noOfPrevDate)===props.hightLightCellIndex)
             className+=" highlightCell";
     }
     return (

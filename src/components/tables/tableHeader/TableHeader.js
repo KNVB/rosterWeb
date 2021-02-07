@@ -3,6 +3,7 @@ import HolidayRow from './holidayRow/HolidayRow';
 import WeekDayRow from './weekDayRow/WeekDayRow';
 function TableHeader(props){
     //console.log(props.monthlyCalendar);
+    //console.log(props);
     return (
         <thead>
             <HolidayRow 

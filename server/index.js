@@ -4,10 +4,10 @@ const accessTokenSecret='SD@FD{S=*(^dsv$bm%dl&kf}';
 let bodyParser = require('body-parser')
 let cookierParser = require('cookie-parser');
 let express = require('express');
-let jwt = require('jsonwebtoken');
 let PrivateAPI = require('./utils/privateAPI.js');
 let PublicAPI = require('./utils/publicAPI.js');
-let rosterManager=new (require("./classes/rosterManager.js"));
+let RosterManager=require("./classes/rosterManager.js");
+let rosterManager=new RosterManager();
 let util=require("./utils/utility.js");
 let privateAPI =new PrivateAPI(rosterManager);
 let publicAPI=new PublicAPI(rosterManager);
@@ -36,6 +36,7 @@ app.use('/rosterWeb/publicAPI',publicAPIRouter);
 app.use('/rosterWeb/privateAPI',util.checkToken,privateAPIRouter);
 
 publicAPIRouter.post('/adminLogin',util.adminLogin);
+publicAPIRouter.get('/getAllActiveShiftInfo',publicAPI.getAllActiveShiftInfo);
 publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
 publicAPIRouter.get('/getRosterParam',publicAPI.getRosterParam);
 publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);

@@ -12,7 +12,11 @@ function DateRow(props){
     }
     for (let i=0;i<31;i++){
         if (props.monthlyCalendar[i]){
-            dateRow.push(<DateCell dateData={props.monthlyCalendar[i]} hightLightCellIndex={props.hightLightCellIndex} key={"date_"+i}/>);
+            dateRow.push(<DateCell 
+                            dateData={props.monthlyCalendar[i]}
+                            hightLightCellIndex={props.hightLightCellIndex}
+                            key={"date_"+i}
+                            noOfPrevDate={props.noOfPrevDate}/>);
         } else {
             dateRow.push(<DateCell key={"date_"+i}/>);
         }

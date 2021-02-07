@@ -1,12 +1,11 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useState} from 'react';
-import AppConfig from '../../../utils/AppConfig';
 import MonthPicker from '../../monthPicker/MonthPicker';
 import React from 'react';
 import RosterSchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
-function RosterScheduler(){
+function RosterScheduler(props){
     const [rosterDate,setRosterMonth]=useState(new Date());
-    let monthPickerMinDate=JSON.parse(AppConfig.MIN_DATE);
+    let monthPickerMinDate=props.systemParam.monthPickerMinDate;
     monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
     let updateMonth=(year,month)=>{
         //console.log("updateMonth="+year+","+month);
