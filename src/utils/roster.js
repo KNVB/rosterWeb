@@ -7,8 +7,8 @@ class Roster{
         this.getAllActiveShiftInfo=()=>{
             return Utility.fetchAPI('/publicAPI/getAllActiveShiftInfo','GET');
         }
-        this.getRosterParam=()=>{
-            return Utility.fetchAPI('/publicAPI/getRosterParam','GET');
+        this.getRosterSchedulerList=(year,month)=>{
+            return Utility.fetchAPI('/privateAPI/getRosterSchedulerList','POST',{"year":year,"month":month});
         }
     }
 }

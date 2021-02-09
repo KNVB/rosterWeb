@@ -29,6 +29,7 @@ export default function RosterScheduler(){
             let result=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
             let roster = new Roster();
             let rosterData = await roster.get(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
+            let rosterBB=await roster.getRosterSchedulerList(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
             let shiftInfoList= await roster.getAllActiveShiftInfo();
             setRosterTableData(
                {

@@ -82,8 +82,6 @@ async function getITOList(){
 }
 
 
-let dboObj=new DBO();
-dboObj.getRosterSchedulerList(2021,1);
 /*
 let dboObj=new DBO();
 dboObj.getRosterRule()
@@ -96,8 +94,8 @@ dboObj.getRosterRule()
 .finally(()=>{
 	dboObj.close();
 });
+*/
 getITOList()
 .then(resultList=>{
 	console.log(resultList);
 });
-*/

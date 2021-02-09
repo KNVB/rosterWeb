@@ -1,11 +1,39 @@
 class RosterManager
 {
-	constructor(){
+	constructor(sp){
+		
 		let DBO=require("../utils/dbo.js");
 		let ITO = require('./ITO');
 		let ITORoster = require('./ITORoster');
+		let Moment = require('moment');
 		let Shift =require('./Shift');
-
+		let systemParam=sp;
+		this.getAllActiveShiftInfo=async()=>{
+			let dboObj=new DBO();
+			let shiftInfoList={};
+			
+			try{
+				let results=await dboObj.getAllActiveShiftInfo();
+				results.forEach(record=>{
+					let shift=new Shift();
+					shift.cssClassName=record.css_class_name;
+					shift.duration=parseFloat(record.shift_duration);
+					shift.isEssential=(record.is_essential === "1");
+					shift.timeSlot=record.time_slot;
+					shift.type=record.shift_type;
+					shiftInfoList[shift.type]=shift;
+				});
+				console.log("Get All Active Shift Info. success.");
+				return shiftInfoList;
+			}
+			catch (error){
+				console.log("Something wrong when getting active shift info list:"+error);
+				console.log(shiftInfoList);
+			}
+			finally{
+				dboObj.close();
+			};	
+		}
 		this.getRosterList=async (year,month)=>{
 			let dboObj=new DBO();
 			let itoRoster=null;
@@ -42,31 +70,41 @@ class RosterManager
 				dboObj.close();
 			};	
 		}
-		this.getAllActiveShiftInfo=async()=>{
-			let dboObj=new DBO();
-			let shiftInfoList={};
+		this.getRosterSchedulerList=async (year,month)=>{
+			let finalResult={}
+			let preferredShiftList={};
+			let previousMonthShiftList={};
 			
+			let dboObj=new DBO();
 			try{
-				let results=await dboObj.getAllActiveShiftInfo();
-				results.forEach(record=>{
-					let shift=new Shift();
-					shift.cssClassName=record.css_class_name;
-					shift.duration=parseFloat(record.shift_duration);
-					shift.isEssential=(record.is_essential === "1");
-					shift.timeSlot=record.time_slot;
-					shift.type=record.shift_type;
-					shiftInfoList[shift.type]=shift;
+				let results=await dboObj.getPreivousMonthShiftList(year,month,systemParam);
+				results.forEach(result=>{
+					if (previousMonthShiftList[result.ito_id]===undefined){
+						previousMonthShiftList[result.ito_id]=[];
+					}
+					previousMonthShiftList[result.ito_id].push(result.shift);
 				});
-				console.log("Get All Active Shift Info. success.");
-				return shiftInfoList;
+				let rosterList=await this.getRosterList(year,month);
+				results=await dboObj.getPreferredShiftList(year,month);
+				console.log(results);
+				results.forEach(result=>{
+					if (preferredShiftList[result.ito_id]===undefined){
+						preferredShiftList[result.ito_id]={};
+					}
+					preferredShiftList[result.ito_id][result.d]=result.shift;
+				});
+				
+				finalResult.rosterList=rosterList;
+				finalResult.preferredShiftList=preferredShiftList;
+				finalResult.previousMonthShiftList=previousMonthShiftList;
 			}
 			catch (error){
-				console.log("Something wrong when getting active shift info list:"+error);
-				console.log(shiftInfoList);
+				console.log("Something wrong when getting ("+year+","+month+") roster scheduler list:"+error);				
 			}
 			finally{
 				dboObj.close();
-			};	
+			};
+			return finalResult;
 		}
 	}
 }

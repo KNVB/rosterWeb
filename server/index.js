@@ -8,8 +8,10 @@ let PrivateAPI = require('./utils/privateAPI.js');
 let PublicAPI = require('./utils/publicAPI.js');
 let RosterManager=require("./classes/rosterManager.js");
 let SystemParam=require("./classes/SystemParam");
-let rosterManager=new RosterManager();
+//===============================================================
 let systemParam=new SystemParam();
+let rosterManager=new RosterManager(systemParam);
+
 let util=require("./utils/utility.js");
 let privateAPI =new PrivateAPI(rosterManager,systemParam);
 let publicAPI=new PublicAPI(rosterManager,systemParam);
