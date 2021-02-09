@@ -38,7 +38,6 @@ app.use('/rosterWeb/privateAPI',util.checkToken,privateAPIRouter);
 publicAPIRouter.post('/adminLogin',util.adminLogin);
 publicAPIRouter.get('/getAllActiveShiftInfo',publicAPI.getAllActiveShiftInfo);
 publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
-publicAPIRouter.get('/getRosterParam',publicAPI.getRosterParam);
 publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);
 
 privateAPIRouter.post('/logout',privateAPI.logout);

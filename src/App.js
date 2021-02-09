@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
 import {useEffect,useState} from 'react';
-import AA from './components/testing/AA';
+//import AA from './components/testing/AA';
 import RosterAdmin from './components/rosterAdmin/RosterAdmin'
 import RosterViewer from './components/rosterViewer/RosterViewer';
 import Utility from './utils/Utility';

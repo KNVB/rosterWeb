@@ -48,10 +48,7 @@ class DBO
 
             return await executeQuery(sqlString,[startDateString,endDateString,startDateString,endDateString,startDateString]);
         }
-        this.getRosterParam=async()=>{
-			let sqlString ="select * from roster_param order by param_type,param_key,param_value";
-			return await executeQuery(sqlString);
-		}
+        
 		this.getAllActiveShiftInfo=async()=>{
 			let sqlString="select * from shift_info where active=1";
 			return await executeQuery(sqlString);

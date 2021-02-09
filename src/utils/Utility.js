@@ -1,5 +1,5 @@
 class Utility{
-    static calculateShiftStat(noOfWorkingDay,rosterData,shiftHourCount){
+    static calculateShiftStat(noOfWorkingDay,rosterData,shiftInfoList){
         var aShiftCount=0,actualWorkingHour=0.0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0;
 		var	thisMonthHourTotal=0.0,thisMonthBalance=0.0,totalHour=0.0,actualNoOfWorkingDay=0;
         var result={};
@@ -9,7 +9,7 @@ class Utility{
             var shiftTypeList=item.shift.split("+");
             shiftList.push(item.shift);
             shiftTypeList.forEach(shiftType => {
-                actualWorkingHour+=shiftHourCount[shiftType];
+                actualWorkingHour+=shiftInfoList[shiftType].duration;
                 switch (shiftType)
                 {
                     case "a":

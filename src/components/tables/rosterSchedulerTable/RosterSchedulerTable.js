@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import AppConfig from '../../../utils/AppConfig';
+
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import React from 'react';
 import TableHeader from '../tableHeader/TableHeader'; 
@@ -16,7 +16,7 @@ function RosterSchedulerTable(props){
                 calendarUtility={calendarUtility} 
                 hightLightCellIndex={hightLightCellIndex} 
                 monthlyCalendar={monthlyCalendar}
-                noOfPrevDate={AppConfig.NO_OF_PREV_DATE}/>
+                noOfPrevDate={0}/>
         </table>
     )
 }

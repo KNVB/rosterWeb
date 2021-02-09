@@ -17,8 +17,7 @@ function RosterTable(props){
             <TableBody 
                 noOfPrevDate={props.rosterTableData.noOfPrevDate}
                 noOfWorkingDay={props.rosterTableData.result.noOfWorkingDay}
-                rosterData={props.rosterTableData.rosterData}
-                rosterParam={props.rosterTableData.rosterParam}
+                rosterData={props.rosterTableData.rosterData}               
                 setHightLightCellIndex={setHightLightCellIndex}
                 shiftInfoList={props.rosterTableData.shiftInfoList} />    
             <TableFooter

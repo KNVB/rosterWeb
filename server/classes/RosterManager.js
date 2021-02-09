@@ -5,8 +5,7 @@ class RosterManager
 		let ITO = require('./ITO');
 		let ITORoster = require('./ITORoster');
 		let Shift =require('./Shift');
-		const RosterParam = require('./RosterParam');
-		
+
 		this.getRosterList=async (year,month)=>{
 			let dboObj=new DBO();
 			let itoRoster=null;
@@ -42,9 +41,6 @@ class RosterManager
 			finally{
 				dboObj.close();
 			};	
-		}
-		this.getRosterParam=()=>{
-			return RosterParam;
 		}
 		this.getAllActiveShiftInfo=async()=>{
 			let dboObj=new DBO();

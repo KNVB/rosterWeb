@@ -5,7 +5,7 @@ function TableBody(props){
   //console.log(props);
     
   Object.keys(props.rosterData).forEach(itoId=>{
-      let result=Utility.calculateShiftStat(props.noOfWorkingDay,props.rosterData[itoId],props.rosterParam.shiftHourCount);
+      let result=Utility.calculateShiftStat(props.noOfWorkingDay,props.rosterData[itoId],props.shiftInfoList);
       //console.log(itoId,result);
       rosterRowList.push(<RosterRow 
                   itoId={itoId} 

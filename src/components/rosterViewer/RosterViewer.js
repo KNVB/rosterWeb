@@ -11,7 +11,9 @@ function RosterViewer(props){
     const[rosterTableData,setRosterTableData]=useState();
 
     let monthPickerMinDate=props.systemParam.monthPickerMinDate;
+    console.log(monthPickerMinDate);
     monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
+    
     //console.log(props);
     //console.log(props.systemParam.monthSelectorMinDate);
     let updateMonth=(year,month)=>{
@@ -27,14 +29,12 @@ function RosterViewer(props){
             let result=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
             let roster = new Roster();
             let rosterData = await roster.get(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
-            let rosterParam = await roster.getRosterParam();
             let shiftInfoList= await roster.getAllActiveShiftInfo();
             setRosterTableData(
                {
                 "noOfPrevDate":0,
                 "result":result,
                 "rosterData":rosterData,
-                "rosterParam":rosterParam,
                 "shiftInfoList":shiftInfoList
                }
             )
