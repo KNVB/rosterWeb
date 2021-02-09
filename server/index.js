@@ -7,10 +7,12 @@ let express = require('express');
 let PrivateAPI = require('./utils/privateAPI.js');
 let PublicAPI = require('./utils/publicAPI.js');
 let RosterManager=require("./classes/rosterManager.js");
+let SystemParam=require("./classes/SystemParam");
 let rosterManager=new RosterManager();
+let systemParam=new SystemParam();
 let util=require("./utils/utility.js");
-let privateAPI =new PrivateAPI(rosterManager);
-let publicAPI=new PublicAPI(rosterManager);
+let privateAPI =new PrivateAPI(rosterManager,systemParam);
+let publicAPI=new PublicAPI(rosterManager,systemParam);
 //===============================================================
 let app = express();
 let privateAPIRouter= express.Router();
@@ -29,17 +31,21 @@ let httpServer= http.createServer(app);
 console.log(process.env.NODE_ENV+" Mode");
 console.log("DB server name="+process.env.DATABASE_HOST);
 //================================================================
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use(cookierParser(accessTokenSecret)); //signed cookie key
 app.use('/rosterWeb/publicAPI',publicAPIRouter);
 app.use('/rosterWeb/privateAPI',util.checkToken,privateAPIRouter);
 
+//==============================================================================
 publicAPIRouter.post('/adminLogin',publicAPI.adminLogin);
 publicAPIRouter.get('/getAllActiveShiftInfo',publicAPI.getAllActiveShiftInfo);
 publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
 publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);
 
+//==============================================================================
+privateAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
 privateAPIRouter.post('/logout',privateAPI.logout);
 httpServer.listen(httpServerPort, function() {
   console.log('server up and running at %s port', httpServerPort);

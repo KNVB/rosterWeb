@@ -1,12 +1,21 @@
 import {Col,Container,Row} from 'react-bootstrap';
-import {useState} from 'react';
+import { SytemContext } from '../../SystemContext';
+import {useContext,useEffect,useState} from 'react';
+import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import MonthPicker from '../../monthPicker/MonthPicker';
-import React from 'react';
+import Roster from '../../../utils/Roster';
 import RosterSchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
-function RosterScheduler(props){
-    const [rosterDate,setRosterMonth]=useState(new Date());
-    let monthPickerMinDate=props.systemParam.monthPickerMinDate;
+export default function RosterScheduler(){
+    const [rosterMonth,setRosterMonth]=useState(new Date());
+    const[rosterTableData,setRosterTableData]=useState();
+    const systemParam = useContext(SytemContext);
+    
+    let monthPickerMinDate=systemParam.monthPickerMinDate;
+    //console.log(monthPickerMinDate);
     monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
+    
+    //console.log(props);
+    //console.log(props.systemParam.monthSelectorMinDate);
     let updateMonth=(year,month)=>{
         //console.log("updateMonth="+year+","+month);
         let newDate=new Date();
@@ -14,6 +23,23 @@ function RosterScheduler(props){
         newDate.setMonth(month);
         setRosterMonth(newDate);
     }
+    useEffect(()=>{
+        const getData = async () => {
+            let calendarUtility=new CalendarUtility();
+            let result=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
+            let roster = new Roster();
+            let rosterData = await roster.get(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
+            let shiftInfoList= await roster.getAllActiveShiftInfo();
+            setRosterTableData(
+               {
+                "result":result,
+                "rosterData":rosterData,
+                "shiftInfoList":shiftInfoList
+               }
+            )
+        }
+        getData();    
+    },[rosterMonth]);
     return (
         <div className="App p-1">
             <Container fluid={true} className="tableContainer">
@@ -22,7 +48,7 @@ function RosterScheduler(props){
                         <u>EMSTF Resident Support & Computer Operation Support Services Team Roster</u>
                     </Col>
                 </Row>
-                 <Row>
+                <Row>
                     <Col md={12} lg={12} sm={12} xl={12} xs={12}>
                         <MonthPicker 
                             minDate={monthPickerMinDate}
@@ -31,11 +57,10 @@ function RosterScheduler(props){
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                        <RosterSchedulerTable rosterDate={rosterDate}/>
+                        {rosterTableData && <RosterSchedulerTable rosterTableData={rosterTableData}/>}
                     </Col>
                 </Row>
-            </Container>
-        </div>        
-    )
+            </Container>        
+        </div>
+    );
 }
-export default RosterScheduler

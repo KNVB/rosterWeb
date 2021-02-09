@@ -8,6 +8,11 @@ class DBO
 		const mysql = require('mysql2');
 
         const connection = mysql.createConnection(dbConfig);
+
+		this.getAllActiveShiftInfo=async()=>{
+			let sqlString="select * from shift_info where active=1";
+			return await executeQuery(sqlString);
+		}
         this.getITOList=async(year, month)=>{
             let startDateString=year+"-";
 			if (month<10) {
@@ -48,11 +53,6 @@ class DBO
 
             return await executeQuery(sqlString,[startDateString,endDateString,startDateString,endDateString,startDateString]);
         }
-        
-		this.getAllActiveShiftInfo=async()=>{
-			let sqlString="select * from shift_info where active=1";
-			return await executeQuery(sqlString);
-		}
 		this.getSystemParam=async()=>{
 			let sqlString ="select * from system_param order by param_type,param_key,param_value";
 			return await executeQuery(sqlString);

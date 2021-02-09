@@ -8,7 +8,9 @@ function ShiftCell(props){
     
     Object.keys(props).forEach(key=>{
       if (key==="shiftInfoList"){
-        shiftClass+=" "+props.shiftInfoList[props.children].cssClassName;
+        if (props.shiftInfoList[props.children]){
+          shiftClass+=" "+props.shiftInfoList[props.children].cssClassName;
+        }        
       }else{
         myProps[key]=props[key];
       }        

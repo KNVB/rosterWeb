@@ -1,12 +1,13 @@
-import { useState} from 'react';
+import {useState} from 'react';
 import '../tables.css';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import TableBody   from './tableBody/TableBody';
 import TableFooter from './TableFooter'; 
 import TableHeader from '../tableHeader/TableHeader'; 
-function RosterTable(props){
+export default function RosterTable(props){
     const [hightLightCellIndex,setHightLightCellIndex]=useState(-1);
     const calendarUtility=new CalendarUtility();
+    
     return (
         <table id="rosterTable">
              <TableHeader 
@@ -25,4 +26,3 @@ function RosterTable(props){
         </table>
     );
 }
-export default RosterTable;

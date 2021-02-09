@@ -13,7 +13,7 @@ class DBO
 			};
 		dbConfig["multipleStatements"]=true;
 		dbConfig["insecureAuth"]=true;	
-		const connection = mysql.createConnection(dbConfig);
+		//const connection = mysql.createConnection(dbConfig);
 		this.getITOList=async(year, month)=>{
             let startDateString=year+"-";
 			if (month<10) {
@@ -36,6 +36,18 @@ class DBO
 		this.getRosterRule=async()=>{
 			let sqlString ="select * from roster_rule order by rule_type,rule_key,rule_value";
 			return await executeQuery(sqlString);
+		}
+		this.getRosterSchedulerList=(year, month)=>{
+			let startDateString=year+"-";
+			if (month<10) {
+				startDateString+="0"+month;
+			} else {
+				startDateString+=month;
+			}
+			startDateString+="-01";
+			let startDate=moment(startDateString);
+			const endDateString=moment(startDateString).endOf('month').format('YYYY-MM-DD');
+			const prevDateString=startDate.subtract(2, 'days').format('YYYY-MM-DD');
 		}
 		this.close=()=>{
 			connection.end(err=>{
@@ -69,6 +81,9 @@ async function getITOList(){
 	};
 }
 
+
+let dboObj=new DBO();
+dboObj.getRosterSchedulerList(2021,1);
 /*
 let dboObj=new DBO();
 dboObj.getRosterRule()
@@ -81,8 +96,8 @@ dboObj.getRosterRule()
 .finally(()=>{
 	dboObj.close();
 });
-*/
 getITOList()
 .then(resultList=>{
 	console.log(resultList);
 });
+*/
