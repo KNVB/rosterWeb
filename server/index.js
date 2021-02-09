@@ -35,7 +35,7 @@ app.use(cookierParser(accessTokenSecret)); //signed cookie key
 app.use('/rosterWeb/publicAPI',publicAPIRouter);
 app.use('/rosterWeb/privateAPI',util.checkToken,privateAPIRouter);
 
-publicAPIRouter.post('/adminLogin',util.adminLogin);
+publicAPIRouter.post('/adminLogin',publicAPI.adminLogin);
 publicAPIRouter.get('/getAllActiveShiftInfo',publicAPI.getAllActiveShiftInfo);
 publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
 publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);
