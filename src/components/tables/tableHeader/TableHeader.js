@@ -7,15 +7,15 @@ function TableHeader(props){
     return (
         <thead>
             <HolidayRow 
-                monthlyCalendar={props.monthlyCalendar}
+                calendarDateList={props.calendarDateList}
                 noOfPrevDate={props.noOfPrevDate}/>
             <WeekDayRow
                 calendarUtility={props.calendarUtility}
-                monthlyCalendar={props.monthlyCalendar}
+                calendarDateList={props.calendarDateList}
                 noOfPrevDate={props.noOfPrevDate}/>
             <DateRow 
                 hightLightCellIndex={props.hightLightCellIndex}
-                monthlyCalendar={props.monthlyCalendar}
+                calendarDateList={props.calendarDateList}
                 noOfPrevDate={props.noOfPrevDate}/>
         </thead>
     )

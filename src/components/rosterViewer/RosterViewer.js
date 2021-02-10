@@ -26,14 +26,14 @@ export default function RosterViewer(props){
     useEffect(()=>{
         const getData = async () => {
             let calendarUtility=new CalendarUtility();
-            let result=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
+            let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
             let roster = new Roster();
             let rosterData = await roster.get(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
             let shiftInfoList= await roster.getAllActiveShiftInfo();
             setRosterTableData(
                {
-                "noOfPrevDate":0,
-                "result":result,
+                "monthlyCalendar":monthlyCalendar,
+                "noOfPrevDate":0,                
                 "rosterData":rosterData,
                 "shiftInfoList":shiftInfoList
                }

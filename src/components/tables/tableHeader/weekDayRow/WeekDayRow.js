@@ -10,14 +10,14 @@ function WeekDayRow(props){
         )
     }
     for (let i=0;i<31;i++){
-        if (props.monthlyCalendar[i]){
+        if (props.calendarDateList[i]){
             //console.log(props.monthlyCalendar[i]);
-            let content=props.calendarUtility.weekdayNames[props.monthlyCalendar[i].dayOfWeek];
+            let content=props.calendarUtility.weekdayNames[props.calendarDateList[i].dayOfWeek];
             let className="",title="";
-            if ((content==="S") || (content==="Su") || (props.monthlyCalendar[i].publicHoliday))
+            if ((content==="S") || (content==="Su") || (props.calendarDateList[i].publicHoliday))
                 className="font-weight-bold phCell";
-            if  (props.monthlyCalendar[i].publicHoliday){
-                title=props.monthlyCalendar[i].festivalInfo;
+            if  (props.calendarDateList[i].publicHoliday){
+                title=props.calendarDateList[i].festivalInfo;
             }            
             weekdayRow.push(
                 <WeekDayCell className={className} key={"weekDay_"+i} title={title}>

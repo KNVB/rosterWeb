@@ -2,7 +2,7 @@ import parse from 'html-react-parser'
 import BalanceCell from '../../cells/balanceCell/BalanceCell';
 import CursoredShiftCell from '../../cells/cursoredShiftCell/CursoredShiftCell';
 import NameCell from '../../cells/nameCell/NameCell';
-import RosterTableCell from '../..//cells/rosterTableCell/RosterTableCell';
+import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
 import ShiftCell from '../../cells/shiftCell/ShiftCell';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
 import { useState} from 'react';

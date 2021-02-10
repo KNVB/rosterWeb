@@ -13,11 +13,11 @@ export default function RosterTable(props){
              <TableHeader 
                 calendarUtility={calendarUtility} 
                 hightLightCellIndex={hightLightCellIndex} 
-                monthlyCalendar={props.rosterTableData.result.monthlyCalendar}
+                calendarDateList={props.rosterTableData.monthlyCalendar.calendarDateList}
                 noOfPrevDate={props.rosterTableData.noOfPrevDate}/>
             <TableBody 
                 noOfPrevDate={props.rosterTableData.noOfPrevDate}
-                noOfWorkingDay={props.rosterTableData.result.noOfWorkingDay}
+                noOfWorkingDay={props.rosterTableData.monthlyCalendar.noOfWorkingDay}
                 rosterData={props.rosterTableData.rosterData}               
                 setHightLightCellIndex={setHightLightCellIndex}
                 shiftInfoList={props.rosterTableData.shiftInfoList} />    

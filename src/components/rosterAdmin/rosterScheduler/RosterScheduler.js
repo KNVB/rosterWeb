@@ -7,7 +7,7 @@ import Roster from '../../../utils/Roster';
 import RosterSchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
 export default function RosterScheduler(){
     const [rosterMonth,setRosterMonth]=useState(new Date());
-    const[rosterTableData,setRosterTableData]=useState();
+    const[rosterSchedulerData,setRosterSchedulerData]=useState();
     const systemParam = useContext(SytemContext);
     
     let monthPickerMinDate=systemParam.monthPickerMinDate;
@@ -26,14 +26,13 @@ export default function RosterScheduler(){
     useEffect(()=>{
         const getData = async () => {
             let calendarUtility=new CalendarUtility();
-            let result=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
+            let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
             let roster = new Roster();
-            let rosterData = await roster.get(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
-            let rosterBB=await roster.getRosterSchedulerList(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
+            let rosterData=await roster.getRosterSchedulerList(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
             let shiftInfoList= await roster.getAllActiveShiftInfo();
-            setRosterTableData(
+            setRosterSchedulerData(
                {
-                "result":result,
+                "monthlyCalendar":monthlyCalendar,
                 "rosterData":rosterData,
                 "shiftInfoList":shiftInfoList
                }
@@ -58,7 +57,7 @@ export default function RosterScheduler(){
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                        {rosterTableData && <RosterSchedulerTable rosterTableData={rosterTableData}/>}
+                        {rosterSchedulerData && <RosterSchedulerTable rosterSchedulerData={rosterSchedulerData}/>}
                     </Col>
                 </Row>
             </Container>        

@@ -1,6 +1,11 @@
 import ShiftCell from "../shiftCell/ShiftCell";
 
 export default function CursoredShiftCell(props){
+    let myProps={};
+    Object.keys(props).forEach(key=>{
+      if ((key!=="setHightLightCellIndex")  && (key!=="setHightLightRowIndex"))
+        myProps[key]=props[key];
+    })
     let deHightLight=(e)=>{
         props.setHightLightRowIndex(-1);
         props.setHightLightCellIndex(-1);
@@ -12,7 +17,7 @@ export default function CursoredShiftCell(props){
         props.setHightLightRowIndex(1);
     }
     return (
-        <ShiftCell
+        <ShiftCell  {...myProps}
             onMouseOut={deHightLight}
             onMouseOver={hightLight}
             shiftInfoList={props.shiftInfoList}>

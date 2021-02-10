@@ -4,19 +4,21 @@ export default function RosterSchedulerTableBody(props){
   let rosterRowList=[];
   //console.log(props);
     
-  Object.keys(props.rosterData).forEach(itoId=>{
-      let result=Utility.calculateShiftStat(props.noOfWorkingDay,props.rosterData[itoId],props.shiftInfoList);
+  Object.keys(props.rosterData.rosterList).forEach(itoId=>{
+      let result=Utility.calculateShiftStat(props.noOfWorkingDay,props.rosterData.rosterList[itoId],props.shiftInfoList);
       //console.log(itoId,result);
       
-      rosterRowList.push(<RosterSchedulerRow 
-                  itoId={itoId} 
-                  itoRoster={result} 
+      rosterRowList.push(
+                <RosterSchedulerRow 
+                  itoId={itoId}
+                  itoRoster={result}
                   key={itoId}
-                  noOfPrevDate={props.noOfPrevDate}                  
+                  noOfWorkingDay={props.noOfWorkingDay}
+                  noOfPrevDate={props.noOfPrevDate}
                   setHightLightCellIndex={props.setHightLightCellIndex}
-                  shiftInfoList={props.shiftInfoList} />);
-                  
+                  shiftInfoList={props.shiftInfoList} />);                  
     });  
+    
     return (
         <tbody>
           {rosterRowList}

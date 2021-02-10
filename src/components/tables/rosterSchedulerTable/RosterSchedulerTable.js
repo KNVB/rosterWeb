@@ -13,16 +13,16 @@ export default function RosterSchedulerTable(props){
     return (
         <table id="rosterTable">
             <TableHeader 
+                calendarDateList={props.rosterSchedulerData.monthlyCalendar.calendarDateList}
                 calendarUtility={calendarUtility} 
-                hightLightCellIndex={hightLightCellIndex} 
-                monthlyCalendar={props.rosterTableData.result.monthlyCalendar}
+                hightLightCellIndex={hightLightCellIndex}                 
                 noOfPrevDate={systemParam.noOfPrevDate}/>
             <RosterSchedulerTableBody
                 noOfPrevDate={systemParam.noOfPrevDate}
-                noOfWorkingDay={props.rosterTableData.result.noOfWorkingDay}
-                rosterData={props.rosterTableData.rosterData}               
+                noOfWorkingDay={props.rosterSchedulerData.monthlyCalendar.noOfWorkingDay}
+                rosterData={props.rosterSchedulerData.rosterData}               
                 setHightLightCellIndex={setHightLightCellIndex}
-                shiftInfoList={props.rosterTableData.shiftInfoList}/>
+                shiftInfoList={props.rosterSchedulerData.shiftInfoList}/>
         </table>
     );
 }

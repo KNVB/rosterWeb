@@ -43,12 +43,12 @@ class DBO
         }
 		this.getPreferredShiftList=async(year,month)=>{
 			let result=getStartEndDateString(year,month);
-			let sqlString="select ito_id,preferred_shift,day(shift_date) as d from preferred_shift where shift_date between ? and ? order by ito_id";
+			let sqlString="select ito_id,preferred_shift,day(shift_date) as d from preferred_shift where shift_date between ? and ? order by ito_id,shift_date";
 			return await executeQuery(sqlString,[result.startDateString,result.endDateString]);
 		}
 		this.getPreivousMonthShiftList=async(year,month,systemParam)=>{
 			let result=getStartEndDateString(year,month);
-			let sqlString="select ito_id,shift from shift_record where shift_date >= ? and shift_date < ? order by ito_id";
+			let sqlString="select ito_id,shift from shift_record where shift_date >= ? and shift_date < ? order by ito_id,shift_date";
 			result.endDateString=result.startDateString;
 			result.startDateString=moment(result.startDateString).subtract(systemParam.noOfPrevDate, 'days').format('YYYY-MM-DD');
 			return await executeQuery(sqlString,[result.startDateString,result.endDateString]);

@@ -15,11 +15,17 @@ function checkToken(req,res,next){
     } else {
         let token=signedCookies.isAdmin;
         try{
-        jwt.verify(token,accessTokenSecret);
-        next();
+            jwt.verify(token,accessTokenSecret);
+            res.cookie('isAdmin',token,{
+                path:'/rosterWeb/privateAPI/',
+                httpOnly:true,
+                signed: true, 
+                maxAge:3600000
+            });
+            next();
         }
         catch (error){
-        return res.status(401).end();
+            return res.status(401).end();
         }
     }
 }
