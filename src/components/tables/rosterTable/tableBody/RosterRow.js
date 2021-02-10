@@ -17,7 +17,7 @@ function RosterRow(props) {
                 key={props.itoId+"_shift-"+i}
                 shiftInfoList={props.shiftInfoList}/>    
         )
-    }
+    }    
     props.itoRoster.shiftList.forEach(itoShift=>{
         shiftCellList.push(<CursoredShiftCell 
                                 key={props.itoId+"_shift_"+j} 
@@ -28,7 +28,7 @@ function RosterRow(props) {
                            </CursoredShiftCell>);
         j++;
     })
-    for (var i=props.itoRoster.shiftList.length;i<31;i++){
+    for (let i=props.itoRoster.shiftList.length;i<31;i++){
         shiftCellList.push(<RosterTableCell key={props.itoId+"_shift_"+i} />);
     }
     return(

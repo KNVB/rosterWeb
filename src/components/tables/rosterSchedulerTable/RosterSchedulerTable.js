@@ -18,7 +18,6 @@ export default function RosterSchedulerTable(props){
                 hightLightCellIndex={hightLightCellIndex}                 
                 noOfPrevDate={systemParam.noOfPrevDate}/>
             <RosterSchedulerTableBody
-                noOfPrevDate={systemParam.noOfPrevDate}
                 noOfWorkingDay={props.rosterSchedulerData.monthlyCalendar.noOfWorkingDay}
                 rosterData={props.rosterSchedulerData.rosterData}               
                 setHightLightCellIndex={setHightLightCellIndex}

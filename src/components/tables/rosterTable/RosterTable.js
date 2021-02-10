@@ -7,7 +7,6 @@ import TableHeader from '../tableHeader/TableHeader';
 export default function RosterTable(props){
     const [hightLightCellIndex,setHightLightCellIndex]=useState(-1);
     const calendarUtility=new CalendarUtility();
-    
     return (
         <table id="rosterTable">
              <TableHeader 

@@ -1,4 +1,15 @@
 class Utility{
+    static calculateMean(data){
+        return data.reduce(function (a, b) {
+            return Number(a) + Number(b);
+        }) / data.length;
+    }
+    static calculateStdDev(data){
+        let m =this.calculateMean(data);
+	    return Math.sqrt(data.reduce(function (sq, n) {
+	            return sq + Math.pow(n - m, 2);
+	        }, 0) / (data.length - 1));
+    }
     static calculateShiftStat(noOfWorkingDay,rosterData,shiftInfoList){
         var aShiftCount=0,actualWorkingHour=0.0,bxShiftCount=0,cShiftCount=0,dxShiftCount=0;
 		var	thisMonthHourTotal=0.0,thisMonthBalance=0.0,totalHour=0.0,actualNoOfWorkingDay=0;
