@@ -86,11 +86,12 @@ class RosterManager
 				});
 				let rosterList=await this.getRosterList(year,month);
 				results=await dboObj.getPreferredShiftList(year,month);
+				//console.log(results);
 				results.forEach(result=>{
 					if (preferredShiftList[result.ito_id]===undefined){
 						preferredShiftList[result.ito_id]={};
 					}
-					preferredShiftList[result.ito_id][result.d]=result.shift;
+					preferredShiftList[result.ito_id][result.d]=result.preferred_shift;
 				});
 				
 				finalResult.rosterList=rosterList;
