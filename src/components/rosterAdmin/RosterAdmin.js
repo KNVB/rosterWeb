@@ -1,5 +1,4 @@
 import { BrowserRouter as Router,Route,Switch } from 'react-router-dom';
-import { SytemContext } from '../SystemContext';
 import AdminHome from './AdminHome';
 import GuardedRoute from './GuardedRoute';
 import ITOManagment from './itoManagement/ITOManagement';
@@ -26,13 +25,11 @@ function RosterAdmin(props){
 							<div>
 								<h1 className="p-0 m-0">EMSTF Roster Admin. Page</h1>
 							</div>
-							<SytemContext.Provider value={props.systemParam}>
-								<Switch>
-									<Route exact path="/rosterWeb/admin" component={AdminHome} />
-									<Route exact path='/rosterWeb/admin/itoManagement' component={ITOManagment} />
-									<Route exact path='/rosterWeb/admin/rosterScheduler' component={RosterScheduler} />
-								</Switch>
-							</SytemContext.Provider>
+							<Switch>
+								<Route exact path="/rosterWeb/admin" component={AdminHome} />
+								<Route exact path='/rosterWeb/admin/itoManagement' component={ITOManagment} />
+								<Route exact path='/rosterWeb/admin/rosterScheduler' component={RosterScheduler} />
+							</Switch>
 						</div>					
 				</GuardedRoute>					
 			</Router>

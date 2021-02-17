@@ -1,14 +1,13 @@
 import './ShiftCountCell.css';
-import RosterTableCell from '../rosterTableCell/RosterTableCell';
-function ShiftCountCell(props){
-    let finalClassName="shiftCountCell text-center";
+import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+export default function ShiftCountCell(props){
+    let finalClassName="shiftCountCell";
     if (props.className){
         finalClassName+=" "+props.className;
     }
     return (
-        <RosterTableCell className={finalClassName} >
+        <BorderedAlignCenterCell className={finalClassName} >
             {props.children}
-        </RosterTableCell>    
+        </BorderedAlignCenterCell>    
     )
 }
-export default ShiftCountCell;

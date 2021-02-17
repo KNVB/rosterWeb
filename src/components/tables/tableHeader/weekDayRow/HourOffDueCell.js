@@ -1,9 +1,8 @@
-import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
-function HourOffDueCell(props){
+import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+export default function HourOffDueCell(props){
     return (
-        <RosterTableCell className="p-0 tailCell text-center" colSpan="8">
+        <BorderedAlignCenterCell className="p-0 tailCell" colSpan="8">
             Hour Off Due
-        </RosterTableCell>    
+        </BorderedAlignCenterCell>    
     )
 }
-export default HourOffDueCell

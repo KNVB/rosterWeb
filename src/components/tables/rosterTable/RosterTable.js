@@ -1,27 +1,38 @@
-import {useState} from 'react';
 import '../tables.css';
-import CalendarUtility from '../../../utils/calendar/CalendarUtility';
-import TableBody   from './tableBody/TableBody';
+import {useState} from 'react';
+import RosterWebContext from '../../../RosterWebContext';
+import TableBody from './tableBody/TableBody'; 
 import TableFooter from './TableFooter'; 
 import TableHeader from '../tableHeader/TableHeader'; 
 export default function RosterTable(props){
-    const [hightLightCellIndex,setHightLightCellIndex]=useState(-1);
-    const calendarUtility=new CalendarUtility();
+    let rosterList = props.rosterTableData.rosterList
+    
+    const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
+    const [highLightRowIndex, setHighLightRowIndex] = useState();
+    
+    let activeShiftInfoList=props.rosterTableData.shiftInfoList;
+    let calendarUtility=props.rosterTableData.calendarUtility;
+    let monthlyCalendar=props.rosterTableData.monthlyCalendar;
+    
+    let systemParam=props.rosterTableData.systemParam;
+    let contextValue={
+        activeShiftInfoList,
+        calendarUtility,
+        hightLightCellIndex,
+        highLightRowIndex,
+        monthlyCalendar,
+        rosterList,
+        setHightLightCellIndex,
+        setHighLightRowIndex,
+        systemParam
+    }
     return (
         <table id="rosterTable">
-             <TableHeader 
-                calendarUtility={calendarUtility} 
-                hightLightCellIndex={hightLightCellIndex} 
-                calendarDateList={props.rosterTableData.monthlyCalendar.calendarDateList}
-                noOfPrevDate={props.rosterTableData.noOfPrevDate}/>
-            <TableBody 
-                noOfPrevDate={props.rosterTableData.noOfPrevDate}
-                noOfWorkingDay={props.rosterTableData.monthlyCalendar.noOfWorkingDay}
-                rosterData={props.rosterTableData.rosterData}               
-                setHightLightCellIndex={setHightLightCellIndex}
-                shiftInfoList={props.rosterTableData.shiftInfoList} />    
-            <TableFooter
-                shiftInfoList={props.rosterTableData.shiftInfoList}/>
+            <RosterWebContext.Provider value={contextValue}>
+                <TableHeader noOfPrevDate={0}/>
+                <TableBody noOfPrevDate={0}/>
+                <TableFooter/>
+            </RosterWebContext.Provider>
         </table>
     );
 }

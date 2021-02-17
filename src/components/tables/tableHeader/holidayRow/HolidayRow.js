@@ -1,20 +1,23 @@
+import {useContext} from 'react';
+import './HolidayRow.css';
 import NameCell from '../../cells/nameCell/NameCell';
 import PHCell from './PHCell';
-import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell'
-import './HolidayRow.css';
-function HolidayRow(props){
+import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+import RosterWebContext from '../../../../RosterWebContext';
+export default function HolidayRow(props){
     let holidayRow=[];
     //console.log(props);
+    let {monthlyCalendar} = useContext(RosterWebContext);
     for (let i=props.noOfPrevDate;i>0;i--){
         holidayRow.push(
             <PHCell key={"PH_-"+i}/>    
         )
     }
     for (let i=0;i<31;i++){
-        if (props.calendarDateList[i]){
-            let content=(((props.calendarDateList[i].festivalInfo) &&(props.calendarDateList[i].publicHoliday))?"PH":"");                
+        if (monthlyCalendar.calendarDateList[i]){
+            let content=(((monthlyCalendar.calendarDateList[i].festivalInfo) &&(monthlyCalendar.calendarDateList[i].publicHoliday))?"PH":"");                
             holidayRow.push(
-                <PHCell key={"PH_"+i} title={props.calendarDateList[i].festivalInfo}>
+                <PHCell key={"PH_"+i} title={monthlyCalendar.calendarDateList[i].festivalInfo}>
                     {content}
                 </PHCell>    
             )
@@ -25,10 +28,10 @@ function HolidayRow(props){
         }
     }
     holidayRow.push(
-        <RosterTableCell className="p-0 tailCell text-center text-danger" 
+        <BorderedAlignCenterCell className="p-0 tailCell text-danger" 
             colSpan="10"
             key="32">
-        </RosterTableCell>
+        </BorderedAlignCenterCell>
     )
     return(
         <tr>
@@ -39,4 +42,3 @@ function HolidayRow(props){
         </tr>
     )
 }
-export default HolidayRow;

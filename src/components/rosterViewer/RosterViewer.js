@@ -1,6 +1,5 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useEffect,useState} from 'react';
-import { SytemContext } from '../SystemContext';
 import CalendarUtility from '../../utils/calendar/CalendarUtility';
 import MonthPicker from '../monthPicker/MonthPicker';
 import Roster from '../../utils/Roster';
@@ -11,11 +10,7 @@ export default function RosterViewer(props){
     const[rosterTableData,setRosterTableData]=useState();
  
     let monthPickerMinDate=props.systemParam.monthPickerMinDate;
-    //console.log(monthPickerMinDate);
     monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
-
-    //console.log(props);
-    //console.log(props.systemParam.monthSelectorMinDate);
     let updateMonth=(year,month)=>{
         //console.log("updateMonth="+year+","+month);
         let newDate=new Date();
@@ -32,10 +27,11 @@ export default function RosterViewer(props){
             let shiftInfoList= await roster.getAllActiveShiftInfo();
             setRosterTableData(
                {
+                "calendarUtility":calendarUtility,
                 "monthlyCalendar":monthlyCalendar,
-                "noOfPrevDate":0,                
-                "rosterData":rosterData,
-                "shiftInfoList":shiftInfoList
+                "rosterList":rosterData,
+                "shiftInfoList":shiftInfoList,
+                "systemParam":props.systemParam
                }
             )
         }
@@ -58,9 +54,7 @@ export default function RosterViewer(props){
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                        <SytemContext.Provider value={props.systemParam}>
-                            {rosterTableData && <RosterTable rosterTableData={rosterTableData}/>}
-                        </SytemContext.Provider>    
+                        {rosterTableData && <RosterTable rosterTableData={rosterTableData}/>}                        
                     </Col>
                 </Row>
             </Container>        

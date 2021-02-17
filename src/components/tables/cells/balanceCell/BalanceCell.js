@@ -1,10 +1,9 @@
 import './BalanceCell.css';
-import RosterTableCell from '../rosterTableCell/RosterTableCell';
-function BalanceCell(props){
+import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+export default function BalanceCell(props){
     return (
-        <RosterTableCell className="balanceCell p-0 text-center">
+        <BorderedAlignCenterCell className="balanceCell p-0">
             {props.children}
-        </RosterTableCell>    
+        </BorderedAlignCenterCell>    
     )
 }
-export default BalanceCell;

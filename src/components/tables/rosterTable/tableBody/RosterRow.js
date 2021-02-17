@@ -1,81 +1,76 @@
-import parse from 'html-react-parser'
+import {useContext} from 'react';
 import BalanceCell from '../../cells/balanceCell/BalanceCell';
+import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
 import CursoredShiftCell from '../../cells/cursoredShiftCell/CursoredShiftCell';
-import NameCell from '../../cells/nameCell/NameCell';
-import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
-import ShiftCell from '../../cells/shiftCell/ShiftCell';
-import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
-import { useState} from 'react';
-function RosterRow(props) {
-    const [hightLightRowIndex,setHightLightRowIndex]=useState(-1);
-    let content=parse(props.itoRoster.itoName+"<br>"+props.itoRoster.itoPostName+" Extn. 2458");
-    let j=0,shiftCellList=[];
-    
-    for (let i=props.noOfPrevDate;i>0;i--){
-        shiftCellList.push(
-            <ShiftCell
-                key={props.itoId+"_shift-"+i}
-                shiftInfoList={props.shiftInfoList}/>    
-        )
-    }    
-    props.itoRoster.shiftList.forEach(itoShift=>{
-        shiftCellList.push(<CursoredShiftCell 
-                                key={props.itoId+"_shift_"+j} 
-                                setHightLightCellIndex={props.setHightLightCellIndex}
-                                setHightLightRowIndex={setHightLightRowIndex}
-                                shiftInfoList={props.shiftInfoList}>
-                                {itoShift} 
-                           </CursoredShiftCell>);
-        j++;
-    })
-    for (let i=props.itoRoster.shiftList.length;i<31;i++){
-        shiftCellList.push(<RosterTableCell key={props.itoId+"_shift_"+i} />);
+import RosterNameCell from "../../cells/rosterNameCell/RosterNameCell";
+import Parser from "html-react-parser";
+import ShiftCell from "../../cells/shiftCell/ShiftCell";
+import ShiftCountCell from "../../cells/shiftCountCell/ShiftCountCell";
+import RosterWebContext from '../../../../RosterWebContext';
+import Utility from '../../../../utils/Utility';
+export default function RosterRow(props){
+    let {activeShiftInfoList,monthlyCalendar,rosterList} = useContext(RosterWebContext);
+    let i;
+    let roster=rosterList[props.itoId];
+    let rosterRowData=Utility.calculateShiftStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
+    let rosterCellList=[];
+    //console.log(rosterRowData);
+    let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
+
+    for (i=0;i<props.noOfPrevDate;i++){
+        rosterCellList.push(<ShiftCell key={"pre-"+i}/>);
     }
+    
+    for (i=0;i<31;i++){
+        if (rosterRowData.shiftList[i]){
+            rosterCellList.push(<CursoredShiftCell itoId={props.itoId} rowType="rosterRow" key={props.itoId+"_shift_"+i}>{rosterRowData.shiftList[i]}</CursoredShiftCell>);
+        }else {
+            rosterCellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+i}>{rosterRowData.shiftList[i]}</BorderedAlignCenterCell>);
+        }
+    }
+
     return(
         <tr>
-            <NameCell hightLightRowIndex={hightLightRowIndex}>
-                {content}
-            </NameCell>
-            {shiftCellList}
-            <RosterTableCell className="text-center">
-                {props.itoRoster.totalHour}
-            </RosterTableCell>
-            <RosterTableCell className="text-center">
-                {props.itoRoster.actualHour}
-            </RosterTableCell>
+            <RosterNameCell itoId={props.itoId}>{itoNameContact}</RosterNameCell>
+            {rosterCellList}
+            <BorderedAlignCenterCell>
+                {rosterRowData.totalHour}
+            </BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>
+                {rosterRowData.actualHour}
+            </BorderedAlignCenterCell>
             <BalanceCell>
-                {props.itoRoster.lastMonthBalance}
+                {rosterRowData.lastMonthBalance}
             </BalanceCell>
 
             <BalanceCell>
-                {props.itoRoster.thisMonthHourTotal}
+                {rosterRowData.thisMonthHourTotal}
             </BalanceCell>
 
             <BalanceCell>
-                {props.itoRoster.thisMonthBalance}
+                {rosterRowData.thisMonthBalance}
             </BalanceCell>
 
             <ShiftCountCell>
-                {props.itoRoster.aShiftCount}
+                {rosterRowData.aShiftCount}
             </ShiftCountCell>
 
             <ShiftCountCell>
-                {props.itoRoster.bxShiftCount}
+                {rosterRowData.bxShiftCount}
             </ShiftCountCell>
 
             <ShiftCountCell>
-                {props.itoRoster.cShiftCount}
+                {rosterRowData.cShiftCount}
             </ShiftCountCell>
 
             <ShiftCountCell>
-                {props.itoRoster.dxShiftCount}
+                {rosterRowData.dxShiftCount}
             </ShiftCountCell>
 
             <ShiftCountCell className="tailCell">
-                {props.itoRoster.noOfWorkingDay}
+                {rosterRowData.noOfWorkingDay}
             </ShiftCountCell>
 
         </tr>
-    );
-  }
-export default RosterRow;
+    )
+}

@@ -1,9 +1,8 @@
-import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
-function WeekDayCell(props){
+import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+export default function WeekDayCell(props){
     return (
-        <RosterTableCell title={props.title} className={"p-0 text-center "+props.className}>
+        <BorderedAlignCenterCell title={props.title} className={"p-0 "+props.className}>
             {props.children}
-        </RosterTableCell>    
+        </BorderedAlignCenterCell>    
     )
 }
-export default WeekDayCell;

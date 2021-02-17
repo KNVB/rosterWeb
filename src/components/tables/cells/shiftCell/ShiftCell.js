@@ -1,25 +1,25 @@
-import RosterTableCell from '../rosterTableCell/RosterTableCell';
 import './ShiftCell.css';
-function ShiftCell(props){
-    let shiftClass="p-0 text-center shiftCell";
+import {useContext} from 'react';
+import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+import RosterWebContext from '../../../../RosterWebContext';
+export default function ShiftCell(props){
     let myProps={};
-    //shiftInfoList={props.shiftInfoList}
-    //console.log(props);
+    let shiftClass = "p-0 shiftCell";
+
+    let { activeShiftInfoList } = useContext(RosterWebContext);
     
-    Object.keys(props).forEach(key=>{
-      if (key==="shiftInfoList"){
-        if (props.shiftInfoList[props.children]){
-          shiftClass+=" "+props.shiftInfoList[props.children].cssClassName;
-        }        
-      }else{
-        myProps[key]=props[key];
-      }        
-    })
+    Object.keys(props).forEach(key => {
+        myProps[key] = props[key];
+    });
+
+    if (activeShiftInfoList[props.children]) {
+        shiftClass +=  " " + activeShiftInfoList[props.children].cssClassName;    
+    }
+
+    //console.log(myProps);
     return (
-        <RosterTableCell {...myProps}
-            className={shiftClass}>
+        <BorderedAlignCenterCell {...myProps} className={shiftClass}>
             {props.children}
-        </RosterTableCell>
-    )
+        </BorderedAlignCenterCell>
+    );
 }
-export default ShiftCell;

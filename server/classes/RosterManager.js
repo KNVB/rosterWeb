@@ -10,6 +10,7 @@ class RosterManager
 		let systemParam=sp;
 		this.getAllActiveShiftInfo=async()=>{
 			let dboObj=new DBO();
+			let essentialShift="";
 			let shiftInfoList={};
 			
 			try{
@@ -18,12 +19,16 @@ class RosterManager
 					let shift=new Shift();
 					shift.cssClassName=record.css_class_name;
 					shift.duration=parseFloat(record.shift_duration);
-					shift.isEssential=(record.is_essential === "1");
+					shift.isEssential=(record.is_essential === 1);
 					shift.timeSlot=record.time_slot;
 					shift.type=record.shift_type;
 					shiftInfoList[shift.type]=shift;
+					if (record.is_essential === 1){
+						essentialShift+=shift.type;
+					}
 				});
 				console.log("Get All Active Shift Info. success.");
+				shiftInfoList["essentialShift"]=essentialShift;
 				return shiftInfoList;
 			}
 			catch (error){

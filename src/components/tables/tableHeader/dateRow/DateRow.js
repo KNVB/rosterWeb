@@ -1,20 +1,23 @@
+import {useContext} from 'react';
 import './DateCell.css';
 import DateCell from './DateCell';
 import BalanceCell from '../../cells/balanceCell/BalanceCell';
 import NameCell from '../../cells/nameCell/NameCell';
+import RosterWebContext from '../../../../RosterWebContext';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
-function DateRow(props){
+export default function DateRow(props){
     let dateRow=[];
+    let {monthlyCalendar} = useContext(RosterWebContext);
     for (let i=props.noOfPrevDate;i>0;i--){
         dateRow.push(
             <DateCell key={"date_-"+i}/>    
         )
     }
     for (let i=0;i<31;i++){
-        if (props.calendarDateList[i]){
+        if (monthlyCalendar.calendarDateList[i]){
+
             dateRow.push(<DateCell 
-                            dateData={props.calendarDateList[i]}
-                            hightLightCellIndex={props.hightLightCellIndex}
+                            dateData={monthlyCalendar.calendarDateList[i]}
                             key={"date_"+i}
                             noOfPrevDate={props.noOfPrevDate}/>);
         } else {
@@ -41,4 +44,3 @@ function DateRow(props){
         </tr>
     )
 }
-export default DateRow;

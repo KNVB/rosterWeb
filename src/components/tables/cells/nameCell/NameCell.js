@@ -1,14 +1,10 @@
 import './NameCell.css';
-import RosterTableCell from '../rosterTableCell/RosterTableCell';
-function NameCell(props){
-    let  nameCellClass="nameCell p-0";
-    if (props.hightLightRowIndex===1)
-        nameCellClass+=" highlightCell";
-
+import BorderedCell from '../../cells/borderedCell/BorderedCell';
+export default function NameCell(props){
+    let nameCellClass="nameCell p-0";    
     return (
-        <RosterTableCell className={nameCellClass}>
+        <BorderedCell className={props.className+" "+nameCellClass}>
             {props.children}
-        </RosterTableCell>    
+        </BorderedCell>    
     )
 }
-export default NameCell;

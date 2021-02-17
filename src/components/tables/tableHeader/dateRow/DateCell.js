@@ -1,20 +1,21 @@
-import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
-function DateCell(props){
-    let className="p-0 text-center";
-    
+import {useContext} from 'react';
+import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+import RosterWebContext from '../../../../RosterWebContext';
+export default function DateCell(props){
+    let className="p-0";
+    let {hightLightCellIndex} = useContext(RosterWebContext);
     let dateData=props.dateData;
     let dateOfMonth="";
     if (dateData){
         dateOfMonth=dateData.dateOfMonth;
         if (dateData.today)
             className+=" todayCell";
-        if ((dateOfMonth+props.noOfPrevDate)===props.hightLightCellIndex)
+        if ((dateOfMonth+props.noOfPrevDate)===hightLightCellIndex)
             className+=" highlightCell";
     }
     return (
-        <RosterTableCell className={className}>
+        <BorderedAlignCenterCell className={className}>
             {dateOfMonth}
-        </RosterTableCell>    
+        </BorderedAlignCenterCell>    
     )
 }
-export default DateCell

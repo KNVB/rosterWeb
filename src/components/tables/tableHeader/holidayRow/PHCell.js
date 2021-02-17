@@ -1,9 +1,8 @@
-import RosterTableCell from '../../cells/rosterTableCell/RosterTableCell';
-function PHCell(props){
+import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+export default function PHCell(props){
     return (
-        <RosterTableCell title={props.title} className="font-weight-bold p-0 phCell text-center">
+        <BorderedAlignCenterCell title={props.title} className="font-weight-bold p-0 phCell">
             {props.children}
-        </RosterTableCell>
+        </BorderedAlignCenterCell>
     )
 }
-export default PHCell;
