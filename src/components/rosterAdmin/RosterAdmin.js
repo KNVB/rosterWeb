@@ -28,7 +28,7 @@ function RosterAdmin(props){
 							<Switch>
 								<Route exact path="/rosterWeb/admin" component={AdminHome} />
 								<Route exact path='/rosterWeb/admin/itoManagement' component={ITOManagment} />
-								<Route exact path='/rosterWeb/admin/rosterScheduler' component={RosterScheduler} />
+								<Route exact path='/rosterWeb/admin/rosterScheduler' render={()=>props.systemParam && <RosterScheduler systemParam={props.systemParam}/>} />
 							</Switch>
 						</div>					
 				</GuardedRoute>					

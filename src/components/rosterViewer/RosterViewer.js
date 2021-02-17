@@ -53,7 +53,7 @@ export default function RosterViewer(props){
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                        {rosterTableData && <RosterTable rosterTableData={rosterTableData}/>}                        
+                        {rosterTableData && <RosterTable rosterTableData={rosterTableData}/>}
                     </Col>
                 </Row>
             </Container>        

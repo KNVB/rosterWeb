@@ -1,9 +1,12 @@
 import {Col,Container,Row} from 'react-bootstrap';
-import {useContext,useEffect,useState} from 'react';
+import {useEffect,useState} from 'react';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import MonthPicker from '../../monthPicker/MonthPicker';
+import Roster from '../../../utils/Roster';
+import RosterSchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
 export default function RosterScheduler(props){
     const [rosterMonth,setRosterMonth]=useState(new Date());
+    const[rosterSchedulerData,setRosterSchedulerData]=useState();
     let monthPickerMinDate=props.systemParam.monthPickerMinDate;
     //console.log(monthPickerMinDate);
     monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
@@ -17,6 +20,26 @@ export default function RosterScheduler(props){
         newDate.setMonth(month);
         setRosterMonth(newDate);
     }
+    let systemParam=props.systemParam;
+    useEffect(()=>{
+        const getData = async () => {
+            let calendarUtility=new CalendarUtility();
+            let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
+            let roster = new Roster();
+            let rosterData = await roster.getRosterSchedulerList(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
+            let shiftInfoList= await roster.getAllActiveShiftInfo();
+            setRosterSchedulerData(
+               {
+                "calendarUtility":calendarUtility,
+                "monthlyCalendar":monthlyCalendar,
+                "rosterData":rosterData,
+                "shiftInfoList":shiftInfoList,
+                "systemParam":systemParam
+               }
+            )
+        }
+        getData();    
+    },[rosterMonth]);
     return (
         <div className="App p-1">
             <Container fluid={true} className="tableContainer">
@@ -29,9 +52,14 @@ export default function RosterScheduler(props){
                     <Col md={12} lg={12} sm={12} xl={12} xs={12}>
                         <MonthPicker 
                             minDate={monthPickerMinDate}
-                            onSelect={updateMonth} />                        
+                            onSelect={updateMonth} />
                     </Col>
-                </Row>                
+                </Row>           
+                <Row>
+                    <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
+                        {rosterSchedulerData && <RosterSchedulerTable rosterSchedulerData={rosterSchedulerData}/>}
+                    </Col>
+                </Row>
             </Container>        
         </div>
     )    
