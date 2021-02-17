@@ -24,23 +24,20 @@ export default function DateRow(props){
             dateRow.push(<DateCell key={"date_"+i}/>);
         }
     }
-    dateRow.push(<BalanceCell key="lastMonth">Last<br/>Month</BalanceCell>);
-    dateRow.push(<BalanceCell key="thisMonth">This<br/>Month</BalanceCell>);
-    dateRow.push(<BalanceCell key="total">Total</BalanceCell>);
-
-    dateRow.push(<ShiftCountCell key="totalAShiftCount">Total No. of<br/>A Shift</ShiftCountCell>);
-    dateRow.push(<ShiftCountCell key="totalBxShiftCount">Total No. of<br/>Bx Shift</ShiftCountCell>);
-
-    dateRow.push(<ShiftCountCell key="totalCShiftCount">Total No. of<br/>C Shift</ShiftCountCell>);
-    dateRow.push(<ShiftCountCell key="totalDxShiftCount">Total No. of<br/>Dx Shift</ShiftCountCell>);
-
-    dateRow.push(<ShiftCountCell key="noOfWorkingDay" className="tailCell" >No. of <br/>working<br/>day</ShiftCountCell>);
     return (
         <tr>
             <NameCell>
                 Resident Support<br/>Team Members
             </NameCell>
-            {dateRow}            
+            {dateRow}
+            <BalanceCell>Last<br/>Month</BalanceCell>
+            <BalanceCell>This<br/>Month</BalanceCell>
+            <BalanceCell>Total</BalanceCell>
+            <ShiftCountCell>Total No. of<br/>A Shift</ShiftCountCell>
+            <ShiftCountCell>Total No. of<br/>Bx Shift</ShiftCountCell>
+            <ShiftCountCell>Total No. of<br/>C Shift</ShiftCountCell>
+            <ShiftCountCell>Total No. of<br/>Dx Shift</ShiftCountCell>
+            <ShiftCountCell className="tailCell">No. of <br/>working<br/>day</ShiftCountCell>            
         </tr>
     )
 }

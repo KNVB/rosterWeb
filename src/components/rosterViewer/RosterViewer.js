@@ -30,8 +30,7 @@ export default function RosterViewer(props){
                 "calendarUtility":calendarUtility,
                 "monthlyCalendar":monthlyCalendar,
                 "rosterList":rosterData,
-                "shiftInfoList":shiftInfoList,
-                "systemParam":props.systemParam
+                "shiftInfoList":shiftInfoList                
                }
             )
         }

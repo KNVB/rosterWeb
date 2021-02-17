@@ -14,7 +14,6 @@ export default function RosterTable(props){
     let calendarUtility=props.rosterTableData.calendarUtility;
     let monthlyCalendar=props.rosterTableData.monthlyCalendar;
     
-    let systemParam=props.rosterTableData.systemParam;
     let contextValue={
         activeShiftInfoList,
         calendarUtility,
@@ -23,8 +22,7 @@ export default function RosterTable(props){
         monthlyCalendar,
         rosterList,
         setHightLightCellIndex,
-        setHighLightRowIndex,
-        systemParam
+        setHighLightRowIndex    
     }
     return (
         <table id="rosterTable">
