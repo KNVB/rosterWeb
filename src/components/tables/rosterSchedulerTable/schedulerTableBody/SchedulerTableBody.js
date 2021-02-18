@@ -1,18 +1,18 @@
-import {useContext} from 'react';
+import {useContext,useState} from 'react';
+import PreferredShiftRow from './PreferredShiftRow';
 import RosterSchedulerRow from './RosterSchedulerRow';
 import RosterWebContext from '../../../../RosterWebContext';
 export default function SchedulerTableBody(props){
     let {rosterData} = useContext(RosterWebContext);
-    let schedulerRowList = [];
-    //console.log(rosterData);
+    let rowList = [];
     
     Object.keys(rosterData.rosterList).forEach(itoId=>{
-        schedulerRowList.push(<RosterSchedulerRow itoId={itoId} key={itoId+"_roster"}/>);
+       rowList.push(<RosterSchedulerRow key={itoId+"_roster_scheduler_row"} itoId={itoId}/>);
+       rowList.push(<PreferredShiftRow key={itoId+"_preferred_shift_row"} itoId={itoId}/>);
     })
-    
     return (
-        <tbody>
-          {schedulerRowList}
+        <tbody>            
+            {rowList}
         </tbody>
     );
 }
