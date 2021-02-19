@@ -1,4 +1,5 @@
 import {useContext} from 'react';
+import { Redirect } from 'react-router-dom'
 import RosterWebContext from '../RosterWebContext';
 
 class Utility{
@@ -92,8 +93,15 @@ class Utility{
                     if (response.ok) {
                         return response.json();
                     }else{
-                        //console.log(response);
-                        throw new Error(response.status); 
+                        switch(response.status){
+                            case 401:alert("The user session has been expired, please login again.");
+                                     sessionStorage.clear();
+                                     return <Redirect to='/rosterWeb/admin/'  />
+                                     break
+                            default:
+                                    throw new Error(response.statusText);
+                        }
+                        
                     }
                 })
     }
@@ -116,7 +124,7 @@ class Utility{
         return(
             <BaseComponent {...props}
                 onMouseOut={deHightLight}
-                onMouseEnter={hightLight}>
+                onMouseOver={hightLight}>
                     {props.children}
             </BaseComponent>        
         )

@@ -15,7 +15,6 @@ export default function DateRow(props){
     }
     for (let i=0;i<31;i++){
         if (monthlyCalendar.calendarDateList[i]){
-
             dateRow.push(<DateCell 
                             dateData={monthlyCalendar.calendarDateList[i]}
                             key={"date_"+i}
