@@ -23,7 +23,11 @@ export default function RosterRow(props){
     
     for (i=0;i<31;i++){
         if (rosterRowData.shiftList[i]){
-            rosterCellList.push(<CursoredShiftCell itoId={props.itoId} rowType="rosterRow" key={props.itoId+"_shift_"+i}>{rosterRowData.shiftList[i]}</CursoredShiftCell>);
+            rosterCellList.push(
+                <CursoredShiftCell itoid={props.itoId} rowtype="rosterRow" key={props.itoId+"_shift_"+i}>
+                    {rosterRowData.shiftList[i]}
+                </CursoredShiftCell>
+            );
         }else {
             rosterCellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+i}>{rosterRowData.shiftList[i]}</BorderedAlignCenterCell>);
         }

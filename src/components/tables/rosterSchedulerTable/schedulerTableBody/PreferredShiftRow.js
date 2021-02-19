@@ -1,5 +1,5 @@
 import {useContext,useState} from 'react';
-import CursorCell from '../cells/cursorCell/CursorCell';
+import PreferredShiftCell from '../cells/preferredShiftCell/PreferredShiftCell';
 import PreferredShiftNameCell from '../cells/preferredShiftNameCell/PreferredShiftNameCell';
 import RosterWebContext from '../../../../RosterWebContext';
 import ShiftCell from '../../cells/shiftCell/ShiftCell';
@@ -15,16 +15,21 @@ export default function PreferredShiftRow(props){
         cellList.push(<ShiftCell key={props.itoId+"_prev-"+i}/>);
     }
     if (preferredShiftList){
-        for (i=1;i<32;i++){
+        for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
             if (preferredShiftList[i]){
-                cellList.push(<CursorCell itoId={props.itoId} rowType="preferredShiftRow" key={props.itoId+"_shift_"+i}>{preferredShiftList[i]}</CursorCell>);
+                cellList.push(<PreferredShiftCell itoid={props.itoId} rowtype="preferredShiftRow" key={props.itoId+"_preferred_shift_"+i}>
+                    {preferredShiftList[i]}
+                </PreferredShiftCell>);
             } else {
-                cellList.push(<CursorCell itoId={props.itoId} rowType="preferredShiftRow" key={props.itoId+"_shift_"+i}></CursorCell>);
+                cellList.push(<PreferredShiftCell itoid={props.itoId} rowtype="preferredShiftRow" key={props.itoId+"_preferred_shift_"+i}></PreferredShiftCell>);
             }
+        }
+        for (let j=i;j<31;j++){
+            cellList.push(<BorderedAlignCenterCell key={props.itoId+"_preferred_shift_"+j}/>);
         }
     } else {
         for (i=0;i<31;i++){
-            cellList.push(<CursorCell itoId={props.itoId} rowType="preferredShiftRow" key={props.itoId+"_shift_"+i}></CursorCell>);
+            cellList.push(<PreferredShiftCell itoId={props.itoId} rowType="preferredShiftRow" key={props.itoId+"_preferred_shift_"+i}></PreferredShiftCell>);
         }
     }
     return(

@@ -1,3 +1,6 @@
+import {useContext} from 'react';
+import RosterWebContext from '../RosterWebContext';
+
 class Utility{
     static calculateMean(data){
         return data.reduce(function (a, b) {
@@ -96,6 +99,27 @@ class Utility{
     }
     static getSystemParam(){
         return Utility.fetchAPI('/publicAPI/getSystemParam','GET');
+    }
+    static withCursor=BaseComponent => props => {
+        let { setHightLightCellIndex,setHighLightRowIndex } = useContext(RosterWebContext);
+        let deHightLight = e => {
+            //props.setIstHightLightRow(false);
+            setHightLightCellIndex(-1);
+            setHighLightRowIndex();
+        };
+        let hightLight = e => {
+            //console.log(e.target.cellIndex);
+            //props.setIstHightLightRow(true);
+            setHightLightCellIndex(e.target.cellIndex);
+            setHighLightRowIndex({itoId:props.itoid,rowType:props.rowtype});
+        };
+        return(
+            <BaseComponent {...props}
+                onMouseOut={deHightLight}
+                onMouseEnter={hightLight}>
+                    {props.children}
+            </BaseComponent>        
+        )
     }
 }
 export default Utility;
