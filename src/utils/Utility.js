@@ -123,8 +123,8 @@ class Utility{
         };
         return(
             <BaseComponent {...props}
-                onMouseOut={deHightLight}
-                onMouseOver={hightLight}>
+                onMouseLeave={deHightLight}
+                onMouseEnter={hightLight}>
                     {props.children}
             </BaseComponent>        
         )
