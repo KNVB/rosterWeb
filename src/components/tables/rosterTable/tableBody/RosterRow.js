@@ -12,7 +12,7 @@ export default function RosterRow(props){
     let {activeShiftInfoList,monthlyCalendar,rosterList} = useContext(RosterWebContext);
     let i;
     let roster=rosterList[props.itoId];
-    let rosterRowData=Utility.calculateShiftStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
+    let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
     let rosterCellList=[];
     //console.log(rosterRowData);
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");

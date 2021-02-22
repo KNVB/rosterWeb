@@ -2,5 +2,6 @@ import BorderedAlignCenterCell from '../../../cells/borderedAlignCenterCell/Bord
 import Utility from '../../../../../utils/Utility';
 export default function PreferredShiftCell(props){
     let GG=Utility.withCursor(BorderedAlignCenterCell);
-    return <GG {...props}>{props.children}</GG>;
+    let QQ=Utility.withEditable(GG);
+    return <QQ {...props}>{props.children}</QQ>;
 }

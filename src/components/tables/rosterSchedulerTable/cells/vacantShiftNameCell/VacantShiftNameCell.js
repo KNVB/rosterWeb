@@ -1,7 +1,7 @@
 import "./VacantShiftNameCell.css";
 import NameCell from '../../../cells/nameCell/NameCell';
-export default function VacantShiftNameCell(props){
+export default function VacantShiftNameCell(){
     return(
-        <NameCell className="vacantShiftName">Vacant Shifts</NameCell>
+        <NameCell className="bottomCell vacantShiftName">Vacant Shifts</NameCell>
     )
 }
