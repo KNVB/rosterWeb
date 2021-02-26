@@ -3,13 +3,14 @@ import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/Bordere
 import RosterWebContext from '../../../../RosterWebContext';
 import Utility from "../../../../utils/Utility";
 import VacantShiftNameCell from '../cells/vacantShiftNameCell/VacantShiftNameCell';
-export default function VacantShiftRow(){
+export default function VacantShiftRow(props){
     let {activeShiftInfoList,monthlyCalendar,rosterData,systemParam} = useContext(RosterWebContext);
     let cellList=[],i;
     let aShiftCount = [],    bxShiftCount = [],    cShiftCount = [],    dxShiftCount = [];
     let essentialShift=activeShiftInfoList.essentialShift;
     //console.log(activeShiftInfoList);
     //console.log(rosterData);
+
     let rosterList = rosterData.rosterList;
     for (i = 0; i < systemParam.noOfPrevDate; i++) {
       cellList.push(
@@ -72,4 +73,4 @@ export default function VacantShiftRow(){
                 </BorderedAlignCenterCell>
                 <BorderedAlignCenterCell className="bottomCell tailCell"/>      
             </tr>
-}
+ }

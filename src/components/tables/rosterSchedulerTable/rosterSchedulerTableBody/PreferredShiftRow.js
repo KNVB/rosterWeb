@@ -21,9 +21,9 @@ export default function PreferredShiftRow(props){
         setIsHighLightRow(true);
     }
     if (isHighLightRow){
-        cellList.push(<PreferredShiftNameCell className="highlightCell"/>);
+        cellList.push(<PreferredShiftNameCell className="highlightCell" key={props.itoId + "_Preferred_Name_Cell"}/>);
     } else {
-        cellList.push(<PreferredShiftNameCell/>);
+        cellList.push(<PreferredShiftNameCell key={props.itoId + "_Preferred_Name_Cell"}/>);
     }
     for (i=0;i<systemParam.noOfPrevDate;i++){
         cellList.push(<ShiftCell key={props.itoId+"_prev-"+i}/>);

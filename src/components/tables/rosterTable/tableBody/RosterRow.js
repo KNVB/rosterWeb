@@ -10,7 +10,6 @@ import Utility from '../../../../utils/Utility';
 export default function RosterRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let {activeShiftInfoList,monthlyCalendar,rosterList,setHightLightCellIndex} = useContext(RosterWebContext);
-    
     let i;
     let roster=rosterList[props.itoId];
     let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
