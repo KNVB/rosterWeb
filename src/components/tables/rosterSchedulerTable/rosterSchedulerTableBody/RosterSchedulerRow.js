@@ -1,7 +1,7 @@
 import {useContext,useState} from 'react';
 import BalanceCell from '../../cells/balanceCell/BalanceCell';
 import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
-import EditableShiftCell from '../cells/editableShiftCell/EditableShiftCell';
+import EditableShiftCell from './cells/editableShiftCell/EditableShiftCell';
 import Parser from "html-react-parser";
 import RosterNameCell from '../../cells/rosterNameCell/RosterNameCell';
 import RosterWebContext from '../../../../RosterWebContext';
@@ -11,7 +11,14 @@ import Utility from '../../../../utils/Utility';
 export default function RosterSchedulerRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],i;
-    let {activeShiftInfoList,monthlyCalendar,rosterData,setHightLightCellIndex,systemParam} = useContext(RosterWebContext);
+    let {
+        activeShiftInfoList,
+        monthlyCalendar,
+        rosterData,
+        setHightLightCellIndex,
+        setRosterData,
+        systemParam
+    } = useContext(RosterWebContext);
     //console.log(rosterData);
     let roster=rosterData.rosterList[props.itoId];    
     let previousMonthShift=rosterData.previousMonthShiftList[props.itoId];
@@ -26,6 +33,14 @@ export default function RosterSchedulerRow(props){
         setHightLightCellIndex(e.target.cellIndex);
         setIsHighLightRow(true);
     }
+    let updateShiftData=(e)=>{
+        //console.log(e.target.textContent,e.target.cellIndex);
+        //console.log(rosterData);
+        let realIndex=e.target.cellIndex-1-systemParam.noOfPrevDate;
+        let temp=JSON.parse(JSON.stringify(rosterData));
+        temp.rosterList[props.itoId].shiftList[realIndex].shift=e.target.textContent;
+        setRosterData(temp);
+    }
     if (isHighLightRow){
         cellList.push(<RosterNameCell className="highlightCell" key={props.itoId + "_nameCell"}>{itoNameContact}</RosterNameCell>);
     }else{
@@ -34,19 +49,21 @@ export default function RosterSchedulerRow(props){
     for (i=systemParam.maxConsecutiveWorkingDay-systemParam.noOfPrevDate;i<previousMonthShift.length;i++){
         cellList.push(<ShiftCell key={"prev-"+i}>{previousMonthShift[i]}</ShiftCell>);
     }
-    for (i=0;i<31;i++){
-        if (rosterRowData.shiftList[i]){
-            cellList.push(
-                <EditableShiftCell 
-                    itoid={props.itoId}
-                    key={props.itoId+"_shift_"+i}
-                    onMouseLeave={deHightLight}
-                    onMouseEnter={hightLight}>
-                    {rosterRowData.shiftList[i]}
-                </EditableShiftCell>);
-        }else {
-            cellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+i}>{rosterRowData.shiftList[i]}</BorderedAlignCenterCell>);
-        }
+    for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
+        cellList.push(
+            <EditableShiftCell 
+                itoid={props.itoId}
+                key={props.itoId+"_shift_"+i}
+                onBlur={updateShiftData}
+                onMouseLeave={deHightLight}
+                onMouseEnter={hightLight}>
+                {rosterRowData.shiftList[i]}
+            </EditableShiftCell>
+        );
+    }
+    
+    for (let j=i;j<31;j++){
+        cellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+j}>{rosterRowData.shiftList[j]}</BorderedAlignCenterCell>);
     }
     cellList.push(<BorderedAlignCenterCell key={props.itoId+"_totalHour"}>{rosterRowData.totalHour}</BorderedAlignCenterCell>);
     cellList.push(<BorderedAlignCenterCell key={props.itoId+"_actualHour"}>{rosterRowData.actualHour}</BorderedAlignCenterCell>);

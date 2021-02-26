@@ -1,6 +1,6 @@
 import {useContext,useState} from 'react';
-import PreferredShiftCell from '../cells/preferredShiftCell/PreferredShiftCell';
-import PreferredShiftNameCell from '../cells/preferredShiftNameCell/PreferredShiftNameCell';
+import PreferredShiftCell from './cells/preferredShiftCell/PreferredShiftCell';
+import PreferredShiftNameCell from './cells/preferredShiftNameCell/PreferredShiftNameCell';
 import RosterWebContext from '../../../../RosterWebContext';
 import ShiftCell from '../../cells/shiftCell/ShiftCell';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
@@ -8,7 +8,7 @@ import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/Bordere
 export default function PreferredShiftRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],i;
-    let {activeShiftInfoList,monthlyCalendar,rosterData,setHightLightCellIndex,systemParam} = useContext(RosterWebContext);
+    let {monthlyCalendar,rosterData,setHightLightCellIndex,setRosterData,systemParam} = useContext(RosterWebContext);
     let preferredShiftList=rosterData.preferredShiftList[props.itoId];
     //console.log(rosterData);
     
@@ -20,6 +20,16 @@ export default function PreferredShiftRow(props){
         setHightLightCellIndex(e.target.cellIndex);
         setIsHighLightRow(true);
     }
+    let updatePreferredShiftData=(e)=>{
+        let realIndex=e.target.cellIndex-systemParam.noOfPrevDate;//no need minus 1
+        let temp=JSON.parse(JSON.stringify(rosterData));
+        if (e.target.textContent===""){
+            delete temp.preferredShiftList[props.itoId][realIndex];
+        }else {
+            temp.preferredShiftList[props.itoId][realIndex]=e.target.textContent;
+        }       
+        setRosterData(temp);
+    }
     if (isHighLightRow){
         cellList.push(<PreferredShiftNameCell className="highlightCell" key={props.itoId + "_Preferred_Name_Cell"}/>);
     } else {
@@ -30,13 +40,23 @@ export default function PreferredShiftRow(props){
     }
     for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
         if (preferredShiftList && preferredShiftList[i+1]){
-            cellList.push(<PreferredShiftCell key={props.itoId+"_preferred_shift_"+i} onMouseLeave={deHightLight}
-            onMouseEnter={hightLight}>
-                {preferredShiftList[i+1]}
-            </PreferredShiftCell>);
+            cellList.push(
+                <PreferredShiftCell 
+                    key={props.itoId+"_preferred_shift_"+i} 
+                    onBlur={updatePreferredShiftData}
+                    onMouseLeave={deHightLight}
+                    onMouseEnter={hightLight}>
+                    {preferredShiftList[i+1]}
+                </PreferredShiftCell>
+            );
         } else {
-            cellList.push(<PreferredShiftCell key={props.itoId+"_preferred_shift_"+i} onMouseLeave={deHightLight}
-            onMouseEnter={hightLight}></PreferredShiftCell>);
+            cellList.push(
+                <PreferredShiftCell 
+                    key={props.itoId+"_preferred_shift_"+i} 
+                    onBlur={updatePreferredShiftData} 
+                    onMouseLeave={deHightLight}
+                    onMouseEnter={hightLight}/>
+            );
         }
     }
     for (let j=i;j<31;j++){

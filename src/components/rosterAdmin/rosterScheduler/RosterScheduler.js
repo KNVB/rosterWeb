@@ -2,7 +2,7 @@ import {Col,Container,Row} from 'react-bootstrap';
 import {useEffect,useState} from 'react';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import MonthPicker from '../../monthPicker/MonthPicker';
-import Roster from '../../../utils/Roster';
+import Roster from '../../../utils/roster';
 import RosterSchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
 export default function RosterScheduler(props){
     const [rosterMonth,setRosterMonth]=useState(new Date());
@@ -39,7 +39,7 @@ export default function RosterScheduler(props){
             )
         }
         getData();    
-    },[rosterMonth]);
+    },[rosterMonth,systemParam]);
     return (
         <div className="App p-1">
             <Container fluid={true} className="tableContainer">

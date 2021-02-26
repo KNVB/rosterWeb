@@ -1,8 +1,8 @@
-import {useContext,useState} from 'react';
+import {useContext} from 'react';
 import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
 import RosterWebContext from '../../../../RosterWebContext';
 import Utility from "../../../../utils/Utility";
-import VacantShiftNameCell from '../cells/vacantShiftNameCell/VacantShiftNameCell';
+import VacantShiftNameCell from './cells/vacantShiftNameCell/VacantShiftNameCell';
 export default function VacantShiftRow(props){
     let {activeShiftInfoList,monthlyCalendar,rosterData,systemParam} = useContext(RosterWebContext);
     let cellList=[],i;
