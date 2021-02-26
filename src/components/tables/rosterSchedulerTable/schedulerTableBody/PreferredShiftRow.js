@@ -6,35 +6,45 @@ import ShiftCell from '../../cells/shiftCell/ShiftCell';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
 import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
 export default function PreferredShiftRow(props){
+    const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],i;
-    let {activeShiftInfoList,monthlyCalendar,rosterData,systemParam} = useContext(RosterWebContext);
+    let {activeShiftInfoList,monthlyCalendar,rosterData,setHightLightCellIndex,systemParam} = useContext(RosterWebContext);
     let preferredShiftList=rosterData.preferredShiftList[props.itoId];
     //console.log(rosterData);
     
+    let deHightLight = e => {
+        setHightLightCellIndex(-1);
+        setIsHighLightRow(false);
+    }
+    let hightLight = e => {
+        setHightLightCellIndex(e.target.cellIndex);
+        setIsHighLightRow(true);
+    }
+    if (isHighLightRow){
+        cellList.push(<PreferredShiftNameCell className="highlightCell"/>);
+    } else {
+        cellList.push(<PreferredShiftNameCell/>);
+    }
     for (i=0;i<systemParam.noOfPrevDate;i++){
         cellList.push(<ShiftCell key={props.itoId+"_prev-"+i}/>);
     }
-    if (preferredShiftList){
-        for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
-            if (preferredShiftList[i]){
-                cellList.push(<PreferredShiftCell itoid={props.itoId} rowtype="preferredShiftRow" key={props.itoId+"_preferred_shift_"+i}>
-                    {preferredShiftList[i]}
-                </PreferredShiftCell>);
-            } else {
-                cellList.push(<PreferredShiftCell itoid={props.itoId} rowtype="preferredShiftRow" key={props.itoId+"_preferred_shift_"+i}></PreferredShiftCell>);
-            }
+    for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
+        if (preferredShiftList && preferredShiftList[i+1]){
+            cellList.push(<PreferredShiftCell key={props.itoId+"_preferred_shift_"+i} onMouseLeave={deHightLight}
+            onMouseEnter={hightLight}>
+                {preferredShiftList[i+1]}
+            </PreferredShiftCell>);
+        } else {
+            cellList.push(<PreferredShiftCell key={props.itoId+"_preferred_shift_"+i} onMouseLeave={deHightLight}
+            onMouseEnter={hightLight}></PreferredShiftCell>);
         }
-        for (let j=i;j<31;j++){
-            cellList.push(<BorderedAlignCenterCell key={props.itoId+"_preferred_shift_"+j}/>);
-        }
-    } else {
-        for (i=0;i<31;i++){
-            cellList.push(<PreferredShiftCell itoId={props.itoId} rowType="preferredShiftRow" key={props.itoId+"_preferred_shift_"+i}></PreferredShiftCell>);
-        }
+    }
+    for (let j=i;j<31;j++){
+        cellList.push(<BorderedAlignCenterCell key={props.itoId+"_preferred_shift_"+j}/>);
     }
     return(
         <tr>
-            <PreferredShiftNameCell itoId={props.itoId}>Preferred Shift</PreferredShiftNameCell>
+            
             {cellList}
             <BorderedAlignCenterCell colSpan="5"/>
             <ShiftCountCell/>

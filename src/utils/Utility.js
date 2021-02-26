@@ -132,36 +132,5 @@ export default class Utility{
     }
     static getSystemParam(){
         return Utility.fetchAPI('/publicAPI/getSystemParam','GET');
-    }
-    static withCursor=BaseComponent => props => {
-        let { setHightLightCellIndex,setHighLightRowIndex } = useContext(RosterWebContext);
-        let deHightLight = e => {
-            //props.setIstHightLightRow(false);
-            setHightLightCellIndex(-1);
-            setHighLightRowIndex();
-        };
-        let hightLight = e => {
-            //console.log(e.target.cellIndex);
-            //props.setIstHightLightRow(true);
-            setHightLightCellIndex(e.target.cellIndex);
-            setHighLightRowIndex({itoId:props.itoid,rowType:props.rowtype});
-        };
-        return(
-            <BaseComponent {...props}
-                onMouseLeave={deHightLight}
-                onMouseEnter={hightLight}>
-                    {props.children}
-            </BaseComponent>        
-        )
-    }
-    static withEditable = BaseComponent => props=>{
-        return (
-          <BaseComponent
-            {...props}
-            contentEditable={true}
-            suppressContentEditableWarning={true}>
-            {props.children}
-          </BaseComponent> 
-        )  
-    };
+    }    
 }

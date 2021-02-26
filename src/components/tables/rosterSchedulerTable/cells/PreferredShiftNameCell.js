@@ -1,4 +1,4 @@
-import NameCell from '../../../cells/nameCell/NameCell';
+import NameCell from '../../cells/nameCell/NameCell';
 import React from 'react';
 
 export default function PreferredShiftNameCell(props){

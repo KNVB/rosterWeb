@@ -1,5 +1,5 @@
 import React from "react";
-import BorderedAlignCenterCell from '../../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
 export default function PreferredShiftCell(props) {
   return (
     <BorderedAlignCenterCell

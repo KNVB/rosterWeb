@@ -9,19 +9,41 @@ import ShiftCell from '../../cells/shiftCell/ShiftCell';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
 import Utility from '../../../../utils/Utility';
 export default function RosterSchedulerRow(props){
+    const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],i;
-    let {activeShiftInfoList,monthlyCalendar,rosterData,systemParam} = useContext(RosterWebContext);
+    let {activeShiftInfoList,monthlyCalendar,rosterData,setHightLightCellIndex,systemParam} = useContext(RosterWebContext);
     //console.log(rosterData);
-    let roster=rosterData.rosterList[props.itoId];
+    let roster=rosterData.rosterList[props.itoId];    
     let previousMonthShift=rosterData.previousMonthShiftList[props.itoId];
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
     let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
+
+    let deHightLight = e => {
+        setHightLightCellIndex(-1);
+        setIsHighLightRow(false);
+    }
+    let hightLight = e => {
+        setHightLightCellIndex(e.target.cellIndex);
+        setIsHighLightRow(true);
+    }
+    if (isHighLightRow){
+        cellList.push(<RosterNameCell className="highlightCell" key={props.itoId + "_nameCell"}>{itoNameContact}</RosterNameCell>);
+    }else{
+        cellList.push(<RosterNameCell key={props.itoId + "_nameCell"}>{itoNameContact}</RosterNameCell>);
+    }
     for (i=systemParam.maxConsecutiveWorkingDay-systemParam.noOfPrevDate;i<previousMonthShift.length;i++){
         cellList.push(<ShiftCell key={"prev-"+i}>{previousMonthShift[i]}</ShiftCell>);
     }
     for (i=0;i<31;i++){
         if (rosterRowData.shiftList[i]){
-            cellList.push(<EditableShiftCell itoid={props.itoId} rowtype="rosterRow" key={props.itoId+"_shift_"+i}>{rosterRowData.shiftList[i]}</EditableShiftCell>);
+            cellList.push(
+                <EditableShiftCell 
+                    itoid={props.itoId}
+                    key={props.itoId+"_shift_"+i}
+                    onMouseLeave={deHightLight}
+                    onMouseEnter={hightLight}>
+                    {rosterRowData.shiftList[i]}
+                </EditableShiftCell>);
         }else {
             cellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+i}>{rosterRowData.shiftList[i]}</BorderedAlignCenterCell>);
         }
@@ -38,8 +60,7 @@ export default function RosterSchedulerRow(props){
     cellList.push(<ShiftCountCell key={props.itoId+"_dxShiftCount"}>{rosterRowData.dxShiftCount}</ShiftCountCell>);
     cellList.push(<ShiftCountCell key={props.itoId+"_noOfWorkingDay"} className="tailCell">{rosterRowData.noOfWorkingDay}</ShiftCountCell>);
     return(
-        <tr>
-            <RosterNameCell itoId={props.itoId}>{itoNameContact}</RosterNameCell>
+        <tr>            
             {cellList}
         </tr>
     )

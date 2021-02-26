@@ -1,7 +1,6 @@
-import {useContext} from 'react';
+import {useContext,useState} from 'react';
 import BalanceCell from '../../cells/balanceCell/BalanceCell';
 import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
-import CursoredShiftCell from '../../cells/cursoredShiftCell/CursoredShiftCell';
 import RosterNameCell from "../../cells/rosterNameCell/RosterNameCell";
 import Parser from "html-react-parser";
 import ShiftCell from "../../cells/shiftCell/ShiftCell";
@@ -9,7 +8,9 @@ import ShiftCountCell from "../../cells/shiftCountCell/ShiftCountCell";
 import RosterWebContext from '../../../../RosterWebContext';
 import Utility from '../../../../utils/Utility';
 export default function RosterRow(props){
-    let {activeShiftInfoList,monthlyCalendar,rosterList} = useContext(RosterWebContext);
+    const [isHighLightRow, setIsHighLightRow] = useState(false);
+    let {activeShiftInfoList,monthlyCalendar,rosterList,setHightLightCellIndex} = useContext(RosterWebContext);
+    
     let i;
     let roster=rosterList[props.itoId];
     let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
@@ -17,16 +18,34 @@ export default function RosterRow(props){
     //console.log(rosterRowData);
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
 
+    let deHightLight = e => {
+        setHightLightCellIndex(-1);
+        setIsHighLightRow(false);
+    }
+    let hightLight = e => {
+        setHightLightCellIndex(e.target.cellIndex);
+        setIsHighLightRow(true);
+    }
+
+    if (isHighLightRow){
+        rosterCellList.push(<RosterNameCell className="highlightCell" key={props.itoId + "_nameCell"}>{itoNameContact}</RosterNameCell>);
+    }else{
+        rosterCellList.push(<RosterNameCell key={props.itoId + "_nameCell"}>{itoNameContact}</RosterNameCell>);
+    }
+
     for (i=0;i<props.noOfPrevDate;i++){
         rosterCellList.push(<ShiftCell key={"pre-"+i}/>);
     }
-    
+
     for (i=0;i<31;i++){
         if (rosterRowData.shiftList[i]){
             rosterCellList.push(
-                <CursoredShiftCell itoid={props.itoId} rowtype="rosterRow" key={props.itoId+"_shift_"+i}>
+                <ShiftCell
+                    key={props.itoId+"_shift_"+i}
+                    onMouseLeave={deHightLight}
+                    onMouseEnter={hightLight}>
                     {rosterRowData.shiftList[i]}
-                </CursoredShiftCell>
+                </ShiftCell>
             );
         }else {
             rosterCellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+i}>{rosterRowData.shiftList[i]}</BorderedAlignCenterCell>);
@@ -35,7 +54,7 @@ export default function RosterRow(props){
 
     return(
         <tr>
-            <RosterNameCell itoId={props.itoId}>{itoNameContact}</RosterNameCell>
+            
             {rosterCellList}
             <BorderedAlignCenterCell>
                 {rosterRowData.totalHour}
