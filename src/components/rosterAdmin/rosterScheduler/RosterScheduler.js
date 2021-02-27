@@ -23,11 +23,11 @@ export default function RosterScheduler(props){
     let systemParam=props.systemParam;
     useEffect(()=>{
         const getData = async () => {
-            let calendarUtility=new CalendarUtility();
-            let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
             let roster = new Roster();
             let rosterData = await roster.getRosterSchedulerList(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
             let activeShiftInfoList= await roster.getAllActiveShiftInfo();
+            let calendarUtility=new CalendarUtility();
+            let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
             setRosterSchedulerData(
                {
                 "activeShiftInfoList":activeShiftInfoList,

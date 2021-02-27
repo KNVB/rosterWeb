@@ -6,14 +6,16 @@ import TableHeader from '../tableHeader/TableHeader';
 export default function RosterSchedulerTable(props){
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
     const [rosterData,setRosterData]=useState(props.rosterSchedulerData.rosterData);
+    const [monthlyCalendar,setMonthlyCalendar]=useState(props.rosterSchedulerData.monthlyCalendar);
 
     let activeShiftInfoList=props.rosterSchedulerData.activeShiftInfoList;
     let calendarUtility=props.rosterSchedulerData.calendarUtility;
-    let monthlyCalendar=props.rosterSchedulerData.monthlyCalendar;
+    
     let systemParam=props.rosterSchedulerData.systemParam;
     useEffect(()=>{
+        setMonthlyCalendar(props.rosterSchedulerData.monthlyCalendar);
         setRosterData(props.rosterSchedulerData.rosterData);
-    },[props.rosterSchedulerData.rosterData])
+    },[props.rosterSchedulerData.monthlyCalendar,props.rosterSchedulerData.rosterData,])
     let contextValue={
         activeShiftInfoList,
         calendarUtility,

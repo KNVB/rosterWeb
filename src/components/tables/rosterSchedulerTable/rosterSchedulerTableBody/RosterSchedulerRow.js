@@ -25,6 +25,8 @@ export default function RosterSchedulerRow(props){
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
     let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
 
+    //console.log(monthlyCalendar.calendarDateList.length,rosterData.rosterList['ITO1_1999-01-01'].shiftList.length);
+
     let deHightLight = e => {
         setHightLightCellIndex(-1);
         setIsHighLightRow(false);
