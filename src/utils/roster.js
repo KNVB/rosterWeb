@@ -1,8 +1,8 @@
 import Utility from './Utility';
-class Roster{
+export default class Roster{
     constructor(){
         this.get=(year,month)=>{
-           return Utility.fetchAPI('/publicAPI/getITORosterList','GET',{"year":year,"month":month})                   
+           return Utility.fetchAPI('/publicAPI/getITORosterList','GET',{"year":year,"month":month});
         }
         this.getAllActiveShiftInfo=()=>{
             return Utility.fetchAPI('/publicAPI/getAllActiveShiftInfo','GET');
@@ -12,4 +12,3 @@ class Roster{
         }
     }
 }
-export default Roster;
