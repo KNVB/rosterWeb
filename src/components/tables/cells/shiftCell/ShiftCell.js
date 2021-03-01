@@ -5,9 +5,13 @@ import RosterWebContext from '../../../../RosterWebContext';
 export default function ShiftCell(props){
     let shiftClass ="p-0 shiftCell"+((props.className)?" "+props.className:"");
     let { activeShiftInfoList } = useContext(RosterWebContext);
-    if (activeShiftInfoList[props.children]) {
-        shiftClass +=  " " + activeShiftInfoList[props.children].cssClassName;    
-    }
+    let availableShiftList=props.availableShiftList;
+    //console.log(availableShiftList)
+   // if (availableShiftList.includes(props.children)){
+        if (activeShiftInfoList[props.children]) {
+            shiftClass +=  " " + activeShiftInfoList[props.children].cssClassName;    
+        }
+   // }
 
     //console.log(myProps);
     return (

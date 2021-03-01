@@ -1,6 +1,6 @@
 import {useContext,useState} from 'react';
-import BalanceCell from '../../cells/balanceCell/BalanceCell';
 import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+import EditableBalanceCell from './cells/editableBalanceCell/EditableBalanceCell';
 import EditableShiftCell from './cells/editableShiftCell/EditableShiftCell';
 import Parser from "html-react-parser";
 import RosterNameCell from '../../cells/rosterNameCell/RosterNameCell';
@@ -25,6 +25,7 @@ export default function RosterSchedulerRow(props){
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
     let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
 
+    //console.log(roster)
     //console.log(monthlyCalendar.calendarDateList.length,rosterData.rosterList['ITO1_1999-01-01'].shiftList.length);
 
     let deHightLight = e => {
@@ -83,9 +84,22 @@ export default function RosterSchedulerRow(props){
     }
     cellList.push(<BorderedAlignCenterCell key={props.itoId+"_totalHour"}>{rosterRowData.totalHour}</BorderedAlignCenterCell>);
     cellList.push(<BorderedAlignCenterCell key={props.itoId+"_actualHour"}>{rosterRowData.actualHour}</BorderedAlignCenterCell>);
-    cellList.push(<BalanceCell key={props.itoId+"_lastMonthBalance"}>{rosterRowData.lastMonthBalance}</BalanceCell>);
-    cellList.push(<BalanceCell key={props.itoId+"_thisMonthHourTotal"}>{rosterRowData.thisMonthHourTotal}</BalanceCell>);
-    cellList.push(<BalanceCell key={props.itoId+"_thisMonthBalance"}>{rosterRowData.thisMonthBalance}</BalanceCell>);
+    cellList.push(
+        <EditableBalanceCell
+            key={props.itoId+"_lastMonthBalance"}>
+            {rosterRowData.lastMonthBalance}
+        </EditableBalanceCell>
+    );
+    cellList.push(
+        <EditableBalanceCell key={props.itoId+"_thisMonthHourTotal"}>
+            {rosterRowData.thisMonthHourTotal}
+        </EditableBalanceCell>
+    );
+    cellList.push(
+        <EditableBalanceCell key={props.itoId+"_thisMonthBalance"}>
+            {rosterRowData.thisMonthBalance}
+        </EditableBalanceCell>
+    );
 
     cellList.push(<ShiftCountCell key={props.itoId+"_aShiftCount"}>{rosterRowData.aShiftCount}</ShiftCountCell>);
     cellList.push(<ShiftCountCell key={props.itoId+"_bxShiftCount"}>{rosterRowData.bxShiftCount}</ShiftCountCell>);

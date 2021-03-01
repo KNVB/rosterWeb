@@ -10,11 +10,12 @@ import Utility from '../../../../utils/Utility';
 export default function RosterRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     
-    let {activeShiftInfoList,monthlyCalendar,rosterList,setHightLightCellIndex} = useContext(RosterWebContext);
+    let {activeShiftInfoList,monthlyCalendar,rosterData,setHightLightCellIndex} = useContext(RosterWebContext);
     let i;
-    let roster=rosterList[props.itoId];
+    let roster=rosterData[props.itoId];
     let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
     let rosterCellList=[];
+    //console.log(roster);
     //console.log(rosterRowData);
     //console.log(monthlyCalendar.noOfWorkingDay);
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
@@ -35,22 +36,22 @@ export default function RosterRow(props){
     }
 
     for (i=0;i<props.noOfPrevDate;i++){
-        rosterCellList.push(<ShiftCell key={"pre-"+i}/>);
+        rosterCellList.push(<ShiftCell  key={"pre-"+i}/>);
     }
 
-    for (i=0;i<31;i++){
-        if (rosterRowData.shiftList[i]){
-            rosterCellList.push(
-                <ShiftCell
-                    key={props.itoId+"_shift_"+i}
-                    onMouseLeave={deHightLight}
-                    onMouseEnter={hightLight}>
-                    {rosterRowData.shiftList[i]}
-                </ShiftCell>
-            );
-        }else {
-            rosterCellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+i}>{rosterRowData.shiftList[i]}</BorderedAlignCenterCell>);
-        }
+    for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
+        rosterCellList.push(
+            <ShiftCell 
+                key={props.itoId+"_shift_"+i}
+                onMouseLeave={deHightLight}
+                onMouseEnter={hightLight}>
+                {rosterRowData.shiftList[i]}
+            </ShiftCell>
+        );
+    }
+    
+    for (let j=i;j<31;j++){
+        rosterCellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+j}>{rosterRowData.shiftList[j]}</BorderedAlignCenterCell>);
     }
 
     return(
