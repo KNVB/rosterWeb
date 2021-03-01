@@ -2,7 +2,7 @@ import {Col,Container,Row} from 'react-bootstrap';
 import {useEffect,useState} from 'react';
 import CalendarUtility from '../../utils/calendar/CalendarUtility';
 import MonthPicker from '../monthPicker/MonthPicker';
-import Roster from '../../utils/roster';
+import Roster from '../../utils/Roster';
 import RosterTable from '../tables/rosterTable/RosterTable';
 import './RosterViewer.css';
 export default function RosterViewer(props){

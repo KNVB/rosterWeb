@@ -9,12 +9,14 @@ import RosterWebContext from '../../../../RosterWebContext';
 import Utility from '../../../../utils/Utility';
 export default function RosterRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
+    
     let {activeShiftInfoList,monthlyCalendar,rosterList,setHightLightCellIndex} = useContext(RosterWebContext);
     let i;
     let roster=rosterList[props.itoId];
     let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
     let rosterCellList=[];
     //console.log(rosterRowData);
+    //console.log(monthlyCalendar.noOfWorkingDay);
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
 
     let deHightLight = e => {

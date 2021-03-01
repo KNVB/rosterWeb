@@ -38,9 +38,16 @@ export default function RosterSchedulerRow(props){
     let updateShiftData=(e)=>{
         //console.log(e.target.textContent,e.target.cellIndex);
         //console.log(rosterData);
-        let realIndex=e.target.cellIndex-1-systemParam.noOfPrevDate;
+        let realIndex=e.target.cellIndex-systemParam.noOfPrevDate;
         let temp=JSON.parse(JSON.stringify(rosterData));
-        temp.rosterList[props.itoId].shiftList[realIndex].shift=e.target.textContent;
+        
+        //console.log("0:"+realIndex+","+JSON.stringify(temp.rosterList[props.itoId].shiftList));
+        if (e.target.textContent===null){
+            temp.rosterList[props.itoId].shiftList[realIndex]="";
+        }else {
+            temp.rosterList[props.itoId].shiftList[realIndex]=e.target.textContent;
+        }
+        //console.log("1:"+realIndex+","+JSON.stringify(temp.rosterList[props.itoId].shiftList));
         setRosterData(temp);
     }
     if (isHighLightRow){
@@ -48,9 +55,16 @@ export default function RosterSchedulerRow(props){
     }else{
         cellList.push(<RosterNameCell key={props.itoId + "_nameCell"}>{itoNameContact}</RosterNameCell>);
     }
-    for (i=systemParam.maxConsecutiveWorkingDay-systemParam.noOfPrevDate;i<previousMonthShift.length;i++){
-        cellList.push(<ShiftCell key={"prev-"+i}>{previousMonthShift[i]}</ShiftCell>);
+    if (previousMonthShift){
+        for (i=systemParam.maxConsecutiveWorkingDay-systemParam.noOfPrevDate;i<previousMonthShift.length;i++){
+            cellList.push(<ShiftCell key={"prev-"+i}>{previousMonthShift[i]}</ShiftCell>);
+        }
+    } else {
+        for (i=0;i<systemParam.noOfPrevDate;i++){
+            cellList.push(<ShiftCell key={"prev-"+i}/>);
+        }
     }
+    
     for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
         cellList.push(
             <EditableShiftCell 

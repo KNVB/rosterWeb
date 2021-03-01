@@ -15,6 +15,9 @@ export default function RosterSchedulerTable(props){
     useEffect(()=>{
         setMonthlyCalendar(props.rosterSchedulerData.monthlyCalendar);
         setRosterData(props.rosterSchedulerData.rosterData);
+        document.addEventListener('mouseup',()=>{
+            console.log("mouse up");
+        })       
     },[props.rosterSchedulerData.monthlyCalendar,props.rosterSchedulerData.rosterData,])
     let contextValue={
         activeShiftInfoList,

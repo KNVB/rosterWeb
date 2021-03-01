@@ -25,9 +25,9 @@ class DBO
         }
         this.getRosterList=async(year,month)=>{
 			let result=getStartEndDateString(year,month);
-            let sqlString="select v.ito_id,post_name,ito_name,working_hour_per_day,balance,day(Shift_date) as d,shift ";
+            let sqlString="select v.available_shift,v.ito_id,post_name,ito_name,working_hour_per_day,balance,day(Shift_date) as d,shift ";
             sqlString+="from (";
-            sqlString+="SELECT ito_info.ito_id,post_name,ito_name,working_hour_per_day ";
+            sqlString+="SELECT available_shift,ito_info.ito_id,post_name,ito_name,working_hour_per_day ";
             sqlString+="from ito_info ";
             sqlString+="where ito_info.join_date<=? and ito_info.leave_date >=?";
             sqlString+=") as v left join shift_record "; 

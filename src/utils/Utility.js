@@ -21,15 +21,18 @@ export default class Utility{
           totalHour = 0.0,
           actualNoOfWorkingDay = 0;
         let result = {};
-        let shiftList = [];
+        let shiftList = {};
         totalHour = rosterData.workingHourPerDay * noOfWorkingDay;
-        rosterData.shiftList.forEach(item => {
-          let shiftTypeList = item.shift.split("+");
-          shiftList.push(item.shift);
-          shiftTypeList.forEach(shiftType => {
-            actualWorkingHour += shiftInfoList[shiftType].duration;
-          });
-        });
+        Object.keys(rosterData.shiftList).forEach(key=>{
+          let item =rosterData.shiftList[key];
+            let shiftTypeList = item.split("+");
+            shiftTypeList.forEach(shiftType => {
+              if (shiftInfoList[shiftType]){
+                actualWorkingHour += shiftInfoList[shiftType].duration;
+              }     
+            });
+          shiftList[key-1]=item;
+        })
         let shiftCount = this.calculateShiftCount(rosterData.shiftList);
         thisMonthHourTotal = actualWorkingHour - totalHour;
         thisMonthBalance = rosterData.lastMonthBalance + thisMonthHourTotal;
@@ -60,9 +63,9 @@ export default class Utility{
           bxShiftCount = 0,
           cShiftCount = 0,
           dxShiftCount = 0;
-    
-        shiftList.forEach(item => {
-          let shiftTypeList = item.shift.split("+");
+        Object.keys(shiftList).forEach(key=>{
+          let item=shiftList[key];
+          let shiftTypeList = item.split("+");
           shiftTypeList.forEach(shiftType => {
             switch (shiftType) {
               case "a":
@@ -118,15 +121,13 @@ export default class Utility{
                     if (response.ok) {
                         return response.json();
                     }else{
-                        switch(response.status){
-                            case 401:alert("The user session has been expired, please login again.");
-                                     sessionStorage.clear();
-                                     return <Redirect to='/rosterWeb/admin/'  />
-                                     break
-                            default:
-                                    throw new Error(response.statusText);
+                      if (response.status===401){
+                        alert("The user session has been expired, please login again.");
+                        sessionStorage.clear();
+                        return <Redirect to='/rosterWeb/admin/'  />
+                      } else{
+                          throw new Error(response.statusText);
                         }
-                        
                     }
                 })
     }

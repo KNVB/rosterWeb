@@ -23,11 +23,17 @@ export default function PreferredShiftRow(props){
     let updatePreferredShiftData=(e)=>{
         let realIndex=e.target.cellIndex-systemParam.noOfPrevDate;//no need minus 1
         let temp=JSON.parse(JSON.stringify(rosterData));
-        if (e.target.textContent===""){
-            delete temp.preferredShiftList[props.itoId][realIndex];
+       
+        if (e.target.textContent===null){
+            if (temp.preferredShiftList[props.itoId][realIndex]){
+                delete temp.preferredShiftList[props.itoId][realIndex];
+            }
         }else {
+            if (temp.preferredShiftList[props.itoId]===undefined){
+                temp.preferredShiftList[props.itoId]={};
+            }
             temp.preferredShiftList[props.itoId][realIndex]=e.target.textContent;
-        }       
+        }
         setRosterData(temp);
     }
     if (isHighLightRow){

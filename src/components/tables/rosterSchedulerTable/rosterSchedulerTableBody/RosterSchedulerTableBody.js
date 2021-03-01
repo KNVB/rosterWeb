@@ -1,4 +1,4 @@
-import {useContext, useEffect} from 'react';
+import {useContext} from 'react';
 import PreferredShiftRow from './PreferredShiftRow';
 import RosterSchedulerRow from './RosterSchedulerRow';
 import RosterWebContext from '../../../../RosterWebContext';

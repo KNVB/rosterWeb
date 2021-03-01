@@ -166,24 +166,36 @@ class CalendarUtility {
         function getAnimalOfYear(y) {
             return Animals[(y-4)%12];
         }
-        //======================================= 傳回該年的復活節(春分後第一次滿月週後的第一主日)
+        /**
+         * 傳回該年的復活節LocalDate物件<br>
+         * It returns a LocalDate object which devote the date of easter of given year
+         * 
+         * This is "Meeus/Jones/Butcher" algorithm.
+         * 
+         * Reference URL:
+         * https://en.wikipedia.org/wiki/Computus
+         * 
+         * @param y 年份
+         * @return 傳回該年復活節Date物件
+         */
         function getEasterDate(y) {
-            var term2=sTerm(y,5); //取得春分日期
-            var dayTerm2 = new Date(Date.UTC(y,2,term2,0,0,0,0)); //取得春分的國曆日期物件(春分一定出現在3月)
-            var lDayTerm2 =getLunarDate(dayTerm2); //取得取得春分農曆
-            var lMlen;
+            let a,b,c,d,e,f,g,h,i,k,l,m;
+            let month,date,subtotal;
+            a=y %19; b=parseInt(y/100); c=y % 100;
+            d=parseInt(b /4);e=b %4;f=parseInt((b+8)/25);
+            g=parseInt((b-f+1)/3);
+            //console.log(`a=${a},b=${b},c=${c},d=${d},e=${e}`);
             
+            h = (19*a + b-d-g + 15)% 30;
+            i=parseInt(c/4);k=c %4;
+            l = (32 + 2*e + 2*i -h - k) % 7;
+            m = parseInt((a + 11*h + 22*l) / 451);
+            //console.log(`f=${f},g=${g},h=${h},i=${i},k=${k},l=${l},m=${m}`);
 
-            if(lDayTerm2.date<15) //取得下個月圓的相差天數
-                lMlen= 15-lDayTerm2.date;
-            else
-                lMlen= (lDayTerm2.isLeap? leapDays(y): monthDays(y,lDayTerm2.month)) - lDayTerm2.date + 15;
-
-            //一天等於 1000*60*60*24 = 86400000 毫秒
-            var l15 = new Date(dayTerm2.getTime() + 86400000*lMlen ); //求出第一次月圓為國曆幾日
-            var dayEaster = new Date(l15.getTime() + 86400000*( 7-l15.getUTCDay() ) ); //求出下個週日
-
-            return new Date(y,dayEaster.getUTCMonth(), dayEaster.getUTCDate());	
+            subtotal=(h + l - 7*m + 114);
+            month=parseInt(subtotal/31);
+            date=(subtotal % 31)+1;            
+            return new Date(y,month-1,date);	
         }
 	    function getLunarDate(objDate){
             let result=new LunarDate();

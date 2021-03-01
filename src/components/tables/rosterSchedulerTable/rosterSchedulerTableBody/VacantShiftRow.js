@@ -23,14 +23,16 @@ export default function VacantShiftRow(){
     let vacantShift = essentialShift;
     Object.keys(rosterList).forEach(itoId => {
       let roster = rosterList[itoId];
-      let shiftTypeList = roster.shiftList[i].shift.split("+");
-      shiftTypeList.forEach(shiftType => {
-        if (shiftType === "b1") {
-          vacantShift = vacantShift.replace("b", "");
-        } else {
-          vacantShift = vacantShift.replace(shiftType, "");
-        }
-      });
+      if (roster.shiftList[i+1]){
+        let shiftTypeList = roster.shiftList[i+1].split("+");
+        shiftTypeList.forEach(shiftType => {
+          if (shiftType === "b1") {
+            vacantShift = vacantShift.replace("b", "");
+          } else {
+            vacantShift = vacantShift.replace(shiftType, "");
+          }
+        });
+      }
     });
     cellList.push(
       <BorderedAlignCenterCell className="bottomCell" key={"vacantShift_" + i}>
