@@ -10,9 +10,9 @@ import Utility from '../../../../utils/Utility';
 export default function RosterRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     
-    let {activeShiftInfoList,monthlyCalendar,rosterData,setHightLightCellIndex} = useContext(RosterWebContext);
+    let {activeShiftInfoList,monthlyCalendar,rosterList,setHightLightCellIndex} = useContext(RosterWebContext);
     let i;
-    let roster=rosterData[props.itoId];
+    let roster=rosterList[props.itoId];
     let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
     let rosterCellList=[];
     //console.log(roster);
@@ -36,12 +36,13 @@ export default function RosterRow(props){
     }
 
     for (i=0;i<props.noOfPrevDate;i++){
-        rosterCellList.push(<ShiftCell  key={"pre-"+i}/>);
+        rosterCellList.push(<ShiftCell availableShiftList={roster.availableShiftList} key={"pre-"+i}/>);
     }
 
     for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
         rosterCellList.push(
-            <ShiftCell 
+            <ShiftCell
+                availableShiftList={roster.availableShiftList} 
                 key={props.itoId+"_shift_"+i}
                 onMouseLeave={deHightLight}
                 onMouseEnter={hightLight}>

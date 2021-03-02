@@ -42,7 +42,7 @@ export default function PreferredShiftRow(props){
         cellList.push(<PreferredShiftNameCell key={props.itoId + "_Preferred_Name_Cell"}/>);
     }
     for (i=0;i<systemParam.noOfPrevDate;i++){
-        cellList.push(<ShiftCell key={props.itoId+"_prev-"+i}/>);
+        cellList.push(<ShiftCell availableShiftList={rosterData.rosterList[props.itoId].availableShiftList} key={props.itoId+"_prev-"+i}/>);
     }
     for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
         if (preferredShiftList && preferredShiftList[i+1]){

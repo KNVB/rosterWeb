@@ -5,7 +5,7 @@ import TableBody from './tableBody/TableBody';
 import TableFooter from './TableFooter'; 
 import TableHeader from '../tableHeader/TableHeader'; 
 export default function RosterTable(props){
-    let rosterData = props.rosterTableData.rosterList
+    let rosterList = props.rosterTableData.rosterList
     
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
     const [highLightRowIndex, setHighLightRowIndex] = useState();
@@ -20,7 +20,7 @@ export default function RosterTable(props){
         hightLightCellIndex,
         highLightRowIndex,
         monthlyCalendar,
-        rosterData,
+        rosterList,
         setHightLightCellIndex,
         setHighLightRowIndex    
     }

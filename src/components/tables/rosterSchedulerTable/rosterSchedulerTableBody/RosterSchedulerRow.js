@@ -25,7 +25,7 @@ export default function RosterSchedulerRow(props){
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
     let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
 
-    //console.log(roster)
+    //console.log(roster);
     //console.log(monthlyCalendar.calendarDateList.length,rosterData.rosterList['ITO1_1999-01-01'].shiftList.length);
 
     let deHightLight = e => {
@@ -58,18 +58,18 @@ export default function RosterSchedulerRow(props){
     }
     if (previousMonthShift){
         for (i=systemParam.maxConsecutiveWorkingDay-systemParam.noOfPrevDate;i<previousMonthShift.length;i++){
-            cellList.push(<ShiftCell key={"prev-"+i}>{previousMonthShift[i]}</ShiftCell>);
+            cellList.push(<ShiftCell availableShiftList={roster.availableShiftList} key={"prev-"+i}>{previousMonthShift[i]}</ShiftCell>);
         }
     } else {
         for (i=0;i<systemParam.noOfPrevDate;i++){
-            cellList.push(<ShiftCell key={"prev-"+i}/>);
+            cellList.push(<ShiftCell availableShiftList={roster.availableShiftList} key={"prev-"+i}/>);
         }
     }
     
     for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
         cellList.push(
             <EditableShiftCell 
-                itoid={props.itoId}
+                availableShiftList={roster.availableShiftList} 
                 key={props.itoId+"_shift_"+i}
                 onBlur={updateShiftData}
                 onMouseLeave={deHightLight}
