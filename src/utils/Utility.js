@@ -28,7 +28,7 @@ export default class Utility{
           });
           
       });
-      if(roster.thisMonthHourTotal===undefined)
+      if(roster.thisMonthHourTotal===undefined) //if first loaded
         roster.thisMonthHourTotal = roster.actualWorkingHour - roster.totalHour;
       roster.thisMonthBalance = roster.lastMonthBalance + roster.thisMonthHourTotal;
       roster.shiftCountList=this.calculateShiftCount(roster.shiftList);
