@@ -5,6 +5,11 @@ import TableHeader from '../tableHeader/TableHeader';
 
 export default function RosterSchedulerTable(props){
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
+
+    /**
+     * Both monthlyCalendar and rosterData must be a state variable,
+     * otherwise their data are not in sync.
+     */
     const [rosterData,setRosterData]=useState(props.rosterSchedulerData.rosterData);
     const [monthlyCalendar,setMonthlyCalendar]=useState(props.rosterSchedulerData.monthlyCalendar);
 
@@ -13,6 +18,7 @@ export default function RosterSchedulerTable(props){
     
     let systemParam=props.rosterSchedulerData.systemParam;
     useEffect(()=>{
+        console.log("Table");
         setMonthlyCalendar(props.rosterSchedulerData.monthlyCalendar);
         setRosterData(props.rosterSchedulerData.rosterData);
         document.addEventListener('mouseup',()=>{

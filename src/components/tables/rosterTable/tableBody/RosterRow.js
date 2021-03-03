@@ -13,13 +13,12 @@ export default function RosterRow(props){
     let {activeShiftInfoList,monthlyCalendar,rosterList,setHightLightCellIndex} = useContext(RosterWebContext);
     let i;
     let roster=rosterList[props.itoId];
-    let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
     let rosterCellList=[];
     //console.log(roster);
     //console.log(rosterRowData);
     //console.log(monthlyCalendar.noOfWorkingDay);
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
-
+    Utility.calculateITOMonthlyStat(roster,monthlyCalendar.noOfWorkingDay,activeShiftInfoList)
     let deHightLight = e => {
         setHightLightCellIndex(-1);
         setIsHighLightRow(false);
@@ -46,13 +45,13 @@ export default function RosterRow(props){
                 key={props.itoId+"_shift_"+i}
                 onMouseLeave={deHightLight}
                 onMouseEnter={hightLight}>
-                {rosterRowData.shiftList[i]}
+                {roster.shiftList[i+1]}
             </ShiftCell>
         );
     }
     
     for (let j=i;j<31;j++){
-        rosterCellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+j}>{rosterRowData.shiftList[j]}</BorderedAlignCenterCell>);
+        rosterCellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+j}></BorderedAlignCenterCell>);
     }
 
     return(
@@ -60,41 +59,41 @@ export default function RosterRow(props){
             
             {rosterCellList}
             <BorderedAlignCenterCell>
-                {rosterRowData.totalHour}
+                {roster.totalHour.toFixed(2)}
             </BorderedAlignCenterCell>
             <BorderedAlignCenterCell>
-                {rosterRowData.actualHour}
+                {roster.actualWorkingHour.toFixed(2)}
             </BorderedAlignCenterCell>
             <BalanceCell>
-                {rosterRowData.lastMonthBalance}
+                {roster.lastMonthBalance.toFixed(2)}
             </BalanceCell>
 
             <BalanceCell>
-                {rosterRowData.thisMonthHourTotal}
+                {roster.thisMonthHourTotal.toFixed(2)}
             </BalanceCell>
 
             <BalanceCell>
-                {rosterRowData.thisMonthBalance}
+                {roster.thisMonthBalance.toFixed(2)}
             </BalanceCell>
 
             <ShiftCountCell>
-                {rosterRowData.aShiftCount}
+                {roster.shiftCountList.aShiftCount}
             </ShiftCountCell>
 
             <ShiftCountCell>
-                {rosterRowData.bxShiftCount}
+                {roster.shiftCountList.bxShiftCount}
             </ShiftCountCell>
 
             <ShiftCountCell>
-                {rosterRowData.cShiftCount}
+                {roster.shiftCountList.cShiftCount}
             </ShiftCountCell>
 
             <ShiftCountCell>
-                {rosterRowData.dxShiftCount}
+                {roster.shiftCountList.dxShiftCount}
             </ShiftCountCell>
 
             <ShiftCountCell className="tailCell">
-                {rosterRowData.noOfWorkingDay}
+                {roster.actualNoOfWorkingDay}
             </ShiftCountCell>
 
         </tr>

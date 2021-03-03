@@ -1,4 +1,5 @@
 import {useContext,useState} from 'react';
+import BalanceCell from '../../cells/balanceCell/BalanceCell';
 import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
 import EditableBalanceCell from './cells/editableBalanceCell/EditableBalanceCell';
 import EditableShiftCell from './cells/editableShiftCell/EditableShiftCell';
@@ -20,14 +21,10 @@ export default function RosterSchedulerRow(props){
         systemParam
     } = useContext(RosterWebContext);
     //console.log(rosterData);
-    let roster=rosterData.rosterList[props.itoId];    
+    let roster=Object.assign({},rosterData.rosterList[props.itoId]);    
     let previousMonthShift=rosterData.previousMonthShiftList[props.itoId];
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
-    let rosterRowData=Utility.calculateITOMonthlyStat(monthlyCalendar.noOfWorkingDay,roster,activeShiftInfoList);
-
-    //console.log(roster);
-    //console.log(monthlyCalendar.calendarDateList.length,rosterData.rosterList['ITO1_1999-01-01'].shiftList.length);
-
+    Utility.calculateITOMonthlyStat(roster,monthlyCalendar.noOfWorkingDay,activeShiftInfoList)
     let deHightLight = e => {
         setHightLightCellIndex(-1);
         setIsHighLightRow(false);
@@ -35,6 +32,13 @@ export default function RosterSchedulerRow(props){
     let hightLight = e => {
         setHightLightCellIndex(e.target.cellIndex);
         setIsHighLightRow(true);
+    }
+    let updateLastMonthBalance=(e)=>{
+        let temp=Object.assign({},rosterData);
+        if (!isNaN(e.target.textContent)){
+            temp.rosterList[props.itoId].lastMonthBalance=parseFloat(e.target.textContent);
+            setRosterData(temp);
+        }        
     }
     let updateShiftData=(e)=>{
         //console.log(e.target.textContent,e.target.cellIndex);
@@ -51,6 +55,15 @@ export default function RosterSchedulerRow(props){
         //console.log("1:"+realIndex+","+JSON.stringify(temp.rosterList[props.itoId].shiftList));
         setRosterData(temp);
     }
+    let updateThisMonthHourTotal=(e)=>{
+        let temp=Object.assign({},rosterData);
+        if (!isNaN(e.target.textContent)){
+            temp.rosterList[props.itoId].thisMonthHourTotal=parseFloat(e.target.textContent);
+            setRosterData(temp);
+        }
+    }
+
+    //console.log(roster);
     if (isHighLightRow){
         cellList.push(<RosterNameCell className="highlightCell" key={props.itoId + "_nameCell"}>{itoNameContact}</RosterNameCell>);
     }else{
@@ -65,7 +78,6 @@ export default function RosterSchedulerRow(props){
             cellList.push(<ShiftCell availableShiftList={roster.availableShiftList} key={"prev-"+i}/>);
         }
     }
-    
     for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
         cellList.push(
             <EditableShiftCell 
@@ -74,38 +86,41 @@ export default function RosterSchedulerRow(props){
                 onBlur={updateShiftData}
                 onMouseLeave={deHightLight}
                 onMouseEnter={hightLight}>
-                {rosterRowData.shiftList[i]}
+                {roster.shiftList[i+1]}
             </EditableShiftCell>
         );
     }
-    
     for (let j=i;j<31;j++){
-        cellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+j}>{rosterRowData.shiftList[j]}</BorderedAlignCenterCell>);
+        cellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+j}></BorderedAlignCenterCell>);
     }
-    cellList.push(<BorderedAlignCenterCell key={props.itoId+"_totalHour"}>{rosterRowData.totalHour}</BorderedAlignCenterCell>);
-    cellList.push(<BorderedAlignCenterCell key={props.itoId+"_actualHour"}>{rosterRowData.actualHour}</BorderedAlignCenterCell>);
+    cellList.push(<BorderedAlignCenterCell key={props.itoId+"_totalHour"}>{roster.totalHour.toFixed(2)}</BorderedAlignCenterCell>);
+    cellList.push(<BorderedAlignCenterCell key={props.itoId+"_actualWorkingHour"}>{roster.actualWorkingHour.toFixed(2)}</BorderedAlignCenterCell>);
+    
     cellList.push(
         <EditableBalanceCell
-            key={props.itoId+"_lastMonthBalance"}>
-            {rosterRowData.lastMonthBalance}
+            key={props.itoId+"_lastMonthBalance"}
+            onBlur={updateLastMonthBalance}>
+            {roster.lastMonthBalance.toFixed(2)}
         </EditableBalanceCell>
     );
     cellList.push(
-        <EditableBalanceCell key={props.itoId+"_thisMonthHourTotal"}>
-            {rosterRowData.thisMonthHourTotal}
+        <EditableBalanceCell 
+            key={props.itoId+"_thisMonthHourTotal"}
+            onBlur={updateThisMonthHourTotal}>
+            {roster.thisMonthHourTotal.toFixed(2)}
         </EditableBalanceCell>
     );
     cellList.push(
-        <EditableBalanceCell key={props.itoId+"_thisMonthBalance"}>
-            {rosterRowData.thisMonthBalance}
-        </EditableBalanceCell>
+        <BalanceCell key={props.itoId+"_thisMonthBalance"}>
+            {roster.thisMonthBalance.toFixed(2)}
+        </BalanceCell>
     );
 
-    cellList.push(<ShiftCountCell key={props.itoId+"_aShiftCount"}>{rosterRowData.aShiftCount}</ShiftCountCell>);
-    cellList.push(<ShiftCountCell key={props.itoId+"_bxShiftCount"}>{rosterRowData.bxShiftCount}</ShiftCountCell>);
-    cellList.push(<ShiftCountCell  key={props.itoId+"_cShiftCount"}>{rosterRowData.cShiftCount}</ShiftCountCell>);
-    cellList.push(<ShiftCountCell key={props.itoId+"_dxShiftCount"}>{rosterRowData.dxShiftCount}</ShiftCountCell>);
-    cellList.push(<ShiftCountCell key={props.itoId+"_noOfWorkingDay"} className="tailCell">{rosterRowData.noOfWorkingDay}</ShiftCountCell>);
+    cellList.push(<ShiftCountCell key={props.itoId+"_aShiftCount"}>{roster.shiftCountList.aShiftCount}</ShiftCountCell>);
+    cellList.push(<ShiftCountCell key={props.itoId+"_bxShiftCount"}>{roster.shiftCountList.bxShiftCount}</ShiftCountCell>);
+    cellList.push(<ShiftCountCell key={props.itoId+"_cShiftCount"}>{roster.shiftCountList.cShiftCount}</ShiftCountCell>);
+    cellList.push(<ShiftCountCell key={props.itoId+"_dxShiftCount"}>{roster.shiftCountList.dxShiftCount}</ShiftCountCell>);
+    cellList.push(<ShiftCountCell key={props.itoId+"_actualNoOfWorkingDay"} className="tailCell">{roster.actualNoOfWorkingDay}</ShiftCountCell>);
     return(
         <tr>            
             {cellList}

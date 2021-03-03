@@ -14,6 +14,27 @@ export default class Utility{
 	            return sq + Math.pow(n - m, 2);
 	        }, 0) / (data.length - 1));
     }
+    static calculateITOMonthlyStat(roster,noOfWorkingDay,activeShiftInfoList){
+      roster.actualWorkingHour=0.0;
+      roster.totalHour = roster.workingHourPerDay * noOfWorkingDay;
+      Object.keys(roster.shiftList).forEach(date=>{
+          let item=roster.shiftList[date];
+          let shiftTypeList = item.split("+");
+          
+          shiftTypeList.forEach(shiftType => {
+              if (activeShiftInfoList[shiftType]){
+                roster.actualWorkingHour += activeShiftInfoList[shiftType].duration;
+              }     
+          });
+          
+      });
+      if(roster.thisMonthHourTotal===undefined)
+        roster.thisMonthHourTotal = roster.actualWorkingHour - roster.totalHour;
+      roster.thisMonthBalance = roster.lastMonthBalance + roster.thisMonthHourTotal;
+      roster.shiftCountList=this.calculateShiftCount(roster.shiftList);
+      roster.actualNoOfWorkingDay =roster.shiftCountList.aShiftCount +roster.shiftCountList.bxShiftCount+roster.shiftCountList.cShiftCount +roster.shiftCountList.dxShiftCount;
+    }
+    /*
     static calculateITOMonthlyStat(noOfWorkingDay, rosterData, shiftInfoList) {
         let actualWorkingHour = 0.0,
           thisMonthHourTotal = 0.0,
@@ -58,6 +79,7 @@ export default class Utility{
         result.shiftList = shiftList;
         return result;
     }
+    */
     static calculateShiftCount(shiftList) {
         let aShiftCount = 0,
           bxShiftCount = 0,
