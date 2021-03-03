@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import {useState,useEffect} from 'react';
 import RosterWebContext from '../../../RosterWebContext';
 import RosterSchedulerTableBody from './rosterSchedulerTableBody/RosterSchedulerTableBody';
@@ -26,7 +25,8 @@ export default function RosterSchedulerTable(props){
         setMonthlyCalendar(props.rosterSchedulerData.monthlyCalendar);
         setRosterData(props.rosterSchedulerData.rosterData);
         document.addEventListener('mouseup',mouseUp);
-    },[props.rosterSchedulerData.monthlyCalendar,props.rosterSchedulerData.rosterData,])
+    },[props.rosterSchedulerData.monthlyCalendar,props.rosterSchedulerData.rosterData]);
+
     let contextValue={
         activeShiftInfoList,
         calendarUtility,

@@ -26,10 +26,12 @@ export default function VacantShiftRow(){
       if (roster.shiftList[i+1]){
         let shiftTypeList = roster.shiftList[i+1].split("+");
         shiftTypeList.forEach(shiftType => {
-          if (shiftType === "b1") {
-            vacantShift = vacantShift.replace("b", "");
-          } else {
-            vacantShift = vacantShift.replace(shiftType, "");
+          if (roster.availableShiftList.includes(shiftType)){
+            if (shiftType === "b1") {
+              vacantShift = vacantShift.replace("b", "");
+            } else {
+              vacantShift = vacantShift.replace(shiftType, "");
+            }
           }
         });
       }
@@ -50,7 +52,7 @@ export default function VacantShiftRow(){
   }
   Object.keys(rosterList).forEach(itoId => {
     let roster = rosterList[itoId];
-    let shiftCount = Utility.calculateShiftCount(roster.shiftList);
+    let shiftCount = Utility.calculateShiftCount(roster);
     aShiftCount.push(shiftCount.aShiftCount);
     bxShiftCount.push(shiftCount.bxShiftCount);
     cShiftCount.push(shiftCount.cShiftCount);

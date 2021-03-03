@@ -22,102 +22,62 @@ export default class Utility{
           let shiftTypeList = item.split("+");
           
           shiftTypeList.forEach(shiftType => {
+            if (roster.availableShiftList.includes(shiftType)){
               if (activeShiftInfoList[shiftType]){
                 roster.actualWorkingHour += activeShiftInfoList[shiftType].duration;
-              }     
+              }
+            }
           });
           
       });
       if(roster.thisMonthHourTotal===undefined) //if first loaded
         roster.thisMonthHourTotal = roster.actualWorkingHour - roster.totalHour;
+        
       roster.thisMonthBalance = roster.lastMonthBalance + roster.thisMonthHourTotal;
-      roster.shiftCountList=this.calculateShiftCount(roster.shiftList);
+      roster.shiftCountList=this.calculateShiftCount(roster);
       roster.actualNoOfWorkingDay =roster.shiftCountList.aShiftCount +roster.shiftCountList.bxShiftCount+roster.shiftCountList.cShiftCount +roster.shiftCountList.dxShiftCount;
     }
-    /*
-    static calculateITOMonthlyStat(noOfWorkingDay, rosterData, shiftInfoList) {
-        let actualWorkingHour = 0.0,
-          thisMonthHourTotal = 0.0,
-          thisMonthBalance = 0.0,
-          totalHour = 0.0,
-          actualNoOfWorkingDay = 0;
-        let result = {};
-        let shiftList = {};
-        totalHour = rosterData.workingHourPerDay * noOfWorkingDay;
-        Object.keys(rosterData.shiftList).forEach(key=>{
-          let item =rosterData.shiftList[key];
-            let shiftTypeList = item.split("+");
-            shiftTypeList.forEach(shiftType => {
-              if (shiftInfoList[shiftType]){
-                actualWorkingHour += shiftInfoList[shiftType].duration;
-              }     
-            });
-          shiftList[key-1]=item;
-        })
-        let shiftCount = this.calculateShiftCount(rosterData.shiftList);
-        thisMonthHourTotal = actualWorkingHour - totalHour;
-        thisMonthBalance = rosterData.lastMonthBalance + thisMonthHourTotal;
-        actualNoOfWorkingDay =
-          shiftCount.aShiftCount +
-          shiftCount.bxShiftCount +
-          shiftCount.cShiftCount +
-          shiftCount.dxShiftCount;
-    
-        result.totalHour = totalHour.toFixed(2);
-        result.lastMonthBalance = rosterData.lastMonthBalance.toFixed(2);
-        result.actualHour = actualWorkingHour.toFixed(2);
-        result.thisMonthHourTotal = thisMonthHourTotal.toFixed(2);
-        result.thisMonthBalance = thisMonthBalance.toFixed(2);
-    
-        result.aShiftCount = shiftCount.aShiftCount;
-        result.bxShiftCount = shiftCount.bxShiftCount;
-        result.cShiftCount = shiftCount.cShiftCount;
-        result.dxShiftCount = shiftCount.dxShiftCount;
-        result.itoName = rosterData.itoName;
-        result.itoPostName = rosterData.itoPostName;
-        result.noOfWorkingDay = actualNoOfWorkingDay;
-        result.shiftList = shiftList;
-        return result;
-    }
-    */
-    static calculateShiftCount(shiftList) {
-        let aShiftCount = 0,
-          bxShiftCount = 0,
-          cShiftCount = 0,
-          dxShiftCount = 0;
-        Object.keys(shiftList).forEach(key=>{
-          let item=shiftList[key];
+    static calculateShiftCount(roster) {
+      let aShiftCount = 0,
+        bxShiftCount = 0,
+        cShiftCount = 0,
+        dxShiftCount = 0;
+
+      Object.keys(roster.shiftList).forEach(key=>{
+        let item=roster.shiftList[key];
           let shiftTypeList = item.split("+");
           shiftTypeList.forEach(shiftType => {
-            switch (shiftType) {
-              case "a":
-                aShiftCount++;
-                break;
-              case "b":
-              case "b1":
-                bxShiftCount++;
-                break;
-              case "c":
-                cShiftCount++;
-                break;
-              case "d":
-              case "d1":
-              case "d2":
-              case "d3":
-                dxShiftCount++;
-                break;
-              default:
-                break;
+            if (roster.availableShiftList.includes(shiftType)){
+              switch (shiftType) {
+                case "a":
+                  aShiftCount++;
+                  break;
+                case "b":
+                case "b1":
+                  bxShiftCount++;
+                  break;
+                case "c":
+                  cShiftCount++;
+                  break;
+                case "d":
+                case "d1":
+                case "d2":
+                case "d3":
+                  dxShiftCount++;
+                  break;
+                default:
+                  break;
+              }
             }
           });
-        });
-        return {
-          aShiftCount: aShiftCount,
-          bxShiftCount: bxShiftCount,
-          cShiftCount: cShiftCount,
-          dxShiftCount: dxShiftCount
-        };
-      }
+      });        
+      return {
+        aShiftCount: aShiftCount,
+        bxShiftCount: bxShiftCount,
+        cShiftCount: cShiftCount,
+        dxShiftCount: dxShiftCount
+      };
+    }
     static fetchAPI(url,method,getParams,postParams){
         if (getParams){
             const paramsObject = new URLSearchParams(getParams);

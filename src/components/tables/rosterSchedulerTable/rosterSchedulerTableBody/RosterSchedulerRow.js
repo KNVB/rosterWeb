@@ -62,7 +62,7 @@ export default function RosterSchedulerRow(props){
             setRosterData(temp);
         }
     }
-
+    
     //console.log(roster);
     if (isHighLightRow){
         cellList.push(<RosterNameCell className="highlightCell" key={props.itoId + "_nameCell"}>{itoNameContact}</RosterNameCell>);
@@ -121,6 +121,7 @@ export default function RosterSchedulerRow(props){
     cellList.push(<ShiftCountCell key={props.itoId+"_cShiftCount"}>{roster.shiftCountList.cShiftCount}</ShiftCountCell>);
     cellList.push(<ShiftCountCell key={props.itoId+"_dxShiftCount"}>{roster.shiftCountList.dxShiftCount}</ShiftCountCell>);
     cellList.push(<ShiftCountCell key={props.itoId+"_actualNoOfWorkingDay"} className="tailCell">{roster.actualNoOfWorkingDay}</ShiftCountCell>);
+    
     return(
         <tr>            
             {cellList}
