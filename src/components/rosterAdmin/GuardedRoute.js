@@ -14,7 +14,12 @@ const GuardedRoute = ({ component: Component, auth, ...rest }) =>{
 */
 const GuardedRoute = ({ auth, ...rest }) => {
     console.log(auth === "true");
-    return auth === "true" ? <Route {...rest} /> : <Redirect to="/rosterWeb/admin/" />;
+    //return auth === "true" ? <Route {...rest} /> : <Redirect to="/rosterWeb/admin/" />;
+    if (auth === "true"){
+        return <Route {...rest} />
+    } else {
+        return <Redirect to="/rosterWeb/admin/" />; 
+    }
   };
 
 export default GuardedRoute;

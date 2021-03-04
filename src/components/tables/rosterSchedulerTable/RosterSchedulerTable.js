@@ -1,6 +1,8 @@
 import {useState,useEffect} from 'react';
 import RosterWebContext from '../../../RosterWebContext';
+
 import RosterSchedulerTableBody from './rosterSchedulerTableBody/RosterSchedulerTableBody';
+import RosterSchedulerTableFooter from './rosterSchedulerTableFooter/RosterSchedulerTableFooter';
 import TableHeader from '../tableHeader/TableHeader';
 
 export default function RosterSchedulerTable(props){
@@ -25,6 +27,9 @@ export default function RosterSchedulerTable(props){
         setMonthlyCalendar(props.rosterSchedulerData.monthlyCalendar);
         setRosterData(props.rosterSchedulerData.rosterData);
         document.addEventListener('mouseup',mouseUp);
+        return () => {
+            document.removeEventListener('mouseup', mouseUp)
+        }
     },[props.rosterSchedulerData.monthlyCalendar,props.rosterSchedulerData.rosterData]);
 
     let contextValue={
@@ -44,6 +49,7 @@ export default function RosterSchedulerTable(props){
             <RosterWebContext.Provider value={contextValue}>
                 <TableHeader noOfPrevDate={systemParam.noOfPrevDate}/>
                 <RosterSchedulerTableBody/>
+                <RosterSchedulerTableFooter/>
             </RosterWebContext.Provider>            
         </table>
     );

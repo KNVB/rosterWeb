@@ -2,7 +2,7 @@ import '../tables.css';
 import {useState} from 'react';
 import RosterWebContext from '../../../RosterWebContext';
 import TableBody from './tableBody/TableBody'; 
-import TableFooter from './TableFooter'; 
+import TableFooter from './tableFooter/TableFooter'; 
 import TableHeader from '../tableHeader/TableHeader'; 
 export default function RosterTable(props){
     let rosterList = props.rosterTableData.rosterList
