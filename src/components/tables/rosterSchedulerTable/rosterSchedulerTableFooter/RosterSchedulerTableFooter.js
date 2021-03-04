@@ -1,5 +1,6 @@
 import {useContext} from 'react';
 import './RosterSchedulerTableFooter.js';
+import ButtonPanel from '../buttonPanel/ButtonPanel';
 import RosterWebContext from '../../../../RosterWebContext';
 import YearlyRosterStatistic from '../yearlyRosterStatistic/YearlyRosterStatistic';
 export default function RosterSchedulerTableFooter(props){
@@ -11,7 +12,9 @@ export default function RosterSchedulerTableFooter(props){
             </tr>
             <tr>
                 <td colSpan="11" className={activeShiftInfoList['a'].cssClassName}>a : {activeShiftInfoList['a'].timeSlot}</td>
-                <td colSpan="21" rowSpan="10" id="autoScheduler" style={{"verticalAlign":"top"}}></td>
+                <td colSpan="23" rowSpan="10" id="autoScheduler" style={{"verticalAlign":"top"}}>
+                    
+                </td>
                 <td colSpan="10" rowSpan="20" id="yearlyStat"  style={{"verticalAlign":"top"}}>
                     <YearlyRosterStatistic/>
                 </td>
@@ -45,6 +48,7 @@ export default function RosterSchedulerTableFooter(props){
             </tr>
             <tr>
                 <td colSpan="34">
+                    <ButtonPanel/>
                 </td>
             </tr>
         </tfoot>
