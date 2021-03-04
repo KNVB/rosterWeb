@@ -5,7 +5,9 @@ class RosterManager
 		let DBO=require("../utils/dbo.js");
 		let ITO = require('./ITO');
 		let ITORoster = require('./ITORoster');
+		let ITOYearlyRosterStatistic=require('./rosterStatistic/ITOYearlyStatistic');
 		let Moment = require('moment');
+		let MonthlyStatistic =require('./rosterStatistic/MonthlyStatistic');
 		let Shift =require('./Shift');
 		let systemParam=sp;
 		this.getAllActiveShiftInfo=async()=>{
@@ -116,6 +118,39 @@ class RosterManager
 			};
 			return finalResult;
 		}
+		this.getYearlyRosterStatistic=async (year, month)=>{
+			let dboObj=new DBO();
+			let monthlyStatistic=null;
+			let yearlyRosterStatistic={};
+			try{
+				let results=await dboObj.getYearlyRosterStatistic(year,month);
+				let itoYearlyRosterStatistic=null;
+				results.forEach(record=>{
+					if (yearlyRosterStatistic[record.ito_id]===undefined){
+						itoYearlyRosterStatistic=new ITOYearlyRosterStatistic();
+						itoYearlyRosterStatistic.itoPostName=record.post_name;
+					} else {
+						itoYearlyRosterStatistic=yearlyRosterStatistic[record.ito_id];
+					}
+					monthlyStatistic=new MonthlyStatistic();
+					monthlyStatistic.aShiftTotal=parseInt(record.a);
+					monthlyStatistic.bxShiftTotal=parseInt(record.b);
+					monthlyStatistic.cShiftTotal=parseInt(record.c);
+					monthlyStatistic.dxShiftTotal=parseInt(record.d);
+					monthlyStatistic.oShiftTotal=parseInt(record.o);
+					itoYearlyRosterStatistic.itoMonthlyStatisticList.push(monthlyStatistic);
+					yearlyRosterStatistic[record.ito_id]=itoYearlyRosterStatistic;
+				});
+				return yearlyRosterStatistic;
+			}
+			catch (error){
+				console.log("Something wrong when getting ("+year+","+month+") yearly roster statistic:"+error);
+				console.log(yearlyRosterStatistic);
+			}
+			finally{
+				dboObj.close();
+			};	 	
+		} 
 	}
 }
 module.exports = RosterManager;

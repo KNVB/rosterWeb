@@ -46,8 +46,10 @@ publicAPIRouter.get('/getAllActiveShiftInfo',publicAPI.getAllActiveShiftInfo);
 publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
 publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);
 
+
 //==============================================================================
 privateAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
+privateAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
 privateAPIRouter.post('/logout',privateAPI.logout);
 httpServer.listen(httpServerPort, function() {
   console.log('server up and running at %s port', httpServerPort);

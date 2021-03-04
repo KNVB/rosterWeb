@@ -29,7 +29,7 @@ class PublicAPI{
         };       
         this.getSystemParam=(req,res)=>{
             res.send(this.systemParam);
-        }
+        }        
     }
 }
 

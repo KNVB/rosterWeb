@@ -1,6 +1,6 @@
 import CalendarDate from './CalendarDate';
 import LunarDate from './LunarDate';
-class CalendarUtility {
+export default class CalendarUtility {
     constructor (){
         let Animals=["鼠","牛","虎","兔","龍","蛇","馬","羊","猴","雞","狗","豬"];	
         let Gan=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
@@ -349,4 +349,3 @@ class CalendarUtility {
         }            
     }
 }
-export default CalendarUtility;

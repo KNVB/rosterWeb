@@ -1,6 +1,7 @@
 import {useContext} from 'react';
 import './RosterSchedulerTableFooter.js';
 import RosterWebContext from '../../../../RosterWebContext';
+import YearlyRosterStatistic from '../yearlyRosterStatistic/YearlyRosterStatistic';
 export default function RosterSchedulerTableFooter(props){
     let {activeShiftInfoList} = useContext(RosterWebContext);
     return (
@@ -11,7 +12,9 @@ export default function RosterSchedulerTableFooter(props){
             <tr>
                 <td colSpan="11" className={activeShiftInfoList['a'].cssClassName}>a : {activeShiftInfoList['a'].timeSlot}</td>
                 <td colSpan="21" rowSpan="10" id="autoScheduler" style={{"verticalAlign":"top"}}></td>
-                <td colSpan="10" rowSpan="20" id="yearlyStat"  style={{"verticalAlign":"top"}}></td>
+                <td colSpan="10" rowSpan="20" id="yearlyStat"  style={{"verticalAlign":"top"}}>
+                    <YearlyRosterStatistic/>
+                </td>
             </tr>
             <tr>
                 <td colSpan="11" className={activeShiftInfoList['b'].cssClassName}>b : {activeShiftInfoList['b'].timeSlot}</td>
@@ -39,6 +42,10 @@ export default function RosterSchedulerTableFooter(props){
             </tr>
             <tr>
                 <td colSpan="11" className={activeShiftInfoList['O'].cssClassName}>O :  {activeShiftInfoList['O'].timeSlot}</td>
+            </tr>
+            <tr>
+                <td colSpan="34">
+                </td>
             </tr>
         </tfoot>
       

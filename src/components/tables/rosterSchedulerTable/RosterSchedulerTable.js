@@ -18,7 +18,7 @@ export default function RosterSchedulerTable(props){
     let activeShiftInfoList=props.rosterSchedulerData.activeShiftInfoList;
     let calendarUtility=props.rosterSchedulerData.calendarUtility;
     let systemParam=props.rosterSchedulerData.systemParam;
-
+    let yearlyRosterStatistic=props.rosterSchedulerData.yearlyRosterStatistic;
     let mouseUp=(e)=>{
         console.log("mouse up");
     }
@@ -40,7 +40,8 @@ export default function RosterSchedulerTable(props){
         rosterData, 
         setHightLightCellIndex,
         setRosterData,
-        systemParam
+        systemParam,
+        yearlyRosterStatistic
     };
     //console.log("Preferred Shift List="+JSON.stringify(rosterData.preferredShiftList));
     //console.log("Roster List="+JSON.stringify(rosterData.rosterList));

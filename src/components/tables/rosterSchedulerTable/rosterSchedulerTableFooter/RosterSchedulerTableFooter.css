@@ -2,3 +2,222 @@
     border-top:1px inset #e0e0e0;
     text-align: left;
 }
+/*******************************************************************************************************
+ *                                                                                                     *
+ *    Roster Scheduler Button style                                                                    *
+ *                                                                                                     *
+ *******************************************************************************************************/
+ .autoPlannerButton
+ {
+     position: relative;
+     display: inline-block;
+     padding: 10px 15px;
+     -moz-border-radius:28px;
+     -webkit-border-radius:28px;
+     border-radius:28px;
+     background-color: #8B4513 ; /*for compatibility with older browsers*/
+     background-image: linear-gradient(#8B4513,#A0522D);
+     box-shadow: 0px 1px 4px -2px #333;
+     text-shadow: 0px -1px #333;
+     /* text styles */
+     text-decoration: none;
+     color: #fff;
+     font-size: 20px;
+     font-family: sans-serif;
+     font-weight: 100;
+ }
+ .autoPlannerButton:hover
+ {
+     background: linear-gradient(#800000,#8B4513);
+     cursor: pointer;
+ }	
+ .checkAllButton
+ {
+     /* background styles */
+     position: relative;
+     display: inline-block;
+     padding: 10px 15px;
+     -moz-border-radius:28px;
+     -webkit-border-radius:28px;
+     border-radius:28px;
+     background-color: purple; /*for compatibility with older browsers*/
+     background-image: linear-gradient(purple,lightpurple);
+     box-shadow: 0px 1px 4px -2px #333;
+     text-shadow: 0px -1px #333;
+     /* text styles */
+     text-decoration: none;
+     color: #fff;
+     font-size: 20px;
+     font-family: sans-serif;
+     font-weight: 100;
+ }
+ .checkAllButton:hover
+ {
+     background: linear-gradient(#663399,#7E329A);
+     cursor: pointer;
+ }
+ .clearAllButton
+ {
+     position: relative;
+     display: inline-block;
+     padding: 10px 15px;
+     -moz-border-radius:28px;
+     -webkit-border-radius:28px;
+     border-radius:28px;
+     background-color: #FF8500; /*for compatibility with older browsers*/
+     background-image: linear-gradient(#FF8500,lightOrange);
+     box-shadow: 0px 1px 4px -2px #333;
+     text-shadow: 0px -1px #333;
+     /* text styles */
+     text-decoration: none;
+     color: #fff;
+     font-size: 20px;
+     font-family: sans-serif;
+     font-weight: 100;
+ }
+ .clearAllButton:hover
+ {
+     background: linear-gradient(#FF8500,#F7A80A);
+     cursor: pointer;
+ }
+ .exportButton
+ {
+     position: relative;
+     display: inline-block;
+     padding: 10px 15px;
+     -moz-border-radius:28px;
+     -webkit-border-radius:28px;
+     border-radius:28px;
+     background-color: black; /*for compatibility with older browsers*/
+     background-image: linear-gradient(black,#6E685E);
+     box-shadow: 0px 1px 4px -2px #333;
+     text-shadow: 0px -1px #333;
+     /* text styles */
+     text-decoration: none;
+     color: #fff;
+     font-size: 20px;
+     font-family: sans-serif;
+     font-weight: 100;
+ }
+ .exportButton:hover
+ {
+     background: linear-gradient(#6E685E,black);
+     cursor: pointer;
+ }
+ .fillEmptyShiftWithOButton
+ {
+     /* background styles */
+     position: relative;
+     display: inline-block;
+     padding: 10px 15px;
+     -moz-border-radius:28px;
+     -webkit-border-radius:28px;
+     border-radius:28px;
+     background-color: green; /*for compatibility with older browsers*/
+     background-image: linear-gradient(#FFB6C1,#CD5C5C);
+     box-shadow: 0px 1px 4px -2px #333;
+     text-shadow: 0px -1px #333;
+     /* text styles */
+     text-decoration: none;
+     color: #fff;
+     font-size: 20px;
+     font-family: sans-serif;
+     font-weight: 100;
+ }
+ .fillEmptyShiftWithOButton:hover
+ {
+     background: linear-gradient(IndianRed,lightPink);
+     cursor: pointer;
+ }
+ .findMissingShiftButton
+ {
+     /* background styles */
+     position: relative;
+     display: inline-block;
+     padding: 10px 15px;
+     -moz-border-radius:28px;
+     -webkit-border-radius:28px;
+     border-radius:28px;
+     background-color: green; /*for compatibility with older browsers*/
+     background-image: linear-gradient(green,lightgreen);
+     box-shadow: 0px 1px 4px -2px #333;
+     text-shadow: 0px -1px #333;
+     /* text styles */
+     text-decoration: none;
+     color: #fff;
+     font-size: 20px;
+     font-family: sans-serif;
+     font-weight: 100;
+ }
+ 
+ .findMissingShiftButton:hover
+ {
+     background: linear-gradient(#073,#0fa);
+     cursor: pointer;
+ }
+ .findDuplicateShiftButton
+ {
+     /* background styles */
+     position: relative;
+     display: inline-block;
+     padding: 10px 15px;
+     -moz-border-radius:28px;
+     -webkit-border-radius:28px;
+     border-radius:28px;
+     background-color: blue; /*for compatibility with older browsers*/
+     background-image: linear-gradient(blue,lightblue);
+     box-shadow: 0px 1px 4px -2px #333;
+     text-shadow: 0px -1px #333;
+     /* text styles */
+     text-decoration: none;
+     color: #fff;
+     font-size: 20px;
+     font-family: sans-serif;
+     font-weight: 100;
+ }
+ .findDuplicateShiftButton:hover
+ {
+     background: linear-gradient(#1f4160,#1e3460);
+     cursor: pointer;
+ }
+ .saveRosterToDBButton
+ {
+     position: relative;
+     display: inline-block;
+     padding: 10px 15px;
+     -moz-border-radius:28px;
+     -webkit-border-radius:28px;
+     border-radius:28px;
+     background-color: red; /*for compatibility with older browsers*/
+     background-image: linear-gradient(red,lightred);
+     box-shadow: 0px 1px 4px -2px #333;
+     text-shadow: 0px -1px #333;
+     /* text styles */
+     text-decoration: none;
+     color: #fff;
+     font-size: 20px;
+     font-family: sans-serif;
+     font-weight: 100;
+ }
+ .saveRosterToDBButton:hover
+ {
+     background: linear-gradient(pink,red);
+     cursor: pointer;
+ }	
+ .exportButton:after,
+ .clearAllButton:after,
+ .checkAllButton:after,
+ .autoPlannerButton:after,
+ .saveRosterToDBButton:after,
+ .fillEmptyShiftWithOButton:after,
+ .findMissingShiftButton:after, 
+ .findDuplicateShiftButton:after	
+ {
+     content: '';
+     position: absolute;
+     top: 2px;
+     left: 2px;
+     width: calc(100% - 4px);
+     height: 50%;
+     background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));
+ }

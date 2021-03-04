@@ -26,6 +26,7 @@ export default function RosterScheduler(props){
             let roster = new Roster();
             let rosterData = await roster.getRosterSchedulerList(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
             let activeShiftInfoList= await roster.getAllActiveShiftInfo();
+            let yearlyRosterStatistic=await roster.getYearlyRosterStatistic(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
             let calendarUtility=new CalendarUtility();
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
             setRosterSchedulerData(
@@ -34,7 +35,8 @@ export default function RosterScheduler(props){
                 "calendarUtility":calendarUtility,
                 "monthlyCalendar":monthlyCalendar,
                 "rosterData":rosterData,                
-                "systemParam":systemParam
+                "systemParam":systemParam,
+                "yearlyRosterStatistic":yearlyRosterStatistic
                }
             )
         }

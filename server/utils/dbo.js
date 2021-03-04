@@ -58,6 +58,33 @@ class DBO
 			let sqlString ="select * from system_param order by param_type,param_key,param_value";
 			return await executeQuery(sqlString);
 		}
+		this.getYearlyRosterStatistic=async(year, month)=>{
+			let result=getStartEndDateString(year,month);
+			let sqlString="select a.ito_id,b.post_name,";
+			sqlString=sqlString+"			sum(case when shift ='a' then 1 else 0 end) as a,";
+			sqlString=sqlString+"			sum(case when shift ='b' or shift ='b1' then 1 else 0 end) as b,";
+			sqlString=sqlString+"			sum(case when shift ='c' then 1 else 0 end) as c,";
+			sqlString=sqlString+"			sum(case when shift ='d' or shift='d1' or shift='d2' or shift='d3' then 1 else 0 end) as d,";
+			sqlString=sqlString+"			sum(case when shift ='O' then 1 else 0 end) as o,";
+			sqlString=sqlString+"			year(shift_date) as y,";
+			sqlString=sqlString+"			month(shift_date) m ";
+			sqlString=sqlString+"from ";
+			sqlString=sqlString+"shift_record a inner join ito_info b ";
+			sqlString=sqlString+"on join_date<? and ";
+			sqlString=sqlString+"   leave_date>? and ";
+			sqlString=sqlString+"   year(shift_date)=? and ";
+			sqlString=sqlString+"   month(shift_date) <=? and ";
+			sqlString=sqlString+"   a.ITO_ID =b.ito_id ";
+			sqlString=sqlString+"group by a.ito_id,year(shift_date),month(shift_date)";
+
+			return await executeQuery(sqlString,
+									[
+										result.startDateString,
+										result.endDateString,
+										year,
+										month]
+			);
+		} 
 		this.close=()=>{
 			connection.end(err=>{
 				if (err) throw err;
