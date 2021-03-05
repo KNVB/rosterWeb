@@ -1,6 +1,4 @@
-import {useContext} from 'react';
 import { Redirect } from 'react-router-dom'
-import RosterWebContext from '../RosterWebContext';
 
 export default class Utility{
     static calculateMean(data){
@@ -112,8 +110,31 @@ export default class Utility{
                         }
                     }
                 })
-    }
+    }    
     static getSystemParam(){
         return Utility.fetchAPI('/publicAPI/getSystemParam','GET');
+    }
+    static getVacantShiftList(essentialShift,monthlyCalendar,rosterList){
+      let result={};
+      for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
+        let vacantShift = essentialShift;
+        Object.keys(rosterList).forEach(itoId => {
+          let roster = rosterList[itoId];
+          if (roster.shiftList[i+1]){
+            let shiftTypeList = roster.shiftList[i+1].split("+");
+            shiftTypeList.forEach(shiftType => {
+              if (roster.availableShiftList.includes(shiftType)){
+                if (shiftType === "b1") {
+                  vacantShift = vacantShift.replace("b", "");
+                } else {
+                  vacantShift = vacantShift.replace(shiftType, "");
+                }
+              }
+            });
+          }
+        });
+        result[i]=vacantShift;
+      }
+      return result;
     }    
 }

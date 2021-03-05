@@ -1,4 +1,4 @@
-import { Redirect,BrowserRouter as Router,Route,Switch } from 'react-router-dom';
+import { BrowserRouter as Router,Route,Switch } from 'react-router-dom';
 import AdminHome from './AdminHome';
 import GuardedRoute from './GuardedRoute';
 import ITOManagment from './itoManagement/ITOManagement';

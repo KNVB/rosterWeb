@@ -8,7 +8,7 @@ export default function YearlyRosterStatistic(){
     Object.keys(yearlyRosterStatistic).forEach(itoId=>{
         let aShiftTotal=0,bxShiftTotal=0,cShiftTotal=0,dxShiftTotal=0,oShiftTotal=0,finalTotal=0;
 		let itoMonthlyStatistic=yearlyRosterStatistic[itoId].itoMonthlyStatisticList;
-		let monthlyTotal;
+	
         for (let i=0;i<itoMonthlyStatistic.length;i++){
             aShiftTotal+=itoMonthlyStatistic[i].aShiftTotal;
             bxShiftTotal+=itoMonthlyStatistic[i].bxShiftTotal;
