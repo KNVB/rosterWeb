@@ -1,6 +1,6 @@
 function AdminHome(){
     return(
-       <span></span>
+       <span>Welcome</span>
     )
 }
 export default AdminHome;

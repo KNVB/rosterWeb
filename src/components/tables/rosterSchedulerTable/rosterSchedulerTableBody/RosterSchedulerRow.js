@@ -21,7 +21,7 @@ export default function RosterSchedulerRow(props){
         systemParam
     } = useContext(RosterWebContext);
     //console.log(rosterData);
-    console.log("RosterSchedulerRow");
+    //console.log("RosterSchedulerRow");
     let roster=Object.assign({},rosterData.rosterList[props.itoId]);    
     let previousMonthShift=rosterData.previousMonthShiftList[props.itoId];
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
@@ -53,6 +53,7 @@ export default function RosterSchedulerRow(props){
         }else {
             temp.rosterList[props.itoId].shiftList[realIndex]=e.target.textContent;
         }
+        temp.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,temp.rosterList);
         //console.log("1:"+realIndex+","+JSON.stringify(temp.rosterList[props.itoId].shiftList));
         setRosterData(temp);
     }
@@ -80,9 +81,14 @@ export default function RosterSchedulerRow(props){
         }
     }
     for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
+        let cssClassName=null;
+        if (rosterData.duplicateShiftList[props.itoId].includes(i+1)){
+            cssClassName="errorRedBlackGround"; 
+        }
         cellList.push(
             <EditableShiftCell 
-                availableShiftList={roster.availableShiftList} 
+                availableShiftList={roster.availableShiftList}
+                className={cssClassName}
                 key={props.itoId+"_shift_"+i}
                 onBlur={updateShiftData}
                 onMouseLeave={deHightLight}
@@ -90,6 +96,7 @@ export default function RosterSchedulerRow(props){
                 {roster.shiftList[i+1]}
             </EditableShiftCell>
         );
+        
     }
     for (let j=i;j<31;j++){
         cellList.push(<BorderedAlignCenterCell key={props.itoId+"_shift_"+j}></BorderedAlignCenterCell>);

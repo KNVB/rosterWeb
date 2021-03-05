@@ -201,7 +201,7 @@
 	background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));
 }
 
-table#buttonTable
+.buttonPanel
 {
 	width:100%;
 	border-spacing:10px;	

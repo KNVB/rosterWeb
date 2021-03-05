@@ -4,6 +4,7 @@ import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import MonthPicker from '../../monthPicker/MonthPicker';
 import Roster from '../../../utils/Roster';
 import RosterSchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
+import Utility from '../../../utils/Utility';
 export default function RosterScheduler(props){
     const [rosterMonth,setRosterMonth]=useState(new Date());
     const[rosterSchedulerData,setRosterSchedulerData]=useState();
@@ -29,6 +30,7 @@ export default function RosterScheduler(props){
             let yearlyRosterStatistic=await roster.getYearlyRosterStatistic(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
             let calendarUtility=new CalendarUtility();
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
+            rosterData.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,rosterData.rosterList);
             setRosterSchedulerData(
                {
                 "activeShiftInfoList":activeShiftInfoList,

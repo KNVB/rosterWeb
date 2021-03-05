@@ -1,44 +1,33 @@
 import "./ButtonPanel.css";
+import {Col,Container,Row} from 'react-bootstrap';
+
 export default function ButtonPanel(){
     
     return(
-        <table id="buttonTable">
-            <tbody>
-                <tr>
-                    <td className="text-center p-1">
-                        <a className="findMissingShiftButton" href="#0">
-                            Find Missing Shift
-                        </a>
-                    </td>
-                    <td className="text-center p-1">
-                        <a className="findDuplicateShiftButton" href="#0">
-                            Find Duplicate Shift
-                        </a>
-                    </td>
-                    <td className="text-center p-1">
-                        <a className="checkAllButton" href="#0">
-                            is it a valid roster?
-                        </a>
-                    </td>
-                    <td className="text-center p-1">
-                        <a className="clearAllButton" href="#0">
-                            Clear All Shift Data
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td className="text-center p-1" colSpan="2">
-                        <a className="exportButton" href="#0">
-                            Export to Excel File
-                        </a>
-                    </td>
-                    <td className="text-center p-1" colSpan="2">
-                        <a className="saveRosterToDBButton" href="#0">
-                            Save all data to DB
-                        </a>
-                    </td>                  
-                </tr>
-            </tbody>
-        </table>
+        <Container fluid={true}>
+            <Row>
+                <Col md={12} lg={12} sm={12} xl={12} xs={12} className="d-flex justify-content-around">
+                    <div className="findDuplicateShiftButton">
+                        Find Duplicate Shift
+                    </div>
+                    <div className="checkAllButton">
+                        is it a valid roster?
+                    </div>
+                    <div className="clearAllButton">
+                        Clear All Shift Data
+                    </div>
+                </Col>
+            </Row>
+            <Row>
+                <Col md={12} lg={12} sm={12} xl={12} xs={12} className="d-flex justify-content-around p-1">
+                    <div className="exportButton">
+                        Export to Excel File
+                    </div>
+                    <div className="saveRosterToDBButton">
+                        Save all data to DB
+                    </div>
+                </Col>
+            </Row>
+        </Container> 
     )
 }

@@ -8,7 +8,8 @@ export default function RosterSchedulerTableBody(){
     let rowList = [];
     let {activeShiftInfoList,monthlyCalendar,rosterData}=useContext(RosterWebContext);
     
-    console.log("RosterSchedulerTableBody");
+    //console.log("RosterSchedulerTableBody");
+    //console.log(rosterData);
     let vacantShiftList=Utility.getVacantShiftList(activeShiftInfoList.essentialShift,monthlyCalendar,rosterData.rosterList);
     
     Object.keys(rosterData.rosterList).forEach(itoId=>{
