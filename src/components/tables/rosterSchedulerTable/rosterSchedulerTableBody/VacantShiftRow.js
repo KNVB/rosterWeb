@@ -9,7 +9,7 @@ export default function VacantShiftRow(){
   let aShiftCount = [],    bxShiftCount = [],    cShiftCount = [],    dxShiftCount = [];
   let essentialShift=activeShiftInfoList.essentialShift;
   let rosterList = rosterData.rosterList;
-  
+  console.log("VacantShiftRow");
   //console.log(monthlyCalendar.calendarDateList.length,rosterData.rosterList['ITO1_1999-01-01'].shiftList.length);
   for (let i = 0; i < systemParam.noOfPrevDate; i++) {
     cellList.push(

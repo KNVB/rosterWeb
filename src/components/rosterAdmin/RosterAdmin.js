@@ -4,6 +4,7 @@ import GuardedRoute from './GuardedRoute';
 import ITOManagment from './itoManagement/ITOManagement';
 import LoginForm from './LoginForm';
 import React,{useState} from 'react';
+import './RosterAdmin.css';
 import RosterScheduler from './rosterScheduler/RosterScheduler';
 import Sidebar from './sideBar/SideBar';
 function RosterAdmin(props){
@@ -23,7 +24,7 @@ function RosterAdmin(props){
 					<Sidebar pageWrapId={'page-wrap'} auth={changeLoggedInFlag}/>
 						<div id="page-wrap" className="d-flex align-items-center flex-column m-0 flex-grow-1">
 							<div>
-								<h1 className="p-0 m-0">EMSTF Roster Admin. Page</h1>
+								<h1 className="p-0 m-0 caption">EMSTF Roster Admin. Page</h1>
 							</div>
 							<Switch>
 								<Route exact path="/rosterWeb/admin" component={AdminHome} />

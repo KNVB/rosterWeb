@@ -4,37 +4,37 @@ export default function ButtonPanel(){
         <table id="buttonTable">
             <tbody>
                 <tr>
-                    <td className="text-center">
-                        <button className="findMissingShiftButton">
+                    <td className="text-center p-1">
+                        <a className="findMissingShiftButton">
                             Find Missing Shift
-                        </button>
+                        </a>
                     </td>
-                    <td className="text-center">
-                        <button className="findDuplicateShiftButton">
+                    <td className="text-center p-1">
+                        <a className="findDuplicateShiftButton">
                             Find Duplicate Shift
-                        </button>
+                        </a>
                     </td>
-                    <td className="text-center">
-                        <button className="checkAllButton">
+                    <td className="text-center p-1">
+                        <a className="checkAllButton">
                             is it a valid roster?
-                        </button>
+                        </a>
                     </td>
-                    <td className="text-center">
-                        <button className="clearAllButton">
+                    <td className="text-center p-1">
+                        <a className="clearAllButton">
                             Clear All Shift Data
-                        </button>
+                        </a>
                     </td>
                 </tr>
                 <tr>
-                    <td className="text-center" colSpan="2">
-                        <button className="exportButton">
+                    <td className="text-center p-1" colSpan="2">
+                        <a className="exportButton">
                             Export to Excel File
-                        </button>
+                        </a>
                     </td>
-                    <td className="text-center" colSpan="2">
-                        <button className="saveRosterToDBButton">
+                    <td className="text-center p-1" colSpan="2">
+                        <a className="saveRosterToDBButton">
                             Save all data to DB
-                        </button>
+                        </a>
                     </td>                  
                 </tr>
             </tbody>

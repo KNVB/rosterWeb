@@ -51,14 +51,14 @@ export default function RosterScheduler(props){
                     </Col>
                 </Row>
                 <Row>
-                    <Col md={12} lg={12} sm={12} xl={12} xs={12}>
+                    <Col md={12} lg={12} sm={12} xl={12} xs={12} >
                         <MonthPicker 
                             minDate={monthPickerMinDate}
                             onSelect={updateMonth} />
                     </Col>
                 </Row>           
                 <Row>
-                    <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
+                    <Col className="d-flex justify-content-center m-0 p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
                         {rosterSchedulerData && <RosterSchedulerTable rosterSchedulerData={rosterSchedulerData}/>}
                     </Col>
                 </Row>

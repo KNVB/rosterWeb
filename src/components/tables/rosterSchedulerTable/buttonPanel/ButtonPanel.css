@@ -21,7 +21,9 @@
 .checkAllButton:hover
 {
 	background: linear-gradient(#663399,#7E329A);
+	color: #fff;
 	cursor: pointer;
+	text-decoration: none;
 }
 .clearAllButton
 {
@@ -45,7 +47,9 @@
 .clearAllButton:hover
 {
 	background: linear-gradient(#FF8500,#F7A80A);
+	color: #fff;
 	cursor: pointer;
+	text-decoration: none;
 }
 .exportButton
 {
@@ -69,7 +73,9 @@
 .exportButton:hover
 {
 	background: linear-gradient(#6E685E,black);
+	color: #fff;
 	cursor: pointer;
+	text-decoration: none;
 }
 .fillEmptyShiftWithOButton
 {
@@ -94,7 +100,9 @@
 .fillEmptyShiftWithOButton:hover
 {
 	background: linear-gradient(IndianRed,lightPink);
+	color: #fff;
 	cursor: pointer;
+	text-decoration: none;
 }
 .findMissingShiftButton
 {
@@ -116,11 +124,12 @@
 	font-family: sans-serif;
 	font-weight: 100;
 }
-
 .findMissingShiftButton:hover
 {
 	background: linear-gradient(#073,#0fa);
+	color: #fff;
 	cursor: pointer;
+	text-decoration: none;
 }
 .findDuplicateShiftButton
 {
@@ -145,7 +154,9 @@
 .findDuplicateShiftButton:hover
 {
 	background: linear-gradient(#1f4160,#1e3460);
+	color: #fff;
 	cursor: pointer;
+	text-decoration: none;
 }
 .saveRosterToDBButton
 {
@@ -169,7 +180,9 @@
 .saveRosterToDBButton:hover
 {
 	background: linear-gradient(pink,red);
+	color: #fff;
 	cursor: pointer;
+	text-decoration: none;
 }	
 .exportButton:after,
 .clearAllButton:after,
@@ -191,5 +204,5 @@
 table#buttonTable
 {
 	width:100%;
-	border-spacing:10px;
+	border-spacing:10px;	
 }

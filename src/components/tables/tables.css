@@ -39,7 +39,11 @@
    background-color:#cc99ff;
  }
  /********************************************************************************************************/
+.tableCaption{
+  font-size:18px
+}
  table#rosterTable {
   border-spacing: 0;
   border-collapse: collapse;
+  line-height: 1.16;
 }

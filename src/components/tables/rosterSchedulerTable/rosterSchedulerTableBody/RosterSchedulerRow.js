@@ -21,6 +21,7 @@ export default function RosterSchedulerRow(props){
         systemParam
     } = useContext(RosterWebContext);
     //console.log(rosterData);
+    console.log("RosterSchedulerRow");
     let roster=Object.assign({},rosterData.rosterList[props.itoId]);    
     let previousMonthShift=rosterData.previousMonthShiftList[props.itoId];
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
