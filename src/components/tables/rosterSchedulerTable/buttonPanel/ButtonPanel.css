@@ -1,4 +1,4 @@
-.checkAllButton
+.reloadRoster
 {
 	/* background styles */
 	position: relative;
@@ -18,7 +18,7 @@
 	font-family: sans-serif;
 	font-weight: 100;
 }
-.checkAllButton:hover
+.reloadRoster:hover
 {
 	background: linear-gradient(#663399,#7E329A);
 	color: #fff;
@@ -186,7 +186,7 @@
 }	
 .exportButton:after,
 .clearAllButton:after,
-.checkAllButton:after,
+.reloadRoster:after,
 .saveRosterToDBButton:after,
 .fillEmptyShiftWithOButton:after,
 .findMissingShiftButton:after, 

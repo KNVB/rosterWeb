@@ -105,7 +105,7 @@ class RosterManager
 					}
 					preferredShiftList[result.ito_id][result.d]=result.preferred_shift;
 				});
-				finalResult.itoList=await ITO.getITOList(year, month);
+				//finalResult.itoList=await ITO.getITOList(year, month);
 				finalResult.rosterList=rosterList;
 				finalResult.preferredShiftList=preferredShiftList;
 				finalResult.previousMonthShiftList=previousMonthShiftList;

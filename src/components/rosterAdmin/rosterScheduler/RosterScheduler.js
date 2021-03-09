@@ -36,7 +36,8 @@ export default function RosterScheduler(props){
                 "activeShiftInfoList":activeShiftInfoList,
                 "calendarUtility":calendarUtility,
                 "monthlyCalendar":monthlyCalendar,
-                "rosterData":rosterData,                
+                "rosterData":rosterData,
+                "rosterMonth":rosterMonth,                
                 "systemParam":systemParam,
                 "yearlyRosterStatistic":yearlyRosterStatistic
                }
