@@ -1,10 +1,11 @@
 import "./ButtonPanel.css";
 import {useContext} from 'react';
 import {Col,Container,Row} from 'react-bootstrap';
+import Roster from '../../../../utils/Roster';
 import RosterWebContext from '../../../../RosterWebContext';
 import Utility from '../../../../utils/Utility';
 export default function ButtonPanel(){
-    let {activeShiftInfoList,monthlyCalendar,orgRosterData,rosterData,setRosterData} = useContext(RosterWebContext);
+    let {activeShiftInfoList,monthlyCalendar,orgRosterData,rosterData,rosterMonth,setRosterData} = useContext(RosterWebContext);
     async function reload(){
         /*
         console.log(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList);
@@ -37,7 +38,22 @@ export default function ButtonPanel(){
         setRosterData(temp);
     }
     function saveRosterToDB(){
-        console.log(rosterData);
+        
+        let roster=new Roster();
+        roster.saveRosterToDB({
+            month:rosterMonth.getMonth()+1,
+            preferredShiftList:rosterData.preferredShiftList,
+            rosterList:rosterData.rosterList,
+            year:rosterMonth.getFullYear(),
+        })
+        .then(result=>{
+            alert(result);
+        })
+        .catch(error=>{
+            console.log(error);
+        })
+        
+        roster=null;
     }
     return(
         <Container fluid={true}>

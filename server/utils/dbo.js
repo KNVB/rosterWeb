@@ -84,6 +84,66 @@ class DBO
 										year,
 										month]
 			);
+		}
+		this.saveRosterData=async(year,month,preferredShiftList,rosterList)=>{
+			let dateString;
+			let sqlString="";
+			connection.beginTransaction();
+			try{
+				console.log("Update roster data transaction start.");
+				console.log("===============================");
+				console.log("year="+year+",month="+month);
+				Object.keys(rosterList).forEach(itoId=>{
+					console.log("itoId="+itoId);
+					console.log("lastMonthBalance="+rosterList[itoId].lastMonthBalance.toFixed(2));
+					console.log("thisMonthBalance="+rosterList[itoId].thisMonthBalance.toFixed(2));
+					
+					sqlString="replace into last_month_balance (ito_id,shift_month,balance) values (?,?,?)";
+					dateString=moment({"year":year,"month":month-1,"date":1}).format('YYYY-MM-DD');
+					connection.query(sqlString,[itoId,dateString,rosterList[itoId].lastMonthBalance.toFixed(2)]);
+					
+					dateString=getNextMonthStartDateString(year,month);
+					connection.query(sqlString,[itoId,dateString,rosterList[itoId].thisMonthBalance.toFixed(2)])
+
+					sqlString="delete from shift_record where ito_id=? and month(shift_date)=? and year(shift_date)=?";
+					connection.query(sqlString,[itoId,month,year]);
+					
+					sqlString="replace into shift_record (ito_id,shift_date,shift,state) values (?,?,?,?)";
+					let shiftList=rosterList[itoId].shiftList;
+					Object.keys(shiftList).forEach(date=>{
+						dateString=moment({"year":year,"month":month-1,"date":date}).format('YYYY-MM-DD');
+						//console.log(dateString);
+						//console.log(date+","+shiftList[date]);
+						
+						let shiftTypeList = shiftList[date].split("+");
+						shiftTypeList.forEach(shiftType => {
+							connection.query(sqlString,[itoId,dateString,shiftType,'A']);
+						});
+						
+					});
+					console.log("Update "+itoId+" Shift List Completed.");
+					sqlString="delete from preferred_shift where ito_id=? and month(shift_date)=? and year(shift_date)=?";
+					connection.query(sqlString,[itoId,month,year]);
+					sqlString="replace into preferred_shift (ito_id,preferred_shift,shift_date) values (?,?,?)";
+					if (preferredShiftList[itoId]){
+						Object.keys(preferredShiftList[itoId]).forEach(date=>{
+							dateString=moment({"year":year,"month":month-1,"date":date}).format('YYYY-MM-DD');
+							connection.query(sqlString,[itoId,preferredShiftList[itoId][date],dateString]);
+						});
+					}
+					console.log("Update "+itoId+" Preferred Shift List Completed.");
+					//console.log("Preferred Shift List:"+JSON.stringify(preferredShiftList[itoId]));
+					console.log(itoId+" roster data update completed.");	
+					console.log("===============================");
+				})
+				connection.commit();
+				
+				
+			}catch (error){
+				connection.rollback();
+				console.log("Update roster data failure.The transaction has been rollbacked.");
+				throw error;
+			}			
 		} 
 		this.close=()=>{
 			connection.end(err=>{
@@ -100,6 +160,18 @@ class DBO
                throw(err);
             })	
 		}
+		function getNextMonthStartDateString(year,month){
+			let result="";
+			let startDateString=year+"-";
+			if (month<10) {
+				startDateString+="0"+month;
+			} else {
+				startDateString+=month;
+			}
+			startDateString+="-01";
+			result=moment(startDateString).add(1,'months').format('YYYY-MM-DD');
+			return result;
+		}
 		function getStartEndDateString(year,month){
 			let startDateString=year+"-";
 			if (month<10) {
@@ -111,6 +183,7 @@ class DBO
             let endDateString=moment(startDateString).endOf('month').format('YYYY-MM-DD');
 			return {"startDateString":startDateString,"endDateString":endDateString};
 		}
+
     }
 }
 module.exports = DBO;    

@@ -3,10 +3,8 @@ class RosterManager
 	constructor(sp){
 		
 		let DBO=require("../utils/dbo.js");
-		let ITO = require('./ITO');
 		let ITORoster = require('./ITORoster');
 		let ITOYearlyRosterStatistic=require('./rosterStatistic/ITOYearlyStatistic');
-		let Moment = require('moment');
 		let MonthlyStatistic =require('./rosterStatistic/MonthlyStatistic');
 		let Shift =require('./Shift');
 		let systemParam=sp;
@@ -150,6 +148,27 @@ class RosterManager
 			finally{
 				dboObj.close();
 			};	 	
+		}
+		this.saveToDB=async(rosterData)=>{
+			let month=rosterData.month;
+            let preferredShiftList=rosterData.preferredShiftList;
+            let rosterList=rosterData.rosterList;
+            let year=rosterData.year;
+            /*
+			console.log(year+"/"+month);
+            console.log("preferredShiftList="+JSON.stringify(preferredShiftList));
+            console.log("rosterList="+JSON.stringify(rosterList));
+			*/
+			let dboObj=new DBO();
+			try{
+				dboObj.saveRosterData(year,month,preferredShiftList,rosterList);
+				return true;
+			}catch (error){
+				throw error;
+			}
+			finally{
+				dboObj.close();
+			};	
 		} 
 	}
 }
