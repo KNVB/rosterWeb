@@ -1,11 +1,10 @@
 import "./ButtonPanel.css";
 import {useContext} from 'react';
 import {Col,Container,Row} from 'react-bootstrap';
-import Roster from '../../../../utils/Roster';
 import RosterWebContext from '../../../../RosterWebContext';
 import Utility from '../../../../utils/Utility';
 export default function ButtonPanel(){
-    let {calendarUtility,rosterMonth,orgRosterData,rosterData,setRosterData} = useContext(RosterWebContext);
+    let {activeShiftInfoList,monthlyCalendar,orgRosterData,rosterData,setRosterData} = useContext(RosterWebContext);
     async function reload(){
         /*
         console.log(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList);
@@ -26,13 +25,19 @@ export default function ButtonPanel(){
             let roster=rosterList[itoId];
             roster.shiftList={};
             temp.rosterList[itoId]=roster;
+            Utility.calculateITOMonthlyStat(temp.rosterList[itoId],monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
         });
+        temp.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,rosterList);
+        
         /*
         console.log("1temp="+JSON.stringify(temp.rosterList['ITO1_1999-01-01'].shiftList));
         console.log("1org="+JSON.stringify(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList));
         console.log("1current="+JSON.stringify(rosterData.rosterList['ITO1_1999-01-01'].shiftList));
         */
         setRosterData(temp);
+    }
+    function saveRosterToDB(){
+        console.log(rosterData);
     }
     return(
         <Container fluid={true}>
@@ -47,7 +52,7 @@ export default function ButtonPanel(){
                     <div className="exportButton">
                         Export to Excel File
                     </div>
-                    <div className="saveRosterToDBButton">
+                    <div className="saveRosterToDBButton" onClick={saveRosterToDB}>
                         Save all data to DB
                     </div>
                 </Col>

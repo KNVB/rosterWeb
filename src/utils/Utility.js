@@ -26,11 +26,8 @@ export default class Utility{
             }
           }
         });
-        
-    });
-    if(roster.thisMonthHourTotal===undefined) //if first loaded
-      roster.thisMonthHourTotal = roster.actualWorkingHour - roster.totalHour;
-      
+    });    
+    roster.thisMonthHourTotal = roster.actualWorkingHour - roster.totalHour;
     roster.thisMonthBalance = roster.lastMonthBalance + roster.thisMonthHourTotal;
     roster.shiftCountList=this.calculateShiftCount(roster);
     roster.actualNoOfWorkingDay =roster.shiftCountList.aShiftCount +roster.shiftCountList.bxShiftCount+roster.shiftCountList.cShiftCount +roster.shiftCountList.dxShiftCount;
@@ -173,5 +170,10 @@ export default class Utility{
       result[i]=vacantShift;
     }
     return result;
+  }
+  static updateThisMonthBalance(rosterData,itoId){
+    let roster=rosterData.rosterList[itoId];
+    roster.thisMonthBalance=roster.thisMonthHourTotal+roster.lastMonthBalance;
+    rosterData.rosterList[itoId]=roster;
   }
 }

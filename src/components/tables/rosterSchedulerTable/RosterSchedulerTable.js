@@ -25,7 +25,7 @@ export default function RosterSchedulerTable(props){
         console.log("mouse up");
     }
     useEffect(()=>{
-        console.log("Table");
+        //console.log("Table");
         setMonthlyCalendar(props.rosterSchedulerData.monthlyCalendar);
         setRosterData(props.rosterSchedulerData.rosterData);
         document.addEventListener('mouseup',mouseUp);

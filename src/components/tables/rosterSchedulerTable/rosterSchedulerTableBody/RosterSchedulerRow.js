@@ -21,11 +21,11 @@ export default function RosterSchedulerRow(props){
         systemParam
     } = useContext(RosterWebContext);
     //console.log(rosterData);
-    console.log("RosterSchedulerRow");
-    let roster=Object.assign({},rosterData.rosterList[props.itoId]);    
+    //console.log("RosterSchedulerRow");
+    let roster=JSON.parse(JSON.stringify(rosterData.rosterList[props.itoId]));    
     let previousMonthShift=rosterData.previousMonthShiftList[props.itoId];
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
-    Utility.calculateITOMonthlyStat(roster,monthlyCalendar.noOfWorkingDay,activeShiftInfoList)
+
     let deHightLight = e => {
         setHightLightCellIndex(-1);
         setIsHighLightRow(false);
@@ -35,15 +35,17 @@ export default function RosterSchedulerRow(props){
         setIsHighLightRow(true);
     }
     let updateLastMonthBalance=(e)=>{
-        let temp=Object.assign({},rosterData);
-        if (!isNaN(e.target.textContent)){
+        if (isNaN(e.target.textContent)){
+            alert("The last month balance must be a no.");
+            e.target.focus();
+        } else {
+            let temp=JSON.parse(JSON.stringify(rosterData));//Don't use object.assign, which is shallow copy
             temp.rosterList[props.itoId].lastMonthBalance=parseFloat(e.target.textContent);
+            Utility.updateThisMonthBalance(temp,props.itoId);
             setRosterData(temp);
-        }        
+        }
     }
     let updateShiftData=(e)=>{
-        //console.log(e.target.textContent,e.target.cellIndex);
-        //console.log(rosterData);
         let realIndex=e.target.cellIndex-systemParam.noOfPrevDate;
         let temp=JSON.parse(JSON.stringify(rosterData));//Don't use object.assign, which is shallow copy
         
@@ -53,18 +55,23 @@ export default function RosterSchedulerRow(props){
         }else {
             temp.rosterList[props.itoId].shiftList[realIndex]=e.target.textContent;
         }
+        //console.log("0:"+temp.rosterList[props.itoId].thisMonthBalance);
         temp.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,temp.rosterList);
-        //console.log("1:"+realIndex+","+JSON.stringify(temp.rosterList[props.itoId].shiftList));
+        Utility.calculateITOMonthlyStat(temp.rosterList[props.itoId],monthlyCalendar.noOfWorkingDay,activeShiftInfoList);        
+        //console.log("1:"+temp.rosterList[props.itoId].thisMonthBalance);
         setRosterData(temp);
     }
     let updateThisMonthHourTotal=(e)=>{
-        let temp=Object.assign({},rosterData);
-        if (!isNaN(e.target.textContent)){
+        if (isNaN(e.target.textContent)){
+            alert("The this month balance must be a no.");
+            e.target.focus();
+        } else {
+            let temp=JSON.parse(JSON.stringify(rosterData));//Don't use object.assign, which is shallow copy
             temp.rosterList[props.itoId].thisMonthHourTotal=parseFloat(e.target.textContent);
+            Utility.updateThisMonthBalance(temp,props.itoId);
             setRosterData(temp);
         }
     }
-    
     //console.log(roster);
     if (isHighLightRow){
         cellList.push(<RosterNameCell className="highlightCell" key={props.itoId + "_nameCell"}>{itoNameContact}</RosterNameCell>);
@@ -80,6 +87,7 @@ export default function RosterSchedulerRow(props){
             cellList.push(<ShiftCell availableShiftList={roster.availableShiftList} key={"prev-"+i}/>);
         }
     }
+
     for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
         let cssClassName=null;
         if (rosterData.duplicateShiftList[props.itoId].includes(i+1)){
@@ -128,8 +136,7 @@ export default function RosterSchedulerRow(props){
     cellList.push(<ShiftCountCell key={props.itoId+"_bxShiftCount"}>{roster.shiftCountList.bxShiftCount}</ShiftCountCell>);
     cellList.push(<ShiftCountCell key={props.itoId+"_cShiftCount"}>{roster.shiftCountList.cShiftCount}</ShiftCountCell>);
     cellList.push(<ShiftCountCell key={props.itoId+"_dxShiftCount"}>{roster.shiftCountList.dxShiftCount}</ShiftCountCell>);
-    cellList.push(<ShiftCountCell key={props.itoId+"_actualNoOfWorkingDay"} className="tailCell">{roster.actualNoOfWorkingDay}</ShiftCountCell>);
-    
+    cellList.push(<ShiftCountCell key={props.itoId+"_actualNoOfWorkingDay"} className="tailCell">{roster.actualNoOfWorkingDay}</ShiftCountCell>);    
     return(
         <tr>            
             {cellList}
