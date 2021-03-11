@@ -21,7 +21,7 @@ export default function RosterSchedulerRow(props){
         systemParam
     } = useContext(RosterWebContext);
     //console.log(rosterData);
-    //console.log("RosterSchedulerRow");
+    console.log("RosterSchedulerRow");
     let roster=Object.assign({},rosterData.rosterList[props.itoId]);    
     let previousMonthShift=rosterData.previousMonthShiftList[props.itoId];
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
@@ -45,7 +45,7 @@ export default function RosterSchedulerRow(props){
         //console.log(e.target.textContent,e.target.cellIndex);
         //console.log(rosterData);
         let realIndex=e.target.cellIndex-systemParam.noOfPrevDate;
-        let temp=JSON.parse(JSON.stringify(rosterData));
+        let temp=JSON.parse(JSON.stringify(rosterData));//Don't use object.assign, which is shallow copy
         
         //console.log("0:"+realIndex+","+JSON.stringify(temp.rosterList[props.itoId].shiftList));
         if (e.target.textContent===null){

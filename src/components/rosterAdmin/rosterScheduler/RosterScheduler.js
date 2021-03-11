@@ -31,11 +31,13 @@ export default function RosterScheduler(props){
             let calendarUtility=new CalendarUtility();
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
             rosterData.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,rosterData.rosterList);
+            let orgRosterData= JSON.parse(JSON.stringify(rosterData)); //Don't use object.assign, which is shallow copy
             setRosterSchedulerData(
                {
                 "activeShiftInfoList":activeShiftInfoList,
                 "calendarUtility":calendarUtility,
                 "monthlyCalendar":monthlyCalendar,
+                "orgRosterData":orgRosterData,
                 "rosterData":rosterData,
                 "rosterMonth":rosterMonth,                
                 "systemParam":systemParam,

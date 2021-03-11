@@ -5,22 +5,33 @@ import Roster from '../../../../utils/Roster';
 import RosterWebContext from '../../../../RosterWebContext';
 import Utility from '../../../../utils/Utility';
 export default function ButtonPanel(){
-    let {calendarUtility,rosterMonth,rosterData,setRosterData} = useContext(RosterWebContext);
+    let {calendarUtility,rosterMonth,orgRosterData,rosterData,setRosterData} = useContext(RosterWebContext);
     async function reload(){
-        let roster = new Roster();
-        let newRosterData = await roster.getRosterSchedulerList(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
-        let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
-        newRosterData.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,newRosterData.rosterList);
-        setRosterData(newRosterData);
+        /*
+        console.log(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList);
+        console.log(rosterData.rosterList['ITO1_1999-01-01'].shiftList);
+        */
+        setRosterData(orgRosterData);
     }
     function clearAllShiftData(){
-        let temp=Object.assign({},rosterData);
+        let temp=JSON.parse(JSON.stringify(rosterData));
         let rosterList=temp.rosterList;
+        /*
+        console.log(JSON.stringify(rosterData));
+        console.log("0temp="+JSON.stringify(temp.rosterList['ITO1_1999-01-01'].shiftList));
+        console.log("0org="+JSON.stringify(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList));
+        console.log("0current="+JSON.stringify(rosterData.rosterList['ITO1_1999-01-01'].shiftList));
+        */
         Object.keys(rosterList).forEach(itoId=>{
             let roster=rosterList[itoId];
             roster.shiftList={};
             temp.rosterList[itoId]=roster;
         });
+        /*
+        console.log("1temp="+JSON.stringify(temp.rosterList['ITO1_1999-01-01'].shiftList));
+        console.log("1org="+JSON.stringify(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList));
+        console.log("1current="+JSON.stringify(rosterData.rosterList['ITO1_1999-01-01'].shiftList));
+        */
         setRosterData(temp);
     }
     return(

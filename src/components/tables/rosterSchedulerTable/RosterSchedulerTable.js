@@ -17,6 +17,7 @@ export default function RosterSchedulerTable(props){
 
     let activeShiftInfoList=props.rosterSchedulerData.activeShiftInfoList;
     let calendarUtility=props.rosterSchedulerData.calendarUtility;
+    let orgRosterData=props.rosterSchedulerData.orgRosterData;
     let rosterMonth=props.rosterSchedulerData.rosterMonth;
     let systemParam=props.rosterSchedulerData.systemParam;
     let yearlyRosterStatistic=props.rosterSchedulerData.yearlyRosterStatistic;
@@ -38,6 +39,7 @@ export default function RosterSchedulerTable(props){
         calendarUtility,
         hightLightCellIndex,
         monthlyCalendar,
+        orgRosterData,
         rosterData,
         rosterMonth,
         setHightLightCellIndex,
@@ -45,8 +47,13 @@ export default function RosterSchedulerTable(props){
         systemParam,
         yearlyRosterStatistic
     };
+    //console.log("RosterSchedulerTable");
     //console.log("Preferred Shift List="+JSON.stringify(rosterData.preferredShiftList));
     //console.log("Roster List="+JSON.stringify(rosterData.rosterList));
+    
+    //console.log("Table org="+JSON.stringify(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList));
+    //console.log("Table current="+JSON.stringify(rosterData.rosterList['ITO1_1999-01-01'].shiftList));
+    
     return (
         <table id="rosterTable">
             <RosterWebContext.Provider value={contextValue}>
