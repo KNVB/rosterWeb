@@ -94,6 +94,8 @@ export default class Utility{
       case 'POST':
         requestPara["body"]=JSON.stringify(params);
         break;
+      default:
+        break;  
     }
     url="/rosterWeb"+url;
     let response = await fetch(url,requestPara);
