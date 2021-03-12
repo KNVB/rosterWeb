@@ -15,12 +15,17 @@ class PrivateAPI{
             res.send({});
         }
         this.saveRosterToDB=async(req,res)=>{
-            try{
-                let result=rosterManager.saveToDB(req.body);
-                res.send(result);
-            }catch(error){
-                res.send(error);
-            }
+            await rosterManager.saveToDB(req.body)
+            .then(result=>{
+                res.status(200).json({"result":result});
+            })
+            .catch(error=>{
+                console.log("3 Exception Caught");
+                return res.status(500).json({
+                    status: 'error',
+                    message: error,
+                });
+            })
         }
     }
 }

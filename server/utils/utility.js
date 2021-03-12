@@ -25,7 +25,8 @@ function checkToken(req,res,next){
             next();
         }
         catch (error){
-            return res.status(401).end();
+            //return res.status(401).end();
+            return res.redirect(401, '/rosterWeb/admin');
         }
     }
 }

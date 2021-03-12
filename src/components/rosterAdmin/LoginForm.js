@@ -10,7 +10,7 @@ function LoginForm(props) {
 			data.loginName=theForm.loginName.value;
 			data.adminPwd=theForm.adminPwd.value;
 
-			Utility.fetchAPI('/publicAPI/adminLogin','POST',null,data)
+			Utility.fetchAPI('/publicAPI/adminLogin','POST',data)
 			.then(data=>{
 				props.auth("true");
 			})

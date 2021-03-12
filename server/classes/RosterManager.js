@@ -149,7 +149,7 @@ class RosterManager
 				dboObj.close();
 			};	 	
 		}
-		this.saveToDB=async(rosterData)=>{
+		this.saveToDB=async (rosterData)=>{
 			let month=rosterData.month;
             let preferredShiftList=rosterData.preferredShiftList;
             let rosterList=rosterData.rosterList;
@@ -161,14 +161,15 @@ class RosterManager
 			*/
 			let dboObj=new DBO();
 			try{
-				dboObj.saveRosterData(year,month,preferredShiftList,rosterList);
-				return true;
-			}catch (error){
-				throw error;
+				let result=await dboObj.saveRosterData(year,month,preferredShiftList,rosterList);
+				return result;
+			}catch(err){
+				console.log("Some wrong when update roster data:"+err);
+				throw "Some wrong when update roster data.";
 			}
 			finally{
 				dboObj.close();
-			};	
+			};
 		} 
 	}
 }

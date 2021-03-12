@@ -37,22 +37,29 @@ export default function ButtonPanel(){
         */
         setRosterData(temp);
     }
-    function saveRosterToDB(){
+    async function saveRosterToDB(){
         
         let roster=new Roster();
+        
         roster.saveRosterToDB({
             month:rosterMonth.getMonth()+1,
             preferredShiftList:rosterData.preferredShiftList,
             rosterList:rosterData.rosterList,
             year:rosterMonth.getFullYear(),
         })
-        .then(result=>{
-            alert(result);
+        .then(updateResult=>{
+            if (updateResult.result){
+                alert("Update Success");
+            } else {
+                //return updateResult;
+                console.log(updateResult);
+            }
         })
         .catch(error=>{
-            console.log(error);
-        })
-        
+            alert(error.message);
+            //console.log("ButtonPanel Exception Caught");
+            //console.log(error);
+        });
         roster=null;
     }
     return(

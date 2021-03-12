@@ -4,6 +4,16 @@ class DBO
 		const moment = require('moment');
 		const mysql = require('mysql2');
 		const dbConfig={
+			charset	:"utf8",
+			host		:"f5vm9",
+			user     	:"operator",
+			password	:"f5P@ssword",
+			port		:3306,
+			database 	:"operator_roster"
+		};
+
+		/*
+		const dbConfig={
 				charset	:"utf8",
 				host		:"server",
 				user     	:"cstsang",
@@ -11,9 +21,10 @@ class DBO
 				port		:3306,
 				database 	:"roster"
 			};
+		*/	
 		dbConfig["multipleStatements"]=true;
 		dbConfig["insecureAuth"]=true;	
-		//const connection = mysql.createConnection(dbConfig);
+		const connection = mysql.createConnection(dbConfig);
 		this.getITOList=async(year, month)=>{
             let startDateString=year+"-";
 			if (month<10) {
@@ -49,6 +60,20 @@ class DBO
 			const endDateString=moment(startDateString).endOf('month').format('YYYY-MM-DD');
 			const prevDateString=startDate.subtract(2, 'days').format('YYYY-MM-DD');
 		}
+		this.updateRoster=async()=>{
+			try{
+				await connection.promise().beginTransaction();
+				await connection.promise().query("select 1+1");
+				await connection.promise().query("select 1+1");
+				await connection.promise().commit();
+				return true;
+			}catch(error){
+				if (connection) {
+					await connection.promise().rollback();
+				}
+				throw error;
+			}
+		}
 		this.close=()=>{
 			connection.end(err=>{
 				if (err) throw err;
@@ -81,6 +106,20 @@ async function getITOList(){
 	};
 }
 
+let dboObj=new DBO();
+dboObj.updateRoster()
+.then((result)=>{
+	console.log(result);
+})
+.catch(error=>{
+	console.log(error);
+	console.log("2 Exception Caught.");
+	dboObj.close();
+})
+.finally(()=>{
+	dboObj.close();
+})
+
 
 /*
 let dboObj=new DBO();
@@ -94,8 +133,9 @@ dboObj.getRosterRule()
 .finally(()=>{
 	dboObj.close();
 });
-*/
+
 getITOList()
 .then(resultList=>{
 	console.log(resultList);
 });
+*/

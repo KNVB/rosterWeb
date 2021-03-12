@@ -73,40 +73,45 @@ export default class Utility{
       dxShiftCount: dxShiftCount
     };
   }
-  static fetchAPI(url,method,getParams,postParams){
-      if (getParams){
-          const paramsObject = new URLSearchParams(getParams);
-          const queryString = paramsObject.toString();  
-          url+="?"+queryString;
-      }
-      url="/rosterWeb"+url;
-      console.log("=======================");
-      console.log("url="+url);
-      console.log("method="+method);
-      console.log("getParams="+getParams);
-      console.log("postParams="+postParams);
-      console.log("=======================");
-      return fetch(url,
-              {
-                  body: JSON.stringify(postParams),
-                  headers:{
-                      'Content-Type': 'application/json' 
-                  },
-                  "method":method || 'GET',
-              })
-              .then(response => {
-                  if (response.ok) {
-                      return response.json();
-                  }else{
-                    if (response.status===401){
-                      alert("The user session has been expired, please login again.");
-                      sessionStorage.clear();
-                      return <Redirect to='/rosterWeb/admin/'  />
-                    } else{
-                        throw new Error(response.statusText);
-                      }
-                  }
-              })
+  static async fetchAPI(url,method,params){
+    console.log("=======================");
+    console.log("url="+url);
+    console.log("method="+method);
+    console.log("params="+params);
+    console.log("=======================");
+    let requestPara={
+      headers:{
+                'Content-Type': 'application/json' 
+      },
+      "method":method || 'GET',
+    }
+    switch (method.toUpperCase()){
+      case 'GET':
+        const paramsObject = new URLSearchParams(params);
+        const queryString = paramsObject.toString();  
+        url+="?"+queryString;
+        break;
+      case 'POST':
+        requestPara["body"]=JSON.stringify(params);
+        break;
+    }
+    url="/rosterWeb"+url;
+    let response = await fetch(url,requestPara);
+    switch (response.status){
+      case 401:
+        sessionStorage.clear();  
+        alert("The user session has been expired, please login again.");
+        return <Redirect to='/rosterWeb/admin/'  />
+        break;
+      case 200:
+        return response.json();  
+        break;
+      default:
+        const error = await response.json();
+        throw new Error(error.message);
+        break;  
+    }
+
   }
   static getDuplicateShiftList(monthlyCalendar,rosterList){
     let result={};
