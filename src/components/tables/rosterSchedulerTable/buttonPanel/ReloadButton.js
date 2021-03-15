@@ -1,0 +1,17 @@
+import {useContext} from 'react';
+import RosterWebContext from '../../../../RosterWebContext';
+export default function ReloadButton(){
+    let {orgRosterData,setRosterData} = useContext(RosterWebContext);
+    async function reload(){
+        /*
+        console.log(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList);
+        console.log(rosterData.rosterList['ITO1_1999-01-01'].shiftList);
+        */
+        setRosterData(orgRosterData);
+    }
+    return (
+        <div className="reloadRoster" onClick={reload}>
+            Reload the roster
+        </div>
+    );    
+}

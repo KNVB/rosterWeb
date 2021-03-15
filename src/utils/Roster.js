@@ -34,7 +34,7 @@ export default class Roster{
                 throw error;
             }            
         }
-        this.saveRosterToDB=async(rosterData, changeLoggedInFlag)=>{
+        this.saveRosterToDB=async(rosterData)=>{
             try{
                 let result=await Utility.fetchAPI('/privateAPI/saveRosterToDB','POST',rosterData);
                 return result;
