@@ -1,4 +1,3 @@
-import { Redirect } from 'react-router-dom'
 import SessionExpiredError from './SessionExpiredError';
 export default class Utility{
   static calculateMean(data){
@@ -99,16 +98,16 @@ export default class Utility{
     }
     url="/rosterWeb"+url;
     let response = await fetch(url,requestPara);
+    let responseObj=await response.json();
     switch (response.status){
       case 401:
-        throw new SessionExpiredError("The user session has been expired, please login again.");
+        throw new SessionExpiredError(responseObj.message);
         break;
       case 200:
-        return response.json();  
+        return responseObj;  
         break;
       default:
-        const error = await response.json();
-        throw new Error(error.message);
+        throw new Error(responseObj.message);
         break;  
     }
 

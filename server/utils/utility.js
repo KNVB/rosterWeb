@@ -25,8 +25,7 @@ function checkToken(req,res,next){
             next();
         }
         catch (error){
-            //return res.status(401).end();
-            return res.redirect(401, '/rosterWeb/admin');
+            return res.status(401).send({message:"The user session has been expired, please login again."});
         }
     }
 }

@@ -16,12 +16,15 @@ class PublicAPI{
                 });
                 res.status(200).send({});
             } else {
-                res.status(401).send();
+                res.status(401).send({message:"Invalid user name or password."});
             }
         }
         this.getAllActiveShiftInfo=async (req,res)=>{
             let result=await rosterManager.getAllActiveShiftInfo();
             res.send(result);
+        }
+        this.getExcel=async(req,res)=>{
+            
         }
         this.getITORosterList = async (req, res) =>{
             let result=await rosterManager.getRosterList(req.query.year,req.query.month);

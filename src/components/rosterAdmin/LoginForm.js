@@ -15,14 +15,7 @@ function LoginForm(props) {
 				props.auth("true");
 			})
 			.catch(error=>{
-				switch(error.message){
-					case "401":
-						alert("Invalid user name or password");
-						break;
-					default:
-						alert("Something wrong when login the system,error code="+error.message);
-						break;			
-				}
+				alert(error.message);
 			});
 		}
 		e.preventDefault();

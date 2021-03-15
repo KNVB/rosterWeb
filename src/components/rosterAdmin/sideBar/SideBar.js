@@ -1,16 +1,26 @@
+import { slide as Menu } from 'react-burger-menu';
 import React from 'react';
 import Utility from '../../../utils/Utility';
-import { slide as Menu } from 'react-burger-menu';
+//import SessionExpiredError from '../../../utils/SessionExpiredError';
 import "./SideBar.css";
 function SideBar(props){
-    function logout(){
-        Utility.fetchAPI('/privateAPI/logout','POST')
-        .then(result=>{
+    async function logout(){
+        try{
+            await Utility.fetchAPI('/privateAPI/logout','POST');
+        }catch(error){
+            console.log(error);
+            /*
+            if (error instanceof SessionExpiredError){
+                //console.log("changeLoggedInFlag");
+                props.auth("false");
+            } else {
+                throw error;
+            }
+            */
+        }
+        finally{
             props.auth("false");
-        })
-        .catch(err=>{
-          alert("Something wrong when logout the system: "+err.message);  
-        })
+        }
     }
     return (
         <Menu disableAutoFocus width={ '250px' }>
