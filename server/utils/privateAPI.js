@@ -1,6 +1,10 @@
 class PrivateAPI{
     constructor(rosterManager,systemParam){
         this.systemParam=systemParam;
+        this.exportExcel=async(req,res)=>{
+            let ExcelExporter=require('../classes/ExcelExporter');
+            let excelExporter=new ExcelExporter(res);
+        }
         this.getRosterSchedulerList=async(req,res)=>{
             let result=await rosterManager.getRosterSchedulerList(req.body.year,req.body.month);
             res.send(result);

@@ -43,12 +43,12 @@ app.use('/rosterWeb/privateAPI',util.checkToken,privateAPIRouter);
 //==============================================================================
 publicAPIRouter.post('/adminLogin',publicAPI.adminLogin);
 publicAPIRouter.get('/getAllActiveShiftInfo',publicAPI.getAllActiveShiftInfo);
-publicAPIRouter.get('/getExcel',publicAPI.getExcel);
 publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
 publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);
 
 
 //==============================================================================
+privateAPIRouter.post('/exportExcel',privateAPI.exportExcel);
 privateAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
 privateAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
 privateAPIRouter.post('/logout',privateAPI.logout);
