@@ -17,6 +17,7 @@ export default function RosterSchedulerTable(props){
 
     let activeShiftInfoList=props.rosterSchedulerData.activeShiftInfoList;
     let calendarUtility=props.rosterSchedulerData.calendarUtility;
+    let changeLoggedInFlag=props.rosterSchedulerData.changeLoggedInFlag;
     let orgRosterData=props.rosterSchedulerData.orgRosterData;
     let rosterMonth=props.rosterSchedulerData.rosterMonth;
     let systemParam=props.rosterSchedulerData.systemParam;
@@ -37,6 +38,7 @@ export default function RosterSchedulerTable(props){
     let contextValue={
         activeShiftInfoList,
         calendarUtility,
+        changeLoggedInFlag,
         hightLightCellIndex,
         monthlyCalendar,
         orgRosterData,

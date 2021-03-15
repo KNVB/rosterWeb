@@ -5,7 +5,7 @@ import Roster from '../../../../utils/Roster';
 import RosterWebContext from '../../../../RosterWebContext';
 import Utility from '../../../../utils/Utility';
 export default function ButtonPanel(){
-    let {activeShiftInfoList,monthlyCalendar,orgRosterData,rosterData,rosterMonth,setRosterData} = useContext(RosterWebContext);
+    let {activeShiftInfoList,changeLoggedInFlag,monthlyCalendar,orgRosterData,rosterData,rosterMonth,setRosterData} = useContext(RosterWebContext);
     async function reload(){
         /*
         console.log(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList);
@@ -38,27 +38,22 @@ export default function ButtonPanel(){
         setRosterData(temp);
     }
     async function saveRosterToDB(){
-        
         let roster=new Roster();
-        
         roster.saveRosterToDB({
             month:rosterMonth.getMonth()+1,
             preferredShiftList:rosterData.preferredShiftList,
             rosterList:rosterData.rosterList,
             year:rosterMonth.getFullYear(),
-        })
+        }, changeLoggedInFlag)
         .then(updateResult=>{
             if (updateResult.result){
                 alert("Update Success");
             } else {
-                //return updateResult;
                 console.log(updateResult);
             }
         })
         .catch(error=>{
             alert(error.message);
-            //console.log("ButtonPanel Exception Caught");
-            //console.log(error);
         });
         roster=null;
     }

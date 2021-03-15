@@ -1,9 +1,11 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useEffect,useState} from 'react';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
+
 import MonthPicker from '../../monthPicker/MonthPicker';
 import Roster from '../../../utils/Roster';
 import RosterSchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
+import SessionExpiredError from '../../../utils/SessionExpiredError';
 import Utility from '../../../utils/Utility';
 export default function RosterScheduler(props){
     const [rosterMonth,setRosterMonth]=useState(new Date());
@@ -24,31 +26,42 @@ export default function RosterScheduler(props){
     let systemParam=props.systemParam;
     useEffect(()=>{
         const getData = async () => {
-            let roster = new Roster();
-            let rosterData = await roster.getRosterSchedulerList(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
-            let activeShiftInfoList= await roster.getAllActiveShiftInfo();
-            let yearlyRosterStatistic=await roster.getYearlyRosterStatistic(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
-            let calendarUtility=new CalendarUtility();
-            let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
-            rosterData.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,rosterData.rosterList);
-            Object.keys(rosterData.rosterList).forEach(itoId=>{
-                let itoRoster=rosterData.rosterList[itoId];
-                Utility.calculateITOMonthlyStat(itoRoster,monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
-                rosterData.rosterList[itoId]=itoRoster;
-            })
-            let orgRosterData= JSON.parse(JSON.stringify(rosterData)); //Don't use object.assign, which is shallow copy
-            setRosterSchedulerData(
-               {
-                "activeShiftInfoList":activeShiftInfoList,
-                "calendarUtility":calendarUtility,
-                "monthlyCalendar":monthlyCalendar,
-                "orgRosterData":orgRosterData,
-                "rosterData":rosterData,
-                "rosterMonth":rosterMonth,                
-                "systemParam":systemParam,
-                "yearlyRosterStatistic":yearlyRosterStatistic
-               }
-            )
+            let activeShiftInfoList,rosterData, yearlyRosterStatistic;
+            let roster = new Roster(props.changeLoggedInFlag);
+            activeShiftInfoList= await roster.getAllActiveShiftInfo();
+            try{            
+                yearlyRosterStatistic=await roster.getYearlyRosterStatistic(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
+                rosterData = await roster.getRosterSchedulerList(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
+                let calendarUtility=new CalendarUtility();
+
+                let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
+                rosterData.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,rosterData.rosterList);
+                Object.keys(rosterData.rosterList).forEach(itoId=>{
+                    let itoRoster=rosterData.rosterList[itoId];
+                    Utility.calculateITOMonthlyStat(itoRoster,monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
+                    rosterData.rosterList[itoId]=itoRoster;
+                })
+                let orgRosterData= JSON.parse(JSON.stringify(rosterData)); //Don't use object.assign, which is shallow copy
+                setRosterSchedulerData(
+                   {
+                    "activeShiftInfoList":activeShiftInfoList,
+                    "calendarUtility":calendarUtility,
+                    "changeLoggedInFlag":props.changeLoggedInFlag,
+                    "monthlyCalendar":monthlyCalendar,
+                    "orgRosterData":orgRosterData,
+                    "rosterData":rosterData,
+                    "rosterMonth":rosterMonth,                
+                    "systemParam":systemParam,
+                    "yearlyRosterStatistic":yearlyRosterStatistic
+                   }
+                );
+            }catch (error){
+                if (error instanceof SessionExpiredError){
+                    //console.log("changeLoggedInFlag");
+                    props.changeLoggedInFlag(false);
+                }
+                alert(error.message);
+            }
         }
         getData();    
     },[rosterMonth,systemParam]);
