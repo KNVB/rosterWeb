@@ -4,7 +4,7 @@ import RosterWebContext from '../../../RosterWebContext';
 import RosterSchedulerTableBody from './rosterSchedulerTableBody/RosterSchedulerTableBody';
 import RosterSchedulerTableFooter from './rosterSchedulerTableFooter/RosterSchedulerTableFooter';
 import TableHeader from '../tableHeader/TableHeader';
-
+import Utility from '../../../utils/Utility';
 export default function RosterSchedulerTable(props){
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
 
@@ -21,6 +21,7 @@ export default function RosterSchedulerTable(props){
     let orgRosterData=props.rosterSchedulerData.orgRosterData;
     let rosterMonth=props.rosterSchedulerData.rosterMonth;
     let systemParam=props.rosterSchedulerData.systemParam;
+    rosterData.vacantShiftList=Utility.getVacantShiftList(activeShiftInfoList.essentialShift,monthlyCalendar,rosterData.rosterList);
     let yearlyRosterStatistic=props.rosterSchedulerData.yearlyRosterStatistic;
     let mouseUp=(e)=>{
         console.log("mouse up");

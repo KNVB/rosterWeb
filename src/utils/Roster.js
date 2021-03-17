@@ -3,6 +3,19 @@ import SessionExpiredError from './SessionExpiredError';
 export default class Roster{
     constructor(changeLoggedInFlag){
         //this.changeLoggedInFlag=changeLoggedInFlag;
+        this.exportExcel=async(rosterData)=>{
+            try{
+                let result=await Utility.fetchAPI('/privateAPI/exportExcel','POST',rosterData);
+                return result;
+            }catch(error){
+                if (error instanceof SessionExpiredError){
+                    console.log("changeLoggedInFlag");
+                    changeLoggedInFlag(false);
+                } else {
+                    throw error;
+                }
+            }
+        }
         this.get=(year,month)=>{
            return Utility.fetchAPI('/publicAPI/getITORosterList','GET',{"year":year,"month":month});
         }
@@ -11,7 +24,7 @@ export default class Roster{
         }
         this.getRosterSchedulerList=async(year,month)=>{
             try{
-                let result=await Utility.fetchAPI('/privateAPI/getRosterSchedulerList','POST',{"year":year,"month":month}, changeLoggedInFlag);
+                let result=await Utility.fetchAPI('/privateAPI/getRosterSchedulerList','POST',{"year":year,"month":month});
                 return result;
             }catch(error){
                 if (error instanceof SessionExpiredError){
