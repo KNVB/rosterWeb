@@ -771,5 +771,5 @@ excelExporter.doExport()
     console.log("Export Completed.");
 })
 .catch(error=>{
-    console.log("Something Wrong:"+error);
+    console.log("Something Wrong:"+error.stack);
 })

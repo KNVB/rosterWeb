@@ -138,7 +138,7 @@ export default function RosterSchedulerRow(props){
     cellList.push(<ShiftCountCell key={props.itoId+"_dxShiftCount"}>{roster.shiftCountList.dxShiftCount}</ShiftCountCell>);
     cellList.push(<ShiftCountCell key={props.itoId+"_actualNoOfWorkingDay"} className="tailCell">{roster.actualNoOfWorkingDay}</ShiftCountCell>);    
     return(
-        <tr>            
+        <tr id={props.itoId+"_roster_scheduler_row"}>            
             {cellList}
         </tr>
     )

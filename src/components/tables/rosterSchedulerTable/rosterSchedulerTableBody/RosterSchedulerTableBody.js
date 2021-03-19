@@ -6,7 +6,7 @@ import VacantShiftRow from './VacantShiftRow';
 import Utility from '../../../../utils/Utility';
 export default function RosterSchedulerTableBody(){
     let rowList = [];
-    let {activeShiftInfoList,monthlyCalendar,rosterData}=useContext(RosterWebContext);
+    let {rosterData,selectedRegion}=useContext(RosterWebContext);
     
     //console.log("RosterSchedulerTableBody");
     //console.log(rosterData);
@@ -15,8 +15,8 @@ export default function RosterSchedulerTableBody(){
     //console.log("body current="+JSON.stringify(rosterData.rosterList['ITO1_1999-01-01'].shiftList));
     //let vacantShiftList=Utility.getVacantShiftList(activeShiftInfoList.essentialShift,monthlyCalendar,rosterData.rosterList);
     Object.keys(rosterData.rosterList).forEach(itoId=>{
-        rowList.push(<RosterSchedulerRow key={itoId+"_roster_scheduler_row"} itoId={itoId}/>);
-        rowList.push(<PreferredShiftRow key={itoId+"_preferred_shift_row"} itoId={itoId}/>);
+        rowList.push(<RosterSchedulerRow key={itoId+"_roster_scheduler_row"} itoId={itoId} rowIndex={rowList.length}/>);
+        rowList.push(<PreferredShiftRow key={itoId+"_preferred_shift_row"} itoId={itoId} rowIndex={rowList.length}/>);
     });    
     rowList.push(<VacantShiftRow key="vacant_shift_row" vacantShiftList={rosterData.vacantShiftList}/>);
 

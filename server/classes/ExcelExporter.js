@@ -12,7 +12,7 @@ class ExcelExporter{
             
             //fs.copyFileSync('server/template.xlsx','server/output.xlsx');
             const workbook = new ExcelJS.Workbook();
-            await workbook.xlsx.readFile('./template.xlsx');
+            await workbook.xlsx.readFile('./input.xlsx');
             const worksheet1 = workbook.getWorksheet("Sheet1");
             const worksheet2 = workbook.getWorksheet("Sheet2");
             //console.log(worksheet1===undefined);
@@ -25,26 +25,17 @@ class ExcelExporter{
             let holidayRow=worksheet1.getRow(4);
             let weekdayRow=worksheet1.getRow(5);
 
-            this.monthlyCalendar.calendarDateList.forEach(calendarDate=>{
-                if ((calendarDate.festivalInfo)&&(calendarDate.publicHoliday)){
-                    holidayRow.getCell(calendarDate.dateOfMonth+1).value='PH';
-                } 
-                dateRow.getCell(calendarDate.dateOfMonth+1).value=calendarDate.dateOfMonth;
-                
-                if ((calendarDate.dayOfWeek==6)||(calendarDate.publicHoliday)){
-                    console.log(calendarDate.dateOfMonth+1);
-                    weekdayRow.getCell(calendarDate.dateOfMonth+1).font = {color:{argb: 'FFFF0000'}, name: "Times New Roman", size: 12};
-                    weekdayRow.getCell(calendarDate.dateOfMonth+1).alignment ={ vertical: 'middle', horizontal: 'center'};
-                } else {
-                    weekdayRow.getCell(calendarDate.dateOfMonth+1).font = {color:{argb: '00000000'}, name: "Times New Roman", size: 12};
-                }
-                
-                weekdayRow.getCell(calendarDate.dateOfMonth+1).alignment ={ vertical: 'middle', horizontal: 'center'};
+            for (let i=0;i<this.monthlyCalendar.calendarDateList.length;i++){
+                let calendarDate=this.monthlyCalendar.calendarDateList[i];
                 weekdayRow.getCell(calendarDate.dateOfMonth+1).value=this.weekdayNames[calendarDate.dayOfWeek];
-                weekdayRow.getCell(calendarDate.dateOfMonth+1).font = {name: "Times New Roman", size: 12};
-
-               
-            })
+                let address=weekdayRow.getCell(calendarDate.dateOfMonth+1).address;
+                if ((calendarDate.dayOfWeek==6)||(calendarDate.publicHoliday)){
+                    console.log(weekdayRow.getCell(calendarDate.dateOfMonth+1).address);
+                    worksheet1.getCell(address).font = {color:{argb: 'FFFF0000'}, name: "Times New Roman", size: 12};
+                    break;
+                }
+            }
+            
             await workbook.xlsx.writeFile('./output.xlsx');
             //await workbook.xlsx.writeFile('server/output.xlsx');
             //res.download('server/output.xlsx','output.xlsx'); 
