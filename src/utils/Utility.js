@@ -182,18 +182,20 @@ export default class Utility{
     }
     return result;
   }
-  static startSelect(theCell,selectedRegion){
+  static startSelect(theCell,selectedRegion,setSelectedRegion){
     let row=theCell.parentElement;
-    selectedRegion.firstX=theCell.cellIndex;
-    selectedRegion.firstY=row.rowIndex;
-    selectedRegion.minX=theCell.cellIndex;
-    selectedRegion.minY=row.rowIndex;
-    selectedRegion.maxX=theCell.cellIndex;
-    selectedRegion.maxY=row.rowIndex;
-    selectedRegion.inSelectMode=true;
-    return selectedRegion;
+    let temp=JSON.parse(JSON.stringify(selectedRegion));
+    temp.firstX=theCell.cellIndex;
+    temp.firstY=row.rowIndex;
+    temp.minX=theCell.cellIndex;
+    temp.minY=row.rowIndex;
+    temp.maxX=theCell.cellIndex;
+    temp.maxY=row.rowIndex;
+    temp.inSelectMode=true;
+    console.log("temp="+JSON.stringify(temp));
+    setSelectedRegion(temp);
   }
-  static updateSelect(theCell,selectedRegion){
+  static updateSelect(theCell,selectedRegion,setSelectedRegion){
     if (selectedRegion.inSelectMode){
       let cellIndex=theCell.cellIndex;
 			let isChanged=false;
@@ -241,14 +243,15 @@ export default class Utility{
 				}	
 			}
       if (isChanged){
-        selectedRegion.minX=newMinX;
-				selectedRegion.maxX=newMaxX;
+        let temp=JSON.parse(JSON.stringify(selectedRegion))
+        temp.minX=newMinX;
+				temp.maxX=newMaxX;
 				
-				selectedRegion.minY=newMinY;
-				selectedRegion.maxY=newMaxY;
+				temp.minY=newMinY;
+			  temp.maxY=newMaxY;
+        setSelectedRegion(temp);
       }
     }
-    return selectedRegion;
   }
   static updateThisMonthBalance(rosterData,itoId){
     let roster=rosterData.rosterList[itoId];

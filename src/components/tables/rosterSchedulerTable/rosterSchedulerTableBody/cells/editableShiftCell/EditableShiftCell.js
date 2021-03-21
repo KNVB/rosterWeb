@@ -11,20 +11,11 @@ export default function EditableShiftCell(props) {
   } = useContext(RosterWebContext);
   function mouseEnterHandler(e){
     props.onMouseEnter(e);
-    //console.log(e.target.parentElement.id);
-    if (selectedRegion.inSelectMode){
-      let temp=JSON.parse(JSON.stringify(selectedRegion));
-      temp=Utility.updateSelect(e.target,temp);
-      console.log("temp="+JSON.stringify(temp));
-      setSelectedRegion(temp);
-    }
+    Utility.updateSelect(e.target, selectedRegion,setSelectedRegion);
   }
   function mouseDownHandler(e){
     e.preventDefault();
-    let temp=JSON.parse(JSON.stringify(selectedRegion));
-    temp=Utility.startSelect(e.target,temp);
-    console.log("temp="+JSON.stringify(temp));
-    setSelectedRegion(temp);
+    Utility.startSelect(e.target,selectedRegion,setSelectedRegion);
   }
   return (
     <ShiftCell
