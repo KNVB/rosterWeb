@@ -64,7 +64,7 @@ export default function RosterScheduler(props){
             }
         }
         getData();    
-    },[rosterMonth,systemParam]);
+    },[rosterMonth,systemParam,props]);
     return (
         <div className="App p-1">
             <Container fluid={true} className="tableContainer">

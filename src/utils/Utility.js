@@ -72,9 +72,12 @@ export default class Utility{
       dxShiftCount: dxShiftCount
     };
   }
-  static endSelect(selectedRegion){
-    selectedRegion.inSelectMode=false;
-    return selectedRegion;
+  static endSelect(selectedRegion,setSelectedRegion){
+    if (selectedRegion.inSelectMode){
+      let temp=JSON.parse(JSON.stringify(selectedRegion));
+      temp.inSelectMode=false;
+      setSelectedRegion(temp);
+    }
   }
   static async fetchAPI(url,method,params){
     console.log("=======================");
@@ -252,4 +255,5 @@ export default class Utility{
     roster.thisMonthBalance=roster.thisMonthHourTotal+roster.lastMonthBalance;
     rosterData.rosterList[itoId]=roster;
   }
+  
 }
