@@ -3,6 +3,7 @@ import RosterWebContext from '../../../RosterWebContext';
 
 import RosterSchedulerTableBody from './rosterSchedulerTableBody/RosterSchedulerTableBody';
 import RosterSchedulerTableFooter from './rosterSchedulerTableFooter/RosterSchedulerTableFooter';
+import SelectedRegion from '../../../utils/SelectedRegion'; 
 import TableHeader from '../tableHeader/TableHeader';
 import Utility from '../../../utils/Utility';
 export default function RosterSchedulerTable(props){
@@ -12,8 +13,9 @@ export default function RosterSchedulerTable(props){
      * Both monthlyCalendar and rosterData must be a state variable,
      * otherwise their data are not in sync.
      */
-    const [rosterData,setRosterData]=useState(props.rosterSchedulerData.rosterData);
     const [monthlyCalendar,setMonthlyCalendar]=useState(props.rosterSchedulerData.monthlyCalendar);
+    const [rosterData,setRosterData]=useState(props.rosterSchedulerData.rosterData);
+    const [selectedRegion,setSelectedRegion]=useState(new SelectedRegion());
 
     let activeShiftInfoList=props.rosterSchedulerData.activeShiftInfoList;
     let calendarUtility=props.rosterSchedulerData.calendarUtility;
@@ -25,6 +27,13 @@ export default function RosterSchedulerTable(props){
     let yearlyRosterStatistic=props.rosterSchedulerData.yearlyRosterStatistic;
     let mouseUp=(e)=>{
         console.log("mouse up");
+        console.log(selectedRegion.inSelectMode);
+        if (selectedRegion.inSelectMode){
+            let temp=JSON.parse(JSON.stringify(selectedRegion));
+            temp=Utility.endSelect(temp);
+            console.log(temp);
+            setSelectedRegion(temp);
+        }
     }
     useEffect(()=>{
         //console.log("Table");
@@ -34,7 +43,7 @@ export default function RosterSchedulerTable(props){
         return () => {
             document.removeEventListener('mouseup', mouseUp)
         }
-    },[props.rosterSchedulerData.monthlyCalendar,props.rosterSchedulerData.rosterData]);
+    },[mouseUp,props.rosterSchedulerData.monthlyCalendar,props.rosterSchedulerData.rosterData,selectedRegion]);
 
     let contextValue={
         activeShiftInfoList,
@@ -45,8 +54,10 @@ export default function RosterSchedulerTable(props){
         orgRosterData,
         rosterData,
         rosterMonth,
+        selectedRegion,
         setHightLightCellIndex,
         setRosterData,
+        setSelectedRegion,
         systemParam,
         yearlyRosterStatistic
     };

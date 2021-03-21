@@ -72,6 +72,10 @@ export default class Utility{
       dxShiftCount: dxShiftCount
     };
   }
+  static endSelect(selectedRegion){
+    selectedRegion.inSelectMode=false;
+    return selectedRegion;
+  }
   static async fetchAPI(url,method,params){
     console.log("=======================");
     console.log("url="+url);
@@ -174,6 +178,74 @@ export default class Utility{
       result[i]=vacantShift;
     }
     return result;
+  }
+  static startSelect(theCell,selectedRegion){
+    let row=theCell.parentElement;
+    selectedRegion.firstX=theCell.cellIndex;
+    selectedRegion.firstY=row.rowIndex;
+    selectedRegion.minX=theCell.cellIndex;
+    selectedRegion.minY=row.rowIndex;
+    selectedRegion.maxX=theCell.cellIndex;
+    selectedRegion.maxY=row.rowIndex;
+    selectedRegion.inSelectMode=true;
+    return selectedRegion;
+  }
+  static updateSelect(theCell,selectedRegion){
+    if (selectedRegion.inSelectMode){
+      let cellIndex=theCell.cellIndex;
+			let isChanged=false;
+			let newMaxX=selectedRegion.maxX,newMinX=selectedRegion.minX;
+			let newMaxY=selectedRegion.maxY,newMinY=selectedRegion.minY;
+			let row=theCell.parentElement;
+			let rowIndex=row.rowIndex;
+
+      if (cellIndex<selectedRegion.firstX)
+			{
+				newMinX=cellIndex;
+				isChanged=true;
+			}
+			else
+			{
+				if (cellIndex>selectedRegion.firstX)
+				{
+					newMaxX=cellIndex;
+					isChanged=true;
+				}
+				else
+				{
+					newMinX=selectedRegion.firstX;
+					newMaxX=selectedRegion.firstX;
+					isChanged=true;
+				}	
+			}
+			if (rowIndex>selectedRegion.firstY)
+			{
+				newMaxY=rowIndex;
+				isChanged=true;
+			}
+			else
+			{
+				if (rowIndex<selectedRegion.firstY)
+				{
+					newMinY=rowIndex;
+					isChanged=true;
+				}
+				else
+				{
+					newMinY=selectedRegion.firstY;
+					newMaxY=selectedRegion.firstY;
+					isChanged=true;
+				}	
+			}
+      if (isChanged){
+        selectedRegion.minX=newMinX;
+				selectedRegion.maxX=newMaxX;
+				
+				selectedRegion.minY=newMinY;
+				selectedRegion.maxY=newMaxY;
+      }
+    }
+    return selectedRegion;
   }
   static updateThisMonthBalance(rosterData,itoId){
     let roster=rosterData.rosterList[itoId];

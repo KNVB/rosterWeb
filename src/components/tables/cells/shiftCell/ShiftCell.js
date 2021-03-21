@@ -3,7 +3,7 @@ import {useContext} from 'react';
 import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
 import RosterWebContext from '../../../../RosterWebContext';
 export default function ShiftCell(props){
-    const shellCellProps=Object.assign({},props);
+    const shiftCellProps=Object.assign({},props);
     let shiftClass ="p-0 shiftCell"+((props.className)?" "+props.className:"");
     let { activeShiftInfoList } = useContext(RosterWebContext);
     //let availableShiftList=props.availableShiftList;
@@ -13,10 +13,10 @@ export default function ShiftCell(props){
             shiftClass +=  " " + activeShiftInfoList[props.children].cssClassName;    
         }
     }
-    delete shellCellProps.availableShiftList;
+    delete shiftCellProps.availableShiftList;
     //console.log(myProps);
     return (
-        <BorderedAlignCenterCell {...shellCellProps} className={shiftClass}>
+        <BorderedAlignCenterCell {...shiftCellProps} className={shiftClass}>
             {props.children}
         </BorderedAlignCenterCell>
     );
