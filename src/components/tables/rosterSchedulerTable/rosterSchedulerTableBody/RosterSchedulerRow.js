@@ -16,12 +16,15 @@ export default function RosterSchedulerRow(props){
         activeShiftInfoList,
         monthlyCalendar,
         rosterData,
+        selectedRegion,
         setHightLightCellIndex,
         setRosterData,
         systemParam
     } = useContext(RosterWebContext);
     //console.log(rosterData);
     //console.log("RosterSchedulerRow");
+    //console.log(props.itoId+"_"+props.rowIndex);
+    
     let roster=JSON.parse(JSON.stringify(rosterData.rosterList[props.itoId]));    
     let previousMonthShift=rosterData.previousMonthShiftList[props.itoId];
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
@@ -89,10 +92,21 @@ export default function RosterSchedulerRow(props){
     }
 
     for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
-        let cssClassName=null;
+        let cssClassName="";
         if (rosterData.duplicateShiftList[props.itoId].includes(i+1)){
             cssClassName="errorRedBlackGround"; 
         }
+        if (selectedRegion.maxY===props.rowIndex){
+            console.log("MaxY="+props.rowIndex);
+            cssClassName+=" selectCellBorderBottom";
+        }
+        if (selectedRegion.minY===props.rowIndex){
+            console.log("MinY="+props.rowIndex);
+            cssClassName+=" selectCellBorderTop";
+        }
+
+        //console.log(selectedRegion.maxY,selectedRegion.minY,props.rowIndex);
+        
         cellList.push(
             <EditableShiftCell 
                 availableShiftList={roster.availableShiftList}

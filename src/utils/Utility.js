@@ -75,7 +75,13 @@ export default class Utility{
   static endSelect(selectedRegion,setSelectedRegion){
     if (selectedRegion.inSelectMode){
       let temp=JSON.parse(JSON.stringify(selectedRegion));
+      temp.firstX=-1;
+      temp.firstY=-1;
       temp.inSelectMode=false;
+      temp.minX=-1;
+      temp.minY=-1;
+      temp.maxX=-1;
+      temp.maxY=-1;
       setSelectedRegion(temp);
     }
   }
@@ -243,6 +249,7 @@ export default class Utility{
 				}	
 			}
       if (isChanged){
+        console.log("isChanged=true");
         let temp=JSON.parse(JSON.stringify(selectedRegion))
         temp.minX=newMinX;
 				temp.maxX=newMaxX;

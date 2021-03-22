@@ -1,6 +1,6 @@
 import {useCallback,useState,useEffect} from 'react';
+import './RosterSchedulerTable.css';
 import RosterWebContext from '../../../RosterWebContext';
-
 import RosterSchedulerTableBody from './rosterSchedulerTableBody/RosterSchedulerTableBody';
 import RosterSchedulerTableFooter from './rosterSchedulerTableFooter/RosterSchedulerTableFooter';
 import SelectedRegion from '../../../utils/SelectedRegion'; 
