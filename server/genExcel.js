@@ -551,7 +551,6 @@ worksheet.addConditionalFormatting({
     ]
 });
 
-
 function initHeader(){
     worksheet.mergeCells('B1:AF1');
     worksheet.mergeCells('B2:AF2');
@@ -712,15 +711,15 @@ function loadRosterData(){
         row.getCell(1).font=timesNewRomanFont;
         row.getCell(1).border=fullBorderStyle;
         row.getCell(1).alignment={wrapText: true};
-        j=2;
-        Object.keys(roster.shiftList).forEach(key=>{
-            row.getCell(j).value=roster.shiftList[key];
+        
+        j=2;        
+        for (const property in roster.shiftList) {
+            row.getCell(j).value=roster.shiftList[property];
             row.getCell(j).border=fullBorderStyle;
             row.getCell(j).font=timesNewRomanFont;
             row.getCell(j).alignment={ horizontal: 'center',vertical:'middle'};
             j++;
-        });
-        
+        }
 
         cell=worksheet.getCell("AG"+(i+firstRowIndex));
         cell.value=roster.totalHour;
@@ -761,10 +760,54 @@ function loadRosterData(){
         cell.font=timesNewRomanFont;
         cell.numFmt = '0.00';
         cell.value={formula:address};
+
+        address='countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"a")';
+        cell=worksheet.getCell("AL"+(i+firstRowIndex));
+        cell.value={formula:address};
+
+        address='countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"b")';
+        address+='+countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"b1")';
+        cell=worksheet.getCell("AM"+(i+firstRowIndex));
+        cell.value={formula:address};
+
+        address='countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"c")';
+        cell=worksheet.getCell("AN"+(i+firstRowIndex));
+        cell.value={formula:address};
+
+        address='countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"d")';
+        address+='+countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"d1")';
+        address+='+countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"d2")';
+        cell=worksheet.getCell("AO"+(i+firstRowIndex));
+        cell.value={formula:address};
+
+        address='countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"O")';
+        cell=worksheet.getCell("AP"+(i+firstRowIndex));
+        cell.value={formula:address};
+
+        address='SUM(AL'+(i+firstRowIndex)+':AP'+(i+firstRowIndex)+')';
+        cell=worksheet.getCell("AQ"+(i+firstRowIndex));
+        cell.value={formula:address};
+
     }
+    
+    cell=worksheet.getCell("A"+(firstRowIndex+itoCount));
+    cell.alignment={ horizontal: 'right',vertical:'middle'};
+    cell.value="Vacant Shifts";
+    cell.font={
+        bold: true,
+        size: 12,
+        color: { indexed: 53 },
+        name: 'Times New Roman',
+        family: 1
+      }
+    let row=worksheet.getRow(firstRowIndex+itoCount);
+    for (let i=2;i<33;i++){ 
+
+    } 
 }
 initHeader();
 loadRosterData();
+
 workbook.xlsx.writeFile('./output.xlsx')
 .then(()=>{
     console.log("complete");
@@ -784,8 +827,8 @@ workbook.xlsx.readFile('./template.xlsx')
             worksheet2.conditionalFormattings[0].rules[i].formulae,
             worksheet2.conditionalFormattings[0].rules[i].style.fill);
     }
-    
     const worksheet1 = workbook.getWorksheet("Sheet1");
+    console.log(worksheet1.getCell('A7').style.font);
     console.log(worksheet1.getCell('AI1')._column.width);
     console.log(worksheet1.getCell('AJ1')._column.width);
     console.log(worksheet1.getCell('AK1')._column.width);
@@ -794,7 +837,6 @@ workbook.xlsx.readFile('./template.xlsx')
     weekdayRow._cells.forEach(cell=>{
         console.log(cell._address,cell._column.width,cell.value);
     });
-    
 })
 .catch(error=>{
     console.log("Some wrong:"+error);
