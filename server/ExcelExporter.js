@@ -1,19 +1,227 @@
+class ExcelExporter{
+    constructor(){
+        let centerAligment={ horizontal: 'center',vertical:'middle'};
+        let centerWithWrapTextAligment={...centerAligment,...{wrapText:true}};
+        let ExcelJS = require('exceljs');
+        let fullBorderStyle={top: {style:'thin'},left: {style:'thin'},bottom: {style:'thin'},right: {style:'thin'}};
+        let monthNames=[
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ]
+        let timesNewRomanFont12={name: "Times New Roman", size: 12};
+        let timesNewRomanFont14={name: "Times New Roman", size: 14};
+        let weekdayNames=['Su','M','T','W','Th','F','S'];
+        let workbook = new ExcelJS.Workbook();
+        
+        let captionFont={...timesNewRomanFont14,...{bold:true,underline:true}};
+        this.columnWidthList={};
+        this.mergeList=[];
+        this.monthlyCalendar={};
+        this.rosterList={},this.rosterMonth=-1,this.rosterYear=-1;
+        this.vacantShiftList={};
 
-const ExcelJS = require('exceljs');
-const monthNames=['January','February','March','April',
-'May',
-'June',
-'July',
-'August',
-'September',
-'October',
-'November',
-'December']
+        this.doExport=()=>{
+            let worksheet = workbook.addWorksheet('Sheet1');
+            setRosterCellWidth(worksheet);
+            setCaptionRow(worksheet,this.rosterMonth,this.rosterYear);
+            mergeCells(worksheet,this.mergeList);
+            setColumnWidth(worksheet,this.columnWidthList);
+            setHeaderRow(worksheet,this.monthlyCalendar);
+            setRosterData(worksheet,this.rosterList);
+            return workbook.xlsx.writeFile('./output.xlsx');
+        }
+        function mergeCells(worksheet,mergeList){
+            mergeList.forEach(mergeAddress=>{
+                worksheet.mergeCells(mergeAddress);
+            })
+        }
+        function setColumnWidth(worksheet,columnList){
+            for (let key in columnList){
+                worksheet.getColumn(key).width=columnList[key];
+            }
+        }
+        function setCaptionRow(worksheet,rosterMonth,rosterYear){
+            let cell=worksheet.getCell('B1');
+    
+            cell.value='EMSTF Resident Support & Computer Operation Support Services Team Roster';
+            cell.font=captionFont;
+            cell.alignment = centerAligment;
+            
+            cell=worksheet.getCell('B2');
+            cell.value=monthNames[rosterMonth]+" "+rosterYear;
+            cell.font=captionFont;
+            cell.alignment =centerAligment;
+        
+            cell=worksheet.getCell('AG2');
+            cell.font=timesNewRomanFont12;
+            cell.value="Approved by SSO(R)5:";
+            
+            cell=worksheet.getCell('AI2');
+            cell.border={bottom: {style:'thin'}};
+        }
+        function setHeaderRow(worksheet,monthlyCalendar){
+            let calendarDate,cell;          
 
-const weekdayNames=['Su','M','T','W','Th','F','S'];
-const workbook = new ExcelJS.Workbook();
+            cell=worksheet.getCell('A4');
+            cell.value="Holidays";
+            cell.font = timesNewRomanFont12;
+            cell.border=fullBorderStyle;
+            worksheet.getCell('AG4').border=fullBorderStyle;
 
-const monthlyCalendar={
+//=============================================================================            
+            cell=worksheet.getCell('A5');
+            cell.value="Days";
+            cell.font = timesNewRomanFont12;
+            cell.border=fullBorderStyle;
+
+            cell=worksheet.getCell('AG5');
+            cell.font =timesNewRomanFont12;
+            cell.border=fullBorderStyle;
+            cell.value="Total\nHour";
+            cell.alignment = centerWithWrapTextAligment;
+
+            cell=worksheet.getCell('AH5');
+            cell.font =timesNewRomanFont12;
+            cell.border=fullBorderStyle;
+            cell.value="Actual\nHour";
+            cell.alignment = centerWithWrapTextAligment;
+
+            cell=worksheet.getCell('AI5');
+            cell.value="Hour Off Due";
+            cell.border=fullBorderStyle;
+            cell.font = timesNewRomanFont12;
+            cell.alignment = centerWithWrapTextAligment;
+            
+            worksheet.getCell('AK5').border=fullBorderStyle;
+//========================================================================================
+            cell=worksheet.getCell('A6');
+            cell.value="Resident Support\nTeam Members";
+            cell.font = timesNewRomanFont12;
+            cell.border=fullBorderStyle;
+            cell.alignment = { vertical: 'top',wrapText: true };
+
+            cell=worksheet.getCell('AI6');
+            cell.value="Last Month";
+            cell.font = timesNewRomanFont12;
+            cell.border=fullBorderStyle;
+            cell.alignment = centerWithWrapTextAligment;
+            
+            cell=worksheet.getCell('AJ6');
+            cell.value="This Month";
+            cell.font = timesNewRomanFont12;
+            cell.border=fullBorderStyle;
+            cell.alignment = centerWithWrapTextAligment;
+            
+            cell=worksheet.getCell('AK6');
+            cell.value="Total";
+            cell.font = timesNewRomanFont12;
+            cell.border=fullBorderStyle;
+            cell.alignment = centerWithWrapTextAligment;
+            
+            cell=worksheet.getCell('AL6');
+            cell.value="a";
+            cell.font = timesNewRomanFont12
+            
+            cell=worksheet.getCell('AM6');
+            cell.value="b";
+            cell.font = timesNewRomanFont12
+            
+            cell=worksheet.getCell('AN6');
+            cell.value="c";
+            cell.font = timesNewRomanFont12;
+            
+            cell=worksheet.getCell('AO6');
+            cell.value="d1";
+            cell.font = timesNewRomanFont12;
+            
+            cell=worksheet.getCell('AP6');
+            cell.value="o";
+            cell.font = timesNewRomanFont12;
+            
+            cell=worksheet.getCell('AQ6');
+            cell.value="No. of working day";
+            cell.font = timesNewRomanFont12;
+//=========================================================================================
+            let holidayRow=worksheet.getRow(4);
+            let weekdayRow=worksheet.getRow(5);
+            let dateRow=worksheet.getRow(6);
+            for (let i=2;i<33;i++){ 
+                dateRow.getCell(i).alignment = centerAligment;
+                holidayRow.getCell(i).alignment = centerAligment;
+                weekdayRow.getCell(i).alignment = centerAligment;
+
+                dateRow.getCell(i).border=fullBorderStyle;
+                holidayRow.getCell(i).border=fullBorderStyle;
+                weekdayRow.getCell(i).border=fullBorderStyle;
+                
+                holidayRow.getCell(i).font = timesNewRomanFont12;
+                weekdayRow.getCell(i).font = timesNewRomanFont12;
+                dateRow.getCell(i).font = timesNewRomanFont12;
+            }
+            for (let date=0;date< monthlyCalendar.calendarDateList.length;date++){
+                calendarDate=monthlyCalendar.calendarDateList[date];
+                dateRow.getCell(date+2).value=calendarDate.dateOfMonth;
+                dateRow.getCell(date+2).alignment = { horizontal: 'center',vertical:'bottom'};
+                weekdayRow.getCell(date+2).value=weekdayNames[calendarDate.dayOfWeek];
+                weekdayRow.getCell(date+2).alignment = centerAligment;
+
+                if ((calendarDate.dayOfWeek==6)||(calendarDate.publicHoliday)){
+                    holidayRow.getCell(date+2).value="PH";
+                    holidayRow.getCell(date+2).font={bold:true,color:{argb:"FFFF0000"},name: 'Times New Roman',size: 12};
+                    weekdayRow.getCell(date+2).font={bold:true,color:{argb:"FFFF0000"},name: 'Times New Roman',size: 12};
+                    holidayRow.getCell(date+2).alignment = centerAligment;
+                }
+            }
+        }
+        function setRosterCellWidth(worksheet){
+            for (let i=2;i<33;i++){
+                worksheet.getColumn(i).width=3.5;
+            }
+        }
+        function setRosterData(worksheet,rosterList){
+            let cell;
+            let firstRowIndex=worksheet.rowCount+1;
+            let itoIdList=Object.keys(rosterList);
+            let itoCount=itoIdList.length;
+            let j,row;
+            
+            for (let i=0;i<itoCount;i++){
+                
+            }
+        }
+    }
+    
+}
+module.exports = ExcelExporter;
+let excelExporter=new ExcelExporter();
+excelExporter.columnWidthList={'A':26,
+    'AG':11,
+    'AH':11,
+    'AI':8.25,
+    'AJ':8.625,
+    'AK':7.875
+};
+excelExporter.mergeList=[
+    'B1:AF1',
+    'B2:AF2',
+    'AG2:AH2',
+    'AI2:AK2',
+    'AG4:AK4',
+    'AI5:AJ5',
+    'AG5:AG6',
+    'AH5:AH6'
+];
+excelExporter.monthlyCalendar={
     "calendarDateList": [
         {
             "publicHoliday": false,
@@ -516,7 +724,7 @@ const monthlyCalendar={
     ],
     "noOfWorkingDay": 23
 }
-const rosterList={
+excelExporter.rosterList={
     "ITO1_1999-01-01": {
         "lastMonthBalance": 5.55,
         "thisMonthBalance": -5.350000000000006,
@@ -807,518 +1015,46 @@ const rosterList={
         "actualNoOfWorkingDay": 20
     }
 }
-const rosterMonth=2,rosterYear=2021;    
-const vacantShiftList={
-        "0": "",
-        "1": "",
-        "2": "",
-        "3": "",
-        "4": "",
-        "5": "",
-        "6": "",
-        "7": "",
-        "8": "",
-        "9": "",
-        "10": "",
-        "11": "",
-        "12": "",
-        "13": "",
-        "14": "",
-        "15": "",
-        "16": "",
-        "17": "a",
-        "18": "",
-        "19": "",
-        "20": "",
-        "21": "",
-        "22": "",
-        "23": "",
-        "24": "",
-        "25": "",
-        "26": "",
-        "27": "",
-        "28": "a",
-        "29": "",
-        "30": ""
+excelExporter.vacantShiftList={
+    "0": "",
+    "1": "",
+    "2": "",
+    "3": "",
+    "4": "",
+    "5": "",
+    "6": "",
+    "7": "",
+    "8": "",
+    "9": "",
+    "10": "",
+    "11": "",
+    "12": "",
+    "13": "",
+    "14": "",
+    "15": "",
+    "16": "",
+    "17": "a",
+    "18": "",
+    "19": "",
+    "20": "",
+    "21": "",
+    "22": "",
+    "23": "",
+    "24": "",
+    "25": "",
+    "26": "",
+    "27": "",
+    "28": "a",
+    "29": "",
+    "30": ""
 }
-    
-const worksheet = workbook.addWorksheet('Sheet1');
-
-let centerAligment={ horizontal: 'center',vertical:'middle'};
-let centerWithWrapTextAligment={...centerAligment,...{wrapText:true}};
-let fullBorderStyle={top: {style:'thin'},left: {style:'thin'},bottom: {style:'thin'},right: {style:'thin'}};
-let firstRowIndex=7;
-let lastBodyIndex="B7:AF"+(firstRowIndex+Object.keys(rosterList).length-1);
-let timesNewRomanFont12={name: "Times New Roman", size: 12};
-let timesNewRomanFont14={name: "Times New Roman", size: 14};
-
-let captionFont={...timesNewRomanFont14,...{bold:true,underline:true}};
-
-worksheet.addConditionalFormatting({
-    ref: lastBodyIndex,
-    rules: [
-        {
-            type: 'cellIs',
-            operator:'equal',
-            formulae:['"a"'],
-            style: {fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFFF99CC'}}},
-        },
-        {
-            type: 'cellIs',
-            operator:'equal',
-            formulae:['"c"'],
-            style: {fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFCCFFCC'}}},
-        },
-        {
-            type: 'containsText',
-            operator:'containsText',
-            text:"b",
-            style: {fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFFFFFCC'}}},
-        },
-        {
-            type: 'containsText',
-            operator:'containsText',
-            text:"d",
-            style: {fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFCCFFFF'}}},
-        }
-    ]
+excelExporter.rosterMonth=2;
+excelExporter.rosterYear=2021;
+console.log("Export Excel Start");
+excelExporter.doExport()
+.then(()=>{
+    console.log("export complete");
+})
+.catch(error=>{
+    console.log("Some wrong:"+error);
 });
-
-function initHeader(){
-    worksheet.mergeCells('B1:AF1');
-    worksheet.mergeCells('B2:AF2');
-    worksheet.mergeCells('AG2:AH2');
-    worksheet.mergeCells('AI2:AK2');
-    worksheet.mergeCells('AG4:AK4');
-    worksheet.mergeCells('AI5:AJ5');
-    worksheet.mergeCells('AG5:AG6');
-    worksheet.mergeCells('AH5:AH6');
-    
-    worksheet.getColumn('A').width=26;
-    worksheet.getColumn('AG').width=11;
-    worksheet.getColumn('AH').width=11;
-    worksheet.getColumn('AI').width=8.25;
-    worksheet.getColumn('AJ').width=8.625;
-    worksheet.getColumn('AK').width=7.875;
-
-    let cell=worksheet.getCell('B1');
-    
-    cell.value='EMSTF Resident Support & Computer Operation Support Services Team Roster';
-    cell.font=captionFont;
-    cell.alignment = centerAligment;
-    
-    cell=worksheet.getCell('B2');
-    cell.value=monthNames[rosterMonth]+" "+rosterYear;
-    cell.font=captionFont;
-    cell.alignment =centerAligment;
-
-    cell=worksheet.getCell('AG2');
-    cell.font=timesNewRomanFont12;
-    cell.value="Approved by SSO(R)5:";
-    
-    cell=worksheet.getCell('AI2');
-    cell.border={bottom: {style:'thin'}};
-    let headerRow=worksheet.getRow(3);
-    let holidayRow=worksheet.getRow(4);
-    let weekdayRow=worksheet.getRow(5);
-    let dateRow=worksheet.getRow(6);
-    
-    headerRow.alignment = { horizontal: 'center'};
-    for (let i=2;i<33;i++){
-        worksheet.getColumn(i).width=3.5;
-       
-        headerRow.getCell(i).font = timesNewRomanFont12;
-        holidayRow.getCell(i).font = timesNewRomanFont12;
-        weekdayRow.getCell(i).font = timesNewRomanFont12;
-        dateRow.getCell(i).font = timesNewRomanFont12;
-    
-        holidayRow.getCell(i).border=fullBorderStyle;
-        weekdayRow.getCell(i).border=fullBorderStyle;
-        dateRow.getCell(i).border=fullBorderStyle;
-    
-        if (monthlyCalendar.calendarDateList[i-2]){
-            let calendarDate=monthlyCalendar.calendarDateList[i-2];
-            dateRow.getCell(i).value=calendarDate.dateOfMonth;
-            dateRow.getCell(i).alignment = { horizontal: 'center',vertical:'bottom'};
-            weekdayRow.getCell(i).value=weekdayNames[calendarDate.dayOfWeek];
-            weekdayRow.getCell(i).alignment = centerAligment;
-            if ((calendarDate.dayOfWeek==6)||(calendarDate.publicHoliday)){
-                holidayRow.getCell(i).value="PH";
-                holidayRow.getCell(i).font={bold:true,color:{argb:"FFFF0000"},name: 'Times New Roman',size: 12};
-                weekdayRow.getCell(i).font={bold:true,color:{argb:"FFFF0000"},name: 'Times New Roman',size: 12};
-                holidayRow.getCell(i).alignment = centerAligment;
-            }        
-        }
-    }
-    
-    cell=worksheet.getCell('A4');
-    cell.value="Holidays";
-    cell.font = timesNewRomanFont12;
-    cell.border=fullBorderStyle;
-    worksheet.getCell('AG4').border=fullBorderStyle;
-    
-    //===================================================
-    cell=worksheet.getCell('A5');
-    cell.value="Days";
-    cell.font = timesNewRomanFont12;
-    cell.border=fullBorderStyle;
-    
-    cell=worksheet.getCell('AG5');
-    cell.font =timesNewRomanFont12;
-    cell.border=fullBorderStyle;
-    cell.value="Total\nHour";
-    cell.alignment = centerWithWrapTextAligment;
-    
-    cell=worksheet.getCell('AH5');
-    cell.font = timesNewRomanFont12;
-    cell.border=fullBorderStyle;
-    
-    cell.value="Actual\nHour";
-    cell.alignment = centerWithWrapTextAligment;
-    
-    cell=worksheet.getCell('AI5');
-    cell.value="Hour Off Due";
-    cell.border=fullBorderStyle;
-    cell.font = timesNewRomanFont12;
-    cell.alignment = centerWithWrapTextAligment;
-    
-    worksheet.getCell('AK5').border=fullBorderStyle;
-    
-    //=================================================================================
-    cell=worksheet.getCell('A6');
-    cell.value="Resident Support\nTeam Members";
-    cell.alignment = { vertical: 'top',wrapText: true };
-    cell.font = timesNewRomanFont12;
-    cell.border=fullBorderStyle;
-    
-    cell=worksheet.getCell('AI6');
-    cell.value="Last Month";
-    cell.font = timesNewRomanFont12;
-    cell.border=fullBorderStyle;
-    cell.alignment = centerWithWrapTextAligment;
-    
-    cell=worksheet.getCell('AJ6');
-    cell.value="This Month";
-    cell.font = timesNewRomanFont12;
-    cell.border=fullBorderStyle;
-    cell.alignment = centerWithWrapTextAligment;
-    
-    cell=worksheet.getCell('AK6');
-    cell.value="Total";
-    cell.font = timesNewRomanFont12;
-    cell.border=fullBorderStyle;
-    cell.alignment = centerWithWrapTextAligment;
-    
-    cell=worksheet.getCell('AL6');
-    cell.value="a";
-    cell.font = timesNewRomanFont12
-    
-    cell=worksheet.getCell('AM6');
-    cell.value="b";
-    cell.font = timesNewRomanFont12
-    
-    cell=worksheet.getCell('AN6');
-    cell.value="c";
-    cell.font = timesNewRomanFont12;
-    
-    cell=worksheet.getCell('AO6');
-    cell.value="d1";
-    cell.font = timesNewRomanFont12;
-    
-    cell=worksheet.getCell('AP6');
-    cell.value="o";
-    cell.font = timesNewRomanFont12;
-    
-    cell=worksheet.getCell('AQ6');
-    cell.value="No. of working day";
-    cell.font = timesNewRomanFont12;
-}
-function loadRosterData(){
-    let cell;
-    let itoIdList=Object.keys(rosterList);
-    let itoCount=itoIdList.length;
-    let j,row;
-    for (let i=0;i<itoCount;i++){
-        let roster=rosterList[itoIdList[i]];
-        row=worksheet.getRow(i+firstRowIndex);
-        row.getCell(1).value=roster.itoName+"\n"+roster.itoPostName+" Extn. 2458";
-        row.getCell(1).font=timesNewRomanFont12;
-        row.getCell(1).border=fullBorderStyle;
-        row.getCell(1).alignment={wrapText: true};
-        
-        j=2;        
-        for (const property in roster.shiftList) {
-            row.getCell(j).value=roster.shiftList[property];
-            row.getCell(j).border=fullBorderStyle;
-            row.getCell(j).font=timesNewRomanFont14;
-            row.getCell(j).alignment=centerAligment;
-            j++;
-        }
-
-        cell=worksheet.getCell("AG"+(i+firstRowIndex));
-        cell.value=roster.totalHour;
-        cell.border=fullBorderStyle;
-        cell.font=timesNewRomanFont14;
-        cell.alignment=centerAligment;
-        cell.numFmt = '0.00';
-
-        let address="B"+(i+firstRowIndex)+":AF"+(i+firstRowIndex);
-        cell=worksheet.getCell("AH"+(i+firstRowIndex));
-        cell.alignment=centerAligment;
-        cell.border=fullBorderStyle;
-        cell.font=timesNewRomanFont14;
-        cell.numFmt = '0.00';
-        cell.value={
-            formula:'(COUNTIF('+address+',"a"))*9+(COUNTIF('+address+',"b"))*5.75+(COUNTIF('+address+',"c"))*10.75+(COUNTIF('+address+',"d"))*9+(COUNTIF('+address+',"d1"))*8+(COUNTIF('+address+',"d2"))*8+(COUNTIF('+address+',"d3"))*7.8+(COUNTIF('+address+',"b1"))*7.25'
-        }        
-
-        cell=worksheet.getCell("AI"+(i+firstRowIndex));
-        cell.alignment=centerAligment;
-        cell.border=fullBorderStyle;
-        cell.font=timesNewRomanFont14;
-        cell.numFmt = '+#0.##;-#0.##';
-        cell.value=roster.lastMonthBalance;
-
-        address="AH"+(i+firstRowIndex)+"-AG"+(i+firstRowIndex);
-        cell=worksheet.getCell("AJ"+(i+firstRowIndex));
-        cell.alignment=centerAligment;
-        cell.border=fullBorderStyle;
-        cell.font=timesNewRomanFont14;
-        cell.numFmt = '0.00';
-        cell.value={formula:address,result:roster.thisMonthHourTotal};
-
-        address="AJ"+(i+firstRowIndex)+"+AI"+(i+firstRowIndex);
-        cell=worksheet.getCell("AK"+(i+firstRowIndex));
-        cell.alignment=centerAligment;
-        cell.border=fullBorderStyle;
-        cell.font=timesNewRomanFont14;
-        cell.numFmt = '0.00';
-        cell.value={formula:address};
-
-        address='countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"a")';
-        cell=worksheet.getCell("AL"+(i+firstRowIndex));
-        cell.value={formula:address};
-
-        address='countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"b")';
-        address+='+countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"b1")';
-        cell=worksheet.getCell("AM"+(i+firstRowIndex));
-        cell.value={formula:address};
-
-        address='countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"c")';
-        cell=worksheet.getCell("AN"+(i+firstRowIndex));
-        cell.value={formula:address};
-
-        address='countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"d")';
-        address+='+countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"d1")';
-        address+='+countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"d2")';
-        cell=worksheet.getCell("AO"+(i+firstRowIndex));
-        cell.value={formula:address};
-
-        address='countif(B'+(i+firstRowIndex)+":AF"+(i+firstRowIndex)+',"O")';
-        cell=worksheet.getCell("AP"+(i+firstRowIndex));
-        cell.value={formula:address};
-
-        address='SUM(AL'+(i+firstRowIndex)+':AP'+(i+firstRowIndex)+')';
-        cell=worksheet.getCell("AQ"+(i+firstRowIndex));
-        cell.value={formula:address};
-
-    }
-    worksheet.getColumn("AL").hidden=true;
-    worksheet.getColumn("AM").hidden=true;
-    worksheet.getColumn("AN").hidden=true;
-    worksheet.getColumn("AO").hidden=true;
-    worksheet.getColumn("AP").hidden=true;
-    worksheet.getColumn("AQ").hidden=true;
-    cell=worksheet.getCell("A"+(firstRowIndex+itoCount));
-    cell.alignment={ horizontal: 'right',vertical:'middle'};
-    cell.value="Vacant Shifts";
-    cell.font={
-        bold: true,
-        size: 12,
-        color: { indexed: 53 },
-        name: 'Times New Roman',
-        family: 1
-      }
-    let vacantRow=worksheet.getRow(firstRowIndex+itoCount);
-    for (let i=2;i<33;i++){ 
-        if (vacantShiftList[i-2]){
-            cell=vacantRow.getCell(i);
-            cell.value=vacantShiftList[i-2];
-            cell.alignment=centerAligment;
-            cell.font=timesNewRomanFont12;    
-        }
-    }
-    lastRowCount=worksheet.rowCount+1;
-    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
-    cell=worksheet.getCell("A"+lastRowCount);
-    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFF99CC'},bgColor: { indexed: 46 }};
-    cell.value="a : 0800H - 1700H";
-    cell.font=timesNewRomanFont14;
-
-    cell=worksheet.getCell("S"+lastRowCount);
-    cell.value="SITO - Senior Information Technology Officer";
-    cell.font=timesNewRomanFont14;
-
-    lastRowCount=worksheet.rowCount+1;
-    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
-    cell=worksheet.getCell("A"+lastRowCount);
-    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFFFFCC'},bgColor: { indexed: 46 }};
-    cell.value="b : 1630H - 2215H";
-    cell.font=timesNewRomanFont14;
-
-    cell=worksheet.getCell("S"+lastRowCount);
-    cell.value="ITO - Information Technology Officer";
-    cell.font=timesNewRomanFont14;
-
-    lastRowCount=worksheet.rowCount+1;
-    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
-    cell=worksheet.getCell("A"+lastRowCount);
-    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFFFFCC'},bgColor: { indexed: 46 }};
-    cell.value="b1: 1500H - 2215H";
-    cell.font=timesNewRomanFont14;
-
-    lastRowCount=worksheet.rowCount+1;
-    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
-    cell=worksheet.getCell("A"+lastRowCount);
-    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFCC'},bgColor: { indexed: 46 }};
-    cell.value="c : 2145H - 0830H (the next day)";
-    cell.font=timesNewRomanFont14;
-
-    cell=worksheet.getCell("S"+lastRowCount);
-    cell.value="Distrubution List :";
-    cell.font=timesNewRomanFont12;
-
-    cell=worksheet.getCell("X"+lastRowCount);
-    cell.value="SSO(R)5";
-    cell.font=timesNewRomanFont12;
-
-    cell=worksheet.getCell("AB"+lastRowCount);
-    cell.value="CSA(CS)";
-    cell.font=timesNewRomanFont12;
-
-    lastRowCount=worksheet.rowCount+1;
-    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
-    cell=worksheet.getCell("A"+lastRowCount);
-    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFFF'},bgColor: { indexed: 46 }};
-    cell.value="d : 0800H - 1800H (on weekdays)";
-    cell.font=timesNewRomanFont14;
-
-    cell=worksheet.getCell("X"+lastRowCount);
-    cell.value="SO(R)51";
-    cell.font=timesNewRomanFont12;
-
-    cell=worksheet.getCell("AB"+lastRowCount);
-    cell.value="KP";
-    cell.font=timesNewRomanFont12;
-
-    lastRowCount=worksheet.rowCount+1;
-    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
-    cell=worksheet.getCell("A"+lastRowCount);
-    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFFF'},bgColor: { indexed: 46 }};
-    cell.value="d1 : 0800H - 1700H (on weekdays)";
-    cell.font=timesNewRomanFont14;
-    
-    cell=worksheet.getCell("X"+lastRowCount);
-    cell.value="SEO(R)51";
-    cell.font=timesNewRomanFont12;
-
-    cell=worksheet.getCell("AB"+lastRowCount);
-    cell.value="CLK";
-    cell.font=timesNewRomanFont12;
-
-    lastRowCount=worksheet.rowCount+1;
-    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
-    cell=worksheet.getCell("A"+lastRowCount);
-    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFFF'},bgColor: { indexed: 46 }};
-    cell.value="d3 : 0800H - 1648H (on weekdays)";
-    cell.font=timesNewRomanFont14;
-    
-    cell=worksheet.getCell("X"+lastRowCount);
-    cell.value="SEO(R)52";
-    cell.font=timesNewRomanFont12;
-
-    cell=worksheet.getCell("AB"+lastRowCount);
-    cell.value="GR";
-    cell.font=timesNewRomanFont12;
-
-    lastRowCount=worksheet.rowCount+1;
-    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
-    cell=worksheet.getCell("A"+lastRowCount);
-    cell.fill={type: 'pattern',pattern: 'solid',fgColor: { argb: 'FFCC99FF' },bgColor: { indexed: 46 }};
-    cell.value="s : sick leave standby";
-    cell.font=timesNewRomanFont14;
-
-    lastRowCount=worksheet.rowCount+1;
-    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
-    cell=worksheet.getCell("A"+lastRowCount);
-    cell.value="O : dayoff";
-    cell.font=timesNewRomanFont14;
-}
-
-initHeader();
-loadRosterData();
-
-workbook.xlsx.writeFile('./output.xlsx')
-.then(()=>{
-    console.log("complete");
-})   
-.catch(error=>{
-    console.log("Some wrong:"+error);
-})
-
-
-/*
-workbook.xlsx.readFile('./template.xlsx')
-.then(()=>{
-    const worksheet2 = workbook.getWorksheet("Sheet2");
-    for (let i=0;i<4;i++){
-        console.log(
-            worksheet2.conditionalFormattings[0].rules[i].type,
-            worksheet2.conditionalFormattings[0].rules[i].formulae,
-            worksheet2.conditionalFormattings[0].rules[i].style.fill);
-    }
-    const worksheet1 = workbook.getWorksheet("Sheet1");
-    console.log(worksheet1.getCell('A16').style);
-    console.log(worksheet1.getCell('A7').style.font);
-    console.log(worksheet1.getCell('AI1')._column.width);
-    console.log(worksheet1.getCell('AJ1')._column.width);
-    console.log(worksheet1.getCell('AK1')._column.width);
-
-    let weekdayRow=worksheet1.getRow(5);
-    weekdayRow._cells.forEach(cell=>{
-        console.log(cell._address,cell._column.width,cell.value);
-    });
-})
-.catch(error=>{
-    console.log("Some wrong:"+error);
-})
-*/
-/*
-workbook.xlsx.readFile('./output.xlsx')
-.then(()=>{
-    let worksheet=workbook.getWorksheet('Sheet1');
-    let row=worksheet.getRow(3);
-
-    for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
-        let calendarDate=monthlyCalendar.calendarDateList[i];
-        row.getCell(calendarDate.dateOfMonth+1).value=weekdayNames[calendarDate.dayOfWeek];
-        if ((calendarDate.dayOfWeek==6)||(calendarDate.publicHoliday)){
-            let address=row.getCell(calendarDate.dateOfMonth+1).address;
-            console.log(row.getCell(calendarDate.dateOfMonth+1).address);
-            row.getCell(calendarDate.dateOfMonth+1).font = {color:{argb: 'FFFF0000'}, name: "Times New Roman", size: 12};
-        } else {
-            row.getCell(calendarDate.dateOfMonth+1).font = {color:{argb: '00000000'}, name: "Times New Roman", size: 12};
-        }
-    }
-    workbook.xlsx.writeFile('./output.xlsx')
-    .then(()=>{
-        console.log("complete");
-    })   
-    .catch(error=>{
-        console.log("Some wrong:"+error);
-    })
-})
-.catch(error=>{
-    console.log("Some wrong:"+error);
-})
-*/
