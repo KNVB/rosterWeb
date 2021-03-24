@@ -20,172 +20,501 @@ const monthlyCalendar={
             "today": false,
             "dateOfMonth": 1,
             "dayOfWeek": 1,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 18,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "庚寅",
+            "chineseDayName": "戊申"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 2,
             "dayOfWeek": 2,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 19,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "庚寅",
+            "chineseDayName": "己酉"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 3,
             "dayOfWeek": 3,
-        },  
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 20,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "庚寅",
+            "chineseDayName": "庚戌"
+        },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 4,
             "dayOfWeek": 4,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 21,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "庚寅",
+            "chineseDayName": "辛亥"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 5,
             "dayOfWeek": 5,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 22,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "壬子",
+            "solarTermInfo": "驚蟄"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 6,
             "dayOfWeek": 6,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 23,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "癸丑"
         },
         {
             "publicHoliday": true,
             "today": false,
             "dateOfMonth": 7,
             "dayOfWeek": 0,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 24,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "甲寅"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 8,
             "dayOfWeek": 1,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 25,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "乙卯"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 9,
             "dayOfWeek": 2,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 26,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "丙辰"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 10,
             "dayOfWeek": 3,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 27,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "丁巳"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 11,
             "dayOfWeek": 4,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 28,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "戊午"
         },
         {
-            "publicHoliday": true,
+            "publicHoliday": false,
             "today": false,
             "dateOfMonth": 12,
             "dayOfWeek": 5,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 29,
+            "lunarMonth": 1,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "己未"
         },
         {
-            "publicHoliday": true,
+            "publicHoliday": false,
             "today": false,
             "dateOfMonth": 13,
-            "dayOfWeek": 6,          
+            "dayOfWeek": 6,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 1,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "庚申"
         },
         {
             "publicHoliday": true,
             "today": false,
             "dateOfMonth": 14,
             "dayOfWeek": 0,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 2,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "辛酉"
         },
         {
-            "publicHoliday": true,
+            "publicHoliday": false,
             "today": false,
             "dateOfMonth": 15,
             "dayOfWeek": 1,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 3,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "壬戌"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 16,
             "dayOfWeek": 2,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 4,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "癸亥"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 17,
             "dayOfWeek": 3,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 5,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "甲子"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 18,
             "dayOfWeek": 4,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 6,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "乙丑"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 19,
             "dayOfWeek": 5,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 7,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "丙寅"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 20,
             "dayOfWeek": 6,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 8,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "丁卯",
+            "solarTermInfo": "春分"
         },
         {
             "publicHoliday": true,
             "today": false,
             "dateOfMonth": 21,
             "dayOfWeek": 0,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 9,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "戊辰"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 22,
             "dayOfWeek": 1,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 10,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "己巳"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 23,
             "dayOfWeek": 2,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 11,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "庚午"
         },
         {
             "publicHoliday": false,
-            "today": false,
+            "today": true,
             "dateOfMonth": 24,
             "dayOfWeek": 3,
-    
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 12,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "辛未"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 25,
             "dayOfWeek": 4,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 13,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "壬申"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 26,
             "dayOfWeek": 5,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 14,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "癸酉"
         },
         {
             "publicHoliday": false,
             "today": false,
             "dateOfMonth": 27,
             "dayOfWeek": 6,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 15,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "甲戌"
         },
         {
             "publicHoliday": true,
             "today": false,
             "dateOfMonth": 28,
             "dayOfWeek": 0,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 16,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "乙亥"
+        },
+        {
+            "publicHoliday": false,
+            "today": false,
+            "dateOfMonth": 29,
+            "dayOfWeek": 1,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 17,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "丙子"
+        },
+        {
+            "publicHoliday": false,
+            "today": false,
+            "dateOfMonth": 30,
+            "dayOfWeek": 2,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 18,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "丁丑"
+        },
+        {
+            "publicHoliday": false,
+            "today": false,
+            "dateOfMonth": 31,
+            "dayOfWeek": 3,
+            "animalOfYear": "牛",
+            "month": 2,
+            "year": 2021,
+            "lunarDate": 19,
+            "lunarMonth": 2,
+            "lunarYear": 2021,
+            "isLeap": false,
+            "chineseYearName": "辛丑",
+            "chineseMonthName": "辛卯",
+            "chineseDayName": "戊寅"
         }
     ],
-    "noOfWorkingDay": 18
+    "noOfWorkingDay": 23
 }
 const rosterList={
     "ITO1_1999-01-01": {
@@ -478,7 +807,7 @@ const rosterList={
         "actualNoOfWorkingDay": 20
     }
 }
-const rosterMonth=1,rosterYear=2021;    
+const rosterMonth=2,rosterYear=2021;    
 const vacantShiftList={
         "0": "",
         "1": "",
@@ -519,8 +848,8 @@ let fullCenterAligment={ horizontal: 'center',vertical:'middle', wrapText: true 
 let fullBorderStyle={top: {style:'thin'},left: {style:'thin'},bottom: {style:'thin'},right: {style:'thin'}};
 let firstRowIndex=7;
 let lastBodyIndex="B7:AF"+(firstRowIndex+Object.keys(rosterList).length-1);
-let timesNewRomanFont={name: "Times New Roman", size: 12};
-
+let timesNewRomanFont12={name: "Times New Roman", size: 12};
+let timesNewRomanFont14={name: "Times New Roman", size: 14};
 worksheet.addConditionalFormatting({
     ref: lastBodyIndex,
     rules: [
@@ -561,10 +890,15 @@ function initHeader(){
     worksheet.mergeCells('AG5:AG6');
     worksheet.mergeCells('AH5:AH6');
     
-    worksheet.getCell('AG5')._column.width=11;
-    worksheet.getCell('AH5')._column.width=11;
-    
+    worksheet.getColumn('A').width=26;
+    worksheet.getColumn('AG').width=11;
+    worksheet.getColumn('AH').width=11;
+    worksheet.getColumn('AI').width=8.25;
+    worksheet.getColumn('AJ').width=8.625;
+    worksheet.getColumn('AK').width=7.875;
+
     let cell=worksheet.getCell('B1');
+    
     cell.value='EMSTF Resident Support & Computer Operation Support Services Team Roster';
     cell.font={bold:true,name: 'Times New Roman',size: 14,underline:true};
     cell.alignment = { horizontal: 'center',vertical: 'bottom'};
@@ -584,19 +918,15 @@ function initHeader(){
     let holidayRow=worksheet.getRow(4);
     let weekdayRow=worksheet.getRow(5);
     let dateRow=worksheet.getRow(6);
-    headerRow.getCell(1)._column.width=26;
-    worksheet.getCell('AI1')._column.width=8.25;
-    worksheet.getCell('AJ1')._column.width=8.625;
-    worksheet.getCell('AK1')._column.width=7.875;
     
+    headerRow.alignment = { horizontal: 'center'};
     for (let i=2;i<33;i++){
-        headerRow.getCell(i)._column.width=3.5;
-        headerRow.alignment = { horizontal: 'center'};
-        headerRow.getCell(i).font = timesNewRomanFont;
-    
-        holidayRow.getCell(i).font = timesNewRomanFont;
-        weekdayRow.getCell(i).font = timesNewRomanFont;
-        dateRow.getCell(i).font = timesNewRomanFont;
+        worksheet.getColumn(i).width=3.5;
+       
+        headerRow.getCell(i).font = timesNewRomanFont12;
+        holidayRow.getCell(i).font = timesNewRomanFont12;
+        weekdayRow.getCell(i).font = timesNewRomanFont12;
+        dateRow.getCell(i).font = timesNewRomanFont12;
     
         holidayRow.getCell(i).border=fullBorderStyle;
         weekdayRow.getCell(i).border=fullBorderStyle;
@@ -610,8 +940,8 @@ function initHeader(){
             weekdayRow.getCell(i).alignment = { horizontal: 'center',vertical:'middle'};
             if ((calendarDate.dayOfWeek==6)||(calendarDate.publicHoliday)){
                 holidayRow.getCell(i).value="PH";
-                holidayRow.getCell(i).font={bold:true,color:{argb:"FFFF0000"},name: 'Times New Roman'};
-                weekdayRow.getCell(i).font={bold:true,color:{argb:"FFFF0000"},name: 'Times New Roman'};
+                holidayRow.getCell(i).font={bold:true,color:{argb:"FFFF0000"},name: 'Times New Roman',size: 12};
+                weekdayRow.getCell(i).font={bold:true,color:{argb:"FFFF0000"},name: 'Times New Roman',size: 12};
                 holidayRow.getCell(i).alignment = { horizontal: 'center',vertical:'middle'};
             }        
         }
@@ -619,24 +949,24 @@ function initHeader(){
     
     cell=worksheet.getCell('A4');
     cell.value="Holidays";
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
     cell.border=fullBorderStyle;
     worksheet.getCell('AG4').border=fullBorderStyle;
     
     //===================================================
     cell=worksheet.getCell('A5');
     cell.value="Days";
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
     cell.border=fullBorderStyle;
     
     cell=worksheet.getCell('AG5');
-    cell.font =timesNewRomanFont;
+    cell.font =timesNewRomanFont12;
     cell.border=fullBorderStyle;
     cell.value="Total\nHour";
     cell.alignment = fullCenterAligment;
     
     cell=worksheet.getCell('AH5');
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
     cell.border=fullBorderStyle;
     
     cell.value="Actual\nHour";
@@ -645,7 +975,7 @@ function initHeader(){
     cell=worksheet.getCell('AI5');
     cell.value="Hour Off Due";
     cell.border=fullBorderStyle;
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
     cell.alignment = fullCenterAligment;
     
     worksheet.getCell('AK5').border=fullBorderStyle;
@@ -654,61 +984,61 @@ function initHeader(){
     cell=worksheet.getCell('A6');
     cell.value="Resident Support\nTeam Members";
     cell.alignment = { vertical: 'top',wrapText: true };
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
     cell.border=fullBorderStyle;
     
     cell=worksheet.getCell('AI6');
     cell.value="Last Month";
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
     cell.border=fullBorderStyle;
     cell.alignment = fullCenterAligment;
     
     cell=worksheet.getCell('AJ6');
     cell.value="This Month";
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
     cell.border=fullBorderStyle;
     cell.alignment = fullCenterAligment;
     
     cell=worksheet.getCell('AK6');
     cell.value="Total";
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
     cell.border=fullBorderStyle;
     cell.alignment = fullCenterAligment;
     
     cell=worksheet.getCell('AL6');
     cell.value="a";
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12
     
     cell=worksheet.getCell('AM6');
     cell.value="b";
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12
     
     cell=worksheet.getCell('AN6');
     cell.value="c";
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
     
     cell=worksheet.getCell('AO6');
     cell.value="d1";
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
     
     cell=worksheet.getCell('AP6');
     cell.value="o";
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
     
     cell=worksheet.getCell('AQ6');
     cell.value="No. of working day";
-    cell.font = timesNewRomanFont;
+    cell.font = timesNewRomanFont12;
 }
 function loadRosterData(){
     let cell;
     let itoIdList=Object.keys(rosterList);
     let itoCount=itoIdList.length;
-    let j;
+    let j,row;
     for (let i=0;i<itoCount;i++){
         let roster=rosterList[itoIdList[i]];
-        let row=worksheet.getRow(i+firstRowIndex);
+        row=worksheet.getRow(i+firstRowIndex);
         row.getCell(1).value=roster.itoName+"\n"+roster.itoPostName+" Extn. 2458";
-        row.getCell(1).font=timesNewRomanFont;
+        row.getCell(1).font=timesNewRomanFont12;
         row.getCell(1).border=fullBorderStyle;
         row.getCell(1).alignment={wrapText: true};
         
@@ -716,7 +1046,7 @@ function loadRosterData(){
         for (const property in roster.shiftList) {
             row.getCell(j).value=roster.shiftList[property];
             row.getCell(j).border=fullBorderStyle;
-            row.getCell(j).font=timesNewRomanFont;
+            row.getCell(j).font=timesNewRomanFont14;
             row.getCell(j).alignment={ horizontal: 'center',vertical:'middle'};
             j++;
         }
@@ -724,7 +1054,7 @@ function loadRosterData(){
         cell=worksheet.getCell("AG"+(i+firstRowIndex));
         cell.value=roster.totalHour;
         cell.border=fullBorderStyle;
-        cell.font=timesNewRomanFont;
+        cell.font=timesNewRomanFont14;
         cell.alignment={ horizontal: 'center',vertical:'middle'};
         cell.numFmt = '0.00';
 
@@ -732,7 +1062,7 @@ function loadRosterData(){
         cell=worksheet.getCell("AH"+(i+firstRowIndex));
         cell.alignment={ horizontal: 'center',vertical:'middle'};
         cell.border=fullBorderStyle;
-        cell.font=timesNewRomanFont;
+        cell.font=timesNewRomanFont14;
         cell.numFmt = '0.00';
         cell.value={
             formula:'(COUNTIF('+address+',"a"))*9+(COUNTIF('+address+',"b"))*5.75+(COUNTIF('+address+',"c"))*10.75+(COUNTIF('+address+',"d"))*9+(COUNTIF('+address+',"d1"))*8+(COUNTIF('+address+',"d2"))*8+(COUNTIF('+address+',"d3"))*7.8+(COUNTIF('+address+',"b1"))*7.25'
@@ -741,7 +1071,7 @@ function loadRosterData(){
         cell=worksheet.getCell("AI"+(i+firstRowIndex));
         cell.alignment={ horizontal: 'center',vertical:'middle'};
         cell.border=fullBorderStyle;
-        cell.font=timesNewRomanFont;
+        cell.font=timesNewRomanFont14;
         cell.numFmt = '+#0.##;-#0.##';
         cell.value=roster.lastMonthBalance;
 
@@ -749,15 +1079,15 @@ function loadRosterData(){
         cell=worksheet.getCell("AJ"+(i+firstRowIndex));
         cell.alignment={ horizontal: 'center',vertical:'middle'};
         cell.border=fullBorderStyle;
-        cell.font=timesNewRomanFont;
+        cell.font=timesNewRomanFont14;
         cell.numFmt = '0.00';
-        cell.value={formula:address};
+        cell.value={formula:address,result:roster.thisMonthHourTotal};
 
         address="AJ"+(i+firstRowIndex)+"+AI"+(i+firstRowIndex);
         cell=worksheet.getCell("AK"+(i+firstRowIndex));
         cell.alignment={ horizontal: 'center',vertical:'middle'};
         cell.border=fullBorderStyle;
-        cell.font=timesNewRomanFont;
+        cell.font=timesNewRomanFont14;
         cell.numFmt = '0.00';
         cell.value={formula:address};
 
@@ -789,7 +1119,12 @@ function loadRosterData(){
         cell.value={formula:address};
 
     }
-    
+    worksheet.getColumn("AL").hidden=true;
+    worksheet.getColumn("AM").hidden=true;
+    worksheet.getColumn("AN").hidden=true;
+    worksheet.getColumn("AO").hidden=true;
+    worksheet.getColumn("AP").hidden=true;
+    worksheet.getColumn("AQ").hidden=true;
     cell=worksheet.getCell("A"+(firstRowIndex+itoCount));
     cell.alignment={ horizontal: 'right',vertical:'middle'};
     cell.value="Vacant Shifts";
@@ -800,11 +1135,122 @@ function loadRosterData(){
         name: 'Times New Roman',
         family: 1
       }
-    let row=worksheet.getRow(firstRowIndex+itoCount);
+    let vacantRow=worksheet.getRow(firstRowIndex+itoCount);
     for (let i=2;i<33;i++){ 
+        if (vacantShiftList[i-2]){
+            cell=vacantRow.getCell(i);
+            cell.value=vacantShiftList[i-2];
+            cell.alignment={ horizontal: 'center',vertical:'middle'};
+            cell.font=timesNewRomanFont12;    
+        }
+    }
+    lastRowCount=worksheet.rowCount+1;
+    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
+    cell=worksheet.getCell("A"+lastRowCount);
+    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFF99CC'}};
+    cell.value="a : 0800H - 1700H";
+    cell.font=timesNewRomanFont14;
 
-    } 
+    cell=worksheet.getCell("S"+lastRowCount);
+    cell.value="SITO - Senior Information Technology Officer";
+    cell.font=timesNewRomanFont14;
+
+    lastRowCount=worksheet.rowCount+1;
+    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
+    cell=worksheet.getCell("A"+lastRowCount);
+    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFFFFCC'}};
+    cell.value="b : 1630H - 2215H";
+    cell.font=timesNewRomanFont14;
+
+    cell=worksheet.getCell("S"+lastRowCount);
+    cell.value="ITO - Information Technology Officer";
+    cell.font=timesNewRomanFont14;
+
+    lastRowCount=worksheet.rowCount+1;
+    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
+    cell=worksheet.getCell("A"+lastRowCount);
+    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFFFFCC'}};
+    cell.value="b1: 1500H - 2215H";
+    cell.font=timesNewRomanFont14;
+
+    lastRowCount=worksheet.rowCount+1;
+    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
+    cell=worksheet.getCell("A"+lastRowCount);
+    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFCC'}};
+    cell.value="c : 2145H - 0830H (the next day)";
+    cell.font=timesNewRomanFont14;
+
+    cell=worksheet.getCell("S"+lastRowCount);
+    cell.value="Distrubution List :";
+    cell.font=timesNewRomanFont12;
+
+    cell=worksheet.getCell("X"+lastRowCount);
+    cell.value="SSO(R)5";
+    cell.font=timesNewRomanFont12;
+
+    cell=worksheet.getCell("AB"+lastRowCount);
+    cell.value="CSA(CS)";
+    cell.font=timesNewRomanFont12;
+
+    lastRowCount=worksheet.rowCount+1;
+    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
+    cell=worksheet.getCell("A"+lastRowCount);
+    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFFF'}};
+    cell.value="d : 0800H - 1800H (on weekdays)";
+    cell.font=timesNewRomanFont14;
+
+    cell=worksheet.getCell("X"+lastRowCount);
+    cell.value="SO(R)51";
+    cell.font=timesNewRomanFont12;
+
+    cell=worksheet.getCell("AB"+lastRowCount);
+    cell.value="KP";
+    cell.font=timesNewRomanFont12;
+
+    lastRowCount=worksheet.rowCount+1;
+    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
+    cell=worksheet.getCell("A"+lastRowCount);
+    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFFF'}};
+    cell.value="d1 : 0800H - 1700H (on weekdays)";
+    cell.font=timesNewRomanFont14;
+    
+    cell=worksheet.getCell("X"+lastRowCount);
+    cell.value="SEO(R)51";
+    cell.font=timesNewRomanFont12;
+
+    cell=worksheet.getCell("AB"+lastRowCount);
+    cell.value="CLK";
+    cell.font=timesNewRomanFont12;
+
+    lastRowCount=worksheet.rowCount+1;
+    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
+    cell=worksheet.getCell("A"+lastRowCount);
+    cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFFF'}};
+    cell.value="d3 : 0800H - 1648H (on weekdays)";
+    cell.font=timesNewRomanFont14;
+    
+    cell=worksheet.getCell("X"+lastRowCount);
+    cell.value="SEO(R)52";
+    cell.font=timesNewRomanFont12;
+
+    cell=worksheet.getCell("AB"+lastRowCount);
+    cell.value="GR";
+    cell.font=timesNewRomanFont12;
+
+    lastRowCount=worksheet.rowCount+1;
+    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
+    cell=worksheet.getCell("A"+lastRowCount);
+    cell.fill={type: 'pattern',pattern: 'solid',fgColor: { argb: 'FFCC99FF' },bgColor: { indexed: 46 }};
+    cell.value="s : sick leave standby";
+    cell.font=timesNewRomanFont14;
+
+    lastRowCount=worksheet.rowCount+1;
+    worksheet.mergeCells("A"+lastRowCount+":L"+lastRowCount);
+    cell=worksheet.getCell("A"+lastRowCount);
+    cell.value="O : dayoff";
+    cell.font=timesNewRomanFont14;
 }
+
 initHeader();
 loadRosterData();
 
@@ -828,6 +1274,7 @@ workbook.xlsx.readFile('./template.xlsx')
             worksheet2.conditionalFormattings[0].rules[i].style.fill);
     }
     const worksheet1 = workbook.getWorksheet("Sheet1");
+    console.log(worksheet1.getCell('A16').style);
     console.log(worksheet1.getCell('A7').style.font);
     console.log(worksheet1.getCell('AI1')._column.width);
     console.log(worksheet1.getCell('AJ1')._column.width);
