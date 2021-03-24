@@ -2,7 +2,15 @@ class ExcelExporter{
     constructor(){
         let centerAligment={ horizontal: 'center',vertical:'middle'};
         let centerWithWrapTextAligment={...centerAligment,...{wrapText:true}};
-        let ExcelJS = require('exceljs');
+        let columnWidthList={
+			'A':26,
+			'AG':11,
+			'AH':11,
+			'AI':8.25,
+			'AJ':8.625,
+			'AK':7.875
+		};
+		
         let fullBorderStyle={top: {style:'thin'},left: {style:'thin'},bottom: {style:'thin'},right: {style:'thin'}};
         let monthNames=[
             'January',
@@ -18,16 +26,29 @@ class ExcelExporter{
             'November',
             'December'
         ]
-        let timesNewRomanFont12={name: "Times New Roman", size: 12};
+        let mergeList=[
+			'B1:AF1',
+			'B2:AF2',
+			'AG2:AH2',
+			'AI2:AK2',
+			'AG4:AK4',
+			'AI5:AJ5',
+			'AG5:AG6',
+			'AH5:AH6'
+		];
+		let timesNewRomanFont12={name: "Times New Roman", size: 12};
         let timesNewRomanFont14={name: "Times New Roman", size: 14};
         let weekdayNames=['Su','M','T','W','Th','F','S'];
-        let workbook = new ExcelJS.Workbook();
+		
+        let ExcelJS = require('exceljs');
+		let workbook = new ExcelJS.Workbook();
         
         let captionFont={...timesNewRomanFont14,...{bold:true,underline:true}};
-        this.columnWidthList={};
-        this.mergeList=[];
+        
         this.monthlyCalendar={};
-        this.rosterList={},this.rosterMonth=-1,this.rosterYear=-1;
+        this.rosterList={};
+        this.rosterMonth=-1;
+        this.rosterYear=-1;
         this.vacantShiftList={};
 
         this.doExport=()=>{
@@ -37,17 +58,24 @@ class ExcelExporter{
             mergeCells(worksheet,this.mergeList);
             setColumnWidth(worksheet,this.columnWidthList);
             setHeaderRow(worksheet,this.monthlyCalendar);
+			setConditionalFormatting(worksheet,this.rosterList);
             setRosterData(worksheet,this.rosterList);
+			setVacantShiftRow(worksheet,this.vacantShiftList);
+			setFooter(worksheet);
             return workbook.xlsx.writeFile('./output.xlsx');
         }
-        function mergeCells(worksheet,mergeList){
+		function genCountIf(address,target){
+			let result='(COUNTIF('+address+',"'+target+'"))';
+			return result;
+		}
+        function mergeCells(worksheet){
             mergeList.forEach(mergeAddress=>{
                 worksheet.mergeCells(mergeAddress);
             })
         }
-        function setColumnWidth(worksheet,columnList){
-            for (let key in columnList){
-                worksheet.getColumn(key).width=columnList[key];
+        function setColumnWidth(worksheet){
+            for (let key in columnWidthList){
+                worksheet.getColumn(key).width=columnWidthList[key];
             }
         }
         function setCaptionRow(worksheet,rosterMonth,rosterYear){
@@ -69,7 +97,150 @@ class ExcelExporter{
             cell=worksheet.getCell('AI2');
             cell.border={bottom: {style:'thin'}};
         }
-        function setHeaderRow(worksheet,monthlyCalendar){
+        function setConditionalFormatting(worksheet,rosterList){
+			let firstRowIndex=worksheet.rowCount+1;
+			let lastRowIndex=worksheet.rowCount+Object.keys(rosterList).length;
+			let address="B"+firstRowIndex+":AF"+lastRowIndex;
+			
+			worksheet.addConditionalFormatting({
+				ref: address,
+				rules: [
+					{
+						type: 'cellIs',
+						operator:'equal',
+						formulae:['"a"'],
+						style: {fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFFF99CC'}}},
+					},
+					{
+						type: 'cellIs',
+						operator:'equal',
+						formulae:['"c"'],
+						style: {fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFCCFFCC'}}},
+					},
+					{
+						type: 'containsText',
+						operator:'containsText',
+						text:"b",
+						style: {fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFFFFFCC'}}},
+					},
+					{
+						type: 'containsText',
+						operator:'containsText',
+						text:"d",
+						style: {fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFCCFFFF'}}},
+					}
+				]
+			});
+		}
+		function setFooter(worksheet){
+			worksheet.mergeCells("A"+(worksheet.rowCount+1)+":L"+(worksheet.rowCount+1));
+			let cell=worksheet.getCell("A"+(worksheet.rowCount));
+			cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFF99CC'},bgColor: { indexed: 46 }};
+			cell.value="a : 0800H - 1700H";
+			cell.font=timesNewRomanFont14;
+			
+			cell=worksheet.getCell("S"+worksheet.rowCount);
+			cell.value="SITO - Senior Information Technology Officer";
+			cell.font=timesNewRomanFont14;
+			
+			worksheet.mergeCells("A"+(worksheet.rowCount+1)+":L"+(worksheet.rowCount+1));
+			cell=worksheet.getCell("A"+(worksheet.rowCount));
+			cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFFFFCC'},bgColor: { indexed: 46 }};
+			cell.value="b : 1630H - 2215H";
+			cell.font=timesNewRomanFont14;
+			
+			cell=worksheet.getCell("S"+worksheet.rowCount);
+			cell.value="ITO - Information Technology Officer";
+			cell.font=timesNewRomanFont14;
+			
+			worksheet.mergeCells("A"+(worksheet.rowCount+1)+":L"+(worksheet.rowCount+1));
+			cell=worksheet.getCell("A"+(worksheet.rowCount));
+			cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFFFFCC'},bgColor: { indexed: 46 }};
+			cell.value="b1: 1500H - 2215H";
+			cell.font=timesNewRomanFont14;
+
+			worksheet.mergeCells("A"+(worksheet.rowCount+1)+":L"+(worksheet.rowCount+1));
+			cell=worksheet.getCell("A"+(worksheet.rowCount));
+			cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFCC'},bgColor: { indexed: 46 }};
+			cell.value="c : 2145H - 0830H (the next day)";
+			cell.font=timesNewRomanFont14;
+			
+			cell=worksheet.getCell("S"+(worksheet.rowCount));
+			cell.value="Distrubution List :";
+			cell.font=timesNewRomanFont12;
+			
+			cell=worksheet.getCell("X"+(worksheet.rowCount));
+			cell.value="SSO(R)5";
+			cell.font=timesNewRomanFont12;			
+			
+			cell=worksheet.getCell("AB"+(worksheet.rowCount));
+			cell.value="CSA(CS)";
+			cell.font=timesNewRomanFont12;	
+			
+			worksheet.mergeCells("A"+(worksheet.rowCount+1)+":L"+(worksheet.rowCount+1));
+			cell=worksheet.getCell("A"+(worksheet.rowCount));
+			cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFFF'},bgColor: { indexed: 46 }};
+			cell.value="d : 0800H - 1800H (on weekdays)";
+			cell.font=timesNewRomanFont14;
+			
+			cell=worksheet.getCell("X"+(worksheet.rowCount));
+			cell.value="SO(R)51";
+			cell.font=timesNewRomanFont12;
+
+			cell=worksheet.getCell("AB"+(worksheet.rowCount));
+			cell.value="KP";
+			cell.font=timesNewRomanFont12;
+			
+			worksheet.mergeCells("A"+(worksheet.rowCount+1)+":L"+(worksheet.rowCount+1));
+			cell=worksheet.getCell("A"+(worksheet.rowCount));
+			cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFFF'},bgColor: { indexed: 46 }};
+			cell.value="d1 : 0800H - 1700H (on weekdays)";
+			cell.font=timesNewRomanFont14;
+			
+			cell=worksheet.getCell("X"+(worksheet.rowCount));
+			cell.value="SEO(R)51";
+			cell.font=timesNewRomanFont12;
+
+			cell=worksheet.getCell("AB"+(worksheet.rowCount));
+			cell.value="CLK";
+			cell.font=timesNewRomanFont12;
+			
+			worksheet.mergeCells("A"+(worksheet.rowCount+1)+":L"+(worksheet.rowCount+1));
+			cell=worksheet.getCell("A"+(worksheet.rowCount));
+			cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFFF'},bgColor: { indexed: 46 }};
+			cell.value="d2 : 0900H - 1800H (on weekdays)";
+			cell.font=timesNewRomanFont14;
+			
+			cell=worksheet.getCell("X"+(worksheet.rowCount));
+			cell.value="SEO(R)52";
+			cell.font=timesNewRomanFont12;
+
+			cell=worksheet.getCell("AB"+(worksheet.rowCount));
+			cell.value="GR";
+			cell.font=timesNewRomanFont12;
+			
+			worksheet.mergeCells("A"+(worksheet.rowCount+1)+":L"+(worksheet.rowCount+1));
+			cell=worksheet.getCell("A"+(worksheet.rowCount));
+			cell.fill={type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFCCFFFF'},bgColor: { indexed: 46 }};
+			cell.value="d3 : 0800H - 1648H (on weekdays)";
+			cell.font=timesNewRomanFont14;
+			
+			worksheet.mergeCells("A"+(worksheet.rowCount+1)+":L"+(worksheet.rowCount+1));
+			cell=worksheet.getCell("A"+(worksheet.rowCount));
+			cell.fill={type: 'pattern',pattern: 'solid',fgColor: { argb: 'FFCC99FF' },bgColor: { indexed: 46 }};
+			cell.value="s : sick leave standby";
+			cell.font=timesNewRomanFont14;
+			
+			worksheet.mergeCells("A"+(worksheet.rowCount+1)+":L"+(worksheet.rowCount+1));
+			cell=worksheet.getCell("A"+(worksheet.rowCount));			
+			cell.value="O : dayoff";
+			cell.font=timesNewRomanFont14;
+
+			cell=worksheet.getCell("A"+(worksheet.rowCount+2));
+			cell.value="* Staff in former IT structure of EMSTF, the working hours be 45 hours per week";
+			cell.font={...timesNewRomanFont12,...{italic: true}};
+		}
+		function setHeaderRow(worksheet,monthlyCalendar){
             let calendarDate,cell;          
 
             cell=worksheet.getCell('A4');
@@ -189,38 +360,133 @@ class ExcelExporter{
             }
         }
         function setRosterData(worksheet,rosterList){
-            let cell;
-            let firstRowIndex=worksheet.rowCount+1;
-            let itoIdList=Object.keys(rosterList);
-            let itoCount=itoIdList.length;
+            let address,cell,i;
+            let formula="";
+            //let itoCount=itoIdList.length;
             let j,row;
             
-            for (let i=0;i<itoCount;i++){
-                
-            }
+			for (let itoId in rosterList){
+				let roster=rosterList[itoId];
+				row=worksheet.getRow(worksheet.rowCount+1);
+				cell=row.getCell(1);
+				cell.value=roster.itoName+"\n"+roster.itoPostName+" Extn. 2458";
+				cell.font=timesNewRomanFont12;
+				cell.border=fullBorderStyle;
+				cell.alignment={wrapText: true};
+				for (i=1;i<32;i++){
+					cell=row.getCell(i+1);
+					cell.alignment=centerAligment;
+					cell.border=fullBorderStyle;
+					cell.font=timesNewRomanFont14;
+					if (roster.shiftList[i]){
+						cell.value=roster.shiftList[i];
+					}
+				}
+				cell=worksheet.getCell("AG"+(worksheet.rowCount));
+				cell.alignment=centerAligment;
+				cell.border=fullBorderStyle;
+				cell.font=timesNewRomanFont14;
+				cell.numFmt = '0.00';
+				cell.value=roster.totalHour;
+				
+				
+				address="B"+worksheet.rowCount+":AF"+worksheet.rowCount;
+				formula=genCountIf(address,'a')+"*9+";
+				formula+=genCountIf(address,'b')+"*5.75+";
+				formula+=genCountIf(address,'b1')+"*7.25+";
+				formula+=genCountIf(address,'c')+"*10.75+";
+				formula+=genCountIf(address,'d')+"*9+";
+				formula+=genCountIf(address,'d1')+"*8+";
+				formula+=genCountIf(address,'d2')+"*8+";
+				formula+=genCountIf(address,'d3')+"*7.8";
+			
+				cell=worksheet.getCell("AH"+(worksheet.rowCount));
+				cell.alignment=centerAligment;
+				cell.border=fullBorderStyle;
+				cell.font=timesNewRomanFont14;				
+				cell.numFmt = '0.00';
+				cell.value={"formula":formula};
+				
+				cell=worksheet.getCell("AI"+(worksheet.rowCount));
+				cell.alignment=centerAligment;
+				cell.border=fullBorderStyle;
+				cell.font=timesNewRomanFont14;
+				cell.numFmt = '+#0.##;-#0.##';
+				cell.value=roster.lastMonthBalance;
+				
+				formula="AH"+(worksheet.rowCount)+"-AG"+(worksheet.rowCount);
+				cell=worksheet.getCell("AJ"+(worksheet.rowCount));
+				cell.alignment=centerAligment;
+				cell.border=fullBorderStyle;
+				cell.font=timesNewRomanFont14;
+				cell.numFmt = '0.00';
+				cell.value={"formula":formula,result:roster.thisMonthHourTotal};
+
+				formula="AJ"+(worksheet.rowCount)+"+AI"+(worksheet.rowCount);
+				cell=worksheet.getCell("AK"+(worksheet.rowCount));
+				cell.alignment=centerAligment;
+				cell.border=fullBorderStyle;
+				cell.font=timesNewRomanFont14;
+				cell.numFmt = '0.00';
+				cell.value={"formula":formula};
+				
+				formula=genCountIf(address,'a');
+				cell=worksheet.getCell("AL"+(worksheet.rowCount));
+				cell.value={"formula":formula};
+				
+				formula=genCountIf(address,'b')+"+";
+				formula+=genCountIf(address,'b1');
+				cell=worksheet.getCell("AM"+(worksheet.rowCount));
+				cell.value={"formula":formula};
+				
+				formula=genCountIf(address,'c');
+				cell=worksheet.getCell("AN"+(worksheet.rowCount));
+				cell.value={"formula":formula};
+				
+				formula=genCountIf(address,'d')+"+";
+				formula+=genCountIf(address,'d1')+"+";
+				formula+=genCountIf(address,'d2')+"+";
+				formula+=genCountIf(address,'d3');
+				cell=worksheet.getCell("AO"+(worksheet.rowCount));
+				cell.value={"formula":formula};
+				
+				formula=genCountIf(address,'O');
+				cell=worksheet.getCell("AP"+(worksheet.rowCount));
+				cell.value={"formula":formula};
+				
+				formula='SUM(AL'+(worksheet.rowCount)+':AP'+(worksheet.rowCount)+')';
+				cell=worksheet.getCell("AQ"+(worksheet.rowCount));
+				cell.value={"formula":formula};
+			}
         }
-    }
+		function setVacantShiftRow(worksheet,vacantShiftList){
+			let cell=worksheet.getCell("A"+(worksheet.rowCount+1));
+			cell.alignment={ horizontal: 'right',vertical:'middle'};
+			cell.value="Vacant Shifts";
+			cell.font={
+				bold: true,
+				size: 12,
+				color: { indexed: 53 },
+				name: 'Times New Roman',
+				family: 1
+			};
+			let vacantRow=worksheet.getRow(worksheet.rowCount);
+			for (let i=2;i<33;i++){
+				cell=vacantRow.getCell(i);
+				cell.alignment=centerAligment;
+				cell.font=timesNewRomanFont12;
+				
+				if (vacantShiftList[i-2]){
+					cell.value=vacantShiftList[i-2];
+				}
+			}
+		}
+	}
     
 }
 module.exports = ExcelExporter;
 let excelExporter=new ExcelExporter();
-excelExporter.columnWidthList={'A':26,
-    'AG':11,
-    'AH':11,
-    'AI':8.25,
-    'AJ':8.625,
-    'AK':7.875
-};
-excelExporter.mergeList=[
-    'B1:AF1',
-    'B2:AF2',
-    'AG2:AH2',
-    'AI2:AK2',
-    'AG4:AK4',
-    'AI5:AJ5',
-    'AG5:AG6',
-    'AH5:AH6'
-];
+
 excelExporter.monthlyCalendar={
     "calendarDateList": [
         {
