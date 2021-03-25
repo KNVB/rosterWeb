@@ -1,9 +1,20 @@
 class PrivateAPI{
     constructor(rosterManager,systemParam){
         this.systemParam=systemParam;
-        this.exportExcel=async(req,res)=>{
-            let ExcelExporter=require('../classes/ExcelExporter');
-            let excelExporter=new ExcelExporter(res);
+        this.exportExcel=(req,res)=>{
+            rosterManager.exportExcel(req.body)
+            .then(()=>{
+                //res.send({message:"Export Sucess"})
+                console.log("Export Excel completed.");
+                res.download('./output.xlsx');
+            })
+            .catch(error=>{
+                console.log("Export Excel failure:"+error.stack);
+                return res.status(500).json({
+                    status: 'error',
+                    message: error,
+                });
+            })
         }
         this.getRosterSchedulerList=async(req,res)=>{
             let result=await rosterManager.getRosterSchedulerList(req.body.year,req.body.month);

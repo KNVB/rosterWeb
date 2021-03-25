@@ -93,7 +93,7 @@ export default class Utility{
     console.log("=======================");
     let requestPara={
       headers:{
-                'Content-Type': 'application/json' 
+        'Content-Type': 'application/json'
       },
       "method":method || 'GET',
     }
@@ -111,19 +111,41 @@ export default class Utility{
     }
     url="/rosterWeb"+url;
     let response = await fetch(url,requestPara);
-    let responseObj=await response.json();
-    switch (response.status){
-      case 401:
-        throw new SessionExpiredError(responseObj.message);
-        break;
-      case 200:
-        return responseObj;  
-        break;
-      default:
-        throw new Error(responseObj.message);
-        break;  
+    /*
+    response.headers.forEach((value,name)=>{
+      console.log(name+","+value);
+    })
+    */
+    switch (response.headers.get('content-type')){
+      case "application/json; charset=utf-8":
+          let responseObj=await response.json();
+          switch (response.status){
+            case 401:
+              throw new SessionExpiredError(responseObj.message);
+              break;
+            case 200:
+              return responseObj;  
+              break;
+            default:
+              throw new Error(responseObj.message);
+              break;  
+          }
+          break;
+      case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+          let fileName=response.headers.get('content-disposition').replace("attachment; filename=","").replaceAll("\"","");
+          let blob=await response.blob();
+
+          const newBlob = new Blob([blob], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+          const objUrl = window.URL.createObjectURL(newBlob);
+          let link = document.createElement('a');
+          link.href = objUrl;
+          link.download = fileName;
+          link.click();
+          break;
+      default:break;    
     }
 
+    
   }
   static getDuplicateShiftList(monthlyCalendar,rosterList){
     let result={};

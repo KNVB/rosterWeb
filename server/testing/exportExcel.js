@@ -181,15 +181,16 @@ async function doExport(){
     let weekdayRow=worksheet1.getRow(5);
     for (let i=0;i<this.monthlyCalendar.calendarDateList.length;i++){
         let calendarDate=this.monthlyCalendar.calendarDateList[i];
-        weekdayRow.getCell(calendarDate.dateOfMonth+1).value=weekdayNames[calendarDate.dayOfWeek];
+        let cell=weekdayRow.getCell(calendarDate.dateOfMonth+1)
+        cell.value=weekdayNames[calendarDate.dayOfWeek];
+        
         if ((calendarDate.dayOfWeek==6)||(calendarDate.publicHoliday)){
-            let address=weekdayRow.getCell(calendarDate.dateOfMonth+1).address;
             console.log(weekdayRow.getCell(calendarDate.dateOfMonth+1).address);
-            worksheet1.getCell(address).font = {color:{argb: 'FFFF0000'}, name: "Times New Roman", size: 12};
+            cell.font = {color:{argb: 'FFFF0000'}, name: "Times New Roman", size: 12};
             break;
         }
     }
-    await workbook.xlsx.writeFile('./output.xlsx');   
+    await workbook.xlsx.writeFile('./input.xlsx');   
 }
 doExport()
 .then(()=>{

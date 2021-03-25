@@ -3,9 +3,9 @@ import SessionExpiredError from './SessionExpiredError';
 export default class Roster{
     constructor(changeLoggedInFlag){
         //this.changeLoggedInFlag=changeLoggedInFlag;
-        this.exportExcel=async(rosterData)=>{
+        this.exportExcel=async(genExcelData)=>{
             try{
-                let result=await Utility.fetchAPI('/privateAPI/exportExcel','POST',rosterData);
+                let result=await Utility.fetchAPI('/privateAPI/exportExcel','POST',genExcelData);
                 return result;
             }catch(error){
                 if (error instanceof SessionExpiredError){

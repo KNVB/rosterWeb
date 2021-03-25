@@ -8,6 +8,17 @@ class RosterManager
 		let MonthlyStatistic =require('./rosterStatistic/MonthlyStatistic');
 		let Shift =require('./Shift');
 		let systemParam=sp;
+		this.exportExcel=(genExcelData)=>{
+			let ExcelExporter=require('./ExcelExporter');
+            let excelExporter=new ExcelExporter();
+            excelExporter.monthlyCalendar=genExcelData.monthlyCalendar
+            excelExporter.rosterList=genExcelData.rosterList;
+            excelExporter.vacantShiftList=genExcelData.vacantShiftList
+            excelExporter.rosterMonth=genExcelData.rosterMonth;
+            excelExporter.rosterYear=genExcelData.rosterYear;
+
+			return excelExporter.doExport('./output.xlsx');
+		}
 		this.getAllActiveShiftInfo=async()=>{
 			let dboObj=new DBO();
 			let essentialShift="";
