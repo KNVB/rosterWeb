@@ -6,7 +6,8 @@ class PrivateAPI{
             .then(()=>{
                 //res.send({message:"Export Sucess"})
                 console.log("Export Excel completed.");
-                res.download('./output.xlsx');
+                let fileName=(req.body.rosterYear%100)*100+(1+req.body.rosterMonth);
+                res.download('./output.xlsx',fileName.toString());
             })
             .catch(error=>{
                 console.log("Export Excel failure:"+error.stack);

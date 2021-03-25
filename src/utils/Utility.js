@@ -118,14 +118,17 @@ export default class Utility{
     */
     
     if (response.headers.get('content-disposition')){
-      let fileName=response.headers.get('content-disposition').replace("attachment; filename=","").replaceAll("\"","");
-      let blob=await response.blob();
-      const newBlob = new Blob([blob], { type:response.headers.get('content-type')});
-      const objUrl = window.URL.createObjectURL(newBlob);
-      let link = document.createElement('a');
-      link.href = objUrl;
-      link.download = fileName;
-      link.click();
+      let value=response.headers.get('content-disposition');
+      if (value.indexOf("attachment; filename=")>-1){
+        let fileName=value.replace("attachment; filename=","").replaceAll("\"","");
+        let blob=await response.blob();
+        const newBlob = new Blob([blob], { type:response.headers.get('content-type')});
+        const objUrl = window.URL.createObjectURL(newBlob);
+        let link = document.createElement('a');
+        link.href = objUrl;
+        link.download = fileName;
+        link.click();
+      }
     } else {
       let responseObj=await response.json();
       switch (response.status){
