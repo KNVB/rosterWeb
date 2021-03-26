@@ -279,10 +279,10 @@ class ExcelExporter{
             worksheet.getCell('AK5').border=fullBorderStyle;
 //========================================================================================
             cell=worksheet.getCell('A6');
-            cell.value="Resident Support\nTeam Members";
+            cell.value='                              Date \nMember .';
             cell.font = timesNewRomanFont12;
-            cell.border=fullBorderStyle;
-            cell.alignment = { vertical: 'top',wrapText: true };
+            cell.border={...fullBorderStyle,...{diagonal:{ style: 'thin', color: { indexed: 64 }, up: false, down: true }}};
+            cell.alignment = {horizontal: 'distributed', vertical: 'top', wrapText: true};
 
             cell=worksheet.getCell('AI6');
             cell.value="Last Month";

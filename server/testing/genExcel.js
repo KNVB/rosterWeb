@@ -843,7 +843,7 @@ const vacantShiftList={
 }
     
 const worksheet = workbook.addWorksheet('Sheet1');
-
+/*
 let centerAligment={ horizontal: 'center',vertical:'middle'};
 let centerWithWrapTextAligment={...centerAligment,...{wrapText:true}};
 let fullBorderStyle={top: {style:'thin'},left: {style:'thin'},bottom: {style:'thin'},right: {style:'thin'}};
@@ -1265,19 +1265,21 @@ workbook.xlsx.writeFile('./output.xlsx')
 .catch(error=>{
     console.log("Some wrong:"+error);
 })
-
+*/
 
 /*
 workbook.xlsx.readFile('./template.xlsx')
 .then(()=>{
-    const worksheet2 = workbook.getWorksheet("Sheet2");
+	const worksheet2 = workbook.getWorksheet("Sheet2");
     for (let i=0;i<4;i++){
         console.log(
             worksheet2.conditionalFormattings[0].rules[i].type,
             worksheet2.conditionalFormattings[0].rules[i].formulae,
             worksheet2.conditionalFormattings[0].rules[i].style.fill);
     }
+
     const worksheet1 = workbook.getWorksheet("Sheet1");
+	console.log(worksheet1.getCell('A6'));
     console.log(worksheet1.getCell('A16').style);
     console.log(worksheet1.getCell('A7').style.font);
     console.log(worksheet1.getCell('AI1')._column.width);
@@ -1288,6 +1290,7 @@ workbook.xlsx.readFile('./template.xlsx')
     weekdayRow._cells.forEach(cell=>{
         console.log(cell._address,cell._column.width,cell.value);
     });
+	
 })
 .catch(error=>{
     console.log("Some wrong:"+error);
