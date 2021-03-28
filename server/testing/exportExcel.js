@@ -1,5 +1,5 @@
 async function doExport(){
-    monthlyCalendar={
+    let monthlyCalendar={
         "calendarDateList": [
             {
                 "publicHoliday": false,
@@ -175,22 +175,44 @@ async function doExport(){
         }
     const ExcelJS = require('exceljs');
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.readFile('./input.xlsx');
+    await workbook.xlsx.readFile('./template.xlsx');
     const worksheet1 = workbook.getWorksheet("Sheet1");
+    const itoRow= workbook.getWorksheet("Sheet2").getRow(13);
     let weekdayNames=['Su','M','T','W','Th','F','S'];
     let weekdayRow=worksheet1.getRow(5);
-    for (let i=0;i<this.monthlyCalendar.calendarDateList.length;i++){
-        let calendarDate=this.monthlyCalendar.calendarDateList[i];
-        let cell=weekdayRow.getCell(calendarDate.dateOfMonth+1)
-        cell.value=weekdayNames[calendarDate.dayOfWeek];
-        
-        if ((calendarDate.dayOfWeek==6)||(calendarDate.publicHoliday)){
-            console.log(weekdayRow.getCell(calendarDate.dateOfMonth+1).address);
-            cell.font = {color:{argb: 'FFFF0000'}, name: "Times New Roman", size: 12};
-            break;
+    for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
+        let calendarDate=monthlyCalendar.calendarDateList[i];
+        let cell=weekdayRow.getCell(calendarDate.dateOfMonth+1);
+        if ((calendarDate.dayOfWeek===6)||(calendarDate.publicHoliday)){
+            cell.value= {
+                richText: [
+                    {font:
+                        {color:{argb: 'FFFF0000'}, 
+                        name: "Times New Roman", 
+                        size: 12
+                    },
+                    text:weekdayNames[calendarDate.dayOfWeek]}
+                ]
+            };
+        } else {
+            cell.value=weekdayNames[calendarDate.dayOfWeek];
+            cell.font={name: "Times New Roman", size: 12};
         }
     }
-    await workbook.xlsx.writeFile('./input.xlsx');   
+    
+    worksheet1.insertRow(7,{});
+    
+    let row=worksheet1.getRow(7);
+    for (let i=1;i<=itoRow.cellCount;i++){
+        let srcCell=itoRow.getCell(i);
+        let desCell=row.getCell(i);
+
+        desCell.value=srcCell.value;
+        desCell.style=srcCell.style;
+    }
+    console.log(itoRow.cellCount);
+    
+    await workbook.xlsx.writeFile('./output.xlsx');   
 }
 doExport()
 .then(()=>{
