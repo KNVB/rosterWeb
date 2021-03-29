@@ -90,21 +90,48 @@ export default function RosterSchedulerRow(props){
             cellList.push(<ShiftCell availableShiftList={roster.availableShiftList} key={"prev-"+i}/>);
         }
     }
-
     for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
         let cssClassName="";
         if (rosterData.duplicateShiftList[props.itoId].includes(i+1)){
             cssClassName="errorRedBlackGround"; 
         }
-        if (selectedRegion.maxY===props.rowIndex){
-            console.log("MaxY="+props.rowIndex);
+        cssClassName+=Utility.getSelectedRegionCssClass(i,props.rowIndex,systemParam.noOfPrevDate);
+        /*
+        if ((selectedRegion.maxY===props.rowIndex)&&
+            ((i+systemParam.noOfPrevDate+1)>=selectedRegion.minX) &&
+            ((i+systemParam.noOfPrevDate+1)<=selectedRegion.maxX)
+            ){
+            //console.log("MaxY="+props.rowIndex);
             cssClassName+=" selectCellBorderBottom";
         }
-        if (selectedRegion.minY===props.rowIndex){
-            console.log("MinY="+props.rowIndex);
+        if (
+            (selectedRegion.minY===props.rowIndex) &&
+            ((i+systemParam.noOfPrevDate+1)>=selectedRegion.minX) &&
+            ((i+systemParam.noOfPrevDate+1)<=selectedRegion.maxX)
+            ){
+            //console.log("MinY="+props.rowIndex);
             cssClassName+=" selectCellBorderTop";
         }
-
+        
+        if (
+            (selectedRegion.minX===(i+systemParam.noOfPrevDate+1)) &&
+            (props.rowIndex>=selectedRegion.minY) &&
+            (props.rowIndex<=selectedRegion.maxY)
+            ){
+            //console.log("MinX="+i);
+            cssClassName+=" selectCellBorderLeft";
+        }
+        
+        if (
+            (selectedRegion.maxX===(i+systemParam.noOfPrevDate+1)) &&
+            (props.rowIndex>=selectedRegion.minY) &&
+            (props.rowIndex<=selectedRegion.maxY)
+            ){
+            //console.log("MaxX="+i);
+            cssClassName+=" selectCellBorderRight";
+        }
+        */
+        //console.log(selectedRegion.maxX,selectedRegion.minX,cellList.length+1);
         //console.log(selectedRegion.maxY,selectedRegion.minY,props.rowIndex);
         
         cellList.push(
