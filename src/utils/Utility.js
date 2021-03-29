@@ -145,10 +145,7 @@ export default class Utility{
           break;  
       }
     }
-  }
-  static getSelectedRegionCssClass(cellIndex,rowIndex,noOfPrevDate){
-
-  }
+  }  
   static getDuplicateShiftList(monthlyCalendar,rosterList){
     let result={};
     Object.keys(rosterList).forEach(itoId => {
@@ -185,6 +182,22 @@ export default class Utility{
       });
     }
     return result;
+  }
+  static getSelectedRegionCssClass(cellIndex,rowIndex,selectedRegion){
+    let result="";
+    if ((rowIndex===selectedRegion.minY) && (cellIndex>=selectedRegion.minX) &&(cellIndex<=selectedRegion.maxX)){
+      result="selectCellBorderTop";
+    }
+    if ((rowIndex===selectedRegion.maxY) && (cellIndex>=selectedRegion.minX) &&(cellIndex<=selectedRegion.maxX)){
+      result+=" selectCellBorderBottom";
+    }
+    if ((cellIndex===selectedRegion.maxX) && (rowIndex>=selectedRegion.minY) &&(rowIndex<=selectedRegion.maxY)){
+      result+=" selectCellBorderRight";
+    }
+    if ((cellIndex===selectedRegion.minX) && (rowIndex>=selectedRegion.minY) &&(rowIndex<=selectedRegion.maxY)){
+      result+=" selectCellBorderLeft";
+    }
+    return result.trim();
   }    
   static getSystemParam(){
       return this.fetchAPI('/publicAPI/getSystemParam','GET');

@@ -8,4 +8,4 @@ export default class SelectedRegion{
         this.maxX=-1;
         this.maxY=-1;
     }
-}
+} 
