@@ -13,11 +13,7 @@ export default function RosterViewer(props){
     monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
     let updateMonth=(newDate)=>{
         console.log("updateMonth="+newDate.getFullYear()+","+newDate.getMonth());
-        let rosterDate=new Date();
-        rosterDate.setFullYear(newDate.getFullYear());
-        rosterDate.setDate(1);
-        rosterDate.setMonth(newDate.getMonth());
-        setRosterMonth(rosterDate);
+        setRosterMonth(new Date(newDate.getFullYear(),newDate.getMonth(),1));
     }
     useEffect(()=>{
         const getData = async () => {

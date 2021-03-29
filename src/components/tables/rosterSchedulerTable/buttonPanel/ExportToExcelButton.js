@@ -15,15 +15,8 @@ export default function ExportToExcelButton(){
        for (let shift in activeShiftInfoList){
         if (shift!=='essentialShift'){
             let shiftInfo=activeShiftInfoList[shift];
-            let element=document.querySelector("."+shiftInfo.cssClassName);
-            let style = getComputedStyle(element);
-
-            let colors=style.backgroundColor.replace("rgb(","").replace(")","").split(",");
-            let colorCode="ff"+ Number(colors[0]).toString(16)+ Number(colors[1]).toString(16)+ Number(colors[2]).toString(16);
             shiftInfoList[shift]={
-                                    "colorCode":colorCode,
                                     duration:shiftInfo.duration,
-                                    timeSlot:shiftInfo.timeSlot
                                 };
         }
        }
