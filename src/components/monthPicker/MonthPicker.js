@@ -3,7 +3,13 @@ import "./MonthPicker.css";
 class MonthPicker extends React.Component {
   constructor(props) {
     super(props);
-    this.initialDate = this.props.initialDate || new Date();
+    if (this.props.initialDate){
+      this.initialDate = this.props.initialDate;
+    } else {
+      this.initialDate =new Date();
+      this.initialDate.setDate(1);
+    }
+     
     this.maxDate=this.props.maxDate||new Date(9999,11,31);
     this.minDate=this.props.minDate||new Date(1000,0,1);
     
@@ -42,11 +48,12 @@ class MonthPicker extends React.Component {
     this.nextMonth=()=>{
       let newDate=this.state.currentDate;
       let newMonth=newDate.getMonth()+1;
+      newDate.setDate(1);
       newDate.setMonth(newMonth);
       this.resultDate= this.monthFullName[newDate.getMonth()]+" "+newDate.getFullYear();
       this.setState({ currentDate: newDate});
       if (this.props.onSelect){
-        this.props.onSelect(newDate.getFullYear(),newDate.getMonth());
+        this.props.onSelect(newDate);
       }
     };
     this.nextYear=()=>{
@@ -59,11 +66,15 @@ class MonthPicker extends React.Component {
     this.prevMonth=()=>{
       let newDate=this.state.currentDate;
       let newMonth=newDate.getMonth()-1;
+     
+      newDate.setDate(1);
       newDate.setMonth(newMonth);
+      
+
       this.resultDate= this.monthFullName[newDate.getMonth()]+" "+newDate.getFullYear();
       this.setState({ currentDate: newDate});
       if (this.props.onSelect){
-        this.props.onSelect(newDate.getFullYear(),newDate.getMonth());
+        this.props.onSelect(newDate);
       }
     }
     this.prevYear=()=>{
@@ -87,7 +98,7 @@ class MonthPicker extends React.Component {
       this.setState({ currentDate: newDate, showCalendar: false });
       this.resultDate= this.monthFullName[newDate.getMonth()]+" "+newDate.getFullYear();
       if (this.props.onSelect){
-        this.props.onSelect(newDate.getFullYear(),newDate.getMonth());
+        this.props.onSelect(newDate);
       }
     };
   }

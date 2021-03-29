@@ -253,7 +253,6 @@ class ExcelExporter{
 }
 module.exports = ExcelExporter;
 //===========================================================================================================
-/*
 let excelExporter=new ExcelExporter();
 excelExporter.shiftInfoList={
     "a": {
@@ -1142,4 +1141,3 @@ excelExporter.doExport('./output.xlsx').then(()=>{
 .catch(error=>{
     console.log("Something wrong when export to excel file:"+error.stack);
 });
-*/

@@ -16,7 +16,7 @@ class RosterManager
             excelExporter.vacantShiftList=genExcelData.vacantShiftList
             excelExporter.rosterMonth=genExcelData.rosterMonth;
             excelExporter.rosterYear=genExcelData.rosterYear;
-
+			excelExporter.shiftInfoList=genExcelData.shiftInfoList;
 			return excelExporter.doExport('./output.xlsx');
 		}
 		this.getAllActiveShiftInfo=async()=>{

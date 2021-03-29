@@ -16,12 +16,13 @@ export default function RosterScheduler(props){
 
     //console.log(props);
     //console.log(props.systemParam.monthSelectorMinDate);
-    let updateMonth=(year,month)=>{
+    let updateMonth=(newDate)=>{
         //console.log("updateMonth="+year+","+month);
-        let newDate=new Date();
-        newDate.setFullYear(year);
-        newDate.setMonth(month);
-        setRosterMonth(newDate);
+        let rosterDate=new Date();
+        rosterDate.setFullYear(newDate.getFullYear());
+        rosterDate.setDate(1);
+        rosterDate.setMonth(newDate.getMonth());
+        setRosterMonth(rosterDate);
     }
     let systemParam=props.systemParam;
     useEffect(()=>{

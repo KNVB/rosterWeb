@@ -173,6 +173,7 @@ async function doExport(){
         ],
         "noOfWorkingDay": 18
         }
+    let centerAligment={ horizontal: 'center',vertical:'middle'};    
     const ExcelJS = require('exceljs');
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.readFile('./template.xlsx');
@@ -183,21 +184,23 @@ async function doExport(){
     for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
         let calendarDate=monthlyCalendar.calendarDateList[i];
         let cell=weekdayRow.getCell(calendarDate.dateOfMonth+1);
+        let colorCode='';
         if ((calendarDate.dayOfWeek===6)||(calendarDate.publicHoliday)){
-            cell.value= {
-                richText: [
-                    {font:
-                        {color:{argb: 'FFFF0000'}, 
-                        name: "Times New Roman", 
-                        size: 12
-                    },
-                    text:weekdayNames[calendarDate.dayOfWeek]}
-                ]
-            };
+            colorCode={argb: 'FFFF0000'};
         } else {
-            cell.value=weekdayNames[calendarDate.dayOfWeek];
-            cell.font={name: "Times New Roman", size: 12};
+            colorCode={argb: 'FF000000'};
         }
+        cell.alignment = centerAligment;
+        cell.value= {
+            richText: [
+                {font:
+                    {color:colorCode, 
+                    name: "Times New Roman", 
+                    size: 12
+                },
+                text:weekdayNames[calendarDate.dayOfWeek]}
+            ]
+        };
     }
     
     worksheet1.insertRow(7,{});
@@ -207,10 +210,8 @@ async function doExport(){
         let srcCell=itoRow.getCell(i);
         let desCell=row.getCell(i);
 
-        desCell.value=srcCell.value;
         desCell.style=srcCell.style;
     }
-    console.log(itoRow.cellCount);
     
     await workbook.xlsx.writeFile('./output.xlsx');   
 }
