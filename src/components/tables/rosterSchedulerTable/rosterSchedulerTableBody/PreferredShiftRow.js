@@ -1,6 +1,6 @@
 import {useContext,useState} from 'react';
 import PreferredShiftCell from './cells/PreferredShiftCell';
-import PreferredShiftNameCell from './cells/PreferredShiftCell';
+import PreferredShiftNameCell from './cells/PreferredShiftNameCell';
 import RosterWebContext from '../../../../RosterWebContext';
 import ShiftCell from '../../cells/shiftCell/ShiftCell';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
@@ -62,7 +62,7 @@ export default function PreferredShiftRow(props){
                 <PreferredShiftCell 
                     cellIndex={(1+i+systemParam.noOfPrevDate)}
                     key={props.itoId+"_preferred_shift_"+i} 
-                    onBlur={updatePreferredShiftData} 
+                    onBlur={updatePreferredShiftData}
                     onMouseLeave={deHightLight}
                     onMouseEnter={hightLight}
                     rowIndex={props.rowIndex}/>

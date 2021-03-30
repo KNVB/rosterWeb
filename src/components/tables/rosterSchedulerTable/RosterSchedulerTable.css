@@ -67,3 +67,6 @@
 {
 	border-bottom:2px solid black!important;
 }
+*:focus {
+    outline: none;
+}

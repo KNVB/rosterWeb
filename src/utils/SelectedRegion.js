@@ -2,6 +2,7 @@ export default class SelectedRegion{
     constructor(){
         this.firstX=-1;
         this.firstY=-1;
+        this.inCopyMode=false;
         this.inSelectMode=false;
         this.minX=-1;
         this.minY=-1;

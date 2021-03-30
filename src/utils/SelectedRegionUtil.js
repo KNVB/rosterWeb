@@ -2,33 +2,41 @@ export default class SelectedRegionUtil{
     static endSelect(selectedRegion,setSelectedRegion){
         if (selectedRegion.inSelectMode){
           let temp=JSON.parse(JSON.stringify(selectedRegion));
-          /*
-          temp.firstX=-1;
-          temp.firstY=-1;*/
           temp.inSelectMode=false;
-          /*
-          temp.minX=-1;
-          temp.minY=-1;
-          temp.maxX=-1;
-          temp.maxY=-1;*/
           setSelectedRegion(temp);
         }
     }
+    static getCopedRegionCssClass(cellIndex,rowIndex,selectedRegion){
+      let result=[];
+      if ((rowIndex===selectedRegion.minY) && (cellIndex>=selectedRegion.minX) &&(cellIndex<=selectedRegion.maxX)){
+        result.push("copiedCellBorderTop");
+      }
+      if ((rowIndex===selectedRegion.maxY) && (cellIndex>=selectedRegion.minX) &&(cellIndex<=selectedRegion.maxX)){
+        result.push("copiedCellBorderBottom");
+      }
+      if ((cellIndex===selectedRegion.maxX) && (rowIndex>=selectedRegion.minY) &&(rowIndex<=selectedRegion.maxY)){
+        result.push("copiedCellBorderRight");
+      }
+      if ((cellIndex===selectedRegion.minX) && (rowIndex>=selectedRegion.minY) &&(rowIndex<=selectedRegion.maxY)){
+        result.push("copiedCellBorderBottom");
+      }
+      return result.join(' ');
+    }    
     static getSelectedRegionCssClass(cellIndex,rowIndex,selectedRegion){
-        let result="";
+        let result=[];
         if ((rowIndex===selectedRegion.minY) && (cellIndex>=selectedRegion.minX) &&(cellIndex<=selectedRegion.maxX)){
-          result="selectCellBorderTop";
+          result.push("selectCellBorderTop");
         }
         if ((rowIndex===selectedRegion.maxY) && (cellIndex>=selectedRegion.minX) &&(cellIndex<=selectedRegion.maxX)){
-          result+=" selectCellBorderBottom";
+          result.push("selectCellBorderBottom");
         }
         if ((cellIndex===selectedRegion.maxX) && (rowIndex>=selectedRegion.minY) &&(rowIndex<=selectedRegion.maxY)){
-          result+=" selectCellBorderRight";
+          result.push("selectCellBorderRight");
         }
         if ((cellIndex===selectedRegion.minX) && (rowIndex>=selectedRegion.minY) &&(rowIndex<=selectedRegion.maxY)){
-          result+=" selectCellBorderLeft";
+          result.push("selectCellBorderLeft");
         }
-        return result.trim();
+        return result.join(' ');
     }    
    static startSelect(theCell,selectedRegion,setSelectedRegion){
     let row=theCell.parentElement;
@@ -91,7 +99,7 @@ export default class SelectedRegionUtil{
 				}	
 			}
       if (isChanged){
-        console.log("isChanged=true");
+        //console.log("isChanged=true");
         let temp=JSON.parse(JSON.stringify(selectedRegion))
         temp.minX=newMinX;
 				temp.maxX=newMaxX;

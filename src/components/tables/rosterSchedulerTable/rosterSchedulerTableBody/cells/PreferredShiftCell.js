@@ -12,19 +12,20 @@ export default function PreferredShiftCell(props) {
     SelectedRegionUtil.updateSelect(e.target, selectedRegion,setSelectedRegion);
   }
   function mouseDownHandler(e){
-    e.preventDefault();
     SelectedRegionUtil.startSelect(e.target,selectedRegion,setSelectedRegion);
   }
+  
   const preferredShiftCellProps=Object.assign({},props);
   let cssClassName=props.className+" "+SelectedRegionUtil.getSelectedRegionCssClass(props.cellIndex,props.rowIndex,selectedRegion);
   cssClassName=cssClassName.trim();
   delete preferredShiftCellProps.className;
-  
+  delete preferredShiftCellProps.cellIndex;
+  delete preferredShiftCellProps.rowIndex;
   return (
     <BorderedAlignCenterCell
       {...preferredShiftCellProps}
       className={cssClassName}
-      contentEditable={true}     
+      contentEditable={true}
       onMouseDown={mouseDownHandler}
       onMouseEnter={mouseEnterHandler}
       suppressContentEditableWarning={true}

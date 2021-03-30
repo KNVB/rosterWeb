@@ -32,7 +32,7 @@ export default function RosterSchedulerTable(props){
         SelectedRegionUtil.endSelect(selectedRegion,setSelectedRegion);       
     },[selectedRegion]);
     useEffect(()=>{
-        //console.log("Table");
+        console.log("Table");
         setMonthlyCalendar(props.rosterSchedulerData.monthlyCalendar);
         setRosterData(props.rosterSchedulerData.rosterData);
         document.addEventListener('mouseup',mouseUp);
