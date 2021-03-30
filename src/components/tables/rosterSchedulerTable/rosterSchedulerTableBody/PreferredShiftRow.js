@@ -47,21 +47,25 @@ export default function PreferredShiftRow(props){
     for(i=0;i<monthlyCalendar.calendarDateList.length;i++){
         if (preferredShiftList && preferredShiftList[i+1]){
             cellList.push(
-                <PreferredShiftCell 
+                <PreferredShiftCell
+                    cellIndex={(1+i+systemParam.noOfPrevDate)} 
                     key={props.itoId+"_preferred_shift_"+i} 
                     onBlur={updatePreferredShiftData}
                     onMouseLeave={deHightLight}
-                    onMouseEnter={hightLight}>
+                    onMouseEnter={hightLight}
+                    rowIndex={props.rowIndex}>
                     {preferredShiftList[i+1]}
                 </PreferredShiftCell>
             );
         } else {
             cellList.push(
                 <PreferredShiftCell 
+                    cellIndex={(1+i+systemParam.noOfPrevDate)}
                     key={props.itoId+"_preferred_shift_"+i} 
                     onBlur={updatePreferredShiftData} 
                     onMouseLeave={deHightLight}
-                    onMouseEnter={hightLight}/>
+                    onMouseEnter={hightLight}
+                    rowIndex={props.rowIndex}/>
             );
         }
     }

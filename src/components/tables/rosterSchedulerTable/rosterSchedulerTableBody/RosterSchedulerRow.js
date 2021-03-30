@@ -7,7 +7,6 @@ import Parser from "html-react-parser";
 import Roster from '../../../../utils/Roster';
 import RosterNameCell from '../../cells/RosterNameCell';
 import RosterWebContext from '../../../../RosterWebContext';
-import SelectedRegionUtil from '../../../../utils/SelectedRegionUtil';
 import ShiftCell from '../../cells/shiftCell/ShiftCell';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
 
@@ -97,16 +96,16 @@ export default function RosterSchedulerRow(props){
         if (rosterData.duplicateShiftList[props.itoId].includes(i+1)){
             cssClassName="errorRedBlackGround"; 
         }        
-        cssClassName+=" "+SelectedRegionUtil.getSelectedRegionCssClass(1+i+systemParam.noOfPrevDate,props.rowIndex,selectedRegion);
-        cssClassName=cssClassName.trim();
         cellList.push(
             <EditableShiftCell 
                 availableShiftList={roster.availableShiftList}
                 className={cssClassName}
+                cellIndex={(1+i+systemParam.noOfPrevDate)}
                 key={props.itoId+"_shift_"+i}
                 onBlur={updateShiftData}
                 onMouseLeave={deHightLight}
-                onMouseEnter={hightLight}>
+                onMouseEnter={hightLight}
+                rowIndex={props.rowIndex}>
                 {roster.shiftList[i+1]}
             </EditableShiftCell>
         );

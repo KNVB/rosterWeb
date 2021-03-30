@@ -9,6 +9,10 @@ export default function EditableShiftCell(props) {
     selectedRegion,
     setSelectedRegion
   } = useContext(RosterWebContext);
+  const editableShiftCellProps=Object.assign({},props);
+  let cssClassName=props.className+" "+SelectedRegionUtil.getSelectedRegionCssClass(props.cellIndex,props.rowIndex,selectedRegion);
+  cssClassName=cssClassName.trim();
+  delete editableShiftCellProps.className;
   function mouseEnterHandler(e){
     props.onMouseEnter(e);
     SelectedRegionUtil.updateSelect(e.target, selectedRegion,setSelectedRegion);
@@ -19,7 +23,8 @@ export default function EditableShiftCell(props) {
   }
   return (
     <ShiftCell
-      {...props}
+      {...editableShiftCellProps}
+      className={cssClassName}
       contentEditable={true}
       onMouseDown={mouseDownHandler}
       onMouseEnter={mouseEnterHandler}
