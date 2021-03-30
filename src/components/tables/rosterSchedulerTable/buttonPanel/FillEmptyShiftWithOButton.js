@@ -1,6 +1,6 @@
 import {useContext} from 'react';
 import RosterWebContext from '../../../../RosterWebContext';
-import Utility from '../../../../utils/Utility';
+import Roster from '../../../../utils/Roster';
 export default function FillEmptyShiftWithOButton(){
     let {activeShiftInfoList,monthlyCalendar,rosterData,setRosterData} = useContext(RosterWebContext);
     function fillEmptyShiftWithO(){
@@ -16,9 +16,9 @@ export default function FillEmptyShiftWithOButton(){
                     shiftList[i+1]="O";
                 }
             }
-            Utility.calculateITOMonthlyStat(temp.rosterList[itoId],monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
+            Roster.calculateITOMonthlyStat(temp.rosterList[itoId],monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
         });
-        temp.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,rosterList);
+        temp.duplicateShiftList=Roster.getDuplicateShiftList(monthlyCalendar,rosterList);
         setRosterData(temp);
     }
     return(

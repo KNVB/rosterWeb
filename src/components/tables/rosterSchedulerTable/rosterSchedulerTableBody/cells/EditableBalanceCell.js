@@ -1,4 +1,4 @@
-import BalanceCell from '../../../../cells/balanceCell/BalanceCell';
+import BalanceCell from '../../../cells/balanceCell/BalanceCell';
 export default function EditableBalanceCell(props){
     return (
         <BalanceCell

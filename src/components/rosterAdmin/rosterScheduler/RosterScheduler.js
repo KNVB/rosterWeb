@@ -6,7 +6,7 @@ import MonthPicker from '../../monthPicker/MonthPicker';
 import Roster from '../../../utils/Roster';
 import RosterSchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
 import SessionExpiredError from '../../../utils/SessionExpiredError';
-import Utility from '../../../utils/Utility';
+
 export default function RosterScheduler(props){
     const [rosterMonth,setRosterMonth]=useState(new Date());
     const[rosterSchedulerData,setRosterSchedulerData]=useState();
@@ -32,10 +32,10 @@ export default function RosterScheduler(props){
                 let calendarUtility=new CalendarUtility();
 
                 let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
-                rosterData.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,rosterData.rosterList);
+                rosterData.duplicateShiftList=Roster.getDuplicateShiftList(monthlyCalendar,rosterData.rosterList);
                 Object.keys(rosterData.rosterList).forEach(itoId=>{
                     let itoRoster=rosterData.rosterList[itoId];
-                    Utility.calculateITOMonthlyStat(itoRoster,monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
+                    Roster.calculateITOMonthlyStat(itoRoster,monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
                     rosterData.rosterList[itoId]=itoRoster;
                 })
                 let orgRosterData= JSON.parse(JSON.stringify(rosterData)); //Don't use object.assign, which is shallow copy

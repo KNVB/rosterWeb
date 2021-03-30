@@ -1,11 +1,12 @@
 import {useCallback,useState,useEffect} from 'react';
 import './RosterSchedulerTable.css';
+import Roster from '../../../utils/Roster';
 import RosterWebContext from '../../../RosterWebContext';
 import RosterSchedulerTableBody from './rosterSchedulerTableBody/RosterSchedulerTableBody';
 import RosterSchedulerTableFooter from './rosterSchedulerTableFooter/RosterSchedulerTableFooter';
 import SelectedRegion from '../../../utils/SelectedRegion'; 
 import TableHeader from '../tableHeader/TableHeader';
-import Utility from '../../../utils/Utility';
+import SelectedRegionUtil from '../../../utils/SelectedRegionUtil';
 export default function RosterSchedulerTable(props){
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
 
@@ -23,12 +24,12 @@ export default function RosterSchedulerTable(props){
     let orgRosterData=props.rosterSchedulerData.orgRosterData;
     let rosterMonth=props.rosterSchedulerData.rosterMonth;
     let systemParam=props.rosterSchedulerData.systemParam;
-    rosterData.vacantShiftList=Utility.getVacantShiftList(activeShiftInfoList.essentialShift,monthlyCalendar,rosterData.rosterList);
+    rosterData.vacantShiftList=Roster.getVacantShiftList(activeShiftInfoList.essentialShift,monthlyCalendar,rosterData.rosterList);
     let yearlyRosterStatistic=props.rosterSchedulerData.yearlyRosterStatistic;
     let mouseUp=useCallback(()=>{
         console.log("mouse up");
         //console.log(selectedRegion.inSelectMode);
-        Utility.endSelect(selectedRegion,setSelectedRegion);       
+        SelectedRegionUtil.endSelect(selectedRegion,setSelectedRegion);       
     },[selectedRegion]);
     useEffect(()=>{
         //console.log("Table");

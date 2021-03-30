@@ -1,6 +1,7 @@
 import {useContext} from 'react';
+import Roster from '../../../../utils/Roster';
 import RosterWebContext from '../../../../RosterWebContext';
-import Utility from '../../../../utils/Utility';
+
 export default function ClearAllShiftDataButton(){
     let {activeShiftInfoList,monthlyCalendar,rosterData,setRosterData} = useContext(RosterWebContext);
     function clearAllShiftData(){
@@ -16,9 +17,9 @@ export default function ClearAllShiftDataButton(){
             let roster=rosterList[itoId];
             roster.shiftList={};
             temp.rosterList[itoId]=roster;
-            Utility.calculateITOMonthlyStat(temp.rosterList[itoId],monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
+            Roster.calculateITOMonthlyStat(temp.rosterList[itoId],monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
         });
-        temp.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,rosterList);
+        temp.duplicateShiftList=Roster.getDuplicateShiftList(monthlyCalendar,rosterList);
         
         /*
         console.log("1temp="+JSON.stringify(temp.rosterList['ITO1_1999-01-01'].shiftList));

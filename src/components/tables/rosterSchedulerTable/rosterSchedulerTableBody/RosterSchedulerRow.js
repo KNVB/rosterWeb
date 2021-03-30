@@ -1,14 +1,16 @@
 import {useContext,useState} from 'react';
 import BalanceCell from '../../cells/balanceCell/BalanceCell';
-import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
-import EditableBalanceCell from './cells/editableBalanceCell/EditableBalanceCell';
+import BorderedAlignCenterCell from '../../cells/BorderedAlignCenterCell';
+import EditableBalanceCell from './cells/EditableBalanceCell';
 import EditableShiftCell from './cells/editableShiftCell/EditableShiftCell';
 import Parser from "html-react-parser";
-import RosterNameCell from '../../cells/rosterNameCell/RosterNameCell';
+import Roster from '../../../../utils/Roster';
+import RosterNameCell from '../../cells/RosterNameCell';
 import RosterWebContext from '../../../../RosterWebContext';
+import SelectedRegionUtil from '../../../../utils/SelectedRegionUtil';
 import ShiftCell from '../../cells/shiftCell/ShiftCell';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
-import Utility from '../../../../utils/Utility';
+
 export default function RosterSchedulerRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],i;
@@ -44,7 +46,7 @@ export default function RosterSchedulerRow(props){
         } else {
             let temp=JSON.parse(JSON.stringify(rosterData));//Don't use object.assign, which is shallow copy
             temp.rosterList[props.itoId].lastMonthBalance=parseFloat(e.target.textContent);
-            Utility.updateThisMonthBalance(temp,props.itoId);
+            Roster.updateThisMonthBalance(temp,props.itoId);
             setRosterData(temp);
         }
     }
@@ -59,8 +61,8 @@ export default function RosterSchedulerRow(props){
             temp.rosterList[props.itoId].shiftList[realIndex]=e.target.textContent;
         }
         //console.log("0:"+temp.rosterList[props.itoId].thisMonthBalance);
-        temp.duplicateShiftList=Utility.getDuplicateShiftList(monthlyCalendar,temp.rosterList);
-        Utility.calculateITOMonthlyStat(temp.rosterList[props.itoId],monthlyCalendar.noOfWorkingDay,activeShiftInfoList);        
+        temp.duplicateShiftList=Roster.getDuplicateShiftList(monthlyCalendar,temp.rosterList);
+        Roster.calculateITOMonthlyStat(temp.rosterList[props.itoId],monthlyCalendar.noOfWorkingDay,activeShiftInfoList);        
         //console.log("1:"+temp.rosterList[props.itoId].thisMonthBalance);
         setRosterData(temp);
     }
@@ -71,7 +73,7 @@ export default function RosterSchedulerRow(props){
         } else {
             let temp=JSON.parse(JSON.stringify(rosterData));//Don't use object.assign, which is shallow copy
             temp.rosterList[props.itoId].thisMonthHourTotal=parseFloat(e.target.textContent);
-            Utility.updateThisMonthBalance(temp,props.itoId);
+            Roster.updateThisMonthBalance(temp,props.itoId);
             setRosterData(temp);
         }
     }
@@ -95,7 +97,7 @@ export default function RosterSchedulerRow(props){
         if (rosterData.duplicateShiftList[props.itoId].includes(i+1)){
             cssClassName="errorRedBlackGround"; 
         }        
-        cssClassName+=" "+Utility.getSelectedRegionCssClass(1+i+systemParam.noOfPrevDate,props.rowIndex,selectedRegion);
+        cssClassName+=" "+SelectedRegionUtil.getSelectedRegionCssClass(1+i+systemParam.noOfPrevDate,props.rowIndex,selectedRegion);
         cssClassName=cssClassName.trim();
         cellList.push(
             <EditableShiftCell 

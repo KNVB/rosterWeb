@@ -1,4 +1,4 @@
-import BorderedCell from '../borderedCell/BorderedCell';
+import BorderedCell from './borderedCell/BorderedCell';
 export default function BorderedAlignCenterCell(props){
   let cssClass="text-center"+((props.className)?" "+props.className:"");
   return(

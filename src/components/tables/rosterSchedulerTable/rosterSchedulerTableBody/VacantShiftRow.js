@@ -1,5 +1,6 @@
 import {useContext} from 'react';
-import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+import BorderedAlignCenterCell from '../../cells/BorderedAlignCenterCell';
+import Roster from "../../../../utils/Roster";
 import RosterWebContext from '../../../../RosterWebContext';
 import Utility from "../../../../utils/Utility";
 import VacantShiftNameCell from './cells/vacantShiftNameCell/VacantShiftNameCell';
@@ -38,7 +39,7 @@ export default function VacantShiftRow(props){
   }
   Object.keys(rosterList).forEach(itoId => {
     let roster = rosterList[itoId];
-    let shiftCount = Utility.calculateShiftCount(roster);
+    let shiftCount = Roster.calculateShiftCount(roster);
     aShiftCount.push(shiftCount.aShiftCount);
     bxShiftCount.push(shiftCount.bxShiftCount);
     cShiftCount.push(shiftCount.cShiftCount);

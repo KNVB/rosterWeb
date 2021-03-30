@@ -1,12 +1,13 @@
 import {useContext,useState} from 'react';
 import BalanceCell from '../../cells/balanceCell/BalanceCell';
-import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
-import RosterNameCell from "../../cells/rosterNameCell/RosterNameCell";
+import BorderedAlignCenterCell from '../../cells/BorderedAlignCenterCell';
+import RosterNameCell from "../../cells/RosterNameCell";
 import Parser from "html-react-parser";
+import Roster from '../../../../utils/Roster';
 import ShiftCell from "../../cells/shiftCell/ShiftCell";
 import ShiftCountCell from "../../cells/shiftCountCell/ShiftCountCell";
 import RosterWebContext from '../../../../RosterWebContext';
-import Utility from '../../../../utils/Utility';
+
 export default function RosterRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     
@@ -18,7 +19,7 @@ export default function RosterRow(props){
     //console.log(rosterRowData);
     //console.log(monthlyCalendar.noOfWorkingDay);
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
-    Utility.calculateITOMonthlyStat(roster,monthlyCalendar.noOfWorkingDay,activeShiftInfoList)
+    Roster.calculateITOMonthlyStat(roster,monthlyCalendar.noOfWorkingDay,activeShiftInfoList)
     let deHightLight = e => {
         setHightLightCellIndex(-1);
         setIsHighLightRow(false);

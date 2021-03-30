@@ -1,10 +1,10 @@
 import {useContext,useState} from 'react';
-import PreferredShiftCell from './cells/preferredShiftCell/PreferredShiftCell';
-import PreferredShiftNameCell from './cells/preferredShiftNameCell/PreferredShiftNameCell';
+import PreferredShiftCell from './cells/PreferredShiftCell';
+import PreferredShiftNameCell from './cells/PreferredShiftCell';
 import RosterWebContext from '../../../../RosterWebContext';
 import ShiftCell from '../../cells/shiftCell/ShiftCell';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
-import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+import BorderedAlignCenterCell from '../../cells/BorderedAlignCenterCell';
 export default function PreferredShiftRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],i;

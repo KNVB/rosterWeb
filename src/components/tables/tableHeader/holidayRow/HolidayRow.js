@@ -2,7 +2,7 @@ import {useContext} from 'react';
 import './HolidayRow.css';
 import NameCell from '../../cells/nameCell/NameCell';
 import PHCell from './PHCell';
-import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+import BorderedAlignCenterCell from '../../cells/BorderedAlignCenterCell';
 import RosterWebContext from '../../../../RosterWebContext';
 export default function HolidayRow(props){
     let holidayRow=[];

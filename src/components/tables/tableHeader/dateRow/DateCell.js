@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import BorderedAlignCenterCell from '../../cells/borderedAlignCenterCell/BorderedAlignCenterCell';
+import BorderedAlignCenterCell from '../../cells/BorderedAlignCenterCell';
 import RosterWebContext from '../../../../RosterWebContext';
 export default function DateCell(props){
     let className="p-0";

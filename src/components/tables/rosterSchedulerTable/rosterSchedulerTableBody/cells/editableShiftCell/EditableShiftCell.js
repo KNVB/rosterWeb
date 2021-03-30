@@ -1,9 +1,9 @@
 import {useContext} from 'react';
 import './EditableShiftCell.css';
 import React from "react";
-import ShiftCell from '../../../../cells/shiftCell/ShiftCell';
 import RosterWebContext from '../../../../../../RosterWebContext'; 
-import Utility from '../../../../../../utils/Utility';
+import ShiftCell from '../../../../cells/shiftCell/ShiftCell';
+import SelectedRegionUtil from '../../../../../../utils/SelectedRegionUtil';
 export default function EditableShiftCell(props) {
   let {
     selectedRegion,
@@ -11,11 +11,11 @@ export default function EditableShiftCell(props) {
   } = useContext(RosterWebContext);
   function mouseEnterHandler(e){
     props.onMouseEnter(e);
-    Utility.updateSelect(e.target, selectedRegion,setSelectedRegion);
+    SelectedRegionUtil.updateSelect(e.target, selectedRegion,setSelectedRegion);
   }
   function mouseDownHandler(e){
     e.preventDefault();
-    Utility.startSelect(e.target,selectedRegion,setSelectedRegion);
+    SelectedRegionUtil.startSelect(e.target,selectedRegion,setSelectedRegion);
   }
   return (
     <ShiftCell
