@@ -6,7 +6,8 @@ import Roster from '../../utils/Roster';
 import RosterTable from '../tables/rosterTable/RosterTable';
 import './RosterViewer.css';
 export default function RosterViewer(props){
-    const [rosterMonth,setRosterMonth]=useState(new Date());
+    let now=new Date();
+    const [rosterMonth,setRosterMonth]=useState(new Date(now.getFullYear(),now.getMonth(),1));
     const[rosterTableData,setRosterTableData]=useState();
  
     let monthPickerMinDate=props.systemParam.monthPickerMinDate;

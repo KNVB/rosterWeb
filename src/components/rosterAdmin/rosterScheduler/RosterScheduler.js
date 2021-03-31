@@ -8,7 +8,8 @@ import RosterSchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedu
 import SessionExpiredError from '../../../utils/SessionExpiredError';
 
 export default function RosterScheduler(props){
-    const [rosterMonth,setRosterMonth]=useState(new Date());
+    let now=new Date();
+    const [rosterMonth,setRosterMonth]=useState(new Date(now.getFullYear(),now.getMonth(),1));
     const[rosterSchedulerData,setRosterSchedulerData]=useState();
     let monthPickerMinDate=props.systemParam.monthPickerMinDate;
     //console.log(monthPickerMinDate);
@@ -38,7 +39,8 @@ export default function RosterScheduler(props){
                     Roster.calculateITOMonthlyStat(itoRoster,monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
                     rosterData.rosterList[itoId]=itoRoster;
                 })
-                let orgRosterData= JSON.parse(JSON.stringify(rosterData)); //Don't use object.assign, which is shallow copy
+                let orgRosterData={...rosterData}; //Don't use object.assign, which is shallow copy
+                sessionStorage.setItem("rosterData",JSON.stringify(rosterData));
                 setRosterSchedulerData(
                    {
                     "activeShiftInfoList":activeShiftInfoList,
@@ -46,7 +48,6 @@ export default function RosterScheduler(props){
                     "changeLoggedInFlag":props.changeLoggedInFlag,
                     "monthlyCalendar":monthlyCalendar,
                     "orgRosterData":orgRosterData,
-                    "rosterData":rosterData,
                     "rosterMonth":rosterMonth,                
                     "systemParam":systemParam,
                     "yearlyRosterStatistic":yearlyRosterStatistic
