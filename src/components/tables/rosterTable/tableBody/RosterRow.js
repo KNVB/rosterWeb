@@ -6,7 +6,7 @@ import Parser from "html-react-parser";
 import Roster from '../../../../utils/Roster';
 import ShiftCell from "../../cells/shiftCell/ShiftCell";
 import ShiftCountCell from "../../cells/shiftCountCell/ShiftCountCell";
-import RosterWebContext from '../../../../RosterWebContext';
+import RosterWebContext from '../../../../utils/RosterWebContext';
 
 export default function RosterRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);

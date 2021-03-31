@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import './EditableShiftCell.css';
 import React from "react";
-import RosterWebContext from '../../../../../../RosterWebContext'; 
+import RosterWebContext from '../../../../../../utils/RosterWebContext'; 
 import ShiftCell from '../../../../cells/shiftCell/ShiftCell';
 import SelectedRegionUtil from '../../../../../../utils/SelectedRegionUtil';
 export default function EditableShiftCell(props) {
@@ -24,15 +24,10 @@ export default function EditableShiftCell(props) {
     props.onMouseEnter(e);
     SelectedRegionUtil.updateSelect(e.target, selectedRegion,setSelectedRegion);
   }
-  function mouseDownHandler(e){
-    e.preventDefault();
+  function mouseDownHandler(e){    
     SelectedRegionUtil.startSelect(e.target,selectedRegion,setSelectedRegion);
   }
-  function setFocus(e){
-    e.target.focus();
-		let sel = window.getSelection();
-    sel.collapse(e.target, 1);
-  }
+  
 
   return (
     <ShiftCell
@@ -40,12 +35,10 @@ export default function EditableShiftCell(props) {
       className={cssClassName}
       contentEditable={true}
       onCopy={copyData}
-      /*
-      onDoubleClick={setFocus}
       
       onMouseDown={mouseDownHandler}
       onMouseEnter={mouseEnterHandler}      
-      */
+      
       suppressContentEditableWarning={true}
     >
       {props.children}

@@ -1,6 +1,6 @@
 import {useContext} from 'react';
 import './TableFooter.css';
-import RosterWebContext from '../../../../RosterWebContext';
+import RosterWebContext from '../../../../utils/RosterWebContext';
 function TableFooter(props){
     let {activeShiftInfoList} = useContext(RosterWebContext);
     return (

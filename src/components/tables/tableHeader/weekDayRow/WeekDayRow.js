@@ -2,7 +2,7 @@ import {useContext} from 'react';
 import HourCell from './HourCell';
 import HourOffDueCell from './HourOffDueCell';
 import NameCell from '../../cells/nameCell/NameCell';
-import RosterWebContext from '../../../../RosterWebContext';
+import RosterWebContext from '../../../../utils/RosterWebContext';
 import WeekDayCell from './WeekDayCell';
 
 function WeekDayRow(props){

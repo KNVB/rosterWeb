@@ -6,7 +6,7 @@ import EditableShiftCell from './cells/editableShiftCell/EditableShiftCell';
 import Parser from "html-react-parser";
 import Roster from '../../../../utils/Roster';
 import RosterNameCell from '../../cells/RosterNameCell';
-import RosterWebContext from '../../../../RosterWebContext';
+import RosterWebContext from '../../../../utils/RosterWebContext';
 import ShiftCell from '../../cells/shiftCell/ShiftCell';
 import ShiftCountCell from '../../cells/shiftCountCell/ShiftCountCell';
 

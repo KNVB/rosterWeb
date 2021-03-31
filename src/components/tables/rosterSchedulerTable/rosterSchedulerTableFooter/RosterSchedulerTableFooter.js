@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import './RosterSchedulerTableFooter.js';
 import ButtonPanel from '../buttonPanel/ButtonPanel';
-import RosterWebContext from '../../../../RosterWebContext';
+import RosterWebContext from '../../../../utils/RosterWebContext';
 import YearlyRosterStatistic from '../yearlyRosterStatistic/YearlyRosterStatistic';
 export default function RosterSchedulerTableFooter(props){
     let {activeShiftInfoList} = useContext(RosterWebContext);

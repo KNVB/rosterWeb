@@ -1,7 +1,7 @@
 import './ShiftCell.css';
 import {useContext} from 'react';
 import BorderedAlignCenterCell from '../../cells/BorderedAlignCenterCell';
-import RosterWebContext from '../../../../RosterWebContext';
+import RosterWebContext from '../../../../utils/RosterWebContext';
 export default function ShiftCell(props){
     const shiftCellProps=Object.assign({},props);
     let shiftClass ="p-0 shiftCell"+((props.className)?" "+props.className:"");

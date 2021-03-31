@@ -1,6 +1,6 @@
 import {useContext} from 'react';
 import RosterRow from './RosterRow';
-import RosterWebContext from '../../../../RosterWebContext';
+import RosterWebContext from '../../../../utils/RosterWebContext';
 export default function TableBody(props){
     let {rosterList} = useContext(RosterWebContext);
     let rowList = [];

@@ -1,6 +1,6 @@
 import '../tables.css';
 import {useState} from 'react';
-import RosterWebContext from '../../../RosterWebContext';
+import RosterWebContext from '../../../utils/RosterWebContext';
 import TableBody from './tableBody/TableBody'; 
 import TableFooter from './tableFooter/TableFooter'; 
 import TableHeader from '../tableHeader/TableHeader'; 
