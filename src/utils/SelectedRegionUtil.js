@@ -3,7 +3,7 @@ export default class SelectedRegionUtil{
       console.log("inSelectMode="+selectedRegion.inSelectMode);
       let temp=JSON.parse(JSON.stringify(selectedRegion));
       temp.inCopyMode=true;
-      //setSelectedRegion(temp);
+      setSelectedRegion(temp);
     }
     static endSelect(selectedRegion,setSelectedRegion){
         if (selectedRegion.inSelectMode){
@@ -14,9 +14,9 @@ export default class SelectedRegionUtil{
     }
     static getBorderClass(cellIndex,rowIndex,selectedRegion){
       console.log("inCopyMode="+selectedRegion.inCopyMode);
-      /*if (selectedRegion.inCopyMode){
+      if (selectedRegion.inCopyMode){
         return this.getCopiedRegionCssClass(cellIndex,rowIndex,selectedRegion);
-      }*/
+      }
       return this.getSelectedRegionCssClass(cellIndex,rowIndex,selectedRegion);
     }
     static getCopiedRegionCssClass(cellIndex,rowIndex,selectedRegion){
@@ -31,7 +31,7 @@ export default class SelectedRegionUtil{
         result.push("copiedCellBorderRight");
       }
       if ((cellIndex===selectedRegion.minX) && (rowIndex>=selectedRegion.minY) &&(rowIndex<=selectedRegion.maxY)){
-        result.push("copiedCellBorderBottom");
+        result.push("copiedCellBorderLeft");
       }
       return result.join(' ');
     }    

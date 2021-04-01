@@ -10,7 +10,8 @@ export default function EditableShiftCell(props) {
     setSelectedRegion
   } = useContext(RosterWebContext);
   const editableShiftCellProps=Object.assign({},props);
-  let cssClassName=props.className+" "+SelectedRegionUtil.getSelectedRegionCssClass(props.cellIndex,props.rowIndex,selectedRegion);
+  //let cssClassName=props.className+" "+SelectedRegionUtil.getSelectedRegionCssClass(props.cellIndex,props.rowIndex,selectedRegion);
+  let cssClassName=props.className+" "+SelectedRegionUtil.getBorderClass(props.cellIndex,props.rowIndex,selectedRegion);
   cssClassName=cssClassName.trim();
   delete editableShiftCellProps.className;
   delete editableShiftCellProps.cellIndex;
@@ -19,6 +20,7 @@ export default function EditableShiftCell(props) {
   function copyData(e){
     e.preventDefault();
     console.log("Copy");
+    SelectedRegionUtil.copySelectedRegion(selectedRegion,setSelectedRegion);
   }  
   function mouseEnterHandler(e){
     props.onMouseEnter(e);
