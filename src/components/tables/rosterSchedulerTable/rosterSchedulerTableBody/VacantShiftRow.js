@@ -3,7 +3,7 @@ import BorderedAlignCenterCell from '../../cells/BorderedAlignCenterCell';
 import Roster from "../../../../utils/Roster";
 import RosterWebContext from '../../../../utils/RosterWebContext';
 import Utility from "../../../../utils/Utility";
-import VacantShiftNameCell from './VacantShiftNameCell';
+import VacantShiftNameCell from './cells/VacantShiftNameCell';
 export default function VacantShiftRow(props){
   let {monthlyCalendar,rosterData,systemParam} = useContext(RosterWebContext);
   let cellList=[];

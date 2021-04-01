@@ -19,7 +19,6 @@ export default function FillEmptyShiftWithOButton(){
             Roster.calculateITOMonthlyStat(temp.rosterList[itoId],monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
         });
         temp.duplicateShiftList=Roster.getDuplicateShiftList(monthlyCalendar,rosterList);
-        sessionStorage.setItem("rosterData",JSON.stringify(temp));
         setRosterData(temp);
     }
     return(

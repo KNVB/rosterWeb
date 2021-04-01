@@ -1,11 +1,11 @@
-import {useCallback,useEffect,useState} from 'react';
+import {useCallback,useState,useEffect} from 'react';
 import './RosterSchedulerTable.css';
+import RosterWebContext from '../../../utils/RosterWebContext';
 import RosterSchedulerTableBody from './rosterSchedulerTableBody/RosterSchedulerTableBody';
 import RosterSchedulerTableFooter from './rosterSchedulerTableFooter/RosterSchedulerTableFooter';
-import RosterWebContext from '../../../utils/RosterWebContext';
 import SelectedRegion from '../../../utils/SelectedRegion'; 
-import SelectedRegionUtil from '../../../utils/SelectedRegionUtil';
 import TableHeader from '../tableHeader/TableHeader';
+import SelectedRegionUtil from '../../../utils/SelectedRegionUtil';
 export default function RosterSchedulerTable(props){
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
 
@@ -13,60 +13,63 @@ export default function RosterSchedulerTable(props){
      * Both monthlyCalendar and rosterData must be a state variable,
      * otherwise their data are not in sync.
      */
-    const [rosterData,setRosterData]=useState(JSON.parse(sessionStorage.getItem("rosterData")));
     const [monthlyCalendar,setMonthlyCalendar]=useState(props.rosterSchedulerData.monthlyCalendar);
+    const [rosterData,setRosterData]=useState(props.rosterSchedulerData.rosterData);
     const [selectedRegion,setSelectedRegion]=useState(new SelectedRegion());
     
-    //console.log(rosterData.rosterList);
-    /*
-    let rosterData=JSON.parse(sessionStorage.getItem("rosterData"));
-    let monthlyCalendar=props.rosterSchedulerData.monthlyCalendar;
-    */
+    let activeShiftInfoList=props.rosterSchedulerData.activeShiftInfoList;
+    let calendarUtility=props.rosterSchedulerData.calendarUtility;
+    let changeLoggedInFlag=props.rosterSchedulerData.changeLoggedInFlag;
+    let orgRosterData=props.rosterSchedulerData.orgRosterData;
+    let rosterMonth=props.rosterSchedulerData.rosterMonth;
+    let systemParam=props.rosterSchedulerData.systemParam;
+    let yearlyRosterStatistic=props.rosterSchedulerData.yearlyRosterStatistic;
     
     let mouseUp=useCallback(()=>{
         console.log("mouse up");
         //console.log(selectedRegion.inSelectMode);
         SelectedRegionUtil.endSelect(selectedRegion,setSelectedRegion);       
     },[selectedRegion]);
-    
     useEffect(()=>{
+        console.log("Table");
         setMonthlyCalendar(props.rosterSchedulerData.monthlyCalendar);
-        setRosterData(JSON.parse(sessionStorage.getItem("rosterData")));
- 
+        setRosterData(props.rosterSchedulerData.rosterData);
         document.addEventListener('mouseup',mouseUp);
         return () => {
             document.removeEventListener('mouseup', mouseUp)
         }
-    },[mouseUp,props.rosterSchedulerData.monthlyCalendar]);
-    
-    let temp={...props.rosterSchedulerData};
-    delete temp.monthlyCalendar;
-    /*
-    console.log(monthlyCalendar.calendarDateList.length);
-    console.log(Object.keys(rosterData.rosterList['ITO1_1999-01-01'].shiftList).length);
-    */
-    
+    },[mouseUp,props.rosterSchedulerData.monthlyCalendar,props.rosterSchedulerData.rosterData,selectedRegion]);
+
     let contextValue={
-        ...temp,
-        hightLightCellIndex, 
-        setHightLightCellIndex,
+        activeShiftInfoList,
+        calendarUtility,
+        changeLoggedInFlag,
+        hightLightCellIndex,
         monthlyCalendar,
+        orgRosterData,
         rosterData,
+        rosterMonth,
         selectedRegion,
-        setRosterData,        
-        setSelectedRegion       
-    }
-    /*
-    console.log(contextValue);
-    */
+        setHightLightCellIndex,
+        setRosterData,
+        setSelectedRegion,
+        systemParam,
+        yearlyRosterStatistic
+    };
+    //console.log("RosterSchedulerTable");
+    //console.log("Preferred Shift List="+JSON.stringify(rosterData.preferredShiftList));
+    //console.log("Roster List="+JSON.stringify(rosterData.rosterList));
+    
+    //console.log("Table org="+JSON.stringify(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList));
+    //console.log("Table current="+JSON.stringify(rosterData.rosterList['ITO1_1999-01-01'].shiftList));
+    
     return (
         <table id="rosterTable">
             <RosterWebContext.Provider value={contextValue}>
-                <TableHeader noOfPrevDate={props.rosterSchedulerData.systemParam.noOfPrevDate}/>
+                <TableHeader noOfPrevDate={systemParam.noOfPrevDate}/>
                 <RosterSchedulerTableBody/>
                 <RosterSchedulerTableFooter/>
-            </RosterWebContext.Provider>
+            </RosterWebContext.Provider>            
         </table>
-       
-    )
+    );
 }

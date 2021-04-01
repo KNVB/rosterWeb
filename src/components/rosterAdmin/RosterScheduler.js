@@ -1,11 +1,11 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useEffect,useState} from 'react';
-import CalendarUtility from '../../../utils/calendar/CalendarUtility';
+import CalendarUtility from '../../utils/calendar/CalendarUtility';
 
-import MonthPicker from '../../monthPicker/MonthPicker';
-import Roster from '../../../utils/Roster';
-import RosterSchedulerTable from '../../tables/rosterSchedulerTable/RosterSchedulerTable';
-import SessionExpiredError from '../../../utils/SessionExpiredError';
+import MonthPicker from '../monthPicker/MonthPicker';
+import Roster from '../../utils/Roster';
+import RosterSchedulerTable from '../tables/rosterSchedulerTable/RosterSchedulerTable';
+import SessionExpiredError from '../../utils/SessionExpiredError';
 
 export default function RosterScheduler(props){
     let now=new Date();
@@ -39,8 +39,8 @@ export default function RosterScheduler(props){
                     Roster.calculateITOMonthlyStat(itoRoster,monthlyCalendar.noOfWorkingDay,activeShiftInfoList);
                     rosterData.rosterList[itoId]=itoRoster;
                 })
-                let orgRosterData={...rosterData}; //Don't use object.assign, which is shallow copy
-                sessionStorage.setItem("rosterData",JSON.stringify(rosterData));
+                let orgRosterData=JSON.parse(JSON.stringify(rosterData)); //Don't use object.assign, which is shallow copy
+                ;
                 setRosterSchedulerData(
                    {
                     "activeShiftInfoList":activeShiftInfoList,
@@ -48,6 +48,7 @@ export default function RosterScheduler(props){
                     "changeLoggedInFlag":props.changeLoggedInFlag,
                     "monthlyCalendar":monthlyCalendar,
                     "orgRosterData":orgRosterData,
+                    "rosterData":rosterData,
                     "rosterMonth":rosterMonth,                
                     "systemParam":systemParam,
                     "yearlyRosterStatistic":yearlyRosterStatistic

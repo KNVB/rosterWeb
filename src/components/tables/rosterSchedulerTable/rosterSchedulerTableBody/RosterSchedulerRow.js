@@ -1,8 +1,8 @@
 import {useContext,useState} from 'react';
 import BalanceCell from '../../cells/balanceCell/BalanceCell';
 import BorderedAlignCenterCell from '../../cells/BorderedAlignCenterCell';
-import EditableBalanceCell from './EditableBalanceCell';
-import EditableShiftCell from './EditableShiftCell';
+import EditableBalanceCell from './cells/EditableBalanceCell';
+import EditableShiftCell from './cells/EditableShiftCell';
 import Parser from "html-react-parser";
 import Roster from '../../../../utils/Roster';
 import RosterNameCell from '../../cells/RosterNameCell';
@@ -26,7 +26,7 @@ export default function RosterSchedulerRow(props){
     //console.log("RosterSchedulerRow");
     //console.log(props.itoId+"_"+props.rowIndex);
     
-    let roster=JSON.parse(sessionStorage.getItem("rosterData")).rosterList[props.itoId];    
+    let roster=JSON.parse(JSON.stringify(rosterData.rosterList[props.itoId]));    
     let previousMonthShift=rosterData.previousMonthShiftList[props.itoId];
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
 
@@ -46,7 +46,6 @@ export default function RosterSchedulerRow(props){
             let temp=JSON.parse(JSON.stringify(rosterData));//Don't use object.assign, which is shallow copy
             temp.rosterList[props.itoId].lastMonthBalance=parseFloat(e.target.textContent);
             Roster.updateThisMonthBalance(temp,props.itoId);
-            sessionStorage.setItem("rosterData",JSON.stringify(temp));
             setRosterData(temp);
         }
     }
@@ -64,7 +63,6 @@ export default function RosterSchedulerRow(props){
         temp.duplicateShiftList=Roster.getDuplicateShiftList(monthlyCalendar,temp.rosterList);
         Roster.calculateITOMonthlyStat(temp.rosterList[props.itoId],monthlyCalendar.noOfWorkingDay,activeShiftInfoList);        
         //console.log("1:"+temp.rosterList[props.itoId].thisMonthBalance);
-        sessionStorage.setItem("rosterData",JSON.stringify(temp));
         setRosterData(temp);
     }
     let updateThisMonthHourTotal=(e)=>{
@@ -75,7 +73,6 @@ export default function RosterSchedulerRow(props){
             let temp=JSON.parse(JSON.stringify(rosterData));//Don't use object.assign, which is shallow copy
             temp.rosterList[props.itoId].thisMonthHourTotal=parseFloat(e.target.textContent);
             Roster.updateThisMonthBalance(temp,props.itoId);
-            sessionStorage.setItem("rosterData",JSON.stringify(temp));
             setRosterData(temp);
         }
     }

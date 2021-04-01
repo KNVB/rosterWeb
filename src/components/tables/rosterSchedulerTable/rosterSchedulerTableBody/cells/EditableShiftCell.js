@@ -1,9 +1,9 @@
 import {useContext} from 'react';
 import './EditableShiftCell.css';
 import React from "react";
-import RosterWebContext from '../../../../../../utils/RosterWebContext'; 
-import ShiftCell from '../../../../cells/shiftCell/ShiftCell';
-import SelectedRegionUtil from '../../../../../../utils/SelectedRegionUtil';
+import RosterWebContext from '../../../../../utils/RosterWebContext'; 
+import ShiftCell from '../../../cells/shiftCell/ShiftCell';
+import SelectedRegionUtil from '../../../../../utils/SelectedRegionUtil';
 export default function EditableShiftCell(props) {
   let {
     selectedRegion,

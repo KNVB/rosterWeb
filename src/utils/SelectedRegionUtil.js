@@ -1,10 +1,9 @@
 export default class SelectedRegionUtil{
     static copySelectedRegion(selectedRegion,setSelectedRegion){
-      if (selectedRegion.inSelectMode){
-        let temp={...selectedRegion};
-        temp.inCopyMode=true;
-        setSelectedRegion(temp);
-      }
+      console.log("inSelectMode="+selectedRegion.inSelectMode);
+      let temp=JSON.parse(JSON.stringify(selectedRegion));
+      temp.inCopyMode=true;
+      //setSelectedRegion(temp);
     }
     static endSelect(selectedRegion,setSelectedRegion){
         if (selectedRegion.inSelectMode){
@@ -13,7 +12,14 @@ export default class SelectedRegionUtil{
           setSelectedRegion(temp);
         }
     }
-    static getCopedRegionCssClass(cellIndex,rowIndex,selectedRegion){
+    static getBorderClass(cellIndex,rowIndex,selectedRegion){
+      console.log("inCopyMode="+selectedRegion.inCopyMode);
+      /*if (selectedRegion.inCopyMode){
+        return this.getCopiedRegionCssClass(cellIndex,rowIndex,selectedRegion);
+      }*/
+      return this.getSelectedRegionCssClass(cellIndex,rowIndex,selectedRegion);
+    }
+    static getCopiedRegionCssClass(cellIndex,rowIndex,selectedRegion){
       let result=[];
       if ((rowIndex===selectedRegion.minY) && (cellIndex>=selectedRegion.minX) &&(cellIndex<=selectedRegion.maxX)){
         result.push("copiedCellBorderTop");

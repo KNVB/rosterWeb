@@ -26,7 +26,6 @@ export default function ClearAllShiftDataButton(){
         console.log("1org="+JSON.stringify(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList));
         console.log("1current="+JSON.stringify(rosterData.rosterList['ITO1_1999-01-01'].shiftList));
         */
-        sessionStorage.setItem("rosterData",JSON.stringify(temp));
         setRosterData(temp);
     }
     return(

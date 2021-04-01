@@ -7,7 +7,6 @@ export default function ReloadButton(){
         console.log(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList);
         console.log(rosterData.rosterList['ITO1_1999-01-01'].shiftList);
         */
-        sessionStorage.setItem("rosterData",JSON.stringify(orgRosterData));
         setRosterData(orgRosterData);
     }
     return (

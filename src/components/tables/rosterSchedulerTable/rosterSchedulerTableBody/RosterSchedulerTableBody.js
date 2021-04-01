@@ -14,12 +14,12 @@ export default function RosterSchedulerTableBody(){
     
     //console.log("body org="+JSON.stringify(orgRosterData.rosterList['ITO1_1999-01-01'].shiftList));
     //console.log("body current="+JSON.stringify(rosterData.rosterList['ITO1_1999-01-01'].shiftList));
-    rosterData.vacantShiftList=Roster.getVacantShiftList(activeShiftInfoList.essentialShift,monthlyCalendar,rosterData.rosterList);
+    let vacantShiftList=Roster.getVacantShiftList(activeShiftInfoList.essentialShift,monthlyCalendar,rosterData.rosterList);
     Object.keys(rosterData.rosterList).forEach(itoId=>{
         rowList.push(<RosterSchedulerRow key={itoId+"_roster_scheduler_row"} itoId={itoId} rowIndex={rowList.length+3}/>);
         rowList.push(<PreferredShiftRow key={itoId+"_preferred_shift_row"} itoId={itoId} rowIndex={rowList.length+3}/>);
     });    
-    rowList.push(<VacantShiftRow key="vacant_shift_row" vacantShiftList={rosterData.vacantShiftList}/>);
+    rowList.push(<VacantShiftRow key="vacant_shift_row" vacantShiftList={vacantShiftList}/>);
 
     return (
         <tbody>
