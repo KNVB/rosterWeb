@@ -1,9 +1,18 @@
 export default class SelectedRegionUtil{
-    static copySelectedRegion(selectedRegion,setSelectedRegion){
+    static copySelectedRegion(selectedRegion,setCopiedRegion){
+      let copiedRegion={
+        minX:selectedRegion.minX,
+        minY:selectedRegion.minY,
+        maxX:selectedRegion.maxX,
+        maxY:selectedRegion.maxY
+      }
+      setCopiedRegion(copiedRegion);
+      /*
       console.log("inSelectMode="+selectedRegion.inSelectMode);
       let temp=JSON.parse(JSON.stringify(selectedRegion));
       temp.inCopyMode=true;
       setSelectedRegion(temp);
+      */
     }
     static endSelect(selectedRegion,setSelectedRegion){
         if (selectedRegion.inSelectMode){
@@ -12,28 +21,22 @@ export default class SelectedRegionUtil{
           setSelectedRegion(temp);
         }
     }
-    static getBorderClass(cellIndex,rowIndex,selectedRegion){
-      console.log("inCopyMode="+selectedRegion.inCopyMode);
-      if (selectedRegion.inCopyMode){
-        return this.getCopiedRegionCssClass(cellIndex,rowIndex,selectedRegion);
-      }
-      return this.getSelectedRegionCssClass(cellIndex,rowIndex,selectedRegion);
-    }
-    static getCopiedRegionCssClass(cellIndex,rowIndex,selectedRegion){
+    
+    static getCopiedRegionCssClass(cellIndex,rowIndex,copiedRegion){
       let result=[];
-      if ((rowIndex===selectedRegion.minY) && (cellIndex>=selectedRegion.minX) &&(cellIndex<=selectedRegion.maxX)){
+      if ((rowIndex===copiedRegion.minY) && (cellIndex>=copiedRegion.minX) &&(cellIndex<=copiedRegion.maxX)){
         result.push("copiedCellBorderTop");
       }
-      if ((rowIndex===selectedRegion.maxY) && (cellIndex>=selectedRegion.minX) &&(cellIndex<=selectedRegion.maxX)){
+      if ((rowIndex===copiedRegion.maxY) && (cellIndex>=copiedRegion.minX) &&(cellIndex<=copiedRegion.maxX)){
         result.push("copiedCellBorderBottom");
       }
-      if ((cellIndex===selectedRegion.maxX) && (rowIndex>=selectedRegion.minY) &&(rowIndex<=selectedRegion.maxY)){
+      if ((cellIndex===copiedRegion.maxX) && (rowIndex>=copiedRegion.minY) &&(rowIndex<=copiedRegion.maxY)){
         result.push("copiedCellBorderRight");
       }
-      if ((cellIndex===selectedRegion.minX) && (rowIndex>=selectedRegion.minY) &&(rowIndex<=selectedRegion.maxY)){
+      if ((cellIndex===copiedRegion.minX) && (rowIndex>=copiedRegion.minY) &&(rowIndex<=copiedRegion.maxY)){
         result.push("copiedCellBorderLeft");
       }
-      return result.join(' ');
+      return result;
     }    
     static getSelectedRegionCssClass(cellIndex,rowIndex,selectedRegion){
         let result=[];
@@ -49,7 +52,7 @@ export default class SelectedRegionUtil{
         if ((cellIndex===selectedRegion.minX) && (rowIndex>=selectedRegion.minY) &&(rowIndex<=selectedRegion.maxY)){
           result.push("selectCellBorderLeft");
         }
-        return result.join(' ');
+        return result;
     }    
    static startSelect(theCell,selectedRegion,setSelectedRegion){
     let row=theCell.parentElement;
