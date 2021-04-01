@@ -1,10 +1,18 @@
 import {useCallback,useEffect,useState} from 'react';
+import './RosterSchedulerTable.css';
+import RosterSchedulerTableBody from './rosterSchedulerTableBody/RosterSchedulerTableBody';
+import RosterSchedulerTableFooter from './rosterSchedulerTableFooter/RosterSchedulerTableFooter';
 import RosterWebContext from '../../../utils/RosterWebContext';
 import SelectedRegion from '../../../utils/SelectedRegion'; 
 import SelectedRegionUtil from '../../../utils/SelectedRegionUtil';
 import TableHeader from '../tableHeader/TableHeader';
 export default function RosterSchedulerTable(props){
-    
+    const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
+
+    /**
+     * Both monthlyCalendar and rosterData must be a state variable,
+     * otherwise their data are not in sync.
+     */
     const [rosterData,setRosterData]=useState(JSON.parse(sessionStorage.getItem("rosterData")));
     const [monthlyCalendar,setMonthlyCalendar]=useState(props.rosterSchedulerData.monthlyCalendar);
     const [selectedRegion,setSelectedRegion]=useState(new SelectedRegion());
@@ -33,21 +41,31 @@ export default function RosterSchedulerTable(props){
     
     let temp={...props.rosterSchedulerData};
     delete temp.monthlyCalendar;
-    
+    /*
     console.log(monthlyCalendar.calendarDateList.length);
     console.log(Object.keys(rosterData.rosterList['ITO1_1999-01-01'].shiftList).length);
+    */
     
-    /*
     let contextValue={
         ...temp,
+        hightLightCellIndex, 
+        setHightLightCellIndex,
+        monthlyCalendar,
         rosterData,
-        monthlyCalendar
+        selectedRegion,
+        setRosterData,        
+        setSelectedRegion       
     }
+    /*
     console.log(contextValue);
     */
     return (
         <table id="rosterTable">
-            
+            <RosterWebContext.Provider value={contextValue}>
+                <TableHeader noOfPrevDate={props.rosterSchedulerData.systemParam.noOfPrevDate}/>
+                <RosterSchedulerTableBody/>
+                <RosterSchedulerTableFooter/>
+            </RosterWebContext.Provider>
         </table>
        
     )

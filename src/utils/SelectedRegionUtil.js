@@ -1,4 +1,11 @@
 export default class SelectedRegionUtil{
+    static copySelectedRegion(selectedRegion,setSelectedRegion){
+      if (selectedRegion.inSelectMode){
+        let temp={...selectedRegion};
+        temp.inCopyMode=true;
+        setSelectedRegion(temp);
+      }
+    }
     static endSelect(selectedRegion,setSelectedRegion){
         if (selectedRegion.inSelectMode){
           let temp=JSON.parse(JSON.stringify(selectedRegion));
