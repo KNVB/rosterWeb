@@ -16,11 +16,21 @@ export default class Roster{
                 }
             }
         }
-        this.get=(year,month)=>{
-           return Utility.fetchAPI('/publicAPI/getITORosterList','GET',{"year":year,"month":month});
+        this.get=async(year,month)=>{
+          try{
+            let result=await Utility.fetchAPI('/publicAPI/getITORosterList','GET',{"year":year,"month":month});
+            return result;
+          } catch (error){
+            throw error;
+          }
         }
-        this.getAllActiveShiftInfo=()=>{
-            return Utility.fetchAPI('/publicAPI/getAllActiveShiftInfo','GET');
+        this.getAllActiveShiftInfo=async()=>{
+          try{
+            let result=await Utility.fetchAPI('/publicAPI/getAllActiveShiftInfo','GET');
+            return result;
+          }catch (error){
+            throw error;
+          }
         }
         this.getRosterSchedulerList=async(year,month)=>{
             try{
