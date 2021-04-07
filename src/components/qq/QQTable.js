@@ -1,4 +1,4 @@
-import {useCallback,useEffect, useState} from 'react';
+import {useCallback,useContext,useEffect, useState} from 'react';
 import CalendarUtility from '../../utils/calendar/CalendarUtility';
 import QQTableBody from './QQTableBody';
 import QQTableHeader from './QQTableHeader';
@@ -15,6 +15,13 @@ export default function QQTable(props){
     const [selectedRegion,setSelectedRegion]=useState(new SelectedRegion());
     let componentList=[];
     let systemParam=props.systemParam;
+
+    let mouseUp=useCallback(()=>{
+        console.log("mouse up");
+        console.log(selectedRegion.inSelectMode);
+        SelectedRegionUtil.endSelect(selectedRegion,setSelectedRegion);       
+    },[selectedRegion]);
+    
     useEffect(()=>{
         const getData = async () => {
             console.log("getData() is triggered");
@@ -25,7 +32,11 @@ export default function QQTable(props){
             temp = await roster.getAllActiveShiftInfo();
             setActiveShiftInfoList(temp);
             temp= await roster.get(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
-            setRosterData (temp);           
+            setRosterData (temp);  
+            document.addEventListener('mouseup',mouseUp);
+            return () => {
+                document.removeEventListener('mouseup', mouseUp)
+            }
         }
         getData();    
     },[props.rosterMonth]);
@@ -46,10 +57,10 @@ export default function QQTable(props){
         componentList.push(<QQTableBody key="body"/>);
     }
     return(
-        <table id="rosterTable">
             <RosterWebContext.Provider value={contextValue}>
-                {componentList}
+                <table id="rosterTable">
+                    {componentList}
+                </table>
             </RosterWebContext.Provider>
-        </table>
     )
 }
