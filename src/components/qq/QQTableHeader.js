@@ -1,10 +1,13 @@
+import {useContext} from 'react';
+import RosterWebContext from '../../utils/RosterWebContext';
 export default function QQTableHeader(props){
     //console.log(props.rosterTableData.monthlyCalendar)
-    let calendarDateList=props.rosterTableData.monthlyCalendar.calendarDateList;
+    let {hightLightCellIndex,monthlyCalendar}=useContext(RosterWebContext);
+    let calendarDateList=monthlyCalendar.calendarDateList;
     let cellList=[];
 
     for (let i=0;i<calendarDateList.length;i++){
-        if (props.hightLightCellIndex===i){
+        if (hightLightCellIndex===i){
             cellList.push(
                 <td className="QQ highlightCell" key={"date_"+i}>{i+1}</td>
             )

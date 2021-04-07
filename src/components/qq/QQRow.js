@@ -1,32 +1,28 @@
+import {useContext} from 'react';
+import RosterWebContext from '../../utils/RosterWebContext';
 import QQCell from './QQCell';
 export default function QQRow(props){
-    let calendarDateList=props.monthlyCalendar.calendarDateList;
+    let {monthlyCalendar,rosterData,setHightLightCellIndex}=useContext(RosterWebContext);
+    let calendarDateList=monthlyCalendar.calendarDateList;
     let cellList=[];
     let deHightLight = e => {
-        props.setHightLightCellIndex(-1);
+        setHightLightCellIndex(-1);
     }
     let hightLight = e => {
-        props.setHightLightCellIndex(e.target.cellIndex);
-    }
-    let mouseDownHandler=e=>{
-
-    }
+        setHightLightCellIndex(e.target.cellIndex);
+    }    
     let updateShiftData=e=>{
 
     }
-    console.log(props.itoRoster);
-    
-    let shiftList=props.itoRoster.shiftList;
+    let itoRoster=rosterData[props.itoId];
+    let shiftList=itoRoster.shiftList;
     for (let i=0;i<calendarDateList.length;i++){
         let shiftType=shiftList[i+1];
         cellList.push(
-            <QQCell key={props.itoRoster.itoId+"_"+i}
-                contentEditable={true}
+            <QQCell key={props.itoId+"_"+i}
                 onBlur={updateShiftData}
                 onMouseLeave={deHightLight}
-                onMouseEnter={hightLight}
-                onMouseDown={mouseDownHandler}
-                suppressContentEditableWarning={true}>
+                onMouseEnter={hightLight}>
                     {shiftType}
             </QQCell>
         );

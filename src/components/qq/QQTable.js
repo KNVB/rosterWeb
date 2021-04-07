@@ -12,14 +12,8 @@ export default function QQTable(props){
     const [monthlyCalendar,setMonthlyCalendar]=useState();
     const [rosterData,setRosterData]=useState();
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
-    const [selectedRegion,setSelectedRegion]=useState();
+    const [selectedRegion,setSelectedRegion]=useState(new SelectedRegion());
     let componentList=[];
-
-    let mouseUp=useCallback(()=>{
-        console.log("mouse up");
-        //console.log(selectedRegion.inSelectMode);
-        SelectedRegionUtil.endSelect(selectedRegion,setSelectedRegion);       
-    },[selectedRegion]);
 
     useEffect(()=>{
         const getData = async () => {
@@ -31,14 +25,7 @@ export default function QQTable(props){
             temp = await roster.getAllActiveShiftInfo();
             setActiveShiftInfoList(temp);
             temp= await roster.get(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
-            setRosterData (temp);
-            temp=new SelectedRegion();
-            setSelectedRegion(temp);
-
-            document.addEventListener('mouseup',mouseUp);
-            return () => {
-                document.removeEventListener('mouseup', mouseUp)
-            }
+            setRosterData (temp);           
         }
         getData();    
     },[props.rosterMonth]);
@@ -54,6 +41,8 @@ export default function QQTable(props){
             setRosterData,
             setSelectedRegion
         }
+        componentList.push(<QQTableHeader key="header"/>);
+        componentList.push(<QQTableBody key="body"/>);
     }
     return(
         <table id="rosterTable">
