@@ -1,3 +1,4 @@
+import QQCell from './QQCell';
 export default function QQRow(props){
     let calendarDateList=props.monthlyCalendar.calendarDateList;
     let cellList=[];
@@ -19,7 +20,7 @@ export default function QQRow(props){
     for (let i=0;i<calendarDateList.length;i++){
         let shiftType=shiftList[i+1];
         cellList.push(
-            <td key={props.itoRoster.itoId+"_"+i}
+            <QQCell key={props.itoRoster.itoId+"_"+i}
                 contentEditable={true}
                 onBlur={updateShiftData}
                 onMouseLeave={deHightLight}
@@ -27,7 +28,7 @@ export default function QQRow(props){
                 onMouseDown={mouseDownHandler}
                 suppressContentEditableWarning={true}>
                     {shiftType}
-            </td>
+            </QQCell>
         );
     }
     return(

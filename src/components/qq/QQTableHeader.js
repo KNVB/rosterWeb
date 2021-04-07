@@ -6,11 +6,11 @@ export default function QQTableHeader(props){
     for (let i=0;i<calendarDateList.length;i++){
         if (props.hightLightCellIndex===i){
             cellList.push(
-                <td className="highlightCell" key={"date_"+i}>{i+1}</td>
+                <td className="QQ highlightCell" key={"date_"+i}>{i+1}</td>
             )
         } else {
             cellList.push(
-                <td  key={"date_"+i}>{i+1}</td>
+                <td className="QQ" key={"date_"+i}>{i+1}</td>
             )
         }
         

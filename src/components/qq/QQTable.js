@@ -1,42 +1,65 @@
-import {useEffect, useMemo,useState} from 'react';
+import {useCallback,useEffect, useState} from 'react';
 import CalendarUtility from '../../utils/calendar/CalendarUtility';
 import QQTableBody from './QQTableBody';
 import QQTableHeader from './QQTableHeader';
 import Roster from '../../utils/Roster';
+import RosterWebContext from '../../utils/RosterWebContext';
+import SelectedRegion from '../../utils/SelectedRegion';
+import SelectedRegionUtil from '../../utils/SelectedRegionUtil';
+
 export default function QQTable(props){
-    const[rosterTableData,setRosterTableData]=useState();
+    const[activeShiftInfoList,setActiveShiftInfoList]=useState();
+    const [monthlyCalendar,setMonthlyCalendar]=useState();
+    const [rosterData,setRosterData]=useState();
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
+    const [selectedRegion,setSelectedRegion]=useState();
     let componentList=[];
+
+    let mouseUp=useCallback(()=>{
+        console.log("mouse up");
+        //console.log(selectedRegion.inSelectMode);
+        SelectedRegionUtil.endSelect(selectedRegion,setSelectedRegion);       
+    },[selectedRegion]);
+
     useEffect(()=>{
         const getData = async () => {
             console.log("getData() is triggered");
             let calendarUtility=new CalendarUtility();
-            let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
+            let temp=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
+            setMonthlyCalendar(temp);
             let roster = new Roster();
-            let rosterData = await roster.get(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
-            let shiftInfoList= await roster.getAllActiveShiftInfo();
-            setRosterTableData(
-               {
-                "calendarUtility":calendarUtility,
-                "monthlyCalendar":monthlyCalendar,
-                "rosterList":rosterData,
-                "shiftInfoList":shiftInfoList                
-               }
-            )
+            temp = await roster.getAllActiveShiftInfo();
+            setActiveShiftInfoList(temp);
+            temp= await roster.get(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
+            setRosterData (temp);
+            temp=new SelectedRegion();
+            setSelectedRegion(temp);
+
+            document.addEventListener('mouseup',mouseUp);
+            return () => {
+                document.removeEventListener('mouseup', mouseUp)
+            }
         }
         getData();    
     },[props.rosterMonth]);
-    if (rosterTableData){
-        console.log(rosterTableData.rosterList['ITO1_1999-01-01'].shiftList);
-        componentList.push(<QQTableHeader key="header" rosterTableData={rosterTableData} hightLightCellIndex={hightLightCellIndex}/>);
-        componentList.push(<QQTableBody key="body" 
-                            rosterTableData={rosterTableData} 
-                            setHightLightCellIndex={setHightLightCellIndex}
-                            setRosterTableData={setRosterTableData}/>);
+    let contextValue={}
+    if (rosterData){
+        contextValue={
+            activeShiftInfoList,
+            hightLightCellIndex,
+            monthlyCalendar,
+            rosterData,
+            selectedRegion,
+            setHightLightCellIndex,
+            setRosterData,
+            setSelectedRegion
+        }
     }
     return(
-        <table border="1">
-            {componentList}
+        <table id="rosterTable">
+            <RosterWebContext.Provider value={contextValue}>
+                {componentList}
+            </RosterWebContext.Provider>
         </table>
     )
 }
