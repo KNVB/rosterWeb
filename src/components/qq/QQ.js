@@ -29,7 +29,7 @@ export default function QQ(props){
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                       {rosterMonth && <QQTable rosterMonth={rosterMonth}/>}
+                       {rosterMonth && <QQTable rosterMonth={rosterMonth} systemParam={props.systemParam}/>}
                     </Col>
                 </Row>
             </Container>        

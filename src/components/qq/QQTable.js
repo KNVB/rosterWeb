@@ -14,7 +14,7 @@ export default function QQTable(props){
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
     const [selectedRegion,setSelectedRegion]=useState(new SelectedRegion());
     let componentList=[];
-
+    let systemParam=props.systemParam;
     useEffect(()=>{
         const getData = async () => {
             console.log("getData() is triggered");
@@ -39,7 +39,8 @@ export default function QQTable(props){
             selectedRegion,
             setHightLightCellIndex,
             setRosterData,
-            setSelectedRegion
+            setSelectedRegion,
+            systemParam
         }
         componentList.push(<QQTableHeader key="header"/>);
         componentList.push(<QQTableBody key="body"/>);
