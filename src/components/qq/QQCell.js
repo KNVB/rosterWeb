@@ -7,6 +7,11 @@ export default function QQCell(props){
         selectedRegion,
         setSelectedRegion
     } = useContext(RosterWebContext);
+    const editableShiftCellProps=Object.assign({},props);
+    cssClassName=cssClassName+' '+props.className;
+    delete editableShiftCellProps.className;
+    delete editableShiftCellProps.cellIndex;
+    delete editableShiftCellProps.rowIndex;
     function mouseDownHandler(e){
         SelectedRegionUtil.startSelect(e.target,selectedRegion,setSelectedRegion);
     }
@@ -14,14 +19,10 @@ export default function QQCell(props){
         props.onMouseEnter(e);
         SelectedRegionUtil.updateSelect(e.target, selectedRegion,setSelectedRegion);
     }
-    function updateShiftData(e){
-        props.onBlur(e);
-    }
     return (
-        <td 
+        <td {...editableShiftCellProps}
             className={cssClassName}
-            contentEditable={true}
-            onBlur={updateShiftData}
+            contentEditable={true}           
             onMouseDown={mouseDownHandler}
             onMouseEnter={mouseEnterHandler}
             suppressContentEditableWarning={true}>
