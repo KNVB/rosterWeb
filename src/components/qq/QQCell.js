@@ -14,10 +14,12 @@ export default function QQCell(props){
     delete editableShiftCellProps.rowIndex;
     function mouseDownHandler(e){
         SelectedRegionUtil.startSelect(e.target,selectedRegion,setSelectedRegion);
+        e.preventDefault();
     }
     function mouseEnterHandler(e){
         props.onMouseEnter(e);
         SelectedRegionUtil.updateSelect(e.target, selectedRegion,setSelectedRegion);
+        e.preventDefault();
     }
     return (
         <td {...editableShiftCellProps}

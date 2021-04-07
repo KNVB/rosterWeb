@@ -7,12 +7,14 @@ export default function QQRow(props){
     let cellList=[],workdayCount=0;
     let itoRoster=rosterData[props.itoId];
     let deHightLight = e => {
+        e.preventDefault();
         setHightLightCellIndex(-1);
     }
     let hightLight = e => {
         setHightLightCellIndex(e.target.cellIndex-systemParam.noOfPrevDate-1);
     }
     let updateShiftData=e=>{
+        e.preventDefault();
         let realIndex=e.target.cellIndex-systemParam.noOfPrevDate;
         let temp=JSON.parse(JSON.stringify(rosterData));
         temp[props.itoId].shiftList[realIndex]=e.target.textContent;
