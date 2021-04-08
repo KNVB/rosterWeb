@@ -15,3 +15,10 @@
 td.QQ{
 	border:1px inset #e0e0e0;
 }
+td.QQ:focus 
+{
+	outline: none;
+}
+td.QQ::selection{
+	background: none;
+}

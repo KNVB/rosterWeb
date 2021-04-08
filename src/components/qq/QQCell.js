@@ -5,26 +5,42 @@ export default function QQCell(props){
     let cssClassName="QQ";
     let {
         selectedRegion,
+        setCopiedRegion,
         setSelectedRegion
     } = useContext(RosterWebContext);
     const editableShiftCellProps=Object.assign({},props);
-    cssClassName=cssClassName+' '+props.className;
+    let cssClassList=SelectedRegionUtil.getSelectedRegionCssClass(props.cellIndex,props.rowIndex,selectedRegion);
+    cssClassList.push("QQ");
+    cssClassList.push(props.className);
+    cssClassName=cssClassList.join(' ');
     delete editableShiftCellProps.className;
     delete editableShiftCellProps.cellIndex;
     delete editableShiftCellProps.rowIndex;
-    function mouseDownHandler(e){
-        SelectedRegionUtil.startSelect(e.target,selectedRegion,setSelectedRegion);
+
+    function copyData(e){
         e.preventDefault();
+        console.log("Copy");
+        SelectedRegionUtil.copySelectedRegion(selectedRegion,setCopiedRegion);
+    }
+    function mouseClickHandler(e){
+        e.preventDefault();
+        console.log(window.getSelection());
+    }
+    function mouseDownHandler(e){
+        e.preventDefault();
+        SelectedRegionUtil.startSelect(e.target,selectedRegion,setSelectedRegion);
     }
     function mouseEnterHandler(e){
+        e.preventDefault();
         props.onMouseEnter(e);
         SelectedRegionUtil.updateSelect(e.target, selectedRegion,setSelectedRegion);
-        e.preventDefault();
     }
     return (
         <td {...editableShiftCellProps}
             className={cssClassName}
-            contentEditable={true}           
+            contentEditable={true}
+            onClick={mouseClickHandler}
+            onCopy={copyData}    
             onMouseDown={mouseDownHandler}
             onMouseEnter={mouseEnterHandler}
             suppressContentEditableWarning={true}>

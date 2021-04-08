@@ -1,4 +1,5 @@
 import {useCallback,useContext,useEffect, useState} from 'react';
+import CopiedRegion from '../../utils/CopiedRegion';
 import CalendarUtility from '../../utils/calendar/CalendarUtility';
 import QQTableBody from './QQTableBody';
 import QQTableHeader from './QQTableHeader';
@@ -12,6 +13,7 @@ export default function QQTable(props){
     const [monthlyCalendar,setMonthlyCalendar]=useState();
     const [rosterData,setRosterData]=useState();
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
+    const [copiedRegion,setCopiedRegion]=useState(new CopiedRegion());
     const [selectedRegion,setSelectedRegion]=useState(new SelectedRegion());
     let componentList=[];
     let systemParam=props.systemParam;
@@ -30,14 +32,29 @@ export default function QQTable(props){
         }
         getData();    
     },[props.rosterMonth]);
+    
+    let mouseUp=useCallback(()=>{
+        console.log("mouse up");
+        //console.log(selectedRegion.inSelectMode);
+        SelectedRegionUtil.endSelect(selectedRegion,setSelectedRegion);       
+    },[selectedRegion]);
+    
+    useEffect(()=>{
+        document.addEventListener('mouseup',mouseUp);
+        return () => {
+            document.removeEventListener('mouseup', mouseUp)
+        }
+    },[mouseUp])
     let contextValue={}
     if (rosterData){
         contextValue={
             activeShiftInfoList,
+            copiedRegion,
             hightLightCellIndex,
             monthlyCalendar,
             rosterData,
             selectedRegion,
+            setCopiedRegion,
             setHightLightCellIndex,
             setRosterData,
             setSelectedRegion,
