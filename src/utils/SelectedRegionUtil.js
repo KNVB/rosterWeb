@@ -55,29 +55,62 @@ export default class SelectedRegionUtil{
         }
         return result;
     }
-    static pasteCopiedData(selectedRegion,copiedRegion,setRosterData,rosterData){
-      let table=document.getElementById("rosterTable");
-      let destItoIdList=[],srcItoIdList=[];      
-      let destWidth=selectedRegion.maxX-selectedRegion.minX+1;
-      let srcWidth=copiedRegion.maxX-copiedRegion.minX+1;
+    static pasteCopiedData(selectedRegion,copiedRegion,setCopiedRegion,setRosterData,systemParam,rosterData){
+      let destItoIdList=[],srcItoIdList=[],row;
+      let destCellY=selectedRegion.minY,destCellX=selectedRegion.minX;
+			let destWidth=selectedRegion.maxX-selectedRegion.minX+1;
+			let destHeight=selectedRegion.maxY-selectedRegion.minY+1;
+      let destStartCellIndex=selectedRegion.minX;
 
+      let srcWidth=copiedRegion.maxX-copiedRegion.minX+1;
+			let srcHeight=copiedRegion.maxY-copiedRegion.minY+1;
+
+      let srcStartCellIndex=copiedRegion.minX-systemParam.noOfPrevDate;
+      let srcEndCellIndex=srcWidth+srcStartCellIndex;
+      
+      let table=document.getElementById("rosterTable");
+      let tempRosterData=JSON.parse(JSON.stringify(rosterData));
       let horizontalCopyTime=Math.floor(destWidth/srcWidth);
-      if (horizontalCopyTime===0)
+			let verticalCopyTime=Math.floor(destHeight/srcHeight);
+			
+			if (verticalCopyTime===0)
+				verticalCopyTime=1;
+			if (horizontalCopyTime===0)
 				horizontalCopyTime=1;
-      for (let y=selectedRegion.minY;y<=selectedRegion.maxY;y++){
-        let itoId=table.rows[y].id.replace("_roster","");
-        destItoIdList.push(itoId);
-      }
-      
+
       for (let y=copiedRegion.minY;y<=copiedRegion.maxY;y++){
-        let itoId=table.rows[y].id.replace("_roster","");
-        srcItoIdList.push(itoId);
+        row=table.rows[y];
+        srcItoIdList.push(row.id.replace("_roster",""));
+      }      
+      for (let y=selectedRegion.minY;y<=selectedRegion.maxY;y++){
+        row=table.rows[y];
+        destItoIdList.push(row.id.replace("_roster",""));
       }
       
-      srcItoIdList.forEach(itoId=>{
-        let srcShiftList=rosterData[itoId].shiftList;
-        console.log(srcShiftList);
+      for (let i=0;i<srcItoIdList.length;i++){
+        let destRow=document.getElementById(destItoIdList[i]+"_roster");
+        let srcShiftList=tempRosterData[srcItoIdList[i]].shiftList;
+        let destCellIndex=selectedRegion.minX;
+        
+        for (let j=srcStartCellIndex;j<srcEndCellIndex;j++){
+          let destCell=destRow.cells[destCellIndex++];
+          let range = document.createRange();
+          let sel = window.getSelection();
+          destCell.focus();
+          range.selectNodeContents(destCell);
+          sel.removeAllRanges();
+          sel.addRange(range);
+          document.execCommand("insertText",false,srcShiftList[j]);
+          destCell.blur();
+        }        
+      }
+      setCopiedRegion({
+        minX:-1,
+        minY:-1,
+        maxX:-1,
+        maxY:-1
       })
+      setRosterData(tempRosterData);
       //console.log(srcItoIdList,destItoIdList);
     }
    static startSelect(theCell,selectedRegion,setSelectedRegion){

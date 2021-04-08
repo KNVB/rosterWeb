@@ -47,7 +47,7 @@ export default function QQCell(props){
     function pasteData(e){
         e.preventDefault();
         console.log("Paste");
-        SelectedRegionUtil.pasteCopiedData(selectedRegion,copiedRegion,setRosterData,rosterData)
+        SelectedRegionUtil.pasteCopiedData(selectedRegion,copiedRegion,setCopiedRegion,setRosterData,systemParam,rosterData)
     }
     function setFocus(e){
         e.preventDefault();
