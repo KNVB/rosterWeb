@@ -7,17 +7,18 @@ export default class SelectedRegionUtil{
         maxY:selectedRegion.maxY
       }
       setCopiedRegion(copiedRegion);
-      /*
-      console.log("inSelectMode="+selectedRegion.inSelectMode);
-      let temp=JSON.parse(JSON.stringify(selectedRegion));
-      temp.inCopyMode=true;
-      setSelectedRegion(temp);
-      */
     }
     static endSelect(selectedRegion,setSelectedRegion){
         if (selectedRegion.inSelectMode){
           let temp=JSON.parse(JSON.stringify(selectedRegion));
           temp.inSelectMode=false;
+          let table=document.getElementById("rosterTable");
+          let cell=table.rows[selectedRegion.minY].cells[selectedRegion.minX];
+          let range = document.createRange();
+          let sel = window.getSelection();
+          range.selectNodeContents(cell);
+          sel.removeAllRanges();
+          sel.addRange(range);
           setSelectedRegion(temp);
         }
     }
@@ -53,7 +54,32 @@ export default class SelectedRegionUtil{
           result.push("selectCellBorderLeft");
         }
         return result;
-    }    
+    }
+    static pasteCopiedData(selectedRegion,copiedRegion,setRosterData,rosterData){
+      let table=document.getElementById("rosterTable");
+      let destItoIdList=[],srcItoIdList=[];      
+      let destWidth=selectedRegion.maxX-selectedRegion.minX+1;
+      let srcWidth=copiedRegion.maxX-copiedRegion.minX+1;
+
+      let horizontalCopyTime=Math.floor(destWidth/srcWidth);
+      if (horizontalCopyTime===0)
+				horizontalCopyTime=1;
+      for (let y=selectedRegion.minY;y<=selectedRegion.maxY;y++){
+        let itoId=table.rows[y].id.replace("_roster","");
+        destItoIdList.push(itoId);
+      }
+      
+      for (let y=copiedRegion.minY;y<=copiedRegion.maxY;y++){
+        let itoId=table.rows[y].id.replace("_roster","");
+        srcItoIdList.push(itoId);
+      }
+      
+      srcItoIdList.forEach(itoId=>{
+        let srcShiftList=rosterData[itoId].shiftList;
+        console.log(srcShiftList);
+      })
+      //console.log(srcItoIdList,destItoIdList);
+    }
    static startSelect(theCell,selectedRegion,setSelectedRegion){
     let row=theCell.parentElement;
     let temp=JSON.parse(JSON.stringify(selectedRegion));

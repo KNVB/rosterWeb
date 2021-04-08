@@ -1,5 +1,5 @@
 import {Col,Container,Row} from 'react-bootstrap';
-import {useEffect,useState} from 'react';
+import {useState} from 'react';
 
 import MonthPicker from '../monthPicker/MonthPicker';
 import QQTable from './QQTable';

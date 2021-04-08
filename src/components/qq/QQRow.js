@@ -21,8 +21,12 @@ export default function QQRow(props){
         setRosterData(temp);
     }
     let shiftList=itoRoster.shiftList;
+    //console.log(itoRoster);
+    cellList.push(
+        <td className="QQ" key={"itoName_"+props.itoId}>{itoRoster.itoName}<br/>{itoRoster.itoPostName}</td>
+    )
 
-    for (let i=0;i<systemParam.noOfPrevDate+1;i++){
+    for (let i=0;i<systemParam.noOfPrevDate;i++){
         cellList.push(
             <td className="QQ" key={"preRoster_"+i}></td>
         )
@@ -35,7 +39,8 @@ export default function QQRow(props){
         }        
         cellList.push(
             <QQCell 
-                cellIndex={(1+i+systemParam.noOfPrevDate)}
+                dateIndex={1+i}
+                itoId={props.itoId}
                 key={props.itoId+"_"+i}
                 onBlur={updateShiftData}
                 onMouseLeave={deHightLight}
@@ -49,7 +54,7 @@ export default function QQRow(props){
         <td className="QQ" key={"workdayCount"}>{workdayCount}</td>
     )
     return(
-        <tr>
+        <tr id={props.itoId+"_roster"}>
             {cellList}
         </tr>
     )
