@@ -1,5 +1,18 @@
 export default class SelectedRegionUtil{
-    static copySelectedRegion(selectedRegion,setCopiedRegion){
+    static copySelectedRegion(clipboardData,rosterData,selectedRegion,setCopiedRegion,systemParam){
+      let itoId,row,table=document.getElementById("rosterTable");
+      let result=[],col;
+      for (let y=selectedRegion.minY;y<=selectedRegion.maxY;y++){
+        row=table.rows[y];
+        itoId=row.id.replace("_roster","");
+        col=[];
+        for (let x=selectedRegion.minX;x<=selectedRegion.maxX;x++){
+          //console.log(itoId,rosterData[itoId].shiftList[x-systemParam.noOfPrevDate]);
+          col.push(rosterData[itoId].shiftList[x-systemParam.noOfPrevDate]);
+        }
+        result.push(col);
+      }
+      clipboardData.setData('text',JSON.stringify(result));
       let copiedRegion={
         minX:selectedRegion.minX,
         minY:selectedRegion.minY,
@@ -55,7 +68,32 @@ export default class SelectedRegionUtil{
         }
         return result;
     }
-    static pasteCopiedData(selectedRegion,copiedRegion,setCopiedRegion,setRosterData,systemParam,rosterData){
+    static pasteCopiedData(clipboardData,selectedRegion,copiedRegion,setCopiedRegion,setRosterData,systemParam,rosterData){
+      let copiedData=JSON.parse(clipboardData.getData('text'));
+      let table=document.getElementById("rosterTable");
+      let cell=table.rows[selectedRegion.minY].cells[selectedRegion.minX];
+      //cell.textContent=copiedData[0][0];
+      //cell.blur();
+      let range = document.createRange();
+      let sel = window.getSelection();
+      range.selectNodeContents(cell);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      document.execCommand("insertText",false,copiedData[0][0]);
+      
+      cell=table.rows[selectedRegion.minY].cells[selectedRegion.minX+1];
+      range.selectNodeContents(cell);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      document.execCommand("insertText",false,copiedData[0][0]);
+      
+      cell=table.rows[selectedRegion.minY].cells[selectedRegion.minX+1];
+      range.selectNodeContents(cell);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      document.execCommand("insertText",false,copiedData[0][0]);
+
+     /*
       let destItoIdList=[],srcItoIdList=[],row;
       let destCellY=selectedRegion.minY,destCellX=selectedRegion.minX;
 			let destWidth=selectedRegion.maxX-selectedRegion.minX+1;
@@ -112,6 +150,7 @@ export default class SelectedRegionUtil{
       })
       setRosterData(tempRosterData);
       //console.log(srcItoIdList,destItoIdList);
+      */
     }
    static startSelect(theCell,selectedRegion,setSelectedRegion){
     let row=theCell.parentElement;

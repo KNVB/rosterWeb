@@ -33,7 +33,7 @@ export default function QQCell(props){
     function copyData(e){
         e.preventDefault();
         console.log("Copy");
-        SelectedRegionUtil.copySelectedRegion(selectedRegion,setCopiedRegion);
+        SelectedRegionUtil.copySelectedRegion(e.clipboardData,rosterData,selectedRegion,setCopiedRegion,systemParam);
     }   
     function mouseDownHandler(e){
         e.preventDefault();
@@ -47,7 +47,7 @@ export default function QQCell(props){
     function pasteData(e){
         e.preventDefault();
         console.log("Paste");
-        SelectedRegionUtil.pasteCopiedData(selectedRegion,copiedRegion,setCopiedRegion,setRosterData,systemParam,rosterData)
+        SelectedRegionUtil.pasteCopiedData(e.clipboardData,selectedRegion,copiedRegion,setCopiedRegion,setRosterData,systemParam,rosterData)
     }
     function setFocus(e){
         e.preventDefault();
