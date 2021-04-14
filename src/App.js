@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-d
 import {useEffect,useState} from 'react';
 
 //import DD from './components/testing/DD';
+import JJ from './components/jj/JJ';
 import QQ from './components/qq/QQ';
 import RosterAdmin from './components/rosterAdmin/RosterAdmin';
 import RosterViewer from './components/rosterViewer/RosterViewer';
@@ -27,6 +28,7 @@ function App() {
         }/>
         <Route exact path='/rosterWeb' render={()=>systemParam && <RosterViewer systemParam={systemParam}/>} />
         <Route exact path='/rosterWeb/qq' render={()=>systemParam && <QQ systemParam={systemParam}/>} />
+        <Route exact path='/rosterWeb/jj' render={()=>systemParam && <JJ systemParam={systemParam}/>} />
         <Route path='/rosterWeb/admin' render={()=>systemParam && <RosterAdmin systemParam={systemParam}/>} />
       </Switch>
     </Router>
