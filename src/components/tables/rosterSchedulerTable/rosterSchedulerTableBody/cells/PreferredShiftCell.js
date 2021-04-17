@@ -16,8 +16,8 @@ export default function PreferredShiftCell(props) {
   }
   
   const preferredShiftCellProps=Object.assign({},props);
-  //let cssClassName=props.className+" "+SelectedRegionUtil.getSelectedRegionCssClass(props.cellIndex,props.rowIndex,selectedRegion);
-  let cssClassName=props.className+" "+SelectedRegionUtil.getBorderClass(props.cellIndex,props.rowIndex,selectedRegion);
+  let cssClassName=props.className+" "+SelectedRegionUtil.getSelectedRegionCssClass(props.cellIndex,props.rowIndex,selectedRegion);
+  //let cssClassName=props.className+" "+SelectedRegionUtil.getBorderClass(props.cellIndex,props.rowIndex,selectedRegion);
   cssClassName=cssClassName.trim();
   delete preferredShiftCellProps.className;
   delete preferredShiftCellProps.cellIndex;

@@ -5,6 +5,7 @@ import {useEffect,useState} from 'react';
 //import DD from './components/testing/DD';
 import JJ from './components/jj/JJ';
 import QQ from './components/qq/QQ';
+import P8 from './components/p8/P8';
 import RosterAdmin from './components/rosterAdmin/RosterAdmin';
 import RosterViewer from './components/rosterViewer/RosterViewer';
 //import SelectDemo from './components/testing/SelectDemo';
@@ -27,6 +28,7 @@ function App() {
           )
         }/>
         <Route exact path='/rosterWeb' render={()=>systemParam && <RosterViewer systemParam={systemParam}/>} />
+        <Route exact path='/rosterWeb/p8' render={()=>systemParam && <P8 systemParam={systemParam}/>} />
         <Route exact path='/rosterWeb/qq' render={()=>systemParam && <QQ systemParam={systemParam}/>} />
         <Route exact path='/rosterWeb/jj' render={()=>systemParam && <JJ systemParam={systemParam}/>} />
         <Route path='/rosterWeb/admin' render={()=>systemParam && <RosterAdmin systemParam={systemParam}/>} />

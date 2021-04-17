@@ -23,6 +23,7 @@ export default function RosterViewer(props){
             let roster = new Roster();
             let rosterData = await roster.get(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
             let shiftInfoList= await roster.getAllActiveShiftInfo();
+            
             setRosterTableData(
                {
                 "calendarUtility":calendarUtility,
