@@ -1,14 +1,14 @@
 import {useContext,useState} from 'react';
 import BorderedCell from './cells/borderedCell/BorderedCell';
 import Parser from "html-react-parser";
-import ShiftCell from './ShiftCell';
+import EditableShiftCell from './EditableShiftCell';
 import NameCell from './cells/nameCell/NameCell';
 import RosterWebContext from '../../utils/RosterWebContext';
 
 export default function RosterRow(props){
     let cellList=[],nameCellCssClass="";
     const [isHighLightRow, setIsHighLightRow] = useState(false);
-    let {setHightLightCellIndex,systemParam}=useContext(RosterWebContext);
+    let {systemParam}=useContext(RosterWebContext);
     let itoNameContact = Parser(props.roster.itoName+ "<br>" + props.roster.itoPostName + " Extn. 2458");
     for (let i=systemParam.noOfPrevDate;i>0;i--){
         cellList.push(
@@ -22,15 +22,14 @@ export default function RosterRow(props){
     Object.keys(props.roster.shiftList).forEach(date=>{
         let shift=props.roster.shiftList[date];
         cellList.push(
-            <ShiftCell
+            <EditableShiftCell
                 activeShiftInfoList={props.activeShiftInfoList}
                 date={date}
                 key={props.itoId+"_shift_"+date}
-                setIsHighLightRow={setIsHighLightRow}
-                setHightLightCellIndex={setHightLightCellIndex}>
-                {shift}
-            </ShiftCell>    
-        )
+                setIsHighLightRow={setIsHighLightRow}>
+                    {shift}                      
+            </EditableShiftCell>
+        );
     });
     for (let i=Object.keys(props.roster.shiftList).length;i<31;i++){
         cellList.push(
