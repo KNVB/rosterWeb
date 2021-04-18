@@ -15,7 +15,8 @@ export default function P8Body(props){
                         itoId={itoId}
                         key={itoId+"_roster"}
                         monthlyCalendar={monthlyCalendar} 
-                        roster={roster}/>
+                        roster={roster}
+                        rowIndex={rowList.length+3}/>
                 )
             })
         }

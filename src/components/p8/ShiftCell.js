@@ -8,6 +8,7 @@ export default function ShiftCell(props){
     let myProps=Object.assign({},props);
     delete myProps.activeShiftInfoList;
     delete myProps.setIsHighLightRow;
+    delete myProps.onMouseEnter;
     //console.log(props.contentEditable);
     let {setHightLightCellIndex}=useContext(RosterWebContext);
     useEffect(()=>{
@@ -30,6 +31,9 @@ export default function ShiftCell(props){
         props.setIsHighLightRow(false);
    }
     let hightLight = e => {
+        if (props.onMouseEnter){
+            props.onMouseEnter(e);
+        }
         setHightLightCellIndex(e.target.cellIndex);
         props.setIsHighLightRow(true);
     }

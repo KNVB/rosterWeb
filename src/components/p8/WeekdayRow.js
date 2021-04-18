@@ -42,7 +42,16 @@ export default function WeekdayRow(props){
     return(
         <tr>
             <NameCell/>
-            {cellList}     
+            {cellList}
+            <BorderedAlignCenterCell rowSpan="2">
+                Total<br/>Hour
+            </BorderedAlignCenterCell>
+            <BorderedAlignCenterCell rowSpan="2">
+                Actual<br/>Hour
+            </BorderedAlignCenterCell>
+            <BorderedAlignCenterCell colSpan="8">
+                Hour Off Due
+            </BorderedAlignCenterCell>
         </tr>
     )
 }

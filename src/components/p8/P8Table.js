@@ -5,12 +5,16 @@ import P8Header from './P8Header';
 
 import Roster from '../../utils/Roster';
 import RosterWebContext from '../../utils/RosterWebContext';
+import useSelectedRegion from './useSelectedRegion';
+import useShift from './useShift';
 import './P8.css';
 export default function P8Table(props){
     const [activeShiftInfoList,setActiveShiftInfoList]=useState();
     const [monthlyCalendar,setMonthlyCalendar]=useState();
     const [rosterData,setRosterData]=useState();
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
+    const [getITOStat]=useShift();
+    let [startSelect,endSelect,updateSelect,copySelectedRegion,getBorderClass,pasteCopiedRegion]=useSelectedRegion();
     let calendarUtility=new CalendarUtility();
     let systemParam=props.systemParam;
 
@@ -27,11 +31,27 @@ export default function P8Table(props){
         }
         getData();    
     },[props.rosterMonth]);
+    let mouseUp=useCallback((e)=>{
+        console.log("mouse up");
+        endSelect();
+      });
+      useEffect(()=>{
+        document.addEventListener('mouseup',mouseUp);
+        return () => {
+          document.removeEventListener('mouseup', mouseUp)
+        }
+      },[mouseUp]);
     let contextValue={
         calendarUtility,
+        copySelectedRegion,
+        getBorderClass,
+        getITOStat,
         hightLightCellIndex,
+        pasteCopiedRegion,
         setHightLightCellIndex,
-        systemParam
+        startSelect,
+        systemParam,
+        updateSelect
     }
     return(
         <table id="rosterTable">

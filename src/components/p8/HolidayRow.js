@@ -30,11 +30,13 @@ export default function HolidayRow(props){
                 <BorderedCell key={"holiday_"+i}/>
             );    
         }
+        
     }    
     return(
         <tr>
             <NameCell/>
             {cellList}
+            <BorderedCell colSpan={10}/>
         </tr>
     )
 }
