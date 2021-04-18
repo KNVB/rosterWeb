@@ -1,12 +1,13 @@
-import {useContext} from 'react';
+import {useContext,useState} from 'react';
 import BorderedCell from './cells/borderedCell/BorderedCell';
 import Parser from "html-react-parser";
-import P8Cell from './P8Cell';
+import ShiftCell from './ShiftCell';
 import NameCell from './cells/nameCell/NameCell';
 import RosterWebContext from '../../utils/RosterWebContext';
 
 export default function RosterRow(props){
-    let cellList=[];
+    let cellList=[],nameCellCssClass="";
+    const [isHighLightRow, setIsHighLightRow] = useState(false);
     let {setHightLightCellIndex,systemParam}=useContext(RosterWebContext);
     let itoNameContact = Parser(props.roster.itoName+ "<br>" + props.roster.itoPostName + " Extn. 2458");
     for (let i=systemParam.noOfPrevDate;i>0;i--){
@@ -14,16 +15,21 @@ export default function RosterRow(props){
             <BorderedCell key={props.itoId+"_roster_-"+i}/>
         )
     };
+    //console.log(isHighLightRow);
+    if (isHighLightRow){
+        nameCellCssClass="highlightCell";
+    }
     Object.keys(props.roster.shiftList).forEach(date=>{
         let shift=props.roster.shiftList[date];
         cellList.push(
-            <P8Cell
+            <ShiftCell
                 activeShiftInfoList={props.activeShiftInfoList}
                 date={date}
                 key={props.itoId+"_shift_"+date}
+                setIsHighLightRow={setIsHighLightRow}
                 setHightLightCellIndex={setHightLightCellIndex}>
                 {shift}
-            </P8Cell>    
+            </ShiftCell>    
         )
     });
     for (let i=Object.keys(props.roster.shiftList).length;i<31;i++){
@@ -33,7 +39,7 @@ export default function RosterRow(props){
     }
     return (
         <tr>
-            <NameCell>{itoNameContact}</NameCell>
+            <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>
             {cellList}
         </tr>
     )
