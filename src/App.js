@@ -6,6 +6,7 @@ import {useEffect,useState} from 'react';
 //import JJ from './components.org/jj/JJ';
 //import QQ from './components.org/qq/QQ';
 import P8 from './components/p8/P8';
+//import P9 from './components/p9/P9';
 //import RosterAdmin from './components.org/rosterAdmin/RosterAdmin';
 //import RosterViewer from './components.org/rosterViewer/RosterViewer';
 //import SelectDemo from './components/testing/SelectDemo';
@@ -27,8 +28,11 @@ function App() {
             <Redirect to="/rosterWeb"/>
           )
         }/>
+  
         <Route exact path='/rosterWeb/p8' render={()=>systemParam && <P8 systemParam={systemParam}/>} />
         {/*
+          <Route exact path='/rosterWeb/p8' render={()=>systemParam && <P8 systemParam={systemParam}/>} />
+          <Route exact path='/rosterWeb/p9' render={()=>systemParam && <P9 systemParam={systemParam}/>} />
           <Route exact path='/rosterWeb' render={()=>systemParam && <RosterViewer systemParam={systemParam}/>} />
           <Route exact path='/rosterWeb/qq' render={()=>systemParam && <QQ systemParam={systemParam}/>} />
           <Route exact path='/rosterWeb/jj' render={()=>systemParam && <JJ systemParam={systemParam}/>} />

@@ -9,9 +9,9 @@ import RosterWebContext from '../../utils/RosterWebContext';
 export default function RosterRow(props){
     let cellList=[],i,nameCellCssClass="";
     const [isHighLightRow, setIsHighLightRow] = useState(false);
-    let {activeShiftInfoList,getBorderClass,getITOStat,monthlyCalendar,systemParam}=useContext(RosterWebContext);
-    let itoStat=getITOStat(activeShiftInfoList, monthlyCalendar.noOfWorkingDay, props.roster);
-    let itoNameContact = Parser(props.roster.itoName+ "<br>" + props.roster.itoPostName + " Extn. 2458");
+    let {activeShiftInfoList,getBorderClass,getITOStat,monthlyCalendar,rosterData,systemParam}=useContext(RosterWebContext);
+    let roster=rosterData[props.itoId];
+    let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
     for (i=systemParam.noOfPrevDate;i>0;i--){
         cellList.push(
             <BorderedCell key={props.itoId+"_roster_-"+i}/>
@@ -21,11 +21,11 @@ export default function RosterRow(props){
     if (isHighLightRow){
         nameCellCssClass="highlightCell";
     }
-    let shiftList=props.roster.shiftList;
+    let shiftList=roster.shiftList;
     for(i=1;i<32;i++){
         let id=props.itoId+"_shift_"+i;
         if (shiftList[i]){
-            let shift=props.roster.shiftList[i];
+            let shift=shiftList[i];
             let x=Number(i)+systemParam.noOfPrevDate;
             let className=getBorderClass(x,props.rowIndex);
             cellList.push(
@@ -42,7 +42,8 @@ export default function RosterRow(props){
                 <BorderedCell key={id} id={id}/>
             );    
         }
-    } 
+    }
+    let itoStat=getITOStat(activeShiftInfoList, monthlyCalendar.noOfWorkingDay, roster); 
     return (
         <tr>
             <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>

@@ -22,13 +22,13 @@ export default function P8Table(props){
         const getData = async () => {
             console.log("getData() is triggered");            
             let roster = new Roster();
-            let temp=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
-            setMonthlyCalendar(temp);
-            
-            temp= await roster.get(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
+            let temp= await roster.get(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
             setRosterData (temp);
             temp = await roster.getAllActiveShiftInfo();
             setActiveShiftInfoList(temp);
+
+            temp=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
+            setMonthlyCalendar(temp);
         }
         getData();    
     },[props.rosterMonth]);
