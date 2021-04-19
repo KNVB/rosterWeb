@@ -21,13 +21,14 @@ export default function P8Table(props){
     useEffect(()=>{
         const getData = async () => {
             console.log("getData() is triggered");            
+            let roster = new Roster();
             let temp=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             setMonthlyCalendar(temp);
-            let roster = new Roster();
-            temp = await roster.getAllActiveShiftInfo();
-            setActiveShiftInfoList(temp);
+            
             temp= await roster.get(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
             setRosterData (temp);
+            temp = await roster.getAllActiveShiftInfo();
+            setActiveShiftInfoList(temp);
         }
         getData();    
     },[props.rosterMonth]);
@@ -35,19 +36,22 @@ export default function P8Table(props){
         console.log("mouse up");
         endSelect();
       });
-      useEffect(()=>{
+    useEffect(()=>{
         document.addEventListener('mouseup',mouseUp);
         return () => {
-          document.removeEventListener('mouseup', mouseUp)
+            document.removeEventListener('mouseup', mouseUp)
         }
-      },[mouseUp]);
+    },[mouseUp]);
     let contextValue={
+        activeShiftInfoList,
         calendarUtility,
         copySelectedRegion,
         getBorderClass,
         getITOStat,
         hightLightCellIndex,
+        monthlyCalendar,
         pasteCopiedRegion,
+        rosterData,
         setHightLightCellIndex,
         startSelect,
         systemParam,
@@ -56,11 +60,8 @@ export default function P8Table(props){
     return(
         <table id="rosterTable">
             <RosterWebContext.Provider value={contextValue}> 
-                <P8Header monthlyCalendar={monthlyCalendar}/>
-                <P8Body 
-                    activeShiftInfoList={activeShiftInfoList} 
-                    monthlyCalendar={monthlyCalendar}
-                    rosterData={rosterData}/>
+                <P8Header/>
+                <P8Body/>
             </RosterWebContext.Provider>
         </table>       
     )

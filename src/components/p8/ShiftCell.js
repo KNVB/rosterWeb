@@ -10,7 +10,7 @@ export default function ShiftCell(props){
     delete myProps.setIsHighLightRow;
     delete myProps.onMouseEnter;
     //console.log(props.contentEditable);
-    let {setHightLightCellIndex}=useContext(RosterWebContext);
+    let {activeShiftInfoList,setHightLightCellIndex}=useContext(RosterWebContext);
     useEffect(()=>{
         //console.log("h0,"+props.children);
         setValue(props.children);
@@ -21,8 +21,8 @@ export default function ShiftCell(props){
         if (props.className){
             newClassName+=" "+props.className;
         }        
-        if(props.activeShiftInfoList[value]){
-            newClassName+=' '+props.activeShiftInfoList[value].cssClassName;
+        if(activeShiftInfoList[value]){
+            newClassName+=' '+activeShiftInfoList[value].cssClassName;
         }
         setClassName(newClassName);
     },[value,props.className]);

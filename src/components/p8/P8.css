@@ -9,6 +9,10 @@
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc477', endColorstr='#fb9e25',GradientType=0);
 	background-color:#ffc477;
 }
+.phCell{
+    color:#ff0000;
+    width:25px;
+}
 .todayCell {
     background-color: #11ACF0;
     color: #ffff;
