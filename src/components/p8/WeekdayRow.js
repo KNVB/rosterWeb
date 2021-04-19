@@ -17,7 +17,7 @@ export default function WeekdayRow(props){
         for (let i=0;i<monthLength;i++){
             let calendarDate=monthlyCalendar.calendarDateList[i];
             let content=calendarUtility.weekdayNames[calendarDate.dayOfWeek];
-            let className="",title="";
+            let className="";
             if ((content==="S") || (content==="Su") || (calendarDate.publicHoliday))
                 className="font-weight-bold phCell";
             cellList.push(
@@ -35,7 +35,7 @@ export default function WeekdayRow(props){
     }    
     return(
         <tr>
-            <NameCell/>
+            <NameCell>Days</NameCell>
             {cellList}
             <BorderedAlignCenterCell rowSpan="2">
                 Total<br/>Hour

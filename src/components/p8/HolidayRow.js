@@ -32,7 +32,7 @@ export default function HolidayRow(props){
     }
     return(
         <tr>
-            <NameCell/>
+            <NameCell>Holiday</NameCell>
             {cellList}
             <BorderedCell colSpan={10} className="tailCell"/>
         </tr>

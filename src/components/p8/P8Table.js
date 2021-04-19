@@ -13,7 +13,7 @@ export default function P8Table(props){
     const [monthlyCalendar,setMonthlyCalendar]=useState();
     const [rosterData,setRosterData]=useState();
     const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
-    const [getITOStat]=useShift();
+    const [getITOStat,getShiftCountList,updateTableData]=useShift();
     let [startSelect,endSelect,updateSelect,copySelectedRegion,getBorderClass,pasteCopiedRegion]=useSelectedRegion();
     let calendarUtility=new CalendarUtility();
     let systemParam=props.systemParam;
@@ -55,7 +55,8 @@ export default function P8Table(props){
         setHightLightCellIndex,
         startSelect,
         systemParam,
-        updateSelect
+        updateSelect,
+        updateTableData
     }
     return(
         <table id="rosterTable">

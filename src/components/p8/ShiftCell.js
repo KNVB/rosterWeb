@@ -9,8 +9,9 @@ export default function ShiftCell(props){
     delete myProps.activeShiftInfoList;
     delete myProps.setIsHighLightRow;
     delete myProps.onMouseEnter;
+    delete myProps.onBlur;
     //console.log(props.contentEditable);
-    let {activeShiftInfoList,setHightLightCellIndex}=useContext(RosterWebContext);
+    let {activeShiftInfoList,monthlyCalendar,rosterData,setHightLightCellIndex,updateTableData}=useContext(RosterWebContext);
     useEffect(()=>{
         //console.log("h0,"+props.children);
         setValue(props.children);
@@ -24,7 +25,7 @@ export default function ShiftCell(props){
         if(activeShiftInfoList[value]){
             newClassName+=' '+activeShiftInfoList[value].cssClassName;
         }
-        setClassName(newClassName);
+        setClassName(newClassName);        
     },[value,props.className]);
     let deHightLight = e => {
         setHightLightCellIndex(-1);
@@ -39,7 +40,9 @@ export default function ShiftCell(props){
     }
     function updateValue(e){
         setValue(e.target.textContent);
+        updateTableData(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,rosterData);
     }
+    
     return(
         <BorderedAlignCenterCell 
             {...myProps}

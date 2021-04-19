@@ -1,6 +1,6 @@
 import {useContext,useEffect} from 'react';
-import BorderedCell from './cells/borderedCell/BorderedCell';
 import BorderedAlignCenterCell from './cells/BorderedAlignCenterCell';
+import DateCell from './cells/DateCell';
 import NameCell from './cells/nameCell/NameCell';
 import RosterWebContext from '../../utils/RosterWebContext';
 export default function DateRow(props){
@@ -8,7 +8,7 @@ export default function DateRow(props){
     let {hightLightCellIndex,monthlyCalendar,systemParam}=useContext(RosterWebContext);
     for (let i=systemParam.noOfPrevDate;i>0;i--){
         cellList.push(
-            <BorderedCell key={"date_-"+i}/>
+            <DateCell key={"date_-"+i}/>
         )
     }
 
@@ -25,20 +25,23 @@ export default function DateRow(props){
             }
             //console.log(classNameList);
             cellList.push(
-                <BorderedCell key={"date_"+i} className={classNameList.join(' ')}>
+                <DateCell key={"date_"+i} className={classNameList.join(' ')}>
                     {calendarDate.dateOfMonth}
-                </BorderedCell>    
+                </DateCell>    
             ); 
         }
         for(let i=monthLength;i<31;i++){
             cellList.push(
-                <BorderedCell key={"date_"+i}/>
+                <DateCell key={"date_"+i}/>
             );    
         }
     }    
     return (
         <tr>
-            <NameCell/>
+            <NameCell>
+                Resident Support<br/>
+                Team Members
+            </NameCell>
             {cellList}
             <BorderedAlignCenterCell rowSpan="2">
                 Last<br/>Month

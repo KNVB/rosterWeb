@@ -9,7 +9,7 @@ import RosterWebContext from '../../utils/RosterWebContext';
 export default function RosterRow(props){
     let cellList=[],i,nameCellCssClass="";
     const [isHighLightRow, setIsHighLightRow] = useState(false);
-    let {activeShiftInfoList,getBorderClass,getITOStat,monthlyCalendar,rosterData,systemParam}=useContext(RosterWebContext);
+    let {activeShiftInfoList,getBorderClass,getITOStat,monthlyCalendar,rosterData,systemParam,updateTableData}=useContext(RosterWebContext);
     let roster=rosterData[props.itoId];
     let itoNameContact = Parser(roster.itoName+ "<br>" + roster.itoPostName + " Extn. 2458");
     for (i=systemParam.noOfPrevDate;i>0;i--){
@@ -44,14 +44,17 @@ export default function RosterRow(props){
         }
     }
     let itoStat=getITOStat(activeShiftInfoList, monthlyCalendar.noOfWorkingDay, roster); 
+    function updateValue(e){
+        updateTableData(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,rosterData);
+    }
     return (
         <tr>
             <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>
             {cellList}
             <BorderedAlignCenterCell id={props.itoId+"_expectedWorkingHour"}>{itoStat.expectedWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
             <BorderedAlignCenterCell id={props.itoId+"_actualWorkingHour"}>{itoStat.actualWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell contentEditable={true} suppressContentEditableWarning={true} id={props.itoId+"_lastMonthBalance"}>{itoStat.lastMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell contentEditable={true} suppressContentEditableWarning={true} id={props.itoId+"_thisMonthBalance"}>{itoStat.thisMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell contentEditable={true} suppressContentEditableWarning={true} id={props.itoId+"_lastMonthBalance"} onBlur={updateValue}>{itoStat.lastMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell id={props.itoId+"_thisMonthBalance"} onBlur={updateValue}>{itoStat.thisMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
             <BorderedAlignCenterCell id={props.itoId+"_totalBalance"}>{itoStat.totalBalance.toFixed(2)}</BorderedAlignCenterCell>
             <BorderedAlignCenterCell id={props.itoId+"_aShiftCount"}>{itoStat.shiftCountList.aShiftCount}</BorderedAlignCenterCell>
             <BorderedAlignCenterCell id={props.itoId+"_bxShiftCount"}>{itoStat.shiftCountList.bxShiftCount}</BorderedAlignCenterCell>
