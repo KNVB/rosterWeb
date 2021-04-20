@@ -1,5 +1,5 @@
 import {Col,Container,Row} from 'react-bootstrap';
-import {useEffect,useState} from 'react';
+import {useEffect,useReducer,useState} from 'react';
 import CalendarUtility from '../../utils/calendar/CalendarUtility';
 import MonthPicker from '../monthPicker/MonthPicker';
 import Roster from '../../utils/Roster';
@@ -7,21 +7,29 @@ import UnreTable from './UnreTable';
 import './Unre.css';
 export default function Unre(props){
     let now=new Date();
-    const [rosterMonth,setRosterMonth]=useState(new Date(now.getFullYear(),now.getMonth(),1));
-    const[rosterTableData,setRosterTableData]=useState();
- 
     let monthPickerMinDate=props.systemParam.monthPickerMinDate;
     monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
+    let reducer = (state, action) => {
+        console.log(action);
+        return(action);
+    }
     let updateMonth=(newDate)=>{
         console.log("updateMonth="+newDate.getFullYear()+","+newDate.getMonth());
-        setRosterMonth(new Date(newDate.getFullYear(),newDate.getMonth(),1));
-    }
+        let output={
+            rosterMonth:new Date(newDate.getFullYear(),newDate.getMonth(),1),
+            systemParam:props.systemParam
+        }
+        setData(output);
+    };
+    const [data, setData] = useReducer(reducer,{rosterMonth: new Date(now.getFullYear(),now.getMonth(),1),systemParam:props.systemParam});
+    const[rosterTableData,setRosterTableData]=useState();
+ 
     useEffect(()=>{
         const getData = async () => {
             let calendarUtility=new CalendarUtility();
-            let monthlyCalendar=calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(),rosterMonth.getMonth());
+            let monthlyCalendar=calendarUtility.getMonthlyCalendar(data.rosterMonth.getFullYear(),data.rosterMonth.getMonth());
             let roster = new Roster();
-            let rosterData = await roster.get(rosterMonth.getFullYear(),rosterMonth.getMonth()+1);
+            let rosterData = await roster.get(data.rosterMonth.getFullYear(),data.rosterMonth.getMonth()+1);
             let shiftInfoList= await roster.getAllActiveShiftInfo();
             
             setRosterTableData(
@@ -30,12 +38,12 @@ export default function Unre(props){
                 "monthlyCalendar":monthlyCalendar,
                 "rosterList":rosterData,
                 "shiftInfoList":shiftInfoList,
-                systemParam:props.systemParam                
+                systemParam:data.systemParam
                }
             )
         }
-        getData();    
-    },[rosterMonth]);
+        getData();
+    },[data.systemParam,data.rosterMonth]);
     return (
         <div className="App p-1">
             <Container fluid={true} className="tableContainer">
