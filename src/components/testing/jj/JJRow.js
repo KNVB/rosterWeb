@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import NameCell from './cells/NameCell';
 import Parser from "html-react-parser";
-import RosterWebContext from '../../utils/RosterWebContext';
+import RosterWebContext from '../../../utils/RosterWebContext';
 import ShiftCell from './cells/ShiftCell';
 export default function JJRow(props){
     let cellList=[];

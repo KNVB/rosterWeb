@@ -1,6 +1,6 @@
 import {useContext} from 'react';
-import RosterWebContext from '../../utils/RosterWebContext';
-import SelectedRegionUtil from '../../utils/SelectedRegionUtil';
+import RosterWebContext from '../../../utils/RosterWebContext';
+import SelectedRegionUtil from '../../../utils/SelectedRegionUtil';
 export default function QQCell(props){
     let cssClassName="QQ";
     let {

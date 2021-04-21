@@ -1,6 +1,6 @@
 import React,{useContext} from "react";
 import BorderedAlignCenterCell from './BorderedAlignCenterCell';
-import RosterWebContext from '../../../utils/RosterWebContext';
+import RosterWebContext from '../../../../utils/RosterWebContext';
 import useShift from '../hooks/useShift';
 import './ShiftCell.css';
 export default function ShiftCell(props){

@@ -1,7 +1,7 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useState} from 'react';
 
-import MonthPicker from '../monthPicker/MonthPicker';
+import MonthPicker from '../../monthPicker/MonthPicker';
 import QQTable from './QQTable';
 import './QQ.css';
 export default function QQ(props){

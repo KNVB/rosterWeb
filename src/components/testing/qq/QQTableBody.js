@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import RosterWebContext from '../../utils/RosterWebContext';
+import RosterWebContext from '../../../utils/RosterWebContext';
 import QQRow from './QQRow';
 export default function QQTableBody(props){
     let {rosterData}=useContext(RosterWebContext);
