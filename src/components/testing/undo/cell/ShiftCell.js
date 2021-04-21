@@ -3,8 +3,8 @@ import BorderedAlignCenterCell from './BorderedAlignCenterCell';
 import RosterWebContext from '../../../../utils/RosterWebContext';
 import './ShiftCell.css';
 export default function ShiftCell(props){
-    const[className,setClassName]=useState();
-    const[value,setValue]=useState();
+    let className="shiftCell";
+
     let myProps=Object.assign({},props);
     delete myProps.activeShiftInfoList;
     delete myProps.itoId;
@@ -13,21 +13,14 @@ export default function ShiftCell(props){
     delete myProps.setIsHighLightRow;
     //console.log(props.contentEditable);
     let {activeShiftInfoList,monthlyCalendar,rosterList,setHightLightCellIndex,undoUtil}=useContext(RosterWebContext);
-    useEffect(()=>{
-        //console.log("h0,"+props.children);
-        setValue(props.children);
-      },[props.children]);
-    useEffect(()=>{
-        //console.log("h1,"+className);
-        let newClassName="shiftCell";
-        if (props.className){
-            newClassName+=" "+props.className;
-        }        
-        if(activeShiftInfoList[value]){
-            newClassName+=' '+activeShiftInfoList[value].cssClassName;
-        }
-        setClassName(newClassName);        
-    },[value,props.className]);
+
+    if (props.className){
+        className+=" "+props.className;
+    }
+    if(activeShiftInfoList[props.children]){
+        className+=' '+activeShiftInfoList[props.children].cssClassName;
+    }
+
     let deHightLight = e => {
         setHightLightCellIndex(-1);
         props.setIsHighLightRow(false);
@@ -40,7 +33,7 @@ export default function ShiftCell(props){
         props.setIsHighLightRow(true);
     }
     function updateValue(e){
-        setValue(e.target.textContent);
+        //setValue(e.target.textContent);
         let temp=JSON.parse(JSON.stringify(rosterList.present));
         temp[props.itoId].shiftList[e.target.cellIndex]=e.target.textContent;
         undoUtil.set(temp);
@@ -54,7 +47,7 @@ export default function ShiftCell(props){
             onMouseLeave={deHightLight}
             onMouseEnter={hightLight}
             setHightLightCellIndex={setHightLightCellIndex}>
-            {value}
+            {props.children}
         </BorderedAlignCenterCell>
     )
 }

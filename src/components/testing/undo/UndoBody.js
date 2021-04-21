@@ -4,10 +4,12 @@ import UndoRow from './UndoRow';
 export default function UndoBody(props){
     let {rosterList}=useContext(RosterWebContext);
     let rowList=[];
-    console.log(Object.keys(rosterList.present["ITO1_1999-01-01"].shiftList).length);
-    Object.keys(rosterList.present).forEach(itoId=>{
-        rowList.push(<UndoRow itoId={itoId} key={itoId+"_roster"}/>);
-    });
+    //console.log(Object.keys(rosterList.present["ITO1_1999-01-01"].shiftList).length);
+    if (rosterList){
+        Object.keys(rosterList.present).forEach(itoId=>{
+            rowList.push(<UndoRow itoId={itoId} key={itoId+"_roster"}/>);
+        });
+    }   
     return(
         <tbody>
             {rowList}

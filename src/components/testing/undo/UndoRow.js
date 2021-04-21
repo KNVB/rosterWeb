@@ -1,9 +1,10 @@
-import { useContext,useState } from 'react';
+import { useContext,useEffect,useState } from 'react';
 import BorderedCell from './cell/BorderedCell';
+import EditableShiftCell from './cell/EditableShiftCell';
 import NameCell from './cell/NameCell';
 import Parser from "html-react-parser";
 import RosterWebContext from '../../../utils/RosterWebContext';
-import EditableShiftCell from './cell/EditableShiftCell';
+import ShiftCell from './cell/ShiftCell';
 export default function UndoRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],nameCellCssClass="";
@@ -23,8 +24,9 @@ export default function UndoRow(props){
                     setIsHighLightRow={setIsHighLightRow}>
                     {itoRoster.shiftList[i]}
                 </EditableShiftCell>
-            )
+            )           
         } else {
+            //console.log("i="+i);
             cellList.push(<BorderedCell key={props.itoId+"_shift_"+i}/>);
         }
     }
