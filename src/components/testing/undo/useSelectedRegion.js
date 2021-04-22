@@ -193,5 +193,5 @@ export default function useSelectedRegion(){
       }
     }
   }   
-  return [startSelect,endSelect,updateSelect,copySelectedRegion,getBorderClass,pasteCopiedRegion,selectedRegion]
+  return [startSelect,endSelect,updateSelect,copiedRegion,copySelectedRegion,getBorderClass,pasteCopiedRegion,selectedRegion]
 }
