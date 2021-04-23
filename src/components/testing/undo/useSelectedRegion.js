@@ -74,52 +74,38 @@ export default function useSelectedRegion(){
     }
     return result;
   }
-  const pasteCopiedRegion=(clipboardData)=>{
+  const pasteCopiedRegion=(clipboardData,rosterList,undoUtil)=>{
     let copiedData=JSON.parse(clipboardData.getData('application/json'));
     let destX=selectedRegion.maxX,destY=selectedRegion.maxY+copiedData.length;
-    let cell,range,row,selection,isSucces=true;
+    let cell,itoId,range,row,selection;
     let table=document.getElementById("rosterTable");
-    
-    row=table.rows[destY-1]; //Range Checking
-    if (row){ 
-      cell=row.cells[destX-1+copiedData[0].length];  //Range Checking
-      if (cell){
-        destX=selectedRegion.minX;
-        destY=selectedRegion.minY;
-        for(let y=0;y<copiedData.length;y++){
+    let temp=JSON.parse(JSON.stringify(rosterList.present));
+    cell=table.rows[destY-1].cells[destX];
+    if ((cell)&&(cell.classList.contains("shiftCell"))){
+      destY=selectedRegion.minY;
+      for(let y=0;y<copiedData.length;y++){
           row=table.rows[destY++];
+          itoId=row.id;
           destX=selectedRegion.minX;
           for (let x=0;x<copiedData[y].length;x++){
-            cell=row.cells[destX++];
-            range = document.createRange();
-            selection = window.getSelection();
-            cell.focus();
-            range.selectNodeContents(cell);
-            selection.removeAllRanges();
-            selection.addRange(range);
-            document.execCommand("insertText",false,copiedData[y][x]);
+            temp[itoId].shiftList[destX++]=copiedData[y][x];
+            undoUtil.set(temp);
           }
-        }
-      } else {
-        isSucces=false;  
       }
-    } else {
-      isSucces=false;
-    }
-   
-    if (isSucces){
       cell=table.rows[selectedRegion.minY].cells[selectedRegion.minX];
-      cell.blur();
       range = document.createRange();
       range.selectNodeContents(cell);
       selection = window.getSelection();
       selection.removeAllRanges();
       selection.addRange(range);
-      let temp=JSON.parse(JSON.stringify(selectedRegion));
+      temp=JSON.parse(JSON.stringify(selectedRegion));
       temp.maxX=destX-1;
       temp.maxY=destY-1;      
       setSelectedRegion(temp);
+    } else {
+      console.log("hi");
     }
+
   }
   const startSelect=(theCell)=>{
     let row=theCell.parentElement;

@@ -34,7 +34,7 @@ export default function UndoRow(props){
         }
     }
     return(
-        <tr>
+        <tr id={props.itoId}>
             <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>         
             {cellList}
         </tr>

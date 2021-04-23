@@ -33,7 +33,7 @@ import './UndoTable.css';
             let monthlyCalendar=props.rosterTableData.monthlyCalendar;
             setContextValue({
                 activeShiftInfoList,
-                calendarUtility,
+                calendarUtility,                
                 copySelectedRegion,
                 endSelect,
                 getBorderClass,
@@ -41,8 +41,9 @@ import './UndoTable.css';
                 monthlyCalendar,
                 pasteCopiedRegion,
                 rosterList,
-                startSelect,
+                selectedRegion,
                 setHightLightCellIndex,
+                startSelect,                
                 undoUtil,
                 updateSelect
             });
@@ -61,15 +62,18 @@ import './UndoTable.css';
 
         let keyDown=useCallback((e)=>{
             console.log("keyDown");
-            if (e.ctrlkey){
+            if (e.ctrlKey){
+                //console.log(e.which);
                 switch (e.which){
                     case 89:
+                        console.log("undoUtil.canRedo="+ undoUtil.canRedo);
                         if (undoUtil.canRedo){
                             e.preventDefault();
                             undoUtil.redo();
                         }
                         break;
                     case 90:
+                        console.log("canUndo="+undoUtil.canUndo);
                         if (undoUtil.canUndo){
                             e.preventDefault();
                             undoUtil.undo();

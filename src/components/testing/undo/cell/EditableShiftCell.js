@@ -3,7 +3,7 @@ import RosterWebContext from '../../../../utils/RosterWebContext';
 import ShiftCell from './ShiftCell';
 import './EditableShiftCell.css';
 export default function EditableShiftCell(props){
-    let {copySelectedRegion, pasteCopiedRegion,startSelect,updateSelect}=useContext(RosterWebContext);
+    let {copySelectedRegion, pasteCopiedRegion,rosterList,selectedRegion,startSelect,undoUtil,updateSelect}=useContext(RosterWebContext);
     function copyData(e){
         e.preventDefault();
         copySelectedRegion(e.clipboardData);
@@ -15,7 +15,7 @@ export default function EditableShiftCell(props){
         startSelect(e.target);
     }
     function pasteData(e){
-        pasteCopiedRegion(e.clipboardData);
+        pasteCopiedRegion(e.clipboardData,rosterList,undoUtil);
         e.preventDefault();
     }
     return (
