@@ -24,7 +24,7 @@ export default function ShiftCell(props){
             temp.push(props.className);   
         }
         setClassName(temp);
-    },[props.children,props.className])    
+    },[activeShiftInfoList,props.children,props.className])    
 
     let deHightLight = e => {
         setHightLightCellIndex(-1);
@@ -34,14 +34,14 @@ export default function ShiftCell(props){
         if (props.onMouseEnter){
             props.onMouseEnter(e);
         }
+        props.setIsHighLightRow(true);        
         setHightLightCellIndex(e.target.cellIndex);
-        props.setIsHighLightRow(true);
     }
     function updateValue(e){
         //setValue(e.target.textContent);
         let row=e.target.parentElement;
-        console.log(row.rowIndex+","+e.target.cellIndex);
-        console.log("On blur");
+        //console.log(row.rowIndex+","+e.target.cellIndex);
+        //console.log("On blur");
         let temp=JSON.parse(JSON.stringify(rosterList.present));
         temp[props.itoId].shiftList[e.target.cellIndex]=e.target.textContent;
         undoUtil.set(temp);
@@ -52,8 +52,7 @@ export default function ShiftCell(props){
             className={className.join(' ')}            
             onBlur={updateValue}
             onMouseLeave={deHightLight}
-            onMouseEnter={hightLight}
-            setHightLightCellIndex={setHightLightCellIndex}>
+            onMouseEnter={hightLight}>
             {props.children}
         </BorderedAlignCenterCell>
     )

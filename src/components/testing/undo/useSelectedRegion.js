@@ -1,9 +1,19 @@
-import {useCallback,useEffect,useState } from "react";
+import {useState} from "react";
 import CopiedRegion from './CopiedRegion';
 import SelectedRegion from './SelectedRegion';
 export default function useSelectedRegion(){
   const [selectedRegion,setSelectedRegion]=useState(new SelectedRegion());
   const [copiedRegion,setCopiedRegion]=useState(new CopiedRegion());
+
+  const clearCopiedRegion=()=>{
+    let copiedRegion={
+      minX:-1,
+      minY:-1,
+      maxX:-1,
+      maxY:-1
+    }
+    setCopiedRegion(copiedRegion);
+  }
   const copySelectedRegion=(clipboardData)=>{
     let table=document.getElementById("rosterTable");
     let result=[],col,row;
@@ -89,7 +99,7 @@ export default function useSelectedRegion(){
           destX=selectedRegion.minX;
           for (let x=0;x<copiedData[y].length;x++){
             temp[itoId].shiftList[destX++]=copiedData[y][x];
-            undoUtil.set(temp);
+            undoUtil.set(JSON.parse(JSON.stringify(temp)));
           }
       }
       cell=table.rows[selectedRegion.minY].cells[selectedRegion.minX];
@@ -179,5 +189,5 @@ export default function useSelectedRegion(){
       }
     }
   }   
-  return [startSelect,endSelect,updateSelect,copiedRegion,copySelectedRegion,getBorderClass,pasteCopiedRegion,selectedRegion]
+  return {startSelect,endSelect,updateSelect,clearCopiedRegion,copiedRegion,copySelectedRegion,getBorderClass,pasteCopiedRegion,selectedRegion}
 }

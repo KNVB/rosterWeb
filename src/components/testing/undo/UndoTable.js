@@ -1,18 +1,21 @@
-import {useCallback,useEffect,useReducer,useState} from 'react';
+import {useEffect,useState} from 'react';
+import './UndoTable.css';
 import RosterWebContext from '../../../utils/RosterWebContext';
+import TableHeader from '../../tables/tableHeader/TableHeader';
 import UndoBody from './UndoBody';
 import useUndo from 'use-undo';
+import useEvent from './useEvent';
 import useSelectedRegion from './useSelectedRegion';
-import './UndoTable.css';
     export default function UndoTable(props){
         let [
             rosterList,
             undoUtil
         ]=useUndo(props.rosterTableData.rosterList);
+        
         const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
         const [contextValue,setContextValue]=useState({})
-        let [startSelect,endSelect,updateSelect,copiedRegion,copySelectedRegion,getBorderClass,pasteCopiedRegion,selectedRegion]=useSelectedRegion();
-        
+        let selectedRegionUtil=useSelectedRegion();
+        useEvent(selectedRegionUtil,undoUtil);
         function showData(){
             console.log(rosterList.present);
         }
@@ -34,66 +37,18 @@ import './UndoTable.css';
             setContextValue({
                 activeShiftInfoList,
                 calendarUtility,                
-                copySelectedRegion,
-                endSelect,
-                getBorderClass,
                 hightLightCellIndex,
                 monthlyCalendar,
-                pasteCopiedRegion,
                 rosterList,
-                selectedRegion,
+                selectedRegionUtil,
                 setHightLightCellIndex,
-                startSelect,                
-                undoUtil,
-                updateSelect
+                undoUtil
             });
-        },[copiedRegion,rosterList,selectedRegion]);
-
-        let mouseUp=useCallback((e)=>{
-            console.log("mouse up");
-            endSelect();
-        },[selectedRegion]);
-        useEffect(()=>{
-            document.addEventListener('mouseup',mouseUp);
-            return () => {
-                document.removeEventListener('mouseup', mouseUp)
-            }
-        },[mouseUp]);
-
-        let keyDown=useCallback((e)=>{
-            console.log("keyDown");
-            if (e.ctrlKey){
-                //console.log(e.which);
-                switch (e.which){
-                    case 89:
-                        console.log("undoUtil.canRedo="+ undoUtil.canRedo);
-                        if (undoUtil.canRedo){
-                            e.preventDefault();
-                            undoUtil.redo();
-                        }
-                        break;
-                    case 90:
-                        console.log("canUndo="+undoUtil.canUndo);
-                        if (undoUtil.canUndo){
-                            e.preventDefault();
-                            undoUtil.undo();
-                        }
-                        break;
-                    default:break;    
-                }
-            }
-        });
-        useEffect(()=>{
-            document.addEventListener('keydown',keyDown);
-            return () => {
-                document.removeEventListener('keydown', keyDown)
-            }
-        },[keyDown]);
-
-
+        },[hightLightCellIndex,selectedRegionUtil.copiedRegion,selectedRegionUtil.selectedRegion,rosterList]);        
         return (
             <table id="rosterTable">
                 <RosterWebContext.Provider value={contextValue}>
+                    <TableHeader noOfPrevDate={0}/>
                     <UndoBody/>
                     <tfoot>
                         <tr>

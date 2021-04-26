@@ -1,23 +1,24 @@
-import { useContext,useEffect,useState } from 'react';
+import { useContext,useState } from 'react';
 import BorderedCell from './cell/BorderedCell';
+import BorderedAlignCenterCell from './cell/BorderedAlignCenterCell';
 import EditableShiftCell from './cell/EditableShiftCell';
 import NameCell from './cell/NameCell';
 import Parser from "html-react-parser";
 import RosterWebContext from '../../../utils/RosterWebContext';
-import ShiftCell from './cell/ShiftCell';
+import useShift from './useShift';
 export default function UndoRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],nameCellCssClass="";
-    let {getBorderClass,rosterList}=useContext(RosterWebContext);
+    let {activeShiftInfoList,monthlyCalendar,rosterList,selectedRegionUtil}=useContext(RosterWebContext);
     let itoRoster=rosterList.present[props.itoId];
-    
+    let {getITOStat}=useShift();
     let itoNameContact = Parser(itoRoster.itoName+ "<br>" + itoRoster.itoPostName + " Extn. 2458");
     if (isHighLightRow){
         nameCellCssClass="highlightCell";
     }
     for (let i=1;i<32;i++){
         if (itoRoster.shiftList[i]){
-            let className=getBorderClass(i,props.rowIndex);           
+            let className=selectedRegionUtil.getBorderClass(i,props.rowIndex);           
             cellList.push(
                 <EditableShiftCell 
                     className={className}
@@ -33,10 +34,21 @@ export default function UndoRow(props){
             cellList.push(<BorderedCell key={props.itoId+"_shift_"+i}/>);
         }
     }
+    let itoStat=getITOStat(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,itoRoster);
     return(
         <tr id={props.itoId}>
             <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>         
             {cellList}
+            <BorderedAlignCenterCell>{itoStat.expectedWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoStat.actualWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoStat.lastMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoStat.thisMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoStat.totalBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoStat.shiftCountList.aShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoStat.shiftCountList.bxShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoStat.shiftCountList.cShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoStat.shiftCountList.dxShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoStat.actualWorkingDayCount}</BorderedAlignCenterCell>
         </tr>
     )
 } 
