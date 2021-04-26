@@ -26,7 +26,8 @@ export default function Undo(props){
                 "calendarUtility":calendarUtility,
                 "monthlyCalendar":monthlyCalendar,
                 "rosterList":rosterData,
-                "shiftInfoList":shiftInfoList                
+                "shiftInfoList":shiftInfoList,
+                'systemParam':props.systemParam               
                }
             )
         }

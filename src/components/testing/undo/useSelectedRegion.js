@@ -1,10 +1,11 @@
 import {useState} from "react";
 import CopiedRegion from './CopiedRegion';
 import SelectedRegion from './SelectedRegion';
-export default function useSelectedRegion(){
+export default function useSelectedRegion(rosterTableData){
   const [selectedRegion,setSelectedRegion]=useState(new SelectedRegion());
   const [copiedRegion,setCopiedRegion]=useState(new CopiedRegion());
-
+  const itoCount=Object.keys(rosterTableData.rosterList).length;
+  const monthLength=rosterTableData.monthlyCalendar.calendarDateList.length;
   const clearCopiedRegion=()=>{
     let copiedRegion={
       minX:-1,
@@ -115,7 +116,62 @@ export default function useSelectedRegion(){
     } else {
       console.log("hi");
     }
+  }
+  const selectNextCell=(e,xOffset,yOffset)=>{
+    let index,maxRowCount,newX,newY;
+		let nextCell,orgIndex,theCell,x,y;
 
+    e.preventDefault();
+    if (selectedRegion.minX<selectedRegion.firstX)
+			x=selectedRegion.minX;
+		else
+			x=selectedRegion.maxX;
+		if (selectedRegion.minY<selectedRegion.firstY)
+			y=selectedRegion.minY;
+		else
+			y=selectedRegion.maxY;
+    
+    
+    let minRowNo=3,maxRowNo=itoCount+minRowNo-1;
+    let minCellIndex=1,maxCellIndex=minCellIndex+monthLength-1;    
+    newX=x+xOffset;
+    newY=y+yOffset;
+    
+    if (newY<minRowNo){
+      newY=maxRowNo;
+    }else {
+      if (newY>maxRowNo){
+        newY=minRowNo;
+      }
+    }
+    if (newX<minCellIndex){
+      newX=maxCellIndex
+    }else {
+      if (newX>maxCellIndex){
+        newX=minCellIndex;
+      }
+    }
+    console.log(`newY=${newY},newX=${newX}`);
+    let table=document.getElementById("rosterTable");
+    let cell=table.rows[newY].cells[newX];
+
+    let temp=JSON.parse(JSON.stringify(selectedRegion));
+    temp.firstX=newX;
+    temp.firstY=newY;
+    temp.minX=newX;
+    temp.minY=newY;
+    temp.maxX=newX;
+    temp.maxY=newY;
+    temp.inSelectMode=false;
+
+    let range = document.createRange();
+    range.selectNodeContents(cell);
+    let selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    setSelectedRegion(temp);
+    
   }
   const startSelect=(theCell)=>{
     let row=theCell.parentElement;
@@ -128,6 +184,13 @@ export default function useSelectedRegion(){
     temp.maxY=row.rowIndex;
     temp.inSelectMode=true;
     console.log("temp="+JSON.stringify(temp));
+    
+    let range = document.createRange();
+    range.selectNodeContents(theCell);
+    let selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
     setSelectedRegion(temp);
   }
   const updateSelect=(theCell)=>{
@@ -189,5 +252,5 @@ export default function useSelectedRegion(){
       }
     }
   }   
-  return {startSelect,endSelect,updateSelect,clearCopiedRegion,copiedRegion,copySelectedRegion,getBorderClass,pasteCopiedRegion,selectedRegion}
+  return {startSelect,endSelect,updateSelect,clearCopiedRegion,copiedRegion,copySelectedRegion,getBorderClass,pasteCopiedRegion,selectedRegion,selectNextCell}
 }

@@ -11,7 +11,8 @@ export default function EditableShiftCell(props){
     function mouseEnterHandler(e){
         selectedRegionUtil.updateSelect(e.target);
     }
-    function mouseDownHandler(e){    
+    function mouseDownHandler(e){ 
+        e.preventDefault();   
         selectedRegionUtil.startSelect(e.target);
     }
     function pasteData(e){

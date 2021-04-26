@@ -14,7 +14,7 @@ import useSelectedRegion from './useSelectedRegion';
         
         const [hightLightCellIndex, setHightLightCellIndex] = useState(-1);
         const [contextValue,setContextValue]=useState({})
-        let selectedRegionUtil=useSelectedRegion();
+        let selectedRegionUtil=useSelectedRegion(props.rosterTableData);
         useEvent(selectedRegionUtil,undoUtil);
         function showData(){
             console.log(rosterList.present);
@@ -30,10 +30,11 @@ import useSelectedRegion from './useSelectedRegion';
         useEffect(()=>{    
             //console.log(Object.keys(props.rosterTableData.rosterList["ITO1_1999-01-01"].shiftList).length);
             //console.log(Object.keys(rosterList.present["ITO1_1999-01-01"].shiftList).length);
-        
+            //console.log(props.rosterTableData.monthlyCalendar);
             let activeShiftInfoList=props.rosterTableData.shiftInfoList;
             let calendarUtility=props.rosterTableData.calendarUtility;
             let monthlyCalendar=props.rosterTableData.monthlyCalendar;
+            let systemParam=props.rosterTableData.systemParam;
             setContextValue({
                 activeShiftInfoList,
                 calendarUtility,                
@@ -42,13 +43,14 @@ import useSelectedRegion from './useSelectedRegion';
                 rosterList,
                 selectedRegionUtil,
                 setHightLightCellIndex,
+                systemParam,
                 undoUtil
             });
         },[hightLightCellIndex,selectedRegionUtil.copiedRegion,selectedRegionUtil.selectedRegion,rosterList]);        
         return (
             <table id="rosterTable">
                 <RosterWebContext.Provider value={contextValue}>
-                    <TableHeader noOfPrevDate={0}/>
+                    {contextValue.monthlyCalendar && <TableHeader noOfPrevDate={0}/>}
                     <UndoBody/>
                     <tfoot>
                         <tr>

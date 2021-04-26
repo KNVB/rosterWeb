@@ -26,6 +26,18 @@ export default function useEvent(selectedRegionUtil,undoUtil){
                 case 27://handle "Esc" key event
                     selectedRegionUtil.clearCopiedRegion();
                     break;
+                case 37://handle left arrow key event
+                    selectedRegionUtil.selectNextCell(e,-1,0);
+                    break;
+                case 38://handle up arrow key event
+                    selectedRegionUtil.selectNextCell(e,0,-1);
+					break;
+			    case 39://handle right arrow key event
+                    selectedRegionUtil.selectNextCell(e,1,0);
+					break;			
+			    case 40://handle down arrow key event
+                    selectedRegionUtil.selectNextCell(e,0,1);
+					break;    
                 default:break;                 
             }
         }

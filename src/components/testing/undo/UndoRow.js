@@ -36,7 +36,7 @@ export default function UndoRow(props){
     }
     let itoStat=getITOStat(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,itoRoster);
     return(
-        <tr id={props.itoId}>
+        <tr id={props.itoId} className="rosterRow">
             <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>         
             {cellList}
             <BorderedAlignCenterCell>{itoStat.expectedWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
@@ -48,7 +48,7 @@ export default function UndoRow(props){
             <BorderedAlignCenterCell>{itoStat.shiftCountList.bxShiftCount}</BorderedAlignCenterCell>
             <BorderedAlignCenterCell>{itoStat.shiftCountList.cShiftCount}</BorderedAlignCenterCell>
             <BorderedAlignCenterCell>{itoStat.shiftCountList.dxShiftCount}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell>{itoStat.actualWorkingDayCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell className="tailCell">{itoStat.actualWorkingDayCount}</BorderedAlignCenterCell>
         </tr>
     )
 } 

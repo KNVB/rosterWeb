@@ -36,6 +36,7 @@ export default function ShiftCell(props){
         }
         props.setIsHighLightRow(true);        
         setHightLightCellIndex(e.target.cellIndex);
+        
     }
     function updateValue(e){
         //setValue(e.target.textContent);
