@@ -104,6 +104,7 @@ export default function useSelectedRegion(rosterTableData){
           }
       }
       cell=table.rows[selectedRegion.minY].cells[selectedRegion.minX];
+      
       range = document.createRange();
       range.selectNodeContents(cell);
       selection = window.getSelection();
@@ -112,6 +113,7 @@ export default function useSelectedRegion(rosterTableData){
       temp=JSON.parse(JSON.stringify(selectedRegion));
       temp.maxX=destX-1;
       temp.maxY=destY-1;      
+      
       setSelectedRegion(temp);
     } else {
       console.log("hi");
