@@ -15,6 +15,7 @@ export default function Undo(props){
     }
     useEffect(()=>{
         const getData = async () => {
+            console.log("Undo:Get Data from DB");
             let calendarUtility=new CalendarUtility();
             
             let roster = new Roster();
