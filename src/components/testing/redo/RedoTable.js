@@ -4,15 +4,13 @@ import RedoBody from './RedoBody';
 import RosterWebContext from '../../../utils/RosterWebContext';
 import SelectedRegionUtil from './SelectedRegionUtil';
 import TableHeader from '../../tables/tableHeader/TableHeader';
-import useUndo from 'use-undo';
-import CopiedRegion from './CopiedRegion';
+import useUndoUtil from './useUndoUtil';
+
 export default function RedoTable(props){
-    let [
-        rosterList,
-        undoUtil
-    ]=useUndo(props.rosterTableData.rosterList);
-    let hightLightCellIndex=-1;
-    let selectedRegionUtil=new SelectedRegionUtil();
+    let rosterList=useUndoUtil(props.rosterTableData.rosterList);
+
+    let hightLightCellIndex=-1;    
+    let selectedRegionUtil=new SelectedRegionUtil(props.rosterTableData);
     let genParam=()=>{
         return {
             activeShiftInfoList:props.rosterTableData.shiftInfoList,
@@ -22,13 +20,63 @@ export default function RedoTable(props){
             rosterList:rosterList,
             selectedRegionUtil:selectedRegionUtil,
             systemParam:props.rosterTableData.systemParam,
-            undoUtil:undoUtil
         }
     }
     function contextValueReducer(state,action){
-
+        switch (action.type){
+            case 'pasteData':
+                console.log(rosterList);
+                return {
+                    activeShiftInfoList:state.activeShiftInfoList,
+                    calendarUtility:state.calendarUtility,
+                    hightLightCellIndex:state.hightLightCellIndex,
+                    monthlyCalendar:state.monthlyCalendar,
+                    "rosterList":rosterList,
+                    selectedRegionUtil:state.selectedRegionUtil,
+                    systemParam:state.systemParam,
+                }
+            case "setHightLightCellIndex":
+                return {
+                    activeShiftInfoList:state.activeShiftInfoList,
+                    calendarUtility:state.calendarUtility,
+                    hightLightCellIndex:action.value,
+                    monthlyCalendar:state.monthlyCalendar,
+                    rosterList:state.rosterList,
+                    selectedRegionUtil:state.selectedRegionUtil,
+                    systemParam:state.systemParam,
+                    
+                }
+            case "updateProps":
+                return genParam();                
+            case 'updateSelectedRegion':
+                return {
+                    activeShiftInfoList:state.activeShiftInfoList,
+                    calendarUtility:state.calendarUtility,
+                    hightLightCellIndex:state.hightLightCellIndex,
+                    monthlyCalendar:state.monthlyCalendar,
+                    rosterList:state.rosterList,
+                    selectedRegionUtil:action.value,
+                    systemParam:state.systemParam,
+                }
+            case "updateShiftValue":
+                return {
+                    activeShiftInfoList:state.activeShiftInfoList,
+                    calendarUtility:state.calendarUtility,
+                    hightLightCellIndex:state.hightLightCellIndex,
+                    monthlyCalendar:state.monthlyCalendar,
+                    rosterList:rosterList,
+                    selectedRegionUtil:state.selectedRegionUtil,
+                    systemParam:state.systemParam
+                }
+            default:
+                return state;
+        }
     }
-    const [contextValue, updateContextValue] = useReducer(contextValueReducer, genParam());   
+    const [contextValue, updateContextValue] = useReducer(contextValueReducer, genParam());
+    useEffect(()=>{
+        rosterList.reset(props.rosterTableData.rosterList);
+        updateContextValue({type:"updateProps"});
+    },[props.rosterTableData])
     return (
         <table id="rosterTable">
             <RosterWebContext.Provider value={contextValue}>

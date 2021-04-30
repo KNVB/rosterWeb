@@ -3,20 +3,27 @@ import RosterWebContext from '../../../../utils/RosterWebContext';
 import ShiftCell from './ShiftCell';
 import './EditableShiftCell.css';
 export default function EditableShiftCell(props){
-    let {rosterList,selectedRegionUtil,undoUtil}=useContext(RosterWebContext);
+    let {rosterList,selectedRegionUtil}=useContext(RosterWebContext);
     function copyData(e){
+        console.log("copyData");
         e.preventDefault();
+        //console.log(rosterList);
         selectedRegionUtil.copySelectedRegion(e.clipboardData);
+        props.updateContextValue({type:'updateSelectedRegion',value:selectedRegionUtil});
     }
     function mouseEnterHandler(e){
         selectedRegionUtil.updateSelect(e.target);
+        props.updateContextValue({type:'updateSelectedRegion',value:selectedRegionUtil});
     }
     function mouseDownHandler(e){ 
         e.preventDefault();   
         selectedRegionUtil.startSelect(e.target);
+        props.updateContextValue({type:'updateSelectedRegion',value:selectedRegionUtil});
     }
     function pasteData(e){
-        selectedRegionUtil.pasteCopiedRegion(e.clipboardData,rosterList,undoUtil);
+        //console.log(rosterList);        
+        selectedRegionUtil.pasteCopiedRegion(e.clipboardData,rosterList);        
+        props.updateContextValue({type:"updateShiftValue"});
         e.preventDefault();
     }
     return (
