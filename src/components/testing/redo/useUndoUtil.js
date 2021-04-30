@@ -27,6 +27,7 @@ export default function useUndoUtil(initialValue){
                     presentValue:JSON.parse(JSON.stringify(action.value))
                   }
       case "set":
+                console.log("set");            
                 let temp=JSON.parse(JSON.stringify(state.pastValue));
                 temp.push(JSON.parse(JSON.stringify(state.presentValue)));
                 return {
@@ -39,16 +40,15 @@ export default function useUndoUtil(initialValue){
                 if (state.pastValue.length>0){
                   let temp=JSON.parse(JSON.stringify(state.futureValue));
                   temp.push(JSON.parse(JSON.stringify(state.presentValue)));
-                  let presentValue=JSON.parse(JSON.stringify(state.pastValue.pop()));                  
+                  let currentValue=JSON.parse(JSON.stringify(state.pastValue.pop()));                  
                   return{
                     futureValue:temp,
                     pastValue:state.pastValue,
-                    presentValue:presentValue  
+                    presentValue:currentValue  
                   }
                 }else {
                   return state;
-                }
-                
+                }                
       default: return state;
     }
   }

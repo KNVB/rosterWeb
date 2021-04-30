@@ -6,7 +6,7 @@ export default function ShiftCell(props){
     let [className,setClassName]=useState(["shiftCell"]);
 
     let myProps=Object.assign({},props);
-    let {activeShiftInfoList,rosterList,undoUtil}=useContext(RosterWebContext);
+    let {activeShiftInfoList,rosterList}=useContext(RosterWebContext);
     delete myProps.activeShiftInfoList;
     delete myProps.itoId;
     delete myProps.onMouseEnter;
@@ -41,7 +41,7 @@ export default function ShiftCell(props){
     }
     function updateValue(e){
         //setValue(e.target.textContent);
-        let row=e.target.parentElement;
+        //let row=e.target.parentElement;
         //console.log(row.rowIndex+","+e.target.cellIndex);
         //console.log("On blur");
         let temp=JSON.parse(JSON.stringify(rosterList.presentValue));

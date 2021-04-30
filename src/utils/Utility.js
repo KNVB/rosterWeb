@@ -61,13 +61,13 @@ export default class Utility{
       switch (response.status){
         case 401:
           throw new SessionExpiredError(responseObj.message);
-          break;
+          
         case 200:
           return responseObj;  
-          break;
+         
         default:
           throw new Error(responseObj.message);
-          break;  
+          
       }
     }
   }

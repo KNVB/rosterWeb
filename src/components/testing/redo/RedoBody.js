@@ -17,13 +17,12 @@ export default function RedoBody(props){
             switch (e.which){
                 case 89:
                     console.log("redo:"+JSON.stringify(rosterList));
-                    /*
                     console.log("RedoBody.redo="+rosterList.canRedo);
                     if (rosterList.canRedo){
                         e.preventDefault();
                         rosterList.redo();
                         props.updateContextValue({type:"updateShiftValue"});
-                    }*/
+                    }
                     break;
                 case 90:
                     e.preventDefault();
@@ -56,12 +55,12 @@ export default function RedoBody(props){
             }
             props.updateContextValue({type:'updateSelectedRegion',value:selectedRegionUtil});
         }    
-    });    
+    },[props,rosterList,selectedRegionUtil]);    
     let mouseUp=useCallback((e)=>{
         console.log("mouse up");
         selectedRegionUtil.endSelect();
         props.updateContextValue({type:'updateSelectedRegion',value:selectedRegionUtil});
-    },[selectedRegionUtil]);
+    },[props,selectedRegionUtil]);
     useEffect(()=>{
         document.addEventListener('mouseup',mouseUp);
         return () => {
