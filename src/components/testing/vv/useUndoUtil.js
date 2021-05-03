@@ -5,6 +5,7 @@ export default function useUndoUtil(initialValue){
     pastValue:[],
     presentValue: initialValue
   }  
+  console.log("d");
   function dataReducer(state, action){
     switch (action.type) {
       case "redo":
@@ -65,12 +66,13 @@ export default function useUndoUtil(initialValue){
   function undo(){
     dispatch({ type: 'undo'});
   }
+  console.log(initialState);
   const [state, dispatch] = useReducer(dataReducer,initialState);
+  console.log(state);
   let canRedo=(state.futureValue.length>0);
   let canUndo=(state.pastValue.length>0);
   let futureValue=state.futureValue;
   let pastValue=state.pastValue;
-  let presentValue=state.presentValue;
-  
+  let presentValue=state.presentValue; 
   return {futureValue,pastValue,presentValue,canRedo,canUndo,redo,reset,set,undo,}
 }

@@ -1,8 +1,6 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useEffect,useState} from 'react';
-
 import MonthPicker from '../../monthPicker/MonthPicker';
-
 import VVTable from './VVTable';
 export default function VV(props){
     let monthPickerMinDate=props.systemParam.monthPickerMinDate;
@@ -30,7 +28,7 @@ export default function VV(props){
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                        <VVTable rosterMonth={rosterMonth}/>
+                        <VVTable rosterMonth={rosterMonth} systemParam={props.systemParam}/>
                     </Col>
                 </Row>
             </Container>
