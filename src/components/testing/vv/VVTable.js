@@ -1,43 +1,73 @@
 import {useEffect,useReducer} from 'react';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
-import Roster from '../../../utils/Roster';
 import RosterWebContext from '../../../utils/RosterWebContext';
+import Roster from '../../../utils/Roster';
+import SelectedRegionUtil from './SelectedRegionUtil';
 import VVBody from './VVBody';
-import useUndoUtil from './useUndoUtil';
+import UndoableData from './UndoableData';
+
 import './VVTable.css';
 export default function VVTable(props){
-    const [contextValue, updateContextValue] = useReducer(reducer);
+    let dataReducer=(state,action)=>{
+        switch (action.type){
+            case 'updateRoster':
+                return {
+                    activeShiftInfoList:state.activeShiftInfoList,
+                    calendarUtility:state.calendarUtility,
+                    hightLightCellIndex:state.hightLightCellIndex,
+                    monthlyCalendar:state.monthlyCalendar,
+                    selectedRegionUtil:state.selectedRegionUtil,
+                    systemParam:state.systemParam,
+                    undoableRosterList:action.value,
+                    updateContext:state.updateContext
+                }
+            case 'updateRosterMonth':
+                return action.value;
+            case 'updateSelectedRegion':
+                return {
+                    activeShiftInfoList:state.activeShiftInfoList,
+                    calendarUtility:state.calendarUtility,
+                    hightLightCellIndex:state.hightLightCellIndex,
+                    monthlyCalendar:state.monthlyCalendar,
+                    selectedRegionUtil:action.value,
+                    systemParam:state.systemParam,
+                    undoableRosterList:state.undoableRosterList,
+                    updateContext:state.updateContext
+                }
+        }
+        
+    }
     useEffect(()=>{
         const getData = async () => {
             console.log("Undo:Get Data from DB");
-            let calendarUtility=new CalendarUtility();
             let roster = new Roster();
             let activeShiftInfoList= await roster.getAllActiveShiftInfo();
-            let rosterList = await roster.get(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);            
+            let calendarUtility=new CalendarUtility();
+            let rosterList= await roster.get(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
+            let hightLightCellIndex=-1;
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let systemParam=props.systemParam;
-            updateContextValue({
-                type:'updateRosterMonth',
-                value:{
-                    activeShiftInfoList,
-                    calendarUtility,
-                    monthlyCalendar,
-                    rosterList,
-                    systemParam,
-                    updateContextValue
-                }    
-            });
-        };
+            let selectedRegionUtil=new SelectedRegionUtil(rosterList,monthlyCalendar);
+            let undoableRosterList=new UndoableData(rosterList);
+            updateContext(
+                {
+                    type:'updateRosterMonth',
+                    value:{
+                        activeShiftInfoList:activeShiftInfoList,
+                        calendarUtility:calendarUtility,
+                        hightLightCellIndex:hightLightCellIndex,
+                        monthlyCalendar:monthlyCalendar,
+                        selectedRegionUtil:selectedRegionUtil,
+                        systemParam:systemParam,
+                        undoableRosterList:undoableRosterList,
+                        updateContext:updateContext
+                    }
+                }
+            );
+        }
         getData();
     },[props])
-    function reducer(state,action){
-        switch (action.type){
-            case 'updateRosterMonth':
-                return action.value;
-            default:
-                return state;
-        }
-    }
+    const [contextValue, updateContext] = useReducer(dataReducer,{});
     return(
         <table id="rosterTable">
             <RosterWebContext.Provider value={contextValue}>

@@ -66,9 +66,9 @@ export default function useUndoUtil(initialValue){
   function undo(){
     dispatch({ type: 'undo'});
   }
-  console.log(initialState);
+  //console.log(initialState);
   const [state, dispatch] = useReducer(dataReducer,initialState);
-  console.log(state);
+  //console.log(state);
   let canRedo=(state.futureValue.length>0);
   let canUndo=(state.pastValue.length>0);
   let futureValue=state.futureValue;
