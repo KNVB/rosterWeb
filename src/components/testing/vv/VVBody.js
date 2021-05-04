@@ -69,9 +69,13 @@ export default function VVBody(props){
         }
     },[keyDown,selectedRegionUtil,undoableRosterList]);
     if (undoableRosterList){
+        let headerRowCount=0;
+        if (document.getElementById("rosterTable").tHead){
+            headerRowCount=document.getElementById("rosterTable").tHead.children.length;
+        }
         Object.keys(undoableRosterList.presentValue).forEach(itoId=>{
             rowList.push(
-                <VVRow key={itoId} itoId={itoId} rowIndex={rowList.length}/>
+                <VVRow key={itoId} itoId={itoId} rowIndex={rowList.length+headerRowCount}/>
             )
         });        
     }

@@ -1,11 +1,12 @@
 import CopiedRegion from './CopiedRegion';
 import SelectedRegion from './SelectedRegion';
 export default class SelectedRegionUtil{
-    constructor(rosterList,monthlyCalendar){
+    constructor(rosterList,monthlyCalendar,nOPrevDate){
         let copiedRegion=new CopiedRegion();
         let selectedRegion=new SelectedRegion();
         const itoCount=Object.keys(rosterList).length;
         const monthLength=monthlyCalendar.calendarDateList.length;
+        const noOfPrevDate=nOPrevDate;
         this.hasCopiedRegion=false;
         this.clearCopiedRegion=()=>{
             copiedRegion={
@@ -114,17 +115,22 @@ export default class SelectedRegionUtil{
         
             e.preventDefault();
             if (selectedRegion.minX<selectedRegion.firstX)
-                    x=selectedRegion.minX;
-                else
-                    x=selectedRegion.maxX;
-                if (selectedRegion.minY<selectedRegion.firstY)
-                    y=selectedRegion.minY;
-                else
-                    y=selectedRegion.maxY;
+                x=selectedRegion.minX;
+            else
+                x=selectedRegion.maxX;
+            if (selectedRegion.minY<selectedRegion.firstY)
+                y=selectedRegion.minY;
+            else
+                y=selectedRegion.maxY;
             
+            /********************************************************************************/
+            /* This part is related to the boundary of keyboard navigation.                 */
+            /* if the table structure changed,Please change the below code accordingly.     */
+            /********************************************************************************/
+            let headerRowCount=document.getElementById("rosterTable").tHead.children.length;
+            let minRowNo=headerRowCount,maxRowNo=itoCount+minRowNo-1;
+            let minCellIndex=noOfPrevDate+1,maxCellIndex=minCellIndex+monthLength-1;
             
-            let minRowNo=0,maxRowNo=itoCount+minRowNo-1;
-            let minCellIndex=1,maxCellIndex=minCellIndex+monthLength-1;    
             newX=x+xOffset;
             newY=y+yOffset;
             

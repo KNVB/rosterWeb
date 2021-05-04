@@ -3,9 +3,9 @@ import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import RosterWebContext from '../../../utils/RosterWebContext';
 import Roster from '../../../utils/Roster';
 import SelectedRegionUtil from './SelectedRegionUtil';
-import VVBody from './VVBody';
 import UndoableData from './UndoableData';
-
+import VVBody from './VVBody';
+import VVHeader from './vvHeader/VVHeader';
 import './VVTable.css';
 export default function VVTable(props){
     let dataReducer=(state,action)=>{
@@ -59,7 +59,7 @@ export default function VVTable(props){
             let hightLightCellIndex=-1;
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let systemParam=props.systemParam;
-            let selectedRegionUtil=new SelectedRegionUtil(rosterList,monthlyCalendar);
+            let selectedRegionUtil=new SelectedRegionUtil(rosterList,monthlyCalendar,0);
             let undoableRosterList=new UndoableData(rosterList);
             updateContext(
                 {
@@ -83,7 +83,8 @@ export default function VVTable(props){
     return(
         <table id="rosterTable">
             <RosterWebContext.Provider value={contextValue}>
-            {<VVBody/>}
+                <VVHeader/>
+                <VVBody/>
             </RosterWebContext.Provider>
         </table>    
     )
