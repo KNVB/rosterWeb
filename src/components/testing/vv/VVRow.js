@@ -1,4 +1,4 @@
-import {useContext,useEffect,useReducer} from 'react';
+import {useContext,useState} from 'react';
 import BorderedAlignCenterCell from './cell/BorderedAlignCenterCell';
 import EditableShiftCell from './cell/EditableShiftCell';
 import NameCell from './cell/NameCell';
@@ -6,14 +6,16 @@ import Parser from "html-react-parser";
 import RosterWebContext from '../../../utils/RosterWebContext';
 import useShift from './useShift';
 export default function VVRow(props){
-    
-    let cellList=[],shift;
-    let {activeShiftInfoList,monthlyCalendar,undoableRosterList,selectedRegionUtil,updateContext}=useContext(RosterWebContext);
+    const [isHighLightRow, setIsHighLightRow] = useState(false);
+    let cellList=[],nameCellCssClass="",shift;
+    let {activeShiftInfoList,monthlyCalendar,undoableRosterList,selectedRegionUtil}=useContext(RosterWebContext);
     let itoRoster=undoableRosterList.presentValue[props.itoId];
     let itoNameContact = Parser(itoRoster.itoName+ "<br>" + itoRoster.itoPostName + " Extn. 2458");
     let {getITOStat}=useShift();
     let itoStat=getITOStat(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,itoRoster);
-
+    if (isHighLightRow){
+        nameCellCssClass="highlightCell";
+    }
     for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
         shift=itoRoster.shiftList[i+1];
         let className=selectedRegionUtil.getBorderClass(i+1,props.rowIndex);
@@ -22,6 +24,7 @@ export default function VVRow(props){
                 className={className}
                 itoId={props.itoId}
                 key={props.itoId+"_shift_"+i}
+                setIsHighLightRow={setIsHighLightRow}
                 rowIndex={props.rowIndex}>
                     {shift}
             </EditableShiftCell>
@@ -34,7 +37,7 @@ export default function VVRow(props){
     }
     return(
         <tr id={props.itoId}>
-            <NameCell>{itoNameContact}</NameCell>
+            <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>
             {cellList}
             <BorderedAlignCenterCell>{itoStat.expectedWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
             <BorderedAlignCenterCell>{itoStat.actualWorkingHour.toFixed(2)}</BorderedAlignCenterCell>

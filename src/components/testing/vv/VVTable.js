@@ -10,6 +10,17 @@ import './VVTable.css';
 export default function VVTable(props){
     let dataReducer=(state,action)=>{
         switch (action.type){
+            case "updateHighLightCellIndex":
+                return {
+                    activeShiftInfoList:state.activeShiftInfoList,
+                    calendarUtility:state.calendarUtility,
+                    hightLightCellIndex:action.value,
+                    monthlyCalendar:state.monthlyCalendar,
+                    selectedRegionUtil:state.selectedRegionUtil,
+                    systemParam:state.systemParam,
+                    undoableRosterList:state.undoableRosterList,
+                    updateContext:state.updateContext
+                }
             case 'updateRoster':
                 return {
                     activeShiftInfoList:state.activeShiftInfoList,
@@ -34,6 +45,7 @@ export default function VVTable(props){
                     undoableRosterList:state.undoableRosterList,
                     updateContext:state.updateContext
                 }
+            default:return state;    
         }
         
     }

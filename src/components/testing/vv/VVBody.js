@@ -1,4 +1,4 @@
-import {useContext,useCallback,useEffect,useReducer} from 'react';
+import {useContext,useCallback,useEffect} from 'react';
 import RosterWebContext from '../../../utils/RosterWebContext';
 import VVRow from './VVRow';
 export default function VVBody(props){
@@ -11,15 +11,16 @@ export default function VVBody(props){
             switch (e.which){
                 case 89: //Handle Ctrl-Y
                     e.preventDefault();
+                    console.log("VVBody.futureValue.length="+undoableRosterList.futureValue.length);
                     console.log("VVBody.redo="+undoableRosterList.canRedo());
                     if (undoableRosterList.canRedo()){
-                       
                         undoableRosterList.redo();
                         updateContext({type:'updateRoster',value:undoableRosterList});
                     }
                     break;
                 case 90: //Handle Ctrl-Z
                     e.preventDefault();
+                    console.log("VVBody.pastValue.length="+undoableRosterList.pastValue.length);
                     console.log("VVBody.undo="+undoableRosterList.canUndo());
                     if (undoableRosterList.canUndo()){
                         undoableRosterList.undo();
@@ -49,7 +50,7 @@ export default function VVBody(props){
             }
             updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
         }    
-    },[selectedRegionUtil,undoableRosterList]);        
+    },[selectedRegionUtil,updateContext,undoableRosterList]);        
     let mouseUp=useCallback((e)=>{
         console.log("mouse up");
         selectedRegionUtil.endSelect();

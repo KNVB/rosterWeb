@@ -6,6 +6,7 @@ export default class SelectedRegionUtil{
         let selectedRegion=new SelectedRegion();
         const itoCount=Object.keys(rosterList).length;
         const monthLength=monthlyCalendar.calendarDateList.length;
+        this.hasCopiedRegion=false;
         this.clearCopiedRegion=()=>{
             copiedRegion={
               minX:-1,
@@ -13,6 +14,7 @@ export default class SelectedRegionUtil{
               maxX:-1,
               maxY:-1
             }
+            this.hasCopiedRegion=false;
         }
         this.copySelectedRegion=(clipboardData)=>{
           let table=document.getElementById("rosterTable");
@@ -35,6 +37,7 @@ export default class SelectedRegionUtil{
             maxX:selectedRegion.maxX,
             maxY:selectedRegion.maxY
           }
+          this.hasCopiedRegion=true;
         }         
         this.endSelect=()=>{
             if (selectedRegion.inSelectMode){
@@ -81,26 +84,29 @@ export default class SelectedRegionUtil{
             }
             return result;
         }
+        
         this.pasteCopiedRegion=(clipboardData,undoableRosterList)=>{
-          let copiedData=JSON.parse(clipboardData.getData('application/json'));
-          let destX=selectedRegion.minX,destY=selectedRegion.minY,itoId;
-          let table=document.getElementById("rosterTable"),theCell;
+          if (this.hasCopiedRegion){
+            let copiedData=JSON.parse(clipboardData.getData('application/json'));
+            let destX=selectedRegion.minX,destY=selectedRegion.minY,itoId;
+            let table=document.getElementById("rosterTable");
 
-          let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
-          for (let y=0;y<copiedData.length;y++){
-            let row=table.rows[destY++];
-            itoId=row.id;
-            let dataRow=temp[itoId];
-            if (dataRow){
-              destX=selectedRegion.minX;
-              for (let x=0;x<copiedData[y].length;x++){
-                dataRow.shiftList[destX++]=copiedData[y][x];
-                undoableRosterList.set(JSON.parse(JSON.stringify(temp)));
+            let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
+            for (let y=0;y<copiedData.length;y++){
+              let row=table.rows[destY++];
+              itoId=row.id;
+              let dataRow=temp[itoId];
+              if (dataRow){
+                destX=selectedRegion.minX;
+                for (let x=0;x<copiedData[y].length;x++){
+                  dataRow.shiftList[destX++]=copiedData[y][x];
+                  undoableRosterList.set(JSON.parse(JSON.stringify(temp)));
+                }
               }
             }
+            selectedRegion.maxX=destX-1;
+            selectedRegion.maxY=destY-1;
           }
-          selectedRegion.maxX=destX-1;
-          selectedRegion.maxY=destY-1;
         }
         this.selectNextCell=(e,xOffset,yOffset)=>{
             let newX,newY;
