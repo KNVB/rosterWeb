@@ -35,24 +35,16 @@ export default function VVBody(props){
                     selectedRegionUtil.clearCopiedRegion();
                     break;
                 case 37://handle left arrow key event
-                    setTimeout(()=>{
-                        selectedRegionUtil.selectNextCell(e,-1,0);
-                    });                    
+                    selectedRegionUtil.selectNextCell(e,-1,0);
                     break;
                 case 38://handle up arrow key event
-                    setTimeout(()=>{
-                        selectedRegionUtil.selectNextCell(e,0,-1);
-                    });    
+                    selectedRegionUtil.selectNextCell(e,0,-1);
                     break;
                 case 39://handle right arrow key event
-                    setTimeout(()=>{
-                        selectedRegionUtil.selectNextCell(e,1,0);
-                    });    
+                    selectedRegionUtil.selectNextCell(e,1,0);
                     break;			
                 case 40://handle down arrow key event
-                    setTimeout(()=>{
-                        selectedRegionUtil.selectNextCell(e,0,1);
-                    });    
+                    selectedRegionUtil.selectNextCell(e,0,1);
                     break;    
                 default:break;                 
             }

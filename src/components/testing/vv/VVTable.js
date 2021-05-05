@@ -46,8 +46,7 @@ export default function VVTable(props){
                     updateContext:state.updateContext
                 }
             default:return state;    
-        }
-        
+        }        
     }
     useEffect(()=>{
         const getData = async () => {

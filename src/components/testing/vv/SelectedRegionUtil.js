@@ -159,7 +159,10 @@ export default class SelectedRegionUtil{
             selectedRegion.maxX=newX;
             selectedRegion.maxY=newY;
             selectedRegion.inSelectMode=false;
-        
+            
+            /*************************************************************/
+            /*The following steps trigger the onblur event of the 'cell'.*/
+            /*************************************************************/
             let range = document.createRange();
             range.selectNodeContents(cell);
             let selection = window.getSelection();
@@ -175,6 +178,10 @@ export default class SelectedRegionUtil{
             selectedRegion.maxX=theCell.cellIndex;
             selectedRegion.maxY=row.rowIndex;
             selectedRegion.inSelectMode=true;
+
+            /****************************************************************/
+            /*The following steps trigger the onblur event of the 'theCell'.*/
+            /****************************************************************/
             let range = document.createRange();
             range.selectNodeContents(theCell);
             let selection = window.getSelection();

@@ -31,10 +31,18 @@ export default function ShiftCell(props){
         updateContext({type:"updateHighLightCellIndex",value:e.target.cellIndex})
     }
     function updateValue(e){
-        let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
-        temp[props.itoId].shiftList[e.target.cellIndex]=e.target.textContent;
-        undoableRosterList.set(temp);
-        updateContext({type:'updateRoster',value:undoableRosterList});
+        console.log("ShiftCell:updateValue");
+        let oldValue=undoableRosterList.presentValue[props.itoId].shiftList[e.target.cellIndex];
+        if (oldValue!==e.target.textContent){ 
+            /****************************************************************/
+            /*The following steps are consuming very hight computing power, */
+            /*so if the value not change do not execute the following step. */
+            /****************************************************************/
+            let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
+            temp[props.itoId].shiftList[e.target.cellIndex]=e.target.textContent;
+            undoableRosterList.set(temp);        
+            updateContext({type:'updateRoster',value:undoableRosterList});
+        }
     }
     return(
         <BorderedAlignCenterCell
