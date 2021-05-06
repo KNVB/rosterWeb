@@ -39,7 +39,19 @@ export default class SelectedRegionUtil{
             maxY:selectedRegion.maxY
           }
           this.hasCopiedRegion=true;
-        }         
+        }
+        this.deleteData=(undoableRosterList)=>{
+          let itoId,row,table=document.getElementById("rosterTable");
+          let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
+          for (let y=selectedRegion.minY;y<=selectedRegion.maxY;y++){
+            row=table.rows[y]
+            itoId=row.id;
+            for (let x=selectedRegion.minX;x<=selectedRegion.maxX;x++){
+              temp[itoId].shiftList[x]='';
+              undoableRosterList.set(JSON.parse(JSON.stringify(temp)));
+            }
+          }
+        }
         this.endSelect=()=>{
             if (selectedRegion.inSelectMode){
               selectedRegion.inSelectMode=false;
