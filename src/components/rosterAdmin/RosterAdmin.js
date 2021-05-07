@@ -5,7 +5,7 @@ import ITOManagment from './itoManagement/ITOManagement';
 import LoginForm from './LoginForm';
 import React,{useState} from 'react';
 import './RosterAdmin.css';
-import RosterScheduler from './RosterScheduler';
+import RosterScheduler from './rosterScheduler/RosterScheduler';
 import Sidebar from './sideBar/SideBar';
 function RosterAdmin(props){
 	function changeLoggedInFlag(v){

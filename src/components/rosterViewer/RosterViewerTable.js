@@ -2,7 +2,6 @@ import RosterWebContext from '../../utils/RosterWebContext';
 import RosterViewerBody from './RosterViewerBody';
 import TableHeader from '../tableHeader/TableHeader';
 import TableFooter from '../tableFooter/TableFooter';
-import './RosterViewerTable.css';
 import useRosterMonth from './useRosterMonth';
 export default function RosterViewerTable(props){
     let contextValue=useRosterMonth(props);
