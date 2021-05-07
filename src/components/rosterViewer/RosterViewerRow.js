@@ -7,7 +7,7 @@ import RosterWebContext from '../../utils/RosterWebContext';
 import useShift from '../../utils/useShift';
 export default function RosterViewerRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
-    let cellList=[],nameCellCssClass="",shift;
+    let cellList=[],nameCellCssClass="";
     let {activeShiftInfoList,monthlyCalendar,rosterList}=useContext(RosterWebContext);
     let itoRoster=rosterList[props.itoId];
     let itoNameContact = Parser(itoRoster.itoName+ "<br>" + itoRoster.itoPostName + " Extn. 2458");
@@ -17,14 +17,14 @@ export default function RosterViewerRow(props){
         nameCellCssClass="highlightCell";
     }
     for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
-        shift=itoRoster.shiftList[i+1];
         cellList.push(
             <ShiftCell
+                availableShiftList={itoRoster.availableShiftList}
                 itoId={props.itoId}
                 key={props.itoId+"_shift_"+i}
-                setIsHighLightRow={setIsHighLightRow}
-                rowIndex={props.rowIndex}>
-                    {shift}
+                rowIndex={props.rowIndex} 
+                setIsHighLightRow={setIsHighLightRow}>
+                    {itoRoster.shiftList[i+1]}
             </ShiftCell>
         )
     }

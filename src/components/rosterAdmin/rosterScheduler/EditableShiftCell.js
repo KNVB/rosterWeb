@@ -3,7 +3,8 @@ import './EditableShiftCell.css';
 import ShiftCell from '../../cell/ShiftCell';
 import RosterWebContext from '../../../utils/RosterWebContext';
 export default function EditableShiftCell(props){
-    let {selectedRegionUtil,undoableRosterList,updateContext}=useContext(RosterWebContext);
+    let {selectedRegionUtil,systemParam,undoableRosterSchedulerList,updateContext}=useContext(RosterWebContext);
+    //console.log(props);
     function copyData(e){
         e.preventDefault();
         selectedRegionUtil.copySelectedRegion(e.clipboardData);
@@ -21,14 +22,30 @@ export default function EditableShiftCell(props){
     }
     function pasteData(e){
         e.preventDefault();
-        selectedRegionUtil.pasteCopiedRegion(e.clipboardData,undoableRosterList);
-        console.log(undoableRosterList);
-        updateContext({type:'updateRoster',value:undoableRosterList});
+        selectedRegionUtil.pasteCopiedRegion(e.clipboardData,undoableRosterSchedulerList);
+        console.log(undoableRosterSchedulerList);
+        updateContext({type:'updateRoster',value:undoableRosterSchedulerList});
+    }
+    
+    function updateValue(e){
+        console.log("ShiftCell:updateValue");
+        let oldValue=undoableRosterSchedulerList.presentValue.rosterList[props.itoId].shiftList[e.target.cellIndex-systemParam.noOfPrevDate];
+        if (oldValue!==e.target.textContent){ 
+            /****************************************************************/
+            /*The following steps are consuming very hight computing power, */
+            /*so if the value not change do not execute the following step. */
+            /****************************************************************/
+            let temp=JSON.parse(JSON.stringify(undoableRosterSchedulerList.presentValue));
+            temp.rosterList[props.itoId].shiftList[e.target.cellIndex-systemParam.noOfPrevDate]=e.target.textContent;
+            undoableRosterSchedulerList.set(temp);        
+            updateContext({type:'updateRoster',value:undoableRosterSchedulerList});
+        }
     }
     return(
         <ShiftCell
             {...props}
             contentEditable={true}
+            onBlur={updateValue}
             onCopy={copyData}
             onMouseDown={mouseDownHandler}
             onMouseEnter={mouseEnterHandler}

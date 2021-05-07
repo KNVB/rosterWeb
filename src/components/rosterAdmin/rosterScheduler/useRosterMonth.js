@@ -12,7 +12,7 @@ export default function useRosterMonth(props){
             let calendarUtility=new CalendarUtility();
             let hightLightCellIndex=-1;
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
-            let rosterSchedulerList=await roster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
+            let rosterSchedulerList=await roster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
             let systemParam=props.systemParam;
             let selectedRegionUtil=new SelectedRegionUtil(rosterSchedulerList,monthlyCalendar,systemParam.noOfPrevDate);
             let undoableRosterSchedulerList=new UndoableData(rosterSchedulerList);
@@ -35,8 +35,41 @@ export default function useRosterMonth(props){
     },[props]);
     let dataReducer=(state,action)=>{
         switch (action.type){
+            case "updateHighLightCellIndex":
+                return {
+                    activeShiftInfoList:state.activeShiftInfoList,
+                    calendarUtility:state.calendarUtility,
+                    hightLightCellIndex:action.value,
+                    monthlyCalendar:state.monthlyCalendar,
+                    selectedRegionUtil:state.selectedRegionUtil,
+                    systemParam:state.systemParam,
+                    undoableRosterSchedulerList:state.undoableRosterSchedulerList,
+                    updateContext:state.updateContext
+                }
+            case 'updateRoster':
+                return {
+                    activeShiftInfoList:state.activeShiftInfoList,
+                    calendarUtility:state.calendarUtility,
+                    hightLightCellIndex:state.hightLightCellIndex,
+                    monthlyCalendar:state.monthlyCalendar,
+                    selectedRegionUtil:state.selectedRegionUtil,
+                    systemParam:state.systemParam,
+                    undoableRosterSchedulerList:action.value,
+                    updateContext:state.updateContext
+                }    
             case 'updateRosterMonth':
                 return action.value;
+            case 'updateSelectedRegion':
+                return {
+                    activeShiftInfoList:state.activeShiftInfoList,
+                    calendarUtility:state.calendarUtility,
+                    hightLightCellIndex:state.hightLightCellIndex,
+                    monthlyCalendar:state.monthlyCalendar,
+                    selectedRegionUtil:action.value,
+                    systemParam:state.systemParam,
+                    undoableRosterSchedulerList:state.undoableRosterSchedulerList,
+                    updateContext:state.updateContext
+                }    
             default:return state;
         }
     };

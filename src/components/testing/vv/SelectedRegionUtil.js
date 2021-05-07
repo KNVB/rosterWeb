@@ -134,7 +134,7 @@ export default class SelectedRegionUtil{
                 y=selectedRegion.minY;
             else
                 y=selectedRegion.maxY;
-            
+                
             /********************************************************************************/
             /* This part is related to the boundary of keyboard navigation.                 */
             /* if the table structure changed,Please change the below code accordingly.     */

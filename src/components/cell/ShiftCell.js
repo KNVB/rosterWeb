@@ -6,6 +6,8 @@ import './ShiftCell.css';
 export default function ShiftCell(props){
     let {activeShiftInfoList,updateContext}=useContext(RosterWebContext);
     let myProps=Object.assign({},props);
+    
+    delete myProps.availableShiftList;
     delete myProps.className;
     delete myProps.itoId;
     delete myProps.onMouseEnter
@@ -13,43 +15,34 @@ export default function ShiftCell(props){
     delete myProps.setIsHighLightRow;
 
     let classNameList=['shiftCell'];
-    if(activeShiftInfoList[props.children]){
-        classNameList.push(activeShiftInfoList[props.children].cssClassName);
+    //console.log(props);
+    if (props.availableShiftList.includes(props.children)){
+        if(activeShiftInfoList[props.children]){
+            classNameList.push(activeShiftInfoList[props.children].cssClassName);
+        }
     }
     if (props.className){
         classNameList.push(props.className);   
     }
     //console.log(myProps);
     function deHighLight(e){
-        props.setIsHighLightRow(false);
+        if(props.setIsHighLightRow){
+            props.setIsHighLightRow(false);
+        }
     }
     function highLight(e){
         if (props.onMouseEnter){
             props.onMouseEnter(e);
         }
-        props.setIsHighLightRow(true);
-        updateContext({type:"updateHighLightCellIndex",value:e.target.cellIndex})
-    }
-    /*
-    function updateValue(e){
-        console.log("ShiftCell:updateValue");
-        let oldValue=rosterList[props.itoId].shiftList[e.target.cellIndex];
-        if (oldValue!==e.target.textContent){ 
-            /****************************************************************/
-            /*The following steps are consuming very hight computing power, */
-            /*so if the value not change do not execute the following step. */
-            /****************************************************************/
-       /*    let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
-            temp[props.itoId].shiftList[e.target.cellIndex]=e.target.textContent;
-            undoableRosterList.set(temp);        
-            updateContext({type:'updateRoster',value:undoableRosterList});
+        if(props.setIsHighLightRow){
+            props.setIsHighLightRow(true);
         }
-    }*/
+        updateContext({type:"updateHighLightCellIndex",value:e.target.cellIndex})
+    }   
     return(
         <BorderedAlignCenterCell
             {...myProps}
             className={classNameList.join(' ')}        
-            
             onMouseEnter={highLight}
             onMouseLeave={deHighLight}>
             {props.children}
