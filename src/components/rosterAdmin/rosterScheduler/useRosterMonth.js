@@ -13,6 +13,7 @@ export default function useRosterMonth(props){
             let hightLightCellIndex=-1;
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let rosterSchedulerList=await roster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
+            let yearlyRosterStatistic=await roster.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let systemParam=props.systemParam;
             let selectedRegionUtil=new SelectedRegionUtil(rosterSchedulerList,monthlyCalendar,systemParam.noOfPrevDate);
             let undoableRosterSchedulerList=new UndoableData(rosterSchedulerList);
@@ -27,7 +28,8 @@ export default function useRosterMonth(props){
                         selectedRegionUtil:selectedRegionUtil,
                         systemParam:systemParam,
                         undoableRosterSchedulerList:undoableRosterSchedulerList,
-                        updateContext:updateContext
+                        updateContext:updateContext,
+                        yearlyRosterStatistic:yearlyRosterStatistic
                     }
                 });
         }
@@ -44,7 +46,8 @@ export default function useRosterMonth(props){
                     selectedRegionUtil:state.selectedRegionUtil,
                     systemParam:state.systemParam,
                     undoableRosterSchedulerList:state.undoableRosterSchedulerList,
-                    updateContext:state.updateContext
+                    updateContext:state.updateContext,
+                    yearlyRosterStatistic:state.yearlyRosterStatistic
                 }
             case 'updateRoster':
                 return {
@@ -55,7 +58,8 @@ export default function useRosterMonth(props){
                     selectedRegionUtil:state.selectedRegionUtil,
                     systemParam:state.systemParam,
                     undoableRosterSchedulerList:action.value,
-                    updateContext:state.updateContext
+                    updateContext:state.updateContext,
+                    yearlyRosterStatistic:state.yearlyRosterStatistic
                 }    
             case 'updateRosterMonth':
                 return action.value;
@@ -68,7 +72,8 @@ export default function useRosterMonth(props){
                     selectedRegionUtil:action.value,
                     systemParam:state.systemParam,
                     undoableRosterSchedulerList:state.undoableRosterSchedulerList,
-                    updateContext:state.updateContext
+                    updateContext:state.updateContext,
+                    yearlyRosterStatistic:state.yearlyRosterStatistic
                 }    
             default:return state;
         }

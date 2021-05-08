@@ -15,7 +15,7 @@ export default function ShiftCell(props){
     delete myProps.setIsHighLightRow;
 
     let classNameList=['shiftCell'];
-    //console.log(props);
+    //console.log(props===undefined);
     if (props.availableShiftList.includes(props.children)){
         if(activeShiftInfoList[props.children]){
             classNameList.push(activeShiftInfoList[props.children].cssClassName);
@@ -31,6 +31,7 @@ export default function ShiftCell(props){
         }
     }
     function highLight(e){
+        //console.log(props===undefined);
         if (props.onMouseEnter){
             props.onMouseEnter(e);
         }

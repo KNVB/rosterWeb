@@ -7,7 +7,7 @@ function TableFooter(props){
         <tfoot className="tableFooter">
             <tr><td colSpan={columnCount}><br/></td></tr>
             <tr>
-                <td colSpan="11">
+                <td colSpan="11" className="align-top">
                     <ShiftLegend/>
                 </td>
                 <td colSpan={(columnCount-11-10)} rowSpan="10">
@@ -18,8 +18,8 @@ function TableFooter(props){
                 </td>                                
             </tr>
             <tr>
-                <td colSpan="11">
-                    {props.buttonBar}
+                <td className="align-center" colSpan={(columnCount-10)}>
+                    {props.buttonPanel}
                 </td>
             </tr>
         </tfoot>      

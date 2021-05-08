@@ -30,6 +30,7 @@ export default function EditableShiftCell(props){
     function updateValue(e){
         console.log("ShiftCell:updateValue");
         let oldValue=undoableRosterSchedulerList.presentValue.rosterList[props.itoId].shiftList[e.target.cellIndex-systemParam.noOfPrevDate];
+        
         if (oldValue!==e.target.textContent){ 
             /****************************************************************/
             /*The following steps are consuming very hight computing power, */
