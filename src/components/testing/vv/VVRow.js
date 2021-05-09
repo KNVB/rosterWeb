@@ -21,6 +21,7 @@ export default function VVRow(props){
         let className=selectedRegionUtil.getBorderClass(i+1,props.rowIndex);
         cellList.push(
             <EditableShiftCell
+                availableShiftList={itoRoster.availableShiftList}
                 className={className}
                 itoId={props.itoId}
                 key={props.itoId+"_shift_"+i}

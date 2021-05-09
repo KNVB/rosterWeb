@@ -4,7 +4,7 @@ import RosterWebContext from '../../../../utils/RosterWebContext';
 
 import './ShiftCell.css';
 export default function ShiftCell(props){
-    let {activeShiftInfoList,undoableRosterList,updateContext}=useContext(RosterWebContext);
+    let {activeShiftInfoList,updateContext}=useContext(RosterWebContext);
     let myProps=Object.assign({},props);
     delete myProps.className;
     delete myProps.itoId;
@@ -13,8 +13,10 @@ export default function ShiftCell(props){
     delete myProps.setIsHighLightRow;
 
     let classNameList=['shiftCell'];
-    if(activeShiftInfoList[props.children]){
-        classNameList.push(activeShiftInfoList[props.children].cssClassName);
+    if (props.availableShiftList.includes(props.children)){
+        if(activeShiftInfoList[props.children]){
+            classNameList.push(activeShiftInfoList[props.children].cssClassName);
+        }
     }
     if (props.className){
         classNameList.push(props.className);   
@@ -30,25 +32,10 @@ export default function ShiftCell(props){
         props.setIsHighLightRow(true);
         updateContext({type:"updateHighLightCellIndex",value:e.target.cellIndex})
     }
-    function updateValue(e){
-        console.log("ShiftCell:updateValue");
-        let oldValue=undoableRosterList.presentValue[props.itoId].shiftList[e.target.cellIndex];
-        if (oldValue!==e.target.textContent){ 
-            /****************************************************************/
-            /*The following steps are consuming very hight computing power, */
-            /*so if the value not change do not execute the following step. */
-            /****************************************************************/
-            let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
-            temp[props.itoId].shiftList[e.target.cellIndex]=e.target.textContent;
-            undoableRosterList.set(temp);        
-            updateContext({type:'updateRoster',value:undoableRosterList});
-        }
-    }
     return(
         <BorderedAlignCenterCell
             {...myProps}
-            className={classNameList.join(' ')}        
-            onBlur={updateValue}
+            className={classNameList.join(' ')}
             onMouseEnter={highLight}
             onMouseLeave={deHighLight}>
             {props.children}

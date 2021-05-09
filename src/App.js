@@ -11,7 +11,7 @@ import RosterAdmin from './components/rosterAdmin/RosterAdmin';
 import RosterViewer from './components/rosterViewer/RosterViewer';
 //import SelectDemo from './components/testing/SelectDemo';
 //import Undo from './components/testing/undo/Undo';
-//import VV from './components/testing/vv/VV';
+import VV from './components/testing/vv/VV';
 import Utility from './utils/Utility';
 function App() {
   const[systemParam,setSystemParam]=useState();
@@ -32,13 +32,15 @@ function App() {
         }/>
           <Route exact path='/rosterWeb' render={()=>systemParam && <RosterViewer systemParam={systemParam}/>} />
           <Route path='/rosterWeb/admin' render={()=>systemParam && <RosterAdmin systemParam={systemParam}/>} />
+          <Route exact path='/rosterWeb/vv/' render={()=>systemParam && <VV systemParam={systemParam}/>} /> 
+
 {/*  
           <Route exact path='/rosterWeb/vv/' render={()=>systemParam && <VV systemParam={systemParam}/>} /> 
           <Route exact path='/rosterWeb/redo/' render={()=>systemParam && <Redo systemParam={systemParam}/>} />
           <Route exact path='/rosterWeb/undo/' render={()=>systemParam && <Undo systemParam={systemParam}/>} />
           <Route path='/rosterWeb/admin' render={()=>systemParam && <RosterAdmin systemParam={systemParam}/>} />
           <Route exact path='/rosterWeb/p8' render={()=>systemParam && <P8 systemParam={systemParam}/>} />
-          
+          <Route exact path='/rosterWeb/vv/' render={()=>systemParam && <VV systemParam={systemParam}/>} /> 
           <Route exact path='/rosterWeb/qq' render={()=>systemParam && <QQ systemParam={systemParam}/>} />
           <Route exact path='/rosterWeb/jj' render={()=>systemParam && <JJ systemParam={systemParam}/>} />
          
