@@ -8,7 +8,7 @@ export default function HolidayRow(props){
     let holidayRow=[];
     //console.log(props);
     let {monthlyCalendar} = useContext(RosterWebContext);
-    if (monthlyCalendar){
+    //if (monthlyCalendar){
         for (let i=props.noOfPrevDate;i>0;i--){
             holidayRow.push(
                 <PHCell key={"PH_-"+i}/>    
@@ -34,7 +34,7 @@ export default function HolidayRow(props){
                 key="32">
             </BorderedAlignCenterCell>
         )
-    }    
+    //}    
     return(
         <tr>
             <NameCell>

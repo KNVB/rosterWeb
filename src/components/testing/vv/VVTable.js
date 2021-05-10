@@ -9,9 +9,9 @@ export default function VVTable(props){
     return(
         <table id="rosterTable">
             <RosterWebContext.Provider value={contextValue}>
-                <VVHeader/>
-                <VVBody/>
-                <VVFooter/>
+                {contextValue.monthlyCalendar && <VVHeader/>}
+                {contextValue.undoableRosterList && <VVBody/>}
+                {contextValue.activeShiftInfoList&&<VVFooter/>}
             </RosterWebContext.Provider>
         </table>    
     )

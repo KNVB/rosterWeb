@@ -4,7 +4,7 @@ import ButtonPanel from './buttonPanel/ButtonPanel';
 import RosterWebContext from '../../../utils/RosterWebContext';
 import YearlyRosterStatistic from './yearlyRosterStatistic/YearlyRosterStatistic';
 export default function VVFooter(props){
-    let {activeShiftInfoList} = useContext(RosterWebContext);
+    let {activeShiftInfoList,yearlyRosterStatistic} = useContext(RosterWebContext);
     return (
         <tfoot className="tableFooter">
             <tr>
@@ -16,7 +16,7 @@ export default function VVFooter(props){
                     
                 </td>
                 <td colSpan="10" rowSpan="20" id="yearlyStat"  style={{"verticalAlign":"top"}}>
-                    <YearlyRosterStatistic/>
+                    {yearlyRosterStatistic&& <YearlyRosterStatistic/>}
                 </td>
             </tr>
             <tr>

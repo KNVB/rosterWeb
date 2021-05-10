@@ -10,12 +10,13 @@ export default function useRosterMonth(props){
             let roster = new Roster();
             let activeShiftInfoList= await roster.getAllActiveShiftInfo();
             let calendarUtility=new CalendarUtility();
-            let rosterList= await roster.get(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
+            let rosterSchedulerList= await roster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
             let hightLightCellIndex=-1;
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let systemParam=props.systemParam;
-            let selectedRegionUtil=new SelectedRegionUtil(rosterList,monthlyCalendar,0);
-            let undoableRosterList=new UndoableData(rosterList);
+            let selectedRegionUtil=new SelectedRegionUtil(rosterSchedulerList.rosterList,monthlyCalendar,0);
+            let undoableRosterList=new UndoableData(rosterSchedulerList);
+            let yearlyRosterStatistic=await roster.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             updateContext(
                 {
                     type:'updateRosterMonth',
@@ -27,7 +28,8 @@ export default function useRosterMonth(props){
                         selectedRegionUtil:selectedRegionUtil,
                         systemParam:systemParam,
                         undoableRosterList:undoableRosterList,
-                        updateContext:updateContext
+                        updateContext:updateContext,
+                        yearlyRosterStatistic:yearlyRosterStatistic
                     }
                 }
             );
@@ -38,38 +40,20 @@ export default function useRosterMonth(props){
         switch (action.type){
             case "updateHighLightCellIndex":
                 return {
-                    activeShiftInfoList:state.activeShiftInfoList,
-                    calendarUtility:state.calendarUtility,
+                    ...state,
                     hightLightCellIndex:action.value,
-                    monthlyCalendar:state.monthlyCalendar,
-                    selectedRegionUtil:state.selectedRegionUtil,
-                    systemParam:state.systemParam,
-                    undoableRosterList:state.undoableRosterList,
-                    updateContext:state.updateContext
                 }
             case 'updateRoster':
                 return {
-                    activeShiftInfoList:state.activeShiftInfoList,
-                    calendarUtility:state.calendarUtility,
-                    hightLightCellIndex:state.hightLightCellIndex,
-                    monthlyCalendar:state.monthlyCalendar,
-                    selectedRegionUtil:state.selectedRegionUtil,
-                    systemParam:state.systemParam,
+                    ...state,
                     undoableRosterList:action.value,
-                    updateContext:state.updateContext
                 }
             case 'updateRosterMonth':
                 return action.value;
             case 'updateSelectedRegion':
                 return {
-                    activeShiftInfoList:state.activeShiftInfoList,
-                    calendarUtility:state.calendarUtility,
-                    hightLightCellIndex:state.hightLightCellIndex,
-                    monthlyCalendar:state.monthlyCalendar,
+                    ...state,
                     selectedRegionUtil:action.value,
-                    systemParam:state.systemParam,
-                    undoableRosterList:state.undoableRosterList,
-                    updateContext:state.updateContext
                 }
             default:return state;    
         }        

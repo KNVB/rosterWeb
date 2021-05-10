@@ -6,6 +6,7 @@ import './ShiftCell.css';
 export default function ShiftCell(props){
     let {activeShiftInfoList,updateContext}=useContext(RosterWebContext);
     let myProps=Object.assign({},props);
+    delete myProps.availableShiftList;
     delete myProps.className;
     delete myProps.itoId;
     delete myProps.mouseEnter

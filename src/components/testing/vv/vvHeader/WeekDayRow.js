@@ -8,7 +8,7 @@ import WeekDayCell from './WeekDayCell';
 function WeekDayRow(props){
     let weekdayRow=[];
     let {calendarUtility,monthlyCalendar} = useContext(RosterWebContext);
-    if (monthlyCalendar){
+    //if (monthlyCalendar){
         for (let i=props.noOfPrevDate;i>0;i--){
             weekdayRow.push(
                 <WeekDayCell key={"weekDay_-"+i}/>
@@ -33,7 +33,7 @@ function WeekDayRow(props){
                 weekdayRow.push(<WeekDayCell className="" key={"weekDay_"+i}/>);
             }
         }
-    }
+    //}
     return (
         <tr>
             <NameCell>

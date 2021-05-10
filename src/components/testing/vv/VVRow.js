@@ -9,7 +9,7 @@ export default function VVRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],nameCellCssClass="",shift;
     let {activeShiftInfoList,monthlyCalendar,undoableRosterList,selectedRegionUtil}=useContext(RosterWebContext);
-    let itoRoster=undoableRosterList.presentValue[props.itoId];
+    let itoRoster=undoableRosterList.presentValue.rosterList[props.itoId];
     let itoNameContact = Parser(itoRoster.itoName+ "<br>" + itoRoster.itoPostName + " Extn. 2458");
     let {getITOStat}=useShift();
     let itoStat=getITOStat(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,itoRoster);

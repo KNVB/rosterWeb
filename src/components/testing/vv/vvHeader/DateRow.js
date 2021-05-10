@@ -8,7 +8,7 @@ import ShiftCountCell from './ShiftCountCell';
 export default function DateRow(props){
     let dateRow=[];
     let {monthlyCalendar} = useContext(RosterWebContext);
-    if (monthlyCalendar){
+    //if (monthlyCalendar){
         for (let i=props.noOfPrevDate;i>0;i--){
             dateRow.push(
                 <DateCell key={"date_-"+i}/>    
@@ -24,7 +24,7 @@ export default function DateRow(props){
                 dateRow.push(<DateCell key={"date_"+i}/>);
             }
         }
-    }    
+    //}    
     return (
         <tr>
             <NameCell>

@@ -22,7 +22,7 @@ export default function VVBody(props){
         if (document.getElementById("rosterTable").tHead){
             headerRowCount=document.getElementById("rosterTable").tHead.children.length;
         }
-        Object.keys(undoableRosterList.presentValue).forEach(itoId=>{
+        Object.keys(undoableRosterList.presentValue.rosterList).forEach(itoId=>{
             rowList.push(
                 <VVRow key={itoId} itoId={itoId} rowIndex={rowList.length+headerRowCount}/>
             )
