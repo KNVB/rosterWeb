@@ -51,7 +51,7 @@ class DBO
 			let sqlString="select ito_id,shift from shift_record where shift_date >= ? and shift_date < ? order by ito_id,shift_date";
 			result.endDateString=result.startDateString;
 			result.startDateString=moment(result.startDateString).subtract(systemParam.maxConsecutiveWorkingDay, 'days').format('YYYY-MM-DD');
-			console.log(result.startDateString,result.endDateString);
+			//console.log(result.startDateString,result.endDateString);
 			return await executeQuery(sqlString,[result.startDateString,result.endDateString]);
 		}
 		

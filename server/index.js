@@ -47,6 +47,9 @@ publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
 publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);
 
 
+publicAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
+publicAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
+
 //==============================================================================
 privateAPIRouter.post('/exportExcel',privateAPI.exportExcel);
 privateAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);

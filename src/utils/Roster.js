@@ -3,9 +3,11 @@ import SessionExpiredError from './SessionExpiredError';
 export default class Roster{
     constructor(changeLoggedInFlag){
         //this.changeLoggedInFlag=changeLoggedInFlag;
+        let privateAPIPath='/publicAPI';
+        let publicAPIPath='/publicAPI';
         this.exportExcel=async(genExcelData)=>{
             try{
-                let result=await Utility.fetchAPI('/privateAPI/exportExcel','POST',genExcelData);
+                let result=await Utility.fetchAPI(privateAPIPath+'/exportExcel','POST',genExcelData);
                 return result;
             }catch(error){
                 if (error instanceof SessionExpiredError){
@@ -18,7 +20,7 @@ export default class Roster{
         }
         this.get=async(year,month)=>{
           try{
-            let result=await Utility.fetchAPI('/publicAPI/getITORosterList','GET',{"year":year,"month":month});
+            let result=await Utility.fetchAPI(publicAPIPath+'/getITORosterList','GET',{"year":year,"month":month});
             return result;
           } catch (error){
             throw error;
@@ -26,7 +28,7 @@ export default class Roster{
         }
         this.getAllActiveShiftInfo=async()=>{
           try{
-            let result=await Utility.fetchAPI('/publicAPI/getAllActiveShiftInfo','GET');
+            let result=await Utility.fetchAPI(publicAPIPath+'/getAllActiveShiftInfo','GET');
             return result;
           }catch (error){
             throw error;
@@ -34,7 +36,7 @@ export default class Roster{
         }
         this.getRosterSchedulerList=async(year,month)=>{
             try{
-                let result=await Utility.fetchAPI('/privateAPI/getRosterSchedulerList','POST',{"year":year,"month":month});
+                let result=await Utility.fetchAPI(privateAPIPath+'/getRosterSchedulerList','POST',{"year":year,"month":month});
                 return result;
             }catch(error){
                 if (error instanceof SessionExpiredError){
@@ -47,7 +49,7 @@ export default class Roster{
         }
         this.getYearlyRosterStatistic=async(year,month)=>{
             try{
-                let result=await Utility.fetchAPI('/privateAPI/getYearlyRosterStatistic','POST',{"year":year,"month":month});
+                let result=await Utility.fetchAPI(privateAPIPath+'/getYearlyRosterStatistic','POST',{"year":year,"month":month});
                 return result;
             }catch(error){
                 if (error instanceof SessionExpiredError){
@@ -59,7 +61,7 @@ export default class Roster{
         }
         this.saveRosterToDB=async(rosterData)=>{
             try{
-                let result=await Utility.fetchAPI('/privateAPI/saveRosterToDB','POST',rosterData);
+                let result=await Utility.fetchAPI(privateAPIPath+'/saveRosterToDB','POST',rosterData);
                 return result;
             }catch (error){
                 if (error instanceof SessionExpiredError){
