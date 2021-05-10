@@ -26,15 +26,16 @@ export default function EditableShiftCell(props){
         updateContext({type:'updateRoster',value:undoableRosterList});
     }
     function updateValue(e){
-        console.log("ShiftCell:updateValue");
+        //console.log("EditableShiftCell:updateValue");
         let oldValue=undoableRosterList.presentValue.rosterList[props.itoId].shiftList[e.target.cellIndex];
+        //console.log("EditableShiftCell:updateValue:needUpdateContent:"+(oldValue!==e.target.textContent));
         if (oldValue!==e.target.textContent){ 
             /****************************************************************/
             /*The following steps are consuming very hight computing power, */
             /*so if the value not change do not execute the following step. */
             /****************************************************************/
             let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
-            temp[props.itoId].shiftList[e.target.cellIndex]=e.target.textContent;
+            temp.rosterList[props.itoId].shiftList[e.target.cellIndex]=e.target.textContent;
             undoableRosterList.set(temp);        
             updateContext({type:'updateRoster',value:undoableRosterList});
         }

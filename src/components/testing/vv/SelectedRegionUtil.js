@@ -42,7 +42,7 @@ export default class SelectedRegionUtil{
         }
         this.deleteData=(undoableRosterList)=>{
           let itoId,row,table=document.getElementById("rosterTable");
-          let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
+          let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue.rosterList));
           for (let y=selectedRegion.minY;y<=selectedRegion.maxY;y++){
             row=table.rows[y]
             itoId=row.id;
@@ -55,6 +55,16 @@ export default class SelectedRegionUtil{
         this.endSelect=()=>{
             if (selectedRegion.inSelectMode){
               selectedRegion.inSelectMode=false;
+              let table=document.getElementById("rosterTable");
+              let cell=table.rows[selectedRegion.minY].cells[selectedRegion.minX];
+              /****************************************************************/
+              /*The following steps trigger the onblur event of the 'theCell'.*/
+              /****************************************************************/
+              let range = document.createRange();
+              range.selectNodeContents(cell);
+              let selection = window.getSelection();
+              selection.removeAllRanges();
+              selection.addRange(range);
             }
         }
         this.getBorderClass=(cellIndex,rowIndex)=>{
@@ -160,26 +170,12 @@ export default class SelectedRegionUtil{
                 newX=minCellIndex;
               }
             }
-            console.log(`newY=${newY},newX=${newX}`);
+            //console.log(`newY=${newY},newX=${newX}`);
             let table=document.getElementById("rosterTable");
             let cell=table.rows[newY].cells[newX];
-        
-            selectedRegion.firstX=newX;
-            selectedRegion.firstY=newY;
-            selectedRegion.minX=newX;
-            selectedRegion.minY=newY;
-            selectedRegion.maxX=newX;
-            selectedRegion.maxY=newY;
-            selectedRegion.inSelectMode=false;
             
-            /*************************************************************/
-            /*The following steps trigger the onblur event of the 'cell'.*/
-            /*************************************************************/
-            let range = document.createRange();
-            range.selectNodeContents(cell);
-            let selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
+            this.startSelect(cell);
+            this.endSelect();
         }
         this.startSelect=(theCell)=>{
             let row=theCell.parentElement;
@@ -189,16 +185,7 @@ export default class SelectedRegionUtil{
             selectedRegion.minY=row.rowIndex;
             selectedRegion.maxX=theCell.cellIndex;
             selectedRegion.maxY=row.rowIndex;
-            selectedRegion.inSelectMode=true;
-
-            /****************************************************************/
-            /*The following steps trigger the onblur event of the 'theCell'.*/
-            /****************************************************************/
-            let range = document.createRange();
-            range.selectNodeContents(theCell);
-            let selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
+            selectedRegion.inSelectMode=true;           
         }
         this.updateSelect=(theCell)=>{
             if (selectedRegion.inSelectMode){

@@ -17,17 +17,18 @@ export default function VVBody(props){
             document.removeEventListener('mouseup', mouseUp)
         }
     },[mouseUp]);
-    if (undoableRosterList){
+    //if (undoableRosterList){
         let headerRowCount=0;
         if (document.getElementById("rosterTable").tHead){
             headerRowCount=document.getElementById("rosterTable").tHead.children.length;
         }
+        //console.log(undoableRosterList.presentValue);
         Object.keys(undoableRosterList.presentValue.rosterList).forEach(itoId=>{
             rowList.push(
                 <VVRow key={itoId} itoId={itoId} rowIndex={rowList.length+headerRowCount}/>
             )
         });        
-    }
+    //}
     return(
         <tbody>
             {rowList}
