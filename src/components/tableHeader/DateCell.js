@@ -3,14 +3,14 @@ import BorderedAlignCenterCell from '../cell/BorderedAlignCenterCell';
 import RosterWebContext from '../../utils/RosterWebContext';
 export default function DateCell(props){
     let className="p-0";
-    let {hightLightCellIndex} = useContext(RosterWebContext);
+    let [contextValue,updateContext]=useContext(RosterWebContext);
     let dateData=props.dateData;
     let dateOfMonth="";
     if (dateData){
         dateOfMonth=dateData.dateOfMonth;
         if (dateData.today)
             className+=" todayCell";
-        if ((dateOfMonth+props.noOfPrevDate)===hightLightCellIndex)
+        if ((dateOfMonth+props.noOfPrevDate)===contextValue.hightLightCellIndex)
             className+=" highlightCell";
     }
     return (

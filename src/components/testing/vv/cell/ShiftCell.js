@@ -9,7 +9,7 @@ export default function ShiftCell(props){
     delete myProps.availableShiftList;
     delete myProps.className;
     delete myProps.itoId;
-    delete myProps.mouseEnter
+    delete myProps.onMouseEnter;
     delete myProps.rowIndex;    
     delete myProps.setIsHighLightRow;
 

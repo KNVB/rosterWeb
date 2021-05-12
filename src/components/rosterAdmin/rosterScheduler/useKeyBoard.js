@@ -7,8 +7,8 @@ export default function useKeyBoard(selectedRegionUtil,updateContext,undoableRos
             switch (e.which){
                 case 89: //Handle Ctrl-Y
                     e.preventDefault();
-                    console.log("VVBody.futureValue.length="+undoableRosterList.futureValue.length);
-                    console.log("VVBody:redo,canRedo="+undoableRosterList.canRedo());
+                    console.log("RosterSchedulerBody.futureValue.length="+undoableRosterList.futureValue.length);
+                    console.log("RosterSchedulerBody:redo,canRedo="+undoableRosterList.canRedo());
                     if (undoableRosterList.canRedo()){
                         undoableRosterList.redo();
                         updateContext({type:'updateRoster',value:undoableRosterList});
@@ -16,8 +16,8 @@ export default function useKeyBoard(selectedRegionUtil,updateContext,undoableRos
                     break;
                 case 90: //Handle Ctrl-Z
                     e.preventDefault();
-                    console.log("VVBody.pastValue.length="+undoableRosterList.pastValue.length);
-                    console.log("VVBody:undo,canUndo="+undoableRosterList.canUndo());
+                    console.log("RosterSchedulerBody.pastValue.length="+undoableRosterList.pastValue.length);
+                    console.log("RosterSchedulerBody:undo,canUndo="+undoableRosterList.canUndo());
                     if (undoableRosterList.canUndo()){
                         undoableRosterList.undo();
                         updateContext({type:'updateRoster',value:undoableRosterList});
@@ -33,7 +33,9 @@ export default function useKeyBoard(selectedRegionUtil,updateContext,undoableRos
                     }else {
                         selectedRegionUtil.selectNextCell(e,1,0);
                     }
-                    updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    setTimeout(()=>{
+                        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    })
 					break;
                 case 13://handle "Enter" key event
                     if (e.shiftKey){
@@ -41,32 +43,46 @@ export default function useKeyBoard(selectedRegionUtil,updateContext,undoableRos
                     } else {
                         selectedRegionUtil.selectNextCell(e,0,1);
                     }
-                    updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    setTimeout(()=>{
+                        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    })
 					break;
                 case 27://handle "Esc" key event
                     selectedRegionUtil.clearCopiedRegion();
-                    updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    setTimeout(()=>{
+                        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    })
                     break;
                 case 37://handle left arrow key event
                     selectedRegionUtil.selectNextCell(e,-1,0);
-                    updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    setTimeout(()=>{
+                        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    })
                     break;
                 case 38://handle up arrow key event
                     selectedRegionUtil.selectNextCell(e,0,-1);
-                    updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    setTimeout(()=>{
+                        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    })
                     break;
                 case 39://handle right arrow key event
                     selectedRegionUtil.selectNextCell(e,1,0);
-                    updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    setTimeout(()=>{
+                        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    })
                     break;
                 case 40://handle down arrow key event
                     selectedRegionUtil.selectNextCell(e,0,1);
-                    updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    setTimeout(()=>{
+                        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    })
                     break;
                 case 46://handle delete key event
                     e.preventDefault();
                     selectedRegionUtil.deleteData(undoableRosterList);
-                    updateContext({type:'updateRoster',value:undoableRosterList});
+                    setTimeout(()=>{
+                        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+                    })
                     break
                 default:break;
             }

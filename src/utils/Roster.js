@@ -4,6 +4,7 @@ export default class Roster{
     constructor(changeLoggedInFlag){
         //this.changeLoggedInFlag=changeLoggedInFlag;
         let privateAPIPath='/publicAPI';
+        //let privateAPIPath='/privateAPI';
         let publicAPIPath='/publicAPI';
         this.exportExcel=async(genExcelData)=>{
             try{
@@ -72,6 +73,7 @@ export default class Roster{
             }
         }
     }
+    /*
     static calculateITOMonthlyStat(roster,noOfWorkingDay,activeShiftInfoList){
       roster.actualWorkingHour=0.0;
       roster.totalHour = roster.workingHourPerDay * noOfWorkingDay;
@@ -134,6 +136,7 @@ export default class Roster{
           dxShiftCount: dxShiftCount
         };
     }
+    */
     static getDuplicateShiftList(monthlyCalendar,rosterList){
       let result={};
       Object.keys(rosterList).forEach(itoId => {

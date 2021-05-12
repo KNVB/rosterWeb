@@ -41,13 +41,22 @@ export default class SelectedRegionUtil{
           this.hasCopiedRegion=true;
         }
         this.deleteData=(undoableRosterList)=>{
-          let itoId,row,table=document.getElementById("rosterTable");
+          let dataType,itoId,row,table=document.getElementById("rosterTable");
           let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
+          console.log(temp);
           for (let y=selectedRegion.minY;y<=selectedRegion.maxY;y++){
             row=table.rows[y]
-            itoId=row.id;
+            itoId=row.id.split(":")[0];
+            dataType=row.id.split(":")[1];            
             for (let x=selectedRegion.minX;x<=selectedRegion.maxX;x++){
-              temp[itoId].shiftList[x]='';
+              switch (dataType){
+                case 'shiftList':
+                  temp.rosterList[itoId].shiftList[x-nOPrevDate]='';
+                  break;
+                case 'preferredShiftList':
+                  temp.preferredShiftList[itoId][x-nOPrevDate]='';
+                  break;
+              }
               undoableRosterList.set(JSON.parse(JSON.stringify(temp)));
             }
           }
@@ -55,6 +64,17 @@ export default class SelectedRegionUtil{
         this.endSelect=()=>{
             if (selectedRegion.inSelectMode){
               selectedRegion.inSelectMode=false;
+
+              /****************************************************************/
+              /*The following steps trigger the onblur event of the 'theCell'.*/
+              /****************************************************************/
+              let table=document.getElementById("rosterTable");
+              let theCell=table.rows[selectedRegion.minY].cells[selectedRegion.minX];
+              let range = document.createRange();
+              range.selectNodeContents(theCell);
+              let selection = window.getSelection();
+              selection.removeAllRanges();
+              selection.addRange(range);
             }
         }
         this.getBorderClass=(cellIndex,rowIndex)=>{
@@ -97,7 +117,7 @@ export default class SelectedRegionUtil{
             }
             return result;
         }
-        
+        this.inSelectMode=()=>(selectedRegion.inSelectMode);
         this.pasteCopiedRegion=(clipboardData,undoableRosterList)=>{
           if (this.hasCopiedRegion){
             let copiedData=JSON.parse(clipboardData.getData('application/json'));
@@ -140,7 +160,7 @@ export default class SelectedRegionUtil{
             /* if the table structure changed,Please change the below code accordingly.     */
             /********************************************************************************/
             let headerRowCount=document.getElementById("rosterTable").tHead.children.length;
-            let minRowNo=headerRowCount,maxRowNo=itoCount+minRowNo-1;
+            let minRowNo=headerRowCount,maxRowNo=itoCount*2+minRowNo-1;
             let minCellIndex=noOfPrevDate+1,maxCellIndex=minCellIndex+monthLength-1;
             //console.log(headerRowCount,itoCount,maxRowNo);
 
@@ -190,16 +210,7 @@ export default class SelectedRegionUtil{
             selectedRegion.minY=row.rowIndex;
             selectedRegion.maxX=theCell.cellIndex;
             selectedRegion.maxY=row.rowIndex;
-            selectedRegion.inSelectMode=true;
-
-            /****************************************************************/
-            /*The following steps trigger the onblur event of the 'theCell'.*/
-            /****************************************************************/
-            let range = document.createRange();
-            range.selectNodeContents(theCell);
-            let selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
+            selectedRegion.inSelectMode=true;          
         }
         this.updateSelect=(theCell)=>{
             if (selectedRegion.inSelectMode){

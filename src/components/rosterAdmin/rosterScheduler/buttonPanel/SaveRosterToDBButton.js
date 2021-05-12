@@ -2,9 +2,13 @@ import {useContext} from 'react';
 import Roster from '../../../../utils/Roster';
 import RosterWebContext from '../../../../utils/RosterWebContext';
 export default function SaveRosterToDBButton(){
-    let {changeLoggedInFlag,rosterData,rosterMonth} = useContext(RosterWebContext);
+    //let {changeLoggedInFlag,rosterData,rosterMonth} = useContext(RosterWebContext);
+    let [contextValue,updateContext]=useContext(RosterWebContext);
     async function saveRosterToDB(){
-        let roster=new Roster(changeLoggedInFlag);
+        let roster=new Roster(contextValue.changeLoggedInFlag);
+        //console.log(contextValue.undoableRosterSchedulerList.presentValue.rosterList);
+        console.log(contextValue.undoableRosterSchedulerList.presentValue.preferredShiftList);
+        /*
         roster.saveRosterToDB({
             month:rosterMonth.getMonth()+1,
             preferredShiftList:rosterData.preferredShiftList,
@@ -21,6 +25,7 @@ export default function SaveRosterToDBButton(){
         .catch(error=>{
             alert(error.message);
         });
+        */
         roster=null;
     }
     return(

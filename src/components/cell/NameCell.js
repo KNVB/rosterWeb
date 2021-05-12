@@ -1,11 +1,14 @@
 import './NameCell.css';
 import BorderedCell from './BorderedCell';
 export default function NameCell(props){
-    let nameCellClass="nameCell m-0 p-0";
-    if (props.className)
-        nameCellClass=nameCellClass+" "+props.className;
+    let cssClassList=["nameCell","pb-0","pl-1","pt-0"];
+    if (props.className){
+        props.className.split(' ').forEach(className=>{
+        cssClassList.push(className);
+        })
+    }    
     return (
-        <BorderedCell className={nameCellClass}>
+        <BorderedCell className={cssClassList.join(' ')}>
             {props.children}
         </BorderedCell>    
     )

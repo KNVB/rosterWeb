@@ -9,18 +9,18 @@ import useShift from '../../../utils/useShift';
 export default function RosterSchedulerRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],nameCellCssClass="";
-    let {activeShiftInfoList,monthlyCalendar,undoableRosterSchedulerList,selectedRegionUtil,systemParam}=useContext(RosterWebContext);
-    let itoRoster=undoableRosterSchedulerList.presentValue.rosterList[props.itoId];
-    let previousMonthRoster=undoableRosterSchedulerList.presentValue.previousMonthShiftList[props.itoId];
+    let [contextValue, updateContext] =useContext(RosterWebContext);
+    let itoRoster=contextValue.undoableRosterSchedulerList.presentValue.rosterList[props.itoId];
+    let previousMonthRoster=contextValue.undoableRosterSchedulerList.presentValue.previousMonthShiftList[props.itoId];
     let itoNameContact = Parser(itoRoster.itoName+ "<br>" + itoRoster.itoPostName + " Extn. 2458");
     let {getITOStat}=useShift();
-    let itoStat=getITOStat(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,itoRoster);
+    let itoStat=getITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar.noOfWorkingDay,itoRoster);
     if (isHighLightRow){
         nameCellCssClass="highlightCell";
     }
     //console.log(previousMonthRoster,props.itoId,systemParam.maxConsecutiveWorkingDay,systemParam.noOfPrevDate);
     if (previousMonthRoster){
-        for(let i=systemParam.maxConsecutiveWorkingDay-systemParam.noOfPrevDate;i<previousMonthRoster.length;i++){
+        for(let i=contextValue.systemParam.maxConsecutiveWorkingDay-contextValue.systemParam.noOfPrevDate;i<previousMonthRoster.length;i++){
             cellList.push(
                 <ShiftCell availableShiftList={itoRoster.availableShiftList} key={"prev-"+i}>
                     {previousMonthRoster[i]}
@@ -28,12 +28,12 @@ export default function RosterSchedulerRow(props){
             );
         }
     }else {
-        for (let i=0;i<systemParam.noOfPrevDate;i++){
+        for (let i=0;i<contextValue.systemParam.noOfPrevDate;i++){
             cellList.push(<ShiftCell availableShiftList={itoRoster.availableShiftList} key={"prev-"+i}/>);
         }
     }
-    for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
-        let className=selectedRegionUtil.getBorderClass(i+systemParam.noOfPrevDate+1,props.rowIndex);
+    for (let i=0;i<contextValue.monthlyCalendar.calendarDateList.length;i++){
+        let className=contextValue.selectedRegionUtil.getBorderClass(i+contextValue.systemParam.noOfPrevDate+1,props.rowIndex);
         cellList.push(
             <EditableShiftCell
                 availableShiftList={itoRoster.availableShiftList}
@@ -46,13 +46,13 @@ export default function RosterSchedulerRow(props){
             </EditableShiftCell>
         )
     }
-    for (let i=monthlyCalendar.calendarDateList.length;i<31;i++){
+    for (let i=contextValue.monthlyCalendar.calendarDateList.length;i<31;i++){
         cellList.push(
             <BorderedAlignCenterCell key={props.itoId+"_shift_"+i}></BorderedAlignCenterCell>
         );
     }
     return(
-        <tr id={props.itoId}>
+        <tr id={props.itoId+':shiftList'}>
             <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>
             {cellList}
             <BorderedAlignCenterCell>{itoStat.expectedWorkingHour.toFixed(2)}</BorderedAlignCenterCell>

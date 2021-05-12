@@ -5,13 +5,6 @@ export default function ExportToExcelButton(){
     let {activeShiftInfoList,monthlyCalendar,rosterData,rosterMonth} = useContext(RosterWebContext);
     let genExcelData={},shiftInfoList={};
     function exportExcel(){
-        /*
-        console.log(activeShiftInfoList);
-        console.log(monthlyCalendar);
-        console.log(rosterMonth);
-        console.log(rosterData.rosterList);
-        console.log(rosterData.vacantShiftList);
-        */
        for (let shift in activeShiftInfoList){
         if (shift!=='essentialShift'){
             let shiftInfo=activeShiftInfoList[shift];

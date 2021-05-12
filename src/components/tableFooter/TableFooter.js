@@ -13,7 +13,7 @@ function TableFooter(props){
                 <td colSpan={(columnCount-11-10)} rowSpan="10">
                     {props.autoScheduler}
                 </td>
-                <td colSpan={10} rowSpan="20">
+                <td  className="align-top" colSpan={10} rowSpan="20">
                     {props.yearlyStat}
                 </td>                                
             </tr>

@@ -8,15 +8,15 @@ import useShift from '../../utils/useShift';
 export default function RosterViewerRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],nameCellCssClass="";
-    let {activeShiftInfoList,monthlyCalendar,rosterList}=useContext(RosterWebContext);
-    let itoRoster=rosterList[props.itoId];
+    let [contextValue, updateContext]=useContext(RosterWebContext);
+    let itoRoster=contextValue.rosterList[props.itoId];
     let itoNameContact = Parser(itoRoster.itoName+ "<br>" + itoRoster.itoPostName + " Extn. 2458");
     let {getITOStat}=useShift();
-    let itoStat=getITOStat(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,itoRoster);
+    let itoStat=getITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar.noOfWorkingDay,itoRoster);
     if (isHighLightRow){
         nameCellCssClass="highlightCell";
     }
-    for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
+    for (let i=0;i<contextValue.monthlyCalendar.calendarDateList.length;i++){
         cellList.push(
             <ShiftCell
                 availableShiftList={itoRoster.availableShiftList}
@@ -28,7 +28,7 @@ export default function RosterViewerRow(props){
             </ShiftCell>
         )
     }
-    for (let i=monthlyCalendar.calendarDateList.length;i<31;i++){
+    for (let i=contextValue.monthlyCalendar.calendarDateList.length;i<31;i++){
         cellList.push(
             <BorderedAlignCenterCell key={props.itoId+"_shift_"+i}></BorderedAlignCenterCell>
         );    

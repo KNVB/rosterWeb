@@ -7,24 +7,22 @@ import RosterWebContext from '../../utils/RosterWebContext';
 import ShiftCountCell from './ShiftCountCell';
 export default function DateRow(props){
     let dateRow=[];
-    let {monthlyCalendar} = useContext(RosterWebContext);
-    if (monthlyCalendar){
-        for (let i=props.noOfPrevDate;i>0;i--){
-            dateRow.push(
-                <DateCell key={"date_-"+i}/>    
-            )
+    let  [contextValue, updateContext] = useContext(RosterWebContext);
+    for (let i=props.noOfPrevDate;i>0;i--){
+        dateRow.push(
+            <DateCell key={"date_-"+i}/>    
+        )
+    }
+    for (let i=0;i<31;i++){
+        if (contextValue.monthlyCalendar.calendarDateList[i]){
+            dateRow.push(<DateCell 
+                            dateData={contextValue.monthlyCalendar.calendarDateList[i]}
+                            key={"date_"+i}
+                            noOfPrevDate={props.noOfPrevDate}/>);
+        } else {
+            dateRow.push(<DateCell key={"date_"+i}/>);
         }
-        for (let i=0;i<31;i++){
-            if (monthlyCalendar.calendarDateList[i]){
-                dateRow.push(<DateCell 
-                                dateData={monthlyCalendar.calendarDateList[i]}
-                                key={"date_"+i}
-                                noOfPrevDate={props.noOfPrevDate}/>);
-            } else {
-                dateRow.push(<DateCell key={"date_"+i}/>);
-            }
-        }
-    }    
+    }
     return (
         <tr>
             <NameCell>

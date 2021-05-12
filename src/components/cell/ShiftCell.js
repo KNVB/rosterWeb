@@ -4,7 +4,7 @@ import RosterWebContext from '../../utils/RosterWebContext';
 
 import './ShiftCell.css';
 export default function ShiftCell(props){
-    let {activeShiftInfoList,updateContext}=useContext(RosterWebContext);
+    let [contextValue,updateContext]=useContext(RosterWebContext);
     let myProps=Object.assign({},props);
     
     delete myProps.availableShiftList;
@@ -17,12 +17,14 @@ export default function ShiftCell(props){
     let classNameList=['shiftCell'];
     //console.log(props===undefined);
     if (props.availableShiftList.includes(props.children)){
-        if(activeShiftInfoList[props.children]){
-            classNameList.push(activeShiftInfoList[props.children].cssClassName);
+        if(contextValue.activeShiftInfoList[props.children]){
+            classNameList.push(contextValue.activeShiftInfoList[props.children].cssClassName);
         }
     }
     if (props.className){
-        classNameList.push(props.className);   
+        props.className.split(' ').forEach(className=>{
+            classNameList.push(className);
+        }) 
     }
     //console.log(myProps);
     function deHighLight(e){

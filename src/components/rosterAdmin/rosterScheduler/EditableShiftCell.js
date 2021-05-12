@@ -3,43 +3,43 @@ import './EditableShiftCell.css';
 import ShiftCell from '../../cell/ShiftCell';
 import RosterWebContext from '../../../utils/RosterWebContext';
 export default function EditableShiftCell(props){
-    let {selectedRegionUtil,systemParam,undoableRosterSchedulerList,updateContext}=useContext(RosterWebContext);
+    let [contextValue,updateContext]=useContext(RosterWebContext);
     //console.log(props);
     function copyData(e){
         e.preventDefault();
-        selectedRegionUtil.copySelectedRegion(e.clipboardData);
-        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+        contextValue.selectedRegionUtil.copySelectedRegion(e.clipboardData);
+        updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
     }
     function mouseEnterHandler(e){
         e.preventDefault();
-        selectedRegionUtil.updateSelect(e.target);
-        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
+        contextValue.selectedRegionUtil.updateSelect(e.target);
+        updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
     }
     function mouseDownHandler(e){
         e.preventDefault();
-        selectedRegionUtil.startSelect(e.target);
-        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil})
+        contextValue.selectedRegionUtil.startSelect(e.target);
+        updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil})
     }
     function pasteData(e){
         e.preventDefault();
-        selectedRegionUtil.pasteCopiedRegion(e.clipboardData,undoableRosterSchedulerList);
-        console.log(undoableRosterSchedulerList);
-        updateContext({type:'updateRoster',value:undoableRosterSchedulerList});
+        contextValue.selectedRegionUtil.pasteCopiedRegion(e.clipboardData,contextValue.undoableRosterSchedulerList);
+        console.log(contextValue.undoableRosterSchedulerList);
+        updateContext({type:'updateRoster',value:contextValue.undoableRosterSchedulerList});
     }
     
     function updateValue(e){
         console.log("ShiftCell:updateValue");
-        let oldValue=undoableRosterSchedulerList.presentValue.rosterList[props.itoId].shiftList[e.target.cellIndex-systemParam.noOfPrevDate];
+        let oldValue=contextValue.undoableRosterSchedulerList.presentValue.rosterList[props.itoId].shiftList[e.target.cellIndex-contextValue.systemParam.noOfPrevDate];
         
         if (oldValue!==e.target.textContent){ 
             /****************************************************************/
             /*The following steps are consuming very hight computing power, */
             /*so if the value not change do not execute the following step. */
             /****************************************************************/
-            let temp=JSON.parse(JSON.stringify(undoableRosterSchedulerList.presentValue));
-            temp.rosterList[props.itoId].shiftList[e.target.cellIndex-systemParam.noOfPrevDate]=e.target.textContent;
-            undoableRosterSchedulerList.set(temp);        
-            updateContext({type:'updateRoster',value:undoableRosterSchedulerList});
+            let temp=JSON.parse(JSON.stringify(contextValue.undoableRosterSchedulerList.presentValue));
+            temp.rosterList[props.itoId].shiftList[e.target.cellIndex-contextValue.systemParam.noOfPrevDate]=e.target.textContent;
+            contextValue.undoableRosterSchedulerList.set(temp);        
+            updateContext({type:'updateRoster',value:contextValue.undoableRosterSchedulerList});
         }
     }
     return(

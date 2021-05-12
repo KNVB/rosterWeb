@@ -21,8 +21,7 @@ export default function useRosterMonth(props){
                         hightLightCellIndex:hightLightCellIndex,
                         monthlyCalendar:monthlyCalendar,
                         systemParam:systemParam,
-                        rosterList:rosterList,
-                        updateContext:updateContext
+                        rosterList:rosterList
                     }
                 }
             );
@@ -33,13 +32,8 @@ export default function useRosterMonth(props){
         switch (action.type){
             case "updateHighLightCellIndex":
                 return {
-                    activeShiftInfoList:state.activeShiftInfoList,
-                    calendarUtility:state.calendarUtility,
+                    ...state,
                     hightLightCellIndex:action.value,
-                    monthlyCalendar:state.monthlyCalendar,
-                    systemParam:state.systemParam,
-                    rosterList:state.rosterList,
-                    updateContext:state.updateContext
                 }
             case 'updateRosterMonth':
                 return action.value;
@@ -47,5 +41,5 @@ export default function useRosterMonth(props){
         }        
     }    
     const [contextValue, updateContext] = useReducer(dataReducer,{});
-    return contextValue;
+    return [contextValue, updateContext];
 }

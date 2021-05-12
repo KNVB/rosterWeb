@@ -11,7 +11,7 @@ export default function VVTable(props){
             <RosterWebContext.Provider value={contextValue}>
                 {contextValue.monthlyCalendar && <VVHeader/>}
                 {contextValue.undoableRosterList && <VVBody/>}
-                {contextValue.activeShiftInfoList&&<VVFooter/>}
+                {/*contextValue.activeShiftInfoList&&<VVFooter/>*/}
             </RosterWebContext.Provider>
         </table>    
     )

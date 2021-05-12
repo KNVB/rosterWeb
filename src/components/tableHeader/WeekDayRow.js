@@ -7,31 +7,29 @@ import WeekDayCell from './WeekDayCell';
 
 function WeekDayRow(props){
     let weekdayRow=[];
-    let {calendarUtility,monthlyCalendar} = useContext(RosterWebContext);
-    if (monthlyCalendar){
-        for (let i=props.noOfPrevDate;i>0;i--){
+    let [contextValue, updateContext]=useContext(RosterWebContext);
+    for (let i=props.noOfPrevDate;i>0;i--){
+        weekdayRow.push(
+            <WeekDayCell key={"weekDay_-"+i}/>
+        )
+    }
+    for (let i=0;i<31;i++){
+        if (contextValue.monthlyCalendar.calendarDateList[i]){
+            //console.log(props.monthlyCalendar[i]);
+            let content=contextValue.calendarUtility.weekdayNames[contextValue.monthlyCalendar.calendarDateList[i].dayOfWeek];
+            let className="",title="";
+            if ((content==="S") || (content==="Su") || (contextValue.monthlyCalendar.calendarDateList[i].publicHoliday))
+                className="font-weight-bold phCell";
+            if  (contextValue.monthlyCalendar.calendarDateList[i].publicHoliday){
+                title=contextValue.monthlyCalendar.calendarDateList[i].festivalInfo;
+            }            
             weekdayRow.push(
-                <WeekDayCell key={"weekDay_-"+i}/>
-            )
-        }
-        for (let i=0;i<31;i++){
-            if (monthlyCalendar.calendarDateList[i]){
-                //console.log(props.monthlyCalendar[i]);
-                let content=calendarUtility.weekdayNames[monthlyCalendar.calendarDateList[i].dayOfWeek];
-                let className="",title="";
-                if ((content==="S") || (content==="Su") || (monthlyCalendar.calendarDateList[i].publicHoliday))
-                    className="font-weight-bold phCell";
-                if  (monthlyCalendar.calendarDateList[i].publicHoliday){
-                    title=monthlyCalendar.calendarDateList[i].festivalInfo;
-                }            
-                weekdayRow.push(
-                    <WeekDayCell className={className} key={"weekDay_"+i} title={title}>
-                        {content}
-                    </WeekDayCell>    
-                );
-            } else {
-                weekdayRow.push(<WeekDayCell className="" key={"weekDay_"+i}/>);
-            }
+                <WeekDayCell className={className} key={"weekDay_"+i} title={title}>
+                    {content}
+                </WeekDayCell>    
+            );
+        } else {
+            weekdayRow.push(<WeekDayCell className="" key={"weekDay_"+i}/>);
         }
     }
     return (
