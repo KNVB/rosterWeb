@@ -1,12 +1,9 @@
 import CopiedRegion from './CopiedRegion';
 import SelectedRegion from './SelectedRegion';
 export default class SelectedRegionUtil{
-    constructor(rosterList,monthlyCalendar,nOPrevDate){
+    constructor(bodyRowCount,monthLength,noOfPrevDate){
         let copiedRegion=new CopiedRegion();
         let selectedRegion=new SelectedRegion();
-        const itoCount=Object.keys(rosterList).length;
-        const monthLength=monthlyCalendar.calendarDateList.length;
-        const noOfPrevDate=nOPrevDate;
         this.hasCopiedRegion=false;
         this.clearCopiedRegion=()=>{
             copiedRegion={
@@ -153,7 +150,7 @@ export default class SelectedRegionUtil{
             /* if the table structure changed,Please change the below code accordingly.     */
             /********************************************************************************/
             let headerRowCount=document.getElementById("rosterTable").tHead.children.length;
-            let minRowNo=headerRowCount,maxRowNo=itoCount+minRowNo-1;
+            let minRowNo=headerRowCount,maxRowNo=bodyRowCount+minRowNo-1;
             let minCellIndex=noOfPrevDate+1,maxCellIndex=minCellIndex+monthLength-1;
             
             newX=x+xOffset;

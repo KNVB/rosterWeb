@@ -49,9 +49,7 @@ export default function useKeyBoard(selectedRegionUtil,updateContext,undoableRos
 					break;
                 case 27://handle "Esc" key event
                     selectedRegionUtil.clearCopiedRegion();
-                    setTimeout(()=>{
-                        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
-                    })
+                    updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
                     break;
                 case 37://handle left arrow key event
                     selectedRegionUtil.selectNextCell(e,-1,0);
@@ -80,9 +78,7 @@ export default function useKeyBoard(selectedRegionUtil,updateContext,undoableRos
                 case 46://handle delete key event
                     e.preventDefault();
                     selectedRegionUtil.deleteData(undoableRosterList);
-                    setTimeout(()=>{
-                        updateContext({type:'updateSelectedRegion',value:selectedRegionUtil});
-                    })
+                    updateContext({type:'updateRoster',value:undoableRosterList});
                     break
                 default:break;
             }

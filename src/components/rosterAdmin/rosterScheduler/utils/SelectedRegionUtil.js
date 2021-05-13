@@ -43,21 +43,25 @@ export default class SelectedRegionUtil{
         this.deleteData=(undoableRosterList)=>{
           let dataType,itoId,row,table=document.getElementById("rosterTable");
           let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
-          console.log(temp);
           for (let y=selectedRegion.minY;y<=selectedRegion.maxY;y++){
             row=table.rows[y]
             itoId=row.id.split(":")[0];
-            dataType=row.id.split(":")[1];            
+            dataType=row.id.split(":")[1];
             for (let x=selectedRegion.minX;x<=selectedRegion.maxX;x++){
               switch (dataType){
                 case 'shiftList':
                   temp.rosterList[itoId].shiftList[x-nOPrevDate]='';
+                  undoableRosterList.set(JSON.parse(JSON.stringify(temp)));
                   break;
                 case 'preferredShiftList':
-                  temp.preferredShiftList[itoId][x-nOPrevDate]='';
+                  //temp.preferredShiftList[itoId][x-nOPrevDate]='';
+                  if (temp.preferredShiftList[itoId][x-nOPrevDate]!==undefined){
+                    delete temp.preferredShiftList[itoId][x-nOPrevDate];
+                    undoableRosterList.set(JSON.parse(JSON.stringify(temp)));
+                  }
                   break;
+                default:break;  
               }
-              undoableRosterList.set(JSON.parse(JSON.stringify(temp)));
             }
           }
         }

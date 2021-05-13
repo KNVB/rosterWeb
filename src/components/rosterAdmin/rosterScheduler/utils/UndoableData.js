@@ -25,6 +25,7 @@ export default class UndoableData{
             console.log('UndoableData:set');
             this.pastValue.push(this.presentValue);
             this.presentValue=newValue;
+            console.log(this.pastValue);
         }
         this.undo=()=>{
             console.log('UndoableData:undo');

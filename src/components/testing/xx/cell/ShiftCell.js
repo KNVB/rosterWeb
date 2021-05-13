@@ -1,44 +1,28 @@
 import {useContext} from 'react';
+import './ShiftCell.css';
 import BorderedAlignCenterCell from './BorderedAlignCenterCell';
 import RosterWebContext from '../../../../utils/RosterWebContext';
-
-import './ShiftCell.css';
 export default function ShiftCell(props){
-    let [contextValue,updateContext]=useContext(RosterWebContext);
+    let cssClass="shiftCell"+((props.className)?" "+props.className:"");
+    let [contextValue, updateContext]=useContext(RosterWebContext);
     let myProps=Object.assign({},props);
+    
     delete myProps.availableShiftList;
     delete myProps.className;
     delete myProps.itoId;
-    delete myProps.onMouseEnter;
+    delete myProps.onMouseEnter
     delete myProps.rowIndex;    
     delete myProps.setIsHighLightRow;
 
-    let classNameList=['shiftCell'];
     if (props.availableShiftList.includes(props.children)){
         if(contextValue.activeShiftInfoList[props.children]){
-            classNameList.push(contextValue.activeShiftInfoList[props.children].cssClassName);
+            cssClass=cssClass+' '+contextValue.activeShiftInfoList[props.children].cssClassName;
         }
     }
-    if (props.className){
-        classNameList.push(props.className);   
-    }
-    //console.log(myProps);
-    function deHighLight(e){
-        props.setIsHighLightRow(false);
-    }
-    function highLight(e){
-        if (props.onMouseEnter){
-            props.onMouseEnter(e);
-        }
-        props.setIsHighLightRow(true);
-        updateContext({type:"updateHighLightCellIndex",value:e.target.cellIndex})
-    }
-    return(
-        <BorderedAlignCenterCell
+    return (
+        <BorderedAlignCenterCell 
             {...myProps}
-            className={classNameList.join(' ')}
-            onMouseEnter={highLight}
-            onMouseLeave={deHighLight}>
+            className={cssClass}>
             {props.children}
         </BorderedAlignCenterCell>
     )

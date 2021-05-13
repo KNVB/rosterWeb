@@ -1,22 +1,6 @@
 .shiftCell{
     font-size: 17px;
 }
-.shiftCell:focus 
-{
-	outline: none;
-}
-.shiftCell:hover{
-	cursor: cell;
-}
-.shiftCell::selection
-{
-  background: none; /* WebKit/Blink Browsers */
-}
-.shiftCell::-moz-selection
-{
-  background: none; /* WebKit/Blink Browsers */
-}
-
 /*******************************************************************************************************
  *                                                                                                     *
  *    Shift color style                                                                                *
