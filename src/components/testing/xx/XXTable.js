@@ -23,6 +23,7 @@ export default function XXTable(props){
 
             let rosterData={};
             let itoId="ITO1_1999-01-01";
+            //let itoId="ITO3_2017-10-18";
             //Object.keys(rosterSchedulerList.rosterList).forEach(itoId=>{
                 let psl;
                 if (rosterSchedulerList.preferredShiftList[itoId]){

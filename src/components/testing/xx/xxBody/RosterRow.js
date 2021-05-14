@@ -41,7 +41,7 @@ export default function RosterRow(props){
         );
     }
     return(
-        <tr id={props.itoId+':shiftList'}>
+        <tr id={props.itoId+':shift'}>
             <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>
             {cellList}
         </tr>
