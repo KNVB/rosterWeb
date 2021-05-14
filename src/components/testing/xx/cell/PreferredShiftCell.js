@@ -19,14 +19,28 @@ export default function PreferredShiftCell(props){
     let updateValue=(e)=>{
         e.preventDefault();
         //console.log(e.target.textContent);
-        let preferredShiftList=contextValue.preferredShiftList[props.itoId];
+        
+        let preferredShiftList=contextValue.rosterData.presentValue[props.itoId].preferredShiftList;
+        let temp=JSON.parse(JSON.stringify(contextValue.rosterData.presentValue));
+        let index=e.target.cellIndex-contextValue.systemParam.noOfPrevDate;
         if (preferredShiftList){
-
+            let oldValue= preferredShiftList[index];
+            if ((oldValue)&& (e.target.textContent!==oldValue)){
+                temp[props.itoId].preferredShiftList[index]=e.target.textContent;
+                contextValue.rosterData.set(temp);
+                updateContext({type:'updateRosterData',value:contextValue.rosterData});
+            }else {
+                if (oldValue===undefined){
+                    temp[props.itoId].preferredShiftList[index]=e.target.textContent;
+                    contextValue.rosterData.set(temp);
+                    updateContext({type:'updateRosterData',value:contextValue.rosterData});
+                }
+            }
         }else {
             if (e.target.textContent!=''){
-                let index=e.target.cellIndex-contextValue.systemParam.noOfPrevDate;
-                contextValue.preferredShiftList[props.itoId]=new UndoableData({index:e.target.textContent});
-                updateContext({type:'updatePreferredShift',value:contextValue.preferredShiftList});
+                temp[props.itoId].preferredShiftList={index:e.target.textContent};
+                contextValue.rosterData.set(temp);
+                updateContext({type:'updateRosterData',value:contextValue.rosterData});
             }
         }
     }

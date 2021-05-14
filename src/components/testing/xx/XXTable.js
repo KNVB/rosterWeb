@@ -17,19 +17,24 @@ export default function XXTable(props){
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let rosterSchedulerList=await roster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
             let yearlyRosterStatistic=await roster.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
-            let bodyRowCount=Object.keys(rosterSchedulerList.rosterList).length*2;
+            let bodyRowCount=2;
+            //let bodyRowCount=Object.keys(rosterSchedulerList.rosterList).length*2;
             let monthLength=monthlyCalendar.calendarDateList.length;
 
-            let rosterList={};
-            let preferredShiftList={};
-            Object.keys(rosterSchedulerList.rosterList).forEach(itoId=>{
-                let itoRoster=rosterSchedulerList.rosterList[itoId];
-                rosterList[itoId]=new UndoableData(itoRoster);
-            })
-            Object.keys(rosterSchedulerList.preferredShiftList).forEach(itoId=>{
-                preferredShiftList[itoId]=new UndoableData(rosterSchedulerList.preferredShiftList[itoId]);
-            });
-            
+            let rosterData={};
+            let itoId="ITO1_1999-01-01";
+            //Object.keys(rosterSchedulerList.rosterList).forEach(itoId=>{
+                let psl;
+                if (rosterSchedulerList.preferredShiftList[itoId]){
+                    psl=rosterSchedulerList.preferredShiftList[itoId];
+                }else{
+                    psl={};
+                }
+                rosterData[itoId]={
+                    rosterList:rosterSchedulerList.rosterList[itoId],
+                    preferredShiftList:psl
+                };
+            //})
             updateContext(
                 {
                     type:'updateRosterMonth',
@@ -39,11 +44,10 @@ export default function XXTable(props){
                         changeLoggedInFlag:props.changeLoggedInFlag,
                         hightLightCellIndex:hightLightCellIndex,
                         monthlyCalendar:monthlyCalendar,
-                        rosterList:rosterList,
+                        "rosterData":new UndoableData(rosterData),
                         rosterMonth:props.rosterMonth,
                         selectedRegionUtil:new SelectedRegionUtil(bodyRowCount,monthLength,props.systemParam.noOfPrevDate),
                         systemParam:props.systemParam,
-                        preferredShiftList:preferredShiftList,
                         previousMonthShiftList:rosterSchedulerList.previousMonthShiftList,
                         yearlyRosterStatistic:yearlyRosterStatistic
                     }
@@ -53,15 +57,10 @@ export default function XXTable(props){
     },[props]);
     let dataReducer=(state,action)=>{
         switch(action.type){
-            case 'updatePreferredShift':
+            case 'updateRosterData':
                 return{
                     ...state,
-                    preferredShiftList:action.value,
-                }
-            case 'updateRoster':
-                return{
-                    ...state,
-                    rosterList:action.value,
+                    rosterData:action.value,
                 }
             case 'updateRosterMonth':
                 return action.value;
@@ -78,7 +77,7 @@ export default function XXTable(props){
         <table id="rosterTable">
             <RosterWebContext.Provider value={[contextValue, updateContext]}>
                 {contextValue.monthlyCalendar && <XXHeader/>}
-                {contextValue.rosterList && <XXBody/>}
+                {contextValue.rosterData && <XXBody/>}
             </RosterWebContext.Provider>
         </table>
     )

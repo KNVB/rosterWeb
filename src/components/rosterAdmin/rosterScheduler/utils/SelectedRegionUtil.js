@@ -55,7 +55,7 @@ export default class SelectedRegionUtil{
                   break;
                 case 'preferredShiftList':
                   //temp.preferredShiftList[itoId][x-nOPrevDate]='';
-                  if (temp.preferredShiftList[itoId][x-nOPrevDate]!==undefined){
+                  if (temp.preferredShiftList[itoId][x-nOPrevDate]){
                     delete temp.preferredShiftList[itoId][x-nOPrevDate];
                     undoableRosterList.set(JSON.parse(JSON.stringify(temp)));
                   }

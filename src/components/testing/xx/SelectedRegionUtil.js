@@ -37,15 +37,29 @@ export default class SelectedRegionUtil{
           }
           this.hasCopiedRegion=true;
         }
-        this.deleteData=(undoableRosterList)=>{
+        this.deleteData=(rosterData)=>{
           let itoId,row,table=document.getElementById("rosterTable");
-          let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue.rosterList));
+          let temp=JSON.parse(JSON.stringify(rosterData.presentValue));
+          let tempArray,dataType;
           for (let y=selectedRegion.minY;y<=selectedRegion.maxY;y++){
             row=table.rows[y]
-            itoId=row.id;
+            tempArray=row.id.split(":");
+            itoId=tempArray[0];
+            dataType=tempArray[1];
             for (let x=selectedRegion.minX;x<=selectedRegion.maxX;x++){
-              temp[itoId].shiftList[x]='';
-              undoableRosterList.set(JSON.parse(JSON.stringify(temp)));
+              switch(dataType){
+                case 'shift':
+                  temp[itoId].rosterList.shiftList[x-noOfPrevDate]='';
+                  rosterData.set(temp);
+                  break;
+                case 'preferredShift':
+                  if (temp[itoId].preferredShiftList[x-noOfPrevDate]){
+                    delete temp[itoId].preferredShiftList[x-noOfPrevDate];
+                    rosterData.set(temp);
+                  }
+                default:
+                  break;  
+              }
             }
           }
         }

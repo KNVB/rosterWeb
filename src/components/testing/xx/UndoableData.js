@@ -23,12 +23,17 @@ export default class UndoableData{
         }
         this.set=(newValue)=>{
             console.log('UndoableData:set');
+            //console.log('UndoableData:set:newValue='+JSON.stringify(newValue));
+            //console.log('UndoableData:set:presentValue='+JSON.stringify(this.presentValue));
+            
             pastValue.push(this.presentValue);
             this.presentValue=newValue;
+            console.log('UndoableData:set:pastValue='+JSON.stringify(pastValue));
         }
         this.undo=()=>{
             console.log('UndoableData:undo');
             if (pastValue.length>0){
+                console.log(pastValue);
                 futureValue.push(this.presentValue);
                 this.presentValue=pastValue.pop();
             }
