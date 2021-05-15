@@ -2,9 +2,20 @@ import {useContext} from 'react';
 import BorderedAlignCenterCell from '../cell/BorderedAlignCenterCell';
 import RosterWebContext from '../../../../utils/RosterWebContext';
 import "./EditableCell.css";
+import './EditableShiftCell.css';
 export default function YYCell(props){
-    let className="editableCell";
+    let className="editableCell"+((props.className)?" "+props.className:"");
     let [contextValue, updateContext]=useContext(RosterWebContext);
+    let mouseDownHandler=(e)=>{
+        e.preventDefault();
+        contextValue.selectedRegionUtil.startSelect(e.target);
+        updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil})
+    }
+    let mouseEnterHandler=(e)=>{
+        e.preventDefault();
+        contextValue.selectedRegionUtil.updateSelect(e.target);
+        updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+    }
     let updateValue=e=>{
         let cellIndex=e.target.cellIndex-contextValue.systemParam.noOfPrevDate;
         let temp=JSON.parse(JSON.stringify(contextValue.rosterData.presentValue));
@@ -26,6 +37,8 @@ export default function YYCell(props){
             className={className}
             contentEditable={true}
             onBlur={updateValue}
+            onMouseDown={mouseDownHandler}
+            onMouseEnter={mouseEnterHandler}
             suppressContentEditableWarning={true}>
             {props.children}
         </BorderedAlignCenterCell>

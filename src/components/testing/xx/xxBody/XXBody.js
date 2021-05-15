@@ -13,7 +13,7 @@ export default function XXBody(props){
                 itoRoster={contextValue.rosterData.presentValue[itoId].rosterList}
                 key={itoId+'_shiftList'}
                 itoId={itoId}
-                rowIndex={rowList.lenght+headerRowCount}
+                rowIndex={rowList.length+headerRowCount}
                 previousMonthRoster={contextValue.previousMonthShiftList[itoId]}/>
         )
         rowList.push(
@@ -21,7 +21,7 @@ export default function XXBody(props){
                 itoId={itoId}
                 key={itoId+'_preferredShiftList'}
                 preferredShiftList={contextValue.rosterData.presentValue[itoId].preferredShiftList}
-                rowIndex={rowList.lenght+headerRowCount}/>
+                rowIndex={rowList.length+headerRowCount}/>
         )
     });        
     let keyDown=useCallback((e)=>{
@@ -52,6 +52,19 @@ export default function XXBody(props){
             document.removeEventListener('keydown', keyDown)
         }
     },[keyDown,contextValue.rosterData]);        
+    let mouseUp=useCallback((e)=>{
+        console.log("mouse up");
+        if (contextValue.selectedRegionUtil.isInSelectMode()){
+            contextValue.selectedRegionUtil.endSelect();
+            updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+        }
+    },[contextValue.selectedRegionUtil,updateContext]);
+    useEffect(()=>{
+        document.addEventListener('mouseup',mouseUp);
+        return () => {
+            document.removeEventListener('mouseup', mouseUp)
+        }
+    },[mouseUp]);
     return (
         <tbody>
             {rowList}

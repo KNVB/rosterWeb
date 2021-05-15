@@ -57,6 +57,7 @@ export default class SelectedRegionUtil{
                     delete temp[itoId].preferredShiftList[x-noOfPrevDate];
                     rosterData.set(temp);
                   }
+                  break
                 default:
                   break;  
               }
@@ -78,6 +79,7 @@ export default class SelectedRegionUtil{
               selection.removeAllRanges();
               selection.addRange(range);
               
+              console.log("SelectedRegion.endSelect:"+JSON.stringify(selectedRegion));
             }
         }
         this.getBorderClass=(cellIndex,rowIndex)=>{
@@ -121,7 +123,9 @@ export default class SelectedRegionUtil{
             }
             return result;
         }
-        
+        this.isInSelectMode=()=>{
+          return selectedRegion.inSelectMode
+        }
         this.pasteCopiedRegion=(clipboardData,undoableRosterList)=>{
           if (this.hasCopiedRegion){
             let copiedData=JSON.parse(clipboardData.getData('application/json'));

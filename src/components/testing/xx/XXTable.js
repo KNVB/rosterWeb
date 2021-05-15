@@ -17,8 +17,8 @@ export default function XXTable(props){
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let rosterSchedulerList=await roster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
             let yearlyRosterStatistic=await roster.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
-            let bodyRowCount=2;
-            //let bodyRowCount=Object.keys(rosterSchedulerList.rosterList).length*2;
+            //let bodyRowCount=2;
+            let bodyRowCount=Object.keys(rosterSchedulerList.rosterList).length*2;
             let monthLength=monthlyCalendar.calendarDateList.length;
 
             let rosterData={};

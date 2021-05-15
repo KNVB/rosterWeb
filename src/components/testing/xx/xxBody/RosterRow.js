@@ -25,9 +25,11 @@ export default function RosterRow(props){
         }
     }
     for (let i=0;i<contextValue.monthlyCalendar.calendarDateList.length;i++){
+        let className=contextValue.selectedRegionUtil.getBorderClass(i+contextValue.systemParam.noOfPrevDate+1,props.rowIndex)
         cellList.push(
             <XXCell 
                 availableShiftList={itoRoster.availableShiftList}
+                className={className}
                 itoId={props.itoId}
                 key={props.itoId+"_shift_"+i}
                 rowIndex={props.rowIndex}>

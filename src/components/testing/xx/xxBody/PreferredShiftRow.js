@@ -11,8 +11,10 @@ export default function PreferredShiftRow(props){
         cellList.push(<BorderedCell key={"prev-preferred_shift_"+i}/>);
     }
     for(let i=0;i<31;i++){
+        let className=contextValue.selectedRegionUtil.getBorderClass(i+contextValue.systemParam.noOfPrevDate+1,props.rowIndex)
         cellList.push(
             <YYCell
+                className={className}
                 itoId={props.itoId}
                 rowIndex={props.rowIndex}
                 key={props.itoId+"_preferred_shift_"+i}>

@@ -2,7 +2,7 @@ import ITOShiftStatUtil from './ITOShiftStatUtil';
 export default function AdminShiftStatUtil(){
     const getAllITOStat = (activeShiftInfoList, noOfWorkingDay, rosterData)=>{
         let itoStat,result={};
-        let aShiftCount = [],    bxShiftCount = [],    cShiftCount = [],    dxShiftCount = [];
+        let aShiftCount = [],    bxShiftCount = [],    cShiftCount = [];
         let {getITOStat}=ITOShiftStatUtil();
         
         Object.keys(rosterData).forEach(itoId=>{
