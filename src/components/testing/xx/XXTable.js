@@ -22,9 +22,9 @@ export default function XXTable(props){
             let monthLength=monthlyCalendar.calendarDateList.length;
 
             let rosterData={};
-            let itoId="ITO1_1999-01-01";
+            //let itoId="ITO1_1999-01-01";
             //let itoId="ITO3_2017-10-18";
-            //Object.keys(rosterSchedulerList.rosterList).forEach(itoId=>{
+            Object.keys(rosterSchedulerList.rosterList).forEach(itoId=>{
                 let psl;
                 if (rosterSchedulerList.preferredShiftList[itoId]){
                     psl=rosterSchedulerList.preferredShiftList[itoId];
@@ -35,7 +35,7 @@ export default function XXTable(props){
                     rosterList:rosterSchedulerList.rosterList[itoId],
                     preferredShiftList:psl
                 };
-            //})
+            })
             updateContext(
                 {
                     type:'updateRosterMonth',

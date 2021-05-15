@@ -5,8 +5,9 @@ import RosterWebContext from '../../../../utils/RosterWebContext';
 export default function XXBody(props){
     let [contextValue, updateContext]=useContext(RosterWebContext);
     let rowList=[],headerRowCount=3;
-    let itoId="ITO1_1999-01-01";
+    //let itoId="ITO1_1999-01-01";
     //let itoId="ITO3_2017-10-18";
+    Object.keys(contextValue.rosterData.presentValue).forEach(itoId=>{
         rowList.push(
             <RosterRow 
                 itoRoster={contextValue.rosterData.presentValue[itoId].rosterList}
@@ -21,7 +22,8 @@ export default function XXBody(props){
                 key={itoId+'_preferredShiftList'}
                 preferredShiftList={contextValue.rosterData.presentValue[itoId].preferredShiftList}
                 rowIndex={rowList.lenght+headerRowCount}/>
-        )    
+        )
+    });        
     let keyDown=useCallback((e)=>{
         console.log("keyDown");
         if (e.ctrlKey){
