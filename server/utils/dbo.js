@@ -60,7 +60,12 @@ class DBO
 			return await executeQuery(sqlString);
 		}
 		this.getYearlyRosterStatistic=async(year, month)=>{
-			let result=getStartEndDateString(year,month);
+			let result;
+			if (month<1){
+				year--;
+				month=12;
+			}
+			result=getStartEndDateString(year,month);
 			let sqlString="select a.ito_id,b.post_name,";
 			sqlString=sqlString+"			sum(case when shift ='a' then 1 else 0 end) as a,";
 			sqlString=sqlString+"			sum(case when shift ='b' or shift ='b1' then 1 else 0 end) as b,";
