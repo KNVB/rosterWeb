@@ -1,3 +1,11 @@
+.errorRedBlackGround
+{
+	background-color:red!important;
+	animation: blinker 1s linear infinite;
+}
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
 /*******************************************************************************************************
  *                                                                                                     *
  *    Copied Region border style                                                                       *
@@ -72,3 +80,4 @@
  {
      border-bottom:2px solid black!important;
  }
+ 

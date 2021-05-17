@@ -27,7 +27,10 @@ export default function RosterRow(props){
         }
     }
     for (let i=0;i<contextValue.monthlyCalendar.calendarDateList.length;i++){
-        let className=contextValue.selectedRegionUtil.getBorderClass(i+contextValue.systemParam.noOfPrevDate+1,props.rowIndex)
+        let className=contextValue.selectedRegionUtil.getBorderClass(i+contextValue.systemParam.noOfPrevDate+1,props.rowIndex);
+        if (props.itoStat.duplicatShiftList.includes(i+1)){
+            className+=' errorRedBlackGround';
+        }
         cellList.push(
             <EditableShiftCell
                 availableShiftList={itoRoster.availableShiftList}

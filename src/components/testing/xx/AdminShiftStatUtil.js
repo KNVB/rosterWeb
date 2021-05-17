@@ -1,8 +1,9 @@
 import ITOShiftStatUtil from './ITOShiftStatUtil';
 export default function AdminShiftStatUtil(){
     const getAllITOStat = (activeShiftInfoList, monthlyCalendar, rosterData)=>{
-        let itoStat,roster,result={};
+        let duplicatShift=[],duplicatShiftList={};
         let aShiftCount = [],    bxShiftCount = [],    cShiftCount = [];
+        let itoStat,roster,result={};
         let vacantShift,vacantShiftList={};
         let {getITOStat}=ITOShiftStatUtil();
         
@@ -10,12 +11,14 @@ export default function AdminShiftStatUtil(){
             let itoRoster=rosterData[itoId].rosterList;
             itoStat=getITOStat(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,itoRoster);
             result[itoId]=itoStat;
+            result[itoId].duplicatShiftList=[];
             aShiftCount.push(itoStat.shiftCountList.aShiftCount);
             bxShiftCount.push(itoStat.shiftCountList.bxShiftCount);
             cShiftCount.push(itoStat.shiftCountList.cShiftCount);
         })
         for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
             vacantShift = activeShiftInfoList.essentialShift;
+            duplicatShift=[];
             Object.keys(rosterData).forEach(itoId=>{
                 roster=rosterData[itoId].rosterList;
                 if (roster.shiftList[i+1]){
@@ -26,6 +29,24 @@ export default function AdminShiftStatUtil(){
                                 vacantShift = vacantShift.replace("b", "");
                             } else {
                                 vacantShift = vacantShift.replace(shiftType, "");
+                            }
+
+                            switch (shiftType){
+                                case "a" :                 
+                                case "c" :if (duplicatShift.includes(shiftType)){
+                                            result[itoId].duplicatShiftList.push(i+1);
+                                          } else {
+                                            duplicatShift.push(shiftType);
+                                          }
+                                          break;
+                                case "b" :
+                                case "b1":if (duplicatShift.includes("b")){
+                                            result[itoId].duplicatShiftList.push(i+1);
+                                          }else {
+                                            duplicatShift.push('b');
+                                          }
+                                          break;      
+                                default:break;          
                             }
                         }
                     });
@@ -43,8 +64,8 @@ export default function AdminShiftStatUtil(){
         result.aShiftStdDev  = aShiftSD.toFixed(2);
         result.bxShiftStdDev = bShiftSD.toFixed(2);
         result.cShiftStdDev  = cShiftSD.toFixed(2);
-        result.avgStdDev = avgStdDev.toFixed(2);
-        result.vacantShiftList=vacantShiftList;
+        result.avgStdDev = avgStdDev.toFixed(2);        
+        result.vacantShiftList=vacantShiftList;        
         return result;
     }
     const calculateMean=(data)=>{
