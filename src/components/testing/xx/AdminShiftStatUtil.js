@@ -24,7 +24,7 @@ export default function AdminShiftStatUtil(){
             duplicatShift=[];
 
             for (let y=0;y<itoIdList.length;y++){
-                itoId=itoIdList[i];
+                itoId=itoIdList[y];
                 roster=rosterData[itoId].rosterList;
                 if (roster.shiftList[i+1]){
                     let shiftTypeList = roster.shiftList[i+1].split("+");

@@ -12,4 +12,5 @@
 table#rosterTable
 {
 	font-size: 15px;
+	box-sizing: border-box;
 }
