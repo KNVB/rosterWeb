@@ -6,6 +6,11 @@ import './EditableShiftCell.css';
 export default function YYCell(props){
     let className="editableCell"+((props.className)?" "+props.className:"");
     let [contextValue, updateContext]=useContext(RosterWebContext);
+    let copyData=(e)=>{
+        e.preventDefault();
+        contextValue.selectedRegionUtil.copySelectedRegion(e.clipboardData);
+        updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+    }
     let mouseDownHandler=(e)=>{
         e.preventDefault();
         contextValue.selectedRegionUtil.startSelect(e.target);
@@ -15,6 +20,12 @@ export default function YYCell(props){
         e.preventDefault();
         contextValue.selectedRegionUtil.updateSelect(e.target);
         updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+    }
+    let pasteData=e=>{
+        if (contextValue.selectedRegionUtil.hasCopiedRegion){
+            contextValue.selectedRegionUtil.pasteCopiedRegion(e.clipboardData,contextValue.rosterData,contextValue.systemParam.noOfPrevDate);
+            updateContext({type:'updateRosterData', value:contextValue.rosterData})
+        }   
     }
     let updateValue=e=>{
         let cellIndex=e.target.cellIndex-contextValue.systemParam.noOfPrevDate;
@@ -37,8 +48,10 @@ export default function YYCell(props){
             className={className}
             contentEditable={true}
             onBlur={updateValue}
+            onCopy={copyData}
             onMouseDown={mouseDownHandler}
             onMouseEnter={mouseEnterHandler}
+            onPaste={pasteData}
             suppressContentEditableWarning={true}>
             {props.children}
         </BorderedAlignCenterCell>

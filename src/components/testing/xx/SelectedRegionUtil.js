@@ -27,7 +27,7 @@ export default class SelectedRegionUtil{
               }
               result.push(col);
           }
-          console.log("SelectedRegionUtil:copySelectedRegion:"+JSON.stringify(result));
+          //console.log("SelectedRegionUtil:copySelectedRegion:"+JSON.stringify(result));
           clipboardData.setData('application/json',JSON.stringify(result));
           copiedRegion={
             minX:selectedRegion.minX,
@@ -126,26 +126,34 @@ export default class SelectedRegionUtil{
         this.isInSelectMode=()=>{
           return selectedRegion.inSelectMode
         }
-        this.pasteCopiedRegion=(clipboardData,undoableRosterList)=>{
+        this.pasteCopiedRegion=(clipboardData,rosterData,noOfPrevDate)=>{
           if (this.hasCopiedRegion){
             let copiedData=JSON.parse(clipboardData.getData('application/json'));
-            let destX=selectedRegion.minX,destY=selectedRegion.minY,itoId;
+            let destX,destY=selectedRegion.minY,itoId;
             let table=document.getElementById("rosterTable");
-
-            let temp=JSON.parse(JSON.stringify(undoableRosterList.presentValue));
+            let temp=JSON.parse(JSON.stringify(rosterData.presentValue));
+            let tempArray,rowType;
             for (let y=0;y<copiedData.length;y++){
               let row=table.rows[destY++];
-              itoId=row.id;
-              let dataRow=temp[itoId];
-              if (dataRow){
-                destX=selectedRegion.minX;
+              if ((row) && (row.id.indexOf(':')>-1)){
+                tempArray=row.id.split(":");
+                itoId=tempArray[0];
+                rowType=tempArray[1];
+                destX=selectedRegion.minX-noOfPrevDate;
                 for (let x=0;x<copiedData[y].length;x++){
-                  dataRow.shiftList[destX++]=copiedData[y][x];
-                  undoableRosterList.set(JSON.parse(JSON.stringify(temp)));
+                  switch(rowType){
+                    case 'shift':
+                      temp[itoId].rosterList.shiftList[destX++]=copiedData[y][x];
+                      break;
+                    case 'preferredShift':
+                      temp[itoId].preferredShiftList[destX++]=copiedData[y][x];
+                      break;
+                  }
+                  rosterData.set(temp);
                 }
               }
             }
-            selectedRegion.maxX=destX-1;
+            selectedRegion.maxX=destX+noOfPrevDate;
             selectedRegion.maxY=destY-1;
           }
         }
