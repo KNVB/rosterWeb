@@ -2,7 +2,7 @@ import {useContext,useState} from 'react';
 import BorderedCell from '../cell/BorderedCell';
 import NameCell from '../cell/NameCell';
 import RosterWebContext from '../../../../utils/RosterWebContext';
-import YYCell from '../cell/YYCell';
+import PreferredShiftCell from '../cell/PreferredShiftCell';
 export default function PreferredShiftRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let [contextValue, updateContext]=useContext(RosterWebContext);
@@ -13,13 +13,13 @@ export default function PreferredShiftRow(props){
     for(let i=0;i<31;i++){
         let className=contextValue.selectedRegionUtil.getBorderClass(i+contextValue.systemParam.noOfPrevDate+1,props.rowIndex)
         cellList.push(
-            <YYCell
+            <PreferredShiftCell
                 className={className}
                 itoId={props.itoId}
                 rowIndex={props.rowIndex}
                 key={props.itoId+"_preferred_shift_"+i}>
                 {props.preferredShiftList[i+1]}
-            </YYCell>
+            </PreferredShiftCell>
         );        
     }    
     return(

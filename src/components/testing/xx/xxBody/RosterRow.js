@@ -1,5 +1,6 @@
 import {useContext,useState} from 'react';
 import BorderedCell from '../cell/BorderedCell';
+import EditableShiftCell from '../cell/EditableShiftCell';
 import NameCell from '../cell/NameCell';
 import Parser from "html-react-parser";
 import RosterWebContext from '../../../../utils/RosterWebContext';
@@ -27,20 +28,24 @@ export default function RosterRow(props){
     for (let i=0;i<contextValue.monthlyCalendar.calendarDateList.length;i++){
         let className=contextValue.selectedRegionUtil.getBorderClass(i+contextValue.systemParam.noOfPrevDate+1,props.rowIndex)
         cellList.push(
-            <XXCell 
+            <EditableShiftCell
                 availableShiftList={itoRoster.availableShiftList}
                 className={className}
                 itoId={props.itoId}
                 key={props.itoId+"_shift_"+i}
-                rowIndex={props.rowIndex}>
+                rowIndex={props.rowIndex}
+                setIsHighLightRow={setIsHighLightRow}>
                 {itoRoster.shiftList[i+1]}
-            </XXCell>
+            </EditableShiftCell>
         );
     }
     for (let i=contextValue.monthlyCalendar.calendarDateList.length;i<31;i++){
         cellList.push(
             <BorderedCell key={props.itoId+"_shift_"+i}></BorderedCell>
         );
+    }
+    if (isHighLightRow){
+        nameCellCssClass="highlightCell";
     }
     return(
         <tr id={props.itoId+':shift'}>

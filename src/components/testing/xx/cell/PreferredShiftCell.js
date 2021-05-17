@@ -1,11 +1,16 @@
 import {useContext} from 'react';
-import './EditableCell.css';
-import BorderedAlignCenterCell from './BorderedAlignCenterCell'
+import BorderedAlignCenterCell from '../cell/BorderedAlignCenterCell';
 import RosterWebContext from '../../../../utils/RosterWebContext';
-import UndoableData from '../UndoableData';
+import "./EditableCell.css";
+import './EditableShiftCell.css';
 export default function PreferredShiftCell(props){
-    let cssClass="editableCell"+((props.className)?" "+props.className:"");
+    let className="editableCell"+((props.className)?" "+props.className:"");
     let [contextValue, updateContext]=useContext(RosterWebContext);
+    let copyData=(e)=>{
+        e.preventDefault();
+        contextValue.selectedRegionUtil.copySelectedRegion(e.clipboardData);
+        updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+    }
     let mouseDownHandler=(e)=>{
         e.preventDefault();
         contextValue.selectedRegionUtil.startSelect(e.target);
@@ -16,41 +21,41 @@ export default function PreferredShiftCell(props){
         contextValue.selectedRegionUtil.updateSelect(e.target);
         updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
     }
-    let updateValue=(e)=>{
-        e.preventDefault();
-        //console.log(e.target.textContent);
-        
-        let preferredShiftList=contextValue.rosterData.presentValue[props.itoId].preferredShiftList;
+    let pasteData=e=>{
+        if (contextValue.selectedRegionUtil.hasCopiedRegion){
+            contextValue.selectedRegionUtil.pasteCopiedRegion(e.clipboardData,contextValue.rosterData,contextValue.systemParam.noOfPrevDate);
+            updateContext({type:'updateRosterData', value:contextValue.rosterData})
+        }   
+    }
+    let updateValue=e=>{
+        let cellIndex=e.target.cellIndex-contextValue.systemParam.noOfPrevDate;
         let temp=JSON.parse(JSON.stringify(contextValue.rosterData.presentValue));
-        let index=e.target.cellIndex-contextValue.systemParam.noOfPrevDate;
-        if (preferredShiftList){
-            let oldValue= preferredShiftList[index];
-            if ((oldValue)&& (e.target.textContent!==oldValue)){
-                temp[props.itoId].preferredShiftList[index]=e.target.textContent;
+        let oldValue=temp[props.itoId].preferredShiftList[cellIndex];
+        if (oldValue){
+            if (oldValue!==e.target.textContent){
+                temp[props.itoId].preferredShiftList[cellIndex]=e.target.textContent;
+                console.log('YYCell.updateValue');
                 contextValue.rosterData.set(temp);
-                updateContext({type:'updateRosterData',value:contextValue.rosterData});
-            }else {
-                if (oldValue===undefined){
-                    temp[props.itoId].preferredShiftList[index]=e.target.textContent;
-                    contextValue.rosterData.set(temp);
-                    updateContext({type:'updateRosterData',value:contextValue.rosterData});
-                }
+                updateContext({type:'updateRosterData', value:contextValue.rosterData});
             }
         }else {
-            if (e.target.textContent!=''){
-                temp[props.itoId].preferredShiftList={index:e.target.textContent};
+            if (e.target.textContent!==''){
+                temp[props.itoId].preferredShiftList[cellIndex]=e.target.textContent;
+                console.log('YYCell.updateValue');
                 contextValue.rosterData.set(temp);
-                updateContext({type:'updateRosterData',value:contextValue.rosterData});
+                updateContext({type:'updateRosterData', value:contextValue.rosterData});
             }
         }
     }
     return(
-        <BorderedAlignCenterCell 
-            className={cssClass}
+        <BorderedAlignCenterCell
+            className={className}
             contentEditable={true}
             onBlur={updateValue}
+            onCopy={copyData}
             onMouseDown={mouseDownHandler}
             onMouseEnter={mouseEnterHandler}
+            onPaste={pasteData}
             suppressContentEditableWarning={true}>
             {props.children}
         </BorderedAlignCenterCell>

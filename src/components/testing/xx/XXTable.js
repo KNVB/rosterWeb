@@ -65,6 +65,11 @@ export default function XXTable(props){
                 }
             case 'updateRosterMonth':
                 return action.value;
+            case "updateHighLightCellIndex":
+                return{
+                    ...state,
+                    hightLightCellIndex:action.value,
+                }
             case 'updateSelectedRegion':
                 return{
                     ...state,

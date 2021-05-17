@@ -153,7 +153,7 @@ export default class SelectedRegionUtil{
                 }
               }
             }
-            selectedRegion.maxX=destX+noOfPrevDate;
+            selectedRegion.maxX=destX+noOfPrevDate-1;
             selectedRegion.maxY=destY-1;
           }
         }

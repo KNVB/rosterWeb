@@ -35,6 +35,7 @@ export default function XXCell(props){
         //console.log(oldValue+','+e.target.textContent+'='+(oldValue===e.target.textContent));
         if (oldValue!==e.target.textContent){
             temp[props.itoId].rosterList.shiftList[realX]=e.target.textContent;
+            console.log('XXCell.updateValue');
             contextValue.rosterData.set(temp);
             updateContext({type:'updateRosterData', value:contextValue.rosterData});
         }

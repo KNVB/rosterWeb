@@ -34,13 +34,17 @@ export default function YYCell(props){
         if (oldValue){
             if (oldValue!==e.target.textContent){
                 temp[props.itoId].preferredShiftList[cellIndex]=e.target.textContent;
+                console.log('YYCell.updateValue');
                 contextValue.rosterData.set(temp);
                 updateContext({type:'updateRosterData', value:contextValue.rosterData});
             }
         }else {
-            temp[props.itoId].preferredShiftList[cellIndex]=e.target.textContent;
-            contextValue.rosterData.set(temp);
-            updateContext({type:'updateRosterData', value:contextValue.rosterData});
+            if (e.target.textContent!==''){
+                temp[props.itoId].preferredShiftList[cellIndex]=e.target.textContent;
+                console.log('YYCell.updateValue');
+                contextValue.rosterData.set(temp);
+                updateContext({type:'updateRosterData', value:contextValue.rosterData});
+            }
         }
     }
     return(
