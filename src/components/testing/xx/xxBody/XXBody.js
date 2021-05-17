@@ -44,6 +44,47 @@ export default function XXBody(props){
                     break
                 default:break;    
             }
+        }else {
+            switch (e.which){
+                case  9://handle tab key
+                    if (e.shiftKey){
+                        contextValue.selectedRegionUtil.selectNextCell(e,-1,0);
+                    }else {
+                        contextValue.selectedRegionUtil.selectNextCell(e,1,0);
+                    }
+                    updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+					break;
+                case 13://handle "Enter" key event
+                    if (e.shiftKey){
+                        contextValue.selectedRegionUtil.selectNextCell(e,0,-1);
+                    } else {
+                        contextValue.selectedRegionUtil.selectNextCell(e,0,1);
+                    }
+                    updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+					break;
+                case 37://handle left arrow key event
+                    contextValue.selectedRegionUtil.selectNextCell(e,-1,0);
+                    updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+                    break;
+                case 38://handle up arrow key event
+                    contextValue.selectedRegionUtil.selectNextCell(e,0,-1);
+                    updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+                    break;
+                case 39://handle right arrow key event
+                    contextValue.selectedRegionUtil.selectNextCell(e,1,0);
+                    updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+                    break;
+                case 40://handle down arrow key event
+                    contextValue.selectedRegionUtil.selectNextCell(e,0,1);
+                    updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+                    break;
+                case 46://handle delete key event
+                    e.preventDefault();
+                    contextValue.selectedRegionUtil.deleteData(contextValue.rosterData);
+                    updateContext({type:'updateRosterData',value:contextValue.rosterData});
+                    break    
+                default:break;
+            }    
         }
     },[updateContext,contextValue.rosterData]); 
     useEffect(()=>{

@@ -27,14 +27,17 @@ export default class UndoableData{
             //console.log('UndoableData:set:presentValue='+JSON.stringify(this.presentValue));
             
             pastValue.push(this.presentValue);
-            this.presentValue=newValue;
+            this.presentValue=JSON.parse(JSON.stringify(newValue));
             //console.log('UndoableData:set:pastValue='+JSON.stringify(pastValue));
         }
         this.undo=()=>{
-            console.log('UndoableData:undo');
+            console.log('UndoableData:undo:'+this.canUndo());
+            console.log(pastValue);
+            /*
             for (let i=0;i<pastValue.length;i++){
                 console.log(pastValue[i]["ITO1_1999-01-01"].rosterList.shiftList[1]);
             }
+            */
             if (pastValue.length>0){
                 //console.log(pastValue);
                 futureValue.push(this.presentValue);
