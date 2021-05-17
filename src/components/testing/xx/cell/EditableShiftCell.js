@@ -1,5 +1,4 @@
 import {useContext} from 'react';
-import BorderedAlignCenterCell from '../cell/BorderedAlignCenterCell';
 import RosterWebContext from '../../../../utils/RosterWebContext';
 import ShiftCell from './ShiftCell';
 import "./EditableCell.css";

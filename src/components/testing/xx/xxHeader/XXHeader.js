@@ -4,7 +4,7 @@ import HolidayRow from './HolidayRow';
 import WeekDayRow from './WeekDayRow';
 import RosterWebContext from '../../../../utils/RosterWebContext';
 export default function XXHeader(props){
-    let [contextValue, updateContext]=useContext(RosterWebContext);
+    let [contextValue]=useContext(RosterWebContext);
     return(
         <thead>
             <HolidayRow noOfPrevDate={contextValue.systemParam.noOfPrevDate}/>

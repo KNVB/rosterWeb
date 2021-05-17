@@ -1,11 +1,14 @@
 import {useEffect,useReducer} from 'react';
+import ButtonPanel from './xxFooter/ButtonPanel';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import Roster from '../../../utils/Roster';
 import RosterWebContext from '../../../utils/RosterWebContext';
 import SelectedRegionUtil from './SelectedRegionUtil';
 import UndoableData from './UndoableData';
 import XXBody from './xxBody/XXBody';
+import XXFooter from './xxFooter/XXFooter';
 import XXHeader from './xxHeader/XXHeader';
+import YearlyRosterStatistic from './xxFooter/YearlyRosterStatistic';
 import './XXTable.css';
 export default function XXTable(props){
     useEffect(()=>{
@@ -80,11 +83,16 @@ export default function XXTable(props){
         }
     }
     const [contextValue, updateContext] = useReducer(dataReducer,{});
+    let buttonPanel=<ButtonPanel/>
+    let yearlyStat=<YearlyRosterStatistic/>
     return(
         <table id="rosterTable">
             <RosterWebContext.Provider value={[contextValue, updateContext]}>
                 {contextValue.monthlyCalendar && <XXHeader/>}
                 {contextValue.rosterData && <XXBody/>}
+                {contextValue.activeShiftInfoList && 
+                    <XXFooter buttonPanel={buttonPanel} noOfPrevDate={props.systemParam.noOfPrevDate} yearlyStat={yearlyStat}/>
+                }
             </RosterWebContext.Provider>
         </table>
     )

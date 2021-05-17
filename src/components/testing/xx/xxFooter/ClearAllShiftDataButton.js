@@ -1,5 +1,4 @@
 import {useContext} from 'react';
-import Roster from '../../../../utils/Roster';
 import RosterWebContext from '../../../../utils/RosterWebContext';
 
 export default function ClearAllShiftDataButton(){

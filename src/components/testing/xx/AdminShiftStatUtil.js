@@ -1,13 +1,15 @@
 import ITOShiftStatUtil from './ITOShiftStatUtil';
 export default function AdminShiftStatUtil(){
     const getAllITOStat = (activeShiftInfoList, monthlyCalendar, rosterData)=>{
-        let duplicatShift=[],duplicatShiftList={};
+        let duplicatShift=[];
         let aShiftCount = [],    bxShiftCount = [],    cShiftCount = [];
-        let itoStat,roster,result={};
+        let itoStat,roster,result={},shiftType;
         let vacantShift,vacantShiftList={};
         let {getITOStat}=ITOShiftStatUtil();
-        
-        Object.keys(rosterData).forEach(itoId=>{
+        let itoId,itoIdList=Object.keys(rosterData);
+
+        for (let i=0;i<itoIdList.length;i++){
+            itoId=itoIdList[i];
             let itoRoster=rosterData[itoId].rosterList;
             itoStat=getITOStat(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,itoRoster);
             result[itoId]=itoStat;
@@ -15,15 +17,19 @@ export default function AdminShiftStatUtil(){
             aShiftCount.push(itoStat.shiftCountList.aShiftCount);
             bxShiftCount.push(itoStat.shiftCountList.bxShiftCount);
             cShiftCount.push(itoStat.shiftCountList.cShiftCount);
-        })
+        }
+
         for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
             vacantShift = activeShiftInfoList.essentialShift;
             duplicatShift=[];
-            Object.keys(rosterData).forEach(itoId=>{
+
+            for (let y=0;y<itoIdList.length;y++){
+                itoId=itoIdList[i];
                 roster=rosterData[itoId].rosterList;
                 if (roster.shiftList[i+1]){
                     let shiftTypeList = roster.shiftList[i+1].split("+");
-                    shiftTypeList.forEach(shiftType => {
+                    for (let j=0;j<shiftTypeList.length;j++){
+                        shiftType=shiftTypeList[j];
                         if (roster.availableShiftList.includes(shiftType)){
                             if (shiftType === "b1") {
                                 vacantShift = vacantShift.replace("b", "");
@@ -49,14 +55,13 @@ export default function AdminShiftStatUtil(){
                                 default:break;          
                             }
                         }
-                    });
+                    }
                 }
-            });
+            }
             if (vacantShift!==''){
                 vacantShiftList[i+1]=vacantShift;
             }
-        }
-
+        }    
         let aShiftSD=calculateStdDev(aShiftCount);
         let bShiftSD=calculateStdDev(bxShiftCount);
         let cShiftSD=calculateStdDev(cShiftCount);

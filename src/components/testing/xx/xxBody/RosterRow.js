@@ -5,12 +5,11 @@ import EditableShiftCell from '../cell/EditableShiftCell';
 import NameCell from '../cell/NameCell';
 import Parser from "html-react-parser";
 import RosterWebContext from '../../../../utils/RosterWebContext';
-import XXCell from '../cell/XXCell';
 import ShiftCell from '../cell/ShiftCell';
 export default function RosterRow(props){
     let cellList=[],nameCellCssClass="";
     const [isHighLightRow, setIsHighLightRow] = useState(false);
-    let [contextValue, updateContext]=useContext(RosterWebContext);
+    let [contextValue]=useContext(RosterWebContext);
     let itoRoster=props.itoRoster;
     let itoNameContact = Parser(itoRoster.itoName+ "<br>" + itoRoster.itoPostName + " Extn. 2458");
     if (props.previousMonthRoster){

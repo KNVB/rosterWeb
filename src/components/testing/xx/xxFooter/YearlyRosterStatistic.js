@@ -3,7 +3,7 @@ import BorderedAlignCenterCell from '../../../cell/BorderedAlignCenterCell';
 import RosterWebContext from '../../../../utils/RosterWebContext';
 import './YearlyRosterStatistic.css';
 export default function YearlyRosterStatistic(){
-    let [contextValue, updateContext] =useContext(RosterWebContext);
+    let [contextValue] =useContext(RosterWebContext);
     let rowList=[];
     Object.keys(contextValue.yearlyRosterStatistic).forEach(itoId=>{
         let aShiftTotal=0,bxShiftTotal=0,cShiftTotal=0,dxShiftTotal=0,oShiftTotal=0,finalTotal=0;

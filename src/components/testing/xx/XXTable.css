@@ -9,3 +9,7 @@
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc477', endColorstr='#fb9e25',GradientType=0);
 	background-color:#ffc477;
 }
+table#rosterTable
+{
+	font-size: 15px;
+}

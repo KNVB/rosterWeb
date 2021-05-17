@@ -6,7 +6,7 @@ import NameCell from '../cell/NameCell';
 import RosterWebContext from '../../../../utils/RosterWebContext';
 export default function VacantShiftRow(props){
     let cellList=[];
-    let [contextValue, updateContext]=useContext(RosterWebContext);
+    let [contextValue]=useContext(RosterWebContext);
     for (let i=0;i<contextValue.systemParam.noOfPrevDate;i++){
         cellList.push(<BorderedCell className="bottomCell" key={'preVacant_'+i}/>);
     }

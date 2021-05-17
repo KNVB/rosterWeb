@@ -148,6 +148,7 @@ export default class SelectedRegionUtil{
                     case 'preferredShift':
                       temp[itoId].preferredShiftList[destX++]=copiedData[y][x];
                       break;
+                    default:break  
                   }
                   rosterData.set(temp);
                 }

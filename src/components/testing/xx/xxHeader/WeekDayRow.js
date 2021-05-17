@@ -6,7 +6,7 @@ import RosterWebContext from '../../../../utils/RosterWebContext';
 import WeekDayCell from './WeekDayCell';
 export default function WeekDayRow(props){
     let weekdayRow=[];
-    let [contextValue,updateContext] = useContext(RosterWebContext);
+    let [contextValue] = useContext(RosterWebContext);
     let calendarUtility=contextValue.calendarUtility;
     let monthlyCalendar=contextValue.monthlyCalendar;
 

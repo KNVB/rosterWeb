@@ -7,7 +7,7 @@ import RosterWebContext from '../../../../utils/RosterWebContext';
 export default function HolidayRow(props){
     let holidayCellList=[];
     //console.log(props);
-    let [contextValue,updateContext] = useContext(RosterWebContext);
+    let [contextValue] = useContext(RosterWebContext);
   
     for (let i=props.noOfPrevDate;i>0;i--){
         holidayCellList.push(

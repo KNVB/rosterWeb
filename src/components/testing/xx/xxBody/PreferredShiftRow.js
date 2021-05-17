@@ -5,7 +5,7 @@ import RosterWebContext from '../../../../utils/RosterWebContext';
 import PreferredShiftCell from '../cell/PreferredShiftCell';
 export default function PreferredShiftRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
-    let [contextValue, updateContext]=useContext(RosterWebContext);
+    let [contextValue]=useContext(RosterWebContext);
     let cellList=[],nameCellCssClass="";
     for (let i=0;i<contextValue.systemParam.noOfPrevDate;i++){
         cellList.push(<BorderedCell key={"prev-preferred_shift_"+i}/>);

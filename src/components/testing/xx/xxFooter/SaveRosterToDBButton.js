@@ -7,7 +7,6 @@ export default function SaveRosterToDBButton(){
     async function saveRosterToDB(){
         let roster=new Roster(contextValue.changeLoggedInFlag);
         //console.log(contextValue.undoableRosterSchedulerList.presentValue.rosterList);
-        console.log(contextValue.undoableRosterSchedulerList.presentValue.preferredShiftList);
         /*
         roster.saveRosterToDB({
             month:rosterMonth.getMonth()+1,

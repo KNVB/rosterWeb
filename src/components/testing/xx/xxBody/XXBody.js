@@ -96,7 +96,7 @@ export default function XXBody(props){
                 default:break;
             }    
         }
-    },[updateContext,contextValue.rosterData]); 
+    },[updateContext,contextValue.rosterData,contextValue.selectedRegionUtil]); 
     useEffect(()=>{
         document.addEventListener('keydown',keyDown);
         return () => {

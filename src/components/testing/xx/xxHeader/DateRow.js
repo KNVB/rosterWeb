@@ -7,7 +7,7 @@ import RosterWebContext from '../../../../utils/RosterWebContext';
 import ShiftCountCell from './ShiftCountCell';
 export default function DateRow(props){
     let dateRow=[];
-    let [contextValue,updateContext] = useContext(RosterWebContext);
+    let [contextValue] = useContext(RosterWebContext);
     
     let monthlyCalendar=contextValue.monthlyCalendar;  
     
