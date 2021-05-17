@@ -23,21 +23,13 @@ export default class UndoableData{
         }
         this.set=(newValue)=>{
             console.log('UndoableData:set');
-            //console.log('UndoableData:set:newValue='+JSON.stringify(newValue));
-            //console.log('UndoableData:set:presentValue='+JSON.stringify(this.presentValue));
             
             pastValue.push(this.presentValue);
             this.presentValue=JSON.parse(JSON.stringify(newValue));
-            //console.log('UndoableData:set:pastValue='+JSON.stringify(pastValue));
         }
         this.undo=()=>{
             console.log('UndoableData:undo:'+this.canUndo());
-            console.log(pastValue);
-            /*
-            for (let i=0;i<pastValue.length;i++){
-                console.log(pastValue[i]["ITO1_1999-01-01"].rosterList.shiftList[1]);
-            }
-            */
+            //console.log(pastValue);
             if (pastValue.length>0){
                 //console.log(pastValue);
                 futureValue.push(this.presentValue);

@@ -62,6 +62,10 @@ export default function XXBody(props){
                     }
                     updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
 					break;
+                case 27://handle "Esc" key event
+                    contextValue.selectedRegionUtil.clearCopiedRegion();
+                    updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+                    break;                    
                 case 37://handle left arrow key event
                     contextValue.selectedRegionUtil.selectNextCell(e,-1,0);
                     updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
