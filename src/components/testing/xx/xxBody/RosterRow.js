@@ -1,5 +1,6 @@
 import {useContext,useState} from 'react';
 import BorderedCell from '../cell/BorderedCell';
+import BorderedAlignCenterCell from '../cell/BorderedAlignCenterCell';
 import EditableShiftCell from '../cell/EditableShiftCell';
 import NameCell from '../cell/NameCell';
 import Parser from "html-react-parser";
@@ -51,6 +52,16 @@ export default function RosterRow(props){
         <tr id={props.itoId+':shift'}>
             <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>
             {cellList}
+            <BorderedAlignCenterCell>{props.itoStat.expectedWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{props.itoStat.actualWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{props.itoStat.lastMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{props.itoStat.thisMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{props.itoStat.totalBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{props.itoStat.shiftCountList.aShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{props.itoStat.shiftCountList.bxShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{props.itoStat.shiftCountList.cShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{props.itoStat.shiftCountList.dxShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell className="tailCell">{props.itoStat.actualWorkingDayCount}</BorderedAlignCenterCell>
         </tr>
     )
 }

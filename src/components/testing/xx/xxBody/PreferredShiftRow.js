@@ -17,15 +17,25 @@ export default function PreferredShiftRow(props){
                 className={className}
                 itoId={props.itoId}
                 rowIndex={props.rowIndex}
-                key={props.itoId+"_preferred_shift_"+i}>
+                key={props.itoId+"_preferred_shift_"+i}
+                setIsHighLightRow={setIsHighLightRow}>
                 {props.preferredShiftList[i+1]}
             </PreferredShiftCell>
         );        
-    }    
+    }
+    if (isHighLightRow){
+        nameCellCssClass="highlightCell";
+    }  
     return(
         <tr id={props.itoId+':preferredShift'}>
             <NameCell className={nameCellCssClass}>Preferred ShiftList</NameCell>
             {cellList}
+            <BorderedCell colSpan="5"/>
+            <BorderedCell />
+            <BorderedCell />
+            <BorderedCell />
+            <BorderedCell />
+            <BorderedCell className="tailCell"/>
         </tr>
     )
 }

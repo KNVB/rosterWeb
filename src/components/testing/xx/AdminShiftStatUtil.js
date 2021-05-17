@@ -1,18 +1,41 @@
 import ITOShiftStatUtil from './ITOShiftStatUtil';
 export default function AdminShiftStatUtil(){
-    const getAllITOStat = (activeShiftInfoList, noOfWorkingDay, rosterData)=>{
-        let itoStat,result={};
+    const getAllITOStat = (activeShiftInfoList, monthlyCalendar, rosterData)=>{
+        let itoStat,roster,result={};
         let aShiftCount = [],    bxShiftCount = [],    cShiftCount = [];
+        let vacantShift,vacantShiftList={};
         let {getITOStat}=ITOShiftStatUtil();
         
         Object.keys(rosterData).forEach(itoId=>{
             let itoRoster=rosterData[itoId].rosterList;
-            itoStat=getITOStat(activeShiftInfoList,noOfWorkingDay,itoRoster);
+            itoStat=getITOStat(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,itoRoster);
             result[itoId]=itoStat;
             aShiftCount.push(itoStat.shiftCountList.aShiftCount);
             bxShiftCount.push(itoStat.shiftCountList.bxShiftCount);
             cShiftCount.push(itoStat.shiftCountList.cShiftCount);
         })
+        for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
+            vacantShift = activeShiftInfoList.essentialShift;
+            Object.keys(rosterData).forEach(itoId=>{
+                roster=rosterData[itoId].rosterList;
+                if (roster.shiftList[i+1]){
+                    let shiftTypeList = roster.shiftList[i+1].split("+");
+                    shiftTypeList.forEach(shiftType => {
+                        if (roster.availableShiftList.includes(shiftType)){
+                            if (shiftType === "b1") {
+                                vacantShift = vacantShift.replace("b", "");
+                            } else {
+                                vacantShift = vacantShift.replace(shiftType, "");
+                            }
+                        }
+                    });
+                }
+            });
+            if (vacantShift!==''){
+                vacantShiftList[i+1]=vacantShift;
+            }
+        }
+
         let aShiftSD=calculateStdDev(aShiftCount);
         let bShiftSD=calculateStdDev(bxShiftCount);
         let cShiftSD=calculateStdDev(cShiftCount);
@@ -21,6 +44,7 @@ export default function AdminShiftStatUtil(){
         result.bxShiftStdDev = bShiftSD.toFixed(2);
         result.cShiftStdDev  = cShiftSD.toFixed(2);
         result.avgStdDev = avgStdDev.toFixed(2);
+        result.vacantShiftList=vacantShiftList;
         return result;
     }
     const calculateMean=(data)=>{

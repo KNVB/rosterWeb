@@ -1,10 +1,15 @@
 import {useCallback,useContext,useEffect} from 'react';
+import AdminShiftStatUtil from '../AdminShiftStatUtil';
 import PreferredShiftRow from './PreferredShiftRow';
 import RosterRow from './RosterRow';
 import RosterWebContext from '../../../../utils/RosterWebContext';
+import VacantShiftRow from './VacantShiftRow';
 export default function XXBody(props){
     let [contextValue, updateContext]=useContext(RosterWebContext);
     let rowList=[],headerRowCount=3;
+    let {getAllITOStat}=AdminShiftStatUtil();
+    let itoStat=getAllITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar, contextValue.rosterData.presentValue);
+    
     //let itoId="ITO1_1999-01-01";
     //let itoId="ITO3_2017-10-18";
     Object.keys(contextValue.rosterData.presentValue).forEach(itoId=>{
@@ -13,6 +18,7 @@ export default function XXBody(props){
                 itoRoster={contextValue.rosterData.presentValue[itoId].rosterList}
                 key={itoId+'_shiftList'}
                 itoId={itoId}
+                itoStat={itoStat[itoId]}
                 rowIndex={rowList.length+headerRowCount}
                 previousMonthRoster={contextValue.previousMonthShiftList[itoId]}/>
         )
@@ -109,10 +115,11 @@ export default function XXBody(props){
         return () => {
             document.removeEventListener('mouseup', mouseUp)
         }
-    },[mouseUp]);
+    },[mouseUp]);    
     return (
         <tbody>
             {rowList}
+            <VacantShiftRow itoStat={itoStat}/>
         </tbody>
     )
 }

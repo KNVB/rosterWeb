@@ -18,8 +18,12 @@ export default function PreferredShiftCell(props){
     }
     let mouseEnterHandler=(e)=>{
         e.preventDefault();
+        props.setIsHighLightRow(true);
         contextValue.selectedRegionUtil.updateSelect(e.target);
         updateContext({type:'updateSelectedRegion',value:contextValue.selectedRegionUtil});
+    }
+    let mouseLeaveHandler=(e)=>{
+        props.setIsHighLightRow(false);
     }
     let pasteData=e=>{
         if (contextValue.selectedRegionUtil.hasCopiedRegion){
@@ -55,6 +59,7 @@ export default function PreferredShiftCell(props){
             onCopy={copyData}
             onMouseDown={mouseDownHandler}
             onMouseEnter={mouseEnterHandler}
+            onMouseLeave={mouseLeaveHandler}
             onPaste={pasteData}
             suppressContentEditableWarning={true}>
             {props.children}

@@ -11,25 +11,9 @@ export default function VacantShiftRow(props){
         cellList.push(<BorderedCell className="bottomCell" key={'preVacant_'+i}/>);
     }
     for (let i=0;i<contextValue.monthlyCalendar.calendarDateList.length;i++){
-        let vacantShift = contextValue.activeShiftInfoList.essentialShift;
-        Object.keys(contextValue.rosterList).forEach(itoId=>{
-            let roster = contextValue.rosterList[itoId].presentValue;
-            if (roster.shiftList[i+1]){
-                let shiftTypeList = roster.shiftList[i+1].split("+");
-                shiftTypeList.forEach(shiftType => {
-                    if (roster.availableShiftList.includes(shiftType)){
-                        if (shiftType === "b1") {
-                            vacantShift = vacantShift.replace("b", "");
-                        } else {
-                            vacantShift = vacantShift.replace(shiftType, "");
-                        }
-                    }
-                });
-            }
-        })
         cellList.push(
             <BorderedAlignCenterCell className="bottomCell" key={"vacantShift_" + i}>
-              {vacantShift}
+              {props.itoStat.vacantShiftList[i+1]}
             </BorderedAlignCenterCell>
         );
     }

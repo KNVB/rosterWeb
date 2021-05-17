@@ -6,6 +6,7 @@ import SelectedRegionUtil from './SelectedRegionUtil';
 import UndoableData from './UndoableData';
 import XXBody from './xxBody/XXBody';
 import XXHeader from './xxHeader/XXHeader';
+import './XXTable.css';
 export default function XXTable(props){
     useEffect(()=>{
         const getData = async () => {
