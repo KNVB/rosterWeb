@@ -9,7 +9,7 @@ import UndoableData from './utils/UndoableData';
 import XXBody from './xxBody/XXBody';
 import XXFooter from './xxFooter/XXFooter';
 import YearlyRosterStatistic from './xxFooter/YearlyRosterStatistic';
-import './XXTable.css';
+
 export default function XXTable(props){
     useEffect(()=>{
         const getData = async () => {
