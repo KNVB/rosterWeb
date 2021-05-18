@@ -11,6 +11,7 @@ export default function SaveRosterToDBButton(){
             delete temp[itoId].rosterList.availableShiftList;
             delete temp[itoId].rosterList.itoName;
             delete temp[itoId].rosterList.itoPostName;
+            delete temp[itoId].rosterList.workingHourPerDay;
         })
         roster.saveRosterToDB({
             rosterData:temp,
