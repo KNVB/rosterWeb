@@ -1,4 +1,5 @@
 import {useEffect,useReducer} from 'react';
+import AdminShiftStatUtil from './utils/AdminShiftStatUtil';
 import BaseTable from './baseTable/BaseTable';
 import ButtonPanel from './xxFooter/ButtonPanel';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
@@ -18,6 +19,7 @@ export default function XXTable(props){
             let activeShiftInfoList= await roster.getAllActiveShiftInfo();
             let calendarUtility=new CalendarUtility();
             let hightLightCellIndex=-1;
+            let {getAllITOStat}=AdminShiftStatUtil();
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let rosterSchedulerList=await roster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
             let yearlyRosterStatistic=await roster.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
@@ -28,6 +30,7 @@ export default function XXTable(props){
             let rosterData={};
             //let itoId="ITO1_1999-01-01";
             //let itoId="ITO3_2017-10-18";
+
             Object.keys(rosterSchedulerList.rosterList).forEach(itoId=>{
                 let psl;
                 if (rosterSchedulerList.preferredShiftList[itoId]){
@@ -40,6 +43,7 @@ export default function XXTable(props){
                     preferredShiftList:psl
                 };
             })
+            let itoStat=getAllITOStat(activeShiftInfoList,monthlyCalendar, rosterData);
             updateContext(
                 {
                     type:'updateRosterMonth',
