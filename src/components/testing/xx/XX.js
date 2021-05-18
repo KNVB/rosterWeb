@@ -5,7 +5,6 @@ import Roster from '../../../utils/Roster';
 import XXTable from './XXTable';
 export default function XX(props){
     let now=new Date();
-    const [monthPickerMinDate,setMonthPickerMinDate]=useState();
     const [rosterMonth,setRosterMonth]=useState(new Date(now.getFullYear(),now.getMonth(),1));
     const [systemParam,setSystemParam]=useState();
     useEffect(()=>{
@@ -13,18 +12,12 @@ export default function XX(props){
             console.log("Undo:Get System Parameter from DB");
             let roster = new Roster(props.changeLoggedInFlag);
             let temp=await roster.getSystemParam();
+            let monthPickerMinDate=new Date(temp.monthPickerMinDate.year,temp.monthPickerMinDate.month-1,temp.monthPickerMinDate.date);
+            temp.monthPickerMinDate=monthPickerMinDate;
             setSystemParam(temp);
         }
         getData();
     },[props.changeLoggedInFlag])
-    
-    useEffect(()=>{
-        if (systemParam){
-            let temp=new Date(systemParam.monthPickerMinDate.year,systemParam.monthPickerMinDate.month-1,systemParam.monthPickerMinDate.date);
-            setMonthPickerMinDate(temp);
-        }
-    },[systemParam])
-    
     function updateMonth(newRosterMonth){
         setRosterMonth(new Date(newRosterMonth.getFullYear(),newRosterMonth.getMonth(),1));
     }
@@ -39,8 +32,8 @@ export default function XX(props){
                 <Row>
                     <Col md={12} lg={12} sm={12} xl={12} xs={12}>
                         {
-                            monthPickerMinDate && <MonthPicker 
-                                minDate={monthPickerMinDate}
+                            systemParam && <MonthPicker
+                                minDate={systemParam.monthPickerMinDate}
                                 onSelect={updateMonth} />
                         }
                     </Col>
