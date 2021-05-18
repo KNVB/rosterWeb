@@ -59,7 +59,7 @@ export default function XXTable(props){
                 });
         }
         getData();
-    },[props.rosterMonth]);
+    },[props]);
     let dataReducer=(state,action)=>{
         switch(action.type){
             case 'updateRosterData':
