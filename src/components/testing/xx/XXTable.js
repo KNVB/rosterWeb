@@ -1,4 +1,5 @@
 import {useEffect,useReducer} from 'react';
+import BaseTable from './baseTable/BaseTable';
 import ButtonPanel from './xxFooter/ButtonPanel';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import Roster from '../../../utils/Roster';
@@ -7,7 +8,6 @@ import SelectedRegionUtil from './utils/SelectedRegionUtil';
 import UndoableData from './utils/UndoableData';
 import XXBody from './xxBody/XXBody';
 import XXFooter from './xxFooter/XXFooter';
-import XXHeader from './xxHeader/XXHeader';
 import YearlyRosterStatistic from './xxFooter/YearlyRosterStatistic';
 import './XXTable.css';
 export default function XXTable(props){
@@ -86,14 +86,13 @@ export default function XXTable(props){
     let buttonPanel=<ButtonPanel/>
     let yearlyStat=<YearlyRosterStatistic/>
     return(
-        <table id="rosterTable">
-            <RosterWebContext.Provider value={[contextValue, updateContext]}>
-                {contextValue.monthlyCalendar && <XXHeader/>}
-                {contextValue.rosterData && <XXBody/>}
-                {contextValue.activeShiftInfoList && 
-                    <XXFooter buttonPanel={buttonPanel} noOfPrevDate={props.systemParam.noOfPrevDate} yearlyStat={yearlyStat}/>
-                }
-            </RosterWebContext.Provider>
-        </table>
+        <RosterWebContext.Provider value={[contextValue, updateContext]}>
+            <BaseTable noOfPrevDate={props.systemParam.noOfPrevDate}>
+            {contextValue.rosterData && <XXBody/>}
+            {contextValue.activeShiftInfoList && 
+                <XXFooter buttonPanel={buttonPanel} noOfPrevDate={props.systemParam.noOfPrevDate} yearlyStat={yearlyStat}/>
+            }
+            </BaseTable>
+        </RosterWebContext.Provider>
     )
 }
