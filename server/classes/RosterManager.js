@@ -162,8 +162,7 @@ class RosterManager
 		}
 		this.saveToDB=async (rosterData)=>{
 			let month=rosterData.month;
-            let preferredShiftList=rosterData.preferredShiftList;
-            let rosterList=rosterData.rosterList;
+            let itoRosterList=rosterData.rosterData;
             let year=rosterData.year;
             /*
 			console.log(year+"/"+month);
@@ -172,7 +171,7 @@ class RosterManager
 			*/
 			let dboObj=new DBO();
 			try{
-				let result=await dboObj.saveRosterData(year,month,preferredShiftList,rosterList);
+				let result=await dboObj.saveRosterData(year,month,itoRosterList);
 				return result;
 			}catch(err){
 				console.log("Some wrong when update roster data:"+err);

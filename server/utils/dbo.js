@@ -91,9 +91,11 @@ class DBO
 										month]
 			);
 		}
-		this.saveRosterData=async(year,month,preferredShiftList,rosterList)=>{
+		this.saveRosterData=async(year,month,itoRosterList)=>{
 			let dateString;
 			let sqlString="";
+			console.log(itoRosterList);
+			/*
 			try{
 				await connection.promise().beginTransaction();
 				console.log("Update roster data transaction start.");
@@ -150,7 +152,7 @@ class DBO
 					await connection.promise().rollback();
 				}
 				throw error;
-			}
+			}*/
 		} 
 		this.close=()=>{
 			connection.end(err=>{
