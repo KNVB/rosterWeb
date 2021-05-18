@@ -1,12 +1,30 @@
 import {Col,Container,Row} from 'react-bootstrap';
-import {useState} from 'react';
+import {useEffect,useState} from 'react';
 import MonthPicker from '../../monthPicker/MonthPicker';
+import Roster from '../../../utils/Roster';
 import XXTable from './XXTable';
 export default function XX(props){
-    let monthPickerMinDate=props.systemParam.monthPickerMinDate;
     let now=new Date();
+    const [monthPickerMinDate,setMonthPickerMinDate]=useState();
     const [rosterMonth,setRosterMonth]=useState(new Date(now.getFullYear(),now.getMonth(),1));
-    monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
+    const [systemParam,setSystemParam]=useState();
+    useEffect(()=>{
+        const getData = async () => {
+            console.log("Undo:Get System Parameter from DB");
+            let roster = new Roster(props.changeLoggedInFlag);
+            let temp=await roster.getSystemParam();
+            setSystemParam(temp);
+        }
+        getData();
+    },[props.changeLoggedInFlag])
+    
+    useEffect(()=>{
+        if (systemParam){
+            let temp=new Date(systemParam.monthPickerMinDate.year,systemParam.monthPickerMinDate.month-1,systemParam.monthPickerMinDate.date);
+            setMonthPickerMinDate(temp);
+        }
+    },[systemParam])
+    
     function updateMonth(newRosterMonth){
         setRosterMonth(new Date(newRosterMonth.getFullYear(),newRosterMonth.getMonth(),1));
     }
@@ -20,14 +38,16 @@ export default function XX(props){
                 </Row>
                 <Row>
                     <Col md={12} lg={12} sm={12} xl={12} xs={12}>
-                        <MonthPicker 
-                            minDate={monthPickerMinDate}
-                            onSelect={updateMonth} />                        
+                        {
+                            monthPickerMinDate && <MonthPicker 
+                                minDate={monthPickerMinDate}
+                                onSelect={updateMonth} />
+                        }
                     </Col>
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                       <XXTable rosterMonth={rosterMonth} systemParam={props.systemParam}/>
+                       {systemParam && <XXTable changeLoggedInFlag={props.changeLoggedInFlag} rosterMonth={rosterMonth} systemParam={systemParam}/>}
                     </Col>
                 </Row>
             </Container>

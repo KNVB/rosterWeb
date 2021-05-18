@@ -48,6 +48,14 @@ export default class Roster{
                 }
             }
         }
+        this.getSystemParam=async()=>{
+          try{
+            let result=await Utility.fetchAPI(publicAPIPath+'/getSystemParam','GET');
+            return result;
+          }catch (error){
+            throw error;
+          }          
+        }
         this.getYearlyRosterStatistic=async(year,month)=>{
             try{
                 let result=await Utility.fetchAPI(privateAPIPath+'/getYearlyRosterStatistic','POST',{"year":year,"month":month});
@@ -73,70 +81,6 @@ export default class Roster{
             }
         }
     }
-    /*
-    static calculateITOMonthlyStat(roster,noOfWorkingDay,activeShiftInfoList){
-      roster.actualWorkingHour=0.0;
-      roster.totalHour = roster.workingHourPerDay * noOfWorkingDay;
-      Object.keys(roster.shiftList).forEach(date=>{
-          let item=roster.shiftList[date];
-          let shiftTypeList = item.split("+");
-          
-          shiftTypeList.forEach(shiftType => {
-            if (roster.availableShiftList.includes(shiftType)){
-              if (activeShiftInfoList[shiftType]){
-                roster.actualWorkingHour += activeShiftInfoList[shiftType].duration;
-              }
-            }
-          });
-      });    
-      roster.thisMonthHourTotal = roster.actualWorkingHour - roster.totalHour;
-      roster.thisMonthBalance = roster.lastMonthBalance + roster.thisMonthHourTotal;
-      roster.shiftCountList=this.calculateShiftCount(roster);
-      roster.actualNoOfWorkingDay =roster.shiftCountList.aShiftCount +roster.shiftCountList.bxShiftCount+roster.shiftCountList.cShiftCount +roster.shiftCountList.dxShiftCount;
-    }
-
-    static calculateShiftCount(roster) {
-        let aShiftCount = 0,
-          bxShiftCount = 0,
-          cShiftCount = 0,
-          dxShiftCount = 0;
-    
-        Object.keys(roster.shiftList).forEach(key=>{
-          let item=roster.shiftList[key];
-            let shiftTypeList = item.split("+");
-            shiftTypeList.forEach(shiftType => {
-              if (roster.availableShiftList.includes(shiftType)){
-                switch (shiftType) {
-                  case "a":
-                    aShiftCount++;
-                    break;
-                  case "b":
-                  case "b1":
-                    bxShiftCount++;
-                    break;
-                  case "c":
-                    cShiftCount++;
-                    break;
-                  case "d":
-                  case "d1":
-                  case "d2":
-                  case "d3":
-                    dxShiftCount++;
-                    break;
-                  default:
-                    break;
-                }
-              }
-            });
-        });        
-        return {
-          aShiftCount: aShiftCount,
-          bxShiftCount: bxShiftCount,
-          cShiftCount: cShiftCount,
-          dxShiftCount: dxShiftCount
-        };
-    }
-    */
     static getDuplicateShiftList(monthlyCalendar,rosterList){
       let result={};
       Object.keys(rosterList).forEach(itoId => {
