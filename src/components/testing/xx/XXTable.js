@@ -24,43 +24,37 @@ export default function XXTable(props){
             let rosterSchedulerList=await roster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
             let yearlyRosterStatistic=await roster.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             //let bodyRowCount=2;
-            let bodyRowCount=Object.keys(rosterSchedulerList.rosterList).length*2;
+            let bodyRowCount=Object.keys(rosterSchedulerList.itoRosterList).length*2;
             let monthLength=monthlyCalendar.calendarDateList.length;
 
             let rosterData={};
+            console.log(rosterSchedulerList);
             //let itoId="ITO1_1999-01-01";
             //let itoId="ITO3_2017-10-18";
-
-            Object.keys(rosterSchedulerList.rosterList).forEach(itoId=>{
-                let psl;
-                if (rosterSchedulerList.preferredShiftList[itoId]){
-                    psl=rosterSchedulerList.preferredShiftList[itoId];
-                }else{
-                    psl={};
-                }
-                rosterData[itoId]={
-                    rosterList:rosterSchedulerList.rosterList[itoId],
-                    preferredShiftList:psl
-                };
-            })
-            let itoStat=getAllITOStat(activeShiftInfoList,monthlyCalendar, rosterData);
+            
+           
+            let allITOStat=getAllITOStat(activeShiftInfoList,monthlyCalendar, rosterSchedulerList.itoRosterList);
+            console.log(rosterSchedulerList.itoRosterList);
+            console.log(allITOStat);
             updateContext(
                 {
                     type:'updateRosterMonth',
                     value:{
                         activeShiftInfoList:activeShiftInfoList,
+                        "allITOStat":allITOStat,
                         calendarUtility:calendarUtility,
                         changeLoggedInFlag:props.changeLoggedInFlag,
                         hightLightCellIndex:hightLightCellIndex,
                         monthlyCalendar:monthlyCalendar,
-                        "rosterData":new UndoableData(rosterData),
+                        "rosterData":new UndoableData(rosterSchedulerList.itoRosterList),
                         rosterMonth:props.rosterMonth,
                         selectedRegionUtil:new SelectedRegionUtil(bodyRowCount,monthLength,props.systemParam.noOfPrevDate),
                         systemParam:props.systemParam,
                         previousMonthShiftList:rosterSchedulerList.previousMonthShiftList,
                         yearlyRosterStatistic:yearlyRosterStatistic
                     }
-                });
+                }
+            );
         }
         getData();
     },[props]);
@@ -92,10 +86,12 @@ export default function XXTable(props){
     return(
         <RosterWebContext.Provider value={[contextValue, updateContext]}>
             <BaseTable noOfPrevDate={props.systemParam.noOfPrevDate}>
-            {contextValue.rosterData && <XXBody/>}
-            {contextValue.activeShiftInfoList && 
-                <XXFooter buttonPanel={buttonPanel} noOfPrevDate={props.systemParam.noOfPrevDate} yearlyStat={yearlyStat}/>
-            }
+            {/*
+                {contextValue.rosterData && <XXBody/>}
+                {contextValue.activeShiftInfoList && 
+                    <XXFooter buttonPanel={buttonPanel} noOfPrevDate={props.systemParam.noOfPrevDate} yearlyStat={yearlyStat}/>
+                }
+            */}
             </BaseTable>
         </RosterWebContext.Provider>
     )

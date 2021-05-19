@@ -10,22 +10,21 @@ export default function AdminShiftStatUtil(){
 
         for (let i=0;i<itoIdList.length;i++){
             itoId=itoIdList[i];
-            let itoRoster=rosterData[itoId].rosterList;
-            itoStat=getITOStat(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,itoRoster);
-            result[itoId]=itoStat;
-            result[itoId].duplicatShiftList=[];
-            aShiftCount.push(itoStat.shiftCountList.aShiftCount);
-            bxShiftCount.push(itoStat.shiftCountList.bxShiftCount);
-            cShiftCount.push(itoStat.shiftCountList.cShiftCount);
+            let itoRoster=rosterData[itoId];
+            getITOStat(activeShiftInfoList,monthlyCalendar.noOfWorkingDay,itoRoster);
+            
+            itoRoster.duplicatShiftList=[];
+            aShiftCount.push(itoRoster.shiftCountList.aShiftCount);
+            bxShiftCount.push(itoRoster.shiftCountList.bxShiftCount);
+            cShiftCount.push(itoRoster.shiftCountList.cShiftCount);
         }
-
         for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
             vacantShift = activeShiftInfoList.essentialShift;
             duplicatShift=[];
 
             for (let y=0;y<itoIdList.length;y++){
                 itoId=itoIdList[y];
-                roster=rosterData[itoId].rosterList;
+                roster=rosterData[itoId];
                 if (roster.shiftList[i+1]){
                     let shiftTypeList = roster.shiftList[i+1].split("+");
                     for (let j=0;j<shiftTypeList.length;j++){
@@ -40,14 +39,14 @@ export default function AdminShiftStatUtil(){
                             switch (shiftType){
                                 case "a" :                 
                                 case "c" :if (duplicatShift.includes(shiftType)){
-                                            result[itoId].duplicatShiftList.push(i+1);
+                                            roster.duplicatShiftList.push(i+1);
                                           } else {
                                             duplicatShift.push(shiftType);
                                           }
                                           break;
                                 case "b" :
                                 case "b1":if (duplicatShift.includes("b")){
-                                            result[itoId].duplicatShiftList.push(i+1);
+                                            roster.duplicatShiftList.push(i+1);
                                           }else {
                                             duplicatShift.push('b');
                                           }

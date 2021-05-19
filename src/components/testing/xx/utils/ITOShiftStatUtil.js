@@ -1,34 +1,25 @@
 export default function ITOShiftStatUtil(){
     const getITOStat = (activeShiftInfoList, noOfWorkingDay, itoRoster) => {
-        let actualWorkingHour = 0.0,actualWorkingDayCount = 0;
-        let expectedWorkingHour = 0.0;
-        let lastMonthBalance = itoRoster.lastMonthBalance;
-        let thisMonthBalance = 0.0,totalBalance=0.0;
-        expectedWorkingHour = itoRoster.workingHourPerDay * noOfWorkingDay;
-        Object.keys(itoRoster.shiftList).forEach(date => {
-          let item = itoRoster.shiftList[date];
-          let shiftTypeList = item.split("+");
-          shiftTypeList.forEach(shiftType => {
-            if (itoRoster.availableShiftList.includes(shiftType)) {
-              if (activeShiftInfoList[shiftType]) {
-                actualWorkingHour += activeShiftInfoList[shiftType].duration;
-              }
+      itoRoster.expectedWorkingHour = itoRoster.workingHourPerDay * noOfWorkingDay;
+      itoRoster.actualWorkingHour=0.0;
+      Object.keys(itoRoster.shiftList).forEach(date => {
+        let item = itoRoster.shiftList[date];
+        let shiftTypeList = item.split("+");
+        shiftTypeList.forEach(shiftType => {
+          if (itoRoster.availableShiftList.includes(shiftType)) {
+            if (activeShiftInfoList[shiftType]) {
+              itoRoster.actualWorkingHour += activeShiftInfoList[shiftType].duration;
             }
-          });
+          }
         });
-        let shiftCountList = getShiftCountList(itoRoster);
-        actualWorkingDayCount=shiftCountList.aShiftCount+shiftCountList.bxShiftCount+shiftCountList.cShiftCount+shiftCountList.dxShiftCount;
-        thisMonthBalance=actualWorkingHour - expectedWorkingHour;
-        totalBalance=lastMonthBalance + thisMonthBalance;
-        return {
-          actualWorkingHour,
-          actualWorkingDayCount,
-          shiftCountList,
-          expectedWorkingHour,
-          lastMonthBalance,
-          thisMonthBalance,
-          totalBalance
-        };
+      });
+      itoRoster.shiftCountList = getShiftCountList(itoRoster);
+      itoRoster.actualWorkingDayCount=itoRoster.shiftCountList.aShiftCount
+                                      +itoRoster.shiftCountList.bxShiftCount
+                                      +itoRoster.shiftCountList.cShiftCount
+                                      +itoRoster.shiftCountList.dxShiftCount;
+      itoRoster.thisMonthBalance=itoRoster.actualWorkingHour - itoRoster.expectedWorkingHour;
+      itoRoster.totalBalance=itoRoster.lastMonthBalance + itoRoster.thisMonthBalance;                               
     };
     const getShiftCountList = itoRoster => {
         let aShiftCount = 0,

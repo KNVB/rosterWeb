@@ -3,7 +3,6 @@ class RosterManager
 	constructor(sp){
 		
 		let DBO=require("../utils/dbo.js");
-		let ITORoster = require('./ITORoster');
 		let ITOYearlyRosterStatistic=require('./rosterStatistic/ITOYearlyStatistic');
 		let MonthlyStatistic =require('./rosterStatistic/MonthlyStatistic');
 		let Shift =require('./Shift');
@@ -52,39 +51,38 @@ class RosterManager
 		}
 		this.getRosterList=async (year,month)=>{
 			let dboObj=new DBO();
-			let itoRoster=null;
-			let rosterList={};
+			let itoRosterList={};
 			try{
+				console.log("Get ("+year+","+month+") Roster List successfully!");
 				let results=await dboObj.getRosterList(year,month);
-				//console.log(results);
 				results.forEach(record=>{
-					//console.log(record);
-					if (rosterList[record.ito_id]===undefined){
-						itoRoster=new ITORoster();
-						itoRoster.itoName=record.ito_name;
-						itoRoster.itoPostName=record.post_name;
-						itoRoster.availableShiftList=record.available_shift.split(",");
-						itoRoster.workingHourPerDay=parseFloat(record.working_hour_per_day);
-						if (record.balance)
-							itoRoster.lastMonthBalance=parseFloat(record.balance);
-					} else {
-						itoRoster=rosterList[record.ito_id];
+					if (itoRosterList[record.ito_id]===undefined){
+						itoRosterList[record.ito_id]={
+							availableShiftList:record.available_shift.split(","),
+							itoName:record.ito_name,
+							itoPostName:record.post_name,
+							lastMonthBalance:0.0,
+							shiftList:{},
+							thisMonthBalance:0.0,
+							workingHourPerDay:parseFloat(record.working_hour_per_day)
+						}
+						if (record.balance){
+							itoRosterList[record.ito_id].lastMonthBalance=parseFloat(record.balance);
+						}
 					}
 					if (record.d){
-						if (itoRoster.shiftList[record.d]===undefined){
-							itoRoster.shiftList[record.d]=record.shift;
+						if (itoRosterList[record.ito_id].shiftList[record.d]===undefined){
+							itoRosterList[record.ito_id].shiftList[record.d]=record.shift;
 						}else{
-							itoRoster.shiftList[record.d]+="+"+record.shift;
+							itoRosterList[record.ito_id].shiftList[record.d]+="+"+record.shift;
 						}
-					}				
-					rosterList[record.ito_id]=itoRoster;
+					}
 				});
-				console.log("Get ("+year+","+month+") Roster List successfully!");
-				return rosterList;
+				return itoRosterList;
 			} 
 			catch (error){
 				console.log("Something wrong when getting ("+year+","+month+") roster list:"+error);
-				console.log(rosterList);
+				console.log(itoRosterList);
 			}
 			finally{
 				dboObj.close();
@@ -92,11 +90,11 @@ class RosterManager
 		}
 		this.getRosterSchedulerList=async (year,month)=>{
 			let finalResult={}
-			let preferredShiftList={};
 			let previousMonthShiftList={};
 			
 			let dboObj=new DBO();
 			try{
+				let itoRosterList=await this.getRosterList(year,month);
 				let results=await dboObj.getPreivousMonthShiftList(year,month,systemParam);
 				results.forEach(result=>{
 					if (previousMonthShiftList[result.ito_id]===undefined){
@@ -104,28 +102,24 @@ class RosterManager
 					}
 					previousMonthShiftList[result.ito_id].push(result.shift);
 				});
-				let rosterList=await this.getRosterList(year,month);
-				//console.log(rosterList);
+				Object.keys(itoRosterList).forEach(itoId=>{
+					itoRosterList[itoId].preferredShiftList={};
+				})
 				results=await dboObj.getPreferredShiftList(year,month);
-				//console.log(results);
 				results.forEach(result=>{
-					if (preferredShiftList[result.ito_id]===undefined){
-						preferredShiftList[result.ito_id]={};
-					}
-					preferredShiftList[result.ito_id][result.d]=result.preferred_shift;
+					itoRosterList[result.ito_id].preferredShiftList[result.d]=result.preferred_shift;
 				});
-				//finalResult.itoList=await ITO.getITOList(year, month);
-				finalResult.rosterList=rosterList;
-				finalResult.preferredShiftList=preferredShiftList;
+				finalResult.itoRosterList=itoRosterList;
 				finalResult.previousMonthShiftList=previousMonthShiftList;
+				return finalResult;
 			}
 			catch (error){
-				console.log("Something wrong when getting ("+year+","+month+") roster scheduler list:"+error);				
+				console.log("Something wrong when getting ("+year+","+month+") roster scheduler list:"+error.stack);				
 			}
 			finally{
 				dboObj.close();
 			};
-			return finalResult;
+			
 		}
 		this.getYearlyRosterStatistic=async (year, month)=>{
 			let dboObj=new DBO();
@@ -175,7 +169,7 @@ class RosterManager
 				return result;
 			}catch(err){
 				console.log("Some wrong when update roster data:"+err);
-				throw "Some wrong when update roster data.";
+				throw new Error("Some wrong when update roster data.");
 			}
 			finally{
 				dboObj.close();
