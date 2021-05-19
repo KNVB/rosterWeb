@@ -1,6 +1,7 @@
 class RosterManager
 {
 	constructor(sp){
+		
 		let DBO=require("../utils/dbo.js");
 		let ITOYearlyRosterStatistic=require('./rosterStatistic/ITOYearlyStatistic');
 		let MonthlyStatistic =require('./rosterStatistic/MonthlyStatistic');
@@ -50,32 +51,30 @@ class RosterManager
 		}
 		this.getRosterList=async (year,month)=>{
 			let dboObj=new DBO();
-			let rosterList={};
+			let itoRosterList={};
 			try{
 				console.log("Get ("+year+","+month+") Roster List successfully!");
 				let results=await dboObj.getRosterList(year,month);
 				results.forEach(record=>{
-					if (rosterList[record.ito_id]===undefined){
-						rosterList[record.ito_id]={
+					if (itoRosterList[record.ito_id]===undefined){
+						itoRosterList[record.ito_id]={
+							availableShiftList:record.available_shift.split(","),
 							itoName:record.ito_name,
 							itoPostName:record.post_name,
-							availableShiftList:record.available_shift.split(","),
-							workingHourPerDay:parseFloat(record.working_hour_per_day),
-						};
+							lastMonthBalance:0.0,
+							shiftList:{},
+							thisMonthBalance:0.0,
+							workingHourPerDay:parseFloat(record.working_hour_per_day)
+						}
 						if (record.balance){
-							rosterList[record.ito_id].lastMonthBalance=parseFloat(record.balance);
+							itoRosterList[record.ito_id].lastMonthBalance=parseFloat(record.balance);
 						}
 					}
 					if (record.d){
-						if (rosterList[record.ito_id].shiftList){
-							if (rosterList[record.ito_id].shiftList[record.d]){
-								rosterList[record.ito_id].shiftList[record.d]+="+"+record.shift;
-							}else {
-								rosterList[record.ito_id].shiftList[record.d]=record.shift;
-							}
-						}else {
-							rosterList[record.ito_id].shiftList={};
-							rosterList[record.ito_id].shiftList[record.d]=record.shift;
+						if (itoRosterList[record.ito_id].shiftList[record.d]===undefined){
+							itoRosterList[record.ito_id].shiftList[record.d]=record.shift;
+						}else{
+							itoRosterList[record.ito_id].shiftList[record.d]+="+"+record.shift;
 						}
 					}
 				});
@@ -90,24 +89,28 @@ class RosterManager
 			};	
 		}
 		this.getRosterSchedulerList=async (year,month)=>{
-			let finalResult={};
+			let finalResult={}
+			let previousMonthShiftList={};
+			
 			let dboObj=new DBO();
 			try{
-				let finalResult=await this.getRosterList(year,month);
+				let itoRosterList=await this.getRosterList(year,month);
 				let results=await dboObj.getPreivousMonthShiftList(year,month,systemParam);
 				results.forEach(result=>{
-					if (finalResult[result.ito_id].previousMonthShiftList===undefined){
-						finalResult[result.ito_id].previousMonthShiftList=[];
+					if (previousMonthShiftList[result.ito_id]===undefined){
+						previousMonthShiftList[result.ito_id]=[];
 					}
-					finalResult[result.ito_id].previousMonthShiftList.push(result.shift);
+					previousMonthShiftList[result.ito_id].push(result.shift);
 				});
+				Object.keys(itoRosterList).forEach(itoId=>{
+					itoRosterList[itoId].preferredShiftList={};
+				})
 				results=await dboObj.getPreferredShiftList(year,month);
 				results.forEach(result=>{
-					if (finalResult[result.ito_id].preferredShiftList===undefined){
-						finalResult[result.ito_id].preferredShiftList={};
-					}
-					finalResult[result.ito_id].preferredShiftList[result.d]=result.preferred_shift;
+					itoRosterList[result.ito_id].preferredShiftList[result.d]=result.preferred_shift;
 				});
+				finalResult.itoRosterList=itoRosterList;
+				finalResult.previousMonthShiftList=previousMonthShiftList;
 				return finalResult;
 			}
 			catch (error){
