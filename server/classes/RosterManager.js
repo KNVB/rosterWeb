@@ -82,7 +82,7 @@ class RosterManager
 			} 
 			catch (error){
 				console.log("Something wrong when getting ("+year+","+month+") roster list:"+error.stack);
-				console.log(rosterList);
+				//console.log(rosterList);
 			}
 			finally{
 				dboObj.close();
