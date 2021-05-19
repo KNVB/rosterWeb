@@ -19,6 +19,7 @@ class PrivateAPI{
         }
         this.getRosterSchedulerList=async(req,res)=>{
             let result=await rosterManager.getRosterSchedulerList(req.body.year,req.body.month);
+            console.log(result);
             res.send(result);
         }
         this.getYearlyRosterStatistic=async(req,res)=>{
