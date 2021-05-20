@@ -1,7 +1,9 @@
 import CopiedRegion from './CopiedRegion';
+import ITOShiftStatUtil from './ITOShiftStatUtil';
 import SelectedRegion from './SelectedRegion';
 export default class SelectedRegionUtil{
     constructor(bodyRowCount,monthLength,noOfPrevDate){
+        let {getITOStat}=ITOShiftStatUtil();
         let copiedRegion=new CopiedRegion();
         let selectedRegion=new SelectedRegion();
         this.hasCopiedRegion=false;
@@ -37,9 +39,9 @@ export default class SelectedRegionUtil{
           }
           this.hasCopiedRegion=true;
         }
-        this.deleteData=(rosterData)=>{
+        this.deleteData=(itoRosterList)=>{
           let itoId,row,table=document.getElementById("rosterTable");
-          let temp=JSON.parse(JSON.stringify(rosterData.presentValue));
+          let temp=JSON.parse(JSON.stringify(itoRosterList.presentValue));
           let tempArray,dataType;
           for (let y=selectedRegion.minY;y<=selectedRegion.maxY;y++){
             row=table.rows[y]
@@ -49,13 +51,13 @@ export default class SelectedRegionUtil{
             for (let x=selectedRegion.minX;x<=selectedRegion.maxX;x++){
               switch(dataType){
                 case 'shift':
-                  temp[itoId].rosterList.shiftList[x-noOfPrevDate]='';
-                  rosterData.set(temp);
+                  temp[itoId].shiftList[x-noOfPrevDate]='';
+                  itoRosterList.set(temp);
                   break;
                 case 'preferredShift':
                   if (temp[itoId].preferredShiftList[x-noOfPrevDate]){
                     delete temp[itoId].preferredShiftList[x-noOfPrevDate];
-                    rosterData.set(temp);
+                    itoRosterList.set(temp);
                   }
                   break
                 default:
@@ -126,12 +128,12 @@ export default class SelectedRegionUtil{
         this.isInSelectMode=()=>{
           return selectedRegion.inSelectMode
         }
-        this.pasteCopiedRegion=(clipboardData,rosterData,noOfPrevDate)=>{
+        this.pasteCopiedRegion=(clipboardData,activeShiftInfoList,noOfWorkingDay,itoRosterList,noOfPrevDate)=>{
           if (this.hasCopiedRegion){
             let copiedData=JSON.parse(clipboardData.getData('application/json'));
             let destX,destY=selectedRegion.minY,itoId;
             let table=document.getElementById("rosterTable");
-            let temp=JSON.parse(JSON.stringify(rosterData.presentValue));
+            let temp=JSON.parse(JSON.stringify(itoRosterList.presentValue));
             let tempArray,rowType;
             for (let y=0;y<copiedData.length;y++){
               let row=table.rows[destY++];
@@ -143,14 +145,15 @@ export default class SelectedRegionUtil{
                 for (let x=0;x<copiedData[y].length;x++){
                   switch(rowType){
                     case 'shift':
-                      temp[itoId].rosterList.shiftList[destX++]=copiedData[y][x];
+                      temp[itoId].shiftList[destX++]=copiedData[y][x];
                       break;
                     case 'preferredShift':
                       temp[itoId].preferredShiftList[destX++]=copiedData[y][x];
                       break;
                     default:break  
                   }
-                  rosterData.set(temp);
+                  temp[itoId]=getITOStat(activeShiftInfoList,noOfWorkingDay, temp[itoId]);
+                  itoRosterList.set(temp);
                 }
               }
             }

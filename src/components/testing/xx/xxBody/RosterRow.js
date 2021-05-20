@@ -10,13 +10,14 @@ export default function RosterRow(props){
     let cellList=[],nameCellCssClass="";
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let [contextValue]=useContext(RosterWebContext);
-    let itoRoster=props.itoRoster;
+    let itoRoster=contextValue.itoRosterList.presentValue[props.itoId];
+    let previousMonthShift=contextValue.previousMonthShiftList[props.itoId];
     let itoNameContact = Parser(itoRoster.itoName+ "<br>" + itoRoster.itoPostName + " Extn. 2458");
-    if (props.previousMonthRoster){
-        for(let i=contextValue.systemParam.maxConsecutiveWorkingDay-contextValue.systemParam.noOfPrevDate;i<props.previousMonthRoster.length;i++){
+    if (previousMonthShift){
+        for(let i=contextValue.systemParam.maxConsecutiveWorkingDay-contextValue.systemParam.noOfPrevDate;i<previousMonthShift.length;i++){
             cellList.push(
                 <ShiftCell availableShiftList={itoRoster.availableShiftList} key={"prev-"+i}>
-                    {props.previousMonthRoster[i]}
+                    {previousMonthShift[i]}
                 </ShiftCell>
             );
         }
@@ -25,11 +26,14 @@ export default function RosterRow(props){
             cellList.push(<BorderedCell key={"prev-"+i}/>);
         }
     }
+    //console.log(itoRoster);
+    
     for (let i=0;i<contextValue.monthlyCalendar.calendarDateList.length;i++){
         let className=contextValue.selectedRegionUtil.getBorderClass(i+contextValue.systemParam.noOfPrevDate+1,props.rowIndex);
-        if (props.itoStat.duplicatShiftList.includes(i+1)){
+        /*
+        if (itoRoster.duplicatShiftList.includes(i+1)){
             className+=' errorRedBlackGround';
-        }
+        }*/
         cellList.push(
             <EditableShiftCell
                 availableShiftList={itoRoster.availableShiftList}
@@ -40,7 +44,7 @@ export default function RosterRow(props){
                 setIsHighLightRow={setIsHighLightRow}>
                 {itoRoster.shiftList[i+1]}
             </EditableShiftCell>
-        );
+        );        
     }
     for (let i=contextValue.monthlyCalendar.calendarDateList.length;i<31;i++){
         cellList.push(
@@ -54,16 +58,16 @@ export default function RosterRow(props){
         <tr id={props.itoId+':shift'}>
             <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>
             {cellList}
-            <BorderedAlignCenterCell>{props.itoStat.expectedWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell>{props.itoStat.actualWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell>{props.itoStat.lastMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell>{props.itoStat.thisMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell>{props.itoStat.totalBalance.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell>{props.itoStat.shiftCountList.aShiftCount}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell>{props.itoStat.shiftCountList.bxShiftCount}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell>{props.itoStat.shiftCountList.cShiftCount}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell>{props.itoStat.shiftCountList.dxShiftCount}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell className="tailCell">{props.itoStat.actualWorkingDayCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoRoster.expectedWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoRoster.actualWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoRoster.lastMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoRoster.thisMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoRoster.totalBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoRoster.shiftCountList.aShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoRoster.shiftCountList.bxShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoRoster.shiftCountList.cShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell>{itoRoster.shiftCountList.dxShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell className="tailCell">{itoRoster.actualWorkingDayCount}</BorderedAlignCenterCell>         
         </tr>
     )
 }

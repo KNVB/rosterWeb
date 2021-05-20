@@ -7,11 +7,12 @@ export default function PreferredShiftRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let [contextValue]=useContext(RosterWebContext);
     let cellList=[],nameCellCssClass="";
+    let preferredShiftList=contextValue.itoRosterList.presentValue[props.itoId].preferredShiftList;
     for (let i=0;i<contextValue.systemParam.noOfPrevDate;i++){
         cellList.push(<BorderedCell key={"prev-preferred_shift_"+i}/>);
     }
     for(let i=0;i<31;i++){
-        let className=contextValue.selectedRegionUtil.getBorderClass(i+contextValue.systemParam.noOfPrevDate+1,props.rowIndex)
+        let className=contextValue.selectedRegionUtil.getBorderClass(i+contextValue.systemParam.noOfPrevDate+1,props.rowIndex);
         cellList.push(
             <PreferredShiftCell
                 className={className}
@@ -19,13 +20,10 @@ export default function PreferredShiftRow(props){
                 rowIndex={props.rowIndex}
                 key={props.itoId+"_preferred_shift_"+i}
                 setIsHighLightRow={setIsHighLightRow}>
-                {props.preferredShiftList[i+1]}
+                {preferredShiftList[i+1]}
             </PreferredShiftCell>
-        );        
+        );
     }
-    if (isHighLightRow){
-        nameCellCssClass="highlightCell";
-    }  
     return(
         <tr id={props.itoId+':preferredShift'}>
             <NameCell className={nameCellCssClass}>Preferred ShiftList</NameCell>

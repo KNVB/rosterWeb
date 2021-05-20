@@ -8,44 +8,39 @@ export default function XXBody(props){
     let [contextValue, updateContext]=useContext(RosterWebContext);
     let rowList=[],headerRowCount=3;
     let {getAllITOStat}=AdminShiftStatUtil();
-    let itoStat=getAllITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar, contextValue.rosterData.presentValue);
-    
-    //let itoId="ITO1_1999-01-01";
-    //let itoId="ITO3_2017-10-18";
-    Object.keys(contextValue.rosterData.presentValue).forEach(itoId=>{
+    let allITOStat=getAllITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar,contextValue.itoRosterList.presentValue)
+    Object.keys(contextValue.itoRosterList.presentValue).forEach(itoId=>{
         rowList.push(
             <RosterRow 
-                itoRoster={contextValue.rosterData.presentValue[itoId].rosterList}
                 key={itoId+'_shiftList'}
                 itoId={itoId}
-                itoStat={itoStat[itoId]}
-                rowIndex={rowList.length+headerRowCount}
-                previousMonthRoster={contextValue.previousMonthShiftList[itoId]}/>
-        )
+                rowIndex={rowList.length+headerRowCount}/>
+        );
+        /*
         rowList.push(
             <PreferredShiftRow
                 itoId={itoId}
                 key={itoId+'_preferredShiftList'}
-                preferredShiftList={contextValue.rosterData.presentValue[itoId].preferredShiftList}
                 rowIndex={rowList.length+headerRowCount}/>
         )
-    });        
+        */
+    })
     let keyDown=useCallback((e)=>{
         console.log("keyDown");
         if (e.ctrlKey){
             switch (e.which){
                 case 89: //Handle Ctrl-Y
                     e.preventDefault();
-                    if (contextValue.rosterData.canRedo()){
-                        contextValue.rosterData.redo();
-                        updateContext({type:'updateRosterData', value:contextValue.rosterData})
+                    if (contextValue.itoRosterList.canRedo()){
+                        contextValue.itoRosterList.redo();
+                        updateContext({type:'updateRosterData', value:contextValue.itoRosterList});
                     }
                     break;
                 case 90: //Handle Ctrl-Z
                     e.preventDefault();
-                    if (contextValue.rosterData.canUndo()){
-                        contextValue.rosterData.undo();
-                        updateContext({type:'updateRosterData', value:contextValue.rosterData})
+                    if (contextValue.itoRosterList.canUndo()){
+                        contextValue.itoRosterList.undo();
+                        updateContext({type:'updateRosterData', value:contextValue.itoRosterList});
                     }
                     break
                 default:break;    
@@ -90,19 +85,19 @@ export default function XXBody(props){
                     break;
                 case 46://handle delete key event
                     e.preventDefault();
-                    contextValue.selectedRegionUtil.deleteData(contextValue.rosterData);
-                    updateContext({type:'updateRosterData',value:contextValue.rosterData});
+                    contextValue.selectedRegionUtil.deleteData(contextValue.itoRosterList);
+                    updateContext({type:'updateRosterData',value:contextValue.itoRosterList});
                     break    
                 default:break;
             }    
         }
-    },[updateContext,contextValue.rosterData,contextValue.selectedRegionUtil]); 
+    },[updateContext,contextValue.itoRosterList,contextValue.selectedRegionUtil]); 
     useEffect(()=>{
         document.addEventListener('keydown',keyDown);
         return () => {
             document.removeEventListener('keydown', keyDown)
         }
-    },[keyDown,contextValue.rosterData]);        
+    },[keyDown,contextValue.itoRosterList]);        
     let mouseUp=useCallback((e)=>{
         console.log("mouse up");
         if (contextValue.selectedRegionUtil.isInSelectMode()){
@@ -115,11 +110,10 @@ export default function XXBody(props){
         return () => {
             document.removeEventListener('mouseup', mouseUp)
         }
-    },[mouseUp]);    
+    },[mouseUp]);
     return (
         <tbody>
-            {rowList}
-            <VacantShiftRow itoStat={itoStat}/>
+            {rowList}     
         </tbody>
     )
 }

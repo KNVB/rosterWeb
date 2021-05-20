@@ -1,5 +1,7 @@
 export default function ITOShiftStatUtil(){
-    const getITOStat = (activeShiftInfoList, noOfWorkingDay, itoRoster) => {
+    const getITOStat = (activeShiftInfoList, noOfWorkingDay, inITORoster) => {
+      let itoRoster = JSON.parse(JSON.stringify(inITORoster));
+      
       itoRoster.expectedWorkingHour = itoRoster.workingHourPerDay * noOfWorkingDay;
       itoRoster.actualWorkingHour=0.0;
       Object.keys(itoRoster.shiftList).forEach(date => {
@@ -19,7 +21,8 @@ export default function ITOShiftStatUtil(){
                                       +itoRoster.shiftCountList.cShiftCount
                                       +itoRoster.shiftCountList.dxShiftCount;
       itoRoster.thisMonthBalance=itoRoster.actualWorkingHour - itoRoster.expectedWorkingHour;
-      itoRoster.totalBalance=itoRoster.lastMonthBalance + itoRoster.thisMonthBalance;                               
+      itoRoster.totalBalance=itoRoster.lastMonthBalance + itoRoster.thisMonthBalance;
+      return itoRoster;                           
     };
     const getShiftCountList = itoRoster => {
         let aShiftCount = 0,

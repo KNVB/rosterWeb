@@ -29,7 +29,6 @@ export default class UndoableData{
         }
         this.undo=()=>{
             console.log('UndoableData:undo:'+this.canUndo());
-            //console.log(pastValue);
             if (pastValue.length>0){
                 //console.log(pastValue);
                 futureValue.push(this.presentValue);
