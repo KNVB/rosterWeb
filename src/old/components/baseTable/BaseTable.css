@@ -8,11 +8,9 @@
 	background:linear-gradient(to bottom, #ffc477 5%, #fb9e25 100%);
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc477', endColorstr='#fb9e25',GradientType=0);
 	background-color:#ffc477;
-	color:white;
 }
 table#rosterTable
 {
 	font-size: 15px;
-	font-family:Arial, Helvetica, sans-serif;
 	box-sizing: border-box;
 }

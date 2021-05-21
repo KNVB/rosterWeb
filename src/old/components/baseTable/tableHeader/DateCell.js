@@ -1,8 +1,8 @@
 import {useContext} from 'react';
 import BorderedAlignCenterCell from '../../cell/BorderedAlignCenterCell';
-import RosterWebContext from '../../../utils/RosterWebContext';
+import RosterWebContext from '../../../../../utils/RosterWebContext';
 export default function DateCell(props){
-    let className="p-0 font-weight-bold";
+    let className="p-0";
     let [contextValue] = useContext(RosterWebContext);
     let dateData=props.dateData;
     let dateOfMonth="";

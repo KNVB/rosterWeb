@@ -1,5 +1,17 @@
 import SessionExpiredError from './SessionExpiredError';
 export default class Utility{
+  static calculateMean(data){
+      return data.reduce(function (a, b) {
+          return Number(a) + Number(b);
+      }) / data.length;
+  }
+  static calculateStdDev(data){
+      let m =this.calculateMean(data);
+    return Math.sqrt(data.reduce(function (sq, n) {
+            return sq + Math.pow(n - m, 2);
+        }, 0) / (data.length - 1));
+  } 
+  
   static async fetchAPI(url,method,params){
     console.log("=======================");
     console.log("url="+url);
@@ -49,11 +61,19 @@ export default class Utility{
       switch (response.status){
         case 401:
           throw new SessionExpiredError(responseObj.message);
+          
         case 200:
-          return responseObj;         
+          return responseObj;  
+         
         default:
           throw new Error(responseObj.message);
+          
       }
     }
-  }   
+  }
+      
+  static getSystemParam(){
+      return this.fetchAPI('/publicAPI/getSystemParam','GET');
+  }
+   
 }

@@ -1,23 +1,12 @@
 import {Col,Container,Row} from 'react-bootstrap';
-import {useEffect,useState} from 'react';
-import MonthPicker from '../../utils/monthPicker/MonthPicker';
-import Roster from '../../utils/Roster';
+import {useState} from 'react';
+import MonthPicker from '../monthPicker/MonthPicker';
 import RosterViewerTable from './RosterViewerTable';
 export default function RosterViewer(props){
+    let monthPickerMinDate=props.systemParam.monthPickerMinDate;
     let now=new Date();
     const [rosterMonth,setRosterMonth]=useState(new Date(now.getFullYear(),now.getMonth(),1));
-    const [systemParam,setSystemParam]=useState();
-    useEffect(()=>{
-        const getData = async () => {
-            console.log("Undo:Get System Parameter from DB");
-            let roster = new Roster(props.changeLoggedInFlag);
-            let temp=await roster.getSystemParam();
-            let monthPickerMinDate=new Date(temp.monthPickerMinDate.year,temp.monthPickerMinDate.month-1,temp.monthPickerMinDate.date);
-            temp.monthPickerMinDate=monthPickerMinDate;
-            setSystemParam(temp);
-        }
-        getData();
-    },[props.changeLoggedInFlag])
+    monthPickerMinDate=new Date(monthPickerMinDate.year,monthPickerMinDate.month-1,monthPickerMinDate.date);
     function updateMonth(newRosterMonth){
         setRosterMonth(new Date(newRosterMonth.getFullYear(),newRosterMonth.getMonth(),1));
     }
@@ -31,16 +20,14 @@ export default function RosterViewer(props){
                 </Row>
                 <Row>
                     <Col md={12} lg={12} sm={12} xl={12} xs={12}>
-                        {
-                            systemParam && <MonthPicker
-                                minDate={systemParam.monthPickerMinDate}
-                                onSelect={updateMonth} />
-                        }
+                        <MonthPicker 
+                            minDate={monthPickerMinDate}
+                            onSelect={updateMonth} />                        
                     </Col>
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                       {systemParam && <RosterViewerTable  rosterMonth={rosterMonth} systemParam={systemParam}/>}
+                       <RosterViewerTable rosterMonth={rosterMonth} systemParam={props.systemParam}/>
                     </Col>
                 </Row>
             </Container>

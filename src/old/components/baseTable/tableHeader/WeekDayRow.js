@@ -2,7 +2,7 @@ import {useContext} from 'react';
 import HourCell from './HourCell';
 import HourOffDueCell from './HourOffDueCell';
 import NameCell from '../../cell/NameCell';
-import RosterWebContext from '../../../utils/RosterWebContext';
+import RosterWebContext from '../../../../../utils/RosterWebContext';
 import WeekDayCell from './WeekDayCell';
 export default function WeekDayRow(props){
     let weekdayRow=[];
@@ -19,7 +19,7 @@ export default function WeekDayRow(props){
         if (monthlyCalendar.calendarDateList[i]){
             //console.log(props.monthlyCalendar[i]);
             let content=calendarUtility.weekdayNames[monthlyCalendar.calendarDateList[i].dayOfWeek];
-            let className="font-weight-bold",title="";
+            let className="",title="";
             if ((content==="S") || (content==="Su") || (monthlyCalendar.calendarDateList[i].publicHoliday))
                 className="font-weight-bold phCell";
             if  (monthlyCalendar.calendarDateList[i].publicHoliday){
