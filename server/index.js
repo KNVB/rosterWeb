@@ -50,6 +50,7 @@ publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);
 publicAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
 publicAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
 publicAPIRouter.post('/saveRosterToDB',privateAPI.saveRosterToDB);
+publicAPIRouter.post('/exportExcel',privateAPI.exportExcel);
 //==============================================================================
 privateAPIRouter.post('/exportExcel',privateAPI.exportExcel);
 privateAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);

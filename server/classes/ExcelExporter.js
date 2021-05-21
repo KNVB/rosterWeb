@@ -145,9 +145,10 @@ class ExcelExporter{
 				worksheet.insertRow(rowIndex,{});
                 row=worksheet.getRow(rowIndex);
 				cell=row.getCell(1);
-				cell.value=roster.itoName+"\n"+roster.itoPostName+" Extn. 2458";
-				cell.font=timesNewRomanFont12;
 				cell.alignment={wrapText: true};
+                cell.border=fullBorderStyle;
+                cell.font=timesNewRomanFont12;
+                cell.value=roster.itoName+"\n"+roster.itoPostName+" Extn. 2458";
 				for (i=1;i<32;i++){
 					cell=row.getCell(i+1);
 					cell.alignment=centerAligment;
@@ -162,8 +163,7 @@ class ExcelExporter{
 				cell.border=fullBorderStyle;
 				cell.font=timesNewRomanFont14;
 				cell.numFmt = '0.00';
-				cell.value=roster.totalHour;
-				
+				cell.value=roster.expectedWorkingHour;				
 				
 				address="B"+rowIndex+":AF"+rowIndex;
 				formula=genCountIf(address,'a')+"*"+shiftInfoList["a"].duration+"+";
@@ -188,7 +188,6 @@ class ExcelExporter{
 				cell.font=timesNewRomanFont14;
 				cell.numFmt = '+#0.##;-#0.##';
                 cell.value=roster.lastMonthBalance;
-
 				
 				formula="AH"+rowIndex+"-AG"+rowIndex;
 				cell=worksheet.getCell("AJ"+rowIndex);
@@ -243,9 +242,8 @@ class ExcelExporter{
 				cell=vacantRow.getCell(i);
 				cell.alignment=centerAligment;
 				cell.font=timesNewRomanFont12;
-				
-				if (vacantShiftList[i-2]){
-					cell.value=vacantShiftList[i-2];
+				if (vacantShiftList[i-1]){
+					cell.value=vacantShiftList[i-1];
 				}
 			}
 		}        

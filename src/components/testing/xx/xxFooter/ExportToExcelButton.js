@@ -18,7 +18,7 @@ export default function ExportToExcelButton(){
        genExcelData["rosterMonth"]=contextValue.rosterMonth.getMonth();
        genExcelData["rosterYear"]=contextValue.rosterMonth.getFullYear();
        genExcelData["shiftInfoList"]=shiftInfoList;
-       genExcelData["vacantShiftList"]=contextValue.vacantShiftList;
+       genExcelData["vacantShiftList"]=contextValue.allITOStat.vacantShiftList;
        console.log(genExcelData);
        let roster=new Roster();
        roster.exportExcel(genExcelData);

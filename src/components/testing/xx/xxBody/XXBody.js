@@ -1,5 +1,4 @@
-import {useCallback,useContext,useEffect,useMemo} from 'react';
-//import AdminShiftStatUtil from '../utils/AdminShiftStatUtil';
+import {useCallback,useContext,useEffect} from 'react';
 import PreferredShiftRow from './PreferredShiftRow';
 import RosterRow from './RosterRow';
 import RosterWebContext from '../../../../utils/RosterWebContext';
@@ -7,14 +6,6 @@ import VacantShiftRow from './VacantShiftRow';
 export default function XXBody(props){
     let [contextValue, updateContext]=useContext(RosterWebContext);
     let rowList=[],headerRowCount=3;
-    /*
-    let {getAllITOStat}=AdminShiftStatUtil();
-    //let allITOStat=getAllITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar,contextValue.itoRosterList.presentValue);
-    let allITOStat=useMemo(
-        () => getAllITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar,contextValue.itoRosterList.presentValue),
-        [contextValue.activeShiftInfoList,contextValue.monthlyCalendar,contextValue.itoRosterList.presentValue]
-    );
-    */
     Object.keys(contextValue.itoRosterList.presentValue).forEach(itoId=>{
         rowList.push(
             <RosterRow 
@@ -102,7 +93,12 @@ export default function XXBody(props){
                 default:break;
             }    
         }
-    },[updateContext,contextValue.itoRosterList,contextValue.selectedRegionUtil]); 
+    },[updateContext,
+        contextValue.itoRosterList,
+        contextValue.selectedRegionUtil,
+        contextValue.activeShiftInfoList,
+        contextValue.monthlyCalendar.noOfWorkingDay
+    ]); 
     useEffect(()=>{
         document.addEventListener('keydown',keyDown);
         return () => {
