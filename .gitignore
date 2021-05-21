@@ -25,3 +25,4 @@ yarn-error.log*
 /.env.production
 /.env.development
 /.env.production.bak
+/output.xlsx

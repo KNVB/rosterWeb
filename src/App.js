@@ -1,11 +1,13 @@
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import RosterAdmin from './components/rosterAdmin/RosterAdmin';
 import RosterViewer from './components/rosterViewer/RosterViewer';
 function App() {  
   return (
     <Router>
       <Switch>
         <Route exact path='/rosterWeb' component={RosterViewer} />
+        <Route exact path='/rosterWeb/admin' component={RosterAdmin}/>
       </Switch>
     </Router>
   );
