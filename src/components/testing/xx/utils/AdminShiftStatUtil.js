@@ -6,11 +6,14 @@ export default function AdminShiftStatUtil(){
         let itoId;
         let itoIdList=Object.keys(inITORosterList); 
         let shiftType,vacantShift,temp,vacantShiftList={};
+        Object.keys(inITORosterList).forEach(itoId=>{
+            duplicatShiftList[itoId]=[];
+        })
         for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
             vacantShift = activeShiftInfoList.essentialShift;
             temp=[];
             for (let y=0;y<itoIdList.length;y++){
-                itoId=itoIdList[y];
+                itoId=itoIdList[y];                
                 if (inITORosterList[itoId].shiftList[i+1]){
                     let shiftTypeList = inITORosterList[itoId].shiftList[i+1].split("+");
                     for (let j=0;j<shiftTypeList.length;j++){
@@ -24,9 +27,6 @@ export default function AdminShiftStatUtil(){
                             switch (shiftType){
                                 case "a" :                 
                                 case "c" :if (temp.includes(shiftType)){
-                                            if (duplicatShiftList[itoId]===undefined){
-                                                duplicatShiftList[itoId]=[];
-                                            }
                                             duplicatShiftList[itoId].push(i+1);
                                           } else {
                                             temp.push(shiftType);
@@ -34,9 +34,6 @@ export default function AdminShiftStatUtil(){
                                           break;
                                 case "b" :
                                 case "b1":if (temp.includes("b")){
-                                            if (duplicatShiftList[itoId]===undefined){
-                                                duplicatShiftList[itoId]=[];
-                                            }
                                             duplicatShiftList[itoId].push(i+1);
                                           }else {
                                             temp.push('b');
@@ -59,6 +56,14 @@ export default function AdminShiftStatUtil(){
         let bShiftSD=calculateStdDev(bxShiftCount);
         let cShiftSD=calculateStdDev(cShiftCount);
         let avgStdDev=(aShiftSD+bShiftSD+cShiftSD)/3;
+
+        /*
+        console.log(aShiftSD);
+        console.log(bShiftSD);
+        console.log(cShiftSD);
+        console.log(avgStdDev);
+        */
+       
         allITOStat={
             aShiftStdDev:aShiftSD.toFixed(2),
             bxShiftStdDev:bShiftSD.toFixed(2),

@@ -39,7 +39,7 @@ export default class SelectedRegionUtil{
           }
           this.hasCopiedRegion=true;
         }
-        this.deleteData=(itoRosterList)=>{
+        this.deleteData=(activeShiftInfoList,noOfWorkingDay,itoRosterList)=>{
           let itoId,row,table=document.getElementById("rosterTable");
           let temp=JSON.parse(JSON.stringify(itoRosterList.presentValue));
           let tempArray,dataType;
@@ -52,17 +52,17 @@ export default class SelectedRegionUtil{
               switch(dataType){
                 case 'shift':
                   temp[itoId].shiftList[x-noOfPrevDate]='';
-                  itoRosterList.set(temp);
+                  temp[itoId]=getITOStat(activeShiftInfoList,noOfWorkingDay, temp[itoId]);
                   break;
                 case 'preferredShift':
                   if (temp[itoId].preferredShiftList[x-noOfPrevDate]){
                     delete temp[itoId].preferredShiftList[x-noOfPrevDate];
-                    itoRosterList.set(temp);
                   }
                   break
                 default:
                   break;  
               }
+              itoRosterList.set(temp);
             }
           }
         }
@@ -146,13 +146,13 @@ export default class SelectedRegionUtil{
                   switch(rowType){
                     case 'shift':
                       temp[itoId].shiftList[destX++]=copiedData[y][x];
+                      temp[itoId]=getITOStat(activeShiftInfoList,noOfWorkingDay, temp[itoId]);
                       break;
                     case 'preferredShift':
                       temp[itoId].preferredShiftList[destX++]=copiedData[y][x];
                       break;
                     default:break  
                   }
-                  temp[itoId]=getITOStat(activeShiftInfoList,noOfWorkingDay, temp[itoId]);
                   itoRosterList.set(temp);
                 }
               }
@@ -262,11 +262,11 @@ export default class SelectedRegionUtil{
                     }	
                 }
                 if (isChanged){
-                //console.log("isChanged=true");
-                selectedRegion.minX=newMinX;
-                selectedRegion.maxX=newMaxX;                        
-                selectedRegion.minY=newMinY;
-                selectedRegion.maxY=newMaxY;                
+                  //console.log("isChanged=true");
+                  selectedRegion.minX=newMinX;
+                  selectedRegion.maxX=newMaxX;                        
+                  selectedRegion.minY=newMinY;
+                  selectedRegion.maxY=newMaxY;                
                 }
             }
         }    

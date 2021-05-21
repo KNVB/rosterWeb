@@ -2,23 +2,23 @@ import {useContext} from 'react';
 import Roster from '../../../../utils/Roster';
 import RosterWebContext from '../../../../utils/RosterWebContext';
 export default function ExportToExcelButton(){
-    let {activeShiftInfoList,monthlyCalendar,rosterData,rosterMonth} = useContext(RosterWebContext);
+    let [contextValue] = useContext(RosterWebContext);
     let genExcelData={},shiftInfoList={};
     function exportExcel(){
-       for (let shift in activeShiftInfoList){
+       for (let shift in contextValue.activeShiftInfoList){
         if (shift!=='essentialShift'){
-            let shiftInfo=activeShiftInfoList[shift];
+            let shiftInfo=contextValue.activeShiftInfoList[shift];
             shiftInfoList[shift]={
                                     duration:shiftInfo.duration,
                                 };
         }
        }
-       genExcelData["monthlyCalendar"]=monthlyCalendar;
-       genExcelData["rosterList"]=rosterData.rosterList;
-       genExcelData["rosterMonth"]=rosterMonth.getMonth();
-       genExcelData["rosterYear"]=rosterMonth.getFullYear();
+       genExcelData["monthlyCalendar"]=contextValue.monthlyCalendar;
+       genExcelData["rosterList"]=contextValue.itoRosterList.presentValue;
+       genExcelData["rosterMonth"]=contextValue.rosterMonth.getMonth();
+       genExcelData["rosterYear"]=contextValue.rosterMonth.getFullYear();
        genExcelData["shiftInfoList"]=shiftInfoList;
-       genExcelData["vacantShiftList"]=rosterData.vacantShiftList;
+       genExcelData["vacantShiftList"]=contextValue.vacantShiftList;
        console.log(genExcelData);
        let roster=new Roster();
        roster.exportExcel(genExcelData);

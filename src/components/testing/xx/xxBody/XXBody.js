@@ -1,5 +1,5 @@
-import {useCallback,useContext,useEffect} from 'react';
-import AdminShiftStatUtil from '../utils/AdminShiftStatUtil';
+import {useCallback,useContext,useEffect,useMemo} from 'react';
+//import AdminShiftStatUtil from '../utils/AdminShiftStatUtil';
 import PreferredShiftRow from './PreferredShiftRow';
 import RosterRow from './RosterRow';
 import RosterWebContext from '../../../../utils/RosterWebContext';
@@ -7,23 +7,30 @@ import VacantShiftRow from './VacantShiftRow';
 export default function XXBody(props){
     let [contextValue, updateContext]=useContext(RosterWebContext);
     let rowList=[],headerRowCount=3;
+    /*
     let {getAllITOStat}=AdminShiftStatUtil();
-    let allITOStat=getAllITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar,contextValue.itoRosterList.presentValue)
+    //let allITOStat=getAllITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar,contextValue.itoRosterList.presentValue);
+    let allITOStat=useMemo(
+        () => getAllITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar,contextValue.itoRosterList.presentValue),
+        [contextValue.activeShiftInfoList,contextValue.monthlyCalendar,contextValue.itoRosterList.presentValue]
+    );
+    */
     Object.keys(contextValue.itoRosterList.presentValue).forEach(itoId=>{
         rowList.push(
             <RosterRow 
-                key={itoId+'_shiftList'}
+                duplicatShiftList={contextValue.allITOStat.duplicatShiftList[itoId]}
                 itoId={itoId}
+                key={itoId+'_shiftList'}
                 rowIndex={rowList.length+headerRowCount}/>
         );
-        /*
+        
         rowList.push(
             <PreferredShiftRow
                 itoId={itoId}
                 key={itoId+'_preferredShiftList'}
                 rowIndex={rowList.length+headerRowCount}/>
         )
-        */
+        
     })
     let keyDown=useCallback((e)=>{
         console.log("keyDown");
@@ -85,7 +92,11 @@ export default function XXBody(props){
                     break;
                 case 46://handle delete key event
                     e.preventDefault();
-                    contextValue.selectedRegionUtil.deleteData(contextValue.itoRosterList);
+                    contextValue.selectedRegionUtil.deleteData(
+                        contextValue.activeShiftInfoList,
+                        contextValue.monthlyCalendar.noOfWorkingDay,
+                        contextValue.itoRosterList
+                    );
                     updateContext({type:'updateRosterData',value:contextValue.itoRosterList});
                     break    
                 default:break;
@@ -113,7 +124,8 @@ export default function XXBody(props){
     },[mouseUp]);
     return (
         <tbody>
-            {rowList}     
+            {rowList}
+            <VacantShiftRow/> 
         </tbody>
     )
 }

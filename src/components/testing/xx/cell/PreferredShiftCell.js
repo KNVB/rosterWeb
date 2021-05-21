@@ -27,27 +27,33 @@ export default function PreferredShiftCell(props){
     }
     let pasteData=e=>{
         if (contextValue.selectedRegionUtil.hasCopiedRegion){
-            contextValue.selectedRegionUtil.pasteCopiedRegion(e.clipboardData,contextValue.rosterData,contextValue.systemParam.noOfPrevDate);
-            updateContext({type:'updateRosterData', value:contextValue.rosterData})
+            contextValue.selectedRegionUtil.pasteCopiedRegion(
+                e.clipboardData,
+                contextValue.activeShiftInfoList,
+                contextValue.monthlyCalendar.noOfWorkingDay,
+                contextValue.itoRosterList,
+                contextValue.systemParam.noOfPrevDate
+            );
+            updateContext({type:'updateRosterData', value:contextValue.itoRosterList})
         }   
     }
     let updateValue=e=>{
         let cellIndex=e.target.cellIndex-contextValue.systemParam.noOfPrevDate;
-        let temp=JSON.parse(JSON.stringify(contextValue.rosterData.presentValue));
+        let temp=JSON.parse(JSON.stringify(contextValue.itoRosterList.presentValue));
         let oldValue=temp[props.itoId].preferredShiftList[cellIndex];
         if (oldValue){
             if (oldValue!==e.target.textContent){
                 temp[props.itoId].preferredShiftList[cellIndex]=e.target.textContent;
                 console.log('YYCell.updateValue');
-                contextValue.rosterData.set(temp);
-                updateContext({type:'updateRosterData', value:contextValue.rosterData});
+                contextValue.itoRosterList.set(temp);
+                updateContext({type:'updateRosterData', value:contextValue.itoRosterList});
             }
         }else {
             if (e.target.textContent!==''){
                 temp[props.itoId].preferredShiftList[cellIndex]=e.target.textContent;
                 console.log('YYCell.updateValue');
-                contextValue.rosterData.set(temp);
-                updateContext({type:'updateRosterData', value:contextValue.rosterData});
+                contextValue.itoRosterList.set(temp);
+                updateContext({type:'updateRosterData', value:contextValue.itoRosterList});
             }
         }
     }

@@ -155,7 +155,7 @@ class RosterManager
 		}
 		this.saveToDB=async (rosterData)=>{
 			let month=rosterData.month;
-            let itoRosterList=rosterData.rosterData;
+            let itoRosterList=rosterData.rosterList;
             let year=rosterData.year;
             /*
 			console.log(year+"/"+month);
@@ -167,7 +167,7 @@ class RosterManager
 				let result=await dboObj.saveRosterData(year,month,itoRosterList);
 				return result;
 			}catch(err){
-				console.log("Some wrong when update roster data:"+err);
+				console.log("Some wrong when update roster data:"+err.stack);
 				throw new Error("Some wrong when update roster data.");
 			}
 			finally{

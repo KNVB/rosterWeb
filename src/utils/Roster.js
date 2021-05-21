@@ -2,84 +2,84 @@ import Utility from './Utility';
 import SessionExpiredError from './SessionExpiredError';
 export default class Roster{
     constructor(changeLoggedInFlag){
-        //this.changeLoggedInFlag=changeLoggedInFlag;
-        let privateAPIPath='/publicAPI';
-        //let privateAPIPath='/privateAPI';
-        let publicAPIPath='/publicAPI';
-        this.exportExcel=async(genExcelData)=>{
-            try{
-                let result=await Utility.fetchAPI(privateAPIPath+'/exportExcel','POST',genExcelData);
-                return result;
-            }catch(error){
-                if (error instanceof SessionExpiredError){
-                    console.log("changeLoggedInFlag");
-                    changeLoggedInFlag(false);
-                } else {
-                    throw error;
-                }
-            }
-        }
-        this.get=async(year,month)=>{
+      //this.changeLoggedInFlag=changeLoggedInFlag;
+      let privateAPIPath='/publicAPI';
+      //let privateAPIPath='/privateAPI';
+      let publicAPIPath='/publicAPI';
+      this.exportExcel=async(genExcelData)=>{
           try{
-            let result=await Utility.fetchAPI(publicAPIPath+'/getITORosterList','GET',{"year":year,"month":month});
-            return result;
-          } catch (error){
-            throw error;
+              let result=await Utility.fetchAPI(privateAPIPath+'/exportExcel','POST',genExcelData);
+              return result;
+          }catch(error){
+              if (error instanceof SessionExpiredError){
+                  console.log("changeLoggedInFlag");
+                  changeLoggedInFlag(false);
+              } else {
+                  throw error;
+              }
           }
+      }
+      this.get=async(year,month)=>{
+        try{
+          let result=await Utility.fetchAPI(publicAPIPath+'/getITORosterList','GET',{"year":year,"month":month});
+          return result;
+        } catch (error){
+          throw error;
         }
-        this.getAllActiveShiftInfo=async()=>{
+      }
+      this.getAllActiveShiftInfo=async()=>{
+        try{
+          let result=await Utility.fetchAPI(publicAPIPath+'/getAllActiveShiftInfo','GET');
+          return result;
+        }catch (error){
+          throw error;
+        }
+      }
+      this.getRosterSchedulerList=async(year,month)=>{
           try{
-            let result=await Utility.fetchAPI(publicAPIPath+'/getAllActiveShiftInfo','GET');
-            return result;
-          }catch (error){
-            throw error;
+              let result=await Utility.fetchAPI(privateAPIPath+'/getRosterSchedulerList','POST',{"year":year,"month":month});
+              return result;
+          }catch(error){
+              if (error instanceof SessionExpiredError){
+                  console.log("changeLoggedInFlag");
+                  changeLoggedInFlag(false);
+              } else {
+                  throw error;
+              }
           }
-        }
-        this.getRosterSchedulerList=async(year,month)=>{
-            try{
-                let result=await Utility.fetchAPI(privateAPIPath+'/getRosterSchedulerList','POST',{"year":year,"month":month});
-                return result;
-            }catch(error){
-                if (error instanceof SessionExpiredError){
-                    console.log("changeLoggedInFlag");
-                    changeLoggedInFlag(false);
-                } else {
-                    throw error;
-                }
-            }
-        }
-        this.getSystemParam=async()=>{
+      }
+      this.getSystemParam=async()=>{
+        try{
+          let result=await Utility.fetchAPI(publicAPIPath+'/getSystemParam','GET');
+          return result;
+        }catch (error){
+          throw error;
+        }          
+      }
+      this.getYearlyRosterStatistic=async(year,month)=>{
           try{
-            let result=await Utility.fetchAPI(publicAPIPath+'/getSystemParam','GET');
-            return result;
+              let result=await Utility.fetchAPI(privateAPIPath+'/getYearlyRosterStatistic','POST',{"year":year,"month":month});
+              return result;
+          }catch(error){
+              if (error instanceof SessionExpiredError){
+                  console.log("changeLoggedInFlag");
+                  changeLoggedInFlag(false);
+              }
+              throw error;
+          }            
+      }
+      this.saveRosterToDB=async(rosterData)=>{
+          try{
+              let result=await Utility.fetchAPI(privateAPIPath+'/saveRosterToDB','POST',rosterData);
+              return result;
           }catch (error){
-            throw error;
-          }          
-        }
-        this.getYearlyRosterStatistic=async(year,month)=>{
-            try{
-                let result=await Utility.fetchAPI(privateAPIPath+'/getYearlyRosterStatistic','POST',{"year":year,"month":month});
-                return result;
-            }catch(error){
-                if (error instanceof SessionExpiredError){
-                    console.log("changeLoggedInFlag");
-                    changeLoggedInFlag(false);
-                }
-                throw error;
-            }            
-        }
-        this.saveRosterToDB=async(rosterData)=>{
-            try{
-                let result=await Utility.fetchAPI(privateAPIPath+'/saveRosterToDB','POST',rosterData);
-                return result;
-            }catch (error){
-                if (error instanceof SessionExpiredError){
-                    console.log("changeLoggedInFlag");
-                    changeLoggedInFlag(false);
-                }
-                throw error;
-            }
-        }
+              if (error instanceof SessionExpiredError){
+                  console.log("changeLoggedInFlag");
+                  changeLoggedInFlag(false);
+              }
+              throw error;
+          }
+      }
     }
     static getDuplicateShiftList(monthlyCalendar,rosterList){
       let result={};

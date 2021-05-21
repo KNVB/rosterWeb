@@ -1,8 +1,9 @@
 import {useEffect,useReducer} from 'react';
-import ITOShiftStatUtil from './utils/ITOShiftStatUtil';
+import AdminShiftStatUtil from './utils/AdminShiftStatUtil';
 import BaseTable from './baseTable/BaseTable';
 import ButtonPanel from './xxFooter/ButtonPanel';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
+import ITOShiftStatUtil from './utils/ITOShiftStatUtil';
 import Roster from '../../../utils/Roster';
 import RosterWebContext from '../../../utils/RosterWebContext';
 import SelectedRegionUtil from './utils/SelectedRegionUtil';
@@ -15,11 +16,14 @@ export default function XXTable(props){
     useEffect(()=>{
         const getData = async () => {
             console.log("Undo:Get Data from DB");
+            let {getAllITOStat}=AdminShiftStatUtil();
+            let {getITOStat}=ITOShiftStatUtil();
+
             let roster = new Roster(props.changeLoggedInFlag);
             let activeShiftInfoList= await roster.getAllActiveShiftInfo();
             let calendarUtility=new CalendarUtility();
             let hightLightCellIndex=-1;
-            let {getITOStat}=ITOShiftStatUtil();
+            
             let itoRosterList={};
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let monthLength=monthlyCalendar.calendarDateList.length;
@@ -36,20 +40,22 @@ export default function XXTable(props){
 
             //console.log(itoRosterList);
             //console.log(allITOStat);
+            let allITOStat=getAllITOStat(activeShiftInfoList,monthlyCalendar,itoRosterList);
             updateContext(
                 {
                     type:'updateRosterMonth',
                     value:{
                         activeShiftInfoList:activeShiftInfoList,
+                        "allITOStat":allITOStat,
                         calendarUtility:calendarUtility,
                         changeLoggedInFlag:props.changeLoggedInFlag,
                         hightLightCellIndex:hightLightCellIndex,
-                        monthlyCalendar:monthlyCalendar,
                         itoRosterList:new UndoableData(itoRosterList),
+                        monthlyCalendar:monthlyCalendar,
+                        previousMonthShiftList:rosterSchedulerList.previousMonthShiftList,                        
                         rosterMonth:props.rosterMonth,
                         selectedRegionUtil:new SelectedRegionUtil(bodyRowCount,monthLength,props.systemParam.noOfPrevDate),
                         systemParam:props.systemParam,
-                        previousMonthShiftList:rosterSchedulerList.previousMonthShiftList,
                         yearlyRosterStatistic:yearlyRosterStatistic
                     }
                 }
@@ -60,8 +66,11 @@ export default function XXTable(props){
     let dataReducer=(state,action)=>{
         switch(action.type){
             case 'updateRosterData':
+                let {getAllITOStat}=AdminShiftStatUtil();
+                let allITOStat=getAllITOStat(state.activeShiftInfoList,state.monthlyCalendar,action.value.presentValue);
                 return{
                     ...state,
+                    "allITOStat":allITOStat,
                     itoRosterList:action.value,
                 }
             case 'updateRosterMonth':
@@ -85,13 +94,10 @@ export default function XXTable(props){
     return(
         <RosterWebContext.Provider value={[contextValue, updateContext]}>
             <BaseTable noOfPrevDate={props.systemParam.noOfPrevDate}>
-            
                 {contextValue.itoRosterList && <XXBody/>}
-            {/*                
                 {contextValue.activeShiftInfoList && 
                     <XXFooter buttonPanel={buttonPanel} noOfPrevDate={props.systemParam.noOfPrevDate} yearlyStat={yearlyStat}/>
                 }
-            */}
             </BaseTable>
         </RosterWebContext.Provider>
     )

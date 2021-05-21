@@ -8,9 +8,9 @@ export default class UndoableData{
         this.canUndo=()=>(pastValue.length>0);
 
         this.redo=()=>{
-            console.log('UndoableData:redo');
+            console.log('UndoableData:redo:'+this.canRedo());
             if (futureValue.length>0){
-                console.log(pastValue);
+                //console.log(pastValue);
                 pastValue.push(this.presentValue);
                 this.presentValue=futureValue.pop();
             }

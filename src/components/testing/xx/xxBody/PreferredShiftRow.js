@@ -11,7 +11,7 @@ export default function PreferredShiftRow(props){
     for (let i=0;i<contextValue.systemParam.noOfPrevDate;i++){
         cellList.push(<BorderedCell key={"prev-preferred_shift_"+i}/>);
     }
-    for(let i=0;i<31;i++){
+    for (let i=0;i<contextValue.monthlyCalendar.calendarDateList.length;i++){
         let className=contextValue.selectedRegionUtil.getBorderClass(i+contextValue.systemParam.noOfPrevDate+1,props.rowIndex);
         cellList.push(
             <PreferredShiftCell
@@ -23,6 +23,14 @@ export default function PreferredShiftRow(props){
                 {preferredShiftList[i+1]}
             </PreferredShiftCell>
         );
+    }
+    for (let i=contextValue.monthlyCalendar.calendarDateList.length;i<31;i++){
+        cellList.push(
+            <BorderedCell key={props.itoId+"_shift_"+i}></BorderedCell>
+        );
+    }
+    if (isHighLightRow){
+        nameCellCssClass="highlightCell";
     }
     return(
         <tr id={props.itoId+':preferredShift'}>
