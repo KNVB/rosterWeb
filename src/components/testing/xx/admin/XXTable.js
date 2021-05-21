@@ -1,16 +1,16 @@
 import {useEffect,useReducer} from 'react';
 import AdminShiftStatUtil from './utils/AdminShiftStatUtil';
-import BaseTable from './baseTable/BaseTable';
-import ButtonPanel from './xxFooter/ButtonPanel';
-import CalendarUtility from '../../../utils/calendar/CalendarUtility';
-import ITOShiftStatUtil from './utils/ITOShiftStatUtil';
-import Roster from '../../../utils/Roster';
-import RosterWebContext from '../../../utils/RosterWebContext';
+import BaseTable from '../baseTable/BaseTable';
+import ButtonPanel from './components/ButtonPanel';
+import CalendarUtility from '../utils/calendar/CalendarUtility';
+import ITOShiftStatUtil from '../utils/ITOShiftStatUtil';
+import AdminRoster from './utils/AdminRoster';
+import RosterWebContext from '../utils/RosterWebContext';
 import SelectedRegionUtil from './utils/SelectedRegionUtil';
 import UndoableData from './utils/UndoableData';
 import XXBody from './xxBody/XXBody';
-import XXFooter from './xxFooter/XXFooter';
-import YearlyRosterStatistic from './xxFooter/YearlyRosterStatistic';
+import XXFooter from '../xxFooter/XXFooter';
+import YearlyRosterStatistic from './components/YearlyRosterStatistic';
 
 export default function XXTable(props){
     useEffect(()=>{
@@ -19,16 +19,16 @@ export default function XXTable(props){
             let {getAllITOStat}=AdminShiftStatUtil();
             let {getITOStat}=ITOShiftStatUtil();
 
-            let roster = new Roster(props.changeLoggedInFlag);
-            let activeShiftInfoList= await roster.getAllActiveShiftInfo();
+            let adminRoster = new AdminRoster(props.changeLoggedInFlag);
+            let activeShiftInfoList= await adminRoster.getAllActiveShiftInfo();
             let calendarUtility=new CalendarUtility();
             let hightLightCellIndex=-1;
             
             let itoRosterList={};
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let monthLength=monthlyCalendar.calendarDateList.length;
-            let rosterSchedulerList=await roster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
-            let yearlyRosterStatistic=await roster.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
+            let rosterSchedulerList=await adminRoster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
+            let yearlyRosterStatistic=await adminRoster.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             
             //let bodyRowCount=2;
             let bodyRowCount=Object.keys(rosterSchedulerList.itoRosterList).length*2;

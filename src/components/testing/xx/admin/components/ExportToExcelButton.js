@@ -1,6 +1,6 @@
 import {useContext} from 'react';
-import Roster from '../../../../utils/Roster';
-import RosterWebContext from '../../../../utils/RosterWebContext';
+import AdminRoster from '../utils/AdminRoster';
+import RosterWebContext from '../../utils/RosterWebContext';
 export default function ExportToExcelButton(){
     let [contextValue] = useContext(RosterWebContext);
     let genExcelData={},shiftInfoList={};
@@ -20,8 +20,8 @@ export default function ExportToExcelButton(){
        genExcelData["shiftInfoList"]=shiftInfoList;
        genExcelData["vacantShiftList"]=contextValue.allITOStat.vacantShiftList;
        console.log(genExcelData);
-       let roster=new Roster();
-       roster.exportExcel(genExcelData);
+       let adminRoster=new AdminRoster(contextValue.changeLoggedInFlag);
+       adminRoster.exportExcel(genExcelData);
     }
     return (
         <div className="exportButton" onClick={exportExcel}>

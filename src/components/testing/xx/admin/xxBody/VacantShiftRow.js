@@ -1,9 +1,9 @@
 import {useContext} from 'react';
 import './VacantShiftRow.css';
-import BorderedCell from '../cell/BorderedCell';
-import BorderedAlignCenterCell from '../cell/BorderedAlignCenterCell';
-import NameCell from '../cell/NameCell';
-import RosterWebContext from '../../../../utils/RosterWebContext';
+import BorderedCell from '../../cell/BorderedCell';
+import BorderedAlignCenterCell from '../../cell/BorderedAlignCenterCell';
+import NameCell from '../../cell/NameCell';
+import RosterWebContext from '../../utils/RosterWebContext';
 export default function VacantShiftRow(props){
     let cellList=[];
     let [contextValue]=useContext(RosterWebContext);

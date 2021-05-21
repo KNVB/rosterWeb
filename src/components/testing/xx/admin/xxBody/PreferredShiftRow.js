@@ -1,7 +1,7 @@
 import {useContext,useState} from 'react';
-import BorderedCell from '../cell/BorderedCell';
-import NameCell from '../cell/NameCell';
-import RosterWebContext from '../../../../utils/RosterWebContext';
+import BorderedCell from '../../cell/BorderedCell';
+import NameCell from '../../cell/NameCell';
+import RosterWebContext from '../../utils/RosterWebContext';
 import PreferredShiftCell from '../cell/PreferredShiftCell';
 export default function PreferredShiftRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);

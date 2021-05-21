@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-d
 //import RosterAdmin from './components/rosterAdmin/RosterAdmin';
 //import RosterViewer from './components/rosterViewer/RosterViewer';
 //import VV from './components/testing/vv/VV';
-import XX from './components/testing/xx/XX';
+import Viewer from './components/testing/xx/viewer/Viewer';
+import XX from './components/testing/xx/admin/XX';
 //import Utility from './utils/Utility';
 function App() {  
   return (
@@ -15,8 +16,8 @@ function App() {
             <Redirect to="/rosterWeb"/>
           )
         }/>
-        <Route exact path='/rosterWeb/xx/' component={XX} />
-        
+        <Route exact path='/rosterWeb/xx/admin' component={XX} />
+        <Route exact path='/rosterWeb' component={Viewer} />
 {/*  
           <Route path='/rosterWeb/admin' render={()=>systemParam && <RosterAdmin systemParam={systemParam}/>} />
           <Route exact path='/rosterWeb/vv/' render={()=>systemParam && <VV systemParam={systemParam}/>} />

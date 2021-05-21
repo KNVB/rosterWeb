@@ -1,9 +1,9 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useEffect,useState} from 'react';
-import MonthPicker from '../../monthPicker/MonthPicker';
-import Roster from '../../../utils/Roster';
-import XXTable from './XXTable';
-export default function XX(props){
+import MonthPicker from '../utils/monthPicker/MonthPicker';
+import Roster from '../utils/Roster';
+import ViewerTable from './ViewerTable';
+export default function Viewer(props){
     let now=new Date();
     const [rosterMonth,setRosterMonth]=useState(new Date(now.getFullYear(),now.getMonth(),1));
     const [systemParam,setSystemParam]=useState();
@@ -40,10 +40,10 @@ export default function XX(props){
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
-                       {systemParam && <XXTable changeLoggedInFlag={props.changeLoggedInFlag} rosterMonth={rosterMonth} systemParam={systemParam}/>}
+                       {systemParam && <ViewerTable  rosterMonth={rosterMonth} systemParam={systemParam}/>}
                     </Col>
                 </Row>
             </Container>
         </div>
-    )    
+    )
 }

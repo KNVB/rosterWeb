@@ -1,10 +1,10 @@
 import {useContext} from 'react';
-import Roster from '../../../../utils/Roster';
-import RosterWebContext from '../../../../utils/RosterWebContext';
+import AdminRoster from '../utils/AdminRoster';
+import RosterWebContext from '../../utils/RosterWebContext';
 export default function SaveRosterToDBButton(){
     let [contextValue]=useContext(RosterWebContext);
     async function saveRosterToDB(){
-        let roster=new Roster(contextValue.changeLoggedInFlag);
+        let adminRoster=new AdminRoster(contextValue.changeLoggedInFlag);
         let rosterData={};
         for (const [itoId, itoRoster] of Object.entries(contextValue.itoRosterList.presentValue)) {
             rosterData[itoId]={
@@ -14,7 +14,7 @@ export default function SaveRosterToDBButton(){
                 thisMonthBalance:itoRoster.thisMonthBalance
             }
         }
-        roster.saveRosterToDB({
+        adminRoster.saveRosterToDB({
             month:contextValue.rosterMonth.getMonth()+1,
             preferredShiftList:rosterData.preferredShiftList,
             rosterList:rosterData,
@@ -30,7 +30,7 @@ export default function SaveRosterToDBButton(){
         .catch(error=>{
             alert(error.message);
         });
-        roster=null;
+        adminRoster=null;
     }
     return(
         <div className="saveRosterToDBButton" onClick={saveRosterToDB}>

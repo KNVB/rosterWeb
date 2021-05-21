@@ -1,5 +1,5 @@
 import CopiedRegion from './CopiedRegion';
-import ITOShiftStatUtil from './ITOShiftStatUtil';
+import ITOShiftStatUtil from '../../utils/ITOShiftStatUtil';
 import SelectedRegion from './SelectedRegion';
 export default class SelectedRegionUtil{
     constructor(bodyRowCount,monthLength,noOfPrevDate){

@@ -1,6 +1,6 @@
 import './BaseTable.css';
 import {useContext} from 'react';
-import RosterWebContext from '../../../../utils/RosterWebContext';
+import RosterWebContext from '../utils/RosterWebContext';
 import TableHeader from './tableHeader/TableHeader';
 export default function BaseTable(props){
     let [contextValue]=useContext(RosterWebContext);

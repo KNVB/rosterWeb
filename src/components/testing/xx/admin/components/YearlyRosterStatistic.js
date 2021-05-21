@@ -1,6 +1,6 @@
 import {useContext} from 'react';
-import BorderedAlignCenterCell from '../cell/BorderedAlignCenterCell';
-import RosterWebContext from '../../../../utils/RosterWebContext';
+import BorderedAlignCenterCell from '../../cell/BorderedAlignCenterCell';
+import RosterWebContext from '../../utils/RosterWebContext';
 import './YearlyRosterStatistic.css';
 export default function YearlyRosterStatistic(){
     let [contextValue] =useContext(RosterWebContext);

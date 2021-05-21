@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import RosterWebContext from '../../../../utils/RosterWebContext';
+import RosterWebContext from '../../utils/RosterWebContext';
 export default function ReloadButton(){
     let [contextValue,updateContext]=useContext(RosterWebContext);
     async function reload(){
