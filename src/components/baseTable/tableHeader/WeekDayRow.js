@@ -19,7 +19,7 @@ export default function WeekDayRow(props){
         if (monthlyCalendar.calendarDateList[i]){
             //console.log(props.monthlyCalendar[i]);
             let content=calendarUtility.weekdayNames[monthlyCalendar.calendarDateList[i].dayOfWeek];
-            let className="font-weight-bold",title="";
+            let className="",title="";
             if ((content==="S") || (content==="Su") || (monthlyCalendar.calendarDateList[i].publicHoliday))
                 className="font-weight-bold phCell";
             if  (monthlyCalendar.calendarDateList[i].publicHoliday){

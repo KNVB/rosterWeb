@@ -1,0 +1,15 @@
+.editableCell:focus 
+{
+	outline: none;
+}
+.editableCell:hover{
+	cursor: cell;
+}
+.editableCell::selection
+{
+  background: none; /* WebKit/Blink Browsers */
+}
+.editableCell::-moz-selection
+{
+  background: none; /* WebKit/Blink Browsers */
+}
