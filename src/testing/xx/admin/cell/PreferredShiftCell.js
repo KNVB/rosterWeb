@@ -4,7 +4,7 @@ import RosterWebContext from '../../utils/RosterWebContext';
 import "./EditableCell.css";
 import './EditableShiftCell.css';
 export default function PreferredShiftCell(props){
-    let className="editableCell font-weight-bold "+((props.className)?" "+props.className:"");
+    let className="editableCell "+((props.className)?" "+props.className:"");
     let [contextValue, updateContext]=useContext(RosterWebContext);
     let copyData=(e)=>{
         e.preventDefault();

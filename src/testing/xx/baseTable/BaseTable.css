@@ -12,7 +12,8 @@
 }
 table#rosterTable
 {
-	font-size: 15px;
-	font-family:Arial, Helvetica, sans-serif;
 	box-sizing: border-box;
+	line-height: normal;
+	table-layout: fixed;
+	width:1750px;
 }

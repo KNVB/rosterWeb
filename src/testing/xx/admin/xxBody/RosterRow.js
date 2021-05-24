@@ -57,16 +57,16 @@ export default function RosterRow(props){
         <tr id={props.itoId+':shift'}>
             <NameCell className={nameCellCssClass}>{itoNameContact}</NameCell>
             {cellList}
-            <BorderedAlignCenterCell className="font-weight-bold">{itoRoster.expectedWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell className="font-weight-bold">{itoRoster.actualWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell className="font-weight-bold">{itoRoster.lastMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell className="font-weight-bold">{itoRoster.thisMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell className="font-weight-bold">{itoRoster.totalBalance.toFixed(2)}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell className="font-weight-bold">{itoRoster.shiftCountList.aShiftCount}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell className="font-weight-bold">{itoRoster.shiftCountList.bxShiftCount}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell className="font-weight-bold">{itoRoster.shiftCountList.cShiftCount}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell className="font-weight-bold">{itoRoster.shiftCountList.dxShiftCount}</BorderedAlignCenterCell>
-            <BorderedAlignCenterCell className="tailCell font-weight-bold">{itoRoster.actualWorkingDayCount}</BorderedAlignCenterCell>         
+            <BorderedAlignCenterCell >{itoRoster.expectedWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell >{itoRoster.actualWorkingHour.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell >{itoRoster.lastMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell >{itoRoster.thisMonthBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell >{itoRoster.totalBalance.toFixed(2)}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell >{itoRoster.shiftCountList.aShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell >{itoRoster.shiftCountList.bxShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell >{itoRoster.shiftCountList.cShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell >{itoRoster.shiftCountList.dxShiftCount}</BorderedAlignCenterCell>
+            <BorderedAlignCenterCell className="tailCell">{itoRoster.actualWorkingDayCount}</BorderedAlignCenterCell>         
         </tr>
     )
 }

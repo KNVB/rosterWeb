@@ -12,7 +12,7 @@ export default function VacantShiftRow(props){
     }
     for (let i=0;i<contextValue.monthlyCalendar.calendarDateList.length;i++){
         cellList.push(
-            <BorderedAlignCenterCell className="bottomCell font-weight-bold" key={"vacantShift_" + i}>
+            <BorderedAlignCenterCell className="bottomCell" key={"vacantShift_" + i}>
               {contextValue.allITOStat.vacantShiftList[i+1]}
             </BorderedAlignCenterCell>
         );
@@ -30,7 +30,7 @@ export default function VacantShiftRow(props){
             <NameCell className="bottomCell vacantShiftName pr-1">Vacant Shifts</NameCell>
             {cellList}
             <BorderedCell className="bottomCell p-0 m-0 tailCell" colSpan="10">
-                <div className="d-flex font-weight-bold justify-content-around flex-grow-1">
+                <div className="d-flex justify-content-around flex-grow-1">
                     <div>A Shift σ:{contextValue.allITOStat.aShiftStdDev} </div>
                     <div>Bx Shift σ:{contextValue.allITOStat.bxShiftStdDev} </div>
                     <div>C Shift σ:{contextValue.allITOStat.cShiftStdDev} </div>

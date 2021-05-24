@@ -5,7 +5,6 @@ import ITOShiftStatUtil from '../utils/ITOShiftStatUtil';
 import Roster from '../utils/Roster';
 import RosterWebContext from '../utils/RosterWebContext';
 import ViewerBody from './viewerBody/ViewerBody';
-import XXFooter from '../xxFooter/XXFooter';
 export default function ViewerTable(props){
     useEffect(()=>{
         const getData = async () => {
@@ -53,10 +52,7 @@ export default function ViewerTable(props){
     return (
         <RosterWebContext.Provider value={[contextValue, updateContext]}>
             <BaseTable noOfPrevDate={0}>
-                {contextValue.itoRosterList && <ViewerBody/>}
-                {contextValue.activeShiftInfoList && 
-                    <XXFooter noOfPrevDate={0}/>
-                }
+                {contextValue.itoRosterList && <ViewerBody/>}               
             </BaseTable>
         </RosterWebContext.Provider>
     )        

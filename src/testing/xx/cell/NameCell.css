@@ -1,6 +1,6 @@
 .nameCell{
-    font-size:15px;
-    font-weight: bolder;
-    text-align:left;
-    width:200px;
+    padding: 0px;
+    width: 200px;
+    font-size: 15px;
+    text-align: left;
 }

@@ -1,10 +1,12 @@
 import {useEffect,useReducer} from 'react';
+import './RosterSchedulerTable.css';
+import AdminRoster from './utils/AdminRoster';
 import AdminShiftStatUtil from './utils/AdminShiftStatUtil';
 import BaseTable from '../../baseTable/BaseTable';
 import ButtonPanel from './components/ButtonPanel';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
 import ITOShiftStatUtil from '../../../utils/ITOShiftStatUtil';
-import AdminRoster from './utils/AdminRoster';
+import LoadingImage from './components/icon.gif';
 import RosterSchedulerBody from './rosterSchedulerBody/RosterSchedulerBody';
 import RosterWebContext from '../../../utils/RosterWebContext';
 import SelectedRegionUtil from './utils/SelectedRegionUtil';
@@ -48,11 +50,12 @@ export default function RosterSchedulerTable(props){
                         calendarUtility:calendarUtility,
                         changeLoggedInFlag:props.changeLoggedInFlag,
                         hightLightCellIndex:hightLightCellIndex,
+                        isShowLoadingImage:false,
                         itoRosterList:new UndoableData(itoRosterList),
                         monthlyCalendar:monthlyCalendar,
                         previousMonthShiftList:rosterSchedulerList.previousMonthShiftList,                        
                         rosterMonth:props.rosterMonth,
-                        selectedRegionUtil:new SelectedRegionUtil(bodyRowCount,monthLength,props.systemParam.noOfPrevDate),
+                        selectedRegionUtil:new SelectedRegionUtil(bodyRowCount,monthLength,props.systemParam.noOfPrevDate),                        
                         systemParam:props.systemParam,
                         yearlyRosterStatistic:yearlyRosterStatistic
                     }
@@ -97,6 +100,11 @@ export default function RosterSchedulerTable(props){
                 yearlyStat={yearlyStat}>
                 {contextValue.itoRosterList && <RosterSchedulerBody/>}
             </BaseTable>
+            {contextValue.isShowLoadingImage && 
+                <div  className="modalBackground">
+                    <img src={LoadingImage} alt='loadingImage'/>
+                </div>
+            }    
         </RosterWebContext.Provider>
     )
 }

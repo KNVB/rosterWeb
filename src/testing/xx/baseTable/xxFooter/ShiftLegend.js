@@ -1,5 +1,5 @@
 import {useContext,useEffect} from 'react';
-import RosterWebContext from '../utils/RosterWebContext';
+import RosterWebContext from '../../utils/RosterWebContext';
 export default function ShiftLegend(){
     let [contextValue] =useContext(RosterWebContext);
     let rowList=[];

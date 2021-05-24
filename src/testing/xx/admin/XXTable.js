@@ -1,15 +1,18 @@
 import {useEffect,useReducer} from 'react';
+import './XXTable.css';
+
+import AdminRoster from './utils/AdminRoster';
 import AdminShiftStatUtil from './utils/AdminShiftStatUtil';
+import AutoPlanner from './components/AutoPlanner';
 import BaseTable from '../baseTable/BaseTable';
 import ButtonPanel from './components/ButtonPanel';
 import CalendarUtility from '../utils/calendar/CalendarUtility';
 import ITOShiftStatUtil from '../utils/ITOShiftStatUtil';
-import AdminRoster from './utils/AdminRoster';
+import LoadingImage from './components/icon.gif';
 import RosterWebContext from '../utils/RosterWebContext';
 import SelectedRegionUtil from './utils/SelectedRegionUtil';
 import UndoableData from './utils/UndoableData';
 import XXBody from './xxBody/XXBody';
-import XXFooter from '../xxFooter/XXFooter';
 import YearlyRosterStatistic from './components/YearlyRosterStatistic';
 
 export default function XXTable(props){
@@ -50,7 +53,8 @@ export default function XXTable(props){
                         calendarUtility:calendarUtility,
                         changeLoggedInFlag:props.changeLoggedInFlag,
                         hightLightCellIndex:hightLightCellIndex,
-                        itoRosterList:new UndoableData(itoRosterList),
+                        isShowLoadingImage:false,
+                        itoRosterList:new UndoableData(itoRosterList),                        
                         monthlyCalendar:monthlyCalendar,
                         previousMonthShiftList:rosterSchedulerList.previousMonthShiftList,                        
                         rosterMonth:props.rosterMonth,
@@ -89,16 +93,23 @@ export default function XXTable(props){
         }
     }
     const [contextValue, updateContext] = useReducer(dataReducer,{});
+    let autoPlanner=<AutoPlanner/>
     let buttonPanel=<ButtonPanel/>
     let yearlyStat=<YearlyRosterStatistic/>
     return(
         <RosterWebContext.Provider value={[contextValue, updateContext]}>
-            <BaseTable noOfPrevDate={props.systemParam.noOfPrevDate}>
+            <BaseTable 
+                autoPlanner={autoPlanner}
+                buttonPanel={buttonPanel} 
+                noOfPrevDate={props.systemParam.noOfPrevDate}
+                yearlyStat={yearlyStat}>
                 {contextValue.itoRosterList && <XXBody/>}
-                {contextValue.activeShiftInfoList && 
-                    <XXFooter buttonPanel={buttonPanel} noOfPrevDate={props.systemParam.noOfPrevDate} yearlyStat={yearlyStat}/>
-                }
             </BaseTable>
+            {contextValue.isShowLoadingImage && 
+                <div  className="modalBackground">
+                    <img src={LoadingImage} alt='loadingImage'/>
+                </div>
+            }
         </RosterWebContext.Provider>
     )
 }
