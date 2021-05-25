@@ -6,7 +6,7 @@ import TableHeader from './tableHeader/TableHeader';
 export default function BaseTable(props){
     let [contextValue]=useContext(RosterWebContext);
     return(
-        <table id="rosterTable" border="1">
+        <table id="rosterTable">
             {contextValue.monthlyCalendar &&<TableHeader noOfPrevDate={props.noOfPrevDate}/>}
             {props.children}
             {contextValue.activeShiftInfoList &&<TableFooter autoPlanner={props.autoPlanner} buttonPanel={props.buttonPanel} noOfPrevDate={props.noOfPrevDate} yearlyStat={props.yearlyStat}/>}
