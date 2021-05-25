@@ -1,9 +1,9 @@
 import {useEffect,useReducer} from 'react';
 import './XXTable.css';
 
-import AdminRoster from './utils/AdminRoster';
+import AdminUtility from './utils/AdminUtility';
 import AdminShiftStatUtil from './utils/AdminShiftStatUtil';
-import AutoPlanner from './components/AutoPlanner';
+import AutoPlannerTable from './components/AutoPlannerTable';
 import BaseTable from '../baseTable/BaseTable';
 import ButtonPanel from './components/ButtonPanel';
 import CalendarUtility from '../utils/calendar/CalendarUtility';
@@ -22,16 +22,16 @@ export default function XXTable(props){
             let {getAllITOStat}=AdminShiftStatUtil();
             let {getITOStat}=ITOShiftStatUtil();
 
-            let adminRoster = new AdminRoster(props.changeLoggedInFlag);
-            let activeShiftInfoList= await adminRoster.getAllActiveShiftInfo();
+            let adminUtility = new AdminUtility(props.changeLoggedInFlag);
+            let activeShiftInfoList= await adminUtility.getAllActiveShiftInfo();
             let calendarUtility=new CalendarUtility();
             let hightLightCellIndex=-1;
             
             let itoRosterList={};
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let monthLength=monthlyCalendar.calendarDateList.length;
-            let rosterSchedulerList=await adminRoster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
-            let yearlyRosterStatistic=await adminRoster.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
+            let rosterSchedulerList=await adminUtility.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
+            let yearlyRosterStatistic=await adminUtility.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             
             //let bodyRowCount=2;
             let bodyRowCount=Object.keys(rosterSchedulerList.itoRosterList).length*2;
@@ -69,6 +69,11 @@ export default function XXTable(props){
     },[props]);
     let dataReducer=(state,action)=>{
         switch(action.type){
+            case 'showLoadingImage':
+                return{
+                    ...state,
+                    isShowLoadingImage:true
+                }
             case 'updateRosterData':
                 let {getAllITOStat}=AdminShiftStatUtil();
                 let allITOStat=getAllITOStat(state.activeShiftInfoList,state.monthlyCalendar,action.value.presentValue);
@@ -93,13 +98,13 @@ export default function XXTable(props){
         }
     }
     const [contextValue, updateContext] = useReducer(dataReducer,{});
-    let autoPlanner=<AutoPlanner/>
+    let autoPlannerTable=<AutoPlannerTable/>
     let buttonPanel=<ButtonPanel/>
     let yearlyStat=<YearlyRosterStatistic/>
     return(
         <RosterWebContext.Provider value={[contextValue, updateContext]}>
             <BaseTable 
-                autoPlanner={autoPlanner}
+                autoPlanner={autoPlannerTable}
                 buttonPanel={buttonPanel} 
                 noOfPrevDate={props.systemParam.noOfPrevDate}
                 yearlyStat={yearlyStat}>

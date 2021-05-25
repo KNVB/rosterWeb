@@ -1,13 +1,22 @@
-import './AutoPlanner.css';
+import './AutoPlannerTable.css';
 import {useContext,useRef,useState} from 'react';
+import AutoPlanner from '../utils/AutoPlanner';
 import RosterWebContext from '../../utils/RosterWebContext';
-export default function AutoPlanner(props){
+export default function AutoPlannerTable(props){
     let [contextValue,updateContext]=useContext(RosterWebContext);
     let [monthLength,setMonthLength]=useState(contextValue.monthlyCalendar.calendarDateList.length);
     let autoPlanStartDateList=[],autoPlanEndDateList=[];
     let formRef = useRef();
-    let startAutoPlanner=(e)=>{
-        console.log(formRef.current.autoPlanEndDate.value);
+    let getShuffledItoIdList=(itoIdList)=>{
+        return itoIdList.sort(() => Math.random() - 0.5);
+    }
+    let startAutoPlanner=async (e)=>{
+        //updateContext({type:'showLoadingImage',value:true});
+        let endDate=formRef.current.autoPlanEndDate.value;
+        let startDate=formRef.current.autoPlanStartDate.value;
+        let autoPlanner=new AutoPlanner(contextValue);
+        let result=await autoPlanner.getResult(startDate,endDate);
+        
     }
     let updateEndDate=(e)=>{
         setMonthLength(e.target.value);

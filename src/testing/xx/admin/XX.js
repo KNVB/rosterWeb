@@ -1,7 +1,7 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useEffect,useState} from 'react';
 import MonthPicker from '../utils/monthPicker/MonthPicker';
-import AdminRoster from './utils/AdminRoster';
+import AdminUtility from './utils/AdminUtility';
 import XXTable from './XXTable';
 export default function XX(props){
     let now=new Date();
@@ -10,8 +10,8 @@ export default function XX(props){
     useEffect(()=>{
         const getData = async () => {
             console.log("Undo:Get System Parameter from DB");
-            let adminRoster = new AdminRoster(props.changeLoggedInFlag);
-            let temp=await adminRoster.getSystemParam();
+            let adminUtility = new AdminUtility(props.changeLoggedInFlag);
+            let temp=await adminUtility.getSystemParam();
             let monthPickerMinDate=new Date(temp.monthPickerMinDate.year,temp.monthPickerMinDate.month-1,temp.monthPickerMinDate.date);
             temp.monthPickerMinDate=monthPickerMinDate;
             setSystemParam(temp);

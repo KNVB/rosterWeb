@@ -4,16 +4,19 @@ const accessTokenSecret='SD@FD{S=*(^dsv$bm%dl&kf}';
 let bodyParser = require('body-parser')
 let cookierParser = require('cookie-parser');
 let express = require('express');
+let ITOManger= require('./classes/ITOManager');
 let PrivateAPI = require('./utils/privateAPI.js');
 let PublicAPI = require('./utils/publicAPI.js');
 let RosterManager=require("./classes/rosterManager.js");
 let SystemParam=require("./classes/SystemParam");
 //===============================================================
+let itoManager=new ITOManger();
 let systemParam=new SystemParam();
+
 let rosterManager=new RosterManager(systemParam);
 
 let util=require("./utils/utility.js");
-let privateAPI =new PrivateAPI(rosterManager,systemParam);
+let privateAPI =new PrivateAPI(itoManager,rosterManager,systemParam);
 let publicAPI=new PublicAPI(rosterManager,systemParam);
 //===============================================================
 let app = express();
@@ -46,13 +49,14 @@ publicAPIRouter.get('/getAllActiveShiftInfo',publicAPI.getAllActiveShiftInfo);
 publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
 publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);
 
-
+publicAPIRouter.post('/exportExcel',privateAPI.exportExcel);
+publicAPIRouter.post('/getITOList',privateAPI.getITOList);
 publicAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
 publicAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
 publicAPIRouter.post('/saveRosterToDB',privateAPI.saveRosterToDB);
-publicAPIRouter.post('/exportExcel',privateAPI.exportExcel);
 //==============================================================================
 privateAPIRouter.post('/exportExcel',privateAPI.exportExcel);
+privateAPIRouter.post('/getITOList',privateAPI.getITOList);
 privateAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
 privateAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
 privateAPIRouter.post('/logout',privateAPI.logout);

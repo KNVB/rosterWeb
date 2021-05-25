@@ -1,5 +1,5 @@
 class PrivateAPI{
-    constructor(rosterManager,systemParam){
+    constructor(itoManager,rosterManager,systemParam){
         this.systemParam=systemParam;
         this.exportExcel=(req,res)=>{
             rosterManager.exportExcel(req.body)
@@ -16,6 +16,10 @@ class PrivateAPI{
                     message: error,
                 });
             })
+        }
+        this.getITOList=async(req,res)=>{
+            let result=await itoManager.getITOList(req.body.year,req.body.month);
+            res.send(result);
         }
         this.getRosterSchedulerList=async(req,res)=>{
             let result=await rosterManager.getRosterSchedulerList(req.body.year,req.body.month);
