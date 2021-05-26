@@ -1,3 +1,4 @@
+import ITO from './ITO';
 import Roster from '../../utils/Roster';
 import SessionExpiredError from '../../utils/SessionExpiredError';
 import Utility from '../../utils/Utility';
@@ -20,8 +21,22 @@ export default class AdminUtility extends Roster{
         }
         this.getITOList=async(year,month)=>{
             try{
+                let itoObj;
                 let result=await Utility.fetchAPI(privateAPIPath+'/getITOList','POST',{"year":year,"month":month});
-                return result;
+                let resultList={};
+                Object.keys(result).forEach(itoId=>{
+                    itoObj=new ITO();
+                    itoObj.itoId=itoId;
+                    itoObj.itoName=result[itoId].ito_name;
+                    itoObj.postName=result[itoId].post_name;
+                    itoObj.workingHourPerDay=parseFloat(result[itoId].workingHourPerDay.toFixed(2));
+                    itoObj.joinDate=new Date(result[itoId].join_date);
+                    itoObj.leaveDate=new Date(result[itoId].leave_date);
+                    itoObj.availableShiftList=result[itoId].availableShiftList;
+                    itoObj.blackListedShiftPatternList=result[itoId].blackListedShiftPatternList;
+                    resultList[itoId]=itoObj;
+                });
+                return resultList;
             }catch(error){
                 if (error instanceof SessionExpiredError){
                     console.log("changeLoggedInFlag");
