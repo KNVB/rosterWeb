@@ -1,5 +1,5 @@
 export default function AdminShiftStatUtil(){
-    const getAllITOStat = (activeShiftInfoList, monthlyCalendar,inITORosterList)=>{
+    const getAllITOStat = (activeShiftInfoList, startDate,endDate,inITORosterList)=>{
         let allITOStat; 
         let aShiftCount = [],    bxShiftCount = [],    cShiftCount = [];       
         let duplicatShiftList={};
@@ -9,13 +9,13 @@ export default function AdminShiftStatUtil(){
         Object.keys(inITORosterList).forEach(itoId=>{
             duplicatShiftList[itoId]=[];
         })
-        for (let i=0;i<monthlyCalendar.calendarDateList.length;i++){
+        for (let i=startDate;i<=endDate;i++){
             vacantShift = activeShiftInfoList.essentialShift;
             temp=[];
             for (let y=0;y<itoIdList.length;y++){
                 itoId=itoIdList[y];                
-                if (inITORosterList[itoId].shiftList[i+1]){
-                    let shiftTypeList = inITORosterList[itoId].shiftList[i+1].split("+");
+                if (inITORosterList[itoId].shiftList[i]){
+                    let shiftTypeList = inITORosterList[itoId].shiftList[i].split("+");
                     for (let j=0;j<shiftTypeList.length;j++){
                         shiftType=shiftTypeList[j];
                         if (inITORosterList[itoId].availableShiftList.includes(shiftType)){
@@ -49,7 +49,7 @@ export default function AdminShiftStatUtil(){
                 cShiftCount.push(inITORosterList[itoId].shiftCountList.cShiftCount);
             }
             if (vacantShift!==''){
-                vacantShiftList[i+1]=vacantShift;
+                vacantShiftList[i]=vacantShift;
             }            
         }
         let aShiftSD=calculateStdDev(aShiftCount);

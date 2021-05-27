@@ -43,7 +43,7 @@ export default function XXTable(props){
 
             //console.log(itoRosterList);
             //console.log(allITOStat);
-            let allITOStat=getAllITOStat(activeShiftInfoList,monthlyCalendar,itoRosterList);
+            let allITOStat=getAllITOStat(activeShiftInfoList,1,monthLength,itoRosterList);
             updateContext(
                 {
                     type:'updateRosterMonth',

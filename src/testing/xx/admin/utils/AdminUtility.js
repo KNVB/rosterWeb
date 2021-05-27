@@ -27,11 +27,11 @@ export default class AdminUtility extends Roster{
                 Object.keys(result).forEach(itoId=>{
                     itoObj=new ITO();
                     itoObj.itoId=itoId;
-                    itoObj.itoName=result[itoId].ito_name;
-                    itoObj.postName=result[itoId].post_name;
+                    itoObj.itoName=result[itoId].itoName;
+                    itoObj.postName=result[itoId].postName;
                     itoObj.workingHourPerDay=parseFloat(result[itoId].workingHourPerDay.toFixed(2));
-                    itoObj.joinDate=new Date(result[itoId].join_date);
-                    itoObj.leaveDate=new Date(result[itoId].leave_date);
+                    itoObj.joinDate=new Date(result[itoId].joinDate);
+                    itoObj.leaveDate=new Date(result[itoId].leaveDate);
                     itoObj.availableShiftList=result[itoId].availableShiftList;
                     itoObj.blackListedShiftPatternList=result[itoId].blackListedShiftPatternList;
                     resultList[itoId]=itoObj;

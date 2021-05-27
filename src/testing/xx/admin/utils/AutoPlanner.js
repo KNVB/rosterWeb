@@ -1,38 +1,61 @@
 import AdminUtility from './AdminUtility';
+import AdminShiftStatUtil from './AdminShiftStatUtil';
+import ITOShiftStatUtil from './ITOShiftStatUtil';
 export default class AutoPlanner{
     constructor(contextValue){
-        this.getResult=async(startDate,endDate)=>{
+        this.maxNoOfShiftPerMonth=7;
+        this.maxConsecutiveWorkingDay=contextValue.systemParam.maxConsecutiveWorkingDay;
+        this.getResult=async(startDate,endDate,iterationCount)=>{
+            let {getAllITOStat}=AdminShiftStatUtil();
+            let {getITOStat}=ITOShiftStatUtil();
             let adminUtility = new AdminUtility(contextValue.changeLoggedInFlag);
             let allPreviousShiftList=contextValue.previousMonthShiftList;
+            let allITOStat;
+            let essentialShiftTemplate=contextValue.activeShiftInfoList.essentialShift;
+            let itoList=await adminUtility.getITOList(contextValue.rosterMonth.getFullYear(),contextValue.rosterMonth.getMonth()+1);
+            let itoRosterList=contextValue.itoRosterList.presentValue;
+            
+            let resultantRosterList={},temp;
+            let theLowestMissingShiftRosters=[],theLowestSDRosters=[];
+            temp=genResult(allPreviousShiftList,essentialShiftTemplate,itoList,itoRosterList,startDate,endDate);
+            Object.keys(temp).forEach(itoId=>{
+                resultantRosterList[itoId]=getITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar.noOfWorkingDay,temp[itoId]);
+            })
+            console.log(resultantRosterList);
+            allITOStat=getAllITOStat(contextValue.activeShiftInfoList,startDate,endDate,resultantRosterList);
+            console.log(allITOStat);
+            
+            //resultantRosterList.push(allITOStat);
+            
+            return resultantRosterList;
+        }
+        let genResult=(allPreviousShiftList,essentialShiftTemplate,itoList,itoRosterList,startDate,endDate)=>{
             let comparetor,dateIndex;
-            let essentialShift,iTOAvailableShiftList,itoIdList,isAssigned;
-            let preferredShift,previousShiftList,resultantRoster={},resultantShiftList={};
-            let itoId,itoList=await adminUtility.getITOList(contextValue.rosterMonth.getFullYear(),contextValue.rosterMonth.getMonth()+1);
-            let itoRosterList=contextValue.itoRosterList.presentValue;            
-            console.log(contextValue);
-            this.maxNoOfShiftPerMonth=7;
-            this.maxConsecutiveWorkingDay=contextValue.systemParam.maxConsecutiveWorkingDay;
-
+            let essentialShift,iTOAvailableShiftList,itoId,itoIdList,isAssigned;
+            let preferredShift,previousShiftList,resultantRosterList={},resultantRoster={};
             for (dateIndex = startDate ; dateIndex <= endDate ; dateIndex++){
-                essentialShift=contextValue.activeShiftInfoList.essentialShift;
+                essentialShift=essentialShiftTemplate;
                 itoIdList=getShuffledItoIdList(Object.keys(itoList));
                 for (let i=0;i<itoIdList.length;i++){
                     itoId=itoIdList[i];
                     previousShiftList=getPreviousShiftList(itoId,dateIndex,itoRosterList,allPreviousShiftList[itoId]);
-                    if (resultantRoster[itoId]){
-                        resultantShiftList=resultantRoster[itoId];
-                    }else{
-                        resultantShiftList={};
+                    if (resultantRosterList[itoId]){
+                        resultantRoster=resultantRosterList[itoId];
+                    } else {
+                        resultantRoster={
+                            availableShiftList:itoList[itoId].availableShiftList,
+                            shiftList:{},
+                            workingHourPerDay:itoList[itoId].workingHourPerDay
+                        }
                     }
                     if (itoRosterList[itoId].preferredShiftList[dateIndex]){
                         preferredShift=itoRosterList[itoId].preferredShiftList[dateIndex];
                     }else {
-                        preferredShift=''
+                        preferredShift='';
                     }
-
                     switch (preferredShift){
                         case "o":
-                            resultantShiftList[dateIndex]="O";
+                            resultantRoster.shiftList[dateIndex]="O";
                             previousShiftList.shift();
                             previousShiftList.push("O");
                             break;
@@ -40,15 +63,15 @@ export default class AutoPlanner{
                         case "d1":
                         case "d2":
                         case "d3":
-                            resultantShiftList[dateIndex]=preferredShift;
+                            resultantRoster.shiftList[dateIndex]=preferredShift;
                             previousShiftList.shift();
                             previousShiftList.push(preferredShift);
                             break;
                         default:
-                            iTOAvailableShiftList=getITOAvailableShiftList(dateIndex,itoList[itoId],preferredShift, previousShiftList,resultantShiftList);
+                            iTOAvailableShiftList=getITOAvailableShiftList(dateIndex,itoList[itoId],preferredShift, previousShiftList,resultantRoster.shiftList);
                             console.log("date="+dateIndex+",itoId="+itoId+",availableShift="+iTOAvailableShiftList);
                             if ((essentialShift==='')||(iTOAvailableShiftList.length===0)){
-                                resultantShiftList[dateIndex]="O";
+                                resultantRoster.shiftList[dateIndex]="O";
                                 previousShiftList.shift();
                                 previousShiftList.push("O");
                             }else{
@@ -65,32 +88,31 @@ export default class AutoPlanner{
                                     }
                                     if (essentialShift.indexOf(comparetor)>-1){
                                         essentialShift=essentialShift.replace(comparetor,"");
-                                        resultantShiftList[dateIndex]=iTOAvailableShiftList[j];
+                                        resultantRoster.shiftList[dateIndex]=iTOAvailableShiftList[j];
                                         previousShiftList.shift();
                                         previousShiftList.push(iTOAvailableShiftList[j]);
                                         isAssigned=true;
                                         break;
                                     }
                                 }
-                                if (!isAssigned)
-                                {
-                                //	console.log(" O shift is assigned on day "+dateIndex);
-                                    resultantShiftList[dateIndex]="O";
+                                if (!isAssigned){
+                                    //	console.log(" O shift is assigned on day "+dateIndex);
+                                    resultantRoster.shiftList[dateIndex]="O";
                                     previousShiftList.shift();
                                     previousShiftList.push("O");
                                 }
                             }
-                            break;    
+                            break;
                     }
                     console.log("====================");
 					console.log("itoId="+itoId);
 					console.log("date="+dateIndex);
 					console.log("preferredShift="+preferredShift);
-                    console.log('Assigned Shift='+resultantShiftList[dateIndex]);
-                    resultantRoster[itoId]=resultantShiftList;
+                    console.log('Assigned Shift='+resultantRoster.shiftList[dateIndex]);
+                    resultantRosterList[itoId]=resultantRoster;
                 }
             }
-            return resultantRoster;
+            return resultantRosterList;
         }
         let getITOAvailableShiftList=(dateIndex,ito,preferredShift, previousShiftList,resultantShiftList)=>{
             let result=[];
