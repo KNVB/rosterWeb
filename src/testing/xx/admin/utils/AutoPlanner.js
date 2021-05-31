@@ -16,17 +16,32 @@ export default class AutoPlanner{
             let itoRosterList=contextValue.itoRosterList.presentValue;
             
             let resultantRosterList={},temp;
-            let theLowestMissingShiftRosters=[],theLowestSDRosters=[];
-            temp=genResult(allPreviousShiftList,essentialShiftTemplate,itoList,itoRosterList,startDate,endDate);
-            Object.keys(temp).forEach(itoId=>{
-                resultantRosterList[itoId]=getITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar.noOfWorkingDay,temp[itoId]);
-            })
-            console.log(resultantRosterList);
-            allITOStat=getAllITOStat(contextValue.activeShiftInfoList,startDate,endDate,resultantRosterList);
-            console.log(allITOStat);
-            
+            let tempVacantShiftCountList=[],tempSDList=[];
+            for (let i=0;i<iterationCount;i++){
+                temp=genResult(allPreviousShiftList,essentialShiftTemplate,itoList,itoRosterList,startDate,endDate);
+                Object.keys(temp).forEach(itoId=>{
+                    resultantRosterList[itoId]=getITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar.noOfWorkingDay,temp[itoId]);
+                })
+                //console.log(resultantRosterList);
+                allITOStat=getAllITOStat(contextValue.activeShiftInfoList,startDate,endDate,resultantRosterList);
+                tempSDList[i]={
+                    itoRosterList:resultantRosterList,
+                    avgStdDev:+allITOStat.avgStdDev,
+                    vacantShiftCount:+Object.keys(allITOStat.vacantShiftList).length
+                }
+                tempVacantShiftCountList[i]={
+                    itoRosterList:resultantRosterList,
+                    avgStdDev:+allITOStat.avgStdDev,
+                    vacantShiftCount:+Object.keys(allITOStat.vacantShiftList).length
+                }
+                //console.log(allITOStat);
+            }
             //resultantRosterList.push(allITOStat);
-            
+            console.log(tempSDList);
+            tempSDList.sort(sortBySD);
+            temp=JSON.parse(JSON.stringify(tempSDList));
+            temp.splice(3);
+            console.log(temp);
             return resultantRosterList;
         }
         let genResult=(allPreviousShiftList,essentialShiftTemplate,itoList,itoRosterList,startDate,endDate)=>{
@@ -69,7 +84,7 @@ export default class AutoPlanner{
                             break;
                         default:
                             iTOAvailableShiftList=getITOAvailableShiftList(dateIndex,itoList[itoId],preferredShift, previousShiftList,resultantRoster.shiftList);
-                            console.log("date="+dateIndex+",itoId="+itoId+",availableShift="+iTOAvailableShiftList);
+                            //console.log("date="+dateIndex+",itoId="+itoId+",availableShift="+iTOAvailableShiftList);
                             if ((essentialShift==='')||(iTOAvailableShiftList.length===0)){
                                 resultantRoster.shiftList[dateIndex]="O";
                                 previousShiftList.shift();
@@ -104,11 +119,13 @@ export default class AutoPlanner{
                             }
                             break;
                     }
+                    /*
                     console.log("====================");
 					console.log("itoId="+itoId);
 					console.log("date="+dateIndex);
 					console.log("preferredShift="+preferredShift);
                     console.log('Assigned Shift='+resultantRoster.shiftList[dateIndex]);
+                    */
                     resultantRosterList[itoId]=resultantRoster;
                 }
             }
@@ -245,6 +262,27 @@ export default class AutoPlanner{
             }
             
             return result;
+        }
+        let sortBySD=(a,b)=>{
+            let comparison = 0;
+            if (a.avgStdDev > b.avgStdDev){
+                comparison = 1;
+            } else {
+                if (b.avgStdDev>a.avgStdDev){
+                    comparison = -1;
+                } else {
+                    if (a.vacantShiftCount > b.vacantShiftCount){
+                        comparison = 1;
+                    } else {
+                        if (b.vacantShiftCount > a.vacantShiftCount){
+                            comparison = -1;
+                        } else {
+                            comparison = 1;
+                        }
+                    }
+                }
+            }
+            return comparison;
         }
     }
 }
