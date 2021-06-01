@@ -1,6 +1,7 @@
 import './AutoPlannerTable.css';
-import {useContext,useEffect, useState} from 'react';
+import {useCallback,useContext,useEffect, useState} from 'react';
 import AutoPlanner from '../utils/AutoPlanner';
+import ITOShiftStatUtil from '../../utils/ITOShiftStatUtil';
 import RosterWebContext from '../../utils/RosterWebContext';
 import { Fragment } from 'react';
 export default function AutoPlannerTable(props){
@@ -9,12 +10,44 @@ export default function AutoPlannerTable(props){
     let [autoPlanStartDate,setAutoPlanStartDate]=useState(1);
     let [autoPlanResult,setAutoPlanResult]=useState();
     let [iterationCount,setIterationCount]=useState('');
+    let [autoPlanResultList,setAutoPlanResultList]=useState({});
+    
     let autoPlanStartDateList=[],autoPlanEndDateList=[];
-    let [autoPlanResultSDList,setAutoPlanResultSDList]=useState([]);
-    let [autoPlanResultVSList,setAutoPlanResultVSList]=useState([]);
-
     let monthLength=contextValue.monthlyCalendar.calendarDateList.length;
-   
+
+    let loadSDRoster=useCallback((index)=>{
+        let {getITOStat}=ITOShiftStatUtil();
+        let temp=JSON.parse(JSON.stringify(contextValue.itoRosterList.presentValue));
+        let itoIdList=Object.keys(autoPlanResult.minSDList[index].itoRosterList);
+        for (let i=0;i<itoIdList.length;i++){
+            for (const [date,shift] of Object.entries(autoPlanResult.minSDList[index].itoRosterList[itoIdList[i]].shiftList)){
+                //console.log(itoIdList[i]+",date="+date+",shift="+shift);
+                temp[itoIdList[i]].shiftList[date]=shift;
+            }
+        }
+        Object.keys(temp).forEach(itoId=>{
+            temp[itoId]=getITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar.noOfWorkingDay,temp[itoId]);
+        });
+        contextValue.itoRosterList.set(temp);
+        updateContext({type:'updateRosterData',value:contextValue.itoRosterList});
+    },[autoPlanResult,contextValue,updateContext]);
+    let loadVSRoster=useCallback((index)=>{
+        let {getITOStat}=ITOShiftStatUtil();
+        let temp=JSON.parse(JSON.stringify(contextValue.itoRosterList.presentValue));
+        let itoIdList=Object.keys(autoPlanResult.minVSList[index].itoRosterList);
+
+        for (let i=0;i<itoIdList.length;i++){
+            for (const [date,shift] of Object.entries(autoPlanResult.minVSList[index].itoRosterList[itoIdList[i]].shiftList)){
+                //console.log(itoIdList[i]+",date="+date+",shift="+shift);
+                temp[itoIdList[i]].shiftList[date]=shift;
+            }
+        }
+        Object.keys(temp).forEach(itoId=>{
+            temp[itoId]=getITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar.noOfWorkingDay,temp[itoId]);
+        });
+        contextValue.itoRosterList.set(temp);
+        updateContext({type:'updateRosterData',value:contextValue.itoRosterList});
+    },[autoPlanResult,contextValue,updateContext]);        
     let startAutoPlanner=async (e)=>{
         //
         if (iterationCount!==''){
@@ -27,24 +60,26 @@ export default function AutoPlannerTable(props){
     }
     useEffect(()=>{
         if (autoPlanResult){
-            console.log(autoPlanResult);
+            //console.log(autoPlanResult);
             let temp1=[],temp2=[];
-            for (let i=0;i<3;i++){
+            for (let i=0;i<autoPlanResult.minSDList.length;i++){
                 temp1.push(
-                    <div className="clickable" key={"SD_"+i}>
-                        SD:{autoPlanResult.minSDList[i].avgStdDev} &nbsp;&nbsp;&nbsp; Vacant Shift Count:{autoPlanResult.minSDList[i].vacantShiftCount}
-                    </div>
+                    <tr className="clickable" key={"SD_"+i} onClick={()=>loadSDRoster(i)}>
+                        <td className="text-left pl-3">SD:{autoPlanResult.minSDList[i].avgStdDev}</td>
+                        <td>Vacant Shift Count:{autoPlanResult.minSDList[i].vacantShiftCount}</td>
+                    </tr>
                 );
                 temp2.push(
-                    <div className="clickable" key={"VS_"+i}>
-                        Vacant Shift Count:{autoPlanResult.minVSList[i].vacantShiftCount} &nbsp;&nbsp;&nbsp;SD:{autoPlanResult.minVSList[i].avgStdDev}
-                    </div>
+                    <tr className="clickable" key={"VS_"+i} onClick={()=>loadVSRoster(i)}>
+                        <td className="text-left pl-3">Vacant Shift Count:{autoPlanResult.minVSList[i].vacantShiftCount}</td>
+                        <td>SD:{autoPlanResult.minVSList[i].avgStdDev}</td>
+                    </tr>
                 )
             }
-            setAutoPlanResultSDList(temp1);
-            setAutoPlanResultVSList(temp2);
+            let result={SDList:temp1,VSList:temp2}
+            setAutoPlanResultList(result);
         }
-    },[autoPlanResult])
+    },[autoPlanResult,loadSDRoster,loadVSRoster])
     useEffect(()=>{
         setAutoPlanEndDate(autoPlanStartDate);
     },[autoPlanStartDate])
@@ -55,7 +90,7 @@ export default function AutoPlannerTable(props){
     
     return (
         <form onSubmit={e=>e.preventDefault()}>
-            <table className="autoPlannerTable" border="1">
+            <table className="autoPlannerTable">
                 <tbody>
                     <tr>
                         <td className="text-right w-50">
@@ -96,12 +131,20 @@ export default function AutoPlannerTable(props){
                     </tr>
                     <tr>
                         <td>
-                            Auto Plan Result Sort By SD:<br/>
-                            {autoPlanResultSDList}
+                            Auto Plan Result Sort By SD:
+                            <table className="w-100">
+                                <tbody>
+                                    {autoPlanResultList.SDList}
+                                </tbody>
+                            </table>
                         </td>
                         <td>
                             Auto Plan Result Sort By Vacant Shift Count:<br/>
-                            {autoPlanResultVSList}
+                            <table className="w-100">
+                                <tbody>
+                                    {autoPlanResultList.VSList}
+                                </tbody>
+                            </table>
                         </td>
                     </tr>
                 </Fragment>

@@ -37,11 +37,12 @@ export default class AutoPlanner{
             }
             //console.log(tempRosterList);
             tempRosterList.sort(sortByVacantShiftCount);
-            for (i=0;i<3;i++){
+            let j=((tempRosterList.length>3)?3:tempRosterList.length);
+            for (i=0;i<j;i++){
                 tempVSCountList[i]=JSON.parse(JSON.stringify(tempRosterList[i]));
             }
             tempRosterList.sort(sortBySD);
-            for (i=0;i<3;i++){
+            for (i=0;i<j;i++){
                 tempSDList[i]=JSON.parse(JSON.stringify(tempRosterList[i]));
             }
             resultantRosterList={minSDList:tempSDList,minVSList:tempVSCountList};

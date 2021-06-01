@@ -27,14 +27,14 @@ export default function AdminShiftStatUtil(){
                             switch (shiftType){
                                 case "a" :                 
                                 case "c" :if (temp.includes(shiftType)){
-                                            duplicatShiftList[itoId].push(i+1);
+                                            duplicatShiftList[itoId].push(i);
                                           } else {
                                             temp.push(shiftType);
                                           }
                                           break;
                                 case "b" :
                                 case "b1":if (temp.includes("b")){
-                                            duplicatShiftList[itoId].push(i+1);
+                                            duplicatShiftList[itoId].push(i);
                                           }else {
                                             temp.push('b');
                                           }
