@@ -10,7 +10,7 @@ export default function XXFooter(props){
                 <td colSpan={11} className="align-top">
                     <ShiftLegend/>
                 </td>
-                <td  className="align-top pl-1" colSpan={(columnCount-11-10)} rowSpan="10">
+                <td  className="align-top pl-1 pr-1 text-center" colSpan={(columnCount-11-10)} rowSpan="10">
                     {props.autoPlanner}
                 </td>
                 <td  className="align-top" colSpan={10} rowSpan="20">

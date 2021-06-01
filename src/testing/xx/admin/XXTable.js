@@ -72,11 +72,13 @@ export default function XXTable(props){
             case 'showLoadingImage':
                 return{
                     ...state,
-                    isShowLoadingImage:true
+                    isShowLoadingImage:action.value
                 }
             case 'updateRosterData':
                 let {getAllITOStat}=AdminShiftStatUtil();
-                let allITOStat=getAllITOStat(state.activeShiftInfoList,state.monthlyCalendar,action.value.presentValue);
+                console.log(action.value.presentValue);
+                let monthLength=state.monthlyCalendar.calendarDateList.length;
+                let allITOStat=getAllITOStat(state.activeShiftInfoList,1,monthLength,action.value.presentValue);
                 return{
                     ...state,
                     "allITOStat":allITOStat,

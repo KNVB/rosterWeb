@@ -10,38 +10,41 @@ export default class AutoPlanner{
             let {getITOStat}=ITOShiftStatUtil();
             let adminUtility = new AdminUtility(contextValue.changeLoggedInFlag);
             let allPreviousShiftList=contextValue.previousMonthShiftList;
-            let allITOStat;
             let essentialShiftTemplate=contextValue.activeShiftInfoList.essentialShift;
             let itoList=await adminUtility.getITOList(contextValue.rosterMonth.getFullYear(),contextValue.rosterMonth.getMonth()+1);
             let itoRosterList=contextValue.itoRosterList.presentValue;
             
-            let resultantRosterList={},temp;
-            let tempVacantShiftCountList=[],tempSDList=[];
-            for (let i=0;i<iterationCount;i++){
-                temp=genResult(allPreviousShiftList,essentialShiftTemplate,itoList,itoRosterList,startDate,endDate);
-                Object.keys(temp).forEach(itoId=>{
-                    resultantRosterList[itoId]=getITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar.noOfWorkingDay,temp[itoId]);
+            let resultantRosterList={} ;
+            let tempVSCountList=[],tempSDList=[],tempRosterList=[];
+            let generatedSD=[],i=0;
+            
+            for (i=0;i<iterationCount;i++){
+                let newITORosterList=genResult(allPreviousShiftList,essentialShiftTemplate,itoList,itoRosterList,startDate,endDate);
+                Object.keys(newITORosterList).forEach(itoId=>{
+                    newITORosterList[itoId]=getITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar.noOfWorkingDay,newITORosterList[itoId]);
                 })
-                //console.log(resultantRosterList);
-                allITOStat=getAllITOStat(contextValue.activeShiftInfoList,startDate,endDate,resultantRosterList);
-                tempSDList[i]={
-                    itoRosterList:resultantRosterList,
-                    avgStdDev:+allITOStat.avgStdDev,
-                    vacantShiftCount:+Object.keys(allITOStat.vacantShiftList).length
+                let allITOStat=getAllITOStat(contextValue.activeShiftInfoList,startDate,endDate,newITORosterList);
+                if (!generatedSD.includes(allITOStat.avgStdDev)){
+                    generatedSD.push(allITOStat.avgStdDev);
+                    //console.log(allITOStat.vacantShiftList);
+                    tempRosterList.push({
+                        itoRosterList:newITORosterList,
+                        avgStdDev:+allITOStat.avgStdDev,
+                        vacantShiftCount:+Object.keys(allITOStat.vacantShiftList).length
+                    });
+                    //console.log("count="+i);
                 }
-                tempVacantShiftCountList[i]={
-                    itoRosterList:resultantRosterList,
-                    avgStdDev:+allITOStat.avgStdDev,
-                    vacantShiftCount:+Object.keys(allITOStat.vacantShiftList).length
-                }
-                //console.log(allITOStat);
             }
-            //resultantRosterList.push(allITOStat);
-            console.log(tempSDList);
-            tempSDList.sort(sortBySD);
-            temp=JSON.parse(JSON.stringify(tempSDList));
-            temp.splice(3);
-            console.log(temp);
+            //console.log(tempRosterList);
+            tempRosterList.sort(sortByVacantShiftCount);
+            for (i=0;i<3;i++){
+                tempVSCountList[i]=JSON.parse(JSON.stringify(tempRosterList[i]));
+            }
+            tempRosterList.sort(sortBySD);
+            for (i=0;i<3;i++){
+                tempSDList[i]=JSON.parse(JSON.stringify(tempRosterList[i]));
+            }
+            resultantRosterList={minSDList:tempSDList,minVSList:tempVSCountList};
             return resultantRosterList;
         }
         let genResult=(allPreviousShiftList,essentialShiftTemplate,itoList,itoRosterList,startDate,endDate)=>{
@@ -53,7 +56,6 @@ export default class AutoPlanner{
                 itoIdList=getShuffledItoIdList(Object.keys(itoList));
                 for (let i=0;i<itoIdList.length;i++){
                     itoId=itoIdList[i];
-                    previousShiftList=getPreviousShiftList(itoId,dateIndex,itoRosterList,allPreviousShiftList[itoId]);
                     if (resultantRosterList[itoId]){
                         resultantRoster=resultantRosterList[itoId];
                     } else {
@@ -63,6 +65,8 @@ export default class AutoPlanner{
                             workingHourPerDay:itoList[itoId].workingHourPerDay
                         }
                     }
+                    previousShiftList=getPreviousShiftList(allPreviousShiftList,dateIndex,itoId,resultantRoster);
+                    //tempPreviousShiftList=JSON.parse(JSON.stringify(previousShiftList));
                     if (itoRosterList[itoId].preferredShiftList[dateIndex]){
                         preferredShift=itoRosterList[itoId].preferredShiftList[dateIndex];
                     }else {
@@ -126,6 +130,7 @@ export default class AutoPlanner{
 					console.log("preferredShift="+preferredShift);
                     console.log('Assigned Shift='+resultantRoster.shiftList[dateIndex]);
                     */
+                    //console.log(dateIndex,itoId,tempPreviousShiftList,resultantRoster.shiftList);
                     resultantRosterList[itoId]=resultantRoster;
                 }
             }
@@ -140,24 +145,25 @@ export default class AutoPlanner{
             });
             return result;
         }
-        let getPreviousShiftList=(itoId,dateIndex,itoRosterList,previousMonthShiftList)=>{
+        let getPreviousShiftList=(allPreviousShiftList,dateIndex,itoId,resultantRoster)=>{
             let result=[];
             let startDate=dateIndex-contextValue.systemParam.maxConsecutiveWorkingDay;
-            if (startDate>0){
-                for (let j=startDate;j<dateIndex;j++){
-                    result.push(itoRosterList[itoId].shiftList[j]);
+            if (startDate > 0){
+                //console.log(startDate,dateIndex,resultantRoster.shiftList);
+                for (let i=startDate;i<dateIndex;i++){
+                    result.push(resultantRoster.shiftList[i]);
                 }
-            }else{
+            }else{    
                 let lastMonthIndex=contextValue.systemParam.maxConsecutiveWorkingDay+startDate-1;
-                //console.log(startDate,lastMonthIndex,previousMonthShiftList);
+                let previousMonthShiftList=allPreviousShiftList[itoId];
                 for (let i=lastMonthIndex;i<contextValue.systemParam.maxConsecutiveWorkingDay;i++){
                     result.push(previousMonthShiftList[i]);
                 }
                 for (let i=1;i<dateIndex;i++){
-                    result.push(itoRosterList[itoId].shiftList[i]);
-                }
+                    result.push(resultantRoster.shiftList[i]);
+                }    
             }
-            return result;
+            return result;            
         }
         let getNoOfConsecutiveWorkingDay=(previousShiftList,thatShift)=>{
             let count=0;
@@ -263,6 +269,17 @@ export default class AutoPlanner{
             
             return result;
         }
+        let sortByVacantShiftCount=(a,b)=>{
+            let comparison = 0;
+            if (a.vacantShiftCount > b.vacantShiftCount){
+                comparison = 1;
+            } else {
+                if (b.vacantShiftCount>a.vacantShiftCount){
+                    comparison = -1;
+                }
+            }
+            return comparison;
+        }
         let sortBySD=(a,b)=>{
             let comparison = 0;
             if (a.avgStdDev > b.avgStdDev){
@@ -270,16 +287,6 @@ export default class AutoPlanner{
             } else {
                 if (b.avgStdDev>a.avgStdDev){
                     comparison = -1;
-                } else {
-                    if (a.vacantShiftCount > b.vacantShiftCount){
-                        comparison = 1;
-                    } else {
-                        if (b.vacantShiftCount > a.vacantShiftCount){
-                            comparison = -1;
-                        } else {
-                            comparison = 1;
-                        }
-                    }
                 }
             }
             return comparison;

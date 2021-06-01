@@ -6,16 +6,19 @@ export default function AutoPlannerTable(props){
     let [contextValue,updateContext]=useContext(RosterWebContext);
     let [autoPlanEndDate,setAutoPlanEndDate]=useState(1);
     let [autoPlanStartDate,setAutoPlanStartDate]=useState(1);
+    let [autoPlanResult,setAutoPlanResult]=useState();
     let [iterationCount,setIterationCount]=useState('');
     let autoPlanStartDateList=[],autoPlanEndDateList=[];
     let monthLength=contextValue.monthlyCalendar.calendarDateList.length;
    
     let startAutoPlanner=async (e)=>{
-        //updateContext({type:'showLoadingImage',value:true});
+        //
         if (iterationCount!==''){
+            updateContext({type:'showLoadingImage',value:true});
             let autoPlanner=new AutoPlanner(contextValue);
             let result=await autoPlanner.getResult(autoPlanStartDate,autoPlanEndDate,iterationCount);
             console.log(result);
+            updateContext({type:'showLoadingImage',value:false});
         }
     }
     useEffect(()=>{
@@ -28,13 +31,13 @@ export default function AutoPlannerTable(props){
     
     return (
         <form onSubmit={e=>e.preventDefault()}>
-            <table className="autoPlannerTable">
+            <table className="autoPlannerTable" border="1">
                 <tbody>
                     <tr>
-                        <td>
+                        <td className="text-right">
                             Auto Planning Start From:
                         </td>
-                        <td colSpan="3">
+                        <td className="text-left">
                             <select 
                                 onChange={e => setAutoPlanStartDate(+e.target.value)}
                                 name="autoPlanStartDate" 
@@ -51,34 +54,19 @@ export default function AutoPlannerTable(props){
                         </td>
                     </tr>
                     <tr>
-                        <td>Iteration Count:</td>
-                        <td>
+                        <td className="text-right">Iteration Count:</td>
+                        <td  className="text-left">
                             <input 
                                 onChange={e=>setIterationCount(+e.target.value)}
                                 name='iterationCount' 
                                 required 
                                 type="number" 
                                 value={iterationCount}/>
-                        </td>
-                        <td colSpan="2">
                             &nbsp;<button className="autoPlannerButton" onClick={startAutoPlanner}>Auto Planner</button>
                         </td>
                     </tr>
                     <tr>
-                        <td colSpan="2">Standard Deviation:</td>
-                        <td colSpan="2">Missing shift Count:</td>
-                    </tr>
-                    <tr id="theLowestSD">
-                        <td>1</td><td>1</td>
-                        <td>1</td><td>1</td>
-                    </tr>
-                    <tr id="thirdLowestSD">
-                        <td>1</td><td></td>
-                        <td colSpan="2"><br/></td>
-                    </tr>
-                    <tr id="theLowestMissingShiftCount">
-                        <td>1</td><td>1</td>
-                        <td>1</td><td>1</td>
+                        <td>Auto Plan Result</td>
                     </tr>
                 </tbody>
             </table>
