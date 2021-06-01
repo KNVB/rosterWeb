@@ -37,3 +37,6 @@
 	line-height: normal;
 	width:100%;
 }
+.clickable{
+	cursor: pointer;
+}
