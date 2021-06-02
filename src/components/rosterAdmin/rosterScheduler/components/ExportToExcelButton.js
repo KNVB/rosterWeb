@@ -20,8 +20,8 @@ export default function ExportToExcelButton(){
        genExcelData["shiftInfoList"]=shiftInfoList;
        genExcelData["vacantShiftList"]=contextValue.allITOStat.vacantShiftList;
        console.log(genExcelData);
-       let adminRoster=new AdminUtility(contextValue.changeLoggedInFlag);
-       adminRoster.exportExcel(genExcelData);
+       let adminUtility=new AdminUtility(contextValue.changeLoggedInFlag);
+       adminUtility.exportExcel(genExcelData);
     }
     return (
         <div className="exportButton" onClick={exportExcel}>

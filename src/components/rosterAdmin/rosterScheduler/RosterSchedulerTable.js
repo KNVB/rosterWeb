@@ -20,16 +20,16 @@ export default function RosterSchedulerTable(props){
             let {getAllITOStat}=AdminShiftStatUtil();
             let {getITOStat}=ITOShiftStatUtil();
 
-            let adminRoster = new AdminUtility(props.changeLoggedInFlag);
-            let activeShiftInfoList= await adminRoster.getAllActiveShiftInfo();
+            let adminUtility = new AdminUtility(props.changeLoggedInFlag);
+            let activeShiftInfoList= await adminUtility.getAllActiveShiftInfo();
             let calendarUtility=new CalendarUtility();
             let hightLightCellIndex=-1;
             
             let itoRosterList={};
             let monthlyCalendar=calendarUtility.getMonthlyCalendar(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             let monthLength=monthlyCalendar.calendarDateList.length;
-            let rosterSchedulerList=await adminRoster.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
-            let yearlyRosterStatistic=await adminRoster.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
+            let rosterSchedulerList=await adminUtility.getRosterSchedulerList(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth()+1);
+            let yearlyRosterStatistic=await adminUtility.getYearlyRosterStatistic(props.rosterMonth.getFullYear(),props.rosterMonth.getMonth());
             
             //let bodyRowCount=2;
             let bodyRowCount=Object.keys(rosterSchedulerList.itoRosterList).length*2;

@@ -10,8 +10,8 @@ export default function RosterScheduler(props){
     useEffect(()=>{
         const getData = async () => {
             console.log("Undo:Get System Parameter from DB");
-            let adminRoster = new AdminUtility(props.changeLoggedInFlag);
-            let temp=await adminRoster.getSystemParam();
+            let adminUtility = new AdminUtility(props.changeLoggedInFlag);
+            let temp=await adminUtility.getSystemParam();
             let monthPickerMinDate=new Date(temp.monthPickerMinDate.year,temp.monthPickerMinDate.month-1,temp.monthPickerMinDate.date);
             temp.monthPickerMinDate=monthPickerMinDate;
             setSystemParam(temp);
