@@ -35,9 +35,9 @@ export default class ITO
 		this.workingHourPerDay=0.0;
 		this.isBlackListedShiftPattern=(shiftPattern)=>{
 			let result=false;
-			//console.log(this.blackListedShiftPatternList,shiftPattern,this.blackListedShiftPatternList.includes(shiftPattern));
+			//console.log(this.itoId,this.blackListedShiftPatternList,shiftPattern,this.blackListedShiftPatternList.includes(shiftPattern));
 			for (let i=0;i<this.blackListedShiftPatternList.length;i++){
-				//console.log(this.blackListedShiftPatternList,shiftPattern,shiftPattern.indexOf(this.blackListedShiftPatternList[i]));
+				//console.log(this.itoId,this.blackListedShiftPatternList[i],shiftPattern,shiftPattern.indexOf(this.blackListedShiftPatternList[i]));
 				if (shiftPattern.indexOf(this.blackListedShiftPatternList[i])>-1){
 					result=true;
 					return result;

@@ -242,8 +242,12 @@ export default class AutoPlanner{
         
         let isThatShiftFormBlackListedShiftPattern=(ito,previousShiftList,thatShift)=>{
             let shiftPattern="";
-            previousShiftList.forEach(function(shift){
-                shiftPattern+=shift+",";
+            previousShiftList.forEach(shift=>{
+                if (shift){
+                    shiftPattern+=shift+",";
+                } else {
+                    shiftPattern+=",";
+                }
             });
             shiftPattern+=thatShift;
             return ito.isBlackListedShiftPattern(shiftPattern);
@@ -255,12 +259,13 @@ export default class AutoPlanner{
             /*
             let thatShiftFormBlackListedShift=isThatShiftFormBlackListedShiftPattern(ito,previousShiftList,thatShift);
             let conflictWithPreferredShift=isConflictWithPreferredShift(preferredShift,thatShift);
-           
+            
             console.log("Total No. Of That Shift("+thatShift+") Assigned="+totalNoOfThatShiftAssigned);
             console.log("Total No. Of Consecutive Working Day="+noOfConsecutiveWorkingDay);
             console.log("Is That Shift("+thatShift+") Form BlackListed Shift Pattern="+thatShiftFormBlackListedShift);
             console.log("Is That Shift("+thatShift+") Conflict With Preferred Shift="+conflictWithPreferredShift);
-            */
+            console.log("itoId="+ito.itoId+",thatShift="+thatShift+",previousShiftList="+previousShiftList);
+            */            
             if (totalNoOfThatShiftAssigned>this.maxNoOfShiftPerMonth){
                 //console.log(ito.itoId+","+dateIndex+","+thatShift+", cause over the max. no. of "+thatShift+" shift assigned in a month");
                 return false;
