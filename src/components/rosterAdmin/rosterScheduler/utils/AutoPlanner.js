@@ -1,4 +1,4 @@
-import AdminUtility from './AdminUtility';
+import AdminUtility from '../../AdminUtility';
 import AdminShiftStatUtil from './AdminShiftStatUtil';
 import ITOShiftStatUtil from '../../../../utils/ITOShiftStatUtil';
 export default class AutoPlanner{

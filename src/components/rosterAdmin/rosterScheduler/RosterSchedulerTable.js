@@ -1,6 +1,6 @@
 import {useEffect,useReducer} from 'react';
 import './RosterSchedulerTable.css';
-import AdminUtility from './utils/AdminUtility';
+import AdminUtility from '../AdminUtility';
 import AdminShiftStatUtil from './utils/AdminShiftStatUtil';
 import AutoPlannerTable from './components/AutoPlannerTable';
 import BaseTable from '../../baseTable/BaseTable';

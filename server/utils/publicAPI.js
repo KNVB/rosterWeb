@@ -1,4 +1,3 @@
-
 class PublicAPI{
     constructor(rosterManager,systemParam){
         this.systemParam=systemParam;

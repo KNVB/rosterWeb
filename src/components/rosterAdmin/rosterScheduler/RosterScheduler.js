@@ -1,7 +1,7 @@
 import {useEffect,useState} from 'react';
 import {Col,Container,Row} from 'react-bootstrap';
 import MonthPicker from '../../../utils/monthPicker/MonthPicker';
-import AdminUtility from './utils/AdminUtility';
+import AdminUtility from '../AdminUtility';
 import RosterSchedulerTable from './RosterSchedulerTable';
 export default function RosterScheduler(props){
     let now=new Date();

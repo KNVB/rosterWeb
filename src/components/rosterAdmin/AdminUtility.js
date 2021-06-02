@@ -1,11 +1,11 @@
-import ITO from './ITO';
-import Roster from '../../../../utils/Roster';
-import SessionExpiredError from '../../../../utils/SessionExpiredError';
-import Utility from '../../../../utils/Utility';
+import ITO from './rosterScheduler/utils/ITO';
+import Roster from '../../utils/Roster';
+import SessionExpiredError from '../../utils/SessionExpiredError';
+import Utility from '../../utils/Utility';
 export default class AdminUtility extends Roster{
     constructor(changeLoggedInFlag){
         super(changeLoggedInFlag);
-        let privateAPIPath='/publicAPI';
+        let privateAPIPath='/privateAPI';
         this.exportExcel=async(genExcelData)=>{
             try{
                 let result=await Utility.fetchAPI(privateAPIPath+'/exportExcel','POST',genExcelData);
@@ -70,6 +70,21 @@ export default class AdminUtility extends Roster{
                 }
                 throw error;
             }            
+        }
+        this.logout=async()=>{
+            try{
+                await Utility.fetchAPI(privateAPIPath+'/logout','POST');
+            }catch(error){
+                if (error instanceof SessionExpiredError){
+                    //console.log("changeLoggedInFlag");
+                    changeLoggedInFlag(false);
+                } else {
+                    throw error;
+                }
+            }
+            finally{
+                changeLoggedInFlag(false);
+            }
         }
         this.saveRosterToDB=async(rosterData)=>{
             try{
