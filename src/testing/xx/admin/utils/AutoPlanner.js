@@ -30,7 +30,8 @@ export default class AutoPlanner{
                     tempRosterList.push({
                         itoRosterList:newITORosterList,
                         avgStdDev:+allITOStat.avgStdDev,
-                        vacantShiftCount:+Object.keys(allITOStat.vacantShiftList).length
+                        vacantShiftCount:+Object.keys(allITOStat.vacantShiftList).length,
+                        vacantShiftList:allITOStat.vacantShiftList
                     });
                     //console.log("count="+i);
                 }
@@ -66,7 +67,7 @@ export default class AutoPlanner{
                             workingHourPerDay:itoList[itoId].workingHourPerDay
                         }
                     }
-                    previousShiftList=getPreviousShiftList(allPreviousShiftList,dateIndex,itoId,resultantRoster);
+                    previousShiftList=getPreviousShiftList(allPreviousShiftList,dateIndex,itoId,itoRosterList,resultantRoster);
                     //tempPreviousShiftList=JSON.parse(JSON.stringify(previousShiftList));
                     if (itoRosterList[itoId].preferredShiftList[dateIndex]){
                         preferredShift=itoRosterList[itoId].preferredShiftList[dateIndex];
@@ -146,13 +147,17 @@ export default class AutoPlanner{
             });
             return result;
         }
-        let getPreviousShiftList=(allPreviousShiftList,dateIndex,itoId,resultantRoster)=>{
+        let getPreviousShiftList=(allPreviousShiftList,dateIndex,itoId,itoRosterList,resultantRoster)=>{
             let result=[];
             let startDate=dateIndex-contextValue.systemParam.maxConsecutiveWorkingDay;
             if (startDate > 0){
                 //console.log(startDate,dateIndex,resultantRoster.shiftList);
                 for (let i=startDate;i<dateIndex;i++){
-                    result.push(resultantRoster.shiftList[i]);
+                    if (itoRosterList[itoId].shiftList[i]){
+                        result.push(itoRosterList[itoId].shiftList[i]);
+                    }else {
+                        result.push(resultantRoster.shiftList[i]);
+                    }
                 }
             }else{    
                 let lastMonthIndex=contextValue.systemParam.maxConsecutiveWorkingDay+startDate-1;
@@ -161,7 +166,11 @@ export default class AutoPlanner{
                     result.push(previousMonthShiftList[i]);
                 }
                 for (let i=1;i<dateIndex;i++){
-                    result.push(resultantRoster.shiftList[i]);
+                    if (itoRosterList[itoId].shiftList[i]){
+                        result.push(itoRosterList[itoId].shiftList[i]);
+                    }else {
+                        result.push(resultantRoster.shiftList[i]);
+                    }
                 }    
             }
             return result;            
@@ -180,6 +189,7 @@ export default class AutoPlanner{
                     case "d1":
                     case "d2":
                     case "d3":
+                    case null:    
                             count=0;
                             break;
                     default:

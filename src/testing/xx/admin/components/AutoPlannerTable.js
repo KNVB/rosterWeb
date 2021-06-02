@@ -63,6 +63,7 @@ export default function AutoPlannerTable(props){
             //console.log(autoPlanResult);
             let temp1=[],temp2=[];
             for (let i=0;i<autoPlanResult.minSDList.length;i++){
+                console.log(autoPlanResult.minVSList[i]);
                 temp1.push(
                     <tr className="clickable" key={"SD_"+i} onClick={()=>loadSDRoster(i)}>
                         <td className="text-left pl-3">SD:{autoPlanResult.minSDList[i].avgStdDev}</td>
