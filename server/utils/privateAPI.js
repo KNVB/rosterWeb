@@ -17,8 +17,8 @@ class PrivateAPI{
                 });
             })
         }
-        this.getITOList=async(req,res)=>{
-            let result=await itoManager.getITOList(req.body.year,req.body.month);
+        this.getActiveITOList=async(req,res)=>{
+            let result=await itoManager.getActiveITOList(req.body.year,req.body.month);
             res.send(result);
         }
         this.getRosterSchedulerList=async(req,res)=>{

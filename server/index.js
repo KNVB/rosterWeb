@@ -1,7 +1,6 @@
 require('dotenv-flow').config();
 //===============================================================
 const accessTokenSecret='SD@FD{S=*(^dsv$bm%dl&kf}';
-let bodyParser = require('body-parser')
 let cookierParser = require('cookie-parser');
 let express = require('express');
 let ITOManger= require('./classes/ITOManager');
@@ -35,10 +34,10 @@ let httpServer= http.createServer(app);
 
 console.log(process.env.NODE_ENV+" Mode");
 console.log("DB server name="+process.env.DATABASE_HOST);
-//================================================================
 
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(bodyParser.json());
+//================================================================
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 app.use(cookierParser(accessTokenSecret)); //signed cookie key
 app.use('/rosterWeb/publicAPI',publicAPIRouter);
 app.use('/rosterWeb/privateAPI',util.checkToken,privateAPIRouter);
@@ -49,14 +48,16 @@ publicAPIRouter.get('/getAllActiveShiftInfo',publicAPI.getAllActiveShiftInfo);
 publicAPIRouter.get('/getITORosterList',publicAPI.getITORosterList);
 publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);
 
-publicAPIRouter.post('/exportExcel',privateAPI.exportExcel);
-publicAPIRouter.post('/getITOList',privateAPI.getITOList);
-publicAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
-publicAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
-publicAPIRouter.post('/saveRosterToDB',privateAPI.saveRosterToDB);
+if (process.env.NODE_ENV==="development"){
+  publicAPIRouter.post('/exportExcel',privateAPI.exportExcel);
+  publicAPIRouter.post('/getActiveITOList',privateAPI.getActiveITOList);
+  publicAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
+  publicAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
+  publicAPIRouter.post('/saveRosterToDB',privateAPI.saveRosterToDB);
+}
 //==============================================================================
 privateAPIRouter.post('/exportExcel',privateAPI.exportExcel);
-privateAPIRouter.post('/getITOList',privateAPI.getITOList);
+privateAPIRouter.post('/getActiveITOList',privateAPI.getActiveITOList);
 privateAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
 privateAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
 privateAPIRouter.post('/logout',privateAPI.logout);

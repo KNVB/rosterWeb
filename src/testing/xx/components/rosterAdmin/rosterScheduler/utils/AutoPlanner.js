@@ -11,7 +11,7 @@ export default class AutoPlanner{
             let adminUtility = new AdminUtility(contextValue.changeLoggedInFlag);
             let allPreviousShiftList=contextValue.previousMonthShiftList;
             let essentialShiftTemplate=contextValue.activeShiftInfoList.essentialShift;
-            let itoList=await adminUtility.getITOList(contextValue.rosterMonth.getFullYear(),contextValue.rosterMonth.getMonth()+1);
+            let activeITOList=await adminUtility.getActiveITOList(contextValue.rosterMonth.getFullYear(),contextValue.rosterMonth.getMonth()+1);
             let itoRosterList=contextValue.itoRosterList.presentValue;
             
             let resultantRosterList={} ;
@@ -19,7 +19,7 @@ export default class AutoPlanner{
             let generatedSD=[],i=0;
             
             for (i=0;i<iterationCount;i++){
-                let newITORosterList=genResult(allPreviousShiftList,essentialShiftTemplate,itoList,itoRosterList,startDate,endDate);
+                let newITORosterList=genResult(allPreviousShiftList,essentialShiftTemplate,activeITOList,itoRosterList,startDate,endDate);
                 Object.keys(newITORosterList).forEach(itoId=>{
                     newITORosterList[itoId]=getITOStat(contextValue.activeShiftInfoList,contextValue.monthlyCalendar.noOfWorkingDay,newITORosterList[itoId]);
                 })

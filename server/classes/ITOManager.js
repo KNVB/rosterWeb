@@ -2,7 +2,7 @@ class ITOManager
 {
 	constructor(){
 		let DBO=require("../utils/dbo.js");
-        this.getITOList=async(year,month)=>{
+        this.getActiveITOList=async(year,month)=>{
             let dboObj=new DBO();
             let resultObj={};
 

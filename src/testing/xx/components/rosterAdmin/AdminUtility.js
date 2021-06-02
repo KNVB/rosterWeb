@@ -19,10 +19,10 @@ export default class AdminUtility extends Roster{
                 }
             }
         }
-        this.getITOList=async(year,month)=>{
+        this.getActiveITOList=async(year,month)=>{
             try{
                 let itoObj;
-                let result=await Utility.fetchAPI(privateAPIPath+'/getITOList','POST',{"year":year,"month":month});
+                let result=await Utility.fetchAPI(privateAPIPath+'/getActiveITOList','POST',{"year":year,"month":month});
                 let resultList={};
                 Object.keys(result).forEach(itoId=>{
                     itoObj=new ITO();

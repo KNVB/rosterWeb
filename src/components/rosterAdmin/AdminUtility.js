@@ -5,7 +5,7 @@ import Utility from '../../utils/Utility';
 export default class AdminUtility extends Roster{
     constructor(changeLoggedInFlag){
         super(changeLoggedInFlag);
-        let privateAPIPath='/privateAPI';
+        let privateAPIPath='/publicAPI';
         this.exportExcel=async(genExcelData)=>{
             try{
                 let result=await Utility.fetchAPI(privateAPIPath+'/exportExcel','POST',genExcelData);
@@ -19,10 +19,10 @@ export default class AdminUtility extends Roster{
                 }
             }
         }
-        this.getITOList=async(year,month)=>{
+        this.getActiveITOList=async(year,month)=>{
             try{
                 let itoObj;
-                let result=await Utility.fetchAPI(privateAPIPath+'/getITOList','POST',{"year":year,"month":month});
+                let result=await Utility.fetchAPI(privateAPIPath+'/getActiveITOList','POST',{"year":year,"month":month});
                 let resultList={};
                 Object.keys(result).forEach(itoId=>{
                     itoObj=new ITO();
