@@ -1,7 +1,8 @@
 import {useEffect,useReducer} from 'react';
 import './RosterSchedulerTable.css';
-import AdminRoster from './utils/AdminRoster';
+import AdminUtility from './utils/AdminUtility';
 import AdminShiftStatUtil from './utils/AdminShiftStatUtil';
+import AutoPlannerTable from './components/AutoPlannerTable';
 import BaseTable from '../../baseTable/BaseTable';
 import ButtonPanel from './components/ButtonPanel';
 import CalendarUtility from '../../../utils/calendar/CalendarUtility';
@@ -19,7 +20,7 @@ export default function RosterSchedulerTable(props){
             let {getAllITOStat}=AdminShiftStatUtil();
             let {getITOStat}=ITOShiftStatUtil();
 
-            let adminRoster = new AdminRoster(props.changeLoggedInFlag);
+            let adminRoster = new AdminUtility(props.changeLoggedInFlag);
             let activeShiftInfoList= await adminRoster.getAllActiveShiftInfo();
             let calendarUtility=new CalendarUtility();
             let hightLightCellIndex=-1;
@@ -40,7 +41,7 @@ export default function RosterSchedulerTable(props){
 
             //console.log(itoRosterList);
             //console.log(allITOStat);
-            let allITOStat=getAllITOStat(activeShiftInfoList,monthlyCalendar,itoRosterList);
+            let allITOStat=getAllITOStat(activeShiftInfoList,1,monthLength,itoRosterList);
             updateContext(
                 {
                     type:'updateRosterMonth',
@@ -66,9 +67,15 @@ export default function RosterSchedulerTable(props){
     },[props]);
     let dataReducer=(state,action)=>{
         switch(action.type){
+            case 'showLoadingImage':
+                return{
+                    ...state,
+                    isShowLoadingImage:action.value
+                }
             case 'updateRosterData':
                 let {getAllITOStat}=AdminShiftStatUtil();
-                let allITOStat=getAllITOStat(state.activeShiftInfoList,state.monthlyCalendar,action.value.presentValue);
+                let monthLength=state.monthlyCalendar.calendarDateList.length;
+                let allITOStat=getAllITOStat(state.activeShiftInfoList,1,monthLength,action.value.presentValue);
                 return{
                     ...state,
                     "allITOStat":allITOStat,
@@ -90,11 +97,13 @@ export default function RosterSchedulerTable(props){
         }
     }
     const [contextValue, updateContext] = useReducer(dataReducer,{});
+    let autoPlannerTable=<AutoPlannerTable/>
     let buttonPanel=<ButtonPanel/>
     let yearlyStat=<YearlyRosterStatistic/>
     return(
         <RosterWebContext.Provider value={[contextValue, updateContext]}>
             <BaseTable
+                autoPlanner={autoPlannerTable}
                 buttonPanel={buttonPanel} 
                 noOfPrevDate={props.systemParam.noOfPrevDate}
                 yearlyStat={yearlyStat}>

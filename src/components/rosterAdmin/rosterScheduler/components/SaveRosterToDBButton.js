@@ -1,10 +1,10 @@
 import {useContext} from 'react';
-import AdminRoster from '../utils/AdminRoster';
+import AdminUtility from '../utils/AdminUtility';
 import RosterWebContext from '../../../../utils/RosterWebContext';
 export default function SaveRosterToDBButton(){
     let [contextValue]=useContext(RosterWebContext);
     async function saveRosterToDB(){
-        let adminRoster=new AdminRoster(contextValue.changeLoggedInFlag);
+        let adminRoster=new AdminUtility(contextValue.changeLoggedInFlag);
         let rosterData={};
         for (const [itoId, itoRoster] of Object.entries(contextValue.itoRosterList.presentValue)) {
             rosterData[itoId]={

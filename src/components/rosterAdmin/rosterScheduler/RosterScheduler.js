@@ -1,7 +1,7 @@
 import {useEffect,useState} from 'react';
 import {Col,Container,Row} from 'react-bootstrap';
 import MonthPicker from '../../../utils/monthPicker/MonthPicker';
-import AdminRoster from './utils/AdminRoster';
+import AdminUtility from './utils/AdminUtility';
 import RosterSchedulerTable from './RosterSchedulerTable';
 export default function RosterScheduler(props){
     let now=new Date();
@@ -10,7 +10,7 @@ export default function RosterScheduler(props){
     useEffect(()=>{
         const getData = async () => {
             console.log("Undo:Get System Parameter from DB");
-            let adminRoster = new AdminRoster(props.changeLoggedInFlag);
+            let adminRoster = new AdminUtility(props.changeLoggedInFlag);
             let temp=await adminRoster.getSystemParam();
             let monthPickerMinDate=new Date(temp.monthPickerMinDate.year,temp.monthPickerMinDate.month-1,temp.monthPickerMinDate.date);
             temp.monthPickerMinDate=monthPickerMinDate;

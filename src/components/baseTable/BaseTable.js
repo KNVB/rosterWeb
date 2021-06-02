@@ -9,7 +9,12 @@ export default function BaseTable(props){
         <table id="rosterTable">
             {contextValue.monthlyCalendar &&<TableHeader noOfPrevDate={props.noOfPrevDate}/>}
             {props.children}
-            {contextValue.activeShiftInfoList &&<TableFooter buttonPanel={props.buttonPanel} noOfPrevDate={props.noOfPrevDate} yearlyStat={props.yearlyStat}/>}
+            {contextValue.activeShiftInfoList &&
+                <TableFooter 
+                    autoPlanner={props.autoPlanner}
+                    buttonPanel={props.buttonPanel} 
+                    noOfPrevDate={props.noOfPrevDate} 
+                    yearlyStat={props.yearlyStat}/>}
         </table>
     );        
 }

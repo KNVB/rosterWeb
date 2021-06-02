@@ -5,7 +5,7 @@ import RosterWebContext from '../../utils/RosterWebContext';
 export default function RosterViewerBody(props){
     let rowList=[],headerRowCount=3;
     let [contextValue]=useContext(RosterWebContext);
-    console.log(contextValue.itoRosterList);
+    //console.log(contextValue.itoRosterList);
     Object.keys(contextValue.itoRosterList).forEach(itoId=>{
         rowList.push(
             <RosterViewerRow 
