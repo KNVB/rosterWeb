@@ -76,7 +76,6 @@ export default function XXTable(props){
                 }
             case 'updateRosterData':
                 let {getAllITOStat}=AdminShiftStatUtil();
-                console.log(action.value.presentValue);
                 let monthLength=state.monthlyCalendar.calendarDateList.length;
                 let allITOStat=getAllITOStat(state.activeShiftInfoList,1,monthLength,action.value.presentValue);
                 return{

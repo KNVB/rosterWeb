@@ -147,34 +147,6 @@ export default class AutoPlanner{
             });
             return result;
         }
-        let getPreviousShiftList=(allPreviousShiftList,dateIndex,itoId,itoRosterList,resultantRoster)=>{
-            let result=[];
-            let startDate=dateIndex-contextValue.systemParam.maxConsecutiveWorkingDay;
-            if (startDate > 0){
-                //console.log(startDate,dateIndex,resultantRoster.shiftList);
-                for (let i=startDate;i<dateIndex;i++){
-                    if (itoRosterList[itoId].shiftList[i]){
-                        result.push(itoRosterList[itoId].shiftList[i]);
-                    }else {
-                        result.push(resultantRoster.shiftList[i]);
-                    }
-                }
-            }else{    
-                let lastMonthIndex=contextValue.systemParam.maxConsecutiveWorkingDay+startDate-1;
-                let previousMonthShiftList=allPreviousShiftList[itoId];
-                for (let i=lastMonthIndex;i<contextValue.systemParam.maxConsecutiveWorkingDay;i++){
-                    result.push(previousMonthShiftList[i]);
-                }
-                for (let i=1;i<dateIndex;i++){
-                    if (itoRosterList[itoId].shiftList[i]){
-                        result.push(itoRosterList[itoId].shiftList[i]);
-                    }else {
-                        result.push(resultantRoster.shiftList[i]);
-                    }
-                }    
-            }
-            return result;            
-        }
         let getNoOfConsecutiveWorkingDay=(previousShiftList,thatShift)=>{
             let count=0;
             let shiftList=JSON.parse(JSON.stringify(previousShiftList));
@@ -199,6 +171,34 @@ export default class AutoPlanner{
             }
             //console.log(ito.itoId,previousShiftList,shiftList,thatShift,count,this.maxConsecutiveWorkingDay);
             return count;
+        }
+        let getPreviousShiftList=(allPreviousShiftList,dateIndex,itoId,itoRosterList,resultantRoster)=>{
+            let result=[];
+            let startDate=dateIndex-contextValue.systemParam.maxConsecutiveWorkingDay;
+            if (startDate > 0){
+                //console.log(startDate,dateIndex,resultantRoster.shiftList);
+                for (let i=startDate;i<dateIndex;i++){
+                    if (resultantRoster.shiftList[i]){
+                        result.push(resultantRoster.shiftList[i]);
+                    }else {
+                        result.push(itoRosterList[itoId].shiftList[i]);
+                    }
+                }
+            }else{    
+                let lastMonthIndex=contextValue.systemParam.maxConsecutiveWorkingDay+startDate-1;
+                let previousMonthShiftList=allPreviousShiftList[itoId];
+                for (let i=lastMonthIndex;i<contextValue.systemParam.maxConsecutiveWorkingDay;i++){
+                    result.push(previousMonthShiftList[i]);
+                }
+                for (let i=1;i<dateIndex;i++){
+                    if (resultantRoster.shiftList[i]){
+                        result.push(resultantRoster.shiftList[i]);
+                    }else {
+                        result.push(itoRosterList[itoId].shiftList[i]);
+                    }
+                }    
+            }
+            return result;            
         }
         let getShuffledItoIdList=(itoIdList)=>{
             return itoIdList.sort(() => Math.random() - 0.5);
@@ -264,8 +264,10 @@ export default class AutoPlanner{
             console.log("Total No. Of Consecutive Working Day="+noOfConsecutiveWorkingDay);
             console.log("Is That Shift("+thatShift+") Form BlackListed Shift Pattern="+thatShiftFormBlackListedShift);
             console.log("Is That Shift("+thatShift+") Conflict With Preferred Shift="+conflictWithPreferredShift);
-            console.log("itoId="+ito.itoId+",thatShift="+thatShift+",previousShiftList="+previousShiftList);
-            */            
+            console.log("dateIndex="+dateIndex+",itoId="+ito.itoId+",thatShift="+thatShift+",previousShiftList="+previousShiftList);
+            */
+            
+                       
             if (totalNoOfThatShiftAssigned>this.maxNoOfShiftPerMonth){
                 //console.log(ito.itoId+","+dateIndex+","+thatShift+", cause over the max. no. of "+thatShift+" shift assigned in a month");
                 return false;
