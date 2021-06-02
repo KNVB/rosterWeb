@@ -15,7 +15,7 @@ export default function RosterAdmin(props){
 					</div>
 					<Switch>
 						<Route exact path="/rosterWeb/xx/admin" component={AdminHome} />
-						<Route path='/rosterWeb/xx/admin/itoManagement' component={ITOManagment} />
+						<Route path='/rosterWeb/xx/admin/itoManagement' render={()=><ITOManagment changeLoggedInFlag={changeLoggedInFlag}/>} />
 						<Route path='/rosterWeb/xx/admin/rosterScheduler' render={()=><RosterScheduler changeLoggedInFlag={changeLoggedInFlag}/>} />
 					</Switch>
 				</div>

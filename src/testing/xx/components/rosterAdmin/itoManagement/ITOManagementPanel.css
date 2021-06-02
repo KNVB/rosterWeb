@@ -1,0 +1,22 @@
+.itoDetailTable,
+.itoDetailTable td,
+.itoDetailTable th,
+.itoListTable,
+.itoListTable  td,
+.itoListTable  th{
+    border:1px solid black;
+    padding:3px;
+}
+.itoDetailTable tr td{
+    padding:3px;
+    text-align:left;
+}
+
+.itoDetailTable tr td input{
+    width:50%;
+}
+
+.itoListTable  th{
+    padding:3px;
+    text-align:left;
+}

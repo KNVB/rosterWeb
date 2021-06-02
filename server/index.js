@@ -37,7 +37,7 @@ console.log("DB server name="+process.env.DATABASE_HOST);
 
 //================================================================
 app.use(express.urlencoded({extended: true}));
-app.use(express.json());
+app.use(express.json()); // parse application/json, basically parse incoming Request Object as a JSON Object 
 app.use(cookierParser(accessTokenSecret)); //signed cookie key
 app.use('/rosterWeb/publicAPI',publicAPIRouter);
 app.use('/rosterWeb/privateAPI',util.checkToken,privateAPIRouter);
@@ -51,6 +51,7 @@ publicAPIRouter.get('/getSystemParam',publicAPI.getSystemParam);
 if (process.env.NODE_ENV==="development"){
   publicAPIRouter.post('/exportExcel',privateAPI.exportExcel);
   publicAPIRouter.post('/getActiveITOList',privateAPI.getActiveITOList);
+  publicAPIRouter.post('/getAllITOList',privateAPI.getAllITOList);
   publicAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
   publicAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
   publicAPIRouter.post('/saveRosterToDB',privateAPI.saveRosterToDB);
@@ -58,6 +59,7 @@ if (process.env.NODE_ENV==="development"){
 //==============================================================================
 privateAPIRouter.post('/exportExcel',privateAPI.exportExcel);
 privateAPIRouter.post('/getActiveITOList',privateAPI.getActiveITOList);
+privateAPIRouter.post('/getAllITOList',privateAPI.getAllITOList);
 privateAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
 privateAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
 privateAPIRouter.post('/logout',privateAPI.logout);

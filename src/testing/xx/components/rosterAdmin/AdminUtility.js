@@ -46,6 +46,33 @@ export default class AdminUtility extends Roster{
                 }
             }
         }
+        this.getAllITOList=async()=>{
+            try{
+                let itoObj;
+                let result=await Utility.fetchAPI(privateAPIPath+'/getAllITOList','POST');
+                let resultList={};
+                Object.keys(result).forEach(itoId=>{
+                    itoObj=new ITO();
+                    itoObj.itoId=itoId;
+                    itoObj.itoName=result[itoId].itoName;
+                    itoObj.postName=result[itoId].postName;
+                    itoObj.workingHourPerDay=parseFloat(result[itoId].workingHourPerDay.toFixed(2));
+                    itoObj.joinDate=new Date(result[itoId].joinDate);
+                    itoObj.leaveDate=new Date(result[itoId].leaveDate);
+                    itoObj.availableShiftList=result[itoId].availableShiftList;
+                    itoObj.blackListedShiftPatternList=result[itoId].blackListedShiftPatternList;
+                    resultList[itoId]=itoObj;
+                });
+                return resultList;
+            }catch(error){
+                if (error instanceof SessionExpiredError){
+                    console.log("changeLoggedInFlag");
+                    changeLoggedInFlag(false);
+                } else {
+                    throw error;
+                }
+            }
+        }
         this.getRosterSchedulerList=async(year,month)=>{
             try{
                 let result=await Utility.fetchAPI(privateAPIPath+'/getRosterSchedulerList','POST',{"year":year,"month":month});

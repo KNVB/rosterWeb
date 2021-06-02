@@ -21,6 +21,10 @@ class PrivateAPI{
             let result=await itoManager.getActiveITOList(req.body.year,req.body.month);
             res.send(result);
         }
+        this.getAllITOList=async(req,res)=>{
+            let result=await itoManager.getAllITOList();
+            res.send(result);
+        }
         this.getRosterSchedulerList=async(req,res)=>{
             let result=await rosterManager.getRosterSchedulerList(req.body.year,req.body.month);
             res.send(result);

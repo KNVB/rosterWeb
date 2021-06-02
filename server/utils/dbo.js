@@ -13,7 +13,14 @@ class DBO
 			let sqlString="select * from shift_info where active=1";
 			return await executeQuery(sqlString);
 		}
-        this.getITOList=async(year, month)=>{
+		this.getAllITOList=async()=>{
+            let sqlString ="SELECT join_date,leave_date,ito_info.ito_id,post_name,ito_name,available_shift,working_hour_per_day,black_list_pattern from ";
+            sqlString+="ito_info inner join black_list_pattern ";
+            sqlString+="on ito_info.ito_id=black_list_pattern.ito_id ";
+            sqlString+="order by ito_info.ito_id";
+            return await executeQuery(sqlString,[]);
+		}
+        this.getActiveITOList=async(year, month)=>{
             let result=getStartEndDateString(year,month);			
             let sqlString ="SELECT join_date,leave_date,ito_info.ito_id,post_name,ito_name,available_shift,working_hour_per_day,black_list_pattern from ";
             sqlString+="ito_info inner join black_list_pattern ";
