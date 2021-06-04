@@ -76,7 +76,9 @@ export default function ITODetailTable (props){
         })
     },[props]);    
     function addBlackListShiftPattern(e){
-
+        updateSelectedITOInfo({
+            type:'addBlackListShiftPattern'
+        });
     }
     function handleChange(e){
         let itemName=e.target.name;
@@ -136,10 +138,63 @@ export default function ITODetailTable (props){
 
     }
     function removeBlackListShiftPattern(index){
-
+        updateSelectedITOInfo({
+            type:'removeBlackListShiftPattern',
+            value:+index
+        });
     }
     function reducer(state, action) {
+        let bsList=[],newBSOptionList=[];
         switch (action.type){
+            case 'addBlackListShiftPattern':
+                bsList=JSON.parse(JSON.stringify(state.blackListedShiftPatternList));
+                bsList.push('');
+                for (let [index,blackListShiftPattern] of Object.entries(bsList)){
+                    newBSOptionList.push(
+                        <div key={"blackList_"+index}>
+                            <input 
+                                className="w-75"
+                                data-index={index}
+                                name="blackShiftPattern"
+                                onChange={handleChange}
+                                required
+                                type="text" 
+                                value={blackListShiftPattern}/>
+                                <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
+                        </div>
+                    );
+                }
+                return {
+                    ...state,
+                    blackListedShiftPatternList:bsList,
+                    bsOptionList:newBSOptionList
+                };
+            case 'removeBlackListShiftPattern':
+                for (let i = 0 ;i < state.blackListedShiftPatternList.length; i++){
+                    if (i!==action.value){
+                        bsList.push(state.blackListedShiftPatternList[i])
+                    }
+                }
+                for (let [index,blackListShiftPattern] of Object.entries(bsList)){
+                    newBSOptionList.push(
+                        <div key={"blackList_"+index}>
+                            <input 
+                                className="w-75"
+                                data-index={index}
+                                name="blackShiftPattern"
+                                onChange={handleChange}
+                                required
+                                type="text" 
+                                value={blackListShiftPattern}/>
+                                <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
+                        </div>
+                    );
+                }
+                return {
+                    ...state,
+                    blackListedShiftPatternList:bsList,
+                    bsOptionList:newBSOptionList
+                };
             case 'updateAvailableShiftList':
                 let asList=[];
                 let newASOptionList=[];
@@ -174,8 +229,8 @@ export default function ITODetailTable (props){
                 }
             case 'updateBlackListShiftPattern':
                 //console.log(action.value);
-                let bsList=JSON.parse(JSON.stringify(state.blackListedShiftPatternList));
-                let newBSOptionList=[];
+                bsList=JSON.parse(JSON.stringify(state.blackListedShiftPatternList));
+                newBSOptionList=[];
                 bsList[action.value.index]=action.value.blackShiftPattern;
                 for (let [index,blackListShiftPattern] of Object.entries(bsList)){
                     newBSOptionList.push(
