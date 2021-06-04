@@ -4,7 +4,7 @@ export default function ITODetailTable (props){
     useEffect(()=>{
         let asOptionList=[],availableShiftList=[],blackListedShiftPatternList=[],bsOptionList=[];
         let ito=props.allITOList[props.itoId];
-        let itoName='',joinDate='',leaveDate='',postName='',workingHourPerDay;
+        let itoName='',joinDate='',leaveDate='',postName='',workingHourPerDay=0.0;
         if (ito){
             for (let i = 0 ; i < ito.availableShiftList.length ; i++){
                 availableShiftList.push(ito.availableShiftList[i]);
@@ -74,14 +74,7 @@ export default function ITODetailTable (props){
                 workingHourPerDay:+workingHourPerDay
             }
         })
-    },[props]);
-    let initialState={
-        asOptionList:[],
-        availableShiftList:[],
-        bsOptionList:[],
-        blackListedShiftPatternList:[],
-        itoName:"",
-    }
+    },[props]);    
     function addBlackListShiftPattern(e){
 
     }
@@ -106,6 +99,18 @@ export default function ITODetailTable (props){
                     }
                 })
                 break;
+            case "joinDate":
+                updateSelectedITOInfo({
+                    type:'updateJoinDate',
+                    value:e.target.value
+                });
+                break;
+            case "leaveDate":
+                updateSelectedITOInfo({
+                    type:'updateLeaveDate',
+                    value:e.target.value
+                });
+                break
             case "itoName":
                 updateSelectedITOInfo({
                     type:'updateITOName',
@@ -196,6 +201,16 @@ export default function ITODetailTable (props){
                 return {
                     ...state,
                     itoName:action.value
+                }
+            case 'updateJoinDate':
+                return {
+                    ...state,
+                    joinDate:action.value
+                }
+            case 'updateLeaveDate':
+                return {
+                    ...state,
+                    leaveDate:action.value
                 }
             case 'updatePostName':
                 return {
