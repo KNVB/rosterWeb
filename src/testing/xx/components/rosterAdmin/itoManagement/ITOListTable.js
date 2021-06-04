@@ -1,7 +1,6 @@
 export default function ITOListTable(props){
     let addITO=(e)=>{
-        console.log("li")
-        props.setITOId('');
+        props.setITOId('-1');
     }
     const itoRowList = Object.entries(props.allITOList).map(([itoId, ito]) => (
         <tr key={itoId}>
