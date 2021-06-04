@@ -55,7 +55,8 @@ export default function ITODetailTable (props){
             asOptionList=buildASOptionList(ito.availableShiftList);
             bsOptionList=buildBSOptionList(ito.blackListedShiftPatternList);
         }else{
-            asOptionList=buildASOptionList([]);
+            availableShiftList=["a","b","c"];
+            asOptionList=buildASOptionList(availableShiftList);
         }
         //console.log(availableShiftList);
         updateSelectedITOInfo({
@@ -136,6 +137,7 @@ export default function ITODetailTable (props){
     }
     function handleSubmit(e){
         e.preventDefault();
+        console.log(selectedITO);
     }
     function removeBlackListShiftPattern(index){
         updateSelectedITOInfo({
