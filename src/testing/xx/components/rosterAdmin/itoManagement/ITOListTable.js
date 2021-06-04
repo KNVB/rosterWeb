@@ -1,13 +1,20 @@
+import ITO from '../ITO';
 export default function ITOListTable(props){
     let addITO=(e)=>{
-        props.setITOId('-1');
+        let ito=new ITO();
+        ito.itoId='-1';
+        ito.availableShiftList=props.activeShiftInfoList.essentialShift.split('');
+        ito.blackListedShiftPatternList=[''];
+        ito.joinDate=new Date();
+        ito.leaveDate=new Date('2099-12-31');
+        props.setITO(ito);
     }
     const itoRowList = Object.entries(props.allITOList).map(([itoId, ito]) => (
         <tr key={itoId}>
             <td className="p-1">
                 <span
                     className="text-primary cursor-pointer"
-                    onClick={()=>props.setITOId(itoId)}>
+                    onClick={()=>props.setITO(props.allITOList[itoId])}>
                     <u>{ito.itoName}</u>
                 </span>
             </td>

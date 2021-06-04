@@ -4,17 +4,18 @@ import ITODetailTable from './ITODetailTable';
 import ITOListTable from './ITOListTable';
 export default function ITOManagementPanel(props){
     let contextValue=props.contextValue;
-    const [itoId,setITOId]=useState(Object.keys(contextValue.allITOList)[0]);
+    let itoId=Object.keys(contextValue.allITOList)[0];
+    const [ito,setITO]=useState(contextValue.allITOList[itoId]);
     return(
         <Fragment>
             <ITOListTable 
                 allITOList={contextValue.allITOList}
-                setITOId={setITOId}/>
+                activeShiftInfoList={contextValue.activeShiftInfoList}
+                setITO={setITO}/>
             <br/>
             <ITODetailTable 
-                activeShiftInfoList={contextValue.activeShiftInfoList}
-                allITOList={contextValue.allITOList}
-                itoId={itoId}/>
+                activeShiftInfoList={contextValue.activeShiftInfoList}                
+                ito={ito}/>
         </Fragment>
     )
 }
