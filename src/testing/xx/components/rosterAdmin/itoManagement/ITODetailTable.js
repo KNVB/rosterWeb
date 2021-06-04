@@ -1,6 +1,41 @@
-import {useEffect,useReducer} from 'react';
+import {useCallback, useEffect,useReducer} from 'react';
 import moment from "moment";
 export default function ITODetailTable (props){
+    let buildASOptionList=useCallback((asList)=>{
+        let newASOptionList=[];
+        Object.keys(props.activeShiftInfoList).forEach(key=>{
+            if ((key !== "essentialShift") &&(key !== "s")){
+                let checked =asList.includes(key)
+                newASOptionList.push(
+                    <div className="align-items-center d-flex flex-row flex-grow-1 justify-content-center" key={key}>
+                        <span>{key}</span>
+                        <input checked={checked} name="availableShift" onChange={handleChange} type="checkbox" value={key}/>
+                    </div>
+                )
+            }
+        });
+        return newASOptionList;
+    },[props.activeShiftInfoList]);
+    let buildBSOptionList=useCallback((bsList)=>{
+        let newBSOptionList=[];
+        for (let [index,blackListShiftPattern] of Object.entries(bsList)){
+            newBSOptionList.push(
+                <div key={"blackList_"+index}>
+                    <input 
+                        className="w-75"
+                        data-index={index}
+                        name="blackShiftPattern"
+                        onChange={handleChange}
+                        pattern=".*(?<!,)$"
+                        required
+                        type="text" 
+                        value={blackListShiftPattern}/>
+                        <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
+                </div>
+            );
+        }
+        return newBSOptionList;
+    },[]);
     useEffect(()=>{
         let asOptionList=[],availableShiftList=[],blackListedShiftPatternList=[],bsOptionList=[];
         let ito=props.allITOList[props.itoId];
@@ -17,46 +52,10 @@ export default function ITODetailTable (props){
             leaveDate = moment(ito.leaveDate).format('YYYY-MM-DD');
             postName = ito.postName;            
             workingHourPerDay = ito.workingHourPerDay;
-            Object.keys(props.activeShiftInfoList).forEach(key=>{
-                if ((key !== "essentialShift") &&(key !== "s")){
-                    let checked = false;
-                    if (ito.availableShiftList.includes(key)){
-                        checked=true;
-                    }
-                    asOptionList.push(
-                        <div className="align-items-center d-flex flex-row flex-grow-1 justify-content-center" key={key}>
-                            <span>{key}</span>
-                            <input checked={checked} name="availableShift" onChange={handleChange} type="checkbox" value={key}/>
-                        </div>
-                    )
-                }
-            });
-            for (let [index,blackListShiftPattern] of Object.entries(ito.blackListedShiftPatternList)){
-                bsOptionList.push(
-                    <div key={"blackList_"+index}>
-                        <input 
-                            className="w-75"
-                            data-index={index}
-                            name="blackShiftPattern"
-                            onChange={handleChange}
-                            required
-                            type="text" 
-                            value={blackListShiftPattern}/>
-                            <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
-                    </div>
-                );
-            }
+            asOptionList=buildASOptionList(ito.availableShiftList);
+            bsOptionList=buildBSOptionList(ito.blackListedShiftPatternList);
         }else{
-            Object.keys(props.activeShiftInfoList).forEach(key=>{
-                if ((key !== "essentialShift") &&(key !== "s")){
-                    asOptionList.push(
-                        <div className="align-items-center d-flex flex-row flex-grow-1 justify-content-center" key={key}>
-                            <span>{key}</span>
-                            <input checked={false} name="availableShift" onChange={handleChange} type="checkbox" value={key}/>
-                        </div>
-                    )
-                }
-            });
+            asOptionList=buildASOptionList([]);
         }
         //console.log(availableShiftList);
         updateSelectedITOInfo({
@@ -74,12 +73,13 @@ export default function ITODetailTable (props){
                 workingHourPerDay:+workingHourPerDay
             }
         })
-    },[props]);    
+    },[props, buildASOptionList, buildBSOptionList]);    
     function addBlackListShiftPattern(e){
         updateSelectedITOInfo({
             type:'addBlackListShiftPattern'
         });
     }
+
     function handleChange(e){
         let itemName=e.target.name;
         switch (itemName){
@@ -135,7 +135,7 @@ export default function ITODetailTable (props){
         }
     }
     function handleSubmit(e){
-
+        e.preventDefault();
     }
     function removeBlackListShiftPattern(index){
         updateSelectedITOInfo({
@@ -144,30 +144,15 @@ export default function ITODetailTable (props){
         });
     }
     function reducer(state, action) {
-        let bsList=[],newBSOptionList=[];
+        let bsList=[];
         switch (action.type){
             case 'addBlackListShiftPattern':
                 bsList=JSON.parse(JSON.stringify(state.blackListedShiftPatternList));
                 bsList.push('');
-                for (let [index,blackListShiftPattern] of Object.entries(bsList)){
-                    newBSOptionList.push(
-                        <div key={"blackList_"+index}>
-                            <input 
-                                className="w-75"
-                                data-index={index}
-                                name="blackShiftPattern"
-                                onChange={handleChange}
-                                required
-                                type="text" 
-                                value={blackListShiftPattern}/>
-                                <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
-                        </div>
-                    );
-                }
                 return {
                     ...state,
                     blackListedShiftPatternList:bsList,
-                    bsOptionList:newBSOptionList
+                    bsOptionList:buildBSOptionList(bsList)
                 };
             case 'removeBlackListShiftPattern':
                 for (let i = 0 ;i < state.blackListedShiftPatternList.length; i++){
@@ -175,29 +160,13 @@ export default function ITODetailTable (props){
                         bsList.push(state.blackListedShiftPatternList[i])
                     }
                 }
-                for (let [index,blackListShiftPattern] of Object.entries(bsList)){
-                    newBSOptionList.push(
-                        <div key={"blackList_"+index}>
-                            <input 
-                                className="w-75"
-                                data-index={index}
-                                name="blackShiftPattern"
-                                onChange={handleChange}
-                                required
-                                type="text" 
-                                value={blackListShiftPattern}/>
-                                <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
-                        </div>
-                    );
-                }
                 return {
                     ...state,
                     blackListedShiftPatternList:bsList,
-                    bsOptionList:newBSOptionList
+                    bsOptionList:buildBSOptionList(bsList)
                 };
             case 'updateAvailableShiftList':
                 let asList=[];
-                let newASOptionList=[];
                 if (action.value.checked){
                     asList=JSON.parse(JSON.stringify(state.availableShiftList));
                     asList.push(action.value.shiftType);
@@ -208,48 +177,18 @@ export default function ITODetailTable (props){
                         }
                     });
                 }
-                Object.keys(props.activeShiftInfoList).forEach(key=>{
-                    if ((key !== "essentialShift") &&(key !== "s")){
-                        let checked = false;
-                        if (asList.includes(key)){
-                            checked=true;
-                        }
-                        newASOptionList.push(
-                            <div className="align-items-center d-flex flex-row flex-grow-1 justify-content-center" key={key}>
-                                <span>{key}</span>
-                                <input checked={checked} name="availableShift" onChange={handleChange} type="checkbox" value={key}/>
-                            </div>
-                        )
-                    }
-                });
                 return {
                     ...state,
-                    asOptionList:newASOptionList,
+                    asOptionList:buildASOptionList(asList),
                     availableShiftList:asList,
                 }
             case 'updateBlackListShiftPattern':
                 //console.log(action.value);
                 bsList=JSON.parse(JSON.stringify(state.blackListedShiftPatternList));
-                newBSOptionList=[];
                 bsList[action.value.index]=action.value.blackShiftPattern;
-                for (let [index,blackListShiftPattern] of Object.entries(bsList)){
-                    newBSOptionList.push(
-                        <div key={"blackList_"+index}>
-                            <input 
-                                className="w-75"
-                                data-index={index}
-                                name="blackShiftPattern"
-                                onChange={handleChange}
-                                required
-                                type="text" 
-                                value={blackListShiftPattern}/>
-                                <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
-                        </div>
-                    );
-                }
                 return {
                     ...state,
-                    bsOptionList:newBSOptionList,
+                    bsOptionList:buildBSOptionList(bsList),
                     blackListedShiftPatternList:bsList,
                 }                
             case 'updateITOName':
@@ -301,7 +240,7 @@ export default function ITODetailTable (props){
                         <td><input type="text" name="postName" onChange={handleChange} required value={selectedITO.postName}/></td>
                     </tr>
                     <tr>
-                        <td>Avaliable Shift Type</td>
+                        <td>Available Shift Type</td>
                         <td>
                             <div className="d-flex w-75 flex-row justify-content-center">
                                 {selectedITO.asOptionList}
