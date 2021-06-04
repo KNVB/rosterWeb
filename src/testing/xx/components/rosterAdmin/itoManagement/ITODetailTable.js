@@ -55,8 +55,11 @@ export default function ITODetailTable (props){
             asOptionList=buildASOptionList(ito.availableShiftList);
             bsOptionList=buildBSOptionList(ito.blackListedShiftPatternList);
         }else{
-            availableShiftList=["a","b","c"];
+            availableShiftList=props.activeShiftInfoList.essentialShift.split('');
             asOptionList=buildASOptionList(availableShiftList);
+            bsOptionList=buildBSOptionList(['']);
+            joinDate = moment(new Date()).format('YYYY-MM-DD');
+            leaveDate=moment(new Date(2099,12,31,0,0)).format('YYYY-MM-DD');
         }
         //console.log(availableShiftList);
         updateSelectedITOInfo({
