@@ -1,4 +1,4 @@
-import ITO from './rosterScheduler/utils/ITO';
+import ITO from './ITO';
 import Roster from '../../utils/Roster';
 import SessionExpiredError from '../../utils/SessionExpiredError';
 import Utility from '../../utils/Utility';
