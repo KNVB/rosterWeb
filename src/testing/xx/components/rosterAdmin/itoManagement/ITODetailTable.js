@@ -17,24 +17,21 @@ export default function ITODetailTable (props){
         return newASOptionList;
     },[props.activeShiftInfoList]);
     let buildBSOptionList=useCallback((bsList)=>{
-        let newBSOptionList=[];
-        for (let [index,blackListShiftPattern] of Object.entries(bsList)){
-            newBSOptionList.push(
-                <div key={"blackList_"+index}>
-                    <input 
-                        className="w-75"
-                        data-index={index}
-                        name="blackShiftPattern"
-                        onChange={handleChange}
-                        pattern=".*(?<!,)$"
-                        required
-                        type="text" 
-                        value={blackListShiftPattern}/>
-                        <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
-                </div>
-            );
-        }
-        return newBSOptionList;
+        return Object.entries(bsList).map(([index,blackListShiftPattern])=>(
+                        <div key={"blackList_"+index}>
+                            <input 
+                                className="w-75"
+                                data-index={index}
+                                name="blackShiftPattern"
+                                onChange={handleChange}
+                                pattern=".*(?<!,)$"
+                                required
+                                type="text" 
+                                value={blackListShiftPattern}/>
+                                <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
+                        </div>
+                    )
+                );
     },[]);
     useEffect(()=>{
         let ito=props.ito;
