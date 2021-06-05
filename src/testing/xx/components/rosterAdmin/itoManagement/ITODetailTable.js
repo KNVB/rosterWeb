@@ -102,9 +102,13 @@ export default function ITODetailTable (props){
                 });
                 break
             case "workingHourPerDay":
+                let value=e.target.value;
+                if (value!==''){
+                    value=+value;
+                }
                 updateSelectedITOInfo({
                     type:"updateWorkingHourPerDay",
-                    value:+e.target.value
+                    value:value
                 });
                 break       
             default:break;    

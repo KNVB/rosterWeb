@@ -7,6 +7,7 @@ export default function ITOListTable(props){
         ito.blackListedShiftPatternList=[''];
         ito.joinDate=new Date();
         ito.leaveDate=new Date('2099-12-31');
+        ito.workingHourPerDay='';
         props.setITO(ito);
     }
     const itoRowList = Object.entries(props.allITOList).map(([itoId, ito]) => (
