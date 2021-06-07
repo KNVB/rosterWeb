@@ -99,7 +99,7 @@ export default function ITODetailTable (props){
                 console.log(temp1.blackListedShiftPatternList.length);
                 return {
                     ...state,
-                    ito:temp1,
+                    selectedITO:temp1,
                     bsOptionList:buildBSOptionList(temp1.blackListedShiftPatternList)
                 };
             case "availableShift":
