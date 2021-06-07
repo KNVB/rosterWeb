@@ -86,7 +86,8 @@ export default function ITODetailTable (props){
 
     let handleSubmit=(e)=>{
         e.preventDefault();
-        console.log(formObject);
+        //console.log(formObject);
+        
     }
 
     let reducer=(state,action)=>{
@@ -95,6 +96,7 @@ export default function ITODetailTable (props){
             case 'addBlackListShiftPattern':
                 let temp1=JSON.parse(JSON.stringify(state.selectedITO));
                 temp1.blackListedShiftPatternList.push('');
+                console.log(temp1.blackListedShiftPatternList.length);
                 return {
                     ...state,
                     ito:temp1,
@@ -123,6 +125,19 @@ export default function ITODetailTable (props){
                 return temp3;
             case 'initFormObject':
                 return action.value;
+            case 'removeBlackListShiftPattern':
+                let temp4=JSON.parse(JSON.stringify(state.selectedITO));
+                temp4.blackListedShiftPatternList=[];
+                for (let i = 0 ;i < state.selectedITO.blackListedShiftPatternList.length; i++){
+                    if (i!==action.value){
+                        temp4.blackListedShiftPatternList.push(state.selectedITO.blackListedShiftPatternList[i]);
+                    }
+                }
+                return {
+                    ...state,
+                    bsOptionList:buildBSOptionList(temp4.blackListedShiftPatternList),
+                    selectedITO:temp4
+                }
             default:
                 let ito={...state.selectedITO};
                 ito[action.type]=action.value;
@@ -137,7 +152,10 @@ export default function ITODetailTable (props){
         
     }
     let removeBlackListShiftPattern=(index)=>{
-
+        updateFormObject({
+            type:'removeBlackListShiftPattern',
+            value:+index
+        });
     }
     useEffect(()=>{
         let ito=props.ito;
