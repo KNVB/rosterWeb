@@ -1,11 +1,17 @@
 import {useCallback, useEffect,useReducer} from 'react';
 import moment from "moment";
 export default function ITODetailTable (props){
-    let buildASOptionList=useCallback((asList)=>{
+    let addBlackListShiftPattern=e=>{
+        updateFormObject({
+            type:'addBlackListShiftPattern'
+        });
+    }
+
+    let buildASOptionList=useCallback((availableShiftList)=>{
         let newASOptionList=[];
         Object.keys(props.activeShiftInfoList).forEach(key=>{
             if ((key !== "essentialShift") &&(key !== "s")){
-                let checked =asList.includes(key)
+                let checked =availableShiftList.includes(key)
                 newASOptionList.push(
                     <div className="align-items-center d-flex flex-row flex-grow-1 justify-content-center" key={key}>
                         <span>{key}</span>
@@ -16,49 +22,31 @@ export default function ITODetailTable (props){
         });
         return newASOptionList;
     },[props.activeShiftInfoList]);
-    let buildBSOptionList=useCallback((bsList)=>{
-        return Object.entries(bsList).map(([index,blackListShiftPattern])=>(
-                        <div key={"blackList_"+index}>
-                            <input 
-                                className="w-75"
-                                data-index={index}
-                                name="blackShiftPattern"
-                                onChange={handleChange}
-                                pattern=".*(?<!,)$"
-                                required
-                                type="text" 
-                                value={blackListShiftPattern}/>
-                                <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
-                        </div>
-                    )
-                );
+    
+    let buildBSOptionList=useCallback((blackListedShiftPatternList)=>{
+        return Object.entries(blackListedShiftPatternList).map(([index,blackListShiftPattern])=>(
+                <div key={"blackList_"+index}>
+                    <input 
+                        className="w-75"
+                        data-index={index}
+                        name="blackShiftPattern"
+                        onChange={handleChange}
+                        pattern=".*(?<!,)$"
+                        required
+                        type="text" 
+                        value={blackListShiftPattern}/>
+                        <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
+                </div>
+            )
+        );
     },[]);
-    useEffect(()=>{
-        let ito=props.ito;
-        let asOptionList=buildASOptionList(ito.availableShiftList);
-        let bsOptionList=buildBSOptionList(ito.blackListedShiftPatternList);
-        updateSelectedITOInfo({
-            type:'updateSelectedITO',
-            value:{
-                ...ito,
-                asOptionList:asOptionList,
-                bsOptionList:bsOptionList,
-                joinDateValue:moment(ito.joinDate).format('YYYY-MM-DD'),
-                leaveDateValue:moment(ito.leaveDate).format('YYYY-MM-DD'),
-            }
-        })
-    },[props.ito, buildASOptionList, buildBSOptionList])
-    let addBlackListShiftPattern=(e)=>{
-        updateSelectedITOInfo({
-            type:'addBlackListShiftPattern'
-        });
-    }
-    let handleChange=(e)=>{
+
+    let handleChange=e=>{
         let itemName=e.target.name;
         switch(itemName){
             case "availableShift":
-                updateSelectedITOInfo({
-                    type:'updateAvailableShiftList',
+                updateFormObject({
+                    type:"availableShift",
                     value:{
                         checked:e.target.checked,
                         shiftType:e.target.value
@@ -66,163 +54,139 @@ export default function ITODetailTable (props){
                 });
                 break;
             case "blackShiftPattern":
-                updateSelectedITOInfo({
-                    type:'updateBlackListShiftPattern',
+                updateFormObject({
+                    type:'blackShiftPattern',
                     value:{
                         index:e.target.dataset.index,
                         blackShiftPattern:e.target.value
                     }
                 })
-                break;
-            case "itoName":
-                updateSelectedITOInfo({
-                    type:'updateITOName',
-                    value:e.target.value
-                });
-                break
-            case "joinDate":
-                updateSelectedITOInfo({
-                    type:'updateJoinDate',
-                    value:e.target.value
-                });
-                break;
-            case "leaveDate":
-                updateSelectedITOInfo({
-                    type:'updateLeaveDate',
-                    value:e.target.value
-                });
-                break;    
-            case "postName":
-                updateSelectedITOInfo({
-                    type:'updatePostName',
-                    value:e.target.value
-                });
                 break
             case "workingHourPerDay":
                 let value=e.target.value;
                 if (value!==''){
-                    value=+value;
+                    updateFormObject({
+                        type:e.target.name,
+                        value:+value
+                    });
+                } else {
+                    updateFormObject({
+                        type:e.target.name,
+                        value:value
+                    });
                 }
-                updateSelectedITOInfo({
-                    type:"updateWorkingHourPerDay",
-                    value:value
+                break
+            default:
+                updateFormObject({
+                    type:e.target.name,
+                    value:e.target.value
                 });
-                break       
-            default:break;    
         }
     }
+
     let handleSubmit=(e)=>{
         e.preventDefault();
-        console.log(selectedITO);
+        console.log(formObject);
     }
-    let removeBlackListShiftPattern=(index)=>{
-        updateSelectedITOInfo({
-            type:'removeBlackListShiftPattern',
-            value:+index
-        });
-    }
+
     let reducer=(state,action)=>{
         let bsList=[];
         switch (action.type){
             case 'addBlackListShiftPattern':
-                bsList=JSON.parse(JSON.stringify(state.blackListedShiftPatternList));
-                bsList.push('');
+                let temp1=JSON.parse(JSON.stringify(state.selectedITO));
+                temp1.blackListedShiftPatternList.push('');
                 return {
                     ...state,
-                    blackListedShiftPatternList:bsList,
-                    bsOptionList:buildBSOptionList(bsList)
+                    ito:temp1,
+                    bsOptionList:buildBSOptionList(temp1.blackListedShiftPatternList)
                 };
-            case 'removeBlackListShiftPattern':
-                for (let i = 0 ;i < state.blackListedShiftPatternList.length; i++){
-                    if (i!==action.value){
-                        bsList.push(state.blackListedShiftPatternList[i])
-                    }
-                }
-                return {
-                    ...state,
-                    blackListedShiftPatternList:bsList,
-                    bsOptionList:buildBSOptionList(bsList)
-                };
-            case 'updateAvailableShiftList':
+            case "availableShift":
                 let asList=[];
                 if (action.value.checked){
-                    asList=JSON.parse(JSON.stringify(state.availableShiftList));
+                    asList=JSON.parse(JSON.stringify(state.selectedITO.availableShiftList));
                     asList.push(action.value.shiftType);
                 }else {
-                    state.availableShiftList.forEach(shift=>{
+                    state.selectedITO.availableShiftList.forEach(shift=>{
                         if (shift!==action.value.shiftType){
                             asList.push(shift);
                         }
                     });
                 }
-                return {
-                    ...state,
-                    asOptionList:buildASOptionList(asList),
-                    availableShiftList:asList,
-                }    
-            case 'updateBlackListShiftPattern':
-                //console.log(action.value);
-                bsList=JSON.parse(JSON.stringify(state.blackListedShiftPatternList));
+                let temp2={...state,asOptionList:buildASOptionList(asList)};
+                temp2.selectedITO.availableShiftList=asList;
+                return temp2;
+            case "blackShiftPattern":
+                bsList=JSON.parse(JSON.stringify(state.selectedITO.blackListedShiftPatternList));
                 bsList[action.value.index]=action.value.blackShiftPattern;
-                return {
-                    ...state,
-                    bsOptionList:buildBSOptionList(bsList),
-                    blackListedShiftPatternList:bsList,
-                }    
-            case 'updateITOName':
-                return{
-                    ...state,
-                    "itoName":action.value
-                }
-            case 'updateJoinDate':
-                return{
-                    ...state,
-                    joinDate:new Date(action.value),
-                    joinDateValue:moment(action.value).format('YYYY-MM-DD')
-                }
-            case "updateLeaveDate":
-                return{
-                    ...state,
-                    leaveDate:new Date(action.value),
-                    leaveDateValue:moment(action.value).format('YYYY-MM-DD')
-                }   
-            case 'updatePostName':
-                return{
-                    ...state,
-                    "postName":action.value
-                }
-            case 'updateSelectedITO':
-                return action.value
-            case "updateWorkingHourPerDay":
-                return({
-                    ...state,
-                    "workingHourPerDay":action.value
-                });
+                let temp3={...state,bsOptionList:buildBSOptionList(bsList)};
+                temp3.selectedITO.blackListedShiftPatternList=bsList;
+                return temp3;
+            case 'initFormObject':
+                return action.value;
             default:
-                return state;
+                let ito={...state.selectedITO};
+                ito[action.type]=action.value;
+                return {
+                    selectedITO:ito,
+                    asOptionList:buildASOptionList(ito.availableShiftList),
+                    bsOptionList:buildBSOptionList(ito.blackListedShiftPatternList),
+                    joinDateValue:moment(ito.joinDate).format('YYYY-MM-DD'),
+                    leaveDateValue:moment(ito.leaveDate).format('YYYY-MM-DD'),
+                }                
         }
+        
     }
-    const [selectedITO, updateSelectedITOInfo] = useReducer(reducer);
+    let removeBlackListShiftPattern=(index)=>{
+
+    }
+    useEffect(()=>{
+        let ito=props.ito;
+        updateFormObject({
+            type:'initFormObject',
+            value:{
+                selectedITO:ito,
+                asOptionList:buildASOptionList(ito.availableShiftList),
+                bsOptionList:buildBSOptionList(ito.blackListedShiftPatternList),
+                joinDateValue:moment(ito.joinDate).format('YYYY-MM-DD'),
+                leaveDateValue:moment(ito.leaveDate).format('YYYY-MM-DD'),
+            }
+        })
+    },[props.ito, buildASOptionList, buildBSOptionList]);
+    const [formObject, updateFormObject] = useReducer(reducer);
     return(
         <form 
             className="d-flex flex-column flex-grow-1 justify-content-center"
             onSubmit={handleSubmit}>
-            {selectedITO && 
+            {formObject && 
                 <table className="itoDetailTable">
                     <tbody>
                         <tr>
                             <td>ITO Name</td>
-                            <td><input type="text" name="itoName" onChange={handleChange} required value={selectedITO.itoName}/></td>
+                            <td>
+                                <input 
+                                    name="itoName" 
+                                    onChange={handleChange} 
+                                    required 
+                                    type="text"
+                                    value={formObject.selectedITO.itoName}/>
+                            </td>
                         </tr>
                         <tr>
                             <td>Post Name</td>
-                            <td><input type="text" name="postName" onChange={handleChange} required value={selectedITO.postName}/></td>
+                            <td>
+                                <input 
+                                    name="postName"
+                                    onChange={handleChange}
+                                    required
+                                    type="text"
+                                    value={formObject.selectedITO.postName}/>
+                            </td>
                         </tr>
                         <tr>
                             <td>Available Shift Type</td>
                             <td>
                                 <div className="d-flex w-75 flex-row justify-content-center">
-                                    {selectedITO.asOptionList}
+                                    {formObject.asOptionList}
                                 </div>
                             </td>
                         </tr>
@@ -231,7 +195,7 @@ export default function ITODetailTable (props){
                             <td>
                                 <div className="align-items-center border d-flex flex-grow-1 flex-row justify-content-around p-1">
                                     <div className="d-flex flex-column flex-grow-1">
-                                        {selectedITO.bsOptionList}
+                                        {formObject.bsOptionList}
                                     </div>
                                     <div className="d-flex flex-grow-1 justify-content-start">	
                                         <div className="cursor-pointer" onClick={addBlackListShiftPattern}>&#10133;</div>
@@ -241,31 +205,31 @@ export default function ITODetailTable (props){
                         </tr>
                         <tr>
                             <td>No. of Working Hour Per Day</td>
-                            <td><input type="number" onChange={handleChange} step="0.01" name="workingHourPerDay" required value={selectedITO.workingHourPerDay}/></td>
+                            <td><input type="number" onChange={handleChange} step="0.01" name="workingHourPerDay" required value={formObject.selectedITO.workingHourPerDay}/></td>
                         </tr>
                         <tr>
                             <td>Join Date</td>
-                            <td><input type="date" onChange={handleChange} name="joinDate" required value={selectedITO.joinDateValue}/></td>
+                            <td><input type="date" onChange={handleChange} name="joinDate" required value={formObject.joinDateValue}/></td>
                         </tr>
                         <tr>
                             <td>Leave Date</td>
                             <td>
-                                <input type="date" name="leaveDate" onChange={handleChange} required value={selectedITO.leaveDateValue}/>
+                                <input type="date" name="leaveDate" onChange={handleChange} required value={formObject.leaveDateValue}/>
                                 "31/12/2099" mean active member
                             </td>
-                        </tr>
+                        </tr>                        
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colSpan="2" className="p-1 text-right">
                                 <button>
-                                    {((selectedITO.itoId === '-1')?'Add':'Update')}
+                                    {((formObject.selectedITO.itoId === '-1')?'Add':'Update')}
                                 </button>
                             </td>
                         </tr>
                     </tfoot>
                 </table>
             }
-        </form>       
-    )
+        </form>
+    );                
 }
