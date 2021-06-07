@@ -15,7 +15,12 @@ export default function ITODetailTable (props){
                 newASOptionList.push(
                     <div className="align-items-center d-flex flex-row flex-grow-1 justify-content-center" key={key}>
                         <span>{key}</span>
-                        <input checked={checked} name="availableShift" onChange={handleChange} type="checkbox" value={key}/>
+                        <input 
+                            checked={checked} 
+                            name="availableShift"
+                            onChange={handleChange}
+                            type="checkbox" 
+                            value={key}/>
                     </div>
                 )
             }
@@ -87,7 +92,10 @@ export default function ITODetailTable (props){
     let handleSubmit=(e)=>{
         e.preventDefault();
         //console.log(formObject);
-        
+        let form=e.target;
+        for(let field of form.elements) {
+            console.log(field.type,field.name, field.checkValidity());
+        }
     }
 
     let reducer=(state,action)=>{
@@ -174,6 +182,7 @@ export default function ITODetailTable (props){
     return(
         <form 
             className="d-flex flex-column flex-grow-1 justify-content-center"
+            noValidate
             onSubmit={handleSubmit}>
             {formObject && 
                 <table className="itoDetailTable">
