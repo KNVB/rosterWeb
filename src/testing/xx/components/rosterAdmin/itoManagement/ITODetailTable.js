@@ -2,7 +2,7 @@ import {useCallback, useEffect,useReducer} from 'react';
 import moment from "moment";
 export default function ITODetailTable (props){
     let addBlackListShiftPattern=e=>{
-        updateFormObject({
+        updateObjectList({
             type:'addBlackListShiftPattern'
         });
     }
@@ -37,7 +37,6 @@ export default function ITODetailTable (props){
                         name="blackShiftPattern"
                         onChange={handleChange}
                         pattern=".*(?<!,)$"
-                        required
                         type="text" 
                         value={blackListShiftPattern}/>
                         <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
@@ -50,7 +49,7 @@ export default function ITODetailTable (props){
         let itemName=e.target.name;
         switch(itemName){
             case "availableShift":
-                updateFormObject({
+                updateObjectList({
                     type:"availableShift",
                     value:{
                         checked:e.target.checked,
@@ -59,7 +58,7 @@ export default function ITODetailTable (props){
                 });
                 break;
             case "blackShiftPattern":
-                updateFormObject({
+                updateObjectList({
                     type:'blackShiftPattern',
                     value:{
                         index:e.target.dataset.index,
@@ -70,19 +69,19 @@ export default function ITODetailTable (props){
             case "workingHourPerDay":
                 let value=e.target.value;
                 if (value!==''){
-                    updateFormObject({
+                    updateObjectList({
                         type:e.target.name,
                         value:+value
                     });
                 } else {
-                    updateFormObject({
+                    updateObjectList({
                         type:e.target.name,
                         value:value
                     });
                 }
                 break
             default:
-                updateFormObject({
+                updateObjectList({
                     type:e.target.name,
                     value:e.target.value
                 });
@@ -91,10 +90,21 @@ export default function ITODetailTable (props){
 
     let handleSubmit=(e)=>{
         e.preventDefault();
-        //console.log(formObject);
+        //console.log(objectList);
+        /*
         let form=e.target;
         for(let field of form.elements) {
             console.log(field.type,field.name, field.checkValidity());
+        }
+        */
+        let validateResult=validate(objectList.selectedITO);
+        if (Object.keys(validateResult).length>0){
+            updateObjectList({
+                type:'updateError',
+                data:{
+                    value:validateResult
+                }
+            });
         }
     }
 
@@ -124,6 +134,7 @@ export default function ITODetailTable (props){
                 }
                 let temp2={...state,asOptionList:buildASOptionList(asList)};
                 temp2.selectedITO.availableShiftList=asList;
+                temp2.error=validate(temp2.selectedITO);
                 return temp2;
             case "blackShiftPattern":
                 bsList=JSON.parse(JSON.stringify(state.selectedITO.blackListedShiftPatternList));
@@ -131,7 +142,7 @@ export default function ITODetailTable (props){
                 let temp3={...state,bsOptionList:buildBSOptionList(bsList)};
                 temp3.selectedITO.blackListedShiftPatternList=bsList;
                 return temp3;
-            case 'initFormObject':
+            case 'initObjectList':
                 return action.value;
             case 'removeBlackListShiftPattern':
                 let temp4=JSON.parse(JSON.stringify(state.selectedITO));
@@ -146,6 +157,11 @@ export default function ITODetailTable (props){
                     bsOptionList:buildBSOptionList(temp4.blackListedShiftPatternList),
                     selectedITO:temp4
                 }
+            case 'updateError':
+                return {
+                    ...state,
+                    error:action.data.value
+                }
             default:
                 let ito={...state.selectedITO};
                 ito[action.type]=action.value;
@@ -155,36 +171,60 @@ export default function ITODetailTable (props){
                     bsOptionList:buildBSOptionList(ito.blackListedShiftPatternList),
                     joinDateValue:moment(ito.joinDate).format('YYYY-MM-DD'),
                     leaveDateValue:moment(ito.leaveDate).format('YYYY-MM-DD'),
+					error:validate(ito)
                 }                
         }
         
     }
     let removeBlackListShiftPattern=(index)=>{
-        updateFormObject({
+        updateObjectList({
             type:'removeBlackListShiftPattern',
             value:+index
         });
     }
     useEffect(()=>{
         let ito=props.ito;
-        updateFormObject({
-            type:'initFormObject',
+        updateObjectList({
+            type:'initObjectList',
             value:{
                 selectedITO:ito,
                 asOptionList:buildASOptionList(ito.availableShiftList),
                 bsOptionList:buildBSOptionList(ito.blackListedShiftPatternList),
                 joinDateValue:moment(ito.joinDate).format('YYYY-MM-DD'),
                 leaveDateValue:moment(ito.leaveDate).format('YYYY-MM-DD'),
+				error:{}
             }
         })
     },[props.ito, buildASOptionList, buildBSOptionList]);
-    const [formObject, updateFormObject] = useReducer(reducer);
+	let validate=ito=>{
+		let result={};
+		if (ito.itoName===''){
+			result.itoName='Please enter the ITO Name';
+		}
+		if (ito.postName===''){
+			result.postName='Please enter the Post Name';
+		}
+		if ((ito.workingHourPerDay==='') || isNaN(ito.workingHourPerDay)){
+			result.workingHourPerDay='Please enter the no. of working hour per day';
+		}
+		if (ito.joinDate==='') {
+			result.joinDate='Please enter the join date';
+		}
+		if (ito.leaveDate==='') {
+			result.leaveDate='Please enter the leave date';
+		}
+        if (ito.availableShiftList.length===0){
+            result.availableShiftList='Please an available shift';
+        }
+		return result;
+	}
+    const [objectList, updateObjectList] = useReducer(reducer);
     return(
         <form 
             className="d-flex flex-column flex-grow-1 justify-content-center"
             noValidate
             onSubmit={handleSubmit}>
-            {formObject && 
+            {objectList && 
                 <table className="itoDetailTable">
                     <tbody>
                         <tr>
@@ -193,9 +233,11 @@ export default function ITODetailTable (props){
                                 <input 
                                     name="itoName" 
                                     onChange={handleChange} 
-                                    required 
                                     type="text"
-                                    value={formObject.selectedITO.itoName}/>
+                                    value={objectList.selectedITO.itoName}/>
+								<div className="errorMessage">
+									{objectList.error.itoName}
+								</div>	
                             </td>
                         </tr>
                         <tr>
@@ -204,25 +246,30 @@ export default function ITODetailTable (props){
                                 <input 
                                     name="postName"
                                     onChange={handleChange}
-                                    required
                                     type="text"
-                                    value={formObject.selectedITO.postName}/>
+                                    value={objectList.selectedITO.postName}/>
+								<div className="errorMessage">
+									{objectList.error.postName}
+								</div>									
                             </td>
                         </tr>
                         <tr>
                             <td>Available Shift Type</td>
                             <td>
                                 <div className="d-flex w-75 flex-row justify-content-center">
-                                    {formObject.asOptionList}
+                                    {objectList.asOptionList}
+                                </div>
+                                <div className="d-flex w-75 errorMessage">
+                                    {objectList.error.availableShiftList}
                                 </div>
                             </td>
                         </tr>
                         <tr>
-                            <td>Black Listed Shift Type</td>
+                            <td>Black Listed Shift Pattern</td>
                             <td>
                                 <div className="align-items-center border d-flex flex-grow-1 flex-row justify-content-around p-1">
                                     <div className="d-flex flex-column flex-grow-1">
-                                        {formObject.bsOptionList}
+                                        {objectList.bsOptionList}
                                     </div>
                                     <div className="d-flex flex-grow-1 justify-content-start">	
                                         <div className="cursor-pointer" onClick={addBlackListShiftPattern}>&#10133;</div>
@@ -232,17 +279,43 @@ export default function ITODetailTable (props){
                         </tr>
                         <tr>
                             <td>No. of Working Hour Per Day</td>
-                            <td><input type="number" onChange={handleChange} step="0.01" name="workingHourPerDay" required value={formObject.selectedITO.workingHourPerDay}/></td>
+                            <td>
+								<input 
+									name="workingHourPerDay"
+									onChange={handleChange}
+									step="0.01"
+									type="number"
+									value={objectList.selectedITO.workingHourPerDay}/>
+								<div className="errorMessage">
+									{objectList.error.workingHourPerDay}
+								</div>
+							</td>
                         </tr>
                         <tr>
                             <td>Join Date</td>
-                            <td><input type="date" onChange={handleChange} name="joinDate" required value={formObject.joinDateValue}/></td>
+                            <td>
+								<input 
+									name="joinDate"
+									onChange={handleChange}
+									type="date"
+									value={objectList.joinDateValue}/>
+								<div className="errorMessage">
+									{objectList.error.joinDate}
+								</div>
+							</td>
                         </tr>
                         <tr>
                             <td>Leave Date</td>
                             <td>
-                                <input type="date" name="leaveDate" onChange={handleChange} required value={formObject.leaveDateValue}/>
+                                <input
+									name="leaveDate"
+									onChange={handleChange}
+									type="date"
+									value={objectList.leaveDateValue}/>
                                 "31/12/2099" mean active member
+								<div className="errorMessage">
+									{objectList.error.leaveDate}
+								</div>
                             </td>
                         </tr>                        
                     </tbody>
@@ -250,7 +323,7 @@ export default function ITODetailTable (props){
                         <tr>
                             <td colSpan="2" className="p-1 text-right">
                                 <button>
-                                    {((formObject.selectedITO.itoId === '-1')?'Add':'Update')}
+                                    {((objectList.selectedITO.itoId === '-1')?'Add':'Update')}
                                 </button>
                             </td>
                         </tr>
