@@ -22,3 +22,6 @@
 .itoDetailTable tr td input{
     width:50%;
 }
+.errorMessage{
+    color:red
+}
