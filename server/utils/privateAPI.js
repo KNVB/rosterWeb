@@ -38,13 +38,26 @@ class PrivateAPI{
             console.log("Admin. logout success.");
             res.send({});
         }
+        this.saveITOInfoToDB=async(req,res)=>{
+            await itoManager.saveITOInfoToDB(req.body)
+            .then(updateResult => {
+                res.status(200).json({"result":updateResult.result,itoId:updateResult.itoId});
+            })
+            .catch(error=>{
+                console.log("Fail to save ITO info. to DB.");
+                return res.status(500).json({
+                    status: 'error',
+                    message: error,
+                });
+            })
+        }
         this.saveRosterToDB=async(req,res)=>{
-            await rosterManager.saveToDB(req.body)
+            await rosterManager.saveRosterToDB(req.body)
             .then(result=>{
                 res.status(200).json({"result":result});
             })
             .catch(error=>{
-                console.log("3 Exception Caught");
+                console.log("Fail to save roster to DB.");
                 return res.status(500).json({
                     status: 'error',
                     message: error,

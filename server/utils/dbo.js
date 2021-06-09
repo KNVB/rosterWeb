@@ -98,6 +98,46 @@ class DBO
 										month]
 			);
 		}
+		this.saveITOInfoToDB=async(ito)=>{
+			//console.log(ito,moment(ito.joinDate).format('YYYY-MM-DD'));
+			let sqlString="";
+			try{
+				await connection.promise().beginTransaction();
+				console.log("Update ITO info transaction start.");
+				console.log("===============================");
+				sqlString="replace into ito_info (ito_id,ito_name,post_name,join_date,leave_date,available_shift,working_hour_per_day) values (?,?,?,?,?,?,?)";
+				if (ito.itoId==='-1'){
+					ito.itoId=ito.postName+"_"+moment(ito.joinDate).format('YYYY-MM-DD');
+				}
+				await connection.promise().query(sqlString,[
+																ito.itoId,
+																ito.itoName,
+																ito.postName,
+																moment(ito.joinDate).format('YYYY-MM-DD'),
+																moment(ito.leaveDate).format('YYYY-MM-DD'),
+																ito.availableShiftList.join(','),
+																ito.workingHourPerDay
+															]);
+				sqlString="delete from black_list_pattern where ito_id=?";
+				await connection.promise().query(sqlString,[ito.itoId]);
+				sqlString="insert into black_list_pattern (ito_id,black_list_pattern) values(?,?)";
+				ito.blackListedShiftPatternList.forEach(async (blackListedShiftPattern)=>{
+					await connection.promise().query(sqlString,[ito.itoId,blackListedShiftPattern]);
+				})
+				await connection.promise().commit();
+				console.log("Update ITO info transaction completed.");
+				console.log("===============================");
+				return {
+					result:true,
+					itoId:ito.itoId
+				};
+			}catch(error){
+				if (connection) {
+					await connection.promise().rollback();
+				}
+				throw error;
+			}	
+		}
 		this.saveRosterData=async(year,month,itoRosterList)=>{
 			let dateString;
 			let sqlString="";

@@ -68,6 +68,19 @@ class ITOManager
             }
 
         }
+        this.saveITOInfoToDB=async(ito)=>{
+            let dboObj=new DBO();
+			try{
+				let result=await dboObj.saveITOInfoToDB(ito);
+				return result;
+			}catch(err){
+				console.log("Some wrong when update ITO info:"+err.stack);
+				throw new Error("Some wrong when update the ITO info.");
+			}
+			finally{
+				dboObj.close();
+			};
+        }
 	}
 	
 }

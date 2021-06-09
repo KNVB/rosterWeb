@@ -54,6 +54,7 @@ if (process.env.NODE_ENV==="development"){
   publicAPIRouter.post('/getAllITOList',privateAPI.getAllITOList);
   publicAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
   publicAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
+  publicAPIRouter.post('/saveITOInfoToDB',privateAPI.saveITOInfoToDB);
   publicAPIRouter.post('/saveRosterToDB',privateAPI.saveRosterToDB);
 }
 //==============================================================================
@@ -63,6 +64,7 @@ privateAPIRouter.post('/getAllITOList',privateAPI.getAllITOList);
 privateAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
 privateAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
 privateAPIRouter.post('/logout',privateAPI.logout);
+privateAPIRouter.post('/saveITOInfoToDB',privateAPI.saveITOInfoToDB);
 privateAPIRouter.post('/saveRosterToDB',privateAPI.saveRosterToDB);
 
 const path = require('path');

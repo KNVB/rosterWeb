@@ -5,6 +5,7 @@ import ITOManagementPanel from './ITOManagementPanel';
 
 export default function ITOManagment(props){
     let [contextValue,setContextValue]=useState();
+    let [reload,setReload]=useState()
     useEffect(()=>{
         const getData = async () => {
             console.log("Undo:Get All ITO information from DB");
@@ -18,7 +19,7 @@ export default function ITOManagment(props){
             });
         }
         getData();
-    },[props.changeLoggedInFlag])
+    },[props.changeLoggedInFlag,reload])
     return(
         <Container>
             <Row>
@@ -28,7 +29,7 @@ export default function ITOManagment(props){
             </Row>
             <Row>
                 <Col md={12} lg={12} sm={12} xl={12} xs={12} className="d-flex flex-column flex-grow-1 justify-content-center">
-                    {contextValue && <ITOManagementPanel contextValue={contextValue}/>}    
+                    {contextValue && <ITOManagementPanel contextValue={contextValue} changeLoggedInFlag={props.changeLoggedInFlag} setReload={setReload}/>}
                 </Col>
             </Row>    
         </Container>

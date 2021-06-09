@@ -1,4 +1,5 @@
 import {useEffect,useReducer} from 'react';
+import AdminUtility from '../AdminUtility';
 import moment from "moment";
 export default function ITODetailTable (props){
     let addBlackListShiftPattern=e=>{
@@ -101,6 +102,20 @@ export default function ITODetailTable (props){
                 data:{
                     value:validateResult
                 }
+            });
+        } else {
+            let adminUtility = new AdminUtility(props.changeLoggedInFlag);
+            adminUtility.saveITOInfoToDB(objectList.selectedITO)
+            .then(updateResult=>{
+                if (updateResult.result){
+                    alert("Update ITO Info. Success");
+                    props.setReload(updateResult.itoId);
+                } else {
+                    console.log(updateResult);
+                }
+            })
+            .catch(error=>{
+                alert(error.message);
             });
         }
     }

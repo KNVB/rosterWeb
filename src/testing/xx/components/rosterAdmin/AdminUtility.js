@@ -125,5 +125,17 @@ export default class AdminUtility extends Roster{
                 throw error;
             }
         }
+        this.saveITOInfoToDB=async(ito)=>{
+            try{
+                let result=await Utility.fetchAPI(privateAPIPath+'/saveITOInfoToDB','POST',ito);
+                return result;
+            }catch (error){
+                if (error instanceof SessionExpiredError){
+                    console.log("changeLoggedInFlag");
+                    changeLoggedInFlag(false);
+                }
+                throw error;
+            }
+        }
     }
 }

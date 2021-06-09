@@ -155,7 +155,7 @@ class RosterManager
 				dboObj.close();
 			};	 	
 		}
-		this.saveToDB=async (rosterData)=>{
+		this.saveRosterToDB=async (rosterData)=>{
 			let month=rosterData.month;
             let itoRosterList=rosterData.rosterList;
             let year=rosterData.year;

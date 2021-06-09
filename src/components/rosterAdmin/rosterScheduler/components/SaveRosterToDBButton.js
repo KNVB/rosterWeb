@@ -22,7 +22,7 @@ export default function SaveRosterToDBButton(){
         })
         .then(updateResult=>{
             if (updateResult.result){
-                alert("Update Success");
+                alert("Update Roster Info. Success");
             } else {
                 console.log(updateResult);
             }

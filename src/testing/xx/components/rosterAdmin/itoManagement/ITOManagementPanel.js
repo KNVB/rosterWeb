@@ -14,8 +14,10 @@ export default function ITOManagementPanel(props){
                 setITO={setITO}/>
             <br/>
             <ITODetailTable 
-                activeShiftInfoList={contextValue.activeShiftInfoList}                
-                ito={ito}/>
+                activeShiftInfoList={contextValue.activeShiftInfoList}
+                changeLoggedInFlag={props.changeLoggedInFlag}       
+                ito={ito}
+                setReload={props.setReload}/>
         </Fragment>
     )
 }
