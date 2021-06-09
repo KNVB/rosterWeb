@@ -4,6 +4,7 @@ export default function ITOListTable(props){
         let ito=new ITO();
         ito.itoId='-1';
         ito.availableShiftList=props.activeShiftInfoList.essentialShift.split('');
+        ito.availableShiftList.push('O');
         ito.blackListedShiftPatternList=[''];
         ito.joinDate=new Date();
         ito.leaveDate=new Date('2099-12-31');

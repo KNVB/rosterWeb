@@ -1,4 +1,4 @@
-import {useCallback, useEffect,useReducer} from 'react';
+import {useEffect,useReducer} from 'react';
 import moment from "moment";
 export default function ITODetailTable (props){
     let addBlackListShiftPattern=e=>{
@@ -7,7 +7,7 @@ export default function ITODetailTable (props){
         });
     }
 
-    let buildASOptionList=useCallback((availableShiftList)=>{
+    let buildASOptionList=(availableShiftList)=>{
         let newASOptionList=[];
         Object.keys(props.activeShiftInfoList).forEach(key=>{
             if ((key !== "essentialShift") &&(key !== "s")){
@@ -26,24 +26,27 @@ export default function ITODetailTable (props){
             }
         });
         return newASOptionList;
-    },[props.activeShiftInfoList]);
+    };
     
-    let buildBSOptionList=useCallback((blackListedShiftPatternList)=>{
-        return Object.entries(blackListedShiftPatternList).map(([index,blackListShiftPattern])=>(
+    let buildBSOptionList=(blackListedShiftPatternList,errorMessage)=>{
+        let bsList= Object.entries(blackListedShiftPatternList).map(([index,blackListShiftPattern])=>(
                 <div key={"blackList_"+index}>
                     <input 
                         className="w-75"
                         data-index={index}
                         name="blackShiftPattern"
                         onChange={handleChange}
-                        pattern=".*(?<!,)$"
                         type="text" 
                         value={blackListShiftPattern}/>
                         <span className="cursor-pointer" onClick={()=>removeBlackListShiftPattern(index)}>&#10060;</span>
+                        <div className="errorMessage">
+                            {errorMessage["blackListedShiftPattern_"+index]}
+                        </div>    
                 </div>
             )
         );
-    },[]);
+        return bsList;
+    };
 
     let handleChange=e=>{
         let itemName=e.target.name;
@@ -90,14 +93,8 @@ export default function ITODetailTable (props){
 
     let handleSubmit=(e)=>{
         e.preventDefault();
-        //console.log(objectList);
-        /*
-        let form=e.target;
-        for(let field of form.elements) {
-            console.log(field.type,field.name, field.checkValidity());
-        }
-        */
         let validateResult=validate(objectList.selectedITO);
+        //console.log(validateResult);
         if (Object.keys(validateResult).length>0){
             updateObjectList({
                 type:'updateError',
@@ -109,16 +106,15 @@ export default function ITODetailTable (props){
     }
 
     let reducer=(state,action)=>{
-        let bsList=[];
         switch (action.type){
             case 'addBlackListShiftPattern':
                 let temp1=JSON.parse(JSON.stringify(state.selectedITO));
                 temp1.blackListedShiftPatternList.push('');
-                console.log(temp1.blackListedShiftPatternList.length);
+                //console.log(temp1.blackListedShiftPatternList.length);
                 return {
                     ...state,
                     selectedITO:temp1,
-                    bsOptionList:buildBSOptionList(temp1.blackListedShiftPatternList)
+                    error:validate(temp1)
                 };
             case "availableShift":
                 let asList=[];
@@ -132,15 +128,16 @@ export default function ITODetailTable (props){
                         }
                     });
                 }
-                let temp2={...state,asOptionList:buildASOptionList(asList)};
+                let temp2={...state};
                 temp2.selectedITO.availableShiftList=asList;
                 temp2.error=validate(temp2.selectedITO);
                 return temp2;
             case "blackShiftPattern":
-                bsList=JSON.parse(JSON.stringify(state.selectedITO.blackListedShiftPatternList));
+                let bsList=JSON.parse(JSON.stringify(state.selectedITO.blackListedShiftPatternList));
                 bsList[action.value.index]=action.value.blackShiftPattern;
-                let temp3={...state,bsOptionList:buildBSOptionList(bsList)};
+                let temp3={...state};
                 temp3.selectedITO.blackListedShiftPatternList=bsList;
+                temp3.error=validate(temp3.selectedITO);
                 return temp3;
             case 'initObjectList':
                 return action.value;
@@ -154,8 +151,8 @@ export default function ITODetailTable (props){
                 }
                 return {
                     ...state,
-                    bsOptionList:buildBSOptionList(temp4.blackListedShiftPatternList),
-                    selectedITO:temp4
+                    selectedITO:temp4,
+                    error:validate(temp4)
                 }
             case 'updateError':
                 return {
@@ -167,10 +164,6 @@ export default function ITODetailTable (props){
                 ito[action.type]=action.value;
                 return {
                     selectedITO:ito,
-                    asOptionList:buildASOptionList(ito.availableShiftList),
-                    bsOptionList:buildBSOptionList(ito.blackListedShiftPatternList),
-                    joinDateValue:moment(ito.joinDate).format('YYYY-MM-DD'),
-                    leaveDateValue:moment(ito.leaveDate).format('YYYY-MM-DD'),
 					error:validate(ito)
                 }                
         }
@@ -188,14 +181,10 @@ export default function ITODetailTable (props){
             type:'initObjectList',
             value:{
                 selectedITO:ito,
-                asOptionList:buildASOptionList(ito.availableShiftList),
-                bsOptionList:buildBSOptionList(ito.blackListedShiftPatternList),
-                joinDateValue:moment(ito.joinDate).format('YYYY-MM-DD'),
-                leaveDateValue:moment(ito.leaveDate).format('YYYY-MM-DD'),
 				error:{}
             }
         })
-    },[props.ito, buildASOptionList, buildBSOptionList]);
+    },[props.ito]);
 	let validate=ito=>{
 		let result={};
 		if (ito.itoName===''){
@@ -215,6 +204,66 @@ export default function ITODetailTable (props){
 		}
         if (ito.availableShiftList.length===0){
             result.availableShiftList='Please an available shift';
+        } else {
+            let essentialShiftList=props.activeShiftInfoList.essentialShift.split('');
+            let isIncludeEssentialShift=true;
+            for (let i=0;i<essentialShiftList.length;i++){
+                //console.log(templateShift[i],ito.availableShiftList.includes(templateShift[i]));
+                if (essentialShiftList[i]==='b'){
+                    if ((!ito.availableShiftList.includes('b')) && (!ito.availableShiftList.includes('b1'))){
+                        isIncludeEssentialShift=false;
+                        break;
+                    }
+                }else {
+                    if (!ito.availableShiftList.includes(essentialShiftList[i])){
+                        isIncludeEssentialShift=false;
+                        break;
+                    }
+                }
+            }
+            if (!isIncludeEssentialShift){
+                result.availableShiftList='Please include the essential shift (i.e. a,b/b1,c).';
+            } else {
+                if (!ito.availableShiftList.includes('O')){
+                    result.availableShiftList='Please include \'O\' shift.';
+                } else {
+                    let isIncludeDxShift=false;
+                    ito.availableShiftList.forEach(shiftType=>{
+                        if (shiftType.startsWith("d")){
+                            isIncludeDxShift=true;
+                        }
+                    });
+                    if (!isIncludeDxShift){
+                        result.availableShiftList='Please include \'dx\' shift.';
+                    }
+                }
+            }
+        }
+        if (ito.blackListedShiftPatternList.length===0){
+            result.blackListedShiftPatternList='Please enter the black listed shift pattern';
+        }else {
+            let blackListedShiftPattern='';
+            for (let i=0;i<ito.blackListedShiftPatternList.length;i++){
+                blackListedShiftPattern=ito.blackListedShiftPatternList[i];
+                if (blackListedShiftPattern===''){
+                    result["blackListedShiftPattern_"+i]='Please enter a black listed shift pattern';
+                    continue;
+                }
+                if (blackListedShiftPattern.indexOf(',')===-1){
+                    result["blackListedShiftPattern_"+i]='Blacklisted shift pattern contains at least 2 shift type.';
+                    continue;
+                }
+                if (blackListedShiftPattern.startsWith(',') || blackListedShiftPattern.endsWith(',')){
+                    result["blackListedShiftPattern_"+i]='Blacklisted shift pattern starts/ends with comma.';
+                    continue;
+                }
+                let blackListedShiftPatternList=blackListedShiftPattern.split(',');
+                for (let index=0;index < blackListedShiftPatternList.length; index++){
+                    if (!ito.availableShiftList.includes(blackListedShiftPatternList[index])){
+                        result["blackListedShiftPattern_"+i]='Shift '+blackListedShiftPatternList[index]+' does not included in the avaliable shift type.';
+                    }
+                }
+            }
         }
 		return result;
 	}
@@ -222,7 +271,6 @@ export default function ITODetailTable (props){
     return(
         <form 
             className="d-flex flex-column flex-grow-1 justify-content-center"
-            noValidate
             onSubmit={handleSubmit}>
             {objectList && 
                 <table className="itoDetailTable">
@@ -257,9 +305,9 @@ export default function ITODetailTable (props){
                             <td>Available Shift Type</td>
                             <td>
                                 <div className="d-flex w-75 flex-row justify-content-center">
-                                    {objectList.asOptionList}
+                                    {buildASOptionList(objectList.selectedITO.availableShiftList)}
                                 </div>
-                                <div className="d-flex w-75 errorMessage">
+                                <div className="d-flex errorMessage flex-grow-1 justify-content-center">
                                     {objectList.error.availableShiftList}
                                 </div>
                             </td>
@@ -269,11 +317,14 @@ export default function ITODetailTable (props){
                             <td>
                                 <div className="align-items-center border d-flex flex-grow-1 flex-row justify-content-around p-1">
                                     <div className="d-flex flex-column flex-grow-1">
-                                        {objectList.bsOptionList}
+                                        {buildBSOptionList(objectList.selectedITO.blackListedShiftPatternList,objectList.error)}
                                     </div>
                                     <div className="d-flex flex-grow-1 justify-content-start">	
                                         <div className="cursor-pointer" onClick={addBlackListShiftPattern}>&#10133;</div>
                                     </div>
+                                </div>
+                                <div className="errorMessage text-center" key="blackListedShiftPatternList">
+                                    {objectList.error.blackListedShiftPatternList}
                                 </div>
                             </td>
                         </tr>
@@ -298,7 +349,7 @@ export default function ITODetailTable (props){
 									name="joinDate"
 									onChange={handleChange}
 									type="date"
-									value={objectList.joinDateValue}/>
+									value={moment(objectList.selectedITO.joinDate).format('YYYY-MM-DD')}/>
 								<div className="errorMessage">
 									{objectList.error.joinDate}
 								</div>
@@ -311,7 +362,7 @@ export default function ITODetailTable (props){
 									name="leaveDate"
 									onChange={handleChange}
 									type="date"
-									value={objectList.leaveDateValue}/>
+									value={moment(objectList.selectedITO.leaveDate).format('YYYY-MM-DD')}/>
                                 "31/12/2099" mean active member
 								<div className="errorMessage">
 									{objectList.error.leaveDate}
