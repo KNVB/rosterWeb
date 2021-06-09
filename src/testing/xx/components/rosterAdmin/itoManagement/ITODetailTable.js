@@ -97,9 +97,9 @@ export default function ITODetailTable (props){
 
     let handleSubmit=(e)=>{
         e.preventDefault();
-        console.log("Before validate:"+JSON.stringify(objectList.selectedITO));
+        //console.log("handleSubmit:Before validate:"+JSON.stringify(objectList.selectedITO));
         let validateResult=validate(objectList.selectedITO);
-        
+        //console.log("handleSubmit:After validate:"+JSON.stringify(objectList.selectedITO));
         //console.log(validateResult);       
         if (Object.keys(validateResult).length>0){
             updateObjectList({
@@ -109,8 +109,8 @@ export default function ITODetailTable (props){
                 }
             });
         } else {
-            console.log("after validate:"+JSON.stringify(objectList.selectedITO));
-            /*
+            //console.log("after validate:"+JSON.stringify(objectList.selectedITO));
+            
             let adminUtility = new AdminUtility(props.changeLoggedInFlag);
             adminUtility.saveITOInfoToDB(objectList.selectedITO)
             .then(updateResult=>{
@@ -124,7 +124,6 @@ export default function ITODetailTable (props){
             .catch(error=>{
                 alert(error.message);
             });
-            */
         }
     }
 
@@ -141,7 +140,7 @@ export default function ITODetailTable (props){
                 };
             case "availableShift":
                 let asList=[];
-                console.log("Before:"+state.selectedITO.availableShiftList);
+                //console.log("Before:"+state.selectedITO.availableShiftList);
                 if (action.value.checked){
                     asList=JSON.parse(JSON.stringify(state.selectedITO.availableShiftList));
                     asList.push(action.value.shiftType);
@@ -152,11 +151,13 @@ export default function ITODetailTable (props){
                         }
                     });
                 }
-                console.log("After 0:"+asList);
-                let temp2={selectedITO:state.selectedITO};
+                //console.log("After 0:"+asList);
+                let temp2={selectedITO:JSON.parse(JSON.stringify(state.selectedITO))};
+               
                 temp2.selectedITO.availableShiftList=asList;
                 temp2.error=validate(temp2.selectedITO);
-                console.log("After 1:"+JSON.stringify(temp2.selectedITO.availableShiftList));
+                //console.log("After 1:"+JSON.stringify(temp2.selectedITO.availableShiftList));
+                
                 return temp2;
             case "blackShiftPattern":
                 let bsList=JSON.parse(JSON.stringify(state.selectedITO.blackListedShiftPatternList));
