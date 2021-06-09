@@ -10,6 +10,7 @@ export default function ITODetailTable (props){
 
     let buildASOptionList=(availableShiftList)=>{
         let newASOptionList=[];
+        console.log("buildASOptionList="+JSON.stringify(availableShiftList));
         Object.keys(props.activeShiftInfoList).forEach(key=>{
             if ((key !== "essentialShift") &&(key !== "s")){
                 let checked =availableShiftList.includes(key)
@@ -53,6 +54,7 @@ export default function ITODetailTable (props){
         let itemName=e.target.name;
         switch(itemName){
             case "availableShift":
+                console.log("handleChange:availableShift:"+e.target.value);
                 updateObjectList({
                     type:"availableShift",
                     value:{
@@ -62,6 +64,7 @@ export default function ITODetailTable (props){
                 });
                 break;
             case "blackShiftPattern":
+                console.log("handleChange:blackShiftPattern:"+JSON.stringify(objectList.selectedITO.availableShiftList));
                 updateObjectList({
                     type:'blackShiftPattern',
                     value:{
@@ -94,8 +97,10 @@ export default function ITODetailTable (props){
 
     let handleSubmit=(e)=>{
         e.preventDefault();
+        console.log("Before validate:"+JSON.stringify(objectList.selectedITO));
         let validateResult=validate(objectList.selectedITO);
-        //console.log(validateResult);
+        
+        //console.log(validateResult);       
         if (Object.keys(validateResult).length>0){
             updateObjectList({
                 type:'updateError',
@@ -104,6 +109,8 @@ export default function ITODetailTable (props){
                 }
             });
         } else {
+            console.log("after validate:"+JSON.stringify(objectList.selectedITO));
+            /*
             let adminUtility = new AdminUtility(props.changeLoggedInFlag);
             adminUtility.saveITOInfoToDB(objectList.selectedITO)
             .then(updateResult=>{
@@ -117,6 +124,7 @@ export default function ITODetailTable (props){
             .catch(error=>{
                 alert(error.message);
             });
+            */
         }
     }
 
@@ -133,6 +141,7 @@ export default function ITODetailTable (props){
                 };
             case "availableShift":
                 let asList=[];
+                console.log("Before:"+state.selectedITO.availableShiftList);
                 if (action.value.checked){
                     asList=JSON.parse(JSON.stringify(state.selectedITO.availableShiftList));
                     asList.push(action.value.shiftType);
@@ -143,16 +152,20 @@ export default function ITODetailTable (props){
                         }
                     });
                 }
-                let temp2={...state};
+                console.log("After 0:"+asList);
+                let temp2={selectedITO:state.selectedITO};
                 temp2.selectedITO.availableShiftList=asList;
                 temp2.error=validate(temp2.selectedITO);
+                console.log("After 1:"+JSON.stringify(temp2.selectedITO.availableShiftList));
                 return temp2;
             case "blackShiftPattern":
                 let bsList=JSON.parse(JSON.stringify(state.selectedITO.blackListedShiftPatternList));
                 bsList[action.value.index]=action.value.blackShiftPattern;
+                console.log("reducer:blackShiftPattern:"+JSON.stringify(state.selectedITO.availableShiftList));
                 let temp3={...state};
                 temp3.selectedITO.blackListedShiftPatternList=bsList;
                 temp3.error=validate(temp3.selectedITO);
+                console.log("blackShiftPattern:temp3:"+JSON.stringify(state.selectedITO.availableShiftList));
                 return temp3;
             case 'initObjectList':
                 return action.value;
@@ -283,6 +296,9 @@ export default function ITODetailTable (props){
 		return result;
 	}
     const [objectList, updateObjectList] = useReducer(reducer);
+    if (objectList) {
+        console.log("Main:"+objectList.selectedITO.availableShiftList);
+    }
     return(
         <form 
             className="d-flex flex-column flex-grow-1 justify-content-center"

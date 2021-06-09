@@ -99,7 +99,7 @@ class DBO
 			);
 		}
 		this.saveITOInfoToDB=async(ito)=>{
-			//console.log(ito,moment(ito.joinDate).format('YYYY-MM-DD'));
+			console.log(ito,moment(ito.joinDate).format('YYYY-MM-DD'));
 			let sqlString="";
 			try{
 				await connection.promise().beginTransaction();
