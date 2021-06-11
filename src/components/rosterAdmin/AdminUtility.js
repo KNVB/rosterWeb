@@ -5,8 +5,12 @@ import Utility from '../../utils/Utility';
 export default class AdminUtility extends Roster{
     constructor(changeLoggedInFlag){
         super(changeLoggedInFlag);
-//        let privateAPIPath='/publicAPI';
-        let privateAPIPath='/privateAPI';
+        let privateAPIPath;
+        if (process.env.NODE_ENV==="development"){
+            privateAPIPath='/publicAPI';
+        } else {
+            privateAPIPath='/privateAPI';
+        }
         this.exportExcel=async(genExcelData)=>{
             try{
                 let result=await Utility.fetchAPI(privateAPIPath+'/exportExcel','POST',genExcelData);

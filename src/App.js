@@ -4,7 +4,7 @@ import RosterAdmin from './components/rosterAdmin/RosterAdmin';
 import RosterViewer from './components/rosterViewer/RosterViewer';
 import Viewer from './testing/xx/components/rosterViewer/RosterViewer';
 import Admin from './testing/xx/components/rosterAdmin/RosterAdmin';
-function App() {  
+function App() {
   return (
     <Router>
       <Switch>
