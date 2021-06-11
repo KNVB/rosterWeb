@@ -10,7 +10,7 @@ export default function ITODetailTable (props){
 
     let buildASOptionList=(availableShiftList)=>{
         let newASOptionList=[];
-        console.log("buildASOptionList="+JSON.stringify(availableShiftList));
+        //console.log("buildASOptionList="+JSON.stringify(availableShiftList));
         Object.keys(props.activeShiftInfoList).forEach(key=>{
             if ((key !== "essentialShift") &&(key !== "s")){
                 let checked =availableShiftList.includes(key)
@@ -54,7 +54,7 @@ export default function ITODetailTable (props){
         let itemName=e.target.name;
         switch(itemName){
             case "availableShift":
-                console.log("handleChange:availableShift:"+e.target.value);
+                //console.log("handleChange:availableShift:"+e.target.value);
                 updateObjectList({
                     type:"availableShift",
                     value:{
@@ -64,7 +64,7 @@ export default function ITODetailTable (props){
                 });
                 break;
             case "blackShiftPattern":
-                console.log("handleChange:blackShiftPattern:"+JSON.stringify(objectList.selectedITO.availableShiftList));
+                //console.log("handleChange:blackShiftPattern:"+JSON.stringify(objectList.selectedITO.availableShiftList));
                 updateObjectList({
                     type:'blackShiftPattern',
                     value:{
@@ -162,11 +162,11 @@ export default function ITODetailTable (props){
             case "blackShiftPattern":
                 let bsList=JSON.parse(JSON.stringify(state.selectedITO.blackListedShiftPatternList));
                 bsList[action.value.index]=action.value.blackShiftPattern;
-                console.log("reducer:blackShiftPattern:"+JSON.stringify(state.selectedITO.availableShiftList));
+                //console.log("reducer:blackShiftPattern:"+JSON.stringify(state.selectedITO.availableShiftList));
                 let temp3={...state};
                 temp3.selectedITO.blackListedShiftPatternList=bsList;
                 temp3.error=validate(temp3.selectedITO);
-                console.log("blackShiftPattern:temp3:"+JSON.stringify(state.selectedITO.availableShiftList));
+                //console.log("blackShiftPattern:temp3:"+JSON.stringify(state.selectedITO.availableShiftList));
                 return temp3;
             case 'initObjectList':
                 return action.value;
