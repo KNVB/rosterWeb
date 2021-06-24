@@ -81,7 +81,9 @@ export default function SmallStepSelector(props) {
   return (
     <div className="SmallStepSelector">
       {genPreviousMonth()}
-      <div className="active" onClick={toggleBigStepSelector}>{MonthPickerUtil.formatMonth(selectedMonth)}</div>
+      <div className="active" onClick={toggleBigStepSelector}>
+        {MonthPickerUtil.formatMonth(selectedMonth)}
+      </div>
       {genNextMonth()}
     </div>
   );
