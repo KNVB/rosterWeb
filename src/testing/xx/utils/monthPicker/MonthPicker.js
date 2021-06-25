@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
 import './MonthPicker.css';
+import { useRef,useState } from 'react';
 import BigStepSelector from './BigStepSelector';
 import SmallStepSelector from './SmallStepSelector';
+
 export default function MonthPicker(props) {
   let maxDate, minDate, now, selectedMonth;
   const obj = useRef();
@@ -33,38 +34,42 @@ export default function MonthPicker(props) {
   } else {
     minDate = new Date(now.getFullYear() - 100, now.getMonth(), 1);
   }
-  let [context, setContext] = useState({
-    isShowBigStepSelector: false,
-    maxDate: maxDate,
-    minDate: minDate,
-    selectedMonth: selectedMonth
+  const [context, updateContext] = useState({
+    isShowBigStepSelector:false,
+    maxDate:maxDate,
+    minDate:minDate,
+    selectedMonth:new Date(selectedMonth.getFullYear(),selectedMonth.getMonth(),1)
   });
-  let mouseDown = useCallback(e => {
-    if (context.isShowBigStepSelector && !obj.current.contains(e.target)) {
-      setContext({
-        ...context,
-        isShowBigStepSelector: false
-      });
-    }
-  },[context]);
-  useEffect(() => {
-    document.addEventListener('mousedown', mouseDown);
-    return () => {
-      document.removeEventListener('mousedown', mouseDown);
-    };
-  }, [mouseDown]);
-  useEffect(() => {
-    if (props.onChange) {
-      props.onChange(context.selectedMonth);
-    }
-  }, [context.selectedMonth]);
-  
+
+  let updateValue=(type,value)=>{
+    switch (type){
+      case "toggleBigStepSelectorContainer":
+        updateContext({
+          ...context,
+          isShowBigStepSelector:!context.isShowBigStepSelector
+        });
+        break;
+      case "updateSelectedMonth":
+        if (props.onChange) {
+          props.onChange(value);
+        }  
+        updateContext({
+          ...context,
+          isShowBigStepSelector:false,
+          selectedMonth:value
+        });
+        break;
+      default:
+        break;  
+    }    
+  }
   return (
-    <div ref={obj} className="MonthPickerContainer">
-      <SmallStepSelector context={context} setContext={setContext} />
-      {context.isShowBigStepSelector && (
-        <BigStepSelector context={context} setContext={setContext} />
-      )}
+    <div ref={obj} className="jpickerContainter">
+      <SmallStepSelector context={context} updateValue={updateValue}/>
+    {
+      context.isShowBigStepSelector && 
+      <BigStepSelector context={context} updateValue={updateValue}/>
+    }      
     </div>
   );
 }

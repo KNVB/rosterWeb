@@ -1,26 +1,67 @@
-.disabledBtn{
-  color:grey;
-}
-.changeBtn,
-.monthCell{
+.active,
+.activeMonth {
   cursor: pointer;
+  color: black;
 }
-.monthCell:hover{
-  background-color: white;
-  color:black;
-}
-.popup {
+.activeMonth:hover {
   background-color: black;
-  color:white;
-  font-size:20px;
-  font-family:Arial;
-  font-weight: bold;
-  position:absolute;
+  color: white;
+}
+.inActive {
+  color: rgb(207, 202, 202);
+}
+.monthPickerContainter{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1 ;  
+    justify-content: center;  
+  }
+.monthPickerSmallStepSelector{
+  display: flex;
+  justify-content: center;  
+}
+.monthPickerBigStepSelector {
+  background-color: white;
+  border-radius: 3%;
+  box-shadow: 0px 5px 5px grey;
+  font-family: 'Comic Sans MS';
+  font-size: 20px;
+  height: 200px;
+  position: absolute;
+  text-align: center;
+  width: 200px;
   z-index: 10;
 }
-.result{
-  font-family:'Times New Roman';
-  font-size:17px;
-  font-weight: bold;  
-  text-decoration: underline;
+.monthPickerBigStepSelector tfoot{
+  text-align: right;
+}
+.monthPickerBigStepSelector thead {
+  background-color: #f0f0f0;
+  border-bottom: 1px solid black;
+  width:100%;
+}
+.monthPickerBigStepSelectorContainer {
+  display: flex;
+  flex-grow: 1 1;
+  justify-content: center;  
+  position: relative;
+}
+.monthPickerSmallStepSelector {
+  align-items: center;
+  font-family: 'Times New Roman';
+  font-size: 17px;
+  font-weight: bold;
+  position: relative;
+  text-decoration: underline;   
+}
+.monthPickerValue{
+  border: 0px solid black;
+  cursor: pointer;
+  font-family: 'Times New Roman';
+  font-size: 17px;
+  font-weight: bold;
+  outline: none; 
+  text-align: center;
+  text-decoration: underline; 
+  width: fit-content;
 }

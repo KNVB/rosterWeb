@@ -1,20 +1,15 @@
-import MonthPickerUtil from './MonthPickerUtil';
-export default function BigStepSelectorBody(props) {
+import MonthPickerUtil from "./MonthPickerUtil";
+export default function BigStepSelectorBody(props){
   let context = props.context;
   let monthCellList = [];
   let monthRowList = [];
 
   let selectedMonth = context.selectedMonth;
-  let setContext = props.setContext;
   let firstDate, lastDate;
 
   let getMonth = month => {
     let newSelectedMonth = new Date(selectedMonth.getFullYear(), month, 1);
-    setContext({
-      ...context,
-      isShowBigStepSelector: false,
-      selectedMonth: newSelectedMonth
-    });
+    props.updateValue("updateSelectedMonth",newSelectedMonth);
   };
 
   for (let i = 0; i < 12; i++) {
