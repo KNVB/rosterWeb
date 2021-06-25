@@ -1,6 +1,7 @@
 import {Col,Container,Row} from 'react-bootstrap';
 import {useEffect,useState} from 'react';
-import MonthPicker from '../../utils/monthPicker/MonthPicker';
+import JPicker from '../../utils/jPicker/JPicker';
+//import MonthPicker from '../../utils/monthPicker/MonthPicker';
 import Roster from '../../utils/Roster';
 import RosterViewerTable from './RosterViewerTable';
 export default function RosterViewer(props){
@@ -32,12 +33,23 @@ export default function RosterViewer(props){
                 <Row>
                     <Col md={12} lg={12} sm={12} xl={12} xs={12}>
                         {
+                            systemParam && <JPicker
+                                minDate={systemParam.monthPickerMinDate}
+                                onChange={updateMonth} />
+                        }
+                    </Col>
+                </Row>                
+            {/*
+                <Row>
+                    <Col md={12} lg={12} sm={12} xl={12} xs={12}>
+                        {
                             systemParam && <MonthPicker
                                 minDate={systemParam.monthPickerMinDate}
                                 onChange={updateMonth} />
                         }
                     </Col>
                 </Row>
+            */}    
                 <Row>
                     <Col className="d-flex justify-content-center p-0" md={12} lg={12} sm={12} xl={12} xs={12}>
                        {systemParam && <RosterViewerTable  rosterMonth={rosterMonth} systemParam={systemParam}/>}
