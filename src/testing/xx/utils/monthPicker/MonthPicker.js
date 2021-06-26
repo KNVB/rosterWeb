@@ -1,5 +1,5 @@
 import './MonthPicker.css';
-import { useRef,useState } from 'react';
+import { useCallback, useEffect,useRef,useState } from 'react';
 import BigStepSelector from './BigStepSelector';
 import SmallStepSelector from './SmallStepSelector';
 
@@ -40,7 +40,6 @@ export default function MonthPicker(props) {
     minDate:minDate,
     selectedMonth:new Date(selectedMonth.getFullYear(),selectedMonth.getMonth(),1)
   });
-
   let updateValue=(type,value)=>{
     switch (type){
       case "toggleBigStepSelectorContainer":
@@ -63,6 +62,19 @@ export default function MonthPicker(props) {
         break;  
     }    
   }
+  let mouseDown=useCallback(e=>{
+    if (context.isShowBigStepSelector && !obj.current.contains(e.target)){
+      updateContext({
+        ...context,
+        isShowBigStepSelector:false});
+    }
+  },[context,updateContext]);
+  useEffect(()=>{
+    document.addEventListener('mousedown',mouseDown);
+    return () => {
+        document.removeEventListener('mousedown', mouseDown)
+    }
+},[mouseDown]);  
   return (
     <div ref={obj} className="jpickerContainter">
       <SmallStepSelector context={context} updateValue={updateValue}/>
