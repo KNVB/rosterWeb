@@ -26,11 +26,12 @@
   box-shadow: 0px 5px 5px grey;
   font-family: 'Comic Sans MS';
   font-size: 20px;
-  height: 200px;
   position: absolute;
   text-align: center;
-  width: 200px;
   z-index: 10;
+}
+.monthPickerBigStepSelector > tbody > tr >td{
+  padding: 5px;
 }
 .monthPickerBigStepSelector tfoot{
   text-align: right;
