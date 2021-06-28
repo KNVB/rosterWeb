@@ -34,7 +34,7 @@ export default function RosterScheduler(props){
                         {
                             systemParam && <MonthPicker
                                 minDate={systemParam.monthPickerMinDate}
-                                onSelect={updateMonth} />
+                                onChange={updateMonth} />
                         }
                     </Col>
                 </Row>

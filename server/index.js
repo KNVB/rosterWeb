@@ -54,6 +54,7 @@ if (process.env.NODE_ENV==="development"){
   publicAPIRouter.post('/getAllITOList',privateAPI.getAllITOList);
   publicAPIRouter.post('/getRosterSchedulerList',privateAPI.getRosterSchedulerList);
   publicAPIRouter.post('/getYearlyRosterStatistic',privateAPI.getYearlyRosterStatistic);
+  publicAPIRouter.post('/logout',privateAPI.logout);
   publicAPIRouter.post('/saveITOInfoToDB',privateAPI.saveITOInfoToDB);
   publicAPIRouter.post('/saveRosterToDB',privateAPI.saveRosterToDB);
 }
