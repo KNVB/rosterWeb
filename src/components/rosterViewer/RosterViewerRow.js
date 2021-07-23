@@ -2,7 +2,6 @@ import {useContext,useState} from 'react';
 import BorderedCell from '../cell/BorderedCell';
 import BorderedAlignCenterCell from '../cell/BorderedAlignCenterCell';
 import NameCell from '../cell/NameCell';
-import Parser from "html-react-parser";
 import RosterWebContext from '../../utils/RosterWebContext';
 import ShiftCell from '../cell/ShiftCell';
 export default function RosterViewerRow(props){
@@ -10,7 +9,7 @@ export default function RosterViewerRow(props){
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let cellList=[],nameCellCssClass="";
     let itoRoster=contextValue.itoRosterList[props.itoId];
-    let itoNameContact = Parser(itoRoster.itoName+ "<br>" + itoRoster.itoPostName + " Extn. 2458");
+    let itoNameContact = <span>{itoRoster.itoName}<br/>{itoRoster.itoPostName} Extn. 2458</span>;
     for (let i=0;i<contextValue.monthlyCalendar.calendarDateList.length;i++){
         cellList.push(
             <ShiftCell 

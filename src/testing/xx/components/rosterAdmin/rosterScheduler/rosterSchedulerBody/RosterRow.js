@@ -3,7 +3,6 @@ import BorderedCell from '../../../cell/BorderedCell';
 import BorderedAlignCenterCell from '../../../cell/BorderedAlignCenterCell';
 import EditableShiftCell from '../cell/EditableShiftCell';
 import NameCell from '../../../cell/NameCell';
-import Parser from "html-react-parser";
 import RosterWebContext from '../../../../utils/RosterWebContext';
 import ShiftCell from '../../../cell/ShiftCell';
 export default function RosterRow(props){
@@ -12,7 +11,7 @@ export default function RosterRow(props){
     let [contextValue]=useContext(RosterWebContext);
     let itoRoster=contextValue.itoRosterList.presentValue[props.itoId];
     let previousMonthShift=contextValue.previousMonthShiftList[props.itoId];
-    let itoNameContact = Parser(itoRoster.itoName+ "<br>" + itoRoster.itoPostName + " Extn. 2458");
+    let itoNameContact = <span>{itoRoster.itoName}<br/>{itoRoster.itoPostName} Extn. 2458</span>;
     if (previousMonthShift){
         for(let i=contextValue.systemParam.maxConsecutiveWorkingDay-contextValue.systemParam.noOfPrevDate;i<previousMonthShift.length;i++){
             cellList.push(
