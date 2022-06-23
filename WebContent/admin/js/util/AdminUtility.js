@@ -70,10 +70,10 @@ class AdminUtility  extends Utility
 						jsITO.postName=ito.postName;
 						jsITO.workingHourPerDay=ito.workingHourPerDay;
 						jsITO.availableShiftList=ito.availableShiftList;
-						jsITO.blackListShiftPatternList=ito.blackListedShiftPatternList;
-
-						jsITO.joinDate=new Date(ito.joinDate.year,ito.joinDate.monthValue-1,ito.joinDate.dayOfMonth);
-						jsITO.leaveDate=new Date(ito.leaveDate.year,ito.leaveDate.monthValue-1,ito.leaveDate.dayOfMonth);	
+						jsITO.blackListShiftPatternList=ito.blackListedShiftPatternList;						
+						
+						jsITO.joinDate=new Date(ito.joinDate[0],ito.joinDate[1]-1,ito.joinDate[2]);
+						jsITO.leaveDate=new Date(ito.leaveDate[0],ito.leaveDate[1]-1,ito.leaveDate[2]);	
 						jsITOList[itoId]=jsITO;
 					}
 					resolve(jsITOList);
