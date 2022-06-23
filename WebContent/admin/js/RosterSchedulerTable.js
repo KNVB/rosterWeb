@@ -1263,7 +1263,7 @@ class RosterSchedulerTable extends RosterTable
 				}
 				else	
 				{
-					$(cell).addClass(AdminCSs.errorRedBlackGroundClassName);
+					$(cell).addClass(AdminCss.errorRedBlackGroundClassName);
 					result=true;
 				}	
 			}	
