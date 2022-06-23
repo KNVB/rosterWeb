@@ -1,7 +1,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper"%>
-
+<%@ page import="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"%>
 <%@ page import="com.rosterWeb.ITO"%>
 <%@ page import="com.rosterWeb.ITORoster"%>
 <%@ page import="com.rosterWeb.Roster"%>
@@ -13,5 +13,6 @@ int rosterYear=Integer.parseInt(request.getParameter("year"));
 int rosterMonth=Integer.parseInt(request.getParameter("month"));
 ITO ito=new ITO();
 Map<String,ITO> itoList=ito.getITOList(rosterYear,rosterMonth);
+objectMapper.registerModule(new JavaTimeModule());
 out.println(objectMapper.writeValueAsString(itoList));
 %>
