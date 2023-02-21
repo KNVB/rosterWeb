@@ -21,7 +21,7 @@
 	color:white;
 }
 .nameCell{
-    font-size: 17px;
+    font-size: 15px;
     width:200px
 }
 .phCell
@@ -29,6 +29,9 @@
 	color:#ff0000;
 	font-size:17px;
 	font-weight: bold;
+}
+.rosterTable{
+	font-family: "Times New Roman", Times, serif;
 }
 .shiftCell{
 	padding: 0px;
