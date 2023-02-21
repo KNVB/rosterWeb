@@ -5,6 +5,7 @@ import HeaderRows from "../rows/HeaderRows";
 import RosterViewerBody from "./RosterViewerBody";
 export default function RosterViewer() {
     const [objectList, updateHighLightCellIndex, updateRosterMonth] = useRosterViewer();
+    document.title = "EMSTF Resident Support & Computer Operation Support Services Team Roster";
     let updateMonth = (newRosterMonth) => {
         updateRosterMonth(newRosterMonth);
     }
