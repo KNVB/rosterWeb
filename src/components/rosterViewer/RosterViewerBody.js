@@ -8,10 +8,8 @@ export default function RosterViewerBody({
 }) {
   let rowList = [];
   let itoIdList = Object.keys(rosterList);
-  let {getITOStat}=ITOShiftStatUtil();
   itoIdList.forEach((itoId,i)=>{
     let rosterInfo = rosterList[itoId];
-    rosterInfo=getITOStat(activeShiftList,monthlyCalendar.noOfWorkingDay,rosterInfo);
     rowList.push(
       <RosterViewerRow
         activeShiftList={activeShiftList}
