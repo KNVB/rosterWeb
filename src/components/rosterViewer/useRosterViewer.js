@@ -1,16 +1,18 @@
 import { useEffect, useReducer } from 'react';
 import CalendarUtility from '../../util/calendar/CalendarUtility.js';
+import ITOShiftStatUtil from '../../util/ITOShiftStatUtil';
 import RosterUtil from '../../util/RosterUtil.js';
+import ShiftUtil from '../../util/ShiftUtil.js';
+import SystemUtil from '../../util/SystemUtil.js';
 let reducer = (state, action) => {
   let result = { ...state };
   switch (action.type) {
     case "init":
       result.isLoading = false;
-      result.monthlyCalendar = result.calendarUtility.getMonthlyCalendar(result.rosterMonth.getFullYear(), result.rosterMonth.getMonth());
-      result.rosterList = action.data.rosterList;
-      result.systemParam = { "noOfPrevDate": 0 };
-      result.activeShiftList = action.data.activeShiftList;
-      result.systemParam.monthPickerMinDate = new Date(action.data.systemParam.monthPickerMinDate.year, action.data.systemParam.monthPickerMinDate.month - 1, action.data.systemParam.monthPickerMinDate.date)
+      result.monthlyCalendar = action.monthlyCalendar;
+      result.rosterList = action.rosterList;
+      result.systemParam = action.systemParam;
+      result.activeShiftList = action.activeShiftList;
       break;
     case "setError":
       result.error = action.error;
@@ -35,12 +37,26 @@ let reducer = (state, action) => {
 }
 export function useRosterViewer() {
   const [itemList, updateItemList] = useReducer(reducer, {
+    activeShiftList: null,
     "calendarUtility": new CalendarUtility(),
     error: null,
     highLightCellIndex: -1,
     isLoading: true,
-    rosterMonth: new Date()
+    monthlyCalendar: null,
+    rosterList: null,
+    rosterMonth: new Date(),
+    systemParam: null,
   });
+  let genITOStat = (activeShiftList, monthlyCalendar, rosterList) => {
+    let result = {};
+    let { getITOStat } = ITOShiftStatUtil();
+    let itoIdList = Object.keys(rosterList);
+    itoIdList.forEach((itoId, i) => {
+      let rosterInfo = getITOStat(activeShiftList, monthlyCalendar.noOfWorkingDay, rosterList[itoId]);
+      result[itoId] = rosterInfo;
+    })
+    return result;
+  }
   let updateHighLightCellIndex = cellIndex => {
     updateItemList({ type: "updateHighLightCellIndex", value: cellIndex });
   }
@@ -56,11 +72,22 @@ export function useRosterViewer() {
   };
   useEffect(() => {
     let rosterUtil = new RosterUtil();
+    let shiftUtil = new ShiftUtil();
+    let systemUtil = new SystemUtil();
     let getData = async () => {
       try {
-        let data = await rosterUtil.getRosterViewerData(itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth() + 1);
-        updateItemList({ data: data, type: "init" });
+        let activeShiftList = await shiftUtil.getActiveShiftList();
+        let rosterList = await rosterUtil.getRosterList(itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth() + 1);
+        let systemParam = await systemUtil.getSystemParam();
+        systemParam["noOfPrevDate"] = 0;
+        systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
+        let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth());
+
+        rosterList = genITOStat(activeShiftList, monthlyCalendar, rosterList);
+
+        updateItemList({ activeShiftList: activeShiftList, monthlyCalendar: monthlyCalendar, rosterList: rosterList, systemParam: systemParam, type: "init" });
       } catch (error) {
+        console.log(error);
         updateItemList({ "error": error, "type": "setError" });
       }
     }

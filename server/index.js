@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === "production") {
 console.log(process.env.NODE_ENV+" Mode");
 console.log("DB server name="+process.env.DATABASE_HOST);
 let systemParam=new SystemParam();
-app.use("/rosterWeb/privateAPI",adminUtil.isAuthenticated, PrivateAPI);
+app.use("/rosterWeb/privateAPI",adminUtil.isAuthenticated, PrivateAPI(systemParam));
 app.use('/rosterWeb/publicAPI', PublicAPI(adminUtil,systemParam));
 httpServer.listen(process.env.REACT_APP_SOCKET_PORT, () => {
     console.log('Express server is running on localhost:' + process.env.REACT_APP_SOCKET_PORT);

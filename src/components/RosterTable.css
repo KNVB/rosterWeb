@@ -49,6 +49,9 @@
 	font-weight: 100;
 	font-family: sans-serif;
 }
+.vacantShiftLabel {
+    color: #ff6600; 
+}
 /*******************************************************************************************************
  *                                                                                                     *
  *    Shift color style                                                                                *

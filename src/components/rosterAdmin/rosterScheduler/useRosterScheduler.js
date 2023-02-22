@@ -1,20 +1,14 @@
 import { useEffect, useReducer } from 'react';
+import AdminShiftStatUtil from './util/AdminShiftStatUtil.js';
 import CalendarUtility from '../../../util/calendar/CalendarUtility.js';
+import ITOShiftStatUtil from '../../../util/ITOShiftStatUtil';
 import RosterUtil from '../../../util/RosterUtil.js';
 let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
         case "init":
-            console.log(action.data.systemParam);
+            //console.log(action.data.systemParam);
             result.isLoading = false;
-            result.monthlyCalendar = result.calendarUtility.getMonthlyCalendar(result.rosterMonth.getFullYear(), result.rosterMonth.getMonth());
-            result.rosterList = action.data.rosterList;
-            result.systemParam = {
-                maxConsecutiveWorkingDay: action.data.maxConsecutiveWorkingDay,
-                monthPickerMinDate: new Date(action.data.systemParam.monthPickerMinDate.year, action.data.systemParam.monthPickerMinDate.month - 1, action.data.systemParam.monthPickerMinDate.date),
-                noOfPrevDate: action.data.systemParam.noOfPrevDate
-            }
-            result.activeShiftList = action.data.activeShiftList;
             break;
         case "setError":
             result.error = action.error;
@@ -23,14 +17,6 @@ let reducer = (state, action) => {
             result.highLightCellIndex = action.value;
             break;
         case 'updateRosterMonth':
-            let monthlyCalendar = result.calendarUtility.getMonthlyCalendar(
-                action.newRosterMonth.getFullYear(),
-                action.newRosterMonth.getMonth()
-            );
-            result.activeShiftList = action.data.activeShiftList;
-            result.rosterList = action.data.rosterList;
-            result.monthlyCalendar = monthlyCalendar;
-            result.rosterMonth = action.newRosterMonth;
             break
         default:
             break;
@@ -50,8 +36,9 @@ export function useRosterScheduler() {
     }
     let updateRosterMonth = async (newRosterMonth) => {
         let rosterUtil = new RosterUtil();
+            
         try {
-            let data = await rosterUtil.getRosterViewerData(newRosterMonth.getFullYear(), newRosterMonth.getMonth() + 1);
+            let data = await rosterUtil.getRosterSchedulerData(newRosterMonth.getFullYear(), newRosterMonth.getMonth() + 1);            
             updateItemList({ "data": data, newRosterMonth: newRosterMonth, type: 'updateRosterMonth' });
         } catch (error) {
             updateItemList({ "error": error, "type": "setError" });
@@ -59,9 +46,12 @@ export function useRosterScheduler() {
     };
     useEffect(() => {
         let rosterUtil = new RosterUtil();
+        let {getAllITOStat}=AdminShiftStatUtil();
+        let {getITOStat}=ITOShiftStatUtil();
         let getData = async () => {
             try {
-                let data = await rosterUtil.getRosterViewerData(itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth() + 1);
+                let data = await rosterUtil.getRosterSchedulerData(itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth() + 1);
+                
                 updateItemList({ data: data, type: "init" });
             } catch (error) {
                 updateItemList({ "error": error, "type": "setError" });

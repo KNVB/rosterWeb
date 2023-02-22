@@ -1,8 +1,14 @@
 import axios from "axios";
 export default class FetchAPI {
     constructor() {
-        this.getRosterViewerData=async (year,month)=>{
-            return (await fetch({year:year,month:month}, "get", "/rosterWeb/publicAPI/getRosterViewerData"));
+        this.getActiveShiftList=async ()=>{
+            return (await fetch(null, "get", "/rosterWeb/publicAPI/getActiveShiftList"));
+        }
+        this.getRosterList=async (year,month)=>{
+            return (await fetch({year:year,month:month}, "get", "/rosterWeb/publicAPI/getRosterList"));
+        }
+        this.getSystemParam=async ()=>{
+            return (await fetch(null, "get", "/rosterWeb/publicAPI/getSystemParam"));
         }
         //================================================================================================================
         let fetch = async (data, method, url, responseType, header) => {                            
