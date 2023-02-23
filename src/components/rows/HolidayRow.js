@@ -16,7 +16,7 @@ export default function HolidayRow({ calendarDateList, noOfPrevDate }) {
       <HolidayCell key={'holiday_' + i}></HolidayCell>
     );
   }
-  console.log('HolidayRow is rendered.');
+  //console.log('HolidayRow is rendered.');
   let prevHolidayList = [];
   for (let i = 0; i < noOfPrevDate; i++) {
     prevHolidayList.push(<HolidayCell key={"prevHoliday_" + i} />);

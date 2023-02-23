@@ -18,7 +18,7 @@ export default function DayRow({ calendarDateList, calendarUtility,noOfPrevDate 
   for (let i = 0; i < noOfPrevDate; i++) {
     prevDayList.push(<DayCell key={"prevDay_" + i} />);
   }
-  console.log('DayRow is rendered.');
+  //console.log('DayRow is rendered.');
   return (
     <tr>
       <NameCell border>Days</NameCell>

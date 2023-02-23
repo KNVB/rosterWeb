@@ -1,77 +1,44 @@
 export default function AdminShiftStatUtil(){
     const getAllITOStat = (activeShiftInfoList, startDate,endDate,inITORosterList)=>{
-        let allITOStat; 
-        let aShiftCount = [],    bxShiftCount = [],    cShiftCount = [];       
-        let duplicatShiftList={};
-        let itoId;
-        let itoIdList=Object.keys(inITORosterList); 
+        let allITOStat={};
+        let aShiftCount = [],    bxShiftCount = [],    cShiftCount = [];
         let shiftType,vacantShift,temp,vacantShiftList={};
-        Object.keys(inITORosterList).forEach(itoId=>{
-            duplicatShiftList[itoId]=[];
-        })
+        let itoIdList=Object.keys(inITORosterList); 
         for (let i=startDate;i<=endDate;i++){
             vacantShift = activeShiftInfoList.essentialShift;
             temp=[];
-            for (let y=0;y<itoIdList.length;y++){
-                itoId=itoIdList[y];                
-                if (inITORosterList[itoId].shiftList[i]){
-                    let shiftTypeList = inITORosterList[itoId].shiftList[i].split("+");
-                    for (let j=0;j<shiftTypeList.length;j++){
-                        shiftType=shiftTypeList[j];
-                        if (inITORosterList[itoId].availableShiftList.includes(shiftType)){
-                            if (shiftType === "b1") {
-                                vacantShift = vacantShift.replace("b", "");
-                            } else {
-                                vacantShift = vacantShift.replace(shiftType, "");
-                            }
-                            switch (shiftType){
-                                case "a" :                 
-                                case "c" :if (temp.includes(shiftType)){
-                                            duplicatShiftList[itoId].push(i);
-                                          } else {
-                                            temp.push(shiftType);
-                                          }
-                                          break;
-                                case "b" :
-                                case "b1":if (temp.includes("b")){
-                                            duplicatShiftList[itoId].push(i);
-                                          }else {
-                                            temp.push('b');
-                                          }
-                                          break;      
-                                default:break;          
-                            }
-                        }
+            itoIdList.forEach((itoId,index)=>{
+                let itoRoster=inITORosterList[itoId];
+                let shiftTypeList = itoRoster.shiftList[i].split("+");
+                shiftTypeList.forEach(shiftType=>{
+                    if (shiftType === "b1") {
+                        vacantShift = vacantShift.replace("b", "");
+                    } else {
+                        vacantShift = vacantShift.replace(shiftType, "");
                     }
-                }
-                aShiftCount.push(inITORosterList[itoId].shiftCountList.aShiftCount);
-                bxShiftCount.push(inITORosterList[itoId].shiftCountList.bxShiftCount);
-                cShiftCount.push(inITORosterList[itoId].shiftCountList.cShiftCount);
-            }
+                });
+            });
             if (vacantShift!==''){
                 vacantShiftList[i]=vacantShift;
-            }            
+            }
         }
+        itoIdList.forEach((itoId,index)=>{
+            aShiftCount.push(inITORosterList[itoId].shiftCountList.aShiftCount);
+            bxShiftCount.push(inITORosterList[itoId].shiftCountList.bxShiftCount);
+            cShiftCount.push(inITORosterList[itoId].shiftCountList.cShiftCount);
+        });        
+        
         let aShiftSD=calculateStdDev(aShiftCount);
         let bShiftSD=calculateStdDev(bxShiftCount);
         let cShiftSD=calculateStdDev(cShiftCount);
         let avgStdDev=(aShiftSD+bShiftSD+cShiftSD)/3;
-
-        /*
-        console.log(aShiftSD);
-        console.log(bShiftSD);
-        console.log(cShiftSD);
-        console.log(avgStdDev);
-        */
-       
         allITOStat={
             aShiftStdDev:aShiftSD.toFixed(2),
             bxShiftStdDev:bShiftSD.toFixed(2),
-            cShiftStdDev:cShiftSD.toFixed(2),
-            duplicatShiftList:duplicatShiftList,
+            cShiftStdDev:cShiftSD.toFixed(2),            
             avgStdDev:avgStdDev.toFixed(2),
             vacantShiftList:vacantShiftList
-        }
+        }        
         return allITOStat
     }
     const calculateMean=(data)=>{

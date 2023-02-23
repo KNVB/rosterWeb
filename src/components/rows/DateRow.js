@@ -17,7 +17,7 @@ export default function DateRow({ calendarDateList, highLightCellIndex,noOfPrevD
   for (let i = 0; i < noOfPrevDate; i++) {
     prevDateList.push(<DateCell key={"prevDate_" + i} />);
   }
-  console.log('DateRow is rendered.');
+  //console.log('DateRow is rendered.');
   return (
     <tr>
       <NameCell border>

@@ -8,12 +8,13 @@ export default function EditableRosterRow({
     itoId,
     rosterInfo,
     systemParam,
-    updateHighLightCellIndex
+    updateHighLightCellIndex,
+    updateShift
 }) {
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let shiftCellList = [];
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
-        let className = activeShiftList[rosterInfo.previousMonthShiftList[i]].cssClassName;        
+        let className = activeShiftList[rosterInfo.previousMonthShiftList[i]].cssClassName;
         shiftCellList.push(
             <ShiftCell
                 cssClassName={className}
@@ -22,7 +23,7 @@ export default function EditableRosterRow({
     }
     calendarDateList.forEach((calendarDate, i) => {
         let className = '';
-        if (rosterInfo.shiftList[i + 1]) {
+        if (activeShiftList[rosterInfo.shiftList[i + 1]] !== undefined) {
             className = activeShiftList[rosterInfo.shiftList[i + 1]].cssClassName;
         }
         shiftCellList.push(
@@ -32,6 +33,7 @@ export default function EditableRosterRow({
                 key={itoId + '_' + i}
                 setIsHighLightRow={setIsHighLightRow}
                 updateHighLightCellIndex={updateHighLightCellIndex}
+                onBlur={(e) => { updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}
                 shift={rosterInfo.shiftList[i + 1]} />)
     });
     for (let i = calendarDateList.length; i < 31; i++) {

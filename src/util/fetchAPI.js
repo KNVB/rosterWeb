@@ -4,6 +4,12 @@ export default class FetchAPI {
         this.getActiveShiftList=async ()=>{
             return (await fetch(null, "get", "/rosterWeb/publicAPI/getActiveShiftList"));
         }
+        this.getPreferredShiftList=async (year,month)=>{
+            return (await fetch({year:year,month:month}, "get", "/rosterWeb/privateAPI/getPreferredShiftList"));
+        }
+        this.getPreviousMonthShiftList=async (year, month)=>{
+            return (await fetch({year:year,month:month}, "get", "/rosterWeb/privateAPI/getPreviousMonthShiftList"));
+        }
         this.getRosterList=async (year,month)=>{
             return (await fetch({year:year,month:month}, "get", "/rosterWeb/publicAPI/getRosterList"));
         }

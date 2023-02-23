@@ -4,13 +4,41 @@ import ITOShiftStatUtil from './ITOShiftStatUtil';
 export default class RosterUtil {
     constructor() {
         let fetchAPI = new FetchAPI();
-        this.getRosterList =async (activeShiftList,noOfWorkingDay,year, month) => {
-            let results=await fetchAPI.getRosterList(year, month);
+        this.getPreferredShiftList = async (year, month) => {
+            return await fetchAPI.getPreferredShiftList(year, month);
+        }
+        this.getPreviousMonthShiftList = async (year, month) => {
+            return await fetchAPI.getPreviousMonthShiftList(year, month);
+        }
+        this.getRosterListForScheduler = async (activeShiftList, noOfWorkingDay, year, month) => {
+            let preferredShiftList = await fetchAPI.getPreferredShiftList(year, month);
+            let previousMonthShiftList = await fetchAPI.getPreviousMonthShiftList(year, month);
+            let rosterList = await getRosterListForViewer(activeShiftList, noOfWorkingDay, year, month);
+            previousMonthShiftList.forEach(previousMonthShift=>{
+                if (rosterList[previousMonthShift.ito_id].previousMonthShiftList === undefined) {
+                    rosterList[previousMonthShift.ito_id].previousMonthShiftList = [];
+                }
+                rosterList[previousMonthShift.ito_id].previousMonthShiftList.push(previousMonthShift.shift);
+            });
+            preferredShiftList.forEach(preferredShift => {
+                if (rosterList[preferredShift.ito_id].preferredShiftList === undefined) {
+                    rosterList[preferredShift.ito_id].preferredShiftList = {};
+                }
+                rosterList[preferredShift.ito_id].preferredShiftList[preferredShift.d] = preferredShift.preferred_shift;
+            })
+            return rosterList;
+        }
+        this.getRosterListForViewer = async (activeShiftList, noOfWorkingDay, year, month) => {
+            return await getRosterListForViewer(activeShiftList, noOfWorkingDay, year, month);
+        }
+        //==============================================================================================================================================================================
+        let getRosterListForViewer = async (activeShiftList, noOfWorkingDay, year, month) => {
+            let results = await fetchAPI.getRosterList(year, month);
             let { getITOStat } = ITOShiftStatUtil();
             let itoIdList = Object.keys(results);
             itoIdList.forEach((itoId, i) => {
-              let rosterInfo = getITOStat(activeShiftList,noOfWorkingDay, results[itoId]);              
-              results[itoId] = rosterInfo;
+                let rosterInfo = getITOStat(activeShiftList, noOfWorkingDay, results[itoId]);
+                results[itoId] = rosterInfo;
             })
             return results;
         }

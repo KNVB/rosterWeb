@@ -8,7 +8,8 @@ export default function PreferredShiftRow({
     itoId,
     rosterInfo,
     systemParam,
-    updateHighLightCellIndex }) {
+    updateHighLightCellIndex,
+    updatePreferredShift }) {
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let shiftCellList = [];
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
@@ -21,6 +22,7 @@ export default function PreferredShiftRow({
                 editable
                 key={"preferred_" + itoId + '_' + i}
                 setIsHighLightRow={setIsHighLightRow}
+                onBlur={(e) => { updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}
                 updateHighLightCellIndex={updateHighLightCellIndex}
                 shift={preferredShift} />
         )

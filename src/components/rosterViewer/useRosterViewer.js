@@ -7,11 +7,11 @@ let reducer = (state, action) => {
   let result = { ...state };
   switch (action.type) {
     case "init":
+      result.activeShiftList = action.activeShiftList;
       result.isLoading = false;
       result.monthlyCalendar = action.monthlyCalendar;
       result.rosterList = action.rosterList;
-      result.systemParam = action.systemParam;
-      result.activeShiftList = action.activeShiftList;
+      result.systemParam = action.systemParam;      
       break;
     case "setError":
       result.error = action.error;
@@ -49,7 +49,7 @@ export function useRosterViewer() {
     let rosterUtil = new RosterUtil();
     try {
       let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(newRosterMonth.getFullYear(), newRosterMonth.getMonth());
-      let rosterList = await rosterUtil.getRosterList(itemList.activeShiftList, monthlyCalendar.noOfWorkingDay, newRosterMonth.getFullYear(), newRosterMonth.getMonth() + 1);
+      let rosterList = await rosterUtil.getRosterListForViewer(itemList.activeShiftList, monthlyCalendar.noOfWorkingDay, newRosterMonth.getFullYear(), newRosterMonth.getMonth() + 1);
       updateItemList({ 
         monthlyCalendar,
         newRosterMonth,
@@ -71,7 +71,7 @@ export function useRosterViewer() {
         systemParam["noOfPrevDate"] = 0;
         systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
         let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth());
-        let rosterList = await rosterUtil.getRosterList(activeShiftList, monthlyCalendar.noOfWorkingDay, itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth() + 1);
+        let rosterList = await rosterUtil.getRosterListForViewer(activeShiftList, monthlyCalendar.noOfWorkingDay, itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth() + 1);
 
         updateItemList({ 
           activeShiftList,
