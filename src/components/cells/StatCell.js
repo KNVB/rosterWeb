@@ -1,6 +1,6 @@
 export default function StatCell(props) {
     return (
-        <td className="statCell border text-center"
+        <td className="borderCell statCell text-center"
             colSpan={props.colSpan}
             contentEditable={props.editable}
             onBlur={props.onBlur}

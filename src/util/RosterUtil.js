@@ -14,16 +14,15 @@ export default class RosterUtil {
             let preferredShiftList = await fetchAPI.getPreferredShiftList(year, month);
             let previousMonthShiftList = await fetchAPI.getPreviousMonthShiftList(year, month);
             let rosterList = await getRosterListForViewer(activeShiftList, noOfWorkingDay, year, month);
+            let itoIdList=Object.keys(rosterList); 
+            itoIdList.forEach(itoId=>{
+                rosterList[itoId].previousMonthShiftList=[];
+                rosterList[itoId].preferredShiftList={};
+            });
             previousMonthShiftList.forEach(previousMonthShift=>{
-                if (rosterList[previousMonthShift.ito_id].previousMonthShiftList === undefined) {
-                    rosterList[previousMonthShift.ito_id].previousMonthShiftList = [];
-                }
                 rosterList[previousMonthShift.ito_id].previousMonthShiftList.push(previousMonthShift.shift);
             });
             preferredShiftList.forEach(preferredShift => {
-                if (rosterList[preferredShift.ito_id].preferredShiftList === undefined) {
-                    rosterList[preferredShift.ito_id].preferredShiftList = {};
-                }
                 rosterList[preferredShift.ito_id].preferredShiftList[preferredShift.d] = preferredShift.preferred_shift;
             })
             return rosterList;

@@ -20,6 +20,7 @@ export default function RosterSchedulerBody({
         rowList.push(
             <EditableRosterRow
                 activeShiftList={activeShiftList}
+                allITOStat={allITOStat}
                 calendarDateList={monthlyCalendar.calendarDateList}
                 itoId={itoIdList[i]}
                 key={"rosterRow_" + itoIdList[i]}

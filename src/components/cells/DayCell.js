@@ -12,7 +12,7 @@ export default function DayCell({ calendarDate, calendarUtility }) {
         textContent = calendarUtility.weekdayNames[calendarDate.dayOfWeek]
     }
     return (
-        <td className={"border dayCell text-center" + (isPH ? " phCell" : "")}>
+        <td className={"borderCell dayCell text-center" + (isPH ? " phCell" : "")}>
             {textContent}
         </td>
     )

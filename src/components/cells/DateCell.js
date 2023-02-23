@@ -10,7 +10,7 @@ export default function DateCell({ calendarDate, highLightCellIndex, index }) {
         textContent = calendarDate.dateOfMonth;
     }
     return (
-        <td className={"border dateCell text-center" + (isHighLight ? " highlightCell" : "") + (isToday ? " todayCell" : "")}>
+        <td className={"borderCell dateCell text-center" + (isHighLight ? " highlightCell" : "") + (isToday ? " todayCell" : "")}>
             {textContent}
         </td>
     )

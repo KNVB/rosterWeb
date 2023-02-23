@@ -4,6 +4,7 @@ import ShiftCell from '../../cells/ShiftCell';
 import StatCell from '../../cells/StatCell';
 export default function EditableRosterRow({
     activeShiftList,
+    allITOStat,
     calendarDateList,
     itoId,
     rosterInfo,
@@ -14,27 +15,37 @@ export default function EditableRosterRow({
     const [isHighLightRow, setIsHighLightRow] = useState(false);
     let shiftCellList = [];
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
-        let className = activeShiftList[rosterInfo.previousMonthShiftList[i]].cssClassName;
+        let className = '';
+        let shift='';      
+        if (rosterInfo.previousMonthShiftList[i] !== undefined){
+            className = activeShiftList[rosterInfo.previousMonthShiftList[i]].cssClassName;
+            shift=rosterInfo.previousMonthShiftList[i];
+        }
         shiftCellList.push(
             <ShiftCell
                 cssClassName={className}
                 key={"prev-" + i}
-                shift={rosterInfo.previousMonthShiftList[i]} />)
+                shift={shift} />)
     }
+    
     calendarDateList.forEach((calendarDate, i) => {
         let className = '';
-        if (activeShiftList[rosterInfo.shiftList[i + 1]] !== undefined) {
-            className = activeShiftList[rosterInfo.shiftList[i + 1]].cssClassName;
+        if (allITOStat.duplicatShiftList[itoId].includes(calendarDate.dateOfMonth)){
+            className+=" errorRedBlackGround";
+        } else {
+            if (activeShiftList[rosterInfo.shiftList[i + 1]] !== undefined) {
+                className+=" "+activeShiftList[rosterInfo.shiftList[i + 1]].cssClassName;
+            }
         }
         shiftCellList.push(
             <ShiftCell
                 cssClassName={className}
                 editable
                 key={itoId + '_' + i}
-                setIsHighLightRow={setIsHighLightRow}
-                updateHighLightCellIndex={updateHighLightCellIndex}
                 onBlur={(e) => { updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}
-                shift={rosterInfo.shiftList[i + 1]} />)
+                setIsHighLightRow={setIsHighLightRow}
+                shift={rosterInfo.shiftList[i + 1]}
+                updateHighLightCellIndex={updateHighLightCellIndex}/>)
     });
     for (let i = calendarDateList.length; i < 31; i++) {
         shiftCellList.push(<ShiftCell key={itoId + '_' + i} />)

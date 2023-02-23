@@ -26,7 +26,7 @@ export default function HolidayRow({ calendarDateList, noOfPrevDate }) {
       <NameCell border>Holiday</NameCell>
       {prevHolidayList}
       {holidayCells}
-      <td className="border" colSpan="10" key="holiday_31"></td>
+      <td className="borderCell" colSpan="10" key="holiday_31"></td>
     </tr>
   );
 }

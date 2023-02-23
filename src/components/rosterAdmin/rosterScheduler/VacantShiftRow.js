@@ -1,4 +1,3 @@
-import NameCell from '../../cells/NameCell';
 import ShiftCell from '../../cells/ShiftCell';
 import StatCell from '../../cells/StatCell';
 export default function VacantShiftRow({ allITOStat, calendarDateList, systemParam }) {
@@ -21,7 +20,7 @@ export default function VacantShiftRow({ allITOStat, calendarDateList, systemPar
         <tr>
             <td className="border text-end vacantShiftLabel">Vacant Shifts</td>
             {shiftCellList}
-            <td className='border' colSpan={5}></td>
+            <td className='borderCell' colSpan={5}></td>
             <StatCell>{allITOStat.aShiftStdDev}</StatCell>
             <StatCell>{allITOStat.bxShiftStdDev}</StatCell>
             <StatCell>{allITOStat.cShiftStdDev}</StatCell>

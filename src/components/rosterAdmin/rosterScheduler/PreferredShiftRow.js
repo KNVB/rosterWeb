@@ -16,16 +16,20 @@ export default function PreferredShiftRow({
         shiftCellList.push(<ShiftCell key={"prev-preferred-" + i} />)
     }
     calendarDateList.forEach((calendarDate, i) => {
-        let preferredShift = (rosterInfo.preferredShiftList[i + 1]);
+        let preferredShift ="";
+        if (rosterInfo.preferredShiftList){
+            preferredShift = (rosterInfo.preferredShiftList[i + 1]);
+        }
         shiftCellList.push(
             <ShiftCell
+                cssClassName="cursor-cell"
                 editable
                 key={"preferred_" + itoId + '_' + i}
                 setIsHighLightRow={setIsHighLightRow}
                 onBlur={(e) => { updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}
                 updateHighLightCellIndex={updateHighLightCellIndex}
                 shift={preferredShift} />
-        )
+        );
     });
     for (let i = calendarDateList.length; i < 31; i++) {
         shiftCellList.push(<ShiftCell key={"preferred_" + itoId + '_' + i} />)
@@ -36,7 +40,7 @@ export default function PreferredShiftRow({
                 Preferred Shift
             </NameCell>
             {shiftCellList}
-            <td className='border' colSpan={5}></td>
+            <td className='borderCell' colSpan={5}></td>
             <StatCell></StatCell>
             <StatCell></StatCell>
             <StatCell></StatCell>

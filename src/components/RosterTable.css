@@ -1,13 +1,24 @@
+.borderCell {
+    border: 1px solid #e0e0e0;
+}
 .captionCell{
     text-align:center;
     text-decoration:underline;
 }
 .dateCell,
 .dayCell,
-.holidayCell{
+.holidayCell{	
     font-size: 17px;
 	height:29px;
     width:29px
+}
+.errorRedBlackGround
+{
+	background-color:red!important;
+	animation: blinker 1s linear infinite;
+}
+@keyframes blinker {  
+  50% { opacity: 0; }
 }
 .highlightCell
 {
@@ -39,7 +50,16 @@
 	text-align: center;
 	min-width:27px;
 }
-.statCell{
+.shiftCell:focus{
+	outline: 1px solid black;
+}
+.shiftCell::-moz-selection{
+	background: none; 
+}
+.shiftCell::selection{
+	background: none; 
+} 
+.statCell{	
     font-size: 15px;
     width:60px
 }

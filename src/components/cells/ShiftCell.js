@@ -2,13 +2,12 @@ export default function ShiftCell({ cssClassName, editable,
     onBlur, onCopy, onMouseDown, onMouseEnter, onMouseLeave, onPaste,
     setIsHighLightRow, shift, updateHighLightCellIndex }) {
     let contentEditable = false;
-    let className = "border shiftCell ";
+    let className = "borderCell shiftCell " + cssClassName;
     let textContent = "";
     if (editable) {
         contentEditable = editable;
     }
     if (shift) {
-        className += " " + cssClassName;
         textContent = shift;
     }
     function deHighLight(e) {
@@ -33,6 +32,7 @@ export default function ShiftCell({ cssClassName, editable,
             onMouseEnter();
         }
     }
+    
     return (
         <td
             contentEditable={contentEditable}
