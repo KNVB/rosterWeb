@@ -3,14 +3,14 @@ export default function AdminShiftStatUtil() {
         let allITOStat = {};
         let aShiftCount = [], bxShiftCount = [], cShiftCount = [];
         let duplicatShiftList = {};
-        let vacantShift, temp, vacantShiftList = {};
+        let vacantShiftList = {};
         let itoIdList = Object.keys(inITORosterList);
         Object.keys(inITORosterList).forEach(itoId => {
             duplicatShiftList[itoId] = [];
         });
         for (let i = startDate; i <= endDate; i++) {
-            vacantShift = activeShiftInfoList.essentialShift;
-            temp = [];
+            let vacantShift = activeShiftInfoList.essentialShift;
+            let temp = [];
             itoIdList.forEach(itoId => {
                 let itoRoster = inITORosterList[itoId];
                 if (itoRoster.shiftList[i] !== undefined) {
