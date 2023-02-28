@@ -10,8 +10,13 @@ export default function EditableShiftCell(props) {
             setIsHighLightRow={setIsHighLightRow}            
             updateHighLightCellIndex={updateHighLightCellIndex}>
                 <div>
-                    <div className="shiftType" contentEditable={true}>{children}</div>
-                    <div className="littleSquareDiv">&nbsp;</div>
+                    <div 
+                        className="shiftType" 
+                        contentEditable={true}
+                        suppressContentEditableWarning={true}>
+                            {children}
+                    </div>
+                    <div className="littleSquareDiv"></div>
                 </div>
                 {
                     selected &&

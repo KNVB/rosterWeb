@@ -1,6 +1,6 @@
 export default function ShiftCell(props) {
     let {
-        children, cssClassName, editable,
+        children, cssClassName,
         onBlur, onCopy, onMouseDown, onMouseEnter, onMouseLeave, onPaste,
         setIsHighLightRow, updateHighLightCellIndex
     }=props;    
