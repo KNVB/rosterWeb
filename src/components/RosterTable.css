@@ -16,7 +16,9 @@
 	height: 29px;
 	width: 29px
 }
-
+.editableShiftCell:hover{
+	cursor: cell;
+}
 .errorRedBlackGround {
 	background-color: red !important;
 	animation: blinker 1s linear infinite;
@@ -106,9 +108,9 @@
 }
 
 .dShiftColor {
-	background-color: #ccffff;
+	background: #ccffff padding-box;
 }
 
 .sickLeaveColor {
-	background-color: #cc99ff;
+	background: #cc99ff padding-box;
 }
