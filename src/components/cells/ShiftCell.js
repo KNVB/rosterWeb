@@ -3,13 +3,8 @@ export default function ShiftCell(props) {
         children, cssClassName, editable,
         onBlur, onCopy, onMouseDown, onMouseEnter, onMouseLeave, onPaste,
         setIsHighLightRow, updateHighLightCellIndex
-    }=props;
-    let contentEditable = false;
+    }=props;    
     let className = "borderCell position-relative shiftCell " + cssClassName;
-    if (editable) {
-        contentEditable = editable;
-    }
-
     function deHighLight(e) {
         if (setIsHighLightRow) {
             setIsHighLightRow(false);
@@ -35,7 +30,6 @@ export default function ShiftCell(props) {
 
     return (
         <td
-            contentEditable={contentEditable}
             className={className}
             onBlur={onBlur}
             onCopy={onCopy}
