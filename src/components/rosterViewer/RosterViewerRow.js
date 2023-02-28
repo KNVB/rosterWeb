@@ -21,8 +21,9 @@ export default function RosterViewerRow({
         cssClassName={className}
         key={itoId + '_' + i}
         setIsHighLightRow={setIsHighLightRow}
-        updateHighLightCellIndex={updateHighLightCellIndex}
-        shift={rosterInfo.shiftList[i + 1]} />)
+        updateHighLightCellIndex={updateHighLightCellIndex}>
+          {rosterInfo.shiftList[i + 1]}
+      </ShiftCell>)
   });
   for (let i = calendarDateList.length; i < 31; i++) {
     shiftCellList.push(<ShiftCell key={itoId + '_' + i} />)

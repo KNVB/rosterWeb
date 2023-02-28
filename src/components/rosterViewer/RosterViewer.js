@@ -15,6 +15,7 @@ export default function RosterViewer() {
     } else {
         if (!objectList.isLoading) {
             //console.log(objectList.activeShiftList);
+            //console.log(objectList);
             return (
                 <table className="m-3 rosterTable">
                     <HeaderRows

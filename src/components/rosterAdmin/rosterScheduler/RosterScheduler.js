@@ -15,6 +15,7 @@ export default function RosterScheduler() {
         if (!objectList.isLoading) {
             //console.log(objectList.systemParam);
             //console.log(objectList.rosterList);
+            console.log(objectList);
             return (
                 <table className="m-0 rosterTable">
                     <HeaderRows

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import EditableShiftCell from './util/EditableShiftCell';
 import NameCell from '../../cells/NameCell';
 import ShiftCell from '../../cells/ShiftCell';
 import StatCell from '../../cells/StatCell';
@@ -21,14 +22,14 @@ export default function PreferredShiftRow({
             preferredShift = (rosterInfo.preferredShiftList[i + 1]);
         }
         shiftCellList.push(
-            <ShiftCell
-                cssClassName="cursor-cell"
-                editable
+            <EditableShiftCell
+                cssClassName="cursor-cell"                
                 key={"preferred_" + itoId + '_' + i}
                 setIsHighLightRow={setIsHighLightRow}
                 onBlur={(e) => { updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}
-                updateHighLightCellIndex={updateHighLightCellIndex}
-                shift={preferredShift} />
+                updateHighLightCellIndex={updateHighLightCellIndex}>
+                {preferredShift}
+            </EditableShiftCell>    
         );
     });
     for (let i = calendarDateList.length; i < 31; i++) {
