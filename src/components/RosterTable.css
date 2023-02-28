@@ -80,6 +80,9 @@
 	text-align: center;
 	width: 27px;
 }
+.shiftCell * {
+	pointer-events: none;
+}
 .shiftType{
 	align-items: center;
 	box-sizing: padding-box;
