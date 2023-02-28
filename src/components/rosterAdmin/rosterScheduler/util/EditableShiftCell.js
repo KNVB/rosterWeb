@@ -1,16 +1,31 @@
 import ShiftCell from "../../../cells/ShiftCell";
 export default function EditableShiftCell(props) {
     let {children,cssClassName,onBlur,selected, setIsHighLightRow,updateHighLightCellIndex,updateSelectedRegion}=props;
-    cssClassName+=" position-relative";
+    cssClassName+=" editableShiftCell m-0 p-0 position-relative";
+    function handleMouseLeaveEvent(e) {
+        setIsHighLightRow(false);        
+        updateHighLightCellIndex(-1);        
+    }
+    function handleMouseEnterEvent(e) {        
+        setIsHighLightRow(true);
+        let cell=e.target.parentElement.parentElement;    
+        updateHighLightCellIndex(cell.cellIndex);      
+    }
     return (
         <ShiftCell
             cssClassName={cssClassName}            
             onBlur={onBlur}
-            onMouseEnter={updateSelectedRegion}
+            onMouseEnter={handleMouseEnterEvent}
+            onMouseLeave={handleMouseLeaveEvent}
             setIsHighLightRow={setIsHighLightRow}            
             updateHighLightCellIndex={updateHighLightCellIndex}>
-                <div>
-                    <div className="shiftType" contentEditable={true}>{children}</div>
+                <div className="m-0 p-0">
+                    <div 
+                        className="m-0 p-0 shiftType" 
+                        contentEditable={true}
+                        suppressContentEditableWarning={true}>
+                        {children}
+                    </div>
                     <div className="littleSquareDiv">&nbsp;</div>
                 </div>
                 {

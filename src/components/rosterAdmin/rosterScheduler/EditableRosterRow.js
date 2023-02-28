@@ -52,7 +52,7 @@ export default function EditableRosterRow({
         );
     });
     for (let i = calendarDateList.length; i < 31; i++) {
-        shiftCellList.push(<ShiftCell key={itoId + '_' + i} />)
+        shiftCellList.push(<ShiftCell key={itoId + '_' + i}>&nbsp;</ShiftCell>)
     }
     return (
         <tr>

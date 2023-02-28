@@ -78,6 +78,7 @@
 .shiftCell {
 	padding: 0px;
 	text-align: center;
+	width: 27px;
 }
 .shiftType{
 	align-items: center;
