@@ -41,7 +41,16 @@
 	background-color: #ffc477;
 	color: white;
 }
-
+.littleSquareDiv
+{
+	background-color:black;
+	top: calc(100% - 3px);
+	left: calc(100% - 3px);
+	height:6px;
+	position:absolute;
+	width:6px;
+	z-index: 10;
+}
 .nameCell {
 	font-size: 15px;
 	width: 200px

@@ -9,7 +9,10 @@ export default function EditableShiftCell(props) {
             onMouseEnter={updateSelectedRegion}
             setIsHighLightRow={setIsHighLightRow}            
             updateHighLightCellIndex={updateHighLightCellIndex}>
-                <div className="shiftType" contentEditable={true}>{children}</div>
+                <div>
+                    <div className="shiftType" contentEditable={true}>{children}</div>
+                    <div className="littleSquareDiv">&nbsp;</div>
+                </div>
                 {
                     selected &&
                     <div className="selected">&nbsp;</div>
