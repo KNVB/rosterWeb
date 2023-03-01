@@ -20,6 +20,7 @@ export default function RosterViewer() {
                 <table className="m-3 rosterTable">
                     <HeaderRows
                         calendarUtility={objectList.calendarUtility}
+                        caption="EMSTF Resident Support & Computer Operation Support Services Team Roster"
                         monthlyCalendar={objectList.monthlyCalendar}
                         highLightCellIndex={objectList.highLightCellIndex}
                         systemParam={objectList.systemParam}

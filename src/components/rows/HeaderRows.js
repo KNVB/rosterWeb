@@ -8,14 +8,15 @@ import React from 'react';
 import CaptionCell from "../cells/CaptionCell";
 export default function HeaderRows({
   calendarUtility,
+  caption,
   highLightCellIndex,
   monthlyCalendar,
-  systemParam,
+  systemParam,  
   updateRosterMonth,
 }) {
   return (
     <thead>
-      <CaptionRow />
+      <CaptionRow caption={caption}/>
       <tr>
         <NameCell></NameCell>
         <CaptionCell colSpan="31">

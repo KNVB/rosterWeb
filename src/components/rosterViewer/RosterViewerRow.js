@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import NameCell from '../cells/NameCell';
 import ShiftCell from '../cells/ShiftCell';
 import StatCell from '../cells/StatCell';

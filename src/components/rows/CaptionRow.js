@@ -1,10 +1,10 @@
 import React from 'react';
 import CaptionCell from "../cells/CaptionCell";
-export default function CaptionRow() {
+export default function CaptionRow({caption}) {
   return (
     <tr>
       <CaptionCell colSpan="42">
-        EMSTF Resident Support & Computer Operation Support Services Team Roster
+        {caption}        
       </CaptionCell>
     </tr>
   );

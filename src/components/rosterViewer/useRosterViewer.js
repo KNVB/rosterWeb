@@ -8,9 +8,11 @@ let reducer = (state, action) => {
   switch (action.type) {
     case "init":
       result.activeShiftList = action.activeShiftList;
+      result.calendarUtility = action.calendarUtility;
       result.isLoading = false;
       result.monthlyCalendar = action.monthlyCalendar;
       result.rosterList = action.rosterList;
+      result.rosterMonth = action.rosterMonth;
       result.systemParam = action.systemParam;
       break;
     case "setError":
@@ -33,14 +35,14 @@ let reducer = (state, action) => {
 export function useRosterViewer() {
   const [itemList, updateItemList] = useReducer(reducer, {
     activeShiftList: null,
-    "calendarUtility": new CalendarUtility(),
+    calendarUtility: null,
     error: null,
     highLightCellIndex: -1,
     highLightRowIndex: -1,
     isLoading: true,
     monthlyCalendar: null,
     rosterList: null,
-    rosterMonth: new Date(),
+    rosterMonth: null,
     systemParam: null,
   });
 
@@ -69,16 +71,20 @@ export function useRosterViewer() {
     let getData = async () => {
       try {
         let activeShiftList = await shiftUtil.getActiveShiftList();
+        let calendarUtility=new CalendarUtility();
+        let rosterMonth=new Date();
         let systemParam = await systemUtil.getSystemParam();
         systemParam["noOfPrevDate"] = 0;
         systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
-        let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth());
-        let rosterList = await rosterUtil.getRosterListForViewer(activeShiftList, monthlyCalendar.noOfWorkingDay, itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth() + 1);
+        let monthlyCalendar = calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(), rosterMonth.getMonth());
+        let rosterList = await rosterUtil.getRosterListForViewer(activeShiftList, monthlyCalendar.noOfWorkingDay, rosterMonth.getFullYear(), rosterMonth.getMonth() + 1);
 
         updateItemList({
           activeShiftList,
+          calendarUtility,
           monthlyCalendar,
           rosterList,
+          rosterMonth,
           systemParam,
           type: "init"
         });
