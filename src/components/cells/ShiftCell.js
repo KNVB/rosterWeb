@@ -1,8 +1,8 @@
 export default function ShiftCell(props) {
     let {
         children, cssClassName,
-        onBlur, onCopy, onMouseDown, onMouseEnter, onMouseLeave, onPaste,
-        setIsHighLightRow, updateHighLightCellIndex
+        onBlur, onCopy, onMouseDown,
+        onMouseEnter, onMouseLeave, onPaste        
     }=props;  
     let className = "borderCell shiftCell";
     if (cssClassName){

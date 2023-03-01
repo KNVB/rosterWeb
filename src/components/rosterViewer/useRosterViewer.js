@@ -11,13 +11,14 @@ let reducer = (state, action) => {
       result.isLoading = false;
       result.monthlyCalendar = action.monthlyCalendar;
       result.rosterList = action.rosterList;
-      result.systemParam = action.systemParam;      
+      result.systemParam = action.systemParam;
       break;
     case "setError":
       result.error = action.error;
       break;
-    case "updateHighLightCellIndex":
-      result.highLightCellIndex = action.value;
+    case "updateHighLight":
+      result.highLightCellIndex = action.cellIndex;
+      result.highLightRowIndex=action.rowIndex;
       break;
     case 'updateRosterMonth':
       result.rosterList = action.rosterList;
@@ -35,6 +36,7 @@ export function useRosterViewer() {
     "calendarUtility": new CalendarUtility(),
     error: null,
     highLightCellIndex: -1,
+    highLightRowIndex: -1,
     isLoading: true,
     monthlyCalendar: null,
     rosterList: null,
@@ -42,15 +44,15 @@ export function useRosterViewer() {
     systemParam: null,
   });
 
-  let updateHighLightCellIndex = cellIndex => {
-    updateItemList({ type: "updateHighLightCellIndex", value: cellIndex });
+  let updateHighLight = (cellIndex, rowIndex) => {
+    updateItemList({ type: "updateHighLight", cellIndex: cellIndex, rowIndex: rowIndex });
   }
   let updateRosterMonth = async (newRosterMonth) => {
     let rosterUtil = new RosterUtil();
     try {
       let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(newRosterMonth.getFullYear(), newRosterMonth.getMonth());
       let rosterList = await rosterUtil.getRosterListForViewer(itemList.activeShiftList, monthlyCalendar.noOfWorkingDay, newRosterMonth.getFullYear(), newRosterMonth.getMonth() + 1);
-      updateItemList({ 
+      updateItemList({
         monthlyCalendar,
         newRosterMonth,
         rosterList,
@@ -73,7 +75,7 @@ export function useRosterViewer() {
         let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth());
         let rosterList = await rosterUtil.getRosterListForViewer(activeShiftList, monthlyCalendar.noOfWorkingDay, itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth() + 1);
 
-        updateItemList({ 
+        updateItemList({
           activeShiftList,
           monthlyCalendar,
           rosterList,
@@ -89,7 +91,7 @@ export function useRosterViewer() {
   }, [])
   return [
     itemList,
-    updateHighLightCellIndex,
+    updateHighLight,
     updateRosterMonth
   ]
 }

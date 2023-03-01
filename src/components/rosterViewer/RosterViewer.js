@@ -5,7 +5,7 @@ import HeaderRows from "../rows/HeaderRows";
 import RosterViewerBody from "./RosterViewerBody";
 import ShiftInfoLegend from "../ShiftInfoLegend";
 export default function RosterViewer() {
-    const [objectList, updateHighLightCellIndex, updateRosterMonth] = useRosterViewer();
+    const [objectList, updateHighLight, updateRosterMonth] = useRosterViewer();
     document.title = "EMSTF Resident Support & Computer Operation Support Services Team Roster";
     let updateMonth = (newRosterMonth) => {
         updateRosterMonth(newRosterMonth);
@@ -27,9 +27,10 @@ export default function RosterViewer() {
                     />
                     <RosterViewerBody 
                         activeShiftList={objectList.activeShiftList}
+                        highLightRowIndex={objectList.highLightRowIndex}
                         monthlyCalendar={objectList.monthlyCalendar}
                         rosterList={objectList.rosterList}
-                        updateHighLightCellIndex={updateHighLightCellIndex}
+                        updateHighLight={updateHighLight}
                     />
                     <tfoot>
                         <tr>
