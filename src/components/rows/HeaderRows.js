@@ -1,5 +1,4 @@
 import CaptionRow from "./CaptionRow";
-import NameCell from "../cells/NameCell";
 import DateRow from './DateRow';
 import DayRow from './DayRow';
 import HolidayRow from './HolidayRow';
@@ -17,12 +16,10 @@ export default function HeaderRows({
   return (
     <thead>
       <CaptionRow caption={caption}/>
-      <tr>
-        <NameCell></NameCell>
-        <CaptionCell colSpan="31">
+      <tr>        
+        <CaptionCell colSpan="42">
           <MonthPicker minDate={systemParam.monthPickerMinDate} onChange={updateRosterMonth} />
-        </CaptionCell>
-        <th colSpan="10"></th>
+        </CaptionCell>        
       </tr>
       <HolidayRow calendarDateList={monthlyCalendar.calendarDateList} noOfPrevDate={systemParam.noOfPrevDate}/>
       <DayRow

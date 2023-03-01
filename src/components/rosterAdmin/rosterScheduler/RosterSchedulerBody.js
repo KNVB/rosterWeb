@@ -4,18 +4,19 @@ import VacantShiftRow from "./VacantShiftRow";
 export default function RosterSchedulerBody({
     allITOStat,
     activeShiftList,
+    highLightRowIndex,
     monthlyCalendar,
     rosterList,
     systemParam,
+    updateHighLight,
     updatePreferredShift,
-    updateHighLightCellIndex,
     updateShift
 }) {
     let rowList = [];
     let itoIdList = Object.keys(rosterList);
     //console.log(allITOStat);
     itoIdList.forEach((itoId, i) => {
-        let rosterInfo = rosterList[itoId];       
+        let rosterInfo = rosterList[itoId];
         //console.log(rosterInfo);
         rowList.push(
             <EditableRosterRow
@@ -23,23 +24,25 @@ export default function RosterSchedulerBody({
                 allITOStat={allITOStat}
                 calendarDateList={monthlyCalendar.calendarDateList}
                 itoId={itoIdList[i]}
+                isHighLightRow={(highLightRowIndex === (i * 2 + 5))}
                 key={"rosterRow_" + itoIdList[i]}
                 rosterInfo={rosterInfo}
                 systemParam={systemParam}
-                updateHighLightCellIndex={updateHighLightCellIndex}
-                updateShift={updateShift} 
+                updateHighLight={updateHighLight}
+                updateShift={updateShift}
             />);
         rowList.push(
-            <PreferredShiftRow 
+            <PreferredShiftRow
                 calendarDateList={monthlyCalendar.calendarDateList}
                 itoId={itoIdList[i]}
-                key={"preferredShiftRow_" + itoIdList[i]}                
+                isHighLightRow={(highLightRowIndex === (i * 2 + 6))}
+                key={"preferredShiftRow_" + itoIdList[i]}
                 rosterInfo={rosterInfo}
                 systemParam={systemParam}
-                updateHighLightCellIndex={updateHighLightCellIndex}
+                updateHighLight={updateHighLight}
                 updatePreferredShift={updatePreferredShift}
-            />    
-        );    
+            />
+        );
     });
     rowList.push(
         <VacantShiftRow

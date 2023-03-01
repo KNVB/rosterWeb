@@ -1,8 +1,10 @@
 export default function ShiftCell(props) {
     let {
         children, cssClassName,
-        onBlur, onCopy, onMouseDown,
-        onMouseEnter, onMouseLeave, onPaste        
+        onBlur, onCopy, onFocus,
+        onKeyDown,
+        onMouseDown, onMouseEnter, onMouseLeave,
+        onPaste        
     }=props;  
     let className = "borderCell shiftCell";
     if (cssClassName){
@@ -13,11 +15,12 @@ export default function ShiftCell(props) {
             className={className}
             onBlur={onBlur}
             onCopy={onCopy}
+            onFocus={onFocus}
+            onKeyDown={onKeyDown}
             onMouseDown={onMouseDown}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
-            onPaste={onPaste}
-            suppressContentEditableWarning={true}>            
+            onPaste={onPaste}>            
             {children}            
         </td>
     );

@@ -5,7 +5,7 @@ import HeaderRows from "../../rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../ShiftInfoLegend";
 export default function RosterScheduler() {
-    const [objectList, updateHighLightCellIndex, updatePreferredShift,updateRosterMonth,updateShift] = useRosterScheduler();
+    const [objectList, updateHighLight, updatePreferredShift,updateRosterMonth,updateShift] = useRosterScheduler();
     let updateMonth = (newRosterMonth) => {
         updateRosterMonth(newRosterMonth);
     }
@@ -20,6 +20,7 @@ export default function RosterScheduler() {
                 <table className="m-0 rosterTable">
                     <HeaderRows
                         calendarUtility={objectList.calendarUtility}
+                        caption="EMSTF Roster Scheduler"
                         monthlyCalendar={objectList.monthlyCalendar}
                         highLightCellIndex={objectList.highLightCellIndex}
                         systemParam={objectList.systemParam}
@@ -28,10 +29,11 @@ export default function RosterScheduler() {
                     <RosterSchedulerBody
                         allITOStat={objectList.allITOStat}
                         activeShiftList={objectList.activeShiftList}
+                        highLightRowIndex={objectList.highLightRowIndex}
                         monthlyCalendar={objectList.monthlyCalendar}
                         rosterList={objectList.rosterList}
                         systemParam={objectList.systemParam}
-                        updateHighLightCellIndex={updateHighLightCellIndex}
+                        updateHighLight={updateHighLight}
                         updatePreferredShift={updatePreferredShift}
                         updateShift={updateShift}/>
                     <tfoot>

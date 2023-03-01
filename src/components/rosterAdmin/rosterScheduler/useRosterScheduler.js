@@ -11,16 +11,19 @@ let reducer = (state, action) => {
         case "init":
             result.allITOStat = action.allITOStat;
             result.activeShiftList = action.activeShiftList;
+            result.calendarUtility = action.calendarUtility;
             result.isLoading = false;
             result.monthlyCalendar = action.monthlyCalendar;
             result.rosterList = action.rosterList;
+            result.rosterMonth = action.rosterMonth;
             result.systemParam = action.systemParam;
             break;
         case "setError":
             result.error = action.error;
             break;
-        case "updateHighLightCellIndex":
-            result.highLightCellIndex = action.value;
+        case "updateHighLight":
+            result.highLightCellIndex = action.cellIndex;
+            result.highLightRowIndex = action.rowIndex;
             break;
         case 'updateRosterMonth':
             result.allITOStat = action.allITOStat;
@@ -29,7 +32,7 @@ let reducer = (state, action) => {
             result.rosterMonth = action.newRosterMonth;
             break
         case "updatePreferredShiftList":
-            result.rosterList[action.itoId].preferredShiftList[action.date]=action.newShift;
+            result.rosterList[action.itoId].preferredShiftList[action.date] = action.newShift;
             break;
         case "updateShift":
             result.allITOStat = action.allITOStat;
@@ -42,21 +45,22 @@ let reducer = (state, action) => {
 }
 export function useRosterScheduler() {
     const [itemList, updateItemList] = useReducer(reducer, {
-        "calendarUtility": new CalendarUtility(),
+        calendarUtility: null,
         error: null,
         highLightCellIndex: -1,
+        highLightRowIndex: -1,
         isLoading: true,
-        rosterMonth: new Date()
+        rosterMonth: null,
     });
-    let updateHighLightCellIndex = cellIndex => {
-        updateItemList({ type: "updateHighLightCellIndex", value: cellIndex });
+    let updateHighLight = (cellIndex, rowIndex) => {
+        updateItemList({ type: "updateHighLight", cellIndex: cellIndex, rowIndex: rowIndex });
     }
     let updatePreferredShift = (itoId, date, newShift) => {
         updateItemList({
             date,
             itoId,
             newShift,
-            type:"updatePreferredShiftList"
+            type: "updatePreferredShiftList"
         });
     }
     let updateShift = (itoId, date, shift) => {
@@ -108,23 +112,27 @@ export function useRosterScheduler() {
             try {
                 let { getAllITOStat } = AdminShiftStatUtil();
                 let activeShiftList = await shiftUtil.getActiveShiftList();
-                let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(itemList.rosterMonth.getFullYear(), itemList.rosterMonth.getMonth());
+                let calendarUtility = new CalendarUtility();                
+                let rosterMonth = new Date();
+                let monthlyCalendar = calendarUtility.getMonthlyCalendar(rosterMonth.getFullYear(), rosterMonth.getMonth());                
                 let systemParam = await systemUtil.getSystemParam();
                 systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
 
                 let rosterList = await rosterUtil.getRosterListForScheduler(
                     activeShiftList,
                     monthlyCalendar.noOfWorkingDay,
-                    itemList.rosterMonth.getFullYear(),
-                    itemList.rosterMonth.getMonth() + 1,
+                    rosterMonth.getFullYear(),
+                    rosterMonth.getMonth() + 1,
                 );
 
                 let allITOStat = getAllITOStat(activeShiftList, 1, monthlyCalendar.calendarDateList.length, rosterList);
                 updateItemList({
                     allITOStat,
                     activeShiftList,
+                    calendarUtility,
                     monthlyCalendar,
                     rosterList,
+                    rosterMonth,
                     systemParam,
                     type: "init"
                 });
@@ -136,7 +144,7 @@ export function useRosterScheduler() {
     }, [])
     return [
         itemList,
-        updateHighLightCellIndex,
+        updateHighLight,
         updatePreferredShift,
         updateRosterMonth,
         updateShift

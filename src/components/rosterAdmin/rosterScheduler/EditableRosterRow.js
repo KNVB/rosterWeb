@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import EditableShiftCell from './util/EditableShiftCell';
 import NameCell from '../../cells/NameCell';
 import ShiftCell from '../../cells/ShiftCell';
@@ -8,12 +7,12 @@ export default function EditableRosterRow({
     allITOStat,
     calendarDateList,
     itoId,
+    isHighLightRow,
     rosterInfo,
     systemParam,
-    updateHighLightCellIndex,
+    updateHighLight,
     updateShift
 }) {
-    const [isHighLightRow, setIsHighLightRow] = useState(false);
     let shiftCellList = [];
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         let className = '';
@@ -30,7 +29,14 @@ export default function EditableRosterRow({
             </ShiftCell>
         )
     }
-
+    function handleMouseLeaveEvent(e) {
+        updateHighLight(-1, -1);
+    }
+    function handleMouseEnterEvent(e) {
+        let cell = e.target.closest("td");
+        let row = cell.closest('tr');
+        updateHighLight(cell.cellIndex, row.rowIndex);
+    }
     calendarDateList.forEach((calendarDate, i) => {
         let className = '';
         if (allITOStat.duplicatShiftList[itoId].includes(calendarDate.dateOfMonth)) {
@@ -45,8 +51,8 @@ export default function EditableRosterRow({
                 cssClassName={className}
                 key={itoId + '_' + i}
                 onBlur={(e) => { updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}
-                setIsHighLightRow={setIsHighLightRow}
-                updateHighLightCellIndex={updateHighLightCellIndex}>
+                onMouseEnter={handleMouseEnterEvent}
+                onMouseLeave={handleMouseLeaveEvent}>
                 {rosterInfo.shiftList[i + 1]}
             </EditableShiftCell>
         );

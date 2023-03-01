@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import EditableShiftCell from './util/EditableShiftCell';
 import NameCell from '../../cells/NameCell';
 import ShiftCell from '../../cells/ShiftCell';
@@ -7,29 +6,38 @@ import StatCell from '../../cells/StatCell';
 export default function PreferredShiftRow({
     calendarDateList,
     itoId,
+    isHighLightRow,
     rosterInfo,
     systemParam,
-    updateHighLightCellIndex,
+    updateHighLight,
     updatePreferredShift }) {
-    const [isHighLightRow, setIsHighLightRow] = useState(false);
+
     let shiftCellList = [];
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         shiftCellList.push(<ShiftCell key={"prev-preferred-" + i} />)
     }
+    function handleMouseLeaveEvent(e) {
+        updateHighLight(-1, -1);
+    }
+    function handleMouseEnterEvent(e) {
+        let cell = e.target.closest("td");
+        let row = cell.closest('tr');
+        updateHighLight(cell.cellIndex, row.rowIndex);
+    }
     calendarDateList.forEach((calendarDate, i) => {
-        let preferredShift ="";
-        if (rosterInfo.preferredShiftList){
+        let preferredShift = "";
+        if (rosterInfo.preferredShiftList) {
             preferredShift = (rosterInfo.preferredShiftList[i + 1]);
         }
         shiftCellList.push(
             <EditableShiftCell
-                cssClassName="cursor-cell"                
+                cssClassName="cursor-cell"
                 key={"preferred_" + itoId + '_' + i}
-                setIsHighLightRow={setIsHighLightRow}
                 onBlur={(e) => { updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}
-                updateHighLightCellIndex={updateHighLightCellIndex}>
+                onMouseEnter={handleMouseEnterEvent}
+                onMouseLeave={handleMouseLeaveEvent}>
                 {preferredShift}
-            </EditableShiftCell>    
+            </EditableShiftCell>
         );
     });
     for (let i = calendarDateList.length; i < 31; i++) {

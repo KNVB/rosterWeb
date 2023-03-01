@@ -20,7 +20,7 @@ let reducer = (state, action) => {
       break;
     case "updateHighLight":
       result.highLightCellIndex = action.cellIndex;
-      result.highLightRowIndex=action.rowIndex;
+      result.highLightRowIndex = action.rowIndex;
       break;
     case 'updateRosterMonth':
       result.rosterList = action.rosterList;
@@ -71,8 +71,8 @@ export function useRosterViewer() {
     let getData = async () => {
       try {
         let activeShiftList = await shiftUtil.getActiveShiftList();
-        let calendarUtility=new CalendarUtility();
-        let rosterMonth=new Date();
+        let calendarUtility = new CalendarUtility();
+        let rosterMonth = new Date();
         let systemParam = await systemUtil.getSystemParam();
         systemParam["noOfPrevDate"] = 0;
         systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);

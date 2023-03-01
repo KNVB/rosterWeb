@@ -1,37 +1,39 @@
+import { useState } from "react";
 import ShiftCell from "../../../cells/ShiftCell";
 export default function EditableShiftCell(props) {
-    let {children,cssClassName,onBlur,selected, setIsHighLightRow,updateHighLightCellIndex,updateSelectedRegion}=props;
-    cssClassName+=" editableShiftCell m-0 p-0 position-relative";
-    function handleMouseLeaveEvent(e) {
-        setIsHighLightRow(false);        
-        updateHighLightCellIndex(-1);        
+    const [isFocus, updateFocus] = useState(false);
+    let { children, cssClassName, onBlur, onMouseEnter, onMouseLeave, selected, updateSelectedRegion } = props;
+    cssClassName += " editableShiftCell m-0 p-0 position-relative";
+    let blur = e => {
+        updateFocus(false);
+        onBlur(e);
     }
-    function handleMouseEnterEvent(e) {        
-        setIsHighLightRow(true);
-        let cell=e.target.parentElement.parentElement;    
-        updateHighLightCellIndex(cell.cellIndex);      
+    let setFocus = e => {
+        updateFocus(true);
     }
     return (
         <ShiftCell
-            cssClassName={cssClassName}            
-            onBlur={onBlur}
-            onMouseEnter={handleMouseEnterEvent}
-            onMouseLeave={handleMouseLeaveEvent}
-            setIsHighLightRow={setIsHighLightRow}            
-            updateHighLightCellIndex={updateHighLightCellIndex}>
-                <div className="m-0 p-0">
-                    <div 
-                        className="m-0 p-0 shiftType" 
-                        contentEditable={true}
-                        suppressContentEditableWarning={true}>
-                        {children}
-                    </div>
-                    <div className="littleSquareDiv">&nbsp;</div>
+            cssClassName={cssClassName}
+            onBlur={blur}
+            onFocus={setFocus}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}>
+            <div className="m-0 p-0">
+                <div
+                    className="m-0 p-0 shiftType"
+                    contentEditable={true}
+                    suppressContentEditableWarning={true}>
+                    {children}
                 </div>
                 {
-                    selected &&
-                    <div className="selected">&nbsp;</div>
+                    isFocus &&
+                    <div className="littleSquareDiv">&nbsp;</div>
                 }
-        </ShiftCell>        
+            </div>
+            {
+                selected &&
+                <div className="selected">&nbsp;</div>
+            }
+        </ShiftCell>
     );
 }
