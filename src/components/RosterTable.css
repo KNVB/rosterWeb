@@ -45,7 +45,7 @@
 }
 
 .littleSquareDiv {
-	background-color: black;
+	background-color: rgb(0, 140, 255);
 	top: calc(100% - 3px);
 	left: calc(100% - 3px);
 	height: 6px;
@@ -74,7 +74,7 @@
 }
 
 .selected {
-	background-color: #ccf1ff;
+	background-color: #ccf1ff;	
 	height: 100%;
 	left: 0;
 	position: absolute;
@@ -108,7 +108,7 @@
 }
 
 .shiftType:focus {
-	outline: 1px solid black;
+	outline: 1px solid rgb(0, 140, 255);
 }
 
 .shiftType::-moz-selection {
