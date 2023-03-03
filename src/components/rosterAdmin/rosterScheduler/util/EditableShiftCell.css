@@ -1,6 +1,7 @@
 .editableShiftCell:hover {
 	cursor: cell;
 }
+
 .littleSquareDiv {
 	background-color: rgb(0, 140, 255);
 	top: calc(100% - 3px);
@@ -16,7 +17,7 @@
 }
 
 .selected {
-	background-color: #ccf1ff;	
+	background-color: #ccf1ff;
 	height: 100%;
 	left: 0;
 	position: absolute;
@@ -25,6 +26,23 @@
 	width: 100%;
 	z-index: 100;
 }
+
+.selectedBottom {
+	border-bottom: 1px solid rgb(0, 140, 255);
+}
+
+.selectedLeft {
+	border-left: 1px solid rgb(0, 140, 255);
+}
+
+.selectedRight {
+	border-right: 1px solid rgb(0, 140, 255);
+}
+
+.selectedTop {
+	border-top: 1px solid rgb(0, 140, 255);
+}
+
 .shiftType {
 	align-items: center;
 	box-sizing: padding-box;
@@ -38,10 +56,11 @@
 	width: 100%;
 }
 
-.shiftType:focus {
-	outline: 1px solid rgb(0, 140, 255);
-}
 
+.shiftType:focus {
+	/*outline: 1px solid rgb(0, 140, 255);*/
+	outline:none;
+}
 .shiftType::-moz-selection {
 	background: none;
 }

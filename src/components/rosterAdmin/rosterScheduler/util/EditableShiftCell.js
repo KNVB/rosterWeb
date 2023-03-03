@@ -3,7 +3,7 @@ import "./EditableShiftCell.css";
 import ShiftCell from "../../../cells/ShiftCell";
 export default function EditableShiftCell(props) {
     const [isFocus, updateFocus] = useState(false);
-    let { children, cssClassName, onBlur, onMouseEnter, onMouseLeave, selected, updateSelectedRegion } = props;
+    let { children, cssClassName, onBlur, onMouseDown, onMouseEnter, onMouseLeave } = props;
     cssClassName += " editableShiftCell m-0 p-0 position-relative";
     let blur = e => {
         updateFocus(false);
@@ -17,6 +17,7 @@ export default function EditableShiftCell(props) {
             cssClassName={cssClassName}
             onBlur={blur}
             onFocus={setFocus}
+            onMouseDown={onMouseDown}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}>
             <div className="m-0 p-0">

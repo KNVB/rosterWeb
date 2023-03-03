@@ -9,20 +9,20 @@ export default function PreferredShiftRow({
     isHighLightRow,
     rosterInfo,
     systemParam,
-    updateHighLight,
-    updatePreferredShift }) {
+    updatePreferredShift,
+    updateUI }) {
 
     let shiftCellList = [];
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         shiftCellList.push(<ShiftCell key={"prev-preferred-" + i} />)
     }
     function handleMouseLeaveEvent(e) {
-        updateHighLight(-1, -1);
+        updateUI(-1, -1);
     }
     function handleMouseEnterEvent(e) {
         let cell = e.target.closest("td");
         let row = cell.closest('tr');
-        updateHighLight(cell.cellIndex, row.rowIndex);
+        updateUI(cell.cellIndex, row.rowIndex);
     }
     calendarDateList.forEach((calendarDate, i) => {
         let preferredShift = "";

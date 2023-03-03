@@ -2,9 +2,18 @@ import "../../RosterTable.css";
 import HeaderRows from "../../rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../ShiftInfoLegend";
+import { useEffect } from 'react';
 import { useRosterSchedulerTable } from "./useRosterSchedulerTable";
 export default function RosterSchedulerTable({ objectList, updatePreferredShift, updateRosterMonth, updateShift }) {
-    const [itemList, updateHighLight] = useRosterSchedulerTable();
+    const [itemList, endSelect,getSelectedClassName, startSelect, updateUI] = useRosterSchedulerTable();
+    useEffect(() => {
+        let mouseUpHandler = document.addEventListener("mouseup", () => {
+            endSelect();
+        });
+        return () =>{
+            document.removeEventListener("mouseup", mouseUpHandler);
+        } 
+    }, [])
     return (
         <table className="m-0 rosterTable">
             <HeaderRows
@@ -17,11 +26,13 @@ export default function RosterSchedulerTable({ objectList, updatePreferredShift,
             <RosterSchedulerBody
                 allITOStat={objectList.allITOStat}
                 activeShiftList={objectList.activeShiftList}
-                highLightRowIndex={itemList.highLightRowIndex}
+                getSelectedClassName={getSelectedClassName}
+                highLightRowIndex={itemList.highLightRowIndex}                
                 monthlyCalendar={objectList.monthlyCalendar}
                 rosterList={objectList.rosterList}
+                startSelect={startSelect}
                 systemParam={objectList.systemParam}
-                updateHighLight={updateHighLight}
+                updateUI={updateUI}
                 updatePreferredShift={updatePreferredShift}
                 updateShift={updateShift} />
             <tfoot>
