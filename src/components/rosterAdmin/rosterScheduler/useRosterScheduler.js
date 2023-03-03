@@ -21,10 +21,7 @@ let reducer = (state, action) => {
         case "setError":
             result.error = action.error;
             break;
-        case "updateHighLight":
-            result.highLightCellIndex = action.cellIndex;
-            result.highLightRowIndex = action.rowIndex;
-            break;
+      
         case 'updateRosterMonth':
             result.allITOStat = action.allITOStat;
             result.monthlyCalendar = action.monthlyCalendar;
@@ -46,15 +43,11 @@ let reducer = (state, action) => {
 export function useRosterScheduler() {
     const [itemList, updateItemList] = useReducer(reducer, {
         calendarUtility: null,
-        error: null,
-        highLightCellIndex: -1,
-        highLightRowIndex: -1,
+        error: null,       
         isLoading: true,
         rosterMonth: null,
     });
-    let updateHighLight = (cellIndex, rowIndex) => {
-        updateItemList({ type: "updateHighLight", cellIndex: cellIndex, rowIndex: rowIndex });
-    }
+  
     let updatePreferredShift = (itoId, date, newShift) => {
         updateItemList({
             date,
@@ -143,8 +136,7 @@ export function useRosterScheduler() {
         getData();
     }, [])
     return [
-        itemList,
-        updateHighLight,
+        itemList,       
         updatePreferredShift,
         updateRosterMonth,
         updateShift

@@ -1,14 +1,8 @@
-import "../../RosterTable.css";
 import { useRosterScheduler } from "./useRosterScheduler";
 import handleAPIError from "../../../util/handleAPIError";
-import HeaderRows from "../../rows/HeaderRows";
-import RosterSchedulerBody from "./RosterSchedulerBody";
-import ShiftInfoLegend from "../../ShiftInfoLegend";
-export default function RosterScheduler() {
-    const [objectList, updateHighLight, updatePreferredShift,updateRosterMonth,updateShift] = useRosterScheduler();
-    let updateMonth = (newRosterMonth) => {
-        updateRosterMonth(newRosterMonth);
-    }
+import RosterSchedulerTable from "./RosterSchedulerTable";
+export default function RosterScheduler(){
+    const [objectList, updatePreferredShift,updateRosterMonth,updateShift] = useRosterScheduler();    
     if (objectList.error) {
         return handleAPIError(objectList.error);
     } else {
@@ -17,39 +11,15 @@ export default function RosterScheduler() {
             //console.log(objectList.rosterList);
             //console.log(objectList);
             return (
-                <table className="m-0 rosterTable">
-                    <HeaderRows
-                        calendarUtility={objectList.calendarUtility}
-                        caption="EMSTF Roster Scheduler"
-                        monthlyCalendar={objectList.monthlyCalendar}
-                        highLightCellIndex={objectList.highLightCellIndex}
-                        systemParam={objectList.systemParam}
-                        updateRosterMonth={updateMonth}/>
-                   
-                    <RosterSchedulerBody
-                        allITOStat={objectList.allITOStat}
-                        activeShiftList={objectList.activeShiftList}
-                        highLightRowIndex={objectList.highLightRowIndex}
-                        monthlyCalendar={objectList.monthlyCalendar}
-                        rosterList={objectList.rosterList}
-                        systemParam={objectList.systemParam}
-                        updateHighLight={updateHighLight}
-                        updatePreferredShift={updatePreferredShift}
-                        updateShift={updateShift}/>
-                    <tfoot>
-                        <tr>
-                            <td colSpan="42">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td colSpan="11" className="p-0">
-                                <ShiftInfoLegend activeShiftList={objectList.activeShiftList}/>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <RosterSchedulerTable
+                    objectList={objectList}
+                    updatePreferredShift={updatePreferredShift}
+                    updateRosterMonth={updateRosterMonth}
+                    updateShift={updateShift}/>
             )
         } else {
             return <></>
         }
+
     }
 }
