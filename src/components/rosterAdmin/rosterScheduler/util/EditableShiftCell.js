@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./EditableShiftCell.css";
 import ShiftCell from "../../../cells/ShiftCell";
 export default function EditableShiftCell(props) {
     const [isFocus, updateFocus] = useState(false);
@@ -30,10 +31,6 @@ export default function EditableShiftCell(props) {
                     <div className="littleSquareDiv">&nbsp;</div>
                 }
             </div>
-            {
-                selected &&
-                <div className="selected">&nbsp;</div>
-            }
         </ShiftCell>
     );
 }
