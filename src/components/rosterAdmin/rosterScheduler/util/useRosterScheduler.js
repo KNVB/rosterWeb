@@ -69,18 +69,25 @@ export function useRosterScheduler() {
     let endSelect = () => {
         itemList.selectedRegion.endSelect();
     }
+    let isFocusCell = (date, itoId) => {
+        let cellIndex = date + itemList.systemParam.noOfPrevDate;
+        let rowIndex = "rosterRow_" + itoId;
 
-    let getHighLightCellIndex=()=>{
+        return ((cellIndex === itemList.focusCellIndex) &&
+            (rowIndex === itemList.focusRowItoId))
+
+    }
+    let getHighLightCellIndex = () => {
         return itemList.highLightCellIndex;
     }
     let getHighLightRowIndex = () => {
         return itemList.highLightRowIndex;
     }
-    let startSelect = (cellIndex, rowIndex) => {
-        updateItemList({ cellIndex: cellIndex, rowIndex: rowIndex, type: "startSelect" });
+    let startSelect = (cellIndex, itoId) => {
+        updateItemList({ cellIndex: cellIndex, rowIndex: "rosterRow_"+itoId, type: "startSelect" });
     }
-    let updateFocus= (cellIndex, rowIndex) => {
-        updateItemList({ cellIndex: cellIndex, rowIndex: rowIndex, type: "updateFocus" });
+    let updateFocus = (cellIndex, itoId) => {
+        updateItemList({ cellIndex: cellIndex, rowIndex: "rosterRow_"+itoId, type: "updateFocus" });
     }
     let updatePreferredShift = (itoId, date, newShift) => {
         updateItemList({
@@ -132,8 +139,8 @@ export function useRosterScheduler() {
         });
     }
 
-    let updateUI = (cellIndex, rowIndex) => {
-        updateItemList({ cellIndex: cellIndex, rowIndex: rowIndex, type: "updateUI" });
+    let updateUI = (cellIndex, itoId) => {
+        updateItemList({ cellIndex: cellIndex, rowIndex: "rosterRow_"+itoId, type: "updateUI" });
     }
     useEffect(() => {
         let rosterUtil = new RosterUtil();
@@ -196,6 +203,7 @@ export function useRosterScheduler() {
             endSelect,
             getHighLightCellIndex,
             getHighLightRowIndex,
+            isFocusCell,
             startSelect,
             updateFocus,
             updateUI

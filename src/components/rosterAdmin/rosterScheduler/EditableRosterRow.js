@@ -5,7 +5,7 @@ import StatCell from '../../cells/StatCell';
 export default function EditableRosterRow({itoId, rosterDataAction,rosterDataList, uiAction }){
     let activeShiftList=rosterDataList.activeShiftList;
     let calendarDateList=rosterDataList.monthlyCalendar.calendarDateList;
-    let isHighLightRow=(uiAction.getHighLightRowIndex() === itoId);
+    let isHighLightRow=(uiAction.getHighLightRowIndex() === ("rosterRow_"+itoId));
     let rosterInfo = rosterDataList.rosterList[itoId];
     let shiftCellList = [];    
     let systemParam = rosterDataList.systemParam;
@@ -46,9 +46,11 @@ export default function EditableRosterRow({itoId, rosterDataAction,rosterDataLis
         } else {
             className += " " + activeShiftList[rosterInfo.shiftList[i + 1]].cssClassName;            
         }
+        
         shiftCellList.push(
             <EditableShiftCell
                 cssClassName={className}
+                isFocus={uiAction.isFocusCell(calendarDate.dateOfMonth,itoId)}
                 key={itoId + '_' + i}
                 onBlur={(e) => { rosterDataAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}
                 onFocus={handleFocus}
