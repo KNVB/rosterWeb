@@ -1,4 +1,4 @@
-export class SelectedRegion {
+export default class SelectedRegion {
     constructor() {
         this.firstInput = false;
         this.inSelectMode = false;

@@ -12,6 +12,7 @@
 .dateCell,
 .dayCell,
 .holidayCell {
+	box-sizing: padding-box;
 	font-size: 17px;
 	height: 29px;
 	width: 29px

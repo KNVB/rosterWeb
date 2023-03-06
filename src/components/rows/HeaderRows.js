@@ -3,34 +3,31 @@ import DateRow from './DateRow';
 import DayRow from './DayRow';
 import HolidayRow from './HolidayRow';
 import MonthPicker from '../util/monthPicker/MonthPicker';
-import React from 'react';
 import CaptionCell from "../cells/CaptionCell";
 export default function HeaderRows({
-  calendarUtility,
   caption,
-  highLightCellIndex,
-  monthlyCalendar,
-  systemParam,  
-  updateRosterMonth,
+  rosterDataAction,
+  rosterDataList,
+  uiAction
 }) {
   return (
     <thead>
-      <CaptionRow caption={caption}/>
-      <tr>        
+      <CaptionRow caption={caption} />
+      <tr>
         <CaptionCell colSpan="42">
-          <MonthPicker minDate={systemParam.monthPickerMinDate} onChange={updateRosterMonth} />
-        </CaptionCell>        
+          <MonthPicker minDate={rosterDataList.systemParam.monthPickerMinDate} onChange={rosterDataAction.updateRosterMonth} />
+        </CaptionCell>
       </tr>
-      <HolidayRow calendarDateList={monthlyCalendar.calendarDateList} noOfPrevDate={systemParam.noOfPrevDate}/>
+      <HolidayRow calendarDateList={rosterDataList.monthlyCalendar.calendarDateList} noOfPrevDate={rosterDataList.systemParam.noOfPrevDate} />
       <DayRow
-        calendarDateList={monthlyCalendar.calendarDateList}
-        calendarUtility={calendarUtility}
-        noOfPrevDate={systemParam.noOfPrevDate}
+        calendarDateList={rosterDataList.monthlyCalendar.calendarDateList}
+        calendarUtility={rosterDataList.calendarUtility}
+        noOfPrevDate={rosterDataList.systemParam.noOfPrevDate}
       />
-      <DateRow 
-        calendarDateList={monthlyCalendar.calendarDateList} 
-        highLightCellIndex={(highLightCellIndex - systemParam.noOfPrevDate - 1)}
-        noOfPrevDate={systemParam.noOfPrevDate}/>
+      <DateRow
+        calendarDateList={rosterDataList.monthlyCalendar.calendarDateList}
+        highLightCellIndex={uiAction.getHighLightCellIndex() - rosterDataList.systemParam.noOfPrevDate - 1}
+        noOfPrevDate={rosterDataList.systemParam.noOfPrevDate} />
     </thead>
   );
 }

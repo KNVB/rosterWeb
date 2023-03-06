@@ -1,0 +1,30 @@
+.littleSquareDiv {
+	background-color: rgb(0, 140, 255);
+	top: calc(100% - 3px);
+	left: calc(100% - 3px);
+	height: 6px;
+	position: absolute;
+	width: 6px;
+	z-index: 10;
+}
+
+.littleSquareDiv:hover {
+	cursor: crosshair;
+}
+.shiftContent{
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	height: 100%;
+	left:0;
+	position:absolute;
+	top:0;	
+	width:100%;
+}
+.shiftContent:focus{
+	outline:none;
+	border: 1px solid rgb(0, 140, 255);
+}
+.shiftContent:hover {
+	cursor: cell;
+}
