@@ -34,7 +34,7 @@
 	width:100%;
 }
 .shiftContent:empty{
-	line-height:2.5em;
+	line-height:150%;
 }
 .shiftContent:focus{
 	outline:none;	

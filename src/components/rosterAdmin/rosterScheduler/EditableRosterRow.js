@@ -8,8 +8,8 @@ export default function EditableRosterRow({ itoId, rosterDataAction, rosterDataL
     let isHighLightRow = (uiAction.getHighLightRowIndex() === rowIndex);
     let rosterInfo = rosterDataList.rosterList[itoId];
     let shiftCellList = [];
-    let systemParam = rosterDataList.systemParam;    
-    
+    let systemParam = rosterDataList.systemParam;
+
     function handleMouseDownEvent(e) {
         let cell = e.target.closest("td");
         uiAction.startSelect(cell.cellIndex, rowIndex);
@@ -37,30 +37,25 @@ export default function EditableRosterRow({ itoId, rosterDataAction, rosterDataL
         )
     }
     calendarDateList.forEach((calendarDate, i) => {
-        //if (i===0){
             let className = uiAction.getSelectedClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
-
             if (rosterDataList.allITOStat.duplicatShiftList[itoId].includes(calendarDate.dateOfMonth)) {
                 className += " errorRedBlackGround";
             } else {
-                if (activeShiftList[rosterInfo.shiftList[i + 1]]){
+                if (activeShiftList[rosterInfo.shiftList[i + 1]]) {
                     className += " " + activeShiftList[rosterInfo.shiftList[i + 1]].cssClassName;
                 }
             }
-    
             shiftCellList.push(
                 <EditableShiftCell
                     cssClassName={className}
                     key={itoId + '_' + i}
-                    onBlur={(e) => { rosterDataAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}                
+                    onBlur={(e) => { rosterDataAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}
                     onMouseDown={handleMouseDownEvent}
                     onMouseEnter={handleMouseEnterEvent}
                     onMouseLeave={handleMouseLeaveEvent}>
                     {rosterInfo.shiftList[i + 1]}
                 </EditableShiftCell>
             );
-    
-        //}
     });
     for (let i = calendarDateList.length; i < 31; i++) {
         shiftCellList.push(<ShiftCell key={itoId + '_' + i}>&nbsp;</ShiftCell>)

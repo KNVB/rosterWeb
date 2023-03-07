@@ -1,16 +1,17 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import "../../RosterTable.css";
 import HeaderRow from "../../rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 export default function RosterSchedulerTable({rosterDataList, rosterDataAction, uiAction }) {
-    useEffect(() => {
-        let mouseUpHandler = document.addEventListener("mouseup", () => {
-            uiAction.endSelect();
-        });
+    let mouseUpCallback =useCallback(()=>{
+        uiAction.endSelect();
+    },[])
+    useEffect(() => {       
+        let mouseUpHandler = document.addEventListener("mouseup",mouseUpCallback);      
         return () => {
             document.removeEventListener("mouseup", mouseUpHandler);
         }
-    }, []);
+    }, [mouseUpCallback]);
     return (
         <table className="m-0 rosterTable">
             <HeaderRow

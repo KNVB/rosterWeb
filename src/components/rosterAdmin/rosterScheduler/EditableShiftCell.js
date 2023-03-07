@@ -2,7 +2,7 @@ import "./EditableShiftCell.css";
 import ShiftCell from "../../cells/ShiftCell";
 export default function EditableShiftCell(props) {
     let {
-        children, cssClassName,        
+        children, cssClassName,
         onBlur, onCopy, onFocus,
         onKeyDown,
         onMouseDown, onMouseEnter, onMouseLeave,
@@ -12,7 +12,7 @@ export default function EditableShiftCell(props) {
     if (cssClassName) {
         className += " " + cssClassName;
     }
-    let isLastCell=((cssClassName.indexOf("selectCellBorderRight")>-1) && (cssClassName.indexOf("selectCellBorderBottom")>-1));
+    let isLastCell = ((cssClassName.indexOf("selectCellBorderRight") > -1) && (cssClassName.indexOf("selectCellBorderBottom") > -1));
     return (
         <ShiftCell
             cssClassName="position-relative"

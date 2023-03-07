@@ -9,7 +9,7 @@ import SystemUtil from '../../../../util/SystemUtil';
 let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
-        case "endSlect":
+        case "endSelect":
             result.selectedRegion.endSelect();
             break;
         case "init":
@@ -49,6 +49,9 @@ let reducer = (state, action) => {
         case "updateUI":
             result.highLightCellIndex = action.cellIndex;
             result.highLightRowIndex = action.rowIndex;
+            if (result.selectedRegion.inSelectMode){
+                result.selectedRegion.update(action.cellIndex, action.rowIndex);                        
+            }
             break;
         default:
             break;
