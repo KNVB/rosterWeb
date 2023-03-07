@@ -1,0 +1,27 @@
+.cursor-pointer{
+    cursor:pointer
+}
+.itoDetailTable,
+.itoDetailTable td,
+.itoDetailTable th,
+.itoListTable,
+.itoListTable  td,
+.itoListTable  th{
+    border:1px solid black;
+    padding:3px;
+}
+
+.itoListTable td,
+.itoListTable th{
+    text-align:center;
+}
+.itoListTable td:nth-child(1){
+    text-align:left
+}
+
+.itoDetailTable tr td input{
+    width:50%;
+}
+.errorMessage{
+    color:red
+}
