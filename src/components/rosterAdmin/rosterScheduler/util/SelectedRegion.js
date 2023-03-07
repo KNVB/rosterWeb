@@ -1,7 +1,7 @@
 export default class SelectedRegion {
     constructor() {
         this.firstInput = false;
-        this.inSelectMode = false;
+
         let init = () => {
             this.colCount = -1;
             this.firstX = -1;
@@ -12,6 +12,7 @@ export default class SelectedRegion {
             this.maxY = -1;
             this.rowCount = -1;
             this.selectedCellList = [];
+            this.inSelectMode = false;
         }
         init();
         this.endSelect = function () {
@@ -20,27 +21,21 @@ export default class SelectedRegion {
             }
         }
         this.getSelectedClassName = function (cellIndex, rowIndex) {
-            let result = "";
+            let result = [];
 
-            switch (true) {
-                case (cellIndex === this.maxX):
-                    result += " selected selectedLeft";
-                    break;
-                case (cellIndex === this.minX):
-                    result += " selected selectedRight";
-                    break;
-                case (rowIndex === this.maxY):
-                    result += " selected selectedBottom";
-                    break
-                case (rowIndex === this.minY):
-                    result += " selectedselectedTop";
-                    break;
-                case ((cellIndex > this.minX) && (cellIndex < this.maxX)):
-                case ((rowIndex > this.minY) && (rowIndex < this.maxY)): result += " selected";
-                    break;
-                default:
-                    break
+            if ((rowIndex === this.minY) && (cellIndex >= this.minX) && (cellIndex <= this.maxX)) {
+                result.push("selectCellBorderTop");
             }
+            if ((rowIndex === this.maxY) && (cellIndex >= this.minX) && (cellIndex <= this.maxX)) {
+                result.push("selectCellBorderBottom");
+            }
+            if ((cellIndex === this.maxX) && (rowIndex >= this.minY) && (rowIndex <= this.maxY)) {
+                result.push("selectCellBorderRight");
+            }
+            if ((cellIndex === this.minX) && (rowIndex >= this.minY) && (rowIndex <= this.maxY)) {
+                result.push("selectCellBorderLeft");
+            }
+            result = result.join(" ");
             console.log("=======================================");
             console.log("cellIndex=" + cellIndex + ", rowIndex=" + rowIndex);
             console.log("this.firstX=" + this.firstX + ", this.firstY=" + this.firstY);

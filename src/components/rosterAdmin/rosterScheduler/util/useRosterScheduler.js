@@ -9,6 +9,9 @@ import SystemUtil from '../../../../util/SystemUtil';
 let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
+        case "endSlect":
+            result.selectedRegion.endSelect();
+            break;
         case "init":
             result.allITOStat = action.allITOStat;
             result.activeShiftList = action.activeShiftList;
@@ -22,6 +25,9 @@ let reducer = (state, action) => {
             break;
         case "setError":
             result.error = action.error;
+            break;
+        case "startSelect":
+            result.selectedRegion.startSelect(action.cellIndex,action.rowIndex);
             break;
         case "updateFocus":
             result.focusCellIndex = action.cellIndex;
@@ -55,10 +61,8 @@ export function useRosterScheduler() {
         activeShiftList: null,
         calendarUtility: null,
         error: null,
-        focusCellIndex: -1,
-        focusRowItoId: "",
         highLightCellIndex: -1,
-        highLightRowIndex: "",
+        highLightRowIndex: -1,
         isLoading: true,
         monthlyCalendar: null,
         rosterList: null,
@@ -67,15 +71,7 @@ export function useRosterScheduler() {
         systemParam: null
     });
     let endSelect = () => {
-        itemList.selectedRegion.endSelect();
-    }
-    let isFocusCell = (date, itoId) => {
-        let cellIndex = date + itemList.systemParam.noOfPrevDate;
-        let rowIndex = "rosterRow_" + itoId;
-
-        return ((cellIndex === itemList.focusCellIndex) &&
-            (rowIndex === itemList.focusRowItoId))
-
+        updateItemList({ type: "endSelect" });        
     }
     let getHighLightCellIndex = () => {
         return itemList.highLightCellIndex;
@@ -83,11 +79,14 @@ export function useRosterScheduler() {
     let getHighLightRowIndex = () => {
         return itemList.highLightRowIndex;
     }
-    let startSelect = (cellIndex, itoId) => {
-        updateItemList({ cellIndex: cellIndex, rowIndex: "rosterRow_"+itoId, type: "startSelect" });
+    let getSelectedClassName = (cellIndex, rowIndex) => {
+        return itemList.selectedRegion.getSelectedClassName(cellIndex, rowIndex);
     }
-    let updateFocus = (cellIndex, itoId) => {
-        updateItemList({ cellIndex: cellIndex, rowIndex: "rosterRow_"+itoId, type: "updateFocus" });
+    let isInSelectMode = () => {
+        return itemList.selectedRegion.inSelectMode;
+    }
+    let startSelect = (cellIndex, rowIndex) => {
+        updateItemList({ cellIndex: cellIndex, rowIndex: rowIndex, type: "startSelect" });
     }
     let updatePreferredShift = (itoId, date, newShift) => {
         updateItemList({
@@ -139,8 +138,8 @@ export function useRosterScheduler() {
         });
     }
 
-    let updateUI = (cellIndex, itoId) => {
-        updateItemList({ cellIndex: cellIndex, rowIndex: "rosterRow_"+itoId, type: "updateUI" });
+    let updateUI = (cellIndex, rowIndex) => {
+        updateItemList({ cellIndex: cellIndex, rowIndex: rowIndex, type: "updateUI" });
     }
     useEffect(() => {
         let rosterUtil = new RosterUtil();
@@ -203,9 +202,9 @@ export function useRosterScheduler() {
             endSelect,
             getHighLightCellIndex,
             getHighLightRowIndex,
-            isFocusCell,
+            getSelectedClassName,
+            isInSelectMode,
             startSelect,
-            updateFocus,
             updateUI
         }]
 }

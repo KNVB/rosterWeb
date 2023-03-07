@@ -11,20 +11,41 @@
 .littleSquareDiv:hover {
 	cursor: crosshair;
 }
+.selectCellBorderBottom{
+	border-bottom: 1px solid rgb(0, 140, 255);
+}
+.selectCellBorderLeft{
+	border-left: 1px solid rgb(0, 140, 255);
+}
+.selectCellBorderRight{
+	border-right: 1px solid rgb(0, 140, 255);
+}
+.selectCellBorderTop{
+	border-top: 1px solid rgb(0, 140, 255);
+}
 .shiftContent{
 	align-items: center;
-	display: flex;
-	justify-content: center;
+	display: flex;	
 	height: 100%;
-	left:0;
+	justify-content: center;
+	left:0;	
 	position:absolute;
-	top:0;	
+	top:0;
 	width:100%;
 }
+.shiftContent:empty{
+	line-height:2.5em;
+}
 .shiftContent:focus{
-	outline:none;
-	border: 1px solid rgb(0, 140, 255);
+	outline:none;	
 }
 .shiftContent:hover {
 	cursor: cell;
+}
+.shiftContent::selection{
+	background: none; 
+}
+.statCell{	
+    font-size: 15px;
+    width:60px
 }

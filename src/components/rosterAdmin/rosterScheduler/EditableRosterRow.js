@@ -2,24 +2,21 @@ import EditableShiftCell from './EditableShiftCell';
 import NameCell from '../../cells/NameCell';
 import ShiftCell from "../../cells/ShiftCell";
 import StatCell from '../../cells/StatCell';
-export default function EditableRosterRow({itoId, rosterDataAction,rosterDataList, uiAction }){
-    let activeShiftList=rosterDataList.activeShiftList;
-    let calendarDateList=rosterDataList.monthlyCalendar.calendarDateList;
-    let isHighLightRow=(uiAction.getHighLightRowIndex() === ("rosterRow_"+itoId));
+export default function EditableRosterRow({ itoId, rosterDataAction, rosterDataList, rowIndex, uiAction }) {
+    let activeShiftList = rosterDataList.activeShiftList;
+    let calendarDateList = rosterDataList.monthlyCalendar.calendarDateList;
+    let isHighLightRow = (uiAction.getHighLightRowIndex() === rowIndex);
     let rosterInfo = rosterDataList.rosterList[itoId];
-    let shiftCellList = [];    
-    let systemParam = rosterDataList.systemParam;
-    let handleFocus=e=>{
-        let cell = e.target.closest("td");
-        uiAction.updateFocus(cell.cellIndex, itoId);
-    }
+    let shiftCellList = [];
+    let systemParam = rosterDataList.systemParam;    
+    
     function handleMouseDownEvent(e) {
-        let cell = e.target.closest("td");        
-        uiAction.startSelect(cell.cellIndex, itoId);
+        let cell = e.target.closest("td");
+        uiAction.startSelect(cell.cellIndex, rowIndex);
     }
     function handleMouseEnterEvent(e) {
         let cell = e.target.closest("td");
-        uiAction.updateUI(cell.cellIndex, itoId);
+        uiAction.updateUI(cell.cellIndex, rowIndex);
     }
     function handleMouseLeaveEvent(e) {
         uiAction.updateUI(-1, -1);
@@ -40,31 +37,35 @@ export default function EditableRosterRow({itoId, rosterDataAction,rosterDataLis
         )
     }
     calendarDateList.forEach((calendarDate, i) => {
-        let className='';
-        if (rosterDataList.allITOStat.duplicatShiftList[itoId].includes(calendarDate.dateOfMonth)) {
-            className += " errorRedBlackGround";
-        } else {
-            className += " " + activeShiftList[rosterInfo.shiftList[i + 1]].cssClassName;            
-        }
-        
-        shiftCellList.push(
-            <EditableShiftCell
-                cssClassName={className}
-                isFocus={uiAction.isFocusCell(calendarDate.dateOfMonth,itoId)}
-                key={itoId + '_' + i}
-                onBlur={(e) => { rosterDataAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}
-                onFocus={handleFocus}
-                onMouseDown={handleMouseDownEvent}
-                onMouseEnter={handleMouseEnterEvent}
-                onMouseLeave={handleMouseLeaveEvent}>
-                {rosterInfo.shiftList[i + 1]}
-            </EditableShiftCell>
-        );
+        //if (i===0){
+            let className = uiAction.getSelectedClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
+
+            if (rosterDataList.allITOStat.duplicatShiftList[itoId].includes(calendarDate.dateOfMonth)) {
+                className += " errorRedBlackGround";
+            } else {
+                if (activeShiftList[rosterInfo.shiftList[i + 1]]){
+                    className += " " + activeShiftList[rosterInfo.shiftList[i + 1]].cssClassName;
+                }
+            }
+    
+            shiftCellList.push(
+                <EditableShiftCell
+                    cssClassName={className}
+                    key={itoId + '_' + i}
+                    onBlur={(e) => { rosterDataAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}                
+                    onMouseDown={handleMouseDownEvent}
+                    onMouseEnter={handleMouseEnterEvent}
+                    onMouseLeave={handleMouseLeaveEvent}>
+                    {rosterInfo.shiftList[i + 1]}
+                </EditableShiftCell>
+            );
+    
+        //}
     });
     for (let i = calendarDateList.length; i < 31; i++) {
         shiftCellList.push(<ShiftCell key={itoId + '_' + i}>&nbsp;</ShiftCell>)
     }
-    return(
+    return (
         <tr>
             <NameCell border isHighLight={isHighLightRow}>
                 {rosterInfo.itoName}

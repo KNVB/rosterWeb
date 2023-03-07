@@ -2,20 +2,20 @@ import "./EditableShiftCell.css";
 import ShiftCell from "../../cells/ShiftCell";
 export default function EditableShiftCell(props) {
     let {
-        children, cssClassName,
-        isFocus,
+        children, cssClassName,        
         onBlur, onCopy, onFocus,
         onKeyDown,
         onMouseDown, onMouseEnter, onMouseLeave,
         onPaste
     } = props;
-    let className = "position-relative";
+    let className = "shiftContent";
     if (cssClassName) {
         className += " " + cssClassName;
     }
+    let isLastCell=((cssClassName.indexOf("selectCellBorderRight")>-1) && (cssClassName.indexOf("selectCellBorderBottom")>-1));
     return (
         <ShiftCell
-            cssClassName={className}
+            cssClassName="position-relative"
             onBlur={onBlur}
             onCopy={onCopy}
             onFocus={onFocus}
@@ -25,13 +25,13 @@ export default function EditableShiftCell(props) {
             onMouseLeave={onMouseLeave}
             onPaste={onPaste}>
             <div
-                className="shiftContent"
+                className={className}
                 contentEditable={true}
                 suppressContentEditableWarning={true}>
                 {children}
             </div>
             {
-                isFocus &&
+                isLastCell &&
                 <div className="littleSquareDiv"></div>
             }
         </ShiftCell>
