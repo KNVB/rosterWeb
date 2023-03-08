@@ -47,6 +47,15 @@ export default class SelectedRegion {
             */
             return result;
         }
+        this.select = function (cellIndex, rowIndex) {
+            this.firstX = cellIndex;
+            this.maxX = cellIndex;
+            this.minX = cellIndex;
+            this.firstY = rowIndex;
+            this.maxY = rowIndex;
+            this.minY = rowIndex;
+            this.inSelectMode = false;
+        }
         this.startSelect = function (cellIndex, rowIndex) {
             this.firstX = cellIndex;
             this.maxX = cellIndex;

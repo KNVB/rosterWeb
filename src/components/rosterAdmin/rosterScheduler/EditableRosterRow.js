@@ -39,8 +39,6 @@ export default function EditableRosterRow({ itoId, rosterDataAction, rosterDataL
         shiftCellList.push(
             <EditableShiftCell
                 cssClassName={className}
-                dateOfMonth={calendarDate.dateOfMonth}
-                itoId={itoId}
                 key={itoId + '_' + i}
                 onBlur={(e) => handleBlurEvent(itoId, calendarDate.dateOfMonth, e.target.textContent)}
                 uiAction={uiAction}>

@@ -26,8 +26,11 @@ let reducer = (state, action) => {
         case "setError":
             result.error = action.error;
             break;
+        case "select":
+            result.selectedRegion.select(action.cellIndex, action.rowIndex);
+            break;
         case "startSelect":
-            result.selectedRegion.startSelect(action.cellIndex,action.rowIndex);
+            result.selectedRegion.startSelect(action.cellIndex, action.rowIndex);
             break;
         case "updateFocus":
             result.focusCellIndex = action.cellIndex;
@@ -49,8 +52,8 @@ let reducer = (state, action) => {
         case "updateUI":
             result.highLightCellIndex = action.cellIndex;
             result.highLightRowIndex = action.rowIndex;
-            if (result.selectedRegion.inSelectMode){
-                result.selectedRegion.update(action.cellIndex, action.rowIndex);                        
+            if (result.selectedRegion.inSelectMode) {
+                result.selectedRegion.update(action.cellIndex, action.rowIndex);
             }
             break;
         default:
@@ -74,7 +77,7 @@ export function useRosterScheduler() {
         systemParam: null
     });
     let endSelect = () => {
-        updateItemList({ type: "endSelect" });        
+        updateItemList({ type: "endSelect" });
     }
     let getHighLightCellIndex = () => {
         return itemList.highLightCellIndex;
@@ -87,6 +90,9 @@ export function useRosterScheduler() {
     }
     let isInSelectMode = () => {
         return itemList.selectedRegion.inSelectMode;
+    }
+    let select = (cellIndex, rowIndex) => {
+        updateItemList({ cellIndex: cellIndex, rowIndex: rowIndex, type: "select" });
     }
     let startSelect = (cellIndex, rowIndex) => {
         updateItemList({ cellIndex: cellIndex, rowIndex: rowIndex, type: "startSelect" });
@@ -207,6 +213,7 @@ export function useRosterScheduler() {
             getHighLightRowIndex,
             getSelectedClassName,
             isInSelectMode,
+            select,
             startSelect,
             updateUI
         }]
