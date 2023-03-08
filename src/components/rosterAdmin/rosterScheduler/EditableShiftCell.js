@@ -39,17 +39,17 @@ export default function EditableShiftCell(props) {
             onPaste={onPaste}>
             <div
                 className={className}>
-                <span 
+                <div
                     className="shiftType"
                     contentEditable={true}
                     suppressContentEditableWarning={true}>
                     {children}
-                </span>
+                </div>
+                {
+                    isLastCell &&
+                    <div className="littleSquareDiv"></div>
+                }
             </div>
-            {
-                isLastCell &&
-                <div className="littleSquareDiv"></div>
-            }
         </ShiftCell>
     )
 }
