@@ -21,7 +21,7 @@ let publicAPI=new PublicAPI(rosterManager,systemParam);
 let app = express();
 let privateAPIRouter= express.Router();
 let publicAPIRouter= express.Router();
-let httpServerPort = process.env["HTTP_PORT"];
+let httpServerPort = process.env["REACT_APP_SOCKET_PORT"];
 
 //================================================================
 /*****************************************************************/
