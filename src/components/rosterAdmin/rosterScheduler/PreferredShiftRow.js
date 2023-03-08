@@ -8,17 +8,8 @@ export default function PreferredShiftRow({ itoId, rosterDataAction, rosterDataL
     let rosterInfo = rosterDataList.rosterList[itoId];
     let shiftCellList = [];
     let systemParam = rosterDataList.systemParam;
-    function handleMouseDownEvent(e) {
-        let cell = e.target.closest("td");
-        console.log(cell.cellIndex, rowIndex);
-        uiAction.startSelect(cell.cellIndex, rowIndex);
-    }
-    function handleMouseEnterEvent(e) {
-        let cell = e.target.closest("td");
-        uiAction.updateUI(cell.cellIndex, rowIndex);
-    }
-    function handleMouseLeaveEvent(e) {
-        uiAction.updateUI(-1, -1);
+    let handleBlurEvent=(itoId, dateOfMonth, newPreferredShift)=>{
+        rosterDataAction.updatePreferredShift(itoId, dateOfMonth, newPreferredShift);
     }
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         shiftCellList.push(<ShiftCell key={"prev-preferred-" + i} />)
@@ -34,10 +25,8 @@ export default function PreferredShiftRow({ itoId, rosterDataAction, rosterDataL
             <EditableShiftCell
                 cssClassName={className}
                 key={"preferred_" + itoId + '_' + i}
-                onBlur={(e) => { rosterDataAction.updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent) }}
-                onMouseDown={handleMouseDownEvent}
-                onMouseEnter={handleMouseEnterEvent}
-                onMouseLeave={handleMouseLeaveEvent}>
+                onBlur={(e) => handleBlurEvent(itoId, calendarDate.dateOfMonth, e.target.textContent) }
+                uiAction={uiAction}>
                 {preferredShift}
             </EditableShiftCell>
         );

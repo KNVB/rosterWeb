@@ -33,16 +33,13 @@
 	top:0;
 	width:100%;
 }
-.shiftContent:empty{
-	line-height:150%;
-}
-.shiftContent:focus{
-	outline:none;	
-}
 .shiftContent:hover {
 	cursor: cell;
 }
-.shiftContent::selection{
+.shiftType:focus{
+	outline:none;	
+}
+.shiftType::selection{
 	background: none; 
 }
 .statCell{	

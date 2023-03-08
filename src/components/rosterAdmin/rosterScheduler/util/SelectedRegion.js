@@ -36,7 +36,7 @@ export default class SelectedRegion {
                 result.push("selectCellBorderLeft");
             }
             result = result.join(" ");
-            
+            /*
             console.log("=======================================");
             console.log("cellIndex=" + cellIndex + ", rowIndex=" + rowIndex);
             console.log("this.firstX=" + this.firstX + ", this.firstY=" + this.firstY);
@@ -44,7 +44,7 @@ export default class SelectedRegion {
             console.log("this.minX=" + this.minX + ", this.minY=" + this.minY);
             console.log("result:" + result);
             console.log("=======================================");
-            
+            */
             return result;
         }
         this.startSelect = function (cellIndex, rowIndex) {
