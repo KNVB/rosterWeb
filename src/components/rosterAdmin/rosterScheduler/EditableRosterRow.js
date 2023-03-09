@@ -2,7 +2,7 @@ import EditableShiftCell from './EditableShiftCell';
 import NameCell from '../../cells/NameCell';
 import ShiftCell from "../../cells/ShiftCell";
 import StatCell from '../../cells/StatCell';
-export default function EditableRosterRow({ itoId, rosterDataAction, rosterDataList, rowIndex, uiAction }) {
+export default function EditableRosterRow({ itoId, maxRowCount, minRowCount, rosterDataAction, rosterDataList, rowIndex, uiAction }) {
     let activeShiftList = rosterDataList.activeShiftList;
     let calendarDateList = rosterDataList.monthlyCalendar.calendarDateList;
     let isHighLightRow = (uiAction.getHighLightRowIndex() === rowIndex);
@@ -11,6 +11,77 @@ export default function EditableRosterRow({ itoId, rosterDataAction, rosterDataL
     let systemParam = rosterDataList.systemParam;
     let handleBlurEvent = (itoId, dateOfMonth, newShift) => {
         rosterDataAction.updateShift(itoId, dateOfMonth, newShift);
+    }
+    let handleArrowKeyEvent = (e, yOffset, xOffset) => {
+        e.preventDefault();
+        let cell, nextCell, nextCellIndex, nextRow, nextRowIndex, table, row;
+        cell = e.target.closest("td");
+        row = cell.closest("tr");
+        table = row.closest("table");
+        switch (true) {
+            case (yOffset > 0):
+                nextRow=table.rows[row.rowIndex+1];
+                break;
+        }
+        console.log(nextRow)
+        /*
+        switch (true) {
+            case (xOffset < 0):
+                nextCell = cell.previousSibling;
+                break;
+            case (xOffset > 0):
+                nextCell = cell.nextSibling;
+                break
+            default:
+                nextCell = cell;
+                break;
+        }
+        switch (true) {
+            case (nextCell.cellIndex < (systemParam.noOfPrevDate + 1)):
+                nextCellIndex = systemParam.noOfPrevDate + calendarDateList.length;
+                break;
+            case (nextCell.cellIndex > (systemParam.noOfPrevDate + calendarDateList.length)):
+                nextCellIndex = systemParam.noOfPrevDate + 1;
+                break;
+            default:
+                nextCellIndex = nextCell.cellIndex;
+                break;
+        }
+        nextCell = table.rows[nextRowIndex].cells[nextCellIndex];
+        selectCell(nextCell);
+        */
+    }
+    function handleTabKeyEvent(e) {
+        console.log("Tab event");
+        if (e.shiftKey) {
+            handleArrowKeyEvent(e, 0, -1);
+        } else {
+            handleArrowKeyEvent(e, 0, 1);
+        }
+    }
+    let handleKeyDown = (e) => {
+        switch (e.which) {
+            case 9://handle tab key
+                handleTabKeyEvent(e);
+                break;
+            case 38://handle up arrow key event
+                handleArrowKeyEvent(e, -1, 0);
+                break;
+            case 40://handle down arrow key event
+                handleArrowKeyEvent(e, 1, 0);
+                break;
+            default:
+                break;
+        }
+    }
+    let selectCell = cell => {
+        let nextShiftType = cell.querySelector("div.shiftType");
+        let range = document.createRange();
+        let sel = window.getSelection();
+        range.selectNodeContents(nextShiftType);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        uiAction.select(cell.cellIndex, rowIndex);
     }
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         let className = '';
@@ -41,6 +112,7 @@ export default function EditableRosterRow({ itoId, rosterDataAction, rosterDataL
                 cssClassName={className}
                 key={itoId + '_' + i}
                 onBlur={(e) => handleBlurEvent(itoId, calendarDate.dateOfMonth, e.target.textContent)}
+                onKeyDown={handleKeyDown}
                 uiAction={uiAction}>
                 {rosterInfo.shiftList[i + 1]}
             </EditableShiftCell>
