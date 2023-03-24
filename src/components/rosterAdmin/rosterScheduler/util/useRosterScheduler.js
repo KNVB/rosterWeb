@@ -159,7 +159,13 @@ export function useRosterScheduler() {
     let isHighLightRow = rowIndex => {
         return itemList.rosterTableUtil.isHighLightRow(rowIndex);
     }
-    let paste = (dateOfMonth, e) => { }
+    let paste = (dateOfMonth, e) => {
+        e.preventDefault();
+        let copyDataRowCount=itemList.rosterDataUtil.getCopyDataRowCount();
+        if (copyDataRowCount >0){
+            
+        }
+    }
     let setFocusCell = e => { }
     let startSelect = e => {
         let cell = e.target.closest("td");

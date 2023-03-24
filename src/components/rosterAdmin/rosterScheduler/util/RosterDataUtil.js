@@ -37,6 +37,13 @@ export default class RosterDataUtil {
             });
             copiedData=result;
         }
+        this.getCopyDataRowCount=()=>{
+            if (copiedData===null){
+                return 0
+            }else {
+                return copiedData.length;
+            }
+        }
         this.getShiftCssClassName = shiftType => {
             try {
                 let result = activeShiftList[shiftType].cssClassName;
