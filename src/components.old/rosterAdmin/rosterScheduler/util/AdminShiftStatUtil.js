@@ -2,11 +2,11 @@ export default function AdminShiftStatUtil() {
     const getAllITOStat = (activeShiftInfoList, startDate, endDate, inITORosterList) => {
         let allITOStat = {};
         let aShiftCount = [], bxShiftCount = [], cShiftCount = [];
-        let duplicatShiftList = {};
+        let duplicateShiftList = {};
         let vacantShiftList = {};
         let itoIdList = Object.keys(inITORosterList);
         Object.keys(inITORosterList).forEach(itoId => {
-            duplicatShiftList[itoId] = [];
+            duplicateShiftList[itoId] = [];
         });
         for (let i = startDate; i <= endDate; i++) {
             let vacantShift = activeShiftInfoList.essentialShift;
@@ -25,7 +25,7 @@ export default function AdminShiftStatUtil() {
                             case "a":
                             case "c":
                                 if (temp.includes(shiftType)) {
-                                    duplicatShiftList[itoId].push(i);
+                                    duplicateShiftList[itoId].push(i);
                                 } else {
                                     temp.push(shiftType);
                                 }
@@ -33,7 +33,7 @@ export default function AdminShiftStatUtil() {
                             case "b":
                             case "b1":
                                 if (temp.includes("b")) {
-                                    duplicatShiftList[itoId].push(i);
+                                    duplicateShiftList[itoId].push(i);
                                 } else {
                                     temp.push('b');
                                 }
@@ -62,7 +62,7 @@ export default function AdminShiftStatUtil() {
             avgStdDev: avgStdDev.toFixed(2),
             bxShiftStdDev: bShiftSD.toFixed(2),
             cShiftStdDev: cShiftSD.toFixed(2),
-            duplicatShiftList,            
+            duplicateShiftList,            
             vacantShiftList: vacantShiftList
         }
         return allITOStat

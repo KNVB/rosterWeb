@@ -1,4 +1,4 @@
-export default function DayCell({calendarDate,calendarUtility}){
+export default function DayCell({ calendarDate, calendarUtility }) {
     let isPH = false;
     let textContent = '';
     if (calendarDate) {

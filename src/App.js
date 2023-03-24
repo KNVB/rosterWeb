@@ -1,4 +1,5 @@
 import './App.css';
+import "./components/style.css";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RosterAdminGateKeeper from './components/rosterAdmin/RosterAdminGateKeeper';
 import RosterScheduler from "./components/rosterAdmin/rosterScheduler/RosterScheduler";

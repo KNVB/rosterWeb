@@ -1,4 +1,4 @@
-export default function StatCell(props){
+export default function StatCell(props) {
     return (
         <td className="borderCell statCell text-center"
             colSpan={props.colSpan}
