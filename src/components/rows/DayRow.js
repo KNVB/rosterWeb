@@ -1,16 +1,14 @@
-import CalendarUtility from "../util/calendar/CalendarUtility";
 import NameCell from "../cells/NameCell";
 import DayCell from "../cells/DayCell";
 import StatCell from "../cells/StatCell";
-export default function DayRow({ calendarDateList, noOfPrevDate }) {
-    let calendarUtility=new CalendarUtility();
+export default function DayRow({ calendarDateList, noOfPrevDate,weekdayNames }) {
     let dayList = [];
     let prevDayList = [];
     for (let i = 0; i < noOfPrevDate; i++) {
         prevDayList.push(<td className="borderCell dayCell" key={"prevDay_" + i} />);
     }
     calendarDateList.forEach((calendarDate, index) => {
-        dayList.push(<DayCell calendarUtility={calendarUtility} calendarDate={calendarDate} key={'day_' + index} />);
+        dayList.push(<DayCell weekdayNames={weekdayNames} calendarDate={calendarDate} key={'day_' + index} />);
     });
     for (let i = calendarDateList.length; i < 31; i++) {
         dayList.push(

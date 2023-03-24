@@ -1,4 +1,4 @@
-export default function DayCell({calendarDate,calendarUtility}){
+export default function DayCell({calendarDate,weekdayNames}){
     let isPH = false;
     let textContent = '';
     if (calendarDate) {
@@ -9,7 +9,7 @@ export default function DayCell({calendarDate,calendarUtility}){
         ) {
             isPH = true;
         }
-        textContent = calendarUtility.weekdayNames[calendarDate.dayOfWeek]
+        textContent = weekdayNames[calendarDate.dayOfWeek]
     }
     return (
         <td className={"borderCell dayCell text-center" + (isPH ? " phCell" : "")}>
