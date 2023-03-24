@@ -14,12 +14,12 @@ export default class RosterTableUtil {
                 isFirstInput = true;
             }
         }
-        this.getCopyRegionLocation=()=>{
-            let result={column:{start:minX,end:maxX},rows:[]};
+        this.getCopyRegionLocation = () => {
+            let result = { column: { start: minX, end: maxX }, rows: [] };
             let row;
             let table = document.querySelector("table.rosterTable");
             for (let y = minY; y <= maxY; y++) {
-                row=table.rows[y];
+                row = table.rows[y];
                 result.rows.push(row.id);
             }
             copiedRegion.init({ maxX, minX, minY, maxY });
@@ -71,6 +71,22 @@ export default class RosterTableUtil {
             }
             return { cellIndex: nextCellIndex, rowIndex: nextRowIndex }
         }
+        this.getPasteLocation = (e, copyDataDimension) => {
+            console.log(copyDataDimension);
+            let cell = e.target.closest("td");
+            let row = cell.closest("tr"), nextRow;
+            let result = { column: { start: cell.cellIndex, length: copyDataDimension.width }, rows: [row.id] };
+            for (let i = 1; i < copyDataDimension.height; i++) {
+                nextRow = row.nextSibling;
+                if (nextRow.id.startsWith("rosterRow_") || nextRow.id.startsWith("preferredShiftRow_")) {
+                    result.rows.push(nextRow.id);
+                    row=nextRow;
+                } else {
+                    break
+                }
+            }
+            return result;
+        }
         this.getSelectedCssClass = (cellIndex, rowIndex) => {
             let result = copiedRegion.getCopiedClass(cellIndex, rowIndex);
             if (result.length === 0) {
@@ -94,9 +110,9 @@ export default class RosterTableUtil {
             maxRowIndex = itoIdList.length * 1 + 4;
             minCellIndex = systemParam.noOfPrevDate + 1;
             minX = -1; minY = -1; maxX = -1; maxY = -1;
-            copiedRegion.clear(); 
+            copiedRegion.clear();
         }
-        this.isFirstInput=()=>{
+        this.isFirstInput = () => {
             return isFirstInput;
         }
         this.isHighLightCell = cellIndex => {
@@ -133,7 +149,7 @@ export default class RosterTableUtil {
             maxY = rowIndex;
             isSelectMode = true;
         }
-        this.updateUI=(cellIndex, rowIndex)=>{
+        this.updateUI = (cellIndex, rowIndex) => {
             highLightCellIndex = cellIndex;
             highLightRowIndex = rowIndex;
             updateSelectRegion(cellIndex, rowIndex);
@@ -180,6 +196,6 @@ export default class RosterTableUtil {
                     maxY = newMaxY;
                 }
             }
-        }        
+        }
     }
 }

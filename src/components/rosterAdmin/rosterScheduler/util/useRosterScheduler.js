@@ -98,9 +98,9 @@ export function useRosterScheduler() {
 
     let copy = e => {
         e.preventDefault();
-        let copyRegion=itemList.rosterTableUtil.getCopyRegionLocation();
-        copyRegion.column.end-=itemList.systemParam.noOfPrevDate;
-        copyRegion.column.start-=itemList.systemParam.noOfPrevDate;        
+        let copyRegion = itemList.rosterTableUtil.getCopyRegionLocation();
+        copyRegion.column.end -= itemList.systemParam.noOfPrevDate;
+        copyRegion.column.start -= itemList.systemParam.noOfPrevDate;
         updateItemList({ copyRegion: copyRegion, type: "copy" });
     }
     let endSelect = () => {
@@ -161,10 +161,12 @@ export function useRosterScheduler() {
     }
     let paste = (dateOfMonth, e) => {
         e.preventDefault();
-        let copyDataRowCount=itemList.rosterDataUtil.getCopyDataRowCount();
-        if (copyDataRowCount >0){
-            
+        let copyDataDimension = itemList.rosterDataUtil.getCopyDataDimension();
+        if (copyDataDimension === null){
+            return
         }
+        let pasteLocation=itemList.rosterTableUtil.getPasteLocation(e,copyDataDimension);
+        console.log(pasteLocation);
     }
     let setFocusCell = e => { }
     let startSelect = e => {

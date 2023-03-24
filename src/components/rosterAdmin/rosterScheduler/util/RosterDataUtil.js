@@ -37,11 +37,11 @@ export default class RosterDataUtil {
             });
             copiedData=result;
         }
-        this.getCopyDataRowCount=()=>{
+        this.getCopyDataDimension=()=>{
             if (copiedData===null){
-                return 0
+                return null;
             }else {
-                return copiedData.length;
+                return {height:copiedData.length,width:copiedData[0].length};
             }
         }
         this.getShiftCssClassName = shiftType => {
