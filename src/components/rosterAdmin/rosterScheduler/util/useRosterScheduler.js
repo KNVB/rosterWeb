@@ -6,12 +6,6 @@ import SystemUtil from "../../../../util/SystemUtil";
 let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
-        case "copy":
-            result.rosterDataUtil.copy(action.copyRegion);
-            break;
-        case "endSelect":
-            result.rosterTableUtil.endSelect();
-            break;
         case "init":
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
@@ -21,29 +15,14 @@ let reducer = (state, action) => {
             result.isLoading = false;
             break;
         case "updateRosterMonth":
-            result.history=action.history;
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
             result.rosterDataUtil = action.rosterDataUtil;
             result.rosterTableUtil.init(result.calendarDateList, result.rosterDataUtil.getItoIdList(), result.systemParam);
             break;
-        case "updateShift":
-            result.rosterDataUtil.updateShift(action.itoId, action.dateOfMonth, action.newShift, result.noOfWorkingDay, result.calendarDateList.length);
-            break;
-        case "updateUI":
-            result.rosterTableUtil.updateUI(action.cellIndex, action.rowIndex);
-            break;
-        case "selectNextCell":
-            result.rosterTableUtil.selectCell(action.cellIndex, action.rowIndex);
-            result.rosterTableUtil.select(action.cellIndex, action.rowIndex);
-            break;
         case "setError":
             result.error = action.error;
             break;
-        case "startSelect":
-            result.rosterTableUtil.selectCell(action.cellIndex, action.rowIndex);
-            result.rosterTableUtil.startSelect(action.cellIndex, action.rowIndex);
-            break
         default:
             break;
     }
@@ -57,7 +36,7 @@ export function useRosterScheduler() {
             error: null,
             isLoading: true,
             noOfWorkingDay: -1,
-            rosterDataUtil: null,            
+            rosterDataUtil: null,
             rosterTableUtil: new RosterTableUtil(),
             systemParam: null
         });
@@ -65,7 +44,7 @@ export function useRosterScheduler() {
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
         let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
         let rosterDataUtil = { ...itemList.rosterDataUtil };
-        await rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);        
+        await rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);
         updateItemList({
             monthlyCalendar,
             rosterDataUtil,
@@ -83,8 +62,8 @@ export function useRosterScheduler() {
                 let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
                 await rosterDataUtil.init(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
                 let systemParam = await systemUtil.getSystemParam();
-                systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);                
-                updateItemList({                
+                systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
+                updateItemList({
                     monthlyCalendar,
                     rosterDataUtil,
                     systemParam,
@@ -102,16 +81,20 @@ export function useRosterScheduler() {
         let copyRegion = itemList.rosterTableUtil.getCopyRegionLocation();
         copyRegion.column.end -= itemList.systemParam.noOfPrevDate;
         copyRegion.column.start -= itemList.systemParam.noOfPrevDate;
-        updateItemList({ copyRegion: copyRegion, type: "copy" });
+        itemList.rosterDataUtil.copy(copyRegion);
+        updateItemList({ type: "refresh" });
     }
     let endSelect = () => {
-        updateItemList({ type: "endSelect" });
+        itemList.rosterTableUtil.endSelect();
+        updateItemList({ type: "refresh" });
     }
     let handleArrowKeyEvent = (e, yOffset, xOffset) => {
         e.preventDefault();
         let cell = e.target.closest("td");
         let nextCell = itemList.rosterTableUtil.getNextCell(cell, yOffset, xOffset);
-        updateItemList({ cellIndex: nextCell.cellIndex, rowIndex: nextCell.rowIndex, "type": "selectNextCell" });
+        itemList.rosterTableUtil.selectCell(nextCell.cellIndex, nextCell.rowIndex);
+        itemList.rosterTableUtil.select(nextCell.cellIndex, nextCell.rowIndex);
+        updateItemList({ type: "refresh" });
     }
     let handleKeyDown = e => {
         if (itemList.rosterTableUtil.isFirstInput()) {
@@ -136,17 +119,17 @@ export function useRosterScheduler() {
                     }
                     break;
                 case "y":
-                    if (e.ctrlKey){
+                    if (e.ctrlKey) {
                         e.preventDefault();
                         itemList.rosterDataUtil.reDo();
-                        updateItemList({ type:"refresh"});
+                        updateItemList({ type: "refresh" });
                     }
                     break;
                 case "z":
-                    if (e.ctrlKey){
+                    if (e.ctrlKey) {
                         e.preventDefault();
                         itemList.rosterDataUtil.unDo();
-                        updateItemList({ type:"refresh"});
+                        updateItemList({ type: "refresh" });
                     }
                     break;
                 default:
@@ -175,13 +158,13 @@ export function useRosterScheduler() {
         return itemList.rosterTableUtil.isHighLightRow(rowIndex);
     }
     let paste = (dateOfMonth, e) => {
-        e.preventDefault();        
-        let rowCount=itemList.rosterDataUtil.getCopyDataRowCount();
-        if (rowCount > -1){
+        e.preventDefault();
+        let rowCount = itemList.rosterDataUtil.getCopyDataRowCount();
+        if (rowCount > -1) {
             let cell = e.target.closest("td");
-            let rowIds=itemList.rosterTableUtil.getPasteRowIds(cell,rowCount);
-            itemList.rosterDataUtil.paste(dateOfMonth,rowIds, itemList.noOfWorkingDay,itemList.calendarDateList.length);
-            updateItemList({ type:"refresh"});
+            let rowIds = itemList.rosterTableUtil.getPasteRowIds(cell, rowCount);
+            itemList.rosterDataUtil.paste(dateOfMonth, rowIds, itemList.noOfWorkingDay, itemList.calendarDateList.length);
+            updateItemList({ type: "refresh" });
         }
     }
     let setFocusCell = e => { }
@@ -190,18 +173,18 @@ export function useRosterScheduler() {
         let rowIndex = cell.closest("tr").rowIndex;
         //console.log(cell.cellIndex, rowIndex)
         e.preventDefault();
-        updateItemList({
-            cellIndex: cell.cellIndex,
-            rowIndex: rowIndex,
-            type: "startSelect"
-        });
+        itemList.rosterTableUtil.selectCell(cell.cellIndex, rowIndex);
+        itemList.rosterTableUtil.startSelect(cell.cellIndex, rowIndex);
+        updateItemList({ type: "refresh" });
     }
     let updatePreferredShift = (itoId, dateOfMonth, newShift) => { }
-    let updateShift = (itoId, dateOfMonth, newShift) => {        
-        updateItemList({ itoId: itoId, dateOfMonth: dateOfMonth, newShift: newShift, type: "updateShift" });
+    let updateShift = (itoId, dateOfMonth, newShift) => {
+        itemList.rosterDataUtil.updateShift(itoId, dateOfMonth, newShift, itemList.noOfWorkingDay, itemList.calendarDateList.length);
+        updateItemList({ type: "refresh" });
     }
     let updateUI = (cellIndex, rowIndex) => {
-        updateItemList({ cellIndex: cellIndex, rowIndex: rowIndex, type: "updateUI" });
+        itemList.rosterTableUtil.updateUI(cellIndex, rowIndex);
+        updateItemList({ type: "refresh" });
     }
     return {
         error: itemList.error,
