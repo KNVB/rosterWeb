@@ -12,9 +12,6 @@ export default function PreferredShiftRow(props) {
     let className = '';
     let rosterDetail = rosterDataUtil.getRosterList(itoId);
     let shiftCellList = [];
-    let handleBlurEvent = (itoId, dateOfMonth, newPreferredShift) => {
-        rosterDataUtil.updatePreferredShift(itoId, dateOfMonth, newPreferredShift);
-    }
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         shiftCellList.push(<ShiftCell key={"prev-preferred-" + i} />)
     }
@@ -29,7 +26,7 @@ export default function PreferredShiftRow(props) {
             <EditableShiftCell
                 cssClassName={className.join(" ")}
                 key={"preferred_" + itoId + '_' + i}
-                onBlur={(e) => handleBlurEvent(itoId, calendarDate.dateOfMonth, e.target.textContent)}
+                onBlur={(e) =>  uiAction.updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
                 onPaste={(e) => uiAction.paste(calendarDate.dateOfMonth, e)}
                 uiAction={uiAction}>
                 {preferredShift}

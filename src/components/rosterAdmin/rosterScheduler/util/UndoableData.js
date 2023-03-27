@@ -3,6 +3,12 @@ export default class UndoableData {
         let futureValue = [];
         let pastValue = [];
         console.log('UndoableData:init');
+        /***********************************************************
+         * if the input parameter is an object, the outside function 
+         * can modify the inside variable value, to get ride of
+         * this problem, just the store the input parameter in
+         * string format
+        **************************************************/
         let presentValue = JSON.stringify(initialValue);
         this.canRedo = () => (futureValue.length > 0);
         this.canUndo = () => (pastValue.length > 0);

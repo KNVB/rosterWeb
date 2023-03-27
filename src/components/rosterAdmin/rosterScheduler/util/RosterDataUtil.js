@@ -11,6 +11,9 @@ export default class RosterDataUtil {
         let rosterDataHistory = null;
         let rosterList = null;
         let vacantShiftList = null;
+        this.clearCopiedData=()=>{
+            copiedData = null;
+        }
         this.copy = copyRegion => {
             let index, itoId, shiftList;
             let temp, result = [], shiftRowType;
@@ -114,7 +117,7 @@ export default class RosterDataUtil {
             })
         }
         this.reDo = () => {
-            if (rosterDataHistory.canRedo()){
+            if (rosterDataHistory.canRedo()) {
                 let backupItem = rosterDataHistory.redo();
                 duplicateShiftList = backupItem.duplicateShiftList;
                 rosterList = backupItem.rosterList;
@@ -123,19 +126,19 @@ export default class RosterDataUtil {
         }
         this.unDo = () => {
             if (rosterDataHistory.canUndo()) {
-                let backupItem = rosterDataHistory.undo();                
+                let backupItem = rosterDataHistory.undo();
                 duplicateShiftList = backupItem.duplicateShiftList;
                 rosterList = backupItem.rosterList;
                 vacantShiftList = backupItem.vacantShiftList;
             }
         }
-        this.updatePreferredShift = (itoId, dateOfMonth, newShift) => {            
-            let oldPreferredShift=rosterList[itoId].preferredShiftList[dateOfMonth];
-            let newPreferredShift=newShift.trim();
+        this.updatePreferredShift = (itoId, dateOfMonth, newShift) => {
+            let oldPreferredShift = rosterList[itoId].preferredShiftList[dateOfMonth];
+            let newPreferredShift = newShift.trim();
             switch (true) {
                 case ((oldPreferredShift === undefined) && (newPreferredShift !== '')):
                 case ((oldPreferredShift !== undefined) && (newPreferredShift !== oldPreferredShift)):
-                    rosterList[itoId].preferredShiftList[dateOfMonth] = newPreferredShift;                    
+                    rosterList[itoId].preferredShiftList[dateOfMonth] = newPreferredShift;
                     backupRosterData();
                     break;
                 default:
@@ -159,7 +162,7 @@ export default class RosterDataUtil {
         //==================================================================================================
         let backupRosterData = () => {
             console.log("backup Roster Data");
-            let temp={
+            let temp = {
                 "duplicateShiftList": duplicateShiftList,
                 "rosterList": rosterList,
                 "vacantShiftList": vacantShiftList

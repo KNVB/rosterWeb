@@ -40,17 +40,6 @@ export function useRosterScheduler() {
             rosterTableUtil: new RosterTableUtil(),
             systemParam: null
         });
-    let updateRosterMonth = async (newRosterMonth) => {
-        let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
-        let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
-        let rosterDataUtil = { ...itemList.rosterDataUtil };
-        await rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);
-        updateItemList({
-            monthlyCalendar,
-            rosterDataUtil,
-            type: "updateRosterMonth"
-        });
-    }
     useEffect(() => {
         let rosterDataUtil = new RosterDataUtil();
         let systemUtil = new SystemUtil();
@@ -78,9 +67,7 @@ export function useRosterScheduler() {
 
     let copy = e => {
         e.preventDefault();
-        let copyRegion = itemList.rosterTableUtil.getCopyRegionLocation();
-        copyRegion.column.end -= itemList.systemParam.noOfPrevDate;
-        copyRegion.column.start -= itemList.systemParam.noOfPrevDate;
+        let copyRegion=getCopyRegionLocation();
         itemList.rosterDataUtil.copy(copyRegion);
         updateItemList({ type: "refresh" });
     }
@@ -96,8 +83,14 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.select(nextCell.cellIndex, nextCell.rowIndex);
         updateItemList({ type: "refresh" });
     }
+    let handleEscKeyEvent=e=>{
+        e.preventDefault();
+        itemList.rosterTableUtil.clearCopiedRegion();
+        itemList.rosterDataUtil.clearCopiedData();
+        updateItemList({ type: "refresh" });
+    }
     let handleKeyDown = e => {
-        if (itemList.rosterTableUtil.isFirstInput()) {
+        if (itemList.rosterTableUtil.isFirstInput()){
             switch (e.key) {
                 case "ArrowDown"://handle down arrow key event
                     handleArrowKeyEvent(e, 1, 0);
@@ -111,6 +104,11 @@ export function useRosterScheduler() {
                 case "ArrowUp"://handle up arrow key event
                     handleArrowKeyEvent(e, -1, 0);
                     break;
+                case "Delete":                    
+                    break;
+                case "Escape":
+                    handleEscKeyEvent(e);
+                    break;    
                 case "Tab"://handle tab key
                     if (e.shiftKey) {
                         handleArrowKeyEvent(e, 0, -1);
@@ -136,6 +134,12 @@ export function useRosterScheduler() {
                     break
             }
         }
+    }
+    let getCopyRegionLocation=()=>{
+        let copyRegion = itemList.rosterTableUtil.getCopyRegionLocation();
+        copyRegion.column.end -= itemList.systemParam.noOfPrevDate;
+        copyRegion.column.start -= itemList.systemParam.noOfPrevDate;
+        return copyRegion;
     }
     let getEditableShiftCellCssClassName = (cellIndex, rowIndex, shift) => {
         let className = ["borderCell", "shiftCell", itemList.rosterDataUtil.getShiftCssClassName(shift)];
@@ -176,7 +180,10 @@ export function useRosterScheduler() {
             updateItemList({ type: "refresh" });
         }
     }
-    let setFocusCell = e => { }
+    let setFocusCell = e => {
+        itemList.rosterTableUtil.setFocusCell(e);        
+        updateItemList({ type: "refresh" });
+    }
     let startSelect = e => {
         let cell = e.target.closest("td");
         let rowIndex = cell.closest("tr").rowIndex;
@@ -186,7 +193,21 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.startSelect(cell.cellIndex, rowIndex);
         updateItemList({ type: "refresh" });
     }
-    let updatePreferredShift = (itoId, dateOfMonth, newShift) => { }
+    let updatePreferredShift = (itoId, dateOfMonth, newPreferredShift) => { 
+        itemList.rosterDataUtil.updatePreferredShift(itoId, dateOfMonth, newPreferredShift);
+        updateItemList({ type: "refresh" });
+    }
+    let updateRosterMonth = async (newRosterMonth) => {
+        let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
+        let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
+        let rosterDataUtil = { ...itemList.rosterDataUtil };
+        await rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);
+        updateItemList({
+            monthlyCalendar,
+            rosterDataUtil,
+            type: "updateRosterMonth"
+        });
+    }
     let updateShift = (itoId, dateOfMonth, newShift) => {
         itemList.rosterDataUtil.updateShift(itoId, dateOfMonth, newShift, itemList.noOfWorkingDay, itemList.calendarDateList.length);
         updateItemList({ type: "refresh" });

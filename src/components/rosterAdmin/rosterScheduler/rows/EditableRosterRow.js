@@ -6,7 +6,7 @@ import StatCell from "../../../cells/StatCell";
 export default function EditableRosterRow({ calendarDateList, itoId, rosterDataUtil, rowIndex, systemParam, uiAction }) {
     let className = '';
     let rosterDetail = rosterDataUtil.getRosterList(itoId);
-    let shift = '', shiftCellList = [], temp;
+    let shift = '', shiftCellList = [];
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         className = '';
         shift = '';

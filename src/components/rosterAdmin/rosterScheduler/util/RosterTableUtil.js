@@ -8,6 +8,9 @@ export default class RosterTableUtil {
         let maxCellIndex, maxRowIndex, minCellIndex;
         let minX = -1, minY = -1, maxX = -1, maxY = -1;
         let minRowIndex = 5;
+        this.clearCopiedRegion=()=>{
+            copiedRegion.clear();
+        }
         this.endSelect = () => {
             if (isSelectMode) {
                 isSelectMode = false;
@@ -139,6 +142,14 @@ export default class RosterTableUtil {
             range.selectNodeContents(cell.firstChild);
             sel.removeAllRanges();
             sel.addRange(range);
+        }
+        this.setFocusCell = (e) => {
+            let cell = e.target.closest("td");
+            let sel = window.getSelection();
+            let shiftContentDiv = cell.firstChild;
+            shiftContentDiv.focus();
+            sel.collapse(shiftContentDiv.firstChild, 1);
+            isFirstInput=false;
         }
         this.startSelect = (cellIndex, rowIndex) => {
             minX = cellIndex;
