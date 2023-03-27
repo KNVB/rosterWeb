@@ -1,19 +1,19 @@
-import EditableShiftCell from "../cells/EditableShiftCell";
-import NameCell from "../../cells/NameCell";
-import ShiftCell from "../../cells/ShiftCell";
-import StatCell from "../../cells/StatCell";
+import EditableShiftCell from "../EditableShiftCell";
+import NameCell from "../../../cells/NameCell";
+import ShiftCell from "../../../cells/ShiftCell";
+import StatCell from "../../../cells/StatCell";
 export default function PreferredShiftRow(props) {
     let {
+        calendarDateList,
         itoId,
-        rosterData, rosterDataAction, rowIndex,
+        rosterDataUtil, rowIndex,
+        systemParam,
         uiAction } = props;
-    let calendarDateList = rosterData.monthlyCalendar.calendarDateList;
     let className = '';
-    let rosterDetail = rosterData.rosterList[itoId];
+    let rosterDetail = rosterDataUtil.getRosterList(itoId);
     let shiftCellList = [];
-    let systemParam = rosterData.systemParam;
     let handleBlurEvent = (itoId, dateOfMonth, newPreferredShift) => {
-        rosterDataAction.updatePreferredShift(itoId, dateOfMonth, newPreferredShift);
+        rosterDataUtil.updatePreferredShift(itoId, dateOfMonth, newPreferredShift);
     }
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         shiftCellList.push(<ShiftCell key={"prev-preferred-" + i} />)
@@ -27,10 +27,10 @@ export default function PreferredShiftRow(props) {
 
         shiftCellList.push(
             <EditableShiftCell
-                cssClassName={className}
+                cssClassName={className.join(" ")}
                 key={"preferred_" + itoId + '_' + i}
                 onBlur={(e) => handleBlurEvent(itoId, calendarDate.dateOfMonth, e.target.textContent)}
-                onPaste={(e) => rosterDataAction.paste(calendarDate.dateOfMonth, e)}
+                onPaste={(e) => uiAction.paste(calendarDate.dateOfMonth, e)}
                 uiAction={uiAction}>
                 {preferredShift}
             </EditableShiftCell>

@@ -149,9 +149,16 @@ export function useRosterScheduler() {
         }
         return className;
     }
-    let getPreferredShiftCellCssClassName = (cellIndex, rowIndex) => { }
+    let getPreferredShiftCellCssClassName = (cellIndex, rowIndex) => { 
+        let className = ["borderCell", "shiftCell"];
+        let temp = itemList.rosterTableUtil.getSelectedCssClass(cellIndex, rowIndex);
+        if (temp.length > 0) {
+            className.push(...temp);
+        }
+        return className;
+    }
     let getShiftCssClassName = shiftType => {
-        itemList.rosterDataUtil.getShiftCssClassName(shiftType);
+        return itemList.rosterDataUtil.getShiftCssClassName(shiftType);
     }
     let isHighLightCell = cellIndex => {
         return itemList.rosterTableUtil.isHighLightCell(cellIndex);

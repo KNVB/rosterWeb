@@ -107,7 +107,7 @@ export default class RosterTableUtil {
         }
         this.init = (calendarDateList, itoIdList, systemParam) => {
             maxCellIndex = systemParam.noOfPrevDate + calendarDateList.length;
-            maxRowIndex = itoIdList.length * 1 + 4;
+            maxRowIndex = itoIdList.length * 2 + 4;
             minCellIndex = systemParam.noOfPrevDate + 1;
             minX = -1; minY = -1; maxX = -1; maxY = -1;
             copiedRegion.clear();

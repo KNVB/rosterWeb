@@ -52,6 +52,15 @@ export default class RosterDataUtil {
                 return ''
             }
         }
+        this.getItoIdList = () => {
+            return Object.keys(rosterList);
+        }
+        this.getRosterList = itoId => {
+            return rosterList[itoId];
+        }
+        this.getVacantShiftList = () => {
+            return vacantShiftList;
+        }
         this.init = async (year, month, noOfWorkingDay, monthLength) => {
             activeShiftList = await fetchAPI.getActiveShiftList();
             await this.loadData(year, month, noOfWorkingDay, monthLength);
@@ -80,15 +89,6 @@ export default class RosterDataUtil {
             });
             updateRosterStatistic(rosterList, noOfWorkingDay, monthLength);
             backupRosterData();
-        }
-        this.getItoIdList = () => {
-            return Object.keys(rosterList);
-        }
-        this.getRosterList = itoId => {
-            return rosterList[itoId];
-        }
-        this.getVacantShiftList = () => {
-            return vacantShiftList;
         }
         this.paste = (dateOfMonth, rowIds, noOfWorkingDay, monthLength) => {
             let index, itoId;
