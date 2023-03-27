@@ -129,8 +129,18 @@ export default class RosterDataUtil {
                 vacantShiftList = backupItem.vacantShiftList;
             }
         }
-        this.updatePreferredShift = (itoId, dateOfMonth, newShift) => {
-
+        this.updatePreferredShift = (itoId, dateOfMonth, newShift) => {            
+            let oldPreferredShift=rosterList[itoId].preferredShiftList[dateOfMonth];
+            let newPreferredShift=newShift.trim();
+            switch (true) {
+                case ((oldPreferredShift === undefined) && (newPreferredShift !== '')):
+                case ((oldPreferredShift !== undefined) && (newPreferredShift !== oldPreferredShift)):
+                    rosterList[itoId].preferredShiftList[dateOfMonth] = newPreferredShift;                    
+                    backupRosterData();
+                    break;
+                default:
+                    break;
+            }
         }
         this.updateShift = (itoId, dateOfMonth, newShift, noOfWorkingDay, monthLength) => {
             let oldShift = rosterList[itoId].shiftList[dateOfMonth];
@@ -138,7 +148,7 @@ export default class RosterDataUtil {
             switch (true) {
                 case ((oldShift === undefined) && (newRosterShift !== '')):
                 case ((oldShift !== undefined) && (newRosterShift !== oldShift)):
-                    rosterList[itoId].shiftList[dateOfMonth] = newShift;
+                    rosterList[itoId].shiftList[dateOfMonth] = newRosterShift;
                     updateRosterStatistic(rosterList, noOfWorkingDay, monthLength);
                     backupRosterData();
                     break;
