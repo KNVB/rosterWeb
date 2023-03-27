@@ -98,9 +98,9 @@ export function useRosterScheduler() {
 
     let copy = e => {
         e.preventDefault();
-        let copyRegion=itemList.rosterTableUtil.getCopyRegionLocation();
-        copyRegion.column.end-=itemList.systemParam.noOfPrevDate;
-        copyRegion.column.start-=itemList.systemParam.noOfPrevDate;        
+        let copyRegion = itemList.rosterTableUtil.getCopyRegionLocation();
+        copyRegion.column.end -= itemList.systemParam.noOfPrevDate;
+        copyRegion.column.start -= itemList.systemParam.noOfPrevDate;
         updateItemList({ copyRegion: copyRegion, type: "copy" });
     }
     let endSelect = () => {
