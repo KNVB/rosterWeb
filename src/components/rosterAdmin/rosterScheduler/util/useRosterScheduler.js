@@ -21,6 +21,7 @@ let reducer = (state, action) => {
             result.isLoading = false;
             break;
         case "updateRosterMonth":
+            result.history=action.history;
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
             result.rosterDataUtil = action.rosterDataUtil;
@@ -56,7 +57,7 @@ export function useRosterScheduler() {
             error: null,
             isLoading: true,
             noOfWorkingDay: -1,
-            rosterDataUtil: null,
+            rosterDataUtil: null,            
             rosterTableUtil: new RosterTableUtil(),
             systemParam: null
         });
@@ -64,7 +65,7 @@ export function useRosterScheduler() {
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
         let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
         let rosterDataUtil = { ...itemList.rosterDataUtil };
-        await rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);
+        await rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);        
         updateItemList({
             monthlyCalendar,
             rosterDataUtil,
@@ -82,8 +83,8 @@ export function useRosterScheduler() {
                 let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
                 await rosterDataUtil.init(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
                 let systemParam = await systemUtil.getSystemParam();
-                systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
-                updateItemList({
+                systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);                
+                updateItemList({                
                     monthlyCalendar,
                     rosterDataUtil,
                     systemParam,
@@ -134,6 +135,20 @@ export function useRosterScheduler() {
                         handleArrowKeyEvent(e, 0, 1);
                     }
                     break;
+                case "y":
+                    if (e.ctrlKey){
+                        e.preventDefault();
+                        itemList.rosterDataUtil.reDo();
+                        updateItemList({ type:"refresh"});
+                    }
+                    break;
+                case "z":
+                    if (e.ctrlKey){
+                        e.preventDefault();
+                        itemList.rosterDataUtil.unDo();
+                        updateItemList({ type:"refresh"});
+                    }
+                    break;
                 default:
                     break
             }
@@ -160,7 +175,7 @@ export function useRosterScheduler() {
         return itemList.rosterTableUtil.isHighLightRow(rowIndex);
     }
     let paste = (dateOfMonth, e) => {
-        e.preventDefault();
+        e.preventDefault();        
         let rowCount=itemList.rosterDataUtil.getCopyDataRowCount();
         if (rowCount > -1){
             let cell = e.target.closest("td");
@@ -182,7 +197,7 @@ export function useRosterScheduler() {
         });
     }
     let updatePreferredShift = (itoId, dateOfMonth, newShift) => { }
-    let updateShift = (itoId, dateOfMonth, newShift) => {
+    let updateShift = (itoId, dateOfMonth, newShift) => {        
         updateItemList({ itoId: itoId, dateOfMonth: dateOfMonth, newShift: newShift, type: "updateShift" });
     }
     let updateUI = (cellIndex, rowIndex) => {

@@ -1,5 +1,4 @@
 import ShiftCell from '../../../cells/ShiftCell';
-import StatCell from '../../../cells/StatCell';
 export default function VacantShiftRow({ rosterDataUtil, calendarDateList, systemParam, uiAction }) {
     function handleMouseEnterEvent(e) {
         e.preventDefault();
