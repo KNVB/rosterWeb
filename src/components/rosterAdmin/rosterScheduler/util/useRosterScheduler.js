@@ -150,7 +150,9 @@ export function useRosterScheduler() {
         return className;
     }
     let getPreferredShiftCellCssClassName = (cellIndex, rowIndex) => { }
-    let getShiftCssClassName = shiftType => { }
+    let getShiftCssClassName = shiftType => {
+        itemList.rosterDataUtil.getShiftCssClassName(shiftType);
+    }
     let isHighLightCell = cellIndex => {
         return itemList.rosterTableUtil.isHighLightCell(cellIndex);
     }
