@@ -3,7 +3,7 @@ import NameCell from "../../../cells/NameCell";
 import ShiftCell from "../../../cells/ShiftCell";
 import StatCell from "../../../cells/StatCell";
 
-export default function EditableRosterRow({ calendarDateList, itoId, rosterDataUtil, rosterTableUtil, rowIndex, systemParam,uiAction }) {
+export default function EditableRosterRow({ calendarDateList, itoId, rosterDataUtil, rowIndex, systemParam, uiAction }) {
     let className = '';
     let rosterDetail = rosterDataUtil.getRosterList(itoId);
     let shift = '', shiftCellList = [], temp;
@@ -24,17 +24,20 @@ export default function EditableRosterRow({ calendarDateList, itoId, rosterDataU
     }
     calendarDateList.forEach((calendarDate, index) => {
         shift = rosterDetail.shiftList[index + 1];
-        className=uiAction.getEditableShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex,shift);
+        className = uiAction.getEditableShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex, shift);
+        if (rosterDataUtil.isDuplicateShift(itoId, calendarDate.dateOfMonth)) {
+            className.push("errorRedBlackGround");
+        }
         shiftCellList.push(
             <EditableShiftCell
-              cssClassName={className.join(" ")}
-              key={itoId + '_' + index}
-              onBlur={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
-              onPaste={(e) => uiAction.paste(calendarDate.dateOfMonth, e)}
-              uiAction={uiAction}>
-              {shift}
+                cssClassName={className.join(" ")}
+                key={itoId + '_' + index}
+                onBlur={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
+                onPaste={(e) => uiAction.paste(calendarDate.dateOfMonth, e)}
+                uiAction={uiAction}>
+                {shift}
             </EditableShiftCell>
-          )
+        )
     });
     for (let i = calendarDateList.length; i < 31; i++) {
         shiftCellList.push(<ShiftCell key={itoId + '_' + i}>&nbsp;</ShiftCell>)

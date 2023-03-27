@@ -161,9 +161,12 @@ export function useRosterScheduler() {
     }
     let paste = (dateOfMonth, e) => {
         e.preventDefault();
-        let copyDataRowCount=itemList.rosterDataUtil.getCopyDataRowCount();
-        if (copyDataRowCount >0){
-            
+        let rowCount=itemList.rosterDataUtil.getCopyDataRowCount();
+        if (rowCount > -1){
+            let cell = e.target.closest("td");
+            let rowIds=itemList.rosterTableUtil.getPasteRowIds(cell,rowCount);
+            itemList.rosterDataUtil.paste(dateOfMonth,rowIds, itemList.noOfWorkingDay,itemList.calendarDateList.length);
+            updateItemList({ type:"refresh"});
         }
     }
     let setFocusCell = e => { }

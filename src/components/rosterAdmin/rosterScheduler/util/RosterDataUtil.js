@@ -5,42 +5,42 @@ import ITOShiftStatUtil from "../../../../util/ITOShiftStatUtil";
 export default class RosterDataUtil {
     constructor() {
         let activeShiftList = null;
-        let copiedData=null;
+        let copiedData = null;
         let duplicateShiftList = null;
         let fetchAPI = new FetchAPI();
         let rosterDataHistory = createStack();
         let rosterList = null;
         let vacantShiftList = null;
         this.copy = copyRegion => {
-            let index, itoId,shiftList;
-            let temp,result = [], shiftRowType;
+            let index, itoId, shiftList;
+            let temp, result = [], shiftRowType;
             copyRegion.rows.forEach(row => {
                 index = row.indexOf("_");
                 shiftRowType = row.substring(0, index);
                 itoId = row.substring(index + 1);
                 temp = [];
                 if (shiftRowType === "rosterRow") {
-                    shiftList={...rosterList[itoId].shiftList};
+                    shiftList = { ...rosterList[itoId].shiftList };
                 }
                 if (shiftRowType === "preferredShiftRow") {
-                    shiftList={...rosterList[itoId].preferredShiftList};
+                    shiftList = { ...rosterList[itoId].preferredShiftList };
                 }
-                
-                for (let i=copyRegion.column.start;i<=copyRegion.column.end;i++ ){
-                    if (shiftList[i] === undefined){
+
+                for (let i = copyRegion.column.start; i <= copyRegion.column.end; i++) {
+                    if (shiftList[i] === undefined) {
                         temp.push('')
-                    }else{
-                        temp.push(shiftList[i] )
+                    } else {
+                        temp.push(shiftList[i])
                     }
                 }
                 result.push(temp);
             });
-            copiedData=result;
+            copiedData = result;
         }
-        this.getCopyDataRowCount=()=>{
-            if (copiedData===null){
-                return 0
-            }else {
+        this.getCopyDataRowCount = () => {
+            if (copiedData === null) {
+                return -1;
+            } else {
                 return copiedData.length;
             }
         }
@@ -56,7 +56,9 @@ export default class RosterDataUtil {
             activeShiftList = await fetchAPI.getActiveShiftList();
             await this.loadData(year, month, noOfWorkingDay, monthLength);
         }
-
+        this.isDuplicateShift = (itoId, dateOfMonth) => {
+            return duplicateShiftList[itoId].includes(dateOfMonth);
+        }
         this.loadData = async (year, month, noOfWorkingDay, monthLength) => {
             let preferredShiftList = await fetchAPI.getPreferredShiftList(year, month);
             let previousMonthShiftList = await fetchAPI.getPreviousMonthShiftList(year, month);
@@ -84,6 +86,34 @@ export default class RosterDataUtil {
         }
         this.getRosterList = itoId => {
             return rosterList[itoId];
+        }
+        this.getVacantShiftList = () => {
+            return vacantShiftList;
+        }
+        this.paste = (dateOfMonth, rowIds,noOfWorkingDay, monthLength) => {
+            let index, itoId, shiftList;
+            let temp, copiedDataRow, shiftRowType;
+            rowIds.forEach((rowId, rowIndex) => {
+                index = rowId.indexOf("_");
+                shiftRowType = rowId.substring(0, index);
+                itoId = rowId.substring(index + 1);
+                copiedDataRow = copiedData[rowIndex];
+                for (let x = dateOfMonth; x < dateOfMonth + copiedDataRow.length; x++) {
+                    if (x <= monthLength) {
+                        if (shiftRowType === "rosterRow") {
+                            rosterList[itoId].shiftList[x] = copiedDataRow[x - dateOfMonth];
+                            updateRosterStatistic(rosterList, noOfWorkingDay, monthLength);
+                            backupRosterData();
+                        }
+                        if (shiftRowType === "preferredShiftRow") {
+                            rosterList[itoId].preferredShiftList[x] = copiedDataRow[x - dateOfMonth];                            
+                            backupRosterData();
+                        }                        
+                    } else {
+                        break;
+                    }
+                }
+            })
         }
         this.reDo = () => {
 

@@ -1,7 +1,8 @@
 import EditableRosterRow from "./rows/EditableRosterRow";
+import VacantShiftRow from "./rows/VacantShiftRow";
 export default function RosterSchedulerBody({ calendarDateList, rosterDataUtil, rosterTableUtil, systemParam,uiAction }) {
     let rowList = [];
-    let itoIdList = rosterDataUtil.getItoIdList();
+    let itoIdList = rosterDataUtil.getItoIdList();    
     itoIdList.forEach((itoId, index) => {
         rowList.push(
             <EditableRosterRow
@@ -30,6 +31,12 @@ export default function RosterSchedulerBody({ calendarDateList, rosterDataUtil, 
     return (
         <tbody>
             {rowList}
+            <VacantShiftRow 
+                calendarDateList={calendarDateList}
+                rosterDataUtil={rosterDataUtil}
+                rosterTableUtil={rosterTableUtil}
+                systemParam={systemParam}
+                uiAction={uiAction} />
         </tbody>
     );
 }

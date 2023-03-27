@@ -7,7 +7,7 @@ export default function AdminShiftStatUtil() {
             duplicateShiftList[itoId] = [];
         });
         for (let i = startDate; i <= endDate; i++) {
-            let vacantShift = activeShiftInfoList.essentialShift;
+            let vacantShift = activeShiftInfoList.essentialShift;            
             let temp = [];
             itoIdList.forEach(itoId => {
                 let itoRoster = inITORosterList[itoId];
@@ -16,7 +16,7 @@ export default function AdminShiftStatUtil() {
                     shiftTypeList.forEach(shiftType => {
                         if (shiftType === "b1") {
                             vacantShift = vacantShift.replace("b", "");
-                        } else {
+                        } else {                            
                             vacantShift = vacantShift.replace(shiftType, "");
                         }
                         switch (shiftType) {
@@ -39,11 +39,11 @@ export default function AdminShiftStatUtil() {
                             default: break;
                         }
                     });    
-                }
-                if (vacantShift !== '') {
-                    vacantShiftList[i] = vacantShift;
-                }
-            });    
+                }                
+            });            
+            if (vacantShift !== '') {
+                vacantShiftList[i] = vacantShift;
+            }
         }
         return {
             duplicateShiftList,
