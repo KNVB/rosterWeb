@@ -83,6 +83,12 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.select(nextCell.cellIndex, nextCell.rowIndex);
         updateItemList({ type: "refresh" });
     }
+    let handleDelKeyEvent=e=>{
+        e.preventDefault();
+        let selectedLocation=getSelectedLocation();
+        itemList.rosterDataUtil.deleteSelectedData(selectedLocation, itemList.noOfWorkingDay, itemList.calendarDateList.length);
+        updateItemList({ type: "refresh" });
+    }
     let handleEscKeyEvent=e=>{
         e.preventDefault();
         itemList.rosterTableUtil.clearCopiedRegion();
@@ -104,7 +110,8 @@ export function useRosterScheduler() {
                 case "ArrowUp"://handle up arrow key event
                     handleArrowKeyEvent(e, -1, 0);
                     break;
-                case "Delete":                    
+                case "Delete":
+                    handleDelKeyEvent(e);
                     break;
                 case "Escape":
                     handleEscKeyEvent(e);
@@ -160,6 +167,12 @@ export function useRosterScheduler() {
             className.push(...temp);
         }
         return className;
+    }
+    let getSelectedLocation=()=>{
+        let selectedLocation=itemList.rosterTableUtil.getSelectedLocation();
+        selectedLocation.column.end -= itemList.systemParam.noOfPrevDate;
+        selectedLocation.column.start -= itemList.systemParam.noOfPrevDate;
+        return selectedLocation;
     }
     let getShiftCssClassName = shiftType => {
         return itemList.rosterDataUtil.getShiftCssClassName(shiftType);

@@ -11,7 +11,7 @@ export default class RosterDataUtil {
         let rosterDataHistory = null;
         let rosterList = null;
         let vacantShiftList = null;
-        this.clearCopiedData=()=>{
+        this.clearCopiedData = () => {
             copiedData = null;
         }
         this.copy = copyRegion => {
@@ -39,6 +39,23 @@ export default class RosterDataUtil {
                 result.push(temp);
             });
             copiedData = result;
+        }
+        this.deleteSelectedData = (selectedLocation, noOfWorkingDay, monthLength) => {            
+            let index, itoId, rows = selectedLocation.rows, shiftRowType;
+            rows.forEach(rowId => {
+                index = rowId.indexOf("_");
+                shiftRowType = rowId.substring(0, index);
+                itoId = rowId.substring(index + 1);
+                for (let x = selectedLocation.column.start; x <= selectedLocation.column.end; x++) {
+                    if (shiftRowType === "rosterRow") {
+                        this.updateShift(itoId, x, '', noOfWorkingDay, monthLength);
+                    }
+                    if (shiftRowType === "preferredShiftRow") {
+                        delete rosterList[itoId].preferredShiftList[x];
+                        backupRosterData();
+                    }
+                }
+            });
         }
         this.getCopyDataRowCount = () => {
             if (copiedData === null) {

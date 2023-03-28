@@ -18,13 +18,7 @@ export default class RosterTableUtil {
             }
         }
         this.getCopyRegionLocation = () => {
-            let result = { column: { start: minX, end: maxX }, rows: [] };
-            let row;
-            let table = document.querySelector("table.rosterTable");
-            for (let y = minY; y <= maxY; y++) {
-                row = table.rows[y];
-                result.rows.push(row.id);
-            }
+            let result=this.getSelectedLocation();
             copiedRegion.init({ maxX, minX, minY, maxY });
             return result;
         }
@@ -105,6 +99,16 @@ export default class RosterTableUtil {
                 if ((cellIndex === minX) && (rowIndex >= minY) && (rowIndex <= maxY)) {
                     result.push("selectCellBorderLeft");
                 }
+            }
+            return result;
+        }
+        this.getSelectedLocation=()=>{
+            let result = { column: { start: minX, end: maxX }, rows: [] };
+            let row;
+            let table = document.querySelector("table.rosterTable");
+            for (let y = minY; y <= maxY; y++) {
+                row = table.rows[y];
+                result.rows.push(row.id);
             }
             return result;
         }
