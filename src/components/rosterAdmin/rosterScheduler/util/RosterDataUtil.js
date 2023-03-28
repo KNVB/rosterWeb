@@ -57,7 +57,16 @@ export default class RosterDataUtil {
                 }
             });
         }
-        this.getActiveShiftList=()=>{
+        this.fillEmptyShiftWithO = (monthLength) => {
+            this.getItoIdList().forEach(itoId => {
+                for (let i = 1; i <= monthLength; i++) {
+                    if ((rosterList[itoId].shiftList[i] === undefined) || (rosterList[itoId].shiftList[i] === '')) {
+                        rosterList[itoId].shiftList[i] = "O";
+                    }
+                }
+            })
+        }
+        this.getActiveShiftList = () => {
             return activeShiftList;
         }
         this.getCopyDataRowCount = () => {

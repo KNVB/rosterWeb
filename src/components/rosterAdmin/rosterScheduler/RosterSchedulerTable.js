@@ -1,8 +1,9 @@
 import { useEffect } from "react";
+import AutoPlanner from "./autoPlanner/AutoPlanner";
 import HeaderRows from "../../rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../../util/ShiftInfoLegend";
-export default function RosterSchedulerTable({ rosterDataUtil, rosterMonth, systemParam, uiAction, weekdayNames }) {
+export default function RosterSchedulerTable({autoPlannerUtil, rosterDataUtil, rosterMonth, systemParam, uiAction, weekdayNames }) {
     useEffect(() => {
         const mouseUp = () => uiAction.endSelect();
         document.addEventListener("mouseup", mouseUp);
@@ -24,10 +25,19 @@ export default function RosterSchedulerTable({ rosterDataUtil, rosterMonth, syst
                 rosterDataUtil={rosterDataUtil}
                 systemParam={systemParam}
                 uiAction={uiAction} />
-            <tfoot>                
+            <tfoot>
                 <tr>
                     <td colSpan="7" className="pt-1">
                         <ShiftInfoLegend activeShiftList={rosterDataUtil.getActiveShiftList()} />
+                    </td>
+                    <td colSpan="21" rowSpan="10" className="align-top pt-1">
+                        <AutoPlanner
+                            autoPlannerUtil={autoPlannerUtil}
+                            calendarDateList={rosterMonth.calendarDateList}
+                            rosterDataUtil={rosterDataUtil}
+                            rosterMonth={rosterMonth}
+                            systemParam={systemParam}
+                            uiAction={uiAction} />
                     </td>
                 </tr>
             </tfoot>

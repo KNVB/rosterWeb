@@ -1,4 +1,6 @@
 import { useEffect, useReducer } from "react";
+import AutoPlanner from "../autoPlanner/AutoPlanner";
+import AutoPlannerUtil from "./AutoPlannerUtil";
 import CalendarUtility from "../../../util/calendar/CalendarUtility";
 import KeyboardEventHandler from "./KeyboardEventHandler";
 import RosterDataUtil from "./RosterDataUtil";
@@ -8,6 +10,8 @@ let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
         case "init":
+            result.autoPlannerUtil.setRosterDataUtil(action.rosterDataUtil);
+            result.autoPlannerUtil.setEndDate(action.monthlyCalendar.calendarDateList.length);
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
             result.rosterDataUtil = action.rosterDataUtil;
@@ -16,6 +20,8 @@ let reducer = (state, action) => {
             result.isLoading = false;
             break;
         case "updateRosterMonth":
+            result.autoPlannerUtil.setEndDate(action.monthlyCalendar.calendarDateList.length);
+            result.autoPlannerUtil.setRosterDataUtil(action.rosterDataUtil);
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
             result.rosterDataUtil = action.rosterDataUtil;
@@ -32,6 +38,7 @@ let reducer = (state, action) => {
 export function useRosterScheduler() {
     const [itemList, updateItemList] = useReducer(reducer,
         {
+            autoPlannerUtil: new AutoPlannerUtil(),
             calendarUtility: new CalendarUtility(),
             calendarDateList: null,
             error: null,
@@ -65,7 +72,7 @@ export function useRosterScheduler() {
         }
         init();
     }, []);
-    let { handleKeyDown } = KeyboardEventHandler(itemList,updateItemList);
+    let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
     let copy = e => {
         e.preventDefault();
         let copyRegion = getCopyRegionLocation();
@@ -74,6 +81,10 @@ export function useRosterScheduler() {
     }
     let endSelect = () => {
         itemList.rosterTableUtil.endSelect();
+        updateItemList({ type: "refresh" });
+    }
+    let fillEmptyShiftWithO = () => {
+        itemList.rosterDataUtil.fillEmptyShiftWithO(itemList.calendarDateList.length);
         updateItemList({ type: "refresh" });
     }
     let getCopyRegionLocation = () => {
@@ -135,6 +146,18 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.startSelect(cell.cellIndex, rowIndex);
         updateItemList({ type: "refresh" });
     }
+    let updateAutoPlanEndDate = newEndDate => {
+        itemList.autoPlannerUtil.setEndDate(newEndDate);
+        updateItemList({ type: "refresh" });
+    }
+    let updateAutoPlanIterationCount = newCount => {
+        itemList.autoPlannerUtil.setIterationCount(newCount);
+        updateItemList({ type: "refresh" });
+    }
+    let updateAutoPlanStartDate = newStartDate => {
+        itemList.autoPlannerUtil.setStartDate(newStartDate);
+        updateItemList({ type: "refresh" });
+    }
     let updatePreferredShift = (itoId, dateOfMonth, newPreferredShift) => {
         itemList.rosterDataUtil.updatePreferredShift(itoId, dateOfMonth, newPreferredShift);
         updateItemList({ type: "refresh" });
@@ -159,6 +182,7 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     return {
+        autoPlannerUtil: itemList.autoPlannerUtil,
         error: itemList.error,
         isLoading: itemList.isLoading,
         rosterMonth: {
@@ -170,6 +194,7 @@ export function useRosterScheduler() {
         uiAction: {
             copy,
             endSelect,
+            fillEmptyShiftWithO,
             handleKeyDown,
             getEditableShiftCellCssClassName,
             getPreferredShiftCellCssClassName,
@@ -179,6 +204,9 @@ export function useRosterScheduler() {
             paste,
             setFocusCell,
             startSelect,
+            updateAutoPlanEndDate,
+            updateAutoPlanIterationCount,
+            updateAutoPlanStartDate,
             updatePreferredShift,
             updateRosterMonth,
             updateShift,
