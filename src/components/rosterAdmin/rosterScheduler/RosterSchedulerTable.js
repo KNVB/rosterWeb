@@ -1,7 +1,8 @@
-import {useEffect} from "react";
+import { useEffect } from "react";
 import HeaderRows from "../../rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
-export default function RosterSchedulerTable({rosterDataUtil,rosterMonth,systemParam,uiAction,weekdayNames}){
+import ShiftInfoLegend from "../../../util/ShiftInfoLegend";
+export default function RosterSchedulerTable({ rosterDataUtil, rosterMonth, systemParam, uiAction, weekdayNames }) {
     useEffect(() => {
         const mouseUp = () => uiAction.endSelect();
         document.addEventListener("mouseup", mouseUp);
@@ -17,13 +18,19 @@ export default function RosterSchedulerTable({rosterDataUtil,rosterMonth,systemP
                 caption="EMSTF Computer Operator Roster Scheduler"
                 uiAction={uiAction}
                 systemParam={systemParam} />
-            
+
             <RosterSchedulerBody
                 calendarDateList={rosterMonth.calendarDateList}
                 rosterDataUtil={rosterDataUtil}
                 systemParam={systemParam}
-                uiAction={uiAction} /> 
-            
+                uiAction={uiAction} />
+            <tfoot>                
+                <tr>
+                    <td colSpan="7" className="pt-1">
+                        <ShiftInfoLegend activeShiftList={rosterDataUtil.getActiveShiftList()} />
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     )
 }

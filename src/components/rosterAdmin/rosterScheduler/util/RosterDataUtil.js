@@ -57,6 +57,9 @@ export default class RosterDataUtil {
                 }
             });
         }
+        this.getActiveShiftList=()=>{
+            return activeShiftList;
+        }
         this.getCopyDataRowCount = () => {
             if (copiedData === null) {
                 return -1;
