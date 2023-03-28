@@ -10,7 +10,6 @@ let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
         case "init":
-            result.autoPlannerUtil.setRosterDataUtil(action.rosterDataUtil);
             result.autoPlannerUtil.setEndDate(action.monthlyCalendar.calendarDateList.length);
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
@@ -21,7 +20,6 @@ let reducer = (state, action) => {
             break;
         case "updateRosterMonth":
             result.autoPlannerUtil.setEndDate(action.monthlyCalendar.calendarDateList.length);
-            result.autoPlannerUtil.setRosterDataUtil(action.rosterDataUtil);
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
             result.rosterDataUtil = action.rosterDataUtil;
@@ -137,6 +135,10 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
+    let startAutoPlan = e => {
+        itemList.autoPlannerUtil.autoPlan(itemList.rosterDataUtil);
+        updateItemList({ type: "refresh" });
+    }
     let startSelect = e => {
         let cell = e.target.closest("td");
         let rowIndex = cell.closest("tr").rowIndex;
@@ -203,6 +205,7 @@ export function useRosterScheduler() {
             isHighLightRow,
             paste,
             setFocusCell,
+            startAutoPlan,
             startSelect,
             updateAutoPlanEndDate,
             updateAutoPlanIterationCount,

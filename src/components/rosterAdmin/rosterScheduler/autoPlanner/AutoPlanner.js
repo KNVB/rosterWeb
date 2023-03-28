@@ -37,13 +37,13 @@ export default function AutoPlanner({autoPlannerUtil, rosterMonth, uiAction}){
                 <tr>
                     <td>Iteration Count:</td>
                     <td><input onChange={updateIterationCount} type="number" value={autoPlannerUtil.getIterationCount()}/></td>
-                    <td>&nbsp;<button className="autoPlannerButton">Auto Planner</button></td>
+                    <td>&nbsp;<a className="autoPlannerButton" onClick={uiAction.startAutoPlan}>Auto Planner</a></td>
                 </tr>                
             </tbody>
             <tfoot>
                 <tr>
                     <td colSpan={3} className="text-center">
-                        <button className="fillEmptyShiftWithOButton" onClick={uiAction.fillEmptyShiftWithO}>Fill empty shift with "O"</button>
+                        <a className="fillEmptyShiftWithOButton" onClick={uiAction.fillEmptyShiftWithO}>Fill empty shift with "O"</a>
                     </td>
                 </tr>
             </tfoot>

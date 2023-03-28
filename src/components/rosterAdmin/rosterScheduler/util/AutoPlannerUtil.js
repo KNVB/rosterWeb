@@ -1,8 +1,10 @@
 export default class AutoPlannerUtil {
     constructor(){
-        let rosterDataUtil;
         let iterationCount=100;
         let startDate=1,endDate;
+        this.autoPlan=(rosterDataUtil)=>{
+
+        }
         this.getIterationCount=()=>{
             return iterationCount;
         }
@@ -17,9 +19,6 @@ export default class AutoPlannerUtil {
         }
         this.setIterationCount=(newCount)=>{
             iterationCount=newCount;
-        }
-        this.setRosterDataUtil=inRosterDataUtil=>{
-            rosterDataUtil=inRosterDataUtil;
         }
         this.setStartDate=s=>{
             startDate=s;

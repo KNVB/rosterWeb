@@ -26,6 +26,7 @@
 .autoPlannerButton:hover {
     background: linear-gradient(#800000, #8B4513);
     cursor: pointer;
+    color: #fff;
 }
 
 .autoPlannerButton:after,
@@ -64,4 +65,5 @@
 .fillEmptyShiftWithOButton:hover {
     background: linear-gradient(IndianRed, lightPink);
     cursor: pointer;
+    color: #fff;
 }
