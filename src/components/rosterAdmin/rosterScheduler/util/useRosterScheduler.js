@@ -136,7 +136,7 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     let startAutoPlan = e => {
-        itemList.autoPlannerUtil.autoPlan(itemList.rosterDataUtil);
+        itemList.autoPlannerUtil.autoPlan(itemList.rosterDataUtil,itemList.systemParam);
         updateItemList({ type: "refresh" });
     }
     let startSelect = e => {

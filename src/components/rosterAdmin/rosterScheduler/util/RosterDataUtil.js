@@ -93,7 +93,7 @@ export default class RosterDataUtil {
         this.getVacantShiftList = () => {
             return vacantShiftList;
         }
-        this.init = async (year, month, noOfWorkingDay, monthLength) => {
+        this.init = async (year, month, noOfWorkingDay, monthLength) => {           
             activeShiftList = await fetchAPI.getActiveShiftList();
             await this.loadData(year, month, noOfWorkingDay, monthLength);
         }
