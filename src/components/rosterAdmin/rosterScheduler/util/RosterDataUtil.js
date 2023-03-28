@@ -40,7 +40,7 @@ export default class RosterDataUtil {
             });
             copiedData = result;
         }
-        this.deleteSelectedData = (selectedLocation, noOfWorkingDay, monthLength) => {            
+        this.deleteSelectedData = (selectedLocation, noOfWorkingDay, monthLength) => {
             let index, itoId, rows = selectedLocation.rows, shiftRowType;
             rows.forEach(rowId => {
                 index = rowId.indexOf("_");

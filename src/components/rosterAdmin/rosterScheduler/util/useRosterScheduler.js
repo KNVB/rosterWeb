@@ -1,5 +1,6 @@
 import { useEffect, useReducer } from "react";
 import CalendarUtility from "../../../util/calendar/CalendarUtility";
+import KeyboardEventHandler from "./KeyboardEventHandler";
 import RosterDataUtil from "./RosterDataUtil";
 import RosterTableUtil from "./RosterTableUtil";
 import SystemUtil from "../../../../util/SystemUtil";
@@ -64,10 +65,10 @@ export function useRosterScheduler() {
         }
         init();
     }, []);
-
+    let { handleKeyDown } = KeyboardEventHandler(itemList,updateItemList);
     let copy = e => {
         e.preventDefault();
-        let copyRegion=getCopyRegionLocation();
+        let copyRegion = getCopyRegionLocation();
         itemList.rosterDataUtil.copy(copyRegion);
         updateItemList({ type: "refresh" });
     }
@@ -75,74 +76,7 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
-    let handleArrowKeyEvent = (e, yOffset, xOffset) => {
-        e.preventDefault();
-        let cell = e.target.closest("td");
-        let nextCell = itemList.rosterTableUtil.getNextCell(cell, yOffset, xOffset);
-        itemList.rosterTableUtil.selectCell(nextCell.cellIndex, nextCell.rowIndex);
-        itemList.rosterTableUtil.select(nextCell.cellIndex, nextCell.rowIndex);
-        updateItemList({ type: "refresh" });
-    }
-    let handleDelKeyEvent=e=>{
-        e.preventDefault();
-        let selectedLocation=getSelectedLocation();
-        itemList.rosterDataUtil.deleteSelectedData(selectedLocation, itemList.noOfWorkingDay, itemList.calendarDateList.length);
-        updateItemList({ type: "refresh" });
-    }
-    let handleEscKeyEvent=e=>{
-        e.preventDefault();
-        itemList.rosterTableUtil.clearCopiedRegion();
-        itemList.rosterDataUtil.clearCopiedData();
-        updateItemList({ type: "refresh" });
-    }
-    let handleKeyDown = e => {
-        if (itemList.rosterTableUtil.isFirstInput()){
-            switch (e.key) {
-                case "ArrowDown"://handle down arrow key event
-                    handleArrowKeyEvent(e, 1, 0);
-                    break;
-                case "ArrowLeft"://handle left arrow key event
-                    handleArrowKeyEvent(e, 0, -1);
-                    break;
-                case "ArrowRight"://handle right arrow key event
-                    handleArrowKeyEvent(e, 0, 1);
-                    break;
-                case "ArrowUp"://handle up arrow key event
-                    handleArrowKeyEvent(e, -1, 0);
-                    break;
-                case "Delete":
-                    handleDelKeyEvent(e);
-                    break;
-                case "Escape":
-                    handleEscKeyEvent(e);
-                    break;    
-                case "Tab"://handle tab key
-                    if (e.shiftKey) {
-                        handleArrowKeyEvent(e, 0, -1);
-                    } else {
-                        handleArrowKeyEvent(e, 0, 1);
-                    }
-                    break;
-                case "y":
-                    if (e.ctrlKey) {
-                        e.preventDefault();
-                        itemList.rosterDataUtil.reDo();
-                        updateItemList({ type: "refresh" });
-                    }
-                    break;
-                case "z":
-                    if (e.ctrlKey) {
-                        e.preventDefault();
-                        itemList.rosterDataUtil.unDo();
-                        updateItemList({ type: "refresh" });
-                    }
-                    break;
-                default:
-                    break
-            }
-        }
-    }
-    let getCopyRegionLocation=()=>{
+    let getCopyRegionLocation = () => {
         let copyRegion = itemList.rosterTableUtil.getCopyRegionLocation();
         copyRegion.column.end -= itemList.systemParam.noOfPrevDate;
         copyRegion.column.start -= itemList.systemParam.noOfPrevDate;
@@ -160,7 +94,7 @@ export function useRosterScheduler() {
         }
         return className;
     }
-    let getPreferredShiftCellCssClassName = (cellIndex, rowIndex) => { 
+    let getPreferredShiftCellCssClassName = (cellIndex, rowIndex) => {
         let className = ["borderCell", "shiftCell"];
         let temp = itemList.rosterTableUtil.getSelectedCssClass(cellIndex, rowIndex);
         if (temp.length > 0) {
@@ -168,12 +102,7 @@ export function useRosterScheduler() {
         }
         return className;
     }
-    let getSelectedLocation=()=>{
-        let selectedLocation=itemList.rosterTableUtil.getSelectedLocation();
-        selectedLocation.column.end -= itemList.systemParam.noOfPrevDate;
-        selectedLocation.column.start -= itemList.systemParam.noOfPrevDate;
-        return selectedLocation;
-    }
+
     let getShiftCssClassName = shiftType => {
         return itemList.rosterDataUtil.getShiftCssClassName(shiftType);
     }
@@ -194,7 +123,7 @@ export function useRosterScheduler() {
         }
     }
     let setFocusCell = e => {
-        itemList.rosterTableUtil.setFocusCell(e);        
+        itemList.rosterTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
     let startSelect = e => {
@@ -206,7 +135,7 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.startSelect(cell.cellIndex, rowIndex);
         updateItemList({ type: "refresh" });
     }
-    let updatePreferredShift = (itoId, dateOfMonth, newPreferredShift) => { 
+    let updatePreferredShift = (itoId, dateOfMonth, newPreferredShift) => {
         itemList.rosterDataUtil.updatePreferredShift(itoId, dateOfMonth, newPreferredShift);
         updateItemList({ type: "refresh" });
     }
