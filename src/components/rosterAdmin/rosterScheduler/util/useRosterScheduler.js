@@ -83,9 +83,9 @@ export function useRosterScheduler() {
         return copyRegion;
     }
     let getEditableShiftCellCssClassName = (cellIndex, rowIndex, shift) => {
-        let className = ["borderCell", "shiftCell", itemList.rosterDataUtil.getShiftCssClassName(shift)];
+        let className = [];
         let temp = itemList.rosterDataUtil.getShiftCssClassName(shift);
-        if (temp !== undefined) {
+        if (temp !== null) {
             className.push(temp);
         }
         temp = itemList.rosterTableUtil.getSelectedCssClass(cellIndex, rowIndex);

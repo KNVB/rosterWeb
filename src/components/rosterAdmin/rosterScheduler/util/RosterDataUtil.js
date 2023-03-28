@@ -72,7 +72,7 @@ export default class RosterDataUtil {
                 let result = activeShiftList[shiftType].cssClassName;
                 return result
             } catch (error) {
-                return ''
+                return null
             }
         }
         this.getItoIdList = () => {
