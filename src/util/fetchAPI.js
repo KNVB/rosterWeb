@@ -1,23 +1,26 @@
 import axios from "axios";
 export default class FetchAPI {
     constructor() {
-        this.getActiveShiftList=async ()=>{
+        this.getActiveShiftList = async () => {
             return (await fetch(null, "get", "/rosterWeb/publicAPI/getActiveShiftList"));
         }
-        this.getPreferredShiftList=async (year,month)=>{
-            return (await fetch({year:year,month:month}, "get", "/rosterWeb/privateAPI/getPreferredShiftList"));
+        this.getITOBlackListShiftPattern = async (year, month) => {
+            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getITOBlackListShiftPattern"));
         }
-        this.getPreviousMonthShiftList=async (year, month)=>{
-            return (await fetch({year:year,month:month}, "get", "/rosterWeb/privateAPI/getPreviousMonthShiftList"));
+        this.getPreferredShiftList = async (year, month) => {
+            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getPreferredShiftList"));
         }
-        this.getRosterList=async (year,month)=>{
-            return (await fetch({year:year,month:month}, "get", "/rosterWeb/publicAPI/getRosterList"));
+        this.getPreviousMonthShiftList = async (year, month) => {
+            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getPreviousMonthShiftList"));
         }
-        this.getSystemParam=async ()=>{
+        this.getRosterList = async (year, month) => {
+            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/publicAPI/getRosterList"));
+        }
+        this.getSystemParam = async () => {
             return (await fetch(null, "get", "/rosterWeb/publicAPI/getSystemParam"));
         }
         //================================================================================================================
-        let fetch = async (data, method, url, responseType, header) => {                            
+        let fetch = async (data, method, url, responseType, header) => {
             axios.interceptors.response.use(
                 response => response,
                 error => {
@@ -63,10 +66,10 @@ export default class FetchAPI {
                 requestObj["headers"] = header;
             }
             let response = await axios(requestObj);
-            if (response.request.responseType === 'blob'){
-                let fileName=response.headers['content-disposition'];
-                fileName=fileName.substring(fileName.indexOf("filename=")+9);                
-                const newBlob = new Blob([response.data], { type:response.headers.get('content-type')});
+            if (response.request.responseType === 'blob') {
+                let fileName = response.headers['content-disposition'];
+                fileName = fileName.substring(fileName.indexOf("filename=") + 9);
+                const newBlob = new Blob([response.data], { type: response.headers.get('content-type') });
                 const objUrl = window.URL.createObjectURL(newBlob);
                 let link = document.createElement('a');
                 link.href = objUrl;

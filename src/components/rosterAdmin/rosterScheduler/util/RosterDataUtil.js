@@ -93,7 +93,7 @@ export default class RosterDataUtil {
         this.getVacantShiftList = () => {
             return vacantShiftList;
         }
-        this.init = async (year, month, noOfWorkingDay, monthLength) => {           
+        this.init = async (year, month, noOfWorkingDay, monthLength) => {
             activeShiftList = await fetchAPI.getActiveShiftList();
             await this.loadData(year, month, noOfWorkingDay, monthLength);
         }
@@ -101,6 +101,7 @@ export default class RosterDataUtil {
             return duplicateShiftList[itoId].includes(dateOfMonth);
         }
         this.loadData = async (year, month, noOfWorkingDay, monthLength) => {
+            let itoBlackListShiftPattern = await fetchAPI.getITOBlackListShiftPattern(year, month);
             let preferredShiftList = await fetchAPI.getPreferredShiftList(year, month);
             let previousMonthShiftList = await fetchAPI.getPreviousMonthShiftList(year, month);
             rosterList = await fetchAPI.getRosterList(year, month);
@@ -112,6 +113,7 @@ export default class RosterDataUtil {
                 if (rosterList[itoId].preferredShiftList === undefined) {
                     rosterList[itoId].preferredShiftList = {};
                 }
+                rosterList[itoId].blackListShiftPatternList = itoBlackListShiftPattern[itoId];
             });
             previousMonthShiftList.forEach(previousMonthShift => {
                 rosterList[previousMonthShift.ito_id].previousMonthShiftList.push(previousMonthShift.shift);

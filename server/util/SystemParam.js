@@ -13,6 +13,9 @@ export default class SystemParam {
                         case 'ConsecutiveWorkingDay':
                             this.maxConsecutiveWorkingDay = parseInt(result.param_value);
                             break;
+                        case "NoOfShiftPerMonth":
+                            this.maxNoOfShiftPerMonth= parseInt(result.param_value);
+                            break;
                         case 'monthPicker':
                             this.monthPickerMinDate = JSON.parse(result.param_value);
                             break;

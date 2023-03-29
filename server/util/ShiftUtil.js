@@ -33,5 +33,26 @@ export default class ShiftUtil {
                 dboObj.close();
             };
         }
+        this.getITOBlackListShiftPattern = async (year, month) => {
+            let dboObj = new Dbo();
+            let itoBlackListShiftPattern = {};
+            try {
+                let results = await dboObj.getITOBlackListShiftPattern(year, month);
+                console.log("Get (" + year + "," + month + ") ITO black list shift pattern successfully!");
+                results.forEach(record => {
+                    if (itoBlackListShiftPattern[record.ito_id] === undefined) {
+                        itoBlackListShiftPattern[record.ito_id] = [];
+                    }
+                    itoBlackListShiftPattern[record.ito_id].push(record.black_list_pattern);
+                });
+                return itoBlackListShiftPattern;
+            } catch (error) {
+                console.log("Something wrong when getting ITO black list shift pattern:" + error);
+                console.log(itoBlackListShiftPattern);
+            }
+            finally {
+                dboObj.close();
+            };
+        }
     }
 }
