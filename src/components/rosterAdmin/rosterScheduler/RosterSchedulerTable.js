@@ -3,7 +3,7 @@ import AutoPlanner from "./autoPlanner/AutoPlanner";
 import HeaderRows from "../../rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../../util/ShiftInfoLegend";
-export default function RosterSchedulerTable({autoPlannerUtil, rosterDataUtil, rosterMonth, systemParam, uiAction, weekdayNames }) {
+export default function RosterSchedulerTable({autoPlannerResult,autoPlannerUtil, rosterDataUtil, rosterMonth, systemParam, uiAction, weekdayNames }) {
     useEffect(() => {
         const mouseUp = () => uiAction.endSelect();
         document.addEventListener("mouseup", mouseUp);
@@ -32,6 +32,7 @@ export default function RosterSchedulerTable({autoPlannerUtil, rosterDataUtil, r
                     </td>
                     <td colSpan="21" rowSpan="10" className="align-top pt-1">
                         <AutoPlanner
+                            autoPlannerResult={autoPlannerResult}
                             autoPlannerUtil={autoPlannerUtil}
                             calendarDateList={rosterMonth.calendarDateList}
                             rosterDataUtil={rosterDataUtil}

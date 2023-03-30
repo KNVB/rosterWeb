@@ -213,7 +213,7 @@ export default class RosterDataUtil {
             });
             let { getAllITOStat } = AdminShiftStatUtil();
             let temp = getAllITOStat(activeShiftList, 1, monthLength, rosterList);
-            duplicateShiftList = temp.duplicateShiftList
+            duplicateShiftList = temp.duplicateShiftList;
             vacantShiftList = temp.vacantShiftList;
         }
     }

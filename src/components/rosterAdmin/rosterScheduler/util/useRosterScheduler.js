@@ -1,5 +1,4 @@
 import { useEffect, useReducer } from "react";
-import AutoPlanner from "../autoPlanner/AutoPlanner";
 import AutoPlannerUtil from "./AutoPlannerUtil";
 import CalendarUtility from "../../../util/calendar/CalendarUtility";
 import KeyboardEventHandler from "./KeyboardEventHandler";
@@ -17,6 +16,13 @@ let reducer = (state, action) => {
             result.systemParam = action.systemParam;
             result.rosterTableUtil.init(result.calendarDateList, result.rosterDataUtil.getItoIdList(), action.systemParam);
             result.isLoading = false;
+            break;
+        case "updateAutoPlannerResult":
+            result.autoPlannerResult = action.result;
+            result.isLoading = false;
+            break;
+        case "updateLoadingStatus":
+            result.isLoading = action.value;
             break;
         case "updateRosterMonth":
             result.autoPlannerUtil.setEndDate(action.monthlyCalendar.calendarDateList.length);
@@ -36,6 +42,7 @@ let reducer = (state, action) => {
 export function useRosterScheduler() {
     const [itemList, updateItemList] = useReducer(reducer,
         {
+            autoPlannerResult: [],
             autoPlannerUtil: new AutoPlannerUtil(),
             calendarUtility: new CalendarUtility(),
             calendarDateList: null,
@@ -136,8 +143,11 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     let startAutoPlan = e => {
-        itemList.autoPlannerUtil.autoPlan(itemList.rosterDataUtil,itemList.systemParam);
-        updateItemList({ type: "refresh" });
+        updateItemList({ type: "updateLoadingStatus", value: "true" });
+        setTimeout(() => {
+            let result = itemList.autoPlannerUtil.autoPlan(itemList.noOfWorkingDay, itemList.rosterDataUtil, itemList.systemParam);
+            updateItemList({ "result": result, type: "updateAutoPlannerResult" });
+        }, 50);
     }
     let startSelect = e => {
         let cell = e.target.closest("td");
@@ -184,6 +194,7 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     return {
+        autoPlannerResult: itemList.autoPlannerResult,
         autoPlannerUtil: itemList.autoPlannerUtil,
         error: itemList.error,
         isLoading: itemList.isLoading,

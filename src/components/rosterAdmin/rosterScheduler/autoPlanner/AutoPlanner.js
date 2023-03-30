@@ -1,5 +1,5 @@
 import "./AutoPlanner.css";
-export default function AutoPlanner({autoPlannerUtil, rosterMonth, uiAction}){
+export default function AutoPlanner({autoPlannerResult,autoPlannerUtil, rosterMonth, uiAction}){
     let updateEndDate=e=>{
         uiAction.updateAutoPlanEndDate(e.target.value)
     }
@@ -8,7 +8,7 @@ export default function AutoPlanner({autoPlannerUtil, rosterMonth, uiAction}){
     }
     let updateStartDate=e=>{
         uiAction.updateAutoPlanStartDate(e.target.value);
-    }
+    }   
     return(
         <table className="mt-0">
             <thead>
@@ -44,8 +44,11 @@ export default function AutoPlanner({autoPlannerUtil, rosterMonth, uiAction}){
                 <tr>
                     <td colSpan={3} className="text-center">
                         <a className="fillEmptyShiftWithOButton" onClick={uiAction.fillEmptyShiftWithO}>Fill empty shift with "O"</a>
+                        {autoPlannerResult.map((result,index)=>(
+                            <div key={index}>Missing Shift Count:{result.vacantShiftCount}</div>
+                        ))}
                     </td>
-                </tr>
+                </tr>                
             </tfoot>
         </table>
     )

@@ -2,7 +2,7 @@ import { useRosterScheduler } from "./util/useRosterScheduler";
 import handleAPIError from "../../../util/handleAPIError";
 import RosterSchedulerTable from "./RosterSchedulerTable";
 export default function RosterScheduler() {
-    const { autoPlannerUtil, error, isLoading, rosterMonth, rosterDataUtil, systemParam, uiAction, weekdayNames } = useRosterScheduler();
+    const {autoPlannerResult, autoPlannerUtil, error, isLoading, rosterMonth, rosterDataUtil, systemParam, uiAction, weekdayNames } = useRosterScheduler();
     if (error) {
         console.log(error);
         return handleAPIError(error);
@@ -10,6 +10,7 @@ export default function RosterScheduler() {
         if (!isLoading) {
             return (
                 <RosterSchedulerTable
+                    autoPlannerResult={autoPlannerResult}
                     autoPlannerUtil={autoPlannerUtil}
                     rosterDataUtil={rosterDataUtil}
                     rosterMonth={rosterMonth}
@@ -19,7 +20,7 @@ export default function RosterScheduler() {
             )
 
         } else {
-            return <></>
+            return <div className="modalBackground"><img src="/icon.gif"/></div>
         }
     }
 }
