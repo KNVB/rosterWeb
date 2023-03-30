@@ -1,3 +1,6 @@
+.autoPlanResult{
+	cursor: pointer;
+}
 .borderCell {
 	border-left: 1px inset #e0e0e0;
 	border-top: 1px inset #e0e0e0;

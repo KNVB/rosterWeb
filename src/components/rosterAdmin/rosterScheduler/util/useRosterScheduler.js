@@ -138,6 +138,9 @@ export function useRosterScheduler() {
             updateItemList({ type: "refresh" });
         }
     }
+    let showAutoPlanResult=(index)=>{
+        console.log(itemList.autoPlannerResult[index]);
+    }
     let setFocusCell = e => {
         itemList.rosterTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
@@ -147,7 +150,7 @@ export function useRosterScheduler() {
         setTimeout(() => {
             let result = itemList.autoPlannerUtil.autoPlan(itemList.noOfWorkingDay, itemList.rosterDataUtil, itemList.systemParam);
             updateItemList({ "result": result, type: "updateAutoPlannerResult" });
-        }, 50);
+        }, 500);
     }
     let startSelect = e => {
         let cell = e.target.closest("td");
@@ -216,6 +219,7 @@ export function useRosterScheduler() {
             isHighLightRow,
             paste,
             setFocusCell,
+            showAutoPlanResult,
             startAutoPlan,
             startSelect,
             updateAutoPlanEndDate,
