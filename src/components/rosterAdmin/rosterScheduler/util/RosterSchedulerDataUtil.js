@@ -21,10 +21,10 @@ export default class RosterSchedulerDataUtil {
                 itoId = row.substring(index + 1);
                 temp = [];
                 if (shiftRowType === "rosterRow") {
-                    shiftList = { ...roster.itoList[itoId].shiftList };
+                    shiftList = { ...roster.rosterRow[itoId].shiftList };
                 }
                 if (shiftRowType === "preferredShiftRow") {
-                    shiftList = { ...roster.itoList[itoId].preferredShiftList };
+                    shiftList = { ...rosterSchedulerData.preferredShiftList[itoId] };
                 }
 
                 for (let i = copyRegion.column.start; i <= copyRegion.column.end; i++) {
@@ -37,6 +37,27 @@ export default class RosterSchedulerDataUtil {
                 result.push(temp);
             });
             copiedData = result;
+        }
+        this.deleteSelectedData = (selectedLocation, noOfWorkingDay, monthLength) => {
+            let index,itoId,shiftRowType;
+            selectedLocation.rows.forEach(rowId => {
+                index = rowId.indexOf("_");
+                shiftRowType = rowId.substring(0, index);
+                itoId = rowId.substring(index + 1);                
+                for (let x = selectedLocation.column.start; x <= selectedLocation.column.end; x++) {
+                    console.log(rowId,x)
+                    if (x <= monthLength) {
+                        if (shiftRowType === "rosterRow") {
+                            this.updateShift(itoId, x, '', noOfWorkingDay, monthLength);
+                        }
+                        if (shiftRowType === "preferredShiftRow") {
+                            this.updatePreferredShift(itoId, x, '');
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            });
         }
         this.getCopyDataRowCount = () => {
             if (copiedData === null) {

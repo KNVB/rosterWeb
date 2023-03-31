@@ -11,7 +11,7 @@ export default function EditableRosterRow({ calendarDateList, itoId, roster, ros
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         className = '';
         shift = '';
-        if (previousMonthShiftList[i] !== undefined) {
+        if (previousMonthShiftList && (previousMonthShiftList[i] !== undefined)) {
             shift = previousMonthShiftList[i];
             className = uiAction.getShiftCssClassName(shift);
         }

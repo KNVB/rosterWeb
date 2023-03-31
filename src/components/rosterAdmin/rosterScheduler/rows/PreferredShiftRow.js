@@ -12,7 +12,7 @@ export default function PreferredShiftRow({ calendarDateList, itoId, rosterSched
     calendarDateList.forEach((calendarDate, i) => {
         preferredShift = "";
         className = uiAction.getPreferredShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
-        if (rosterDetail[i + 1]) {
+        if (rosterDetail && (rosterDetail[i + 1] !== undefined)) {
             preferredShift = (rosterDetail[i + 1]);
         }
         shiftCellList.push(

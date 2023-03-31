@@ -17,7 +17,7 @@ export default function KeyboardEventHandler(itemList, updateItemList) {
                 case "Delete"://handle delete key event
                     handleDelKeyEvent(e);
                     break;
-                case "Escape":
+                case "Escape"://handle esc key event
                     handleEscKeyEvent(e);
                     break;
                 case "Tab"://handle tab key
@@ -55,15 +55,15 @@ export default function KeyboardEventHandler(itemList, updateItemList) {
         updateItemList({ type: "refresh" });
     }
     const handleDelKeyEvent = (e) => {
-        e.preventDefault();
+        e.preventDefault();        
         let selectedLocation = getSelectedLocation(itemList.rosterTableUtil, itemList.systemParam);
-        itemList.rosterDataUtil.deleteSelectedData(selectedLocation, itemList.noOfWorkingDay, itemList.calendarDateList.length);
+        itemList.rosterSchedulerDataUtil.deleteSelectedData(selectedLocation, itemList.noOfWorkingDay, itemList.calendarDateList.length);
         updateItemList({ type: "refresh" });
     }
     const handleEscKeyEvent = (e) => {
         e.preventDefault();
         itemList.rosterTableUtil.clearCopiedRegion();
-        itemList.rosterDataUtil.clearCopiedData();
+        itemList.rosterSchedulerDataUtil.clearCopiedData();
         updateItemList({ type: "refresh" });
     }
     let getSelectedLocation = (rosterTableUtil, systemParam) => {
