@@ -2,25 +2,32 @@ import EditableShiftCell from "../EditableShiftCell";
 import NameCell from "../../../cells/NameCell";
 import ShiftCell from "../../../cells/ShiftCell";
 import StatCell from "../../../cells/StatCell";
-export default function PreferredShiftRow({ calendarDateList, itoId, rosterSchedulerData, rowIndex, systemParam, uiAction }) {
+export default function PreferredShiftRow(props) {
+    let {
+        calendarDateList,
+        itoId,
+        rosterDataUtil, rowIndex,
+        systemParam,
+        uiAction } = props;
     let className = '';
-    let rosterDetail = rosterSchedulerData.preferredShiftList[itoId];
-    let preferredShift = '', shiftCellList = [];
+    let rosterDetail = rosterDataUtil.getRosterList(itoId);
+    let shiftCellList = [];
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         shiftCellList.push(<ShiftCell key={"prev-preferred-" + i} />)
     }
     calendarDateList.forEach((calendarDate, i) => {
-        preferredShift = "";
+        let preferredShift = "";
         className = uiAction.getPreferredShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
-        if (rosterDetail[i + 1]) {
-            preferredShift = (rosterDetail[i + 1]);
+        if (rosterDetail.preferredShiftList) {
+            preferredShift = (rosterDetail.preferredShiftList[i + 1]);
         }
+
         shiftCellList.push(
             <EditableShiftCell
                 cssClassName={className.join(" ")}
                 key={"preferred_" + itoId + '_' + i}
-                onBlur={(e) => uiAction.updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
-                onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
+                onBlur={(e) =>  uiAction.updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
+                onPaste={(e) => uiAction.paste(calendarDate.dateOfMonth, e)}
                 uiAction={uiAction}>
                 {preferredShift}
             </EditableShiftCell>

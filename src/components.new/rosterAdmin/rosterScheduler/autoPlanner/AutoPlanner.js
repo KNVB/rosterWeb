@@ -1,5 +1,5 @@
 import "./AutoPlanner.css";
-export default function AutoPlanner({ autoPlannerResult, autoPlannerUtil, rosterMonth, uiAction }) {
+export default function AutoPlanner({ autoPlannerResult, rosterMonth, uiAction }) {
     let updateEndDate = e => {
         uiAction.updateAutoPlanEndDate(e.target.value)
     }
@@ -15,7 +15,7 @@ export default function AutoPlanner({ autoPlannerResult, autoPlannerUtil, roster
                 <tr>
                     <td>Auto Planning Start From:</td>
                     <td colSpan={2}>
-                        <select onChange={updateStartDate} value={autoPlannerUtil.getStartDate()}>
+                        <select onChange={updateStartDate} value={uiAction.getAutoPlanStartDate()}>
                             {
                                 rosterMonth.calendarDateList.map(calendarDate => (
                                     <option key={"startDate_" + calendarDate.dateOfMonth} value={calendarDate.dateOfMonth}>{calendarDate.dateOfMonth}</option>
@@ -23,7 +23,7 @@ export default function AutoPlanner({ autoPlannerResult, autoPlannerUtil, roster
                             }
                         </select>
                         &nbsp;to&nbsp;
-                        <select onChange={updateEndDate} value={autoPlannerUtil.getEndDate()}>
+                        <select onChange={updateEndDate} value={uiAction.getAutoPlanEndDate()}>
                             {
                                 rosterMonth.calendarDateList.map(calendarDate => (
                                     <option key={"endDate_" + calendarDate.dateOfMonth} value={calendarDate.dateOfMonth}>{calendarDate.dateOfMonth}</option>
@@ -36,7 +36,7 @@ export default function AutoPlanner({ autoPlannerResult, autoPlannerUtil, roster
             <tbody>
                 <tr>
                     <td>Iteration Count:</td>
-                    <td><input onChange={updateIterationCount} type="number" value={autoPlannerUtil.getIterationCount()} /></td>
+                    <td><input onChange={updateIterationCount} type="number" value={uiAction.getAutoPlanIterationCount()} /></td>
                     <td>&nbsp;<a className="autoPlannerButton" onClick={uiAction.startAutoPlan}>Auto Planner</a></td>
                 </tr>
             </tbody>
@@ -46,7 +46,7 @@ export default function AutoPlanner({ autoPlannerResult, autoPlannerUtil, roster
                         <a className="fillEmptyShiftWithOButton" onClick={uiAction.fillEmptyShiftWithO}>Fill empty shift with "O"</a>
                         {
                             autoPlannerResult.map((result, index) => (
-                                <div className="autoPlanResult" key={index} onClick={()=>uiAction.showAutoPlanResult(index)}>Missing Shift Count:{result.vacantShiftCount}</div>
+                                <div className="autoPlanResult" key={index} onClick={() => uiAction.showAutoPlanResult(index)}>Missing Shift Count:{result.vacantShiftCount}</div>
                             ))
                         }
                     </td>

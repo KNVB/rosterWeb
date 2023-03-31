@@ -3,16 +3,15 @@ import NameCell from "../../../cells/NameCell";
 import ShiftCell from "../../../cells/ShiftCell";
 import StatCell from "../../../cells/StatCell";
 
-export default function EditableRosterRow({ calendarDateList, itoId, roster, rosterSchedulerData, rowIndex, systemParam, uiAction }) {
-    let className = '', previousMonthShiftList = rosterSchedulerData.previousMonthShiftList[itoId];
-    let rosterDetail = roster.rosterRow[itoId];
+export default function EditableRosterRow({ calendarDateList, itoId, rosterDataUtil, rowIndex, systemParam, uiAction }) {
+    let className = '';
+    let rosterDetail = rosterDataUtil.getRosterList(itoId);
     let shift = '', shiftCellList = [];
-    // console.log(itoId,previousMonthShiftList);
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         className = '';
         shift = '';
-        if (previousMonthShiftList[i] !== undefined) {
-            shift = previousMonthShiftList[i];
+        if (rosterDetail.previousMonthShiftList[i] !== undefined) {
+            shift = rosterDetail.previousMonthShiftList[i];
             className = uiAction.getShiftCssClassName(shift);
         }
         shiftCellList.push(
@@ -26,7 +25,7 @@ export default function EditableRosterRow({ calendarDateList, itoId, roster, ros
     calendarDateList.forEach((calendarDate, index) => {
         shift = rosterDetail.shiftList[index + 1];
         className = uiAction.getEditableShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex, shift);
-        if (uiAction.isDuplicateShift(itoId, calendarDate.dateOfMonth)) {
+        if (rosterDataUtil.isDuplicateShift(itoId, calendarDate.dateOfMonth)) {
             className.push("errorRedBlackGround");
         }
         shiftCellList.push(
@@ -34,16 +33,16 @@ export default function EditableRosterRow({ calendarDateList, itoId, roster, ros
                 cssClassName={className.join(" ")}
                 key={itoId + '_' + index}
                 onBlur={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
-                onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
+                onPaste={(e) => uiAction.paste(calendarDate.dateOfMonth, e)}
                 uiAction={uiAction}>
                 {shift}
             </EditableShiftCell>
-        );
+        )
     });
-
     for (let i = calendarDateList.length; i < 31; i++) {
         shiftCellList.push(<ShiftCell key={itoId + '_' + i}>&nbsp;</ShiftCell>)
     }
+
     return (
         <tr id={"rosterRow_" + itoId}>
             <NameCell isHighLightRow={uiAction.isHighLightRow(rowIndex)}>
@@ -83,5 +82,5 @@ export default function EditableRosterRow({ calendarDateList, itoId, roster, ros
                 {rosterDetail.actualWorkingDayCount}
             </StatCell>
         </tr>
-    );
+    )
 }

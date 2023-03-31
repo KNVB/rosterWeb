@@ -30,14 +30,14 @@ export default function KeyboardEventHandler(itemList, updateItemList) {
                 case "y"://handle redo 
                     if (e.ctrlKey) {
                         e.preventDefault();
-                        itemList.rosterDataUtil.reDo();
+                        itemList.rosterSchedulerDataUtil.reDo();
                         updateItemList({ type: "refresh" });
                     }
                     break;
                 case "z"://handle undo 
                     if (e.ctrlKey) {
                         e.preventDefault();
-                        itemList.rosterDataUtil.unDo();
+                        itemList.rosterSchedulerDataUtil.unDo();
                         updateItemList({ type: "refresh" });
                     }
                     break;

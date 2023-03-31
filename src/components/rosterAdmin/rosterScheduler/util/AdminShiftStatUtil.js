@@ -6,9 +6,11 @@ export default function AdminShiftStatUtil() {
         Object.keys(inITORosterList).forEach(itoId => {
             duplicateShiftList[itoId] = [];
         });
+        //console.log("startDate:"+startDate+",endDate:"+endDate);
         for (let i = startDate; i <= endDate; i++) {
-            let vacantShift = activeShiftInfoList.essentialShift;            
+            let vacantShift = activeShiftInfoList.essentialShift;         
             let temp = [];
+            
             itoIdList.forEach(itoId => {
                 let itoRoster = inITORosterList[itoId];
                 if (itoRoster.shiftList[i] !== undefined) {

@@ -2,19 +2,20 @@ import { useRosterScheduler } from "./util/useRosterScheduler";
 import handleAPIError from "../../../util/handleAPIError";
 import RosterSchedulerTable from "./RosterSchedulerTable";
 export default function RosterScheduler() {
-    const { error, isLoading, roster, rosterMonth, rosterSchedulerData, systemParam, uiAction } = useRosterScheduler();
+    const {autoPlannerResult, error, isLoading, rosterMonth, rosterDataUtil, systemParam, uiAction, weekdayNames } = useRosterScheduler();
     if (error) {
         console.log(error);
         return handleAPIError(error);
     } else {
         if (!isLoading) {
             return (
-                <RosterSchedulerTable                    
-                    roster={roster}
+                <RosterSchedulerTable
+                    autoPlannerResult={autoPlannerResult}
+                    rosterDataUtil={rosterDataUtil}
                     rosterMonth={rosterMonth}
-                    rosterSchedulerData={rosterSchedulerData}
                     systemParam={systemParam}
-                    uiAction={uiAction}/>
+                    uiAction={uiAction}
+                    weekdayNames={weekdayNames} />
             )
 
         } else {

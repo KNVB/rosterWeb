@@ -13,8 +13,8 @@ export default class FetchAPI {
         this.getPreviousMonthShiftList = async (year, month) => {
             return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getPreviousMonthShiftList"));
         }
-        this.getRosterList = async (year, month) => {
-            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/publicAPI/getRosterList"));
+        this.getRoster = async (year, month) => {
+            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/publicAPI/getRoster"));
         }
         this.getSystemParam = async () => {
             return (await fetch(null, "get", "/rosterWeb/publicAPI/getSystemParam"));

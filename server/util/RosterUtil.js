@@ -29,12 +29,12 @@ export default class RosterUtil {
 				dboObj.close();
 			};
 		}
-		this.getRosterList = async (year, month) => {
+		this.getRoster = async (year, month) => {
 			let dbo = new Dbo();
 			let itoRosterList = {};
 			try {
-				let results = await dbo.getRosterList(year, month);
-				console.log("Get (" + year + "," + month + ") Roster List successfully!");
+				let results = await dbo.getRoster(year, month);
+				console.log("Get (" + year + "," + month + ") Roster successfully!");
 				results.forEach(record => {
 					if (itoRosterList[record.ito_id] === undefined) {
 						itoRosterList[record.ito_id] = {

@@ -34,7 +34,7 @@ export default class Dbo {
             //console.log(result.startDateString, result.endDateString);            
             return await executeQuery(sqlString, [result.startDateString, result.endDateString]);
         }
-        this.getRosterList = async (year, month) => {
+        this.getRoster = async (year, month) => {
             let result = getStartEndDateString(year, month);
             sqlString = "select v.available_shift,v.ito_id,post_name,ito_name,working_hour_per_day,balance,day(Shift_date) as d,shift ";
             sqlString += "from (";

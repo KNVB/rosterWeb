@@ -1,0 +1,36 @@
+autoPlanResult:{
+}
+rosterMonth:{
+	calendarDateList
+	noOfWorkingDay
+}
+rosterSchedulerData:{
+	allITOStat
+	activeShiftList
+	roster:[ito]:{
+		availableShiftList,
+		itoName,
+        itoPostName,
+        lastMonthBalance,
+        shiftList,
+	  thisMonthBalance,
+        workingHourPerDay,
+        expectedWorkingHour,
+        "actualWorkingHour,
+        "shiftCountList": {
+          "aShiftCount",
+          "bxShiftCount",
+          "cShiftCount",
+          "dxShiftCount"
+        },
+        "actualWorkingDayCount,
+        "totalBalance",
+        "previousMonthShiftList,
+        "preferredShiftList":
+	}
+systemParam = {
+      maxConsecutiveWorkingDay,
+      monthPickerMinDate,
+      noOfPrevDate": 2
+    }
+rosterTableUtil	

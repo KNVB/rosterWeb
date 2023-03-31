@@ -1,41 +1,41 @@
 import EditableRosterRow from "./rows/EditableRosterRow";
 import PreferredShiftRow from "./rows/PreferredShiftRow";
 import VacantShiftRow from "./rows/VacantShiftRow";
-export default function RosterSchedulerBody({ roster, rosterMonth, rosterSchedulerData, systemParam, uiAction }) {
+export default function RosterSchedulerBody({ calendarDateList, rosterDataUtil, rosterTableUtil, systemParam,uiAction }) {
     let rowList = [];
-    let itoIdList = Object.keys(roster.rosterRow);
+    let itoIdList = rosterDataUtil.getItoIdList();    
     itoIdList.forEach((itoId, index) => {
         rowList.push(
             <EditableRosterRow
-                calendarDateList={rosterMonth.calendarDateList}
+                calendarDateList={calendarDateList}
                 itoId={itoId}
                 key={"rosterRow_" + itoId}
-                roster={roster}
-                rosterSchedulerData={rosterSchedulerData}
+                rosterDataUtil={rosterDataUtil}
+                rosterTableUtil={rosterTableUtil}
                 rowIndex={(index * 2 + 5)}
                 systemParam={systemParam}
-                uiAction={uiAction} />
+                uiAction={uiAction}  />
         );
         rowList.push(
             <PreferredShiftRow
-                calendarDateList={rosterMonth.calendarDateList}
+                calendarDateList={calendarDateList}
                 itoId={itoId}
                 key={"preferredShiftRow_" + itoId}
-                roster={roster}
-                rosterSchedulerData={rosterSchedulerData}
-                rowIndex={(index * 2 + 6)}
+                rosterDataUtil={rosterDataUtil}                
+                rowIndex={(index*2 + 6)}
                 systemParam={systemParam}
-                uiAction={uiAction} />
+                uiAction={uiAction}/>
         );
-    });
+    }); 
     return (
         <tbody>
             {rowList}
-            <VacantShiftRow
-                calendarDateList={rosterMonth.calendarDateList}
-                rosterSchedulerData={rosterSchedulerData}
+            <VacantShiftRow 
+                calendarDateList={calendarDateList}
+                rosterDataUtil={rosterDataUtil}
+                rosterTableUtil={rosterTableUtil}
                 systemParam={systemParam}
                 uiAction={uiAction} />
         </tbody>
-    )
+    );
 }

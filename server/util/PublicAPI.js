@@ -16,10 +16,10 @@ let wrapper=function (adminUtil,systemParam){
                     res.status(400).send(error.message);
                 }
                 break;
-            case "getRosterList":
+            case "getRoster":
                 let rosterUtil=new RosterUtil();
                 try{
-                    let rosterList=await rosterUtil.getRosterList(req.query.year,req.query.month);
+                    let rosterList=await rosterUtil.getRoster(req.query.year,req.query.month);
                     res.send(rosterList);
                 } catch (error) {
                     res.status(400).send(error.message);

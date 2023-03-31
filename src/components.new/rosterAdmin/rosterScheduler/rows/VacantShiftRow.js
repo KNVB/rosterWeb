@@ -1,5 +1,5 @@
 import ShiftCell from '../../../cells/ShiftCell';
-export default function VacantShiftRow({ rosterSchedulerData, calendarDateList, systemParam, uiAction }) {
+export default function VacantShiftRow({ rosterDataUtil, calendarDateList, systemParam, uiAction }) {
     function handleMouseEnterEvent(e) {
         e.preventDefault();
         let cell = e.target.closest("td");
@@ -14,8 +14,8 @@ export default function VacantShiftRow({ rosterSchedulerData, calendarDateList, 
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         shiftCellList.push(<ShiftCell key={"prev-vacant-" + i} />)
     }
-    let vacantShiftList = rosterSchedulerData.vacantShiftList;
-    
+    let vacantShiftList=rosterDataUtil.getVacantShiftList();
+    //console.log(vacantShiftList);
     calendarDateList.forEach(calendarDate => {
         vacantShift = vacantShiftList[calendarDate.dateOfMonth];
         shiftCellList.push(

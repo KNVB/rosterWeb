@@ -28,6 +28,7 @@ export default class UndoableData {
             this.presentValue = JSON.stringify(newValue);
         }
         this.set = (newValue) => {
+            console.log('UndoableData:set');
             pastValue.push(presentValue);
             presentValue = JSON.stringify(newValue);
         }

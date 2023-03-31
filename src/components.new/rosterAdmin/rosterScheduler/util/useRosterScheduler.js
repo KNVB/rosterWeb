@@ -1,29 +1,38 @@
 import { useEffect, useReducer } from "react";
+import AutoPlannerUtil from "./AutoPlannerUtil";
 import CalendarUtility from "../../../util/calendar/CalendarUtility";
 import KeyboardEventHandler from "./KeyboardEventHandler";
-import RosterSchedulerDataUtil from "./RosterSchedulerDataUtil";
+import RosterDataUtil from "./RosterDataUtil";
 import RosterTableUtil from "./RosterTableUtil";
 import SystemUtil from "../../../../util/SystemUtil";
 let reducer = (state, action) => {
     let result = { ...state };
-    //console.log(action.type);
     switch (action.type) {
         case "init":
+            result.autoPlannerUtil.setEndDate(action.monthlyCalendar.calendarDateList.length);
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
+            result.rosterDataUtil = action.rosterDataUtil;
             result.systemParam = action.systemParam;
-            result.rosterTableUtil.init(result.calendarDateList, result.rosterSchedulerDataUtil.getItoIdList(), action.systemParam);
+            result.rosterTableUtil.init(result.calendarDateList, result.rosterDataUtil.getItoIdList(), action.systemParam);
             result.isLoading = false;
+            break;
+        case "updateAutoPlannerResult":
+            result.autoPlannerResult = action.result;
+            result.isLoading = false;
+            break;
+        case "updateLoadingStatus":
+            result.isLoading = action.value;
+            break;
+        case "updateRosterMonth":
+            result.autoPlannerUtil.setEndDate(action.monthlyCalendar.calendarDateList.length);
+            result.calendarDateList = action.monthlyCalendar.calendarDateList;
+            result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
+            result.rosterDataUtil = action.rosterDataUtil;
+            result.rosterTableUtil.init(result.calendarDateList, result.rosterDataUtil.getItoIdList(), result.systemParam);
             break;
         case "setError":
             result.error = action.error;
-            break;
-        case "updateRosterMonth":
-            result.calendarDateList = action.monthlyCalendar.calendarDateList;
-            result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
-            result.rosterTableUtil.init(result.calendarDateList, result.rosterSchedulerDataUtil.getItoIdList(), result.systemParam);
-            break;
-        case "refresh":
             break;
         default:
             break;
@@ -31,17 +40,21 @@ let reducer = (state, action) => {
     return result;
 }
 export function useRosterScheduler() {
-    const [itemList, updateItemList] = useReducer(reducer, {
-        calendarDateList: null,
-        calendarUtility: new CalendarUtility(),
-        error: null,
-        isLoading: true,
-        noOfWorkingDay: -1,
-        rosterSchedulerDataUtil: new RosterSchedulerDataUtil(),
-        rosterTableUtil: new RosterTableUtil(),
-        systemParam: null,
-    });
+    const [itemList, updateItemList] = useReducer(reducer,
+        {
+            autoPlannerResult: [],
+            autoPlannerUtil: new AutoPlannerUtil(),
+            calendarUtility: new CalendarUtility(),
+            calendarDateList: null,
+            error: null,
+            isLoading: true,
+            noOfWorkingDay: -1,
+            rosterDataUtil: null,
+            rosterTableUtil: new RosterTableUtil(),
+            systemParam: null
+        });
     useEffect(() => {
+        let rosterDataUtil = new RosterDataUtil();
         let systemUtil = new SystemUtil();
         let init = async () => {
             try {
@@ -49,11 +62,12 @@ export function useRosterScheduler() {
                 let rosterYear = now.getFullYear();
                 let rosterMonth = now.getMonth();
                 let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
-                await itemList.rosterSchedulerDataUtil.init(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length, itemList.calendarUtility.weekdayNames);
+                await rosterDataUtil.init(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
                 let systemParam = await systemUtil.getSystemParam();
                 systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
                 updateItemList({
                     monthlyCalendar,
+                    rosterDataUtil,
                     systemParam,
                     type: "init"
                 });
@@ -64,15 +78,28 @@ export function useRosterScheduler() {
         init();
     }, []);
     let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
-    let copyRosterData=(e)=>{
+    let copy = e => {
         e.preventDefault();
         let copyRegion = getCopyRegionLocation();
-        itemList.rosterSchedulerDataUtil.copy(copyRegion);
+        itemList.rosterDataUtil.copy(copyRegion);
         updateItemList({ type: "refresh" });
     }
     let endSelect = () => {
         itemList.rosterTableUtil.endSelect();
         updateItemList({ type: "refresh" });
+    }
+    let fillEmptyShiftWithO = () => {
+        itemList.rosterDataUtil.fillEmptyShiftWithO(itemList.calendarDateList.length);
+        updateItemList({ type: "refresh" });
+    }
+    let getAutoPlanEndDate=()=>{
+        return itemList.autoPlannerUtil.getEndDate();
+    }
+    let getAutoPlanIterationCount=()=>{
+        return itemList.autoPlannerUtil.getIterationCount();
+    }
+    let getAutoPlanStartDate=()=>{
+        return itemList.autoPlannerUtil.getStartDate();
     }
     let getCopyRegionLocation = () => {
         let copyRegion = itemList.rosterTableUtil.getCopyRegionLocation();
@@ -80,9 +107,9 @@ export function useRosterScheduler() {
         copyRegion.column.start -= itemList.systemParam.noOfPrevDate;
         return copyRegion;
     }
-    let getEditableShiftCellCssClassName= (cellIndex, rowIndex, shift) => {
+    let getEditableShiftCellCssClassName = (cellIndex, rowIndex, shift) => {
         let className = [];
-        let temp = itemList.rosterSchedulerDataUtil.getShiftCssClassName(shift);
+        let temp = itemList.rosterDataUtil.getShiftCssClassName(shift);
         if (temp !== null) {
             className.push(temp);
         }
@@ -92,19 +119,18 @@ export function useRosterScheduler() {
         }
         return className;
     }
-    let getPreferredShiftCellCssClassName=(cellIndex, rowIndex)=>{
-        let className = [];
+    
+    let getPreferredShiftCellCssClassName = (cellIndex, rowIndex) => {
+        let className = ["borderCell", "shiftCell"];
         let temp = itemList.rosterTableUtil.getSelectedCssClass(cellIndex, rowIndex);
         if (temp.length > 0) {
             className.push(...temp);
         }
         return className;
     }
+
     let getShiftCssClassName = shiftType => {
-        return itemList.rosterSchedulerDataUtil.getShiftCssClassName(shiftType);
-    }    
-    let isDuplicateShift=(itoId, dateOfMonth)=>{
-        return itemList.rosterSchedulerDataUtil.isDuplicateShift(itoId, dateOfMonth);
+        return itemList.rosterDataUtil.getShiftCssClassName(shiftType);
     }
     let isHighLightCell = cellIndex => {
         return itemList.rosterTableUtil.isHighLightCell(cellIndex);
@@ -112,19 +138,29 @@ export function useRosterScheduler() {
     let isHighLightRow = rowIndex => {
         return itemList.rosterTableUtil.isHighLightRow(rowIndex);
     }
-    let pasteRosterData=(dateOfMonth, e) => {
+    let paste = (dateOfMonth, e) => {
         e.preventDefault();
-        let rowCount = itemList.rosterSchedulerDataUtil.getCopyDataRowCount();
+        let rowCount = itemList.rosterDataUtil.getCopyDataRowCount();
         if (rowCount > -1) {
             let cell = e.target.closest("td");
             let rowIds = itemList.rosterTableUtil.getPasteRowIds(cell, rowCount);
-            itemList.rosterSchedulerDataUtil.paste(dateOfMonth, rowIds, itemList.noOfWorkingDay, itemList.calendarDateList.length);
+            itemList.rosterDataUtil.paste(dateOfMonth, rowIds, itemList.noOfWorkingDay, itemList.calendarDateList.length);
             updateItemList({ type: "refresh" });
         }
+    }
+    let showAutoPlanResult=(index)=>{
+        console.log(itemList.autoPlannerResult[index]);
     }
     let setFocusCell = e => {
         itemList.rosterTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
+    }
+    let startAutoPlan = e => {
+        updateItemList({ type: "updateLoadingStatus", value: "true" });
+        setTimeout(() => {
+            let result = itemList.autoPlannerUtil.autoPlan(itemList.noOfWorkingDay, itemList.rosterDataUtil, itemList.systemParam);
+            updateItemList({ "result": result, type: "updateAutoPlannerResult" });
+        }, 500);
     }
     let startSelect = e => {
         let cell = e.target.closest("td");
@@ -135,21 +171,35 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.startSelect(cell.cellIndex, rowIndex);
         updateItemList({ type: "refresh" });
     }
+    let updateAutoPlanEndDate = newEndDate => {
+        itemList.autoPlannerUtil.setEndDate(newEndDate);
+        updateItemList({ type: "refresh" });
+    }
+    let updateAutoPlanIterationCount = newCount => {
+        itemList.autoPlannerUtil.setIterationCount(newCount);
+        updateItemList({ type: "refresh" });
+    }
+    let updateAutoPlanStartDate = newStartDate => {
+        itemList.autoPlannerUtil.setStartDate(newStartDate);
+        updateItemList({ type: "refresh" });
+    }
+    let updatePreferredShift = (itoId, dateOfMonth, newPreferredShift) => {
+        itemList.rosterDataUtil.updatePreferredShift(itoId, dateOfMonth, newPreferredShift);
+        updateItemList({ type: "refresh" });
+    }
     let updateRosterMonth = async (newRosterMonth) => {
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
         let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
-        await itemList.rosterSchedulerDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
+        let rosterDataUtil = { ...itemList.rosterDataUtil };
+        await rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);
         updateItemList({
-            monthlyCalendar,           
+            monthlyCalendar,
+            rosterDataUtil,
             type: "updateRosterMonth"
         });
     }
-    let updatePreferredShift = (itoId, dateOfMonth, newPreferredShift) => {
-        itemList.rosterSchedulerDataUtil.updatePreferredShift(itoId, dateOfMonth, newPreferredShift);
-        updateItemList({ type: "refresh" });
-    }
     let updateShift = (itoId, dateOfMonth, newShift) => {
-        itemList.rosterSchedulerDataUtil.updateShift(itoId, dateOfMonth, newShift, itemList.noOfWorkingDay, itemList.calendarDateList.length);
+        itemList.rosterDataUtil.updateShift(itoId, dateOfMonth, newShift, itemList.noOfWorkingDay, itemList.calendarDateList.length);
         updateItemList({ type: "refresh" });
     }
     let updateUI = (cellIndex, rowIndex) => {
@@ -157,32 +207,41 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     return {
+        autoPlannerResult: itemList.autoPlannerResult,
         error: itemList.error,
         isLoading: itemList.isLoading,
-        roster: itemList.rosterSchedulerDataUtil.getRoster(),
         rosterMonth: {
             calendarDateList: itemList.calendarDateList,
             noOfWorkingDay: itemList.noOfWorkingDay
         },
-        rosterSchedulerData: itemList.rosterSchedulerDataUtil.getRosterSchedulerData(),
+        rosterDataUtil: itemList.rosterDataUtil,
         systemParam: itemList.systemParam,
         uiAction: {
-            copyRosterData,
+            copy,
             endSelect,
+            fillEmptyShiftWithO,
             handleKeyDown,
-            isDuplicateShift,
+            getAutoPlanEndDate,
+            getAutoPlanStartDate,
+            getAutoPlanIterationCount,
+            getEditableShiftCellCssClassName,            
+            getPreferredShiftCellCssClassName,
+            getShiftCssClassName,            
             isHighLightCell,
             isHighLightRow,
-            getEditableShiftCellCssClassName,
-            getPreferredShiftCellCssClassName,
-            getShiftCssClassName,
-            pasteRosterData,
+            paste,
             setFocusCell,
+            showAutoPlanResult,
+            startAutoPlan,
             startSelect,
+            updateAutoPlanEndDate,
+            updateAutoPlanIterationCount,
+            updateAutoPlanStartDate,
             updatePreferredShift,
             updateRosterMonth,
             updateShift,
             updateUI
-        }
+        },
+        weekdayNames: itemList.calendarUtility.weekdayNames
     }
 }

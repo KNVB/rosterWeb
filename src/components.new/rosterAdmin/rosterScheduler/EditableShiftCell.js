@@ -23,7 +23,7 @@ export default function EditableShiftCell(props) {
                 className="shiftContent"
                 contentEditable={true}
                 onBlur={onBlur}
-                onCopy={uiAction.copyRosterData}
+                onCopy={uiAction.copy}
                 onDoubleClick={uiAction.setFocusCell}
                 onKeyDown={uiAction.handleKeyDown}
                 suppressContentEditableWarning={true}>
