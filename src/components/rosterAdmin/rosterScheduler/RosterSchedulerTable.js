@@ -3,7 +3,7 @@ import AutoPlanner from "./autoPlanner/AutoPlanner";
 import HeaderRows from "../../rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../../util/ShiftInfoLegend";
-export default function RosterSchedulerTable({ roster, rosterMonth, rosterSchedulerData, systemParam, uiAction }) {
+export default function RosterSchedulerTable({ autoPlanResult, roster, rosterMonth, rosterSchedulerData, systemParam, uiAction }) {
     useEffect(() => {
         const mouseUp = () => uiAction.endSelect();
         document.addEventListener("mouseup", mouseUp);
@@ -18,13 +18,13 @@ export default function RosterSchedulerTable({ roster, rosterMonth, rosterSchedu
                 weekdayNames={roster.weekdayNames}
                 caption="EMSTF Computer Operator Roster Scheduler"
                 systemParam={systemParam}
-                uiAction={uiAction}/>
+                uiAction={uiAction} />
             <RosterSchedulerBody
                 roster={roster}
                 rosterMonth={rosterMonth}
-                rosterSchedulerData={rosterSchedulerData} 
+                rosterSchedulerData={rosterSchedulerData}
                 systemParam={systemParam}
-                uiAction={uiAction}/>    
+                uiAction={uiAction} />
             <tfoot>
                 <tr>
                     <td colSpan="7" className="pt-1">
@@ -32,11 +32,12 @@ export default function RosterSchedulerTable({ roster, rosterMonth, rosterSchedu
                     </td>
                     <td colSpan="20" className="align-top pt-0">
                         <AutoPlanner
-                            rosterMonth={rosterMonth}                            
-                            uiAction={uiAction}/>
+                            autoPlanResult={autoPlanResult}
+                            rosterMonth={rosterMonth}
+                            uiAction={uiAction} />
                     </td>
-                </tr>    
-            </tfoot>    
+                </tr>
+            </tfoot>
         </table>
     );
 }

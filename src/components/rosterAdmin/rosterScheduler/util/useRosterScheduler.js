@@ -20,6 +20,13 @@ let reducer = (state, action) => {
         case "setError":
             result.error = action.error;
             break;
+        case "updateAutoPlannerResult":            
+            result.autoPlanResult = action.result;
+            result.isLoading = false;
+            break;
+        case "updateLoading":
+            result.isLoading = action.value;
+            break;
         case "updateRosterMonth":
             result.autoPlannerUtil.setEndDate(action.monthlyCalendar.calendarDateList.length);
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
@@ -36,6 +43,7 @@ let reducer = (state, action) => {
 export function useRosterScheduler() {
     const [itemList, updateItemList] = useReducer(reducer, {
         autoPlannerUtil: new AutoPlannerUtil(),
+        autoPlanResult:null,
         calendarDateList: null,
         calendarUtility: new CalendarUtility(),
         error: null,
@@ -78,7 +86,7 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
-    let fillEmptyShiftWithO=()=>{
+    let fillEmptyShiftWithO = () => {
         itemList.rosterSchedulerDataUtil.fillEmptyShiftWithO(itemList.calendarDateList.length);
         updateItemList({ type: "refresh" });
     }
@@ -143,8 +151,12 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
-    let startAutoPlan=e=>{
-        itemList.autoPlannerUtil.autoPlan(itemList.calendarDateList.length, itemList.rosterSchedulerDataUtil, itemList.systemParam);
+    let startAutoPlan = e => {
+        updateItemList({ type: "updateLoading", value: true });
+        setTimeout(() => {
+            let result = itemList.autoPlannerUtil.autoPlan(itemList.noOfWorkingDay, itemList.rosterSchedulerDataUtil, itemList.systemParam);            
+            updateItemList({ "result": result, type: "updateAutoPlannerResult" });
+        }, 500);
     }
     let startSelect = e => {
         let cell = e.target.closest("td");
@@ -189,6 +201,7 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     return {
+        autoPlanResult: itemList.autoPlanResult,
         error: itemList.error,
         isLoading: itemList.isLoading,
         roster: itemList.rosterSchedulerDataUtil.getRoster(),

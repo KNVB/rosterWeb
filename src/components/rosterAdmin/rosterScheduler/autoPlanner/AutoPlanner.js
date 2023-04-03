@@ -1,5 +1,6 @@
 import "./AutoPlanner.css";
-export default function AutoPlanner({ autoPlannerResult, rosterMonth, uiAction }) {
+export default function AutoPlanner({ autoPlanResult, rosterMonth, uiAction }) {
+    console.log(autoPlanResult);
     let updateEndDate = e => {
         uiAction.updateAutoPlanEndDate(e.target.value)
     }
@@ -44,11 +45,12 @@ export default function AutoPlanner({ autoPlannerResult, rosterMonth, uiAction }
                 <tr>
                     <td colSpan={3} className="text-center">
                         <a className="fillEmptyShiftWithOButton" onClick={uiAction.fillEmptyShiftWithO}>Fill empty shift with "O"</a>
-                        {/*
-                            autoPlannerResult.map((result, index) => (
-                                <div className="autoPlanResult" key={index} onClick={() => uiAction.showAutoPlanResult(index)}>Missing Shift Count:{result.vacantShiftCount}</div>
+                        {
+                            autoPlanResult &&
+                            autoPlanResult.map((result, index) => (
+                                <div className="autoPlanResult" key={index} onClick={() => uiAction.showAutoPlanResult(index)}>Missing Shift Count:{}</div>
                             ))
-                        */}
+                        }
                     </td>
                 </tr>
             </tfoot>

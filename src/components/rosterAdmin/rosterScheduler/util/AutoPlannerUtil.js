@@ -10,8 +10,6 @@ export default class AutoPlannerUtil {
                 throw new Error("Invalid start date or end date selection");
             } else {
                 let finalResult = [], tempResult = [];
-                console.log(this.genResult(noOfWorkingDay, rosterSchedulerDataUtil, systemParam));
-                /*
                 for (let i = 0; i < iterationCount; i++) {
                     tempResult.push(this.genResult(noOfWorkingDay, rosterSchedulerDataUtil, systemParam));
                 }
@@ -20,7 +18,6 @@ export default class AutoPlannerUtil {
                 for (let i = 0; i < j; i++) {
                     finalResult.push(tempResult[i]);
                 }
-                */
                 return finalResult;
             }
         }
@@ -30,26 +27,29 @@ export default class AutoPlannerUtil {
             let essentialShift = '';
             let itoIdList;
             let preferredShift, preferredShiftList, previousShiftList = {};
-            let resultantRoster = {}, resultantShiftList, rosterSchedulerData = rosterSchedulerDataUtil.getRosterSchedulerData();
+            let resultantRoster = {rosterRow:{}}, resultantShiftList, rosterSchedulerData = rosterSchedulerDataUtil.getRosterSchedulerData();
             let { getAllITOStat } = AdminShiftStatUtil();
             let { getITOStat } = ITOShiftStatUtil();
-            console.log(activeShiftList);
-            console.log(systemParam);
+            //console.log(activeShiftList);
+            //console.log(systemParam);
             preferredShiftList = rosterSchedulerData.preferredShiftList;
             for (let dateIndex = startDate; dateIndex <= endDate; dateIndex++) {
                 essentialShift = activeShiftList.essentialShift;
                 itoIdList = getShuffledItoIdList(rosterSchedulerDataUtil.getItoIdList());
                 for (let i = 0; i < itoIdList.length; i++) {
-                    if (resultantRoster[itoIdList[i]] === undefined) {
-                        resultantRoster[itoIdList[i]] = {
-                            availableShiftList: rosterSchedulerDataUtil.getRoster().rosterRow[itoIdList[i]].availableShiftList,
-                            lastMonthBalance: rosterSchedulerDataUtil.getRoster().rosterRow[itoIdList[i]].lastMonthBalance,
+                    if (resultantRoster.rosterRow[itoIdList[i]] === undefined) {
+                        let roster = rosterSchedulerDataUtil.getRoster().rosterRow[itoIdList[i]];
+                        resultantRoster.rosterRow[itoIdList[i]] = {
+                            availableShiftList: roster.availableShiftList,
+                            itoName: roster.itoName,
+                            itoPostName: roster.itoPostName,
+                            lastMonthBalance: roster.lastMonthBalance,
                             shiftList: {},
-                            workingHourPerDay: rosterSchedulerDataUtil.getRoster().rosterRow[itoIdList[i]].workingHourPerDay
+                            workingHourPerDay: roster.workingHourPerDay
                         };
                         resultantShiftList = {};
                     } else {
-                        resultantShiftList = resultantRoster[itoIdList[i]].shiftList;
+                        resultantShiftList = resultantRoster.rosterRow[itoIdList[i]].shiftList;
                     }
                     previousShiftList = rosterSchedulerData.previousMonthShiftList[itoIdList[i]];
                     if (preferredShiftList[itoIdList[i]] === undefined) {
@@ -76,8 +76,12 @@ export default class AutoPlannerUtil {
                             availableShiftList = getAvailableShift(itoIdList[i], preferredShift, previousShiftList, rosterSchedulerDataUtil, resultantShiftList, systemParam);
                             if ((essentialShift === '') || (availableShiftList.length === 0)) {
                                 resultantShiftList[dateIndex] = "O";
-                                previousShiftList.shift();
-                                previousShiftList.push("O");
+                                if (previousShiftList === undefined) {
+                                    previousShiftList = ["O"];
+                                } else {
+                                    previousShiftList.shift();
+                                    previousShiftList.push("O");
+                                }
                             } else {
                                 let isAssigned = false, comparator;
                                 for (let j = 0; j < availableShiftList.length; j++) {
@@ -89,8 +93,12 @@ export default class AutoPlannerUtil {
                                     if (essentialShift.indexOf(comparator) > -1) {
                                         essentialShift = essentialShift.replace(comparator, "");
                                         resultantShiftList[dateIndex] = availableShiftList[j];
-                                        previousShiftList.shift();
-                                        previousShiftList.push(availableShiftList[j]);
+                                        if (previousShiftList === undefined) {
+                                            previousShiftList = [availableShiftList[j]];
+                                        } else {
+                                            previousShiftList.shift();
+                                            previousShiftList.push(availableShiftList[j]);
+                                        }
                                         isAssigned = true;
                                         break;
                                     }
@@ -98,22 +106,29 @@ export default class AutoPlannerUtil {
                                 if (!isAssigned) {
                                     //	console.log(" O shift is assigned on day "+dateIndex);
                                     resultantShiftList[dateIndex] = "O";
-                                    previousShiftList.shift();
-                                    previousShiftList.push("O");
+                                    if (previousShiftList === undefined) {
+                                        previousShiftList = ["O"];
+                                    } else {
+                                        previousShiftList.shift();
+                                        previousShiftList.push("O");
+                                    }
                                 }
                             }
                             break;
                     }
-                    resultantRoster[itoIdList[i]].shiftList = resultantShiftList;
+                    resultantRoster.rosterRow[itoIdList[i]].shiftList = resultantShiftList;
                     //console.log("itoId=" + itoId + ",resultantShiftList=" + resultantShiftList);
                     //console.log("====================");    
                 }
             }
             itoIdList = rosterSchedulerDataUtil.getItoIdList();
             itoIdList.forEach(itoId => {
-                let rosterInfo = getITOStat(activeShiftList, noOfWorkingDay, resultantRoster[itoId]);
-                console.log(rosterInfo);
-            })
+                let rosterInfo = getITOStat(activeShiftList, noOfWorkingDay, resultantRoster.rosterRow[itoId]);
+                resultantRoster.rosterRow[itoId] = { ...rosterInfo };
+            });
+            let temp = getAllITOStat(activeShiftList, startDate, endDate, resultantRoster.rosterRow);
+            resultantRoster.duplicateShiftList = temp.duplicateShiftList;
+            resultantRoster.vacantShiftList = temp.vacantShiftList;
             return resultantRoster;
         }
         this.getIterationCount = () => {
