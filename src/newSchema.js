@@ -1,5 +1,5 @@
 roster: {
-  activeShiftList:[],
+  activeShiftList:{[],essentialShift},
   rosterRow:itoId: {    
     "actualWorkingDayCount",
     "actualWorkingHour,
@@ -27,6 +27,7 @@ rosterMonth:{
 }
 systemParam = {  
   maxConsecutiveWorkingDay,
+  maxNoOfShiftPerMonth,
   monthPickerMinDate,
   noOfPrevDate": 2
 }

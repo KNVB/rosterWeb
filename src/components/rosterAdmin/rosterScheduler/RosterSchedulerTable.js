@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import AutoPlanner from "./autoPlanner/AutoPlanner";
 import HeaderRows from "../../rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../../util/ShiftInfoLegend";
@@ -28,6 +29,11 @@ export default function RosterSchedulerTable({ roster, rosterMonth, rosterSchedu
                 <tr>
                     <td colSpan="7" className="pt-1">
                         <ShiftInfoLegend activeShiftList={roster.activeShiftList} />
+                    </td>
+                    <td colSpan="20" className="align-top pt-0">
+                        <AutoPlanner
+                            rosterMonth={rosterMonth}                            
+                            uiAction={uiAction}/>
                     </td>
                 </tr>    
             </tfoot>    
