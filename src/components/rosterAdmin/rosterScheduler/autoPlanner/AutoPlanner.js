@@ -48,7 +48,7 @@ export default function AutoPlanner({ autoPlanResult, rosterMonth, uiAction }) {
                         {
                             autoPlanResult &&
                             autoPlanResult.map((result, index) => (
-                                <div className="autoPlanResult" key={index} onClick={() => uiAction.showAutoPlanResult(index)}>Missing Shift Count:{}</div>
+                                <div className="autoPlanResult" key={index} onClick={() => uiAction.showAutoPlanResult(index)}>Missing Shift Count:{Object.keys(result.vacantShiftList).length}</div>
                             ))
                         }
                     </td>
