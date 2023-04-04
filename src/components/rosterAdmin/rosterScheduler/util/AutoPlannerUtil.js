@@ -9,9 +9,11 @@ export default class AutoPlannerUtil {
                 throw new Error("Invalid start date or end date selection");
             } else {
                 let finalResult = [], tempResult = [];
-                for (let i = 0; i < iterationCount; i++) {
+                //for (let i = 0; i < iterationCount; i++) {
                     tempResult.push(this.genResult(noOfWorkingDay, rosterSchedulerDataUtil, systemParam));
-                }
+                    return tempResult
+                /*}
+                
                 tempResult.sort(sortByVacantShiftCount);
                 //console.log(tempResult);
                 let j = ((tempResult.length > 3) ? 3 : tempResult.length);
@@ -19,6 +21,7 @@ export default class AutoPlannerUtil {
                     finalResult.push(tempResult[i]);
                 }
                 return finalResult;
+                */
             }
         }
         this.genResult = (noOfWorkingDay, rosterSchedulerDataUtil, systemParam) => {

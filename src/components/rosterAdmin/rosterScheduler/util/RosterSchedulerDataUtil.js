@@ -108,7 +108,7 @@ export default class RosterSchedulerDataUtil {
             let itoIdList = this.getItoIdList(), shiftList;
             for (let i = 0; i < itoIdList.length; i++) {
                 shiftList = autoPlanResult.rosterRow[itoIdList[i]].shiftList;
-                for (let [dateOfMonth,shiftType] of Object.entries(shiftList)){
+                for (let [dateOfMonth, shiftType] of Object.entries(shiftList)) {
                     //console.log(itoIdList[i],dateOfMonth,shiftType);
                     this.updateShift(itoIdList[i], dateOfMonth, shiftType, noOfWorkingDay, monthLength);
                 }
@@ -120,10 +120,11 @@ export default class RosterSchedulerDataUtil {
             let previousMonthShiftList = await fetchAPI.getPreviousMonthShiftList(year, month);
 
             roster.rosterRow = await fetchAPI.getRoster(year, month);
-            rosterSchedulerData = { blackListShiftPattern: {}, preferredShiftList: {}, previousMonthShiftList: {} };
+            rosterSchedulerData = { blackListShiftList: {}, blackListShiftPattern: {}, preferredShiftList: {}, previousMonthShiftList: {} };
             //console.log(previousMonthShiftList);
             this.getItoIdList().forEach(itoId => {
                 rosterSchedulerData.blackListShiftPattern[itoId] = itoBlackListShiftPattern[itoId];
+                rosterSchedulerData.blackListShiftList[itoId] = {};
             });
             previousMonthShiftList.forEach(previousMonthShift => {
                 if (rosterSchedulerData.previousMonthShiftList[previousMonthShift.ito_id] === undefined) {
@@ -234,7 +235,8 @@ export default class RosterSchedulerDataUtil {
                 roster.rosterRow[[itoIdList[i]]] = rosterInfo;
             }
             let { getAllITOStat } = AdminShiftStatUtil();
-            let temp = getAllITOStat(roster.activeShiftList, 1, monthLength, roster.rosterRow);
+            console.log(rosterSchedulerData.blackListShiftPattern);
+            let temp = getAllITOStat(roster.activeShiftList, 1, monthLength, roster.rosterRow, rosterSchedulerData.blackListShiftPattern);
             //console.log(temp, roster.rosterRow);
             rosterSchedulerData.duplicateShiftList = temp.duplicateShiftList;
             rosterSchedulerData.vacantShiftList = temp.vacantShiftList;
