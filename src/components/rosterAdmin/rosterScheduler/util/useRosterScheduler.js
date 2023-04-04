@@ -152,7 +152,7 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     let showAutoPlanResult=(index)=>{
-        itemList.rosterSchedulerDataUtil.loadAutoPlanResult(itemList.autoPlanResult[index]);
+        itemList.rosterSchedulerDataUtil.loadAutoPlanResult(itemList.autoPlanResult[index], itemList.noOfWorkingDay, itemList.calendarDateList.length);
         updateItemList({ type: "refresh" });
     }
     let startAutoPlan = e => {

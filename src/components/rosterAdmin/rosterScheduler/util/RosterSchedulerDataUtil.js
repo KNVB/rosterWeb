@@ -103,12 +103,16 @@ export default class RosterSchedulerDataUtil {
         this.isDuplicateShift = (itoId, dateOfMonth) => {
             return rosterSchedulerData.duplicateShiftList[itoId].includes(dateOfMonth);
         }
-        this.loadAutoPlanResult=(autoPlanResult)=>{
-            console.log(autoPlanResult);
-            roster.rosterRow=autoPlanResult.rosterRow;
-            rosterSchedulerData.duplicateShiftList=autoPlanResult.duplicateShiftList;
-            rosterSchedulerData.vacantShiftList=autoPlanResult.vacantShiftList;
-            backupRosterData();
+        this.loadAutoPlanResult = (autoPlanResult, noOfWorkingDay, monthLength) => {
+            //console.log(autoPlanResult);
+            let itoIdList = this.getItoIdList(), shiftList;
+            for (let i = 0; i < itoIdList.length; i++) {
+                shiftList = autoPlanResult.rosterRow[itoIdList[i]].shiftList;
+                for (let [dateOfMonth,shiftType] of Object.entries(shiftList)){
+                    //console.log(itoIdList[i],dateOfMonth,shiftType);
+                    this.updateShift(itoIdList[i], dateOfMonth, shiftType, noOfWorkingDay, monthLength);
+                }
+            }
         }
         this.loadData = async (year, month, noOfWorkingDay, monthLength) => {
             let itoBlackListShiftPattern = await fetchAPI.getITOBlackListShiftPattern(year, month);
@@ -174,20 +178,20 @@ export default class RosterSchedulerDataUtil {
         }
         this.updatePreferredShift = (itoId, dateOfMonth, newShift) => {
             let oldPreferredShift;
-            try{
+            try {
                 oldPreferredShift = rosterSchedulerData.preferredShiftList[itoId][dateOfMonth];
-            }catch (error){
-                oldPreferredShift='';
+            } catch (error) {
+                oldPreferredShift = '';
             }
-            
+
             let newPreferredShift = newShift.trim();
             switch (true) {
                 case ((oldPreferredShift === undefined) && (newPreferredShift !== '')):
                 case ((oldPreferredShift !== undefined) && (newPreferredShift !== oldPreferredShift)):
-                    if (rosterSchedulerData.preferredShiftList[itoId] === undefined){
-                        rosterSchedulerData.preferredShiftList[itoId]={};
+                    if (rosterSchedulerData.preferredShiftList[itoId] === undefined) {
+                        rosterSchedulerData.preferredShiftList[itoId] = {};
                     }
-                    rosterSchedulerData.preferredShiftList[itoId][dateOfMonth] = newPreferredShift;                    
+                    rosterSchedulerData.preferredShiftList[itoId][dateOfMonth] = newPreferredShift;
                     backupRosterData();
                     break;
                 default:
