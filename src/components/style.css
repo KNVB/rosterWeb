@@ -1,6 +1,11 @@
 .autoPlanResult{
 	cursor: pointer;
 }
+.blackListedShift{
+	animation: blinker 1s linear infinite;
+	background-color: black !important;
+	color:white;
+}
 .borderCell {
 	border-left: 1px inset #e0e0e0;
 	border-top: 1px inset #e0e0e0;
@@ -39,9 +44,9 @@
 	margin: 0px;
 	width: 29px;
 }
-.errorRedBlackGround{
-	background-color: red !important;
+.errorRedBackGround{
 	animation: blinker 1s linear infinite;
+	background-color: red !important;	
 }
 @keyframes blinker {
 	50% {

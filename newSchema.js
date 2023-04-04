@@ -31,9 +31,10 @@ systemParam : {
   monthPickerMinDate,
   noOfPrevDate": 2
 }
-rosterSchedulerData:{
-  duplicateShiftList:{}
+rosterSchedulerData:{  
+  blackListShiftList:itoId:{},
   blackListShiftPattern:itoId:{},
+  duplicateShiftList:{}
   previousMonthShiftList:itoId:{},
   preferredShiftList":itoId:{},
   vacantShiftList:{}

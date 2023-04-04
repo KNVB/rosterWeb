@@ -116,7 +116,7 @@ export default class RosterSchedulerDataUtil {
             let previousMonthShiftList = await fetchAPI.getPreviousMonthShiftList(year, month);
 
             roster.rosterRow = await fetchAPI.getRoster(year, month);
-            rosterSchedulerData = { blackListShiftPattern: {}, preferredShiftList: {}, previousMonthShiftList: [] };
+            rosterSchedulerData = { blackListShiftPattern: {}, preferredShiftList: {}, previousMonthShiftList: {} };
             //console.log(previousMonthShiftList);
             this.getItoIdList().forEach(itoId => {
                 rosterSchedulerData.blackListShiftPattern[itoId] = itoBlackListShiftPattern[itoId];
