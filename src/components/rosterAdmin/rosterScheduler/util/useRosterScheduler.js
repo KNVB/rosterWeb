@@ -151,6 +151,10 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
+    let showAutoPlanResult=(index)=>{
+        itemList.rosterSchedulerDataUtil.loadAutoPlanResult(itemList.autoPlanResult[index]);
+        updateItemList({ type: "refresh" });
+    }
     let startAutoPlan = e => {
         updateItemList({ type: "updateLoading", value: true });
         setTimeout(() => {
@@ -227,6 +231,7 @@ export function useRosterScheduler() {
             getShiftCssClassName,
             pasteRosterData,
             setFocusCell,
+            showAutoPlanResult,
             startAutoPlan,
             startSelect,
             updateAutoPlanEndDate,

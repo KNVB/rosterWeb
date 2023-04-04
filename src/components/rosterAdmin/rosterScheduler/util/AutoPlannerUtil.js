@@ -3,7 +3,6 @@ import ITOShiftStatUtil from "../../../../util/ITOShiftStatUtil";
 export default class AutoPlannerUtil {
     constructor() {
         let iterationCount = 100;
-
         let startDate = 1, endDate;
         this.autoPlan = (noOfWorkingDay, rosterSchedulerDataUtil, systemParam) => {
             if (startDate > endDate) {
@@ -14,6 +13,7 @@ export default class AutoPlannerUtil {
                     tempResult.push(this.genResult(noOfWorkingDay, rosterSchedulerDataUtil, systemParam));
                 }
                 tempResult.sort(sortByVacantShiftCount);
+                //console.log(tempResult);
                 let j = ((tempResult.length > 3) ? 3 : tempResult.length);
                 for (let i = 0; i < j; i++) {
                     finalResult.push(tempResult[i]);
@@ -129,6 +129,7 @@ export default class AutoPlannerUtil {
             let temp = getAllITOStat(activeShiftList, startDate, endDate, resultantRoster.rosterRow);
             resultantRoster.duplicateShiftList = temp.duplicateShiftList;
             resultantRoster.vacantShiftList = temp.vacantShiftList;
+            resultantRoster.vacantShiftCount = Object.keys(temp.vacantShiftList).length;
             return resultantRoster;
         }
         this.getIterationCount = () => {

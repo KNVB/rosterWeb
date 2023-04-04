@@ -103,6 +103,13 @@ export default class RosterSchedulerDataUtil {
         this.isDuplicateShift = (itoId, dateOfMonth) => {
             return rosterSchedulerData.duplicateShiftList[itoId].includes(dateOfMonth);
         }
+        this.loadAutoPlanResult=(autoPlanResult)=>{
+            console.log(autoPlanResult);
+            roster.rosterRow=autoPlanResult.rosterRow;
+            rosterSchedulerData.duplicateShiftList=autoPlanResult.duplicateShiftList;
+            rosterSchedulerData.vacantShiftList=autoPlanResult.vacantShiftList;
+            backupRosterData();
+        }
         this.loadData = async (year, month, noOfWorkingDay, monthLength) => {
             let itoBlackListShiftPattern = await fetchAPI.getITOBlackListShiftPattern(year, month);
             let preferredShiftList = await fetchAPI.getPreferredShiftList(year, month);

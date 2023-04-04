@@ -60,5 +60,6 @@ autoplanResult:{
 		"totalBalance",
 		workingHourPerDay,
 	}
-	vacantShiftList:{}
+	vacantShiftList:{},
+	vacantShiftCount
 }
