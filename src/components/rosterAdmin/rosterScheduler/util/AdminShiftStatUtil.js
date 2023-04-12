@@ -1,5 +1,5 @@
 export default function AdminShiftStatUtil() {
-    const getAllITOStat = (activeShiftInfoList, startDate, endDate, inITORosterList,blackListShiftPattern) => {
+    const getAllITOStat = (activeShiftInfoList, startDate, endDate, inITORosterList) => {
         let blackListShiftList = {};
         let duplicateShiftList = {};
         let vacantShiftList = {};
@@ -10,11 +10,10 @@ export default function AdminShiftStatUtil() {
             blackListShiftList[itoId] = [];
             itoShiftList[itoId] = [];
         });
-        console.log(blackListShiftPattern);
         //console.log("startDate:"+startDate+",endDate:"+endDate);
         for (let i = startDate; i <= endDate; i++) {
             let vacantShift = activeShiftInfoList.essentialShift;
-            let temp = [], tempShiftString,blist;
+            let temp = [];
 
             itoIdList.forEach(itoId => {
                 let itoRoster = inITORosterList[itoId];
@@ -48,14 +47,6 @@ export default function AdminShiftStatUtil() {
                         }
                         itoShiftList[itoId].push(shiftType);
                     });
-                    tempShiftString = itoShiftList[itoId].join(",");
-                    /*
-                    for (let x=0;x<blist.length;x++){
-                        if (tempShiftString.indexOf(blist[i])>-1){
-                            blackListShiftList[itoId].push(i);
-                        }
-                    }
-                    */
                 }
             });
             if (vacantShift !== '') {

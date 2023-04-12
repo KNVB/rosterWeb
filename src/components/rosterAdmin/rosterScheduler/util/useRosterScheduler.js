@@ -28,7 +28,9 @@ let reducer = (state, action) => {
             result.isLoading = action.value;
             break;
         case "updateRosterMonth":
+            result.autoPlanResult = null;
             result.autoPlannerUtil.setEndDate(action.monthlyCalendar.calendarDateList.length);
+            result.autoPlannerUtil.setStartDate(1);
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
             result.rosterTableUtil.init(result.calendarDateList, result.rosterSchedulerDataUtil.getItoIdList(), result.systemParam);
@@ -158,7 +160,7 @@ export function useRosterScheduler() {
     let startAutoPlan = e => {
         updateItemList({ type: "updateLoading", value: true });
         setTimeout(() => {
-            let result = itemList.autoPlannerUtil.autoPlan(itemList.noOfWorkingDay, itemList.rosterSchedulerDataUtil, itemList.systemParam);            
+            let result = itemList.autoPlannerUtil.autoPlan(itemList.rosterSchedulerDataUtil, itemList.systemParam);
             updateItemList({ "result": result, type: "updateAutoPlannerResult" });
         }, 500);
     }

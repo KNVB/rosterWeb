@@ -1,19 +1,16 @@
 import AdminShiftStatUtil from './AdminShiftStatUtil';
-import ITOShiftStatUtil from "../../../../util/ITOShiftStatUtil";
 export default class AutoPlannerUtil {
     constructor() {
         let iterationCount = 100;
         let startDate = 1, endDate;
-        this.autoPlan = (noOfWorkingDay, rosterSchedulerDataUtil, systemParam) => {
+        this.autoPlan = (rosterSchedulerDataUtil, systemParam) => {
             if (startDate > endDate) {
                 throw new Error("Invalid start date or end date selection");
             } else {
                 let finalResult = [], tempResult = [];
-                //for (let i = 0; i < iterationCount; i++) {
-                    tempResult.push(this.genResult(noOfWorkingDay, rosterSchedulerDataUtil, systemParam));
-                    return tempResult
-                /*}
-                
+                for (let i = 0; i < iterationCount; i++) {
+                    tempResult.push(this.genResult(rosterSchedulerDataUtil, systemParam));
+                }
                 tempResult.sort(sortByVacantShiftCount);
                 //console.log(tempResult);
                 let j = ((tempResult.length > 3) ? 3 : tempResult.length);
@@ -21,40 +18,30 @@ export default class AutoPlannerUtil {
                     finalResult.push(tempResult[i]);
                 }
                 return finalResult;
-                */
             }
         }
-        this.genResult = (noOfWorkingDay, rosterSchedulerDataUtil, systemParam) => {
+        this.genResult = (rosterSchedulerDataUtil, systemParam) => {
             let activeShiftList = rosterSchedulerDataUtil.getActiveShiftList();
             let availableShiftList;
             let essentialShift = '';
             let itoIdList;
             let preferredShift, preferredShiftList, previousShiftList = {};
-            let resultantRoster = {rosterRow:{}}, resultantShiftList, rosterSchedulerData = rosterSchedulerDataUtil.getRosterSchedulerData();
+            let resultantRoster = { rosterRow: {} }, resultantShiftList, rosterSchedulerData = rosterSchedulerDataUtil.getRosterSchedulerData();
             let { getAllITOStat } = AdminShiftStatUtil();
-            let { getITOStat } = ITOShiftStatUtil();
-            //console.log(activeShiftList);
-            //console.log(systemParam);
             preferredShiftList = rosterSchedulerData.preferredShiftList;
             for (let dateIndex = startDate; dateIndex <= endDate; dateIndex++) {
                 essentialShift = activeShiftList.essentialShift;
                 itoIdList = getShuffledItoIdList(rosterSchedulerDataUtil.getItoIdList());
                 for (let i = 0; i < itoIdList.length; i++) {
                     if (resultantRoster.rosterRow[itoIdList[i]] === undefined) {
-                        let roster = rosterSchedulerDataUtil.getRoster().rosterRow[itoIdList[i]];
                         resultantRoster.rosterRow[itoIdList[i]] = {
-                            availableShiftList: roster.availableShiftList,
-                            itoName: roster.itoName,
-                            itoPostName: roster.itoPostName,
-                            lastMonthBalance: roster.lastMonthBalance,
-                            shiftList: {},
-                            workingHourPerDay: roster.workingHourPerDay
+                            shiftList: {}
                         };
                         resultantShiftList = {};
                     } else {
                         resultantShiftList = resultantRoster.rosterRow[itoIdList[i]].shiftList;
                     }
-                    previousShiftList = rosterSchedulerData.previousMonthShiftList[itoIdList[i]];
+                    previousShiftList = JSON.parse(JSON.stringify(rosterSchedulerData.previousMonthShiftList[itoIdList[i]]));
                     if (preferredShiftList[itoIdList[i]] === undefined) {
                         preferredShiftList[itoIdList[i]] = {};
                         preferredShift = "";
@@ -121,14 +108,9 @@ export default class AutoPlannerUtil {
                     }
                     resultantRoster.rosterRow[itoIdList[i]].shiftList = resultantShiftList;
                     //console.log("itoId=" + itoId + ",resultantShiftList=" + resultantShiftList);
-                    //console.log("====================");    
+                    //console.log("====================");
                 }
             }
-            itoIdList = rosterSchedulerDataUtil.getItoIdList();
-            itoIdList.forEach(itoId => {
-                let rosterInfo = getITOStat(activeShiftList, noOfWorkingDay, resultantRoster.rosterRow[itoId]);
-                resultantRoster.rosterRow[itoId] = { ...rosterInfo };
-            });
             let temp = getAllITOStat(activeShiftList, startDate, endDate, resultantRoster.rosterRow);
             resultantRoster.duplicateShiftList = temp.duplicateShiftList;
             resultantRoster.vacantShiftList = temp.vacantShiftList;
@@ -223,6 +205,7 @@ export default class AutoPlannerUtil {
                     }
                 }
             }
+            return result;
         }
         let isThatShiftFormBlackListedShiftPattern = (itoId, previousShiftList, rosterSchedulerData, thatShift) => {
             let shiftPattern = [];
@@ -236,6 +219,7 @@ export default class AutoPlannerUtil {
                 shiftPattern.push(thatShift);
                 shiftPattern = shiftPattern.join(",");
                 let blackListShiftPatternList = rosterSchedulerData.blackListShiftPattern[itoId];
+
                 blackListShiftPatternList.forEach(blackListShift => {
                     if (shiftPattern.indexOf(blackListShift) > -1) {
                         result = true;
@@ -258,11 +242,16 @@ export default class AutoPlannerUtil {
                 return false;
             }
             if (isThatShiftFormBlackListedShiftPattern(itoId, previousShiftList, rosterSchedulerData, thatShift)) {
-                //console.log(ito.itoId+","+dateIndex+","+thatShift+", form black list");
+                //console.log(itoId+","+dateIndex+","+thatShift+", form black list");
                 return false;
             }
+            /*
+            if (itoId === "ITO4_1999-01-01") {
+                console.log(itoId + "," + thatShift + ",is conflict with preferred(" + preferredShift + ")==" + isConflictWithPreferredShift(preferredShift, thatShift));
+            }
+            */
             if (isConflictWithPreferredShift(preferredShift, thatShift)) {
-                //console.log(ito.itoId+","+dateIndex+","+thatShift+",conflict with preferred("+preferredShift+").");
+                //console.log(itoId+","+thatShift+",conflict with preferred("+preferredShift+").");
                 return false;
             }
             return result;
