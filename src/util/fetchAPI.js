@@ -1,6 +1,9 @@
 import axios from "axios";
 export default class FetchAPI {
     constructor() {
+        this.exportRosterDataToExcel = async(roster,rosterSchedulerData) =>{
+            return (await fetch({ roster: roster, rosterSchedulerData: rosterSchedulerData}, "post", "/rosterWeb/privateAPI/exportRosterDataToExcel"));
+        }
         this.getActiveShiftList = async () => {
             return (await fetch(null, "get", "/rosterWeb/publicAPI/getActiveShiftList"));
         }
@@ -20,7 +23,7 @@ export default class FetchAPI {
             return (await fetch(null, "get", "/rosterWeb/publicAPI/getSystemParam"));
         }
         //================================================================================================================
-        let fetch = async (data, method, url, responseType, header) => {
+        let fetch = async (data, method, url, responseType, headers) => {
             //================================================================================================================
             // create and configure an axios instance
             // src:https://stackoverflow.com/questions/76116501/axios-response-interceptor-strange-behavior?noredirect=1#comment134237075_76116501
@@ -42,19 +45,14 @@ export default class FetchAPI {
                     synchronous: true, // optimise interceptor handling
                 }
             );
-            let requestObj = { "method": method, "url": url }
-            if (method.toLowerCase() === "get") {
-                requestObj.params = data;
-            } else {
-                requestObj.data = data;
-            }
-            if (responseType) {
-                requestObj["responseType"] = responseType;
-            }
-            if (header) {
-                requestObj["headers"] = header;
-            }
-            let response = await axios(requestObj);
+            const requestObj = {
+                url,
+                method,
+                responseType,
+                headers,
+                [method.toLowerCase() === "get" ? "params" : "data"]: data,
+            };
+            let response = await api(requestObj);
             if (response.request.responseType === 'blob') {
                 let fileName = response.headers['content-disposition'];
                 fileName = fileName.substring(fileName.indexOf("filename=") + 9);

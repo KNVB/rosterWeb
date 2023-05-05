@@ -65,6 +65,9 @@ export default class RosterSchedulerDataUtil {
                 }
             });
         }
+        this.exportRosterDataToExcel = async () =>{
+            await fetchAPI.exportRosterDataToExcel(roster,rosterSchedulerData);
+        }
         this.fillEmptyShiftWithO = (monthLength) => {
             this.getItoIdList().forEach(itoId => {
                 for (let i = 1; i <= monthLength; i++) {

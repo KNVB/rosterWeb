@@ -8,11 +8,11 @@ let wrapper = function (systemParam) {
         console.log(req.params.action);
         switch (req.params.action) {
             case "getITOBlackListShiftPattern":
-                let shiftUtil=new ShiftUtil();
-                try{
-                    let itoBlackListShiftPattern=await shiftUtil.getITOBlackListShiftPattern(req.query.year, req.query.month);
+                let shiftUtil = new ShiftUtil();
+                try {
+                    let itoBlackListShiftPattern = await shiftUtil.getITOBlackListShiftPattern(req.query.year, req.query.month);
                     res.send(itoBlackListShiftPattern);
-                }catch (error) {
+                } catch (error) {
                     res.status(400).send(error.message);
                 }
                 break;
@@ -32,7 +32,21 @@ let wrapper = function (systemParam) {
                     let previousMonthShiftList = await rosterUtil.getPreviousMonthShiftList(req.query.year, req.query.month, systemParam);
                     res.send(previousMonthShiftList);
                 } catch (error) {
-                    console.log(error)
+                    res.status(400).send(error.message);
+                }
+                break;
+            default:
+                next();
+                break;
+        }
+    });
+    router.post("/:action", async (req, res, next) => {
+        switch (req.params.action) {
+            case "exportRosterDataToExcel":
+                rosterUtil = new RosterUtil();
+                try{
+                    let result=rosterUtil.exportRosterDataToExcel(req.body.roster,req.body.rosterSchedulerData);
+                }catch (error){
                     res.status(400).send(error.message);
                 }
                 break;

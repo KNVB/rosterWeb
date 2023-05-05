@@ -92,6 +92,13 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
+    let exportRosterDataToExcel =async e =>{
+        try {
+            await itemList.rosterSchedulerDataUtil.exportRosterDataToExcel();
+        }catch (error){
+            updateItemList({ "error": error, "type": "setError" });
+        }
+    }
     let fillEmptyShiftWithO = () => {
         itemList.rosterSchedulerDataUtil.fillEmptyShiftWithO(itemList.calendarDateList.length);
         updateItemList({ type: "refresh" });
@@ -225,6 +232,7 @@ export function useRosterScheduler() {
             clearAllShiftData,
             copyRosterData,
             endSelect,
+            exportRosterDataToExcel,
             fillEmptyShiftWithO,
             handleKeyDown,
             isDuplicateShift,

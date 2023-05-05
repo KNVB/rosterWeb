@@ -1,6 +1,10 @@
 import Dbo from "./Dbo.js";
+import ExcelExporter from "./ExcelExporter.js";
 export default class RosterUtil {
-	constructor() {		
+	constructor() {
+		this.exportRosterDataToExcel = async (roster,rosterSchedulerData)=>{
+
+		}
 		this.getPreferredShiftList = async (year, month) => {
 			let dboObj = new Dbo();
 			try {

@@ -42,7 +42,7 @@ export default function RosterSchedulerTable({ autoPlanResult, roster, rosterMon
                                     <div className="clearAllButton" onClick={uiAction.clearAllShiftData}>Clear All Shift Data</div>
                                 </div>
                                 <div className="d-flex flex-grow-1 justify-content-center mt-1">
-                                    <div className="exportButton">Export To Excel File</div>                                    
+                                    <div className="exportButton" onClick={uiAction.exportRosterDataToExcel}>Export To Excel File</div>                                    
                                 </div>
                             </div>
                             <div className="d-flex flex-column flex-grow-1">

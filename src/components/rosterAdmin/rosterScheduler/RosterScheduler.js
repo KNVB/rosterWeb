@@ -4,7 +4,6 @@ import RosterSchedulerTable from "./RosterSchedulerTable";
 export default function RosterScheduler() {
     const { autoPlanResult, error, isLoading, roster, rosterMonth, rosterSchedulerData, systemParam, uiAction } = useRosterScheduler();
     if (error) {
-        console.log(error);
         return handleAPIError(error);
     } else {
         if (!isLoading) {
