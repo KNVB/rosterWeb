@@ -38,13 +38,12 @@ export default function AutoPlanner({ autoPlanResult, rosterMonth, uiAction }) {
                 <tr>
                     <td>Iteration Count:</td>
                     <td><input onChange={updateIterationCount} type="number" value={uiAction.getAutoPlanIterationCount()} /></td>
-                    <td>&nbsp;<a className="autoPlannerButton" onClick={uiAction.startAutoPlan}>Auto Planner</a></td>
+                    <td>&nbsp;<div className="autoPlannerButton" onClick={uiAction.startAutoPlan}>Auto Planner</div></td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colSpan={3} className="text-center">
-                        <a className="fillEmptyShiftWithOButton" onClick={uiAction.fillEmptyShiftWithO}>Fill empty shift with "O"</a>
+                    <td colSpan={3} className="text-center">                        
                         {
                             autoPlanResult &&
                             autoPlanResult.map((result, index) => (

@@ -26,7 +26,7 @@ export default class AutoPlannerUtil {
             let essentialShift = '';
             let itoIdList;
             let preferredShift, preferredShiftList, previousShiftList = {};
-            let resultantRoster = { rosterRow: {} }, resultantShiftList, rosterSchedulerData = rosterSchedulerDataUtil.getRosterSchedulerData();
+            let resultantRoster = { rosterRow: {} }, resultantShiftList, rosterSchedulerData = JSON.parse(JSON.stringify(rosterSchedulerDataUtil.getRosterSchedulerData()));
             let { getAllITOStat } = AdminShiftStatUtil();
             preferredShiftList = rosterSchedulerData.preferredShiftList;
             for (let dateIndex = startDate; dateIndex <= endDate; dateIndex++) {
@@ -62,8 +62,9 @@ export default class AutoPlannerUtil {
                             previousShiftList.shift();
                             previousShiftList.push(preferredShift);
                             break;
-                        default:
+                        default:                            
                             availableShiftList = getAvailableShift(itoIdList[i], preferredShift, previousShiftList, rosterSchedulerDataUtil, resultantShiftList, systemParam);
+                            console.log("itoId="+itoIdList[i]+",dateIndex="+dateIndex+",availableShiftList="+availableShiftList+",previousShiftList="+previousShiftList );
                             if ((essentialShift === '') || (availableShiftList.length === 0)) {
                                 resultantShiftList[dateIndex] = "O";
                                 if (previousShiftList === undefined) {
@@ -80,6 +81,7 @@ export default class AutoPlannerUtil {
                                     } else {
                                         comparator = availableShiftList[j];
                                     }
+                                    console.log("itoId="+itoIdList[i]+",dateIndex="+dateIndex+",comparator="+comparator+",essentialShift="+essentialShift+",index="+essentialShift.indexOf(comparator));
                                     if (essentialShift.indexOf(comparator) > -1) {
                                         essentialShift = essentialShift.replace(comparator, "");
                                         resultantShiftList[dateIndex] = availableShiftList[j];
@@ -107,6 +109,7 @@ export default class AutoPlannerUtil {
                             break;
                     }
                     resultantRoster.rosterRow[itoIdList[i]].shiftList = resultantShiftList;
+                    rosterSchedulerData.previousMonthShiftList[itoIdList[i]]=JSON.parse(JSON.stringify(previousShiftList));
                     //console.log("itoId=" + itoId + ",resultantShiftList=" + resultantShiftList);
                     //console.log("====================");
                 }
@@ -245,6 +248,10 @@ export default class AutoPlannerUtil {
                 //console.log(itoId+","+dateIndex+","+thatShift+", form black list");
                 return false;
             }
+            /*
+            if (itoId === "ITO8_1999-01-01") {
+                console.log(itoId + "," + thatShift + ",is form black previous shift pattern "+ previousShiftList );
+            }*/
             /*
             if (itoId === "ITO4_1999-01-01") {
                 console.log(itoId + "," + thatShift + ",is conflict with preferred(" + preferredShift + ")==" + isConflictWithPreferredShift(preferredShift, thatShift));

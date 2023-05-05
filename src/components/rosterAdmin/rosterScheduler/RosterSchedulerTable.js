@@ -3,6 +3,7 @@ import AutoPlanner from "./autoPlanner/AutoPlanner";
 import HeaderRows from "../../rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../../util/ShiftInfoLegend";
+import "./RosterSchedulerTable.css";
 export default function RosterSchedulerTable({ autoPlanResult, roster, rosterMonth, rosterSchedulerData, systemParam, uiAction }) {
     useEffect(() => {
         const mouseUp = () => uiAction.endSelect();
@@ -34,7 +35,25 @@ export default function RosterSchedulerTable({ autoPlanResult, roster, rosterMon
                         <AutoPlanner
                             autoPlanResult={autoPlanResult}
                             rosterMonth={rosterMonth}
-                            uiAction={uiAction} />
+                            uiAction={uiAction} />                        
+                        <div className="d-flex flex-row ms-1">
+                            <div className="d-flex flex-column flex-grow-1 mb-1">
+                                <div className="d-flex flex-grow-1 justify-content-center">
+                                    <div className="clearAllButton" onClick={uiAction.clearAllShiftData}>Clear All Shift Data</div>
+                                </div>
+                                <div className="d-flex flex-grow-1 justify-content-center mt-1">
+                                    <div className="exportButton">Export To Excel File</div>                                    
+                                </div>
+                            </div>
+                            <div className="d-flex flex-column flex-grow-1">
+                                <div className="d-flex flex-grow-1 justify-content-center">
+                                    <div className="fillEmptyShiftWithOButton" onClick={uiAction.fillEmptyShiftWithO}>Fill empty shift with "O"</div>
+                                </div>
+                                <div className="d-flex flex-grow-1 justify-content-center mt-1">
+                                    <div className="saveRosterToDBButton">Save All Data To DB</div>
+                                </div>   
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tfoot>

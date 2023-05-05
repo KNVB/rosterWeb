@@ -21,36 +21,25 @@ export default class FetchAPI {
         }
         //================================================================================================================
         let fetch = async (data, method, url, responseType, header) => {
-            axios.interceptors.response.use(
-                response => response,
-                error => {
-                    let errorObj;
-                    //console.log(error);
-                    switch (true) {
-                        case (error.response !== undefined):
-                            switch (error.response.status) {
-                                case 404:
-                                    errorObj = {
-                                        status: 404,
-                                        message: error.message
-                                    };
-                                    break;
-                                default:
-                                    errorObj = {
-                                        status: error.response.status,
-                                        message: error.response.statusText
-                                    };
-                                    break;
-                            }
-                            break;
-                        case (error.request !== undefined):
-                            errorObj = error.request;
-                            break
-                        default:
-                            errorObj = { message: error.message };
-                            break;
-                    }
-                    throw errorObj;
+            //================================================================================================================
+            // create and configure an axios instance
+            // src:https://stackoverflow.com/questions/76116501/axios-response-interceptor-strange-behavior?noredirect=1#comment134237075_76116501
+            const api = axios.create({
+                baseURL: process.env.REACT_APP_SOCKET_URL,
+            });
+            // add the response interceptor
+            api.interceptors.response.use(
+                null, // default success handler
+                (error) => {
+                    console.warn(error.toJSON());
+                    return Promise.reject({
+                        status: error.response?.status,
+                        message:
+                            error.response?.data ?? error.response?.statusText ?? error.message,
+                    });
+                },
+                {
+                    synchronous: true, // optimise interceptor handling
                 }
             );
             let requestObj = { "method": method, "url": url }

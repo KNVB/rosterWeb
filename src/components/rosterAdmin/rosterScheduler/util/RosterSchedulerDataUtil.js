@@ -9,6 +9,12 @@ export default class RosterSchedulerDataUtil {
         let roster = null;
         let rosterSchedulerData = null;
         let rosterDataHistory = null;
+        this.clearAllShiftData = (noOfWorkingDay, monthLength) => {
+            Object.keys(roster.rosterRow).forEach(itoId => {
+                roster.rosterRow[itoId].shiftList = [];
+            });
+            updateRosterStatistic(noOfWorkingDay, monthLength); 
+        }
         this.clearCopiedData = () => {
             copiedData = null;
         }

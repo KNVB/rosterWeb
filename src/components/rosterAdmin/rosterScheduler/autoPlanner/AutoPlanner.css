@@ -29,8 +29,7 @@
     color: #fff;
 }
 
-.autoPlannerButton:after,
-.fillEmptyShiftWithOButton:after {
+.autoPlannerButton:after{
     background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
     border-radius: 28px 28px 0px 0px;
     content: '';
@@ -39,31 +38,4 @@
     position: absolute;
     top: 2px;
     width: calc(100% - 4px);
-}
-
-.fillEmptyShiftWithOButton {
-    /* background styles */
-    position: relative;
-    display: inline-block;
-    padding: 10px 15px;
-    -moz-border-radius: 28px;
-    -webkit-border-radius: 28px;
-    border-radius: 28px;
-    background-color: green;
-    /*for compatibility with older browsers*/
-    background-image: linear-gradient(#FFB6C1, #CD5C5C);
-    box-shadow: 0px 1px 4px -2px #333;
-    text-shadow: 0px -1px #333;
-    /* text styles */
-    text-decoration: none;
-    color: #fff;
-    font-size: 20px;
-    font-family: sans-serif;
-    font-weight: 100;
-}
-
-.fillEmptyShiftWithOButton:hover {
-    background: linear-gradient(IndianRed, lightPink);
-    cursor: pointer;
-    color: #fff;
 }

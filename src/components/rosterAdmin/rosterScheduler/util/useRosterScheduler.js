@@ -20,7 +20,7 @@ let reducer = (state, action) => {
         case "setError":
             result.error = action.error;
             break;
-        case "updateAutoPlannerResult":            
+        case "updateAutoPlannerResult":
             result.autoPlanResult = action.result;
             result.isLoading = false;
             break;
@@ -45,7 +45,7 @@ let reducer = (state, action) => {
 export function useRosterScheduler() {
     const [itemList, updateItemList] = useReducer(reducer, {
         autoPlannerUtil: new AutoPlannerUtil(),
-        autoPlanResult:null,
+        autoPlanResult: null,
         calendarDateList: null,
         calendarUtility: new CalendarUtility(),
         error: null,
@@ -78,6 +78,10 @@ export function useRosterScheduler() {
         init();
     }, []);
     let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
+    let clearAllShiftData = e => {
+        itemList.rosterSchedulerDataUtil.clearAllShiftData(itemList.noOfWorkingDay, itemList.calendarDateList.length);
+        updateItemList({ type: "refresh" });
+    }
     let copyRosterData = (e) => {
         e.preventDefault();
         let copyRegion = getCopyRegionLocation();
@@ -153,7 +157,7 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
-    let showAutoPlanResult=(index)=>{
+    let showAutoPlanResult = (index) => {
         itemList.rosterSchedulerDataUtil.loadAutoPlanResult(itemList.autoPlanResult[index], itemList.noOfWorkingDay, itemList.calendarDateList.length);
         updateItemList({ type: "refresh" });
     }
@@ -218,6 +222,7 @@ export function useRosterScheduler() {
         rosterSchedulerData: itemList.rosterSchedulerDataUtil.getRosterSchedulerData(),
         systemParam: itemList.systemParam,
         uiAction: {
+            clearAllShiftData,
             copyRosterData,
             endSelect,
             fillEmptyShiftWithO,
