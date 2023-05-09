@@ -1,4 +1,3 @@
-import React from "react";
 import MonthPickerUtil from './MonthPickerUtil';
 export default function SmallStepSelector(props) {
   let context=props.context;

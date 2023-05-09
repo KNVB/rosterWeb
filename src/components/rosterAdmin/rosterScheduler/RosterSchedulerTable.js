@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import AutoPlanner from "./autoPlanner/AutoPlanner";
 import HeaderRows from "../../rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
-import ShiftInfoLegend from "../../../util/ShiftInfoLegend";
+import ShiftInfoLegend from "../../util/ShiftInfoLegend";
 import "./RosterSchedulerTable.css";
 export default function RosterSchedulerTable({ autoPlanResult, roster, rosterMonth, rosterSchedulerData, systemParam, uiAction }) {
     useEffect(() => {

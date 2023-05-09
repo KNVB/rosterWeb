@@ -1,5 +1,5 @@
 import './MonthPicker.css';
-import React,{ useCallback, useEffect,useRef,useState } from 'react';
+import { useCallback, useEffect,useRef,useState } from 'react';
 import BigStepSelector from './BigStepSelector';
 import SmallStepSelector from './SmallStepSelector';
 
@@ -76,7 +76,7 @@ export default function MonthPicker(props) {
     }
 },[mouseDown]);  
   return (
-    <div ref={obj} className="jpickerContainter">
+    <div ref={obj} className="pickerContainter">
       <SmallStepSelector context={context} updateValue={updateValue}/>
     {
       context.isShowBigStepSelector && 

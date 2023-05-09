@@ -6,7 +6,6 @@ export default class ShiftUtil {
             let dboObj = new Dbo();
             let essentialShift = "";
             let shiftInfoList = {};
-
             try {
                 let results = await dboObj.getActiveShiftList();
                 results.forEach(record => {
@@ -24,14 +23,12 @@ export default class ShiftUtil {
                 console.log("Get All Active Shift Info. success.");
                 shiftInfoList["essentialShift"] = essentialShift;
                 return shiftInfoList;
-            }
-            catch (error) {
-                console.log("Something wrong when getting active shift info list:" + error);
-                console.log(shiftInfoList);
-            }
-            finally {
+            } catch (error) {
+                console.log("An error occur when getting active shift list from DB.");
+                throw (error);
+            } finally {
                 dboObj.close();
-            };
+            }
         }
         this.getITOBlackListShiftPattern = async (year, month) => {
             let dboObj = new Dbo();
@@ -49,6 +46,7 @@ export default class ShiftUtil {
             } catch (error) {
                 console.log("Something wrong when getting ITO black list shift pattern:" + error);
                 console.log(itoBlackListShiftPattern);
+                throw (error);
             }
             finally {
                 dboObj.close();

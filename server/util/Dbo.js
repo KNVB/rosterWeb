@@ -51,7 +51,6 @@ export default class Dbo {
             result.endDateString,
             result.startDateString]);
         }
-
         this.getSystemParam = async () => {
             sqlString = "select * from system_param order by param_type,param_key,param_value";
             return await executeQuery(sqlString);

@@ -1,60 +1,48 @@
 import Express from 'express';
+import RosterUtil from "./RosterUtil.js";
 import ShiftUtil from './ShiftUtil.js';
-import RosterUtil from './RosterUtil.js';
-let wrapper = function (systemParam) {
+export function PrivateAPI(systemParam) {
     const router = Express.Router();
     let rosterUtil;
     router.get('/:action', async (req, res, next) => {
-        console.log(req.params.action);
         switch (req.params.action) {
             case "getITOBlackListShiftPattern":
-                let shiftUtil = new ShiftUtil();
-                try {
-                    let itoBlackListShiftPattern = await shiftUtil.getITOBlackListShiftPattern(req.query.year, req.query.month);
-                    res.send(itoBlackListShiftPattern);
-                } catch (error) {
-                    res.status(400).send(error.message);
-                }
+                sendResponse(res, getITOBlackListShiftPattern, { year: req.query.year, month: req.query.month });
                 break;
             case "getPreferredShiftList":
-                rosterUtil = new RosterUtil();
-                try {
-                    let preferredShiftList = await rosterUtil.getPreferredShiftList(req.query.year, req.query.month);
-                    res.send(preferredShiftList);
-                } catch (error) {
-                    console.log(error)
-                    res.status(400).send(error.message);
-                }
+                sendResponse(res, getPreferredShiftList, { year: req.query.year, month: req.query.month });
                 break;
             case "getPreviousMonthShiftList":
-                rosterUtil = new RosterUtil();
-                try {
-                    let previousMonthShiftList = await rosterUtil.getPreviousMonthShiftList(req.query.year, req.query.month, systemParam);
-                    res.send(previousMonthShiftList);
-                } catch (error) {
-                    res.status(400).send(error.message);
-                }
+                sendResponse(res, getPreviousMonthShiftList, { year: req.query.year, month: req.query.month, systemParam: systemParam });
                 break;
             default:
                 next();
                 break;
         }
     });
-    router.post("/:action", async (req, res, next) => {
-        switch (req.params.action) {
-            case "exportRosterDataToExcel":
-                rosterUtil = new RosterUtil();
-                try{
-                    let result=rosterUtil.exportRosterDataToExcel(req.body.roster,req.body.rosterSchedulerData);
-                }catch (error){
-                    res.status(400).send(error.message);
-                }
-                break;
-            default:
-                next();
-                break;
-        }
-    });
-    return router
+    return router;
 }
-export default wrapper;
+//====================================================================================================================================
+let getITOBlackListShiftPattern = async (params) => {
+    let shiftUtil = new ShiftUtil();
+    let itoBlackListShiftPattern = await shiftUtil.getITOBlackListShiftPattern(params.year, params.month);
+    return itoBlackListShiftPattern;
+}
+let getPreferredShiftList = async (params) => {
+    let rosterUtil = new RosterUtil();
+    let preferredShiftList = await rosterUtil.getPreferredShiftList(params.year, params.month);
+    return preferredShiftList;
+}
+let getPreviousMonthShiftList = async (params) => {
+    let rosterUtil = new RosterUtil();
+    let previousMonthShiftList = await rosterUtil.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
+    return previousMonthShiftList;
+}
+//====================================================================================================================================
+let sendResponse = async (res, action, param) => {
+    try {
+        res.send(await action(param));
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}

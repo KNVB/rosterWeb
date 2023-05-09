@@ -1,13 +1,12 @@
 import { useEffect, useReducer } from "react";
 import AutoPlannerUtil from "./AutoPlannerUtil";
-import CalendarUtility from "../../../util/calendar/CalendarUtility";
+import CalendarUtility from "../../../../util/calendar/CalendarUtility";
 import KeyboardEventHandler from "./KeyboardEventHandler";
-import RosterSchedulerDataUtil from "./RosterSchedulerDataUtil";
 import RosterTableUtil from "./RosterTableUtil";
+import RosterSchedulerDataUtil from "./RosterSchedulerDataUtil";
 import SystemUtil from "../../../../util/SystemUtil";
 let reducer = (state, action) => {
     let result = { ...state };
-    //console.log(action.type);
     switch (action.type) {
         case "init":
             result.autoPlannerUtil.setEndDate(action.monthlyCalendar.calendarDateList.length);
@@ -16,6 +15,8 @@ let reducer = (state, action) => {
             result.systemParam = action.systemParam;
             result.rosterTableUtil.init(result.calendarDateList, result.rosterSchedulerDataUtil.getItoIdList(), action.systemParam);
             result.isLoading = false;
+            break;
+        case "refresh":
             break;
         case "setError":
             result.error = action.error;
@@ -34,8 +35,6 @@ let reducer = (state, action) => {
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
             result.rosterTableUtil.init(result.calendarDateList, result.rosterSchedulerDataUtil.getItoIdList(), result.systemParam);
-            break;
-        case "refresh":
             break;
         default:
             break;
@@ -65,6 +64,7 @@ export function useRosterScheduler() {
                 let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
                 await itemList.rosterSchedulerDataUtil.init(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length, itemList.calendarUtility.weekdayNames);
                 let systemParam = await systemUtil.getSystemParam();
+
                 systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
                 updateItemList({
                     monthlyCalendar,
@@ -72,16 +72,17 @@ export function useRosterScheduler() {
                     type: "init"
                 });
             } catch (error) {
+                console.log(error);
                 updateItemList({ "error": error, "type": "setError" });
             }
         }
         init();
-    }, []);
+    }, [itemList.calendarUtility, itemList.rosterSchedulerDataUtil]);
     let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
     let clearAllShiftData = e => {
         itemList.rosterSchedulerDataUtil.clearAllShiftData(itemList.noOfWorkingDay, itemList.calendarDateList.length);
         updateItemList({ type: "refresh" });
-    }
+    };
     let copyRosterData = (e) => {
         e.preventDefault();
         let copyRegion = getCopyRegionLocation();
@@ -92,16 +93,17 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
-    let exportRosterDataToExcel =async e =>{
+    let exportRosterDataToExcel = async e => {
+        /*
         try {
             await itemList.rosterSchedulerDataUtil.exportRosterDataToExcel();
-        }catch (error){
+        } catch (error) {
             updateItemList({ "error": error, "type": "setError" });
-        }
+        }*/
     }
     let fillEmptyShiftWithO = () => {
         itemList.rosterSchedulerDataUtil.fillEmptyShiftWithO(itemList.calendarDateList.length);
-        updateItemList({ type: "refresh" });
+        updateItemList({ "type": "refresh" });
     }
     let getAutoPlanEndDate = () => {
         return itemList.autoPlannerUtil.getEndDate();
@@ -184,15 +186,6 @@ export function useRosterScheduler() {
         itemList.rosterTableUtil.startSelect(cell.cellIndex, rowIndex);
         updateItemList({ type: "refresh" });
     }
-    let updateRosterMonth = async (newRosterMonth) => {
-        let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
-        let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
-        await itemList.rosterSchedulerDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
-        updateItemList({
-            monthlyCalendar,
-            type: "updateRosterMonth"
-        });
-    }
     let updateAutoPlanEndDate = newEndDate => {
         itemList.autoPlannerUtil.setEndDate(newEndDate);
         updateItemList({ type: "refresh" });
@@ -208,6 +201,15 @@ export function useRosterScheduler() {
     let updatePreferredShift = (itoId, dateOfMonth, newPreferredShift) => {
         itemList.rosterSchedulerDataUtil.updatePreferredShift(itoId, dateOfMonth, newPreferredShift);
         updateItemList({ type: "refresh" });
+    }
+    let updateRosterMonth = async (newRosterMonth) => {
+        let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
+        let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
+        await itemList.rosterSchedulerDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
+        updateItemList({
+            monthlyCalendar,
+            type: "updateRosterMonth"
+        });
     }
     let updateShift = (itoId, dateOfMonth, newShift) => {
         itemList.rosterSchedulerDataUtil.updateShift(itoId, dateOfMonth, newShift, itemList.noOfWorkingDay, itemList.calendarDateList.length);

@@ -1,9 +1,9 @@
-import FetchAPI from "./fetchAPI";
+import FetchAPI from "./FetchAPI";
 export default class SystemUtil{
-    constructor() {
+    constructor(){
         let fetchAPI = new FetchAPI();
-        this.getSystemParam=()=>{
-            return fetchAPI.getSystemParam();
+        this.getSystemParam=async ()=>{
+            return await fetchAPI.getSystemParam();
         }
     }
 }

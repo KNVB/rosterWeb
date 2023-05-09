@@ -1,9 +1,10 @@
-import AdminShiftStatUtil from './AdminShiftStatUtil';
-import FetchAPI from "../../../../util/fetchAPI";
+import AdminShiftStatUtil from "./AdminShiftStatUtil";
+import FetchAPI from "../../../../util/FetchAPI";
 import ITOShiftStatUtil from "../../../../util/ITOShiftStatUtil";
 import UndoableData from './UndoableData';
-export default class RosterSchedulerDataUtil {
-    constructor() {
+
+export default class RosterSchedulerDataUtil{
+    constructor(){
         let copiedData = null;
         let fetchAPI = new FetchAPI();
         let roster = null;
@@ -13,7 +14,7 @@ export default class RosterSchedulerDataUtil {
             Object.keys(roster.rosterRow).forEach(itoId => {
                 roster.rosterRow[itoId].shiftList = [];
             });
-            updateRosterStatistic(noOfWorkingDay, monthLength); 
+            updateRosterStatistic(noOfWorkingDay, monthLength);
         }
         this.clearCopiedData = () => {
             copiedData = null;
@@ -65,9 +66,6 @@ export default class RosterSchedulerDataUtil {
                 }
             });
         }
-        this.exportRosterDataToExcel = async () =>{
-            await fetchAPI.exportRosterDataToExcel(roster,rosterSchedulerData);
-        }
         this.fillEmptyShiftWithO = (monthLength) => {
             this.getItoIdList().forEach(itoId => {
                 for (let i = 1; i <= monthLength; i++) {
@@ -105,7 +103,7 @@ export default class RosterSchedulerDataUtil {
             }
         }
         this.init = async (year, month, noOfWorkingDay, monthLength, weekdayNames) => {
-            roster = { activeShiftList: await fetchAPI.getActiveShiftList() };
+            roster = { activeShiftList: await fetchAPI.getActiveShiftList(), year: year };
             roster.weekdayNames = weekdayNames;
             await this.loadData(year, month, noOfWorkingDay, monthLength);
         }
@@ -129,6 +127,8 @@ export default class RosterSchedulerDataUtil {
             let previousMonthShiftList = await fetchAPI.getPreviousMonthShiftList(year, month);
 
             roster.rosterRow = await fetchAPI.getRoster(year, month);
+            roster.month = month;
+            roster.year = year;
             rosterSchedulerData = { blackListShiftList: {}, blackListShiftPattern: {}, preferredShiftList: {}, previousMonthShiftList: {} };
             //console.log(previousMonthShiftList);
             this.getItoIdList().forEach(itoId => {
@@ -244,7 +244,7 @@ export default class RosterSchedulerDataUtil {
                 roster.rosterRow[[itoIdList[i]]] = rosterInfo;
             }
             let { getAllITOStat } = AdminShiftStatUtil();
-            console.log(rosterSchedulerData.blackListShiftPattern);
+            //console.log(rosterSchedulerData.blackListShiftPattern);
             let temp = getAllITOStat(roster.activeShiftList, 1, monthLength, roster.rosterRow, rosterSchedulerData.blackListShiftPattern);
             //console.log(temp, roster.rosterRow);
             rosterSchedulerData.duplicateShiftList = temp.duplicateShiftList;

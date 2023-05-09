@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import {useState} from "react";
 import BigStepSelectorBody from './BigStepSelectorBody';
 import BigStepSelectorFooter from './BigStepSelectorFooter';
 import BigStepSelectorHeader from './BigStepSelectorHeader';

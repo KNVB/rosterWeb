@@ -1,5 +1,6 @@
 roster: {
   activeShiftList:{[],essentialShift},
+  month,  
   rosterRow:itoId: {    
     "actualWorkingDayCount",
     "actualWorkingHour,
@@ -19,7 +20,8 @@ roster: {
     "totalBalance",
     workingHourPerDay,
   },
-  weekdayNames
+  weekdayNames,
+  year
 }
 rosterMonth:{
 	calendarDateList:[],

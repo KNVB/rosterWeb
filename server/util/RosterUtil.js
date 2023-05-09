@@ -1,11 +1,7 @@
 import Dbo from "./Dbo.js";
-import ExcelExporter from "./ExcelExporter.js";
 export default class RosterUtil {
-	constructor() {
-		this.exportRosterDataToExcel = async (roster,rosterSchedulerData)=>{
-
-		}
-		this.getPreferredShiftList = async (year, month) => {
+    constructor(){
+        this.getPreferredShiftList = async (year, month) => {
 			let dboObj = new Dbo();
 			try {
 				let results = await dboObj.getPreferredShiftList(year, month);
@@ -13,13 +9,13 @@ export default class RosterUtil {
 				return results;
 			} catch (error) {
 				console.log("Something wrong when getting Preferred shift list:" + error);
-				console.log(shiftInfoList);
+                throw (error);
 			}
 			finally {
 				dboObj.close();
 			};
 		}
-		this.getPreviousMonthShiftList = async (year, month, systemParam) => {
+        this.getPreviousMonthShiftList = async (year, month, systemParam) => {
 			let dboObj = new Dbo();
 			try {
 				let results = await dboObj.getPreviousMonthShiftList(year, month, systemParam);
@@ -27,13 +23,13 @@ export default class RosterUtil {
 				return results;
 			} catch (error) {
 				console.log("Something wrong when getting Previous month shift list:" + error);
-				console.log(shiftInfoList);
+                throw (error);
 			}
 			finally {
 				dboObj.close();
 			};
 		}
-		this.getRoster = async (year, month) => {
+        this.getRoster = async (year, month) => {
 			let dbo = new Dbo();
 			let itoRosterList = {};
 			try {
@@ -71,5 +67,5 @@ export default class RosterUtil {
 				dbo.close();
 			}
 		}
-	}
+    }
 }
