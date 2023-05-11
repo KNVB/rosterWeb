@@ -16,6 +16,9 @@ export function PrivateAPI(systemParam) {
             case "getPreviousMonthShiftList":
                 sendResponse(res, getPreviousMonthShiftList, { year: req.query.year, month: req.query.month, systemParam: systemParam });
                 break;
+            case "getYearlyRosterStatistic":
+                sendResponse(res, getYearlyRosterStatistic, { year: req.query.year, month: req.query.month});
+                break;
             default:
                 next();
                 break;
@@ -63,6 +66,11 @@ let getPreviousMonthShiftList = async (params) => {
     let rosterUtil = new RosterUtil();
     let previousMonthShiftList = await rosterUtil.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
     return previousMonthShiftList;
+}
+let getYearlyRosterStatistic = async params=>{
+    let rosterUtil = new RosterUtil();
+    let yearlyRosterStatistic = rosterUtil.getYearlyRosterStatistic(params.year, params.month);
+    return yearlyRosterStatistic;
 }
 let saveRosterToDB = async rosterData => {
     let rosterUtil = new RosterUtil();

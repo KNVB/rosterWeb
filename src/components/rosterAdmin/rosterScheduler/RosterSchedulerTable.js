@@ -3,6 +3,7 @@ import AutoPlanner from "./autoPlanner/AutoPlanner";
 import HeaderRows from "../../rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../util/ShiftInfoLegend";
+import YearlyRosterStatisticTable from "./YearlyRosterStaticTable";
 import "./RosterSchedulerTable.css";
 export default function RosterSchedulerTable({ autoPlanResult, roster, rosterMonth, rosterSchedulerData, systemParam, uiAction }) {
     useEffect(() => {
@@ -55,6 +56,10 @@ export default function RosterSchedulerTable({ autoPlanResult, roster, rosterMon
                             </div>
                         </div>
                     </td>
+                    <td colSpan="12" className="align-top p-0">
+                        <YearlyRosterStatisticTable 
+                            yearlyRosterStatistic={rosterSchedulerData.yearlyRosterStatistic}/>
+                    </td>    
                 </tr>
             </tfoot>
         </table>

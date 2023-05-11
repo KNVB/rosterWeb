@@ -22,6 +22,9 @@ export default class FetchAPI {
         this.getSystemParam = async () => {
             return (await fetch(null, "get", "/rosterWeb/publicAPI/getSystemParam"));
         }
+        this.getYearlyRosterStatistic= async (year, month) => {
+            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getYearlyRosterStatistic"));
+        }
         this.saveRosterToDB = async rosterData => {
             return (await fetch(rosterData, "post", "/rosterWeb/privateAPI/saveRosterToDB"));
         }

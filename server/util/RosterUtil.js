@@ -67,6 +67,35 @@ export default class RosterUtil {
 				dbo.close();
 			}
 		}
+		this.getYearlyRosterStatistic = async (year, month) => {
+			let dbo = new Dbo();
+			try {
+				let yearlyRosterStatistic = {};
+				let results = await dbo.getYearlyRosterStatistic(year, month);
+				results.forEach(record => {
+					if (yearlyRosterStatistic[record.ito_id] === undefined) {
+						yearlyRosterStatistic[record.ito_id] = { aTotal: 0, bxTotal: 0, cTotal: 0, dxTotal: 0, oTotal: 0, totalCount: 0 };
+					}
+					let a = parseInt(record.a), b = parseInt(record.b), c = parseInt(record.c);
+					let d = parseInt(record.d), o = parseInt(record.o);
+					yearlyRosterStatistic[record.ito_id][record.m] = { a: a, b: b, c: c, d: d, o: o, total: a + b + c + d + o }
+					yearlyRosterStatistic[record.ito_id].aTotal += a;
+					yearlyRosterStatistic[record.ito_id].bxTotal += b;
+					yearlyRosterStatistic[record.ito_id].cTotal += c;
+					yearlyRosterStatistic[record.ito_id].dxTotal += d;
+					yearlyRosterStatistic[record.ito_id].oTotal += o;
+					yearlyRosterStatistic[record.ito_id].totalCount += a + b + c + d + o;
+					yearlyRosterStatistic[record.ito_id].postName = record.post_name;
+				});
+				return { month: month, statistic: yearlyRosterStatistic };
+			} catch (error) {
+				console.log("An error occur when getting yearly roster statistic from DB.");
+				console.log(error);
+				throw (error);
+			} finally {
+				dbo.close();
+			}
+		}
 		this.saveRosterToDB = async rosterData => {
 			let month = rosterData.month;
 			let preferredShiftList = rosterData.preferredShiftList;

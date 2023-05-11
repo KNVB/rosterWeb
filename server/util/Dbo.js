@@ -46,15 +46,45 @@ export default class Dbo {
             sqlString += "left join last_month_balance on v.ito_id=last_month_balance.ITO_ID and shift_month=? ";
             sqlString += "order by v.ito_id,shift_date";
 
-            return await executeQuery(sqlString, [result.startDateString,
-            result.endDateString,
-            result.startDateString,
-            result.endDateString,
-            result.startDateString]);
+            return await executeQuery(sqlString,
+                [
+                    result.startDateString,
+                    result.endDateString,
+                    result.startDateString,
+                    result.endDateString,
+                    result.startDateString
+                ]
+            );
         }
         this.getSystemParam = async () => {
             sqlString = "select * from system_param order by param_type,param_key,param_value";
             return await executeQuery(sqlString);
+        }
+        this.getYearlyRosterStatistic = async (year, month) => {
+            sqlString = "select a.ito_id,b.post_name,";
+            sqlString = sqlString + "			sum(case when shift ='a' then 1 else 0 end) as a,";
+            sqlString = sqlString + "			sum(case when shift ='b' or shift ='b1' then 1 else 0 end) as b,";
+            sqlString = sqlString + "			sum(case when shift ='c' then 1 else 0 end) as c,";
+            sqlString = sqlString + "			sum(case when shift ='d' or shift='d1' or shift='d2' or shift='d3' then 1 else 0 end) as d,";
+            sqlString = sqlString + "			sum(case when shift ='O' then 1 else 0 end) as o,";
+            sqlString = sqlString + "			year(shift_date) as y,";
+            sqlString = sqlString + "			month(shift_date) m ";
+            sqlString = sqlString + "from ";
+            sqlString = sqlString + "shift_record a inner join ito_info b ";
+            sqlString = sqlString + "on join_date<? and ";
+            sqlString = sqlString + "   leave_date>? and ";
+            sqlString = sqlString + "   year(shift_date)=? and ";
+            sqlString = sqlString + "   month(shift_date) <=? and ";
+            sqlString = sqlString + "   a.ITO_ID =b.ito_id ";
+            sqlString = sqlString + "group by year(shift_date),month(shift_date),a.ito_id";
+            let result = getStartEndDateString(year, month);
+            return await executeQuery(sqlString,
+                [
+                    result.startDateString,
+                    result.endDateString,
+                    year,
+                    month
+                ]);
         }
         this.saveRosterData = async (year, month, rosterRows, preferredShiftList) => {
             let dateString;

@@ -1,0 +1,10 @@
+.yearlyRosterStatistic{
+    height: 300px;
+    margin-top: 2px;
+    overflow-y: auto;
+    width:100%;
+}
+.yearlyRosterStatisticTable{
+    text-align: center;
+    width:100%
+}
