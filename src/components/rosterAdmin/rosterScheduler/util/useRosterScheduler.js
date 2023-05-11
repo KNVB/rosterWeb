@@ -94,12 +94,11 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     let exportRosterDataToExcel = async e => {
-        /*
         try {
-            await itemList.rosterSchedulerDataUtil.exportRosterDataToExcel();
+            await itemList.rosterSchedulerDataUtil.exportRosterDataToExcel(itemList.calendarDateList);
         } catch (error) {
             updateItemList({ "error": error, "type": "setError" });
-        }*/
+        }
     }
     let fillEmptyShiftWithO = () => {
         itemList.rosterSchedulerDataUtil.fillEmptyShiftWithO(itemList.calendarDateList.length);
@@ -205,11 +204,16 @@ export function useRosterScheduler() {
     let updateRosterMonth = async (newRosterMonth) => {
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
         let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
-        await itemList.rosterSchedulerDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
-        updateItemList({
-            monthlyCalendar,
-            type: "updateRosterMonth"
-        });
+        try{    
+            await itemList.rosterSchedulerDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
+            updateItemList({
+                monthlyCalendar,
+                type: "updateRosterMonth"
+            });
+        } catch (error) {
+            console.log(error);
+            updateItemList({ "error": error, "type": "setError" });
+        }
     }
     let updateShift = (itoId, dateOfMonth, newShift) => {
         itemList.rosterSchedulerDataUtil.updateShift(itoId, dateOfMonth, newShift, itemList.noOfWorkingDay, itemList.calendarDateList.length);

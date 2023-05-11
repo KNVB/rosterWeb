@@ -1,3 +1,4 @@
+import RosterExporter from './RosterExporter.js';
 import Express from 'express';
 import RosterUtil from "./RosterUtil.js";
 import ShiftUtil from './ShiftUtil.js';
@@ -20,9 +21,39 @@ export function PrivateAPI(systemParam) {
                 break;
         }
     });
+    router.post('/:action', async (req, res, next) => {
+        switch (req.params.action) {
+            case "exportRosterDataToExcel":
+                try {
+                    let rosterExporter = new RosterExporter();
+                    let outputFileName = (req.body.genExcelData.year % 100) * 100 + req.body.genExcelData.month + ".xlsx";
+                    
+                    res.setHeader("Content-disposition", "attachment; filename="+outputFileName);
+                    res.setHeader("Content-type", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    res.send(await rosterExporter.export(req.body.genExcelData));
+                    
+                } catch (error) {
+                    console.log(error);                    
+                    res.status(400).send(error.message);
+                }
+                break;
+            default:
+                next();
+                break
+        }
+    });
     return router;
+
 }
 //====================================================================================================================================
+let exportRosterDataToExcel = async genExcelData => {
+    let excelExporter = new ExcelExporter();
+    let result = excelExporter.exportRoster(genExcelData);
+    res.status(200);
+    res.setHeader("Content-disposition", "attachment; filename=" + result.outputFileName);
+    res.setHeader("Content-type", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(result.buffer);
+}
 let getITOBlackListShiftPattern = async (params) => {
     let shiftUtil = new ShiftUtil();
     let itoBlackListShiftPattern = await shiftUtil.getITOBlackListShiftPattern(params.year, params.month);

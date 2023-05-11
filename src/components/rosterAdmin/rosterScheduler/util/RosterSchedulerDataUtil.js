@@ -3,8 +3,8 @@ import FetchAPI from "../../../../util/FetchAPI";
 import ITOShiftStatUtil from "../../../../util/ITOShiftStatUtil";
 import UndoableData from './UndoableData';
 
-export default class RosterSchedulerDataUtil{
-    constructor(){
+export default class RosterSchedulerDataUtil {
+    constructor() {
         let copiedData = null;
         let fetchAPI = new FetchAPI();
         let roster = null;
@@ -65,6 +65,13 @@ export default class RosterSchedulerDataUtil{
                     }
                 }
             });
+        }
+        this.exportRosterDataToExcel = async (calendarDateList) => {
+            let genExcelData = JSON.parse(JSON.stringify(roster));
+            genExcelData.calendarDateList = JSON.parse(JSON.stringify(calendarDateList));
+            genExcelData.vacantShiftList = JSON.parse(JSON.stringify(rosterSchedulerData.vacantShiftList));
+            console.log(genExcelData);
+            await fetchAPI.exportRosterDataToExcel({ "genExcelData": genExcelData });
         }
         this.fillEmptyShiftWithO = (monthLength) => {
             this.getItoIdList().forEach(itoId => {
@@ -130,6 +137,7 @@ export default class RosterSchedulerDataUtil{
             roster.month = month;
             roster.year = year;
             rosterSchedulerData = { blackListShiftList: {}, blackListShiftPattern: {}, preferredShiftList: {}, previousMonthShiftList: {} };
+            rosterDataHistory = null;
             //console.log(previousMonthShiftList);
             this.getItoIdList().forEach(itoId => {
                 rosterSchedulerData.blackListShiftPattern[itoId] = itoBlackListShiftPattern[itoId];
