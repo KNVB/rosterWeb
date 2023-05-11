@@ -12,7 +12,7 @@ export default class RosterExporter {
             await workbook.xlsx.readFile('./template.xlsx');
             
             let worksheet1 = workbook.getWorksheet('Sheet1');
-            console.log(rosterData);
+            //console.log(rosterData);
             setCaptionRow(workbook, rosterData.month, rosterData.year);
             setConditionalFormatting(worksheet1,rosterData.rosterRow);
             setHeaderRow(worksheet1,rosterData.calendarDateList,rosterData.weekdayNames);

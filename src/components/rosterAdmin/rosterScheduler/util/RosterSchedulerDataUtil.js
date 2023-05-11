@@ -70,7 +70,7 @@ export default class RosterSchedulerDataUtil {
             let genExcelData = JSON.parse(JSON.stringify(roster));
             genExcelData.calendarDateList = JSON.parse(JSON.stringify(calendarDateList));
             genExcelData.vacantShiftList = JSON.parse(JSON.stringify(rosterSchedulerData.vacantShiftList));
-            console.log(genExcelData);
+            //console.log(genExcelData);
             await fetchAPI.exportRosterDataToExcel({ "genExcelData": genExcelData });
         }
         this.fillEmptyShiftWithO = (monthLength) => {
@@ -186,6 +186,18 @@ export default class RosterSchedulerDataUtil {
                 roster.rosterRow = backupItem.rosterRow;
                 rosterSchedulerData = backupItem.rosterSchedulerData;
             }
+        }
+        this.saveRosterToDB = async () => {
+            await fetchAPI.saveRosterToDB(
+                {
+                    rosterData:
+                    {
+                        rosterRow: roster.rosterRow,
+                        preferredShiftList:rosterSchedulerData.preferredShiftList,
+                        month: roster.month,
+                        year: roster.year
+                    }
+                });
         }
         this.unDo = () => {
             if (rosterDataHistory.canUndo()) {

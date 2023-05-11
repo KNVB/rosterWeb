@@ -1,7 +1,7 @@
 import Dbo from "./Dbo.js";
 export default class RosterUtil {
-    constructor(){
-        this.getPreferredShiftList = async (year, month) => {
+	constructor() {
+		this.getPreferredShiftList = async (year, month) => {
 			let dboObj = new Dbo();
 			try {
 				let results = await dboObj.getPreferredShiftList(year, month);
@@ -9,13 +9,13 @@ export default class RosterUtil {
 				return results;
 			} catch (error) {
 				console.log("Something wrong when getting Preferred shift list:" + error);
-                throw (error);
+				throw (error);
 			}
 			finally {
 				dboObj.close();
 			};
 		}
-        this.getPreviousMonthShiftList = async (year, month, systemParam) => {
+		this.getPreviousMonthShiftList = async (year, month, systemParam) => {
 			let dboObj = new Dbo();
 			try {
 				let results = await dboObj.getPreviousMonthShiftList(year, month, systemParam);
@@ -23,13 +23,13 @@ export default class RosterUtil {
 				return results;
 			} catch (error) {
 				console.log("Something wrong when getting Previous month shift list:" + error);
-                throw (error);
+				throw (error);
 			}
 			finally {
 				dboObj.close();
 			};
 		}
-        this.getRoster = async (year, month) => {
+		this.getRoster = async (year, month) => {
 			let dbo = new Dbo();
 			let itoRosterList = {};
 			try {
@@ -67,5 +67,28 @@ export default class RosterUtil {
 				dbo.close();
 			}
 		}
-    }
+		this.saveRosterToDB = async rosterData => {
+			let month = rosterData.month;
+			let preferredShiftList = rosterData.preferredShiftList;
+			let rosterRow = rosterData.rosterRow;
+			let year = rosterData.year;
+
+			/*
+			console.log(year+"/"+month);
+			console.log("preferredShiftList="+JSON.stringify(preferredShiftList));
+			console.log("rosterList="+JSON.stringify(rosterList));
+			*/
+			let dboObj = new Dbo();
+			try {
+				let result = await dboObj.saveRosterData(year, month, rosterRow, preferredShiftList);
+				return result;
+			} catch (err) {
+				console.log("Some wrong when update roster data:" + err.stack);
+				throw err;
+			}
+			finally {
+				dboObj.close();
+			};
+		}
+	}
 }

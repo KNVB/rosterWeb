@@ -38,7 +38,7 @@ rosterSchedulerData:{
   blackListShiftPattern:itoId:{},
   duplicateShiftList:{}
   previousMonthShiftList:itoId:{},
-  preferredShiftList":itoId:{},
+  preferredShiftList:itoId:{},
   vacantShiftList:{}
 }
 

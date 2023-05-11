@@ -47,7 +47,7 @@
 	background-image: linear-gradient(red,lightred);
 }
 .saveRosterToDBButton:hover{
-    background: linear-gradient(#1f4160,#1e3460);
+    background: linear-gradient(pink,red);
 }
 .clearAllButton:hover,
 .exportButton:hover,

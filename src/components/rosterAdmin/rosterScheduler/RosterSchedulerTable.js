@@ -50,7 +50,7 @@ export default function RosterSchedulerTable({ autoPlanResult, roster, rosterMon
                                     <div className="fillEmptyShiftWithOButton" onClick={uiAction.fillEmptyShiftWithO}>Fill empty shift with "O"</div>
                                 </div>
                                 <div className="d-flex flex-grow-1 justify-content-center mt-1">
-                                    <div className="saveRosterToDBButton">Save All Data To DB</div>
+                                    <div className="saveRosterToDBButton" onClick={uiAction.saveRosterToDB}>Save All Data To DB</div>
                                 </div>   
                             </div>
                         </div>

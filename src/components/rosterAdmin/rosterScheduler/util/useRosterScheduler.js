@@ -161,6 +161,14 @@ export function useRosterScheduler() {
             updateItemList({ type: "refresh" });
         }
     }
+    let saveRosterToDB = async e => {
+        try {
+            await itemList.rosterSchedulerDataUtil.saveRosterToDB();
+            alert("Roster Data is saved to DB successfully.");
+        } catch (error) {
+            updateItemList({ "error": error, "type": "setError" });
+        }
+    }
     let setFocusCell = e => {
         itemList.rosterTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
@@ -204,7 +212,7 @@ export function useRosterScheduler() {
     let updateRosterMonth = async (newRosterMonth) => {
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
         let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
-        try{    
+        try {
             await itemList.rosterSchedulerDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
             updateItemList({
                 monthlyCalendar,
@@ -251,6 +259,7 @@ export function useRosterScheduler() {
             getPreferredShiftCellCssClassName,
             getShiftCssClassName,
             pasteRosterData,
+            saveRosterToDB,
             setFocusCell,
             showAutoPlanResult,
             startAutoPlan,

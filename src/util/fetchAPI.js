@@ -2,7 +2,7 @@ import axios from "axios";
 export default class FetchAPI {
     constructor() {
         this.exportRosterDataToExcel = async genExcelData => {
-            return (await fetch(genExcelData, "post", "/rosterWeb/privateAPI/exportRosterDataToExcel","blob"));
+            return (await fetch(genExcelData, "post", "/rosterWeb/privateAPI/exportRosterDataToExcel", "blob"));
         }
         this.getActiveShiftList = async () => {
             return (await fetch(null, "get", "/rosterWeb/publicAPI/getActiveShiftList"));
@@ -19,9 +19,11 @@ export default class FetchAPI {
         this.getRoster = async (year, month) => {
             return (await fetch({ year: year, month: month }, "get", "/rosterWeb/publicAPI/getRoster"));
         }
-
         this.getSystemParam = async () => {
             return (await fetch(null, "get", "/rosterWeb/publicAPI/getSystemParam"));
+        }
+        this.saveRosterToDB = async rosterData => {
+            return (await fetch(rosterData, "post", "/rosterWeb/privateAPI/saveRosterToDB"));
         }
         //================================================================================================================
         // create and configure an axios instance
@@ -54,12 +56,12 @@ export default class FetchAPI {
                 [method.toLowerCase() === "get" ? "params" : "data"]: data,
             };
             const response = await api(requestObj); // use the created instance
-            if (response.request.responseType === "blob") {                
+            if (response.request.responseType === "blob") {
                 let fileName = response.headers["content-disposition"];
                 console.log(fileName);
                 let firstIndex = fileName.indexOf("filename=");
-                fileName = fileName.substring(firstIndex+9);
-                
+                fileName = fileName.substring(firstIndex + 9);
+
                 const newBlob = new Blob([response.data]);
                 const objUrl = window.URL.createObjectURL(newBlob);
                 const link = document.createElement("a");

@@ -27,15 +27,18 @@ export function PrivateAPI(systemParam) {
                 try {
                     let rosterExporter = new RosterExporter();
                     let outputFileName = (req.body.genExcelData.year % 100) * 100 + req.body.genExcelData.month + ".xlsx";
-                    
-                    res.setHeader("Content-disposition", "attachment; filename="+outputFileName);
+
+                    res.setHeader("Content-disposition", "attachment; filename=" + outputFileName);
                     res.setHeader("Content-type", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                     res.send(await rosterExporter.export(req.body.genExcelData));
-                    
+
                 } catch (error) {
-                    console.log(error);                    
+                    console.log(error);
                     res.status(400).send(error.message);
                 }
+                break;
+            case "saveRosterToDB":
+                sendResponse(res, saveRosterToDB, req.body.rosterData);
                 break;
             default:
                 next();
@@ -46,14 +49,6 @@ export function PrivateAPI(systemParam) {
 
 }
 //====================================================================================================================================
-let exportRosterDataToExcel = async genExcelData => {
-    let excelExporter = new ExcelExporter();
-    let result = excelExporter.exportRoster(genExcelData);
-    res.status(200);
-    res.setHeader("Content-disposition", "attachment; filename=" + result.outputFileName);
-    res.setHeader("Content-type", 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.send(result.buffer);
-}
 let getITOBlackListShiftPattern = async (params) => {
     let shiftUtil = new ShiftUtil();
     let itoBlackListShiftPattern = await shiftUtil.getITOBlackListShiftPattern(params.year, params.month);
@@ -68,6 +63,11 @@ let getPreviousMonthShiftList = async (params) => {
     let rosterUtil = new RosterUtil();
     let previousMonthShiftList = await rosterUtil.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
     return previousMonthShiftList;
+}
+let saveRosterToDB = async rosterData => {
+    let rosterUtil = new RosterUtil();
+    await rosterUtil.saveRosterToDB(rosterData);
+    return "";
 }
 //====================================================================================================================================
 let sendResponse = async (res, action, param) => {
