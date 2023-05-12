@@ -2,7 +2,7 @@ import { useEffect, useReducer } from "react";
 import AutoPlannerUtil from "./AutoPlannerUtil";
 import CalendarUtility from "../../../../util/calendar/CalendarUtility";
 import KeyboardEventHandler from "./KeyboardEventHandler";
-import RosterTableUtil from "./RosterTableUtil";
+import RosterSchedulerTableUtil from "./RosterSchedulerTableUtil";
 import RosterSchedulerDataUtil from "./RosterSchedulerDataUtil";
 import SystemUtil from "../../../../util/SystemUtil";
 let reducer = (state, action) => {
@@ -13,7 +13,7 @@ let reducer = (state, action) => {
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
             result.systemParam = action.systemParam;
-            result.rosterTableUtil.init(result.calendarDateList, result.rosterSchedulerDataUtil.getItoIdList(), action.systemParam);
+            result.rosterSchedulerTableUtil.init(result.calendarDateList, result.rosterSchedulerDataUtil.getItoIdList(), action.systemParam);
             result.isLoading = false;
             break;
         case "refresh":
@@ -34,7 +34,7 @@ let reducer = (state, action) => {
             result.autoPlannerUtil.setStartDate(1);
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
-            result.rosterTableUtil.init(result.calendarDateList, result.rosterSchedulerDataUtil.getItoIdList(), result.systemParam);
+            result.rosterSchedulerTableUtil.init(result.calendarDateList, result.rosterSchedulerDataUtil.getItoIdList(), result.systemParam);
             break;
         default:
             break;
@@ -51,7 +51,7 @@ export function useRosterScheduler() {
         isLoading: true,
         noOfWorkingDay: -1,
         rosterSchedulerDataUtil: new RosterSchedulerDataUtil(),
-        rosterTableUtil: new RosterTableUtil(),
+        rosterSchedulerTableUtil: new RosterSchedulerTableUtil(),
         systemParam: null,
     });
     useEffect(() => {
@@ -90,7 +90,7 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     let endSelect = () => {
-        itemList.rosterTableUtil.endSelect();
+        itemList.rosterSchedulerTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
     let exportRosterDataToExcel = async e => {
@@ -114,7 +114,7 @@ export function useRosterScheduler() {
         return itemList.autoPlannerUtil.getStartDate()
     }
     let getCopyRegionLocation = () => {
-        let copyRegion = itemList.rosterTableUtil.getCopyRegionLocation();
+        let copyRegion = itemList.rosterSchedulerTableUtil.getCopyRegionLocation();
         copyRegion.column.end -= itemList.systemParam.noOfPrevDate;
         copyRegion.column.start -= itemList.systemParam.noOfPrevDate;
         return copyRegion;
@@ -125,7 +125,7 @@ export function useRosterScheduler() {
         if (temp !== null) {
             className.push(temp);
         }
-        temp = itemList.rosterTableUtil.getSelectedCssClass(cellIndex, rowIndex);
+        temp = itemList.rosterSchedulerTableUtil.getSelectedCssClass(cellIndex, rowIndex);
         if (temp.length > 0) {
             className.push(...temp);
         }
@@ -133,7 +133,7 @@ export function useRosterScheduler() {
     }
     let getPreferredShiftCellCssClassName = (cellIndex, rowIndex) => {
         let className = [];
-        let temp = itemList.rosterTableUtil.getSelectedCssClass(cellIndex, rowIndex);
+        let temp = itemList.rosterSchedulerTableUtil.getSelectedCssClass(cellIndex, rowIndex);
         if (temp.length > 0) {
             className.push(...temp);
         }
@@ -146,17 +146,17 @@ export function useRosterScheduler() {
         return itemList.rosterSchedulerDataUtil.isDuplicateShift(itoId, dateOfMonth);
     }
     let isHighLightCell = cellIndex => {
-        return itemList.rosterTableUtil.isHighLightCell(cellIndex);
+        return itemList.rosterSchedulerTableUtil.isHighLightCell(cellIndex);
     }
     let isHighLightRow = rowIndex => {
-        return itemList.rosterTableUtil.isHighLightRow(rowIndex);
+        return itemList.rosterSchedulerTableUtil.isHighLightRow(rowIndex);
     }
     let pasteRosterData = (dateOfMonth, e) => {
         e.preventDefault();
         let rowCount = itemList.rosterSchedulerDataUtil.getCopyDataRowCount();
         if (rowCount > -1) {
             let cell = e.target.closest("td");
-            let rowIds = itemList.rosterTableUtil.getPasteRowIds(cell, rowCount);
+            let rowIds = itemList.rosterSchedulerTableUtil.getPasteRowIds(cell, rowCount);
             itemList.rosterSchedulerDataUtil.paste(dateOfMonth, rowIds, itemList.noOfWorkingDay, itemList.calendarDateList.length);
             updateItemList({ type: "refresh" });
         }
@@ -170,7 +170,7 @@ export function useRosterScheduler() {
         }
     }
     let setFocusCell = e => {
-        itemList.rosterTableUtil.setFocusCell(e);
+        itemList.rosterSchedulerTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
     let showAutoPlanResult = (index) => {
@@ -189,8 +189,8 @@ export function useRosterScheduler() {
         let rowIndex = cell.closest("tr").rowIndex;
         //console.log(cell.cellIndex, rowIndex)
         e.preventDefault();
-        itemList.rosterTableUtil.selectCell(cell.cellIndex, rowIndex);
-        itemList.rosterTableUtil.startSelect(cell.cellIndex, rowIndex);
+        itemList.rosterSchedulerTableUtil.selectCell(cell.cellIndex, rowIndex);
+        itemList.rosterSchedulerTableUtil.startSelect(cell.cellIndex, rowIndex);
         updateItemList({ type: "refresh" });
     }
     let updateAutoPlanEndDate = newEndDate => {
@@ -228,7 +228,7 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     let updateUI = (cellIndex, rowIndex) => {
-        itemList.rosterTableUtil.updateUI(cellIndex, rowIndex);
+        itemList.rosterSchedulerTableUtil.updateUI(cellIndex, rowIndex);
         updateItemList({ type: "refresh" });
     }
     return {

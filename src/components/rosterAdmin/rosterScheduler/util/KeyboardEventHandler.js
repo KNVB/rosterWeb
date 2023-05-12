@@ -1,6 +1,6 @@
 export default function KeyboardEventHandler(itemList, updateItemList) {
     const handleKeyDown = e => {
-        if (itemList.rosterTableUtil.isFirstInput()) {
+        if (itemList.rosterSchedulerTableUtil.isFirstInput()) {
             switch (e.key) {
                 case "ArrowDown"://handle down arrow key event
                     handleArrowKeyEvent(e, 1, 0);
@@ -49,25 +49,25 @@ export default function KeyboardEventHandler(itemList, updateItemList) {
     const handleArrowKeyEvent = (e, yOffset, xOffset) => {
         e.preventDefault();
         let cell = e.target.closest("td");
-        let nextCell = itemList.rosterTableUtil.getNextCell(cell, yOffset, xOffset);
-        itemList.rosterTableUtil.selectCell(nextCell.cellIndex, nextCell.rowIndex);
-        itemList.rosterTableUtil.select(nextCell.cellIndex, nextCell.rowIndex);
+        let nextCell = itemList.rosterSchedulerTableUtil.getNextCell(cell, yOffset, xOffset);
+        itemList.rosterSchedulerTableUtil.selectCell(nextCell.cellIndex, nextCell.rowIndex);
+        itemList.rosterSchedulerTableUtil.select(nextCell.cellIndex, nextCell.rowIndex);
         updateItemList({ type: "refresh" });
     }
     const handleDelKeyEvent = (e) => {
         e.preventDefault();        
-        let selectedLocation = getSelectedLocation(itemList.rosterTableUtil, itemList.systemParam);
+        let selectedLocation = getSelectedLocation(itemList.rosterSchedulerTableUtil, itemList.systemParam);
         itemList.rosterSchedulerDataUtil.deleteSelectedData(selectedLocation, itemList.noOfWorkingDay, itemList.calendarDateList.length);
         updateItemList({ type: "refresh" });
     }
     const handleEscKeyEvent = (e) => {
         e.preventDefault();
-        itemList.rosterTableUtil.clearCopiedRegion();
+        itemList.rosterSchedulerTableUtil.clearCopiedRegion();
         itemList.rosterSchedulerDataUtil.clearCopiedData();
         updateItemList({ type: "refresh" });
     }
-    let getSelectedLocation = (rosterTableUtil, systemParam) => {
-        let selectedLocation = rosterTableUtil.getSelectedLocation();
+    let getSelectedLocation = (rosterSchedulerTableUtil, systemParam) => {
+        let selectedLocation = rosterSchedulerTableUtil.getSelectedLocation();
         selectedLocation.column.end -= systemParam.noOfPrevDate;
         selectedLocation.column.start -= systemParam.noOfPrevDate;
         return selectedLocation;

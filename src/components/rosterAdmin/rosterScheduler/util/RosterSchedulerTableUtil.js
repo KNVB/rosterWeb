@@ -1,5 +1,5 @@
 import { CopiedRegion } from "./CopiedRegion";
-export default class RosterTableUtil {
+export default class RosterSchedulerTableUtil {
     constructor() {
         let copiedRegion = new CopiedRegion();
         let firstX = -1, firstY = -1;
