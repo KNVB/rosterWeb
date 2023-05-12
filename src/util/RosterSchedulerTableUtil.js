@@ -1,4 +1,4 @@
-import { CopiedRegion } from "./CopiedRegion";
+import { CopiedRegion } from "../components/rosterAdmin/rosterScheduler/util/CopiedRegion";
 export default class RosterSchedulerTableUtil {
     constructor() {
         let copiedRegion = new CopiedRegion();

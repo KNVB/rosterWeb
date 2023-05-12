@@ -1,6 +1,6 @@
 import AdminShiftStatUtil from "./AdminShiftStatUtil";
-import FetchAPI from "../../../../util/FetchAPI";
-import ITOShiftStatUtil from "../../../../util/ITOShiftStatUtil";
+import FetchAPI from "./FetchAPI";
+import ITOShiftStatUtil from "./ITOShiftStatUtil";
 import UndoableData from './UndoableData';
 
 export default class RosterSchedulerDataUtil {

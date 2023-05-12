@@ -2,8 +2,8 @@ import { useEffect, useReducer } from "react";
 import AutoPlannerUtil from "./AutoPlannerUtil";
 import CalendarUtility from "../../../../util/calendar/CalendarUtility";
 import KeyboardEventHandler from "./KeyboardEventHandler";
-import RosterSchedulerTableUtil from "./RosterSchedulerTableUtil";
-import RosterSchedulerDataUtil from "./RosterSchedulerDataUtil";
+import RosterSchedulerTableUtil from "../../../../util/RosterSchedulerTableUtil";
+import RosterSchedulerDataUtil from "../../../../util/RosterSchedulerDataUtil";
 import SystemUtil from "../../../../util/SystemUtil";
 let reducer = (state, action) => {
     let result = { ...state };

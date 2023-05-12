@@ -1,4 +1,4 @@
-import AdminShiftStatUtil from './AdminShiftStatUtil';
+import AdminShiftStatUtil from '../../../../util/AdminShiftStatUtil';
 export default class AutoPlannerUtil {
     constructor() {
         let iterationCount = 100;
