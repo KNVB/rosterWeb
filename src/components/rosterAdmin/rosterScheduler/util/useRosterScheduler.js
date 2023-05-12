@@ -62,6 +62,7 @@ export function useRosterScheduler() {
                 let rosterYear = now.getFullYear();
                 let rosterMonth = now.getMonth();
                 let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
+
                 await itemList.rosterSchedulerDataUtil.init(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length, itemList.calendarUtility.weekdayNames);
                 let systemParam = await systemUtil.getSystemParam();
 
