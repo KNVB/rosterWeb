@@ -6,7 +6,7 @@ export default function RosterViewer() {
     if (error) {
         return handleAPIError(error);
     }
-    if (!isLoading ) {
+    if (isLoading === false) {
         return (
             <RosterTable
                 roster={roster}

@@ -9,6 +9,7 @@ let reducer = (state, action) => {
         case "init":
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
+            result.rosterDataUtil = action.rosterDataUtil;
             result.systemParam = action.systemParam;
             result.isLoading = false;
             break;
@@ -19,7 +20,7 @@ let reducer = (state, action) => {
             break;
         case "updateRosterMonth":
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
-            result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;            
+            result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
             break;
         default:
             break;
@@ -46,11 +47,13 @@ export function useRosterViewer() {
                 let rosterMonth = now.getMonth();
                 let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
                 let systemParam = await systemUtil.getSystemParam();
-                await itemList.rosterDataUtil.init(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length, itemList.calendarUtility.weekdayNames);
                 systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
                 systemParam.noOfPrevDate = 0;
+                let rosterDataUtil = new RosterDataUtil();
+                await rosterDataUtil.init(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, itemList.calendarUtility.weekdayNames);
                 updateItemList({
                     monthlyCalendar,
+                    rosterDataUtil,
                     systemParam,
                     type: "init"
                 });
@@ -60,8 +63,8 @@ export function useRosterViewer() {
             }
         }
         init();
-    }, [itemList.calendarUtility, itemList.rosterDataUtil]);
-//==============================================================================================================================    
+    }, []);
+    //==============================================================================================================================    
     let isHighLightCell = cellIndex => {
         return itemList.rosterTableUtil.isHighLightCell(cellIndex);
     }
@@ -75,7 +78,7 @@ export function useRosterViewer() {
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
         let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
         try {
-            await itemList.rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
+            await itemList.rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);
             updateItemList({
                 monthlyCalendar,
                 type: "updateRosterMonth"
@@ -98,7 +101,7 @@ export function useRosterViewer() {
             noOfWorkingDay: itemList.noOfWorkingDay
         },
         systemParam: itemList.systemParam,
-        uiAction: {            
+        uiAction: {
             getShiftCssClassName,
             isHighLightCell,
             isHighLightRow,

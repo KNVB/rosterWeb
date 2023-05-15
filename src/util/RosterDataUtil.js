@@ -9,16 +9,14 @@ export default class RosterDataUtil {
     getRoster = () => {
         return this.#roster;
     }
-    init = async (year, month, noOfWorkingDay, monthLength, weekdayNames) => {
+    init = async (year, month, noOfWorkingDay, weekdayNames) => {
         this.#roster = { activeShiftList: await this.#fetchAPI.getActiveShiftList(), year: year };
         this.#roster.weekdayNames = weekdayNames;
-        await this.loadData(year, month, noOfWorkingDay, monthLength);
+        await this.loadData(year, month, noOfWorkingDay);
     }
-    loadData = async (year, month, noOfWorkingDay, monthLength) => {
+    loadData = async (year, month, noOfWorkingDay) => {
         this.#roster.rosterRow = await this.#fetchAPI.getRoster(year, month);
-        if (this.#roster.rosterRow !== undefined) {
-           this.#roster.rosterRow=Utility.genITOStat(this.#roster, noOfWorkingDay);
-        }
+        this.#roster.rosterRow=Utility.genITOStat(this.#roster, noOfWorkingDay);
     }
     getShiftCssClassName = (shiftType) => {
         try {
