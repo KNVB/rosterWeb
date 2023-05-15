@@ -9,6 +9,7 @@ let reducer = (state, action) => {
         case "init":
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
+            result.roster = action.rosterDataUtil.getRoster();
             result.rosterDataUtil = action.rosterDataUtil;
             result.systemParam = action.systemParam;
             result.isLoading = false;
@@ -34,7 +35,8 @@ export function useRosterViewer() {
         error: null,
         isLoading: true,
         noOfWorkingDay: -1,
-        rosterDataUtil: new RosterDataUtil(),
+        roster:null,
+        rosterDataUtil: null,
         rosterTableUtil: new RosterTableUtil(),
         systemParam: null,
     });
@@ -49,7 +51,7 @@ export function useRosterViewer() {
                 let systemParam = await systemUtil.getSystemParam();
                 systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
                 systemParam.noOfPrevDate = 0;
-                let rosterDataUtil = new RosterDataUtil();
+                let rosterDataUtil=new RosterDataUtil();
                 await rosterDataUtil.init(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, itemList.calendarUtility.weekdayNames);
                 updateItemList({
                     monthlyCalendar,
@@ -95,7 +97,7 @@ export function useRosterViewer() {
     return {
         error: itemList.error,
         isLoading: itemList.isLoading,
-        roster: itemList.rosterDataUtil.getRoster(),
+        roster: itemList.roster,
         rosterMonth: {
             calendarDateList: itemList.calendarDateList,
             noOfWorkingDay: itemList.noOfWorkingDay
