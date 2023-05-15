@@ -6,7 +6,7 @@ export default function RosterScheduler() {
     if (error) {
         return handleAPIError(error);
     }
-    if (!isLoading) {
+    if (isLoading === false) {
         return (
             <RosterSchedulerTable
                 autoPlanResult={autoPlanResult}

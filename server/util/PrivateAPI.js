@@ -16,9 +16,13 @@ export function PrivateAPI(systemParam) {
             case "getPreviousMonthShiftList":
                 sendResponse(res, getPreviousMonthShiftList, { year: req.query.year, month: req.query.month, systemParam: systemParam });
                 break;
-            case "getYearlyRosterStatistic":
-                sendResponse(res, getYearlyRosterStatistic, { year: req.query.year, month: req.query.month});
+            case "getRosterSchedulerData":
+                sendResponse(res, getRosterSchedulerData, { year: req.query.year, month: req.query.month, systemParam: systemParam });
                 break;
+            case "getYearlyRosterStatistic":
+                sendResponse(res, getYearlyRosterStatistic, { year: req.query.year, month: req.query.month });
+                break;
+
             default:
                 next();
                 break;
@@ -67,7 +71,23 @@ let getPreviousMonthShiftList = async (params) => {
     let previousMonthShiftList = await rosterUtil.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
     return previousMonthShiftList;
 }
-let getYearlyRosterStatistic = async params=>{
+let getRosterSchedulerData = async params => {
+    let rosterUtil = new RosterUtil();
+    let previousMonthShiftList = await rosterUtil.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
+    let preferredShiftList = await rosterUtil.getPreferredShiftList(params.year, params.month);
+    let yearlyRosterStatistic = await rosterUtil.getYearlyRosterStatistic(params.year, params.month);
+
+    let shiftUtil = new ShiftUtil();
+    let itoBlackListShiftPattern = await shiftUtil.getITOBlackListShiftPattern(params.year, params.month);
+
+    return {
+        itoBlackListShiftPattern,
+        previousMonthShiftList,
+        preferredShiftList,
+        yearlyRosterStatistic
+    };
+}
+let getYearlyRosterStatistic = async params => {
     let rosterUtil = new RosterUtil();
     let yearlyRosterStatistic = rosterUtil.getYearlyRosterStatistic(params.year, params.month);
     return yearlyRosterStatistic;

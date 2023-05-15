@@ -52,7 +52,8 @@ export function useRosterViewer() {
                 systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
                 systemParam.noOfPrevDate = 0;
                 let rosterDataUtil=new RosterDataUtil();
-                await rosterDataUtil.init(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, itemList.calendarUtility.weekdayNames);
+                await rosterDataUtil.init(rosterYear, rosterMonth + 1, itemList.calendarUtility.weekdayNames);
+                await rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);
                 updateItemList({
                     monthlyCalendar,
                     rosterDataUtil,
