@@ -61,11 +61,15 @@ export function useRosterViewer() {
         }
         init();
     }, [itemList.calendarUtility, itemList.rosterDataUtil]);
+//==============================================================================================================================    
     let isHighLightCell = cellIndex => {
         return itemList.rosterTableUtil.isHighLightCell(cellIndex);
     }
     let isHighLightRow = rowIndex => {
         return itemList.rosterTableUtil.isHighLightRow(rowIndex);
+    }
+    let getShiftCssClassName = shiftType => {
+        return itemList.rosterDataUtil.getShiftCssClassName(shiftType);
     }
     let updateRosterMonth = async (newRosterMonth) => {
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
@@ -94,7 +98,8 @@ export function useRosterViewer() {
             noOfWorkingDay: itemList.noOfWorkingDay
         },
         systemParam: itemList.systemParam,
-        uiAction: {
+        uiAction: {            
+            getShiftCssClassName,
             isHighLightCell,
             isHighLightRow,
             updateRosterMonth,

@@ -1,21 +1,31 @@
 import NameCell from "../cells/NameCell";
 import ShiftCell from "../cells/ShiftCell";
 import StatCell from "../cells/StatCell";
-export default function RosterRow( {calendarDateList, itoId, roster, rowIndex, systemParam, uiAction }){
+export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, uiAction }) {
     let className = [];
     let rosterDetail = roster.rosterRow[itoId];
     let shift = '', shiftCellList = [];
-    console.log(roster.activeShiftList);
+    function handleMouseEnterEvent(e) {
+        e.preventDefault();
+        let cell = e.target.closest("td");
+        let rowIndex = cell.closest("tr").rowIndex;
+        uiAction.updateUI(cell.cellIndex, rowIndex);
+    }
+    function handleMouseLeaveEvent(e) {
+        e.preventDefault();
+        uiAction.updateUI(-1, -1);
+    }
     calendarDateList.forEach((calendarDate, index) => {
         shift = rosterDetail.shiftList[index + 1];
-        className = [];
-        className.push(roster.activeShiftList[shift].cssClassName);
+        className = uiAction.getShiftCssClassName(shift);
         shiftCellList.push(
             <ShiftCell
-                cssClassName={className.join(" ")}
-                key={itoId + '_' + index}>
+                cssClassName={className}
+                key={itoId + '_' + index}
+                onMouseEnter={handleMouseEnterEvent}
+                onMouseLeave={handleMouseLeaveEvent}>
                 {shift}
-            </ShiftCell> 
+            </ShiftCell>
         )
     });
     for (let i = calendarDateList.length; i < 31; i++) {
@@ -60,5 +70,5 @@ export default function RosterRow( {calendarDateList, itoId, roster, rowIndex, s
                 {rosterDetail.actualWorkingDayCount}
             </StatCell>
         </tr>
-    )    
+    )
 }

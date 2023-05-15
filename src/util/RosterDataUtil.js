@@ -20,5 +20,13 @@ export default class RosterDataUtil {
            this.#roster.rosterRow=Utility.genITOStat(this.#roster, noOfWorkingDay);
         }
     }
+    getShiftCssClassName = (shiftType) => {
+        try {
+            let result = this.#roster.activeShiftList[shiftType].cssClassName;
+            return result
+        } catch (error) {
+            return null
+        }
+    }
     //==============================================================================================================    
 }

@@ -12,9 +12,8 @@ export default function RosterTable({roster,rosterMonth,systemParam,uiAction}){
                 uiAction={uiAction} />
             <RosterBody
                 roster={roster}
-                rosterMonth={rosterMonth}               
-                systemParam={systemParam}
-                uiAction={uiAction}/>    
+                rosterMonth={rosterMonth}
+                uiAction={uiAction}/>
             <tfoot>
                 <tr>
                     <td colSpan="7" className="pt-1">
