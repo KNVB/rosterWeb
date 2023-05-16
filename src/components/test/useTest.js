@@ -1,13 +1,13 @@
 import { useEffect, useReducer } from "react";
 import CalendarUtility from "../../util/calendar/CalendarUtility";
-import DataUtil from "./DataUtil";
+import SuperDataUtil from "./SuperDataUtil";
 import SystemUtil from "../../util/SystemUtil";
 let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
         case "init":
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
-            result.dataUtil = { ...action.dataUtil };
+            result.superDataUtil = { ...action.superDataUtil };
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
             result.systemParam = action.systemParam;
             result.isLoading = false;
@@ -31,7 +31,7 @@ export function useTest() {
         error: null,
         isLoading: true,
         noOfWorkingDay: -1,
-        dataUtil: new DataUtil(),
+        superDataUtil: new SuperDataUtil(),
         systemParam: null,
     });
     useEffect(() => {
@@ -44,12 +44,13 @@ export function useTest() {
                 let systemParam = await systemUtil.getSystemParam();
                 systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
                 let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
-                let dataUtil = new DataUtil();
-                await dataUtil.init(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length, itemList.calendarUtility.weekdayNames);
+                let superDataUtil = new SuperDataUtil();
+                await superDataUtil.init(itemList.calendarUtility.weekdayNames);
+                await superDataUtil.loadData(rosterYear,rosterMonth+1,monthlyCalendar.noOfWorkingDay,monthlyCalendar.calendarDateList.length);
                 //console.log(dataUtil.getRoster());
 
                 updateItemList({
-                    dataUtil: dataUtil,
+                    superDataUtil: superDataUtil,
                     monthlyCalendar,
                     systemParam,
                     type: "init"
@@ -63,7 +64,7 @@ export function useTest() {
     }, []);
     let go = async e => {
         let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(2023, 1);
-        await itemList.dataUtil.loadData(2023, 2, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
+        await itemList.superDataUtil.loadData(2023, 2, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
         updateItemList({
             monthlyCalendar,
             type: "updateRosterMonth"
@@ -72,7 +73,7 @@ export function useTest() {
     return {
         error: itemList.error,
         isLoading: itemList.isLoading,
-        roster: itemList.dataUtil.getRoster(),
+        roster: itemList.superDataUtil.getRoster(),
         uiAction: {
             go
         }

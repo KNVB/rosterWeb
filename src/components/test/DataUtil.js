@@ -6,12 +6,14 @@ export default class DataUtil{
     getRoster = () => {
         return this.#roster;
     }
-    init = async (year, month, noOfWorkingDay, monthLength, weekdayNames) => {
-        this.#roster = { activeShiftList: await this.#fetchAPI.getActiveShiftList(), year: year };
+    init = async (weekdayNames) => {
+        this.#roster = { activeShiftList: await this.#fetchAPI.getActiveShiftList()};
         this.#roster.weekdayNames = weekdayNames;
-        await this.loadData(year, month, noOfWorkingDay, monthLength);
+        
     }
     loadData = async (year, month, noOfWorkingDay, monthLength) => {
+        this.#roster.month = month;
+        this.#roster.year = year;
         this.#roster.rosterRow = await this.#fetchAPI.getRoster(year, month);
         this.#roster.rosterRow=Utility.genITOStat(this.#roster, noOfWorkingDay);
     }
