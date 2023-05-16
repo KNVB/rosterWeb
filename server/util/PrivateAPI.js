@@ -7,7 +7,6 @@ export function PrivateAPI(systemParam) {
     let rosterUtil;
     router.get('/:action', async (req, res, next) => {
         switch (req.params.action) {
-            /*
             case "getITOBlackListShiftPattern":
                 sendResponse(res, getITOBlackListShiftPattern, { year: req.query.year, month: req.query.month });
                 break;
@@ -17,7 +16,6 @@ export function PrivateAPI(systemParam) {
             case "getPreviousMonthShiftList":
                 sendResponse(res, getPreviousMonthShiftList, { year: req.query.year, month: req.query.month, systemParam: systemParam });
                 break;
-            */    
             case "getRosterSchedulerData":
                 sendResponse(res, getRosterSchedulerData, { year: req.query.year, month: req.query.month, systemParam: systemParam });
                 break;

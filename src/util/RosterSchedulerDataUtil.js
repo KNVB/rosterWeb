@@ -1,255 +1,275 @@
-import { Utility } from "./Utility";
-import RosterDataUtil from "./RosterDataUtil";
+import AdminShiftStatUtil from "./AdminShiftStatUtil";
 import FetchAPI from "./FetchAPI";
+import ITOShiftStatUtil from "./ITOShiftStatUtil";
 import UndoableData from './UndoableData';
+
 export default class RosterSchedulerDataUtil {
-    #copiedData = null;
-    #fetchAPI = new FetchAPI();
-    #rosterDataUtil = new RosterDataUtil();
-    #roster = null;
-    #rosterDataHistory = null;
-    #rosterSchedulerData = null;
-    clearAllShiftData = (noOfWorkingDay, monthLength) => {
-        Object.keys(this.#roster.rosterRow).forEach(itoId => {
-            this.#roster.rosterRow[itoId].shiftList = {};
-        });
-        this.#updateRosterStatistic(noOfWorkingDay, monthLength);
-    }
-    clearCopiedData(){
-        this.#copiedData = null;
-    }
-    copy = copyRegion => {
-        let index, itoId, shiftList;
-        let temp, result = [], shiftRowType;
-        copyRegion.rows.forEach(row => {
-            index = row.indexOf("_");
-            shiftRowType = row.substring(0, index);
-            itoId = row.substring(index + 1);
-            temp = [];
-            if (shiftRowType === "rosterRow") {
-                shiftList = { ...this.#roster.rosterRow[itoId].shiftList };
-            }
-            if (shiftRowType === "preferredShiftRow") {
-                shiftList = { ...this.#rosterSchedulerData.preferredShiftList[itoId] };
-            }
+    constructor() {
+        let copiedData = null;
+        let fetchAPI = new FetchAPI();
+        let roster = null;
+        let rosterSchedulerData = null;
+        let rosterDataHistory = null;
+        this.clearAllShiftData = (noOfWorkingDay, monthLength) => {
+            Object.keys(roster.rosterRow).forEach(itoId => {
+                roster.rosterRow[itoId].shiftList = [];
+            });
+            updateRosterStatistic(noOfWorkingDay, monthLength);
+        }
+        this.clearCopiedData = () => {
+            copiedData = null;
+        }
+        this.copy = copyRegion => {
+            let index, itoId, shiftList;
+            let temp, result = [], shiftRowType;
+            copyRegion.rows.forEach(row => {
+                index = row.indexOf("_");
+                shiftRowType = row.substring(0, index);
+                itoId = row.substring(index + 1);
+                temp = [];
+                if (shiftRowType === "rosterRow") {
+                    shiftList = { ...roster.rosterRow[itoId].shiftList };
+                }
+                if (shiftRowType === "preferredShiftRow") {
+                    shiftList = { ...rosterSchedulerData.preferredShiftList[itoId] };
+                }
 
-            for (let i = copyRegion.column.start; i <= copyRegion.column.end; i++) {
-                if (shiftList[i] === undefined) {
-                    temp.push('')
-                } else {
-                    temp.push(shiftList[i])
-                }
-            }
-            result.push(temp);
-        });
-        this.#copiedData = result;
-    }
-    deleteSelectedData = (selectedLocation, noOfWorkingDay, monthLength) => {
-        let index, itoId, shiftRowType;
-        selectedLocation.rows.forEach(rowId => {
-            index = rowId.indexOf("_");
-            shiftRowType = rowId.substring(0, index);
-            itoId = rowId.substring(index + 1);
-            for (let x = selectedLocation.column.start; x <= selectedLocation.column.end; x++) {
-                console.log(rowId, x)
-                if (x <= monthLength) {
-                    if (shiftRowType === "rosterRow") {
-                        this.updateShift(itoId, x, '', noOfWorkingDay, monthLength);
+                for (let i = copyRegion.column.start; i <= copyRegion.column.end; i++) {
+                    if (shiftList[i] === undefined) {
+                        temp.push('')
+                    } else {
+                        temp.push(shiftList[i])
                     }
-                    if (shiftRowType === "preferredShiftRow") {
-                        this.updatePreferredShift(itoId, x, '');
-                    }
-                } else {
-                    break;
                 }
-            }
-        });
-    }
-    exportRosterDataToExcel = async calendarDateList => {
-        let genExcelData = JSON.parse(JSON.stringify(this.#roster));
-        genExcelData.calendarDateList = JSON.parse(JSON.stringify(calendarDateList));
-        genExcelData.vacantShiftList = JSON.parse(JSON.stringify(this.#rosterSchedulerData.vacantShiftList));
-        //console.log(genExcelData);
-        await this.#fetchAPI.exportRosterDataToExcel({ "genExcelData": genExcelData });
-    }
-    fillEmptyShiftWithO = (monthLength) => {
-        this.getItoIdList().forEach(itoId => {
-            for (let i = 1; i <= monthLength; i++) {
-                if ((this.#roster.rosterRow[itoId].shiftList[i] === undefined) || (this.#roster.rosterRow[itoId].shiftList[i] === '')) {
-                    this.#roster.rosterRow[itoId].shiftList[i] = 'O';
-                }
-            }
-        });
-    }
-    getActiveShiftList(){
-        return this.#roster.activeShiftList;
-    }
-    getCopyDataRowCount(){
-        if (this.#copiedData === null) {
-            return -1;
-        } else {
-            return this.#copiedData.length;
+                result.push(temp);
+            });
+            copiedData = result;
         }
-    }
-    getItoIdList() {
-        return this.#rosterDataUtil.getItoIdList();
-    }
-    getRoster() {
-        return this.#roster
-    }
-    getRosterSchedulerData() {
-        return this.#rosterSchedulerData;
-    }
-    getShiftCssClassName = shiftType => {
-        return this.#rosterDataUtil.getShiftCssClassName(shiftType);
-    }
-    init = async (year, month, weekdayNames) => {
-        await this.#rosterDataUtil.init(year, month, weekdayNames);
-    }
-    isDuplicateShift = (itoId, dateOfMonth) => {
-        return this.#rosterSchedulerData.duplicateShiftList[itoId].includes(dateOfMonth);
-    }
-    loadAutoPlanResult = (autoPlanResult, noOfWorkingDay, monthLength) => {
-        //console.log(autoPlanResult);
-        let itoIdList = this.getItoIdList(), shiftList;
-        for (let i = 0; i < itoIdList.length; i++) {
-            shiftList = autoPlanResult.rosterRow[itoIdList[i]].shiftList;
-            for (let [dateOfMonth, shiftType] of Object.entries(shiftList)) {
-                //console.log(itoIdList[i],dateOfMonth,shiftType);
-                this.updateShift(itoIdList[i], dateOfMonth, shiftType, noOfWorkingDay, monthLength);
-            }
-        }
-    }
-    loadData = async (year, month, noOfWorkingDay, monthLength) => {
-        let temp = await this.#fetchAPI.getRosterSchedulerData(year, month);
-        await this.#rosterDataUtil.loadData(year, month, noOfWorkingDay);
-        this.#roster = this.#rosterDataUtil.getRoster();        
-        this.#rosterSchedulerData = { blackListShiftList: {}, blackListShiftPattern: {}, preferredShiftList: {}, previousMonthShiftList: {} };
-        this.getItoIdList().forEach(itoId => {
-            this.#rosterSchedulerData.blackListShiftPattern[itoId] = JSON.parse(JSON.stringify(temp.itoBlackListShiftPattern[itoId]));
-            this.#rosterSchedulerData.blackListShiftList[itoId] = {};
-        });
-        temp.previousMonthShiftList.forEach(previousMonthShift => {
-            if (this.#rosterSchedulerData.previousMonthShiftList[previousMonthShift.ito_id] === undefined) {
-                this.#rosterSchedulerData.previousMonthShiftList[previousMonthShift.ito_id] = [];
-            }
-            this.#rosterSchedulerData.previousMonthShiftList[previousMonthShift.ito_id].push(previousMonthShift.shift);
-        });
-        temp.preferredShiftList.forEach(preferredShift => {
-            if (this.#rosterSchedulerData.preferredShiftList[preferredShift.ito_id] === undefined) {
-                this.#rosterSchedulerData.preferredShiftList[preferredShift.ito_id] = {};
-            }
-            this.#rosterSchedulerData.preferredShiftList[preferredShift.ito_id][preferredShift.d] = preferredShift.preferred_shift;
-        });
-
-        this.#rosterSchedulerData.yearlyRosterStatistic = JSON.parse(JSON.stringify(temp.yearlyRosterStatistic));
-        this.#rosterDataHistory = null;
-        this.#updateRosterStatistic(noOfWorkingDay, monthLength);
-        this.#backupRosterData();
-    }
-    paste = (dateOfMonth, rowIds, noOfWorkingDay, monthLength) => {
-        let index, itoId;
-        let copiedDataRow, shiftRowType;
-        rowIds.forEach((rowId, rowIndex) => {
-            index = rowId.indexOf("_");
-            shiftRowType = rowId.substring(0, index);
-            itoId = rowId.substring(index + 1);
-            copiedDataRow = this.#copiedData[rowIndex];
-            for (let x = dateOfMonth; x < dateOfMonth + copiedDataRow.length; x++) {
-                if (x <= monthLength) {
-                    if (shiftRowType === "rosterRow") {
-                        this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth], noOfWorkingDay, monthLength);
+        this.deleteSelectedData = (selectedLocation, noOfWorkingDay, monthLength) => {
+            let index, itoId, shiftRowType;
+            selectedLocation.rows.forEach(rowId => {
+                index = rowId.indexOf("_");
+                shiftRowType = rowId.substring(0, index);
+                itoId = rowId.substring(index + 1);
+                for (let x = selectedLocation.column.start; x <= selectedLocation.column.end; x++) {
+                    console.log(rowId, x)
+                    if (x <= monthLength) {
+                        if (shiftRowType === "rosterRow") {
+                            this.updateShift(itoId, x, '', noOfWorkingDay, monthLength);
+                        }
+                        if (shiftRowType === "preferredShiftRow") {
+                            this.updatePreferredShift(itoId, x, '');
+                        }
+                    } else {
+                        break;
                     }
-                    if (shiftRowType === "preferredShiftRow") {
-                        this.updatePreferredShift(itoId, x, copiedDataRow[x - dateOfMonth]);
-                    }
-                } else {
-                    break;
-                }
-            }
-        });
-    }
-    reDo(){ 
-        if (this.#rosterDataHistory.canRedo()) {
-            let backupItem = this.#rosterDataHistory.redo();
-            this.#roster.rosterRow = backupItem.rosterRow;
-            this.#rosterSchedulerData = backupItem.rosterSchedulerData;
-        }
-    }
-    saveRosterToDB = async () => {
-        await this.#fetchAPI.saveRosterToDB(
-            {
-                rosterData:
-                {
-                    rosterRow: this.#roster.rosterRow,
-                    preferredShiftList:this.#rosterSchedulerData.preferredShiftList,
-                    month: this.#roster.month,
-                    year: this.#roster.year
                 }
             });
-    }
-    unDo(){
-        if (this.#rosterDataHistory.canUndo()) {
-            let backupItem = this.#rosterDataHistory.undo();
-            this.#roster.rosterRow = backupItem.rosterRow;
-            this.#rosterSchedulerData = backupItem.rosterSchedulerData;
         }
-    }
-    updatePreferredShift = (itoId, dateOfMonth, newShift) => {
-        let oldPreferredShift;
-        try {
-            oldPreferredShift = this.#rosterSchedulerData.preferredShiftList[itoId][dateOfMonth];
-        } catch (error) {
-            oldPreferredShift = '';
+        this.exportRosterDataToExcel = async (calendarDateList) => {
+            let genExcelData = JSON.parse(JSON.stringify(roster));
+            genExcelData.calendarDateList = JSON.parse(JSON.stringify(calendarDateList));
+            genExcelData.vacantShiftList = JSON.parse(JSON.stringify(rosterSchedulerData.vacantShiftList));
+            //console.log(genExcelData);
+            await fetchAPI.exportRosterDataToExcel({ "genExcelData": genExcelData });
         }
-
-        let newPreferredShift = newShift.trim();
-        switch (true) {
-            case ((oldPreferredShift === undefined) && (newPreferredShift !== '')):
-            case ((oldPreferredShift !== undefined) && (newPreferredShift !== oldPreferredShift)):
-                if (this.#rosterSchedulerData.preferredShiftList[itoId] === undefined) {
-                    this.#rosterSchedulerData.preferredShiftList[itoId] = {};
+        this.fillEmptyShiftWithO = (monthLength) => {
+            this.getItoIdList().forEach(itoId => {
+                for (let i = 1; i <= monthLength; i++) {
+                    if ((roster.rosterRow[itoId].shiftList[i] === undefined) || (roster.rosterRow[itoId].shiftList[i] === '')) {
+                        roster.rosterRow[itoId].shiftList[i] = 'O';
+                    }
                 }
-                this.#rosterSchedulerData.preferredShiftList[itoId][dateOfMonth] = newPreferredShift;
-                this.#backupRosterData();
-                break;
-            default:
-                break;
+            });
         }
-    }
-    updateShift(itoId, dateOfMonth, newShift, noOfWorkingDay, monthLength){
-        let oldShift = this.#roster.rosterRow[itoId].shiftList[dateOfMonth];
-        let newRosterShift = newShift.trim();
-        switch (true) {
-            case ((oldShift === undefined) && (newRosterShift !== '')):
-            case ((oldShift !== undefined) && (newRosterShift !== oldShift)):
-                this.#roster.rosterRow[itoId].shiftList[dateOfMonth] = newRosterShift;
-                this.#roster.rosterRow = Utility.genITOStat(this.#roster, noOfWorkingDay);
-                this.#updateRosterStatistic(monthLength);
-                this.#backupRosterData();
-                break;
-            default:
-                break;
+        this.getActiveShiftList = () => {
+            return roster.activeShiftList;
         }
-    }
-    //====================================================================================================================================================
-    #backupRosterData = () => {
-        console.log("backup Roster Data");
-        let temp = {
-            rosterRow: JSON.parse(JSON.stringify(this.#roster.rosterRow)),
-            rosterSchedulerData: JSON.parse(JSON.stringify(this.#rosterSchedulerData))
+        this.getCopyDataRowCount = () => {
+            if (copiedData === null) {
+                return -1;
+            } else {
+                return copiedData.length;
+            }
         }
-       // console.log(temp.rosterSchedulerData.preferredShiftList);
-        if (this.#rosterDataHistory === null) {
-            this.#rosterDataHistory = new UndoableData(temp);
-        } else {
-            this.#rosterDataHistory.set(temp);
+        this.getItoIdList = () => {
+            return Object.keys(roster.rosterRow);
         }
-    }
-    #updateRosterStatistic = (monthLength) => {
-        let temp = Utility.getAllITOStat(this.#roster.activeShiftList, 1, monthLength, this.#roster.rosterRow);
-        //console.log(temp, roster.rosterRow);
-        this.#rosterSchedulerData.duplicateShiftList = temp.duplicateShiftList;
-        this.#rosterSchedulerData.vacantShiftList = temp.vacantShiftList;
+        this.getRoster = () => {
+            return roster;
+        }
+        this.getRosterSchedulerData = () => {
+            return rosterSchedulerData;
+        }
+        this.getShiftCssClassName = (shiftType) => {
+            try {
+                let result = roster.activeShiftList[shiftType].cssClassName;
+                return result
+            } catch (error) {
+                return null
+            }
+        }
+        this.init = async (year, month, noOfWorkingDay, monthLength, weekdayNames) => {
+            roster = { activeShiftList: await fetchAPI.getActiveShiftList(), year: year };
+            roster.weekdayNames = weekdayNames;
+            await this.loadData(year, month, noOfWorkingDay, monthLength);
+        }
+        this.isDuplicateShift = (itoId, dateOfMonth) => {
+            return rosterSchedulerData.duplicateShiftList[itoId].includes(dateOfMonth);
+        }
+        this.loadAutoPlanResult = (autoPlanResult, noOfWorkingDay, monthLength) => {
+            //console.log(autoPlanResult);
+            let itoIdList = this.getItoIdList(), shiftList;
+            for (let i = 0; i < itoIdList.length; i++) {
+                shiftList = autoPlanResult.rosterRow[itoIdList[i]].shiftList;
+                for (let [dateOfMonth, shiftType] of Object.entries(shiftList)) {
+                    //console.log(itoIdList[i],dateOfMonth,shiftType);
+                    this.updateShift(itoIdList[i], dateOfMonth, shiftType, noOfWorkingDay, monthLength);
+                }
+            }
+        }
+        this.loadData = async (year, month, noOfWorkingDay, monthLength) => {
+            let itoBlackListShiftPattern = await fetchAPI.getITOBlackListShiftPattern(year, month);
+            let preferredShiftList = await fetchAPI.getPreferredShiftList(year, month);
+            let previousMonthShiftList = await fetchAPI.getPreviousMonthShiftList(year, month);
+            let yearlyRosterStatistic = await fetchAPI.getYearlyRosterStatistic(year,month);
+            
+            roster.rosterRow = await fetchAPI.getRoster(year, month);
+            roster.month = month;
+            roster.year = year;
+            rosterSchedulerData = { blackListShiftList: {}, blackListShiftPattern: {}, preferredShiftList: {}, previousMonthShiftList: {},yearlyRosterStatistic };
+            rosterDataHistory = null;
+            //console.log(previousMonthShiftList);
+            this.getItoIdList().forEach(itoId => {
+                rosterSchedulerData.blackListShiftPattern[itoId] = itoBlackListShiftPattern[itoId];
+                rosterSchedulerData.blackListShiftList[itoId] = {};
+            });
+            previousMonthShiftList.forEach(previousMonthShift => {
+                if (rosterSchedulerData.previousMonthShiftList[previousMonthShift.ito_id] === undefined) {
+                    rosterSchedulerData.previousMonthShiftList[previousMonthShift.ito_id] = [];
+                }
+                rosterSchedulerData.previousMonthShiftList[previousMonthShift.ito_id].push(previousMonthShift.shift);
+            })
+            preferredShiftList.forEach(preferredShift => {
+                if (rosterSchedulerData.preferredShiftList[preferredShift.ito_id] === undefined) {
+                    rosterSchedulerData.preferredShiftList[preferredShift.ito_id] = {};
+                }
+                rosterSchedulerData.preferredShiftList[preferredShift.ito_id][preferredShift.d] = preferredShift.preferred_shift;
+            });
+            updateRosterStatistic(noOfWorkingDay, monthLength);
+            backupRosterData();
+        }
+        this.paste = (dateOfMonth, rowIds, noOfWorkingDay, monthLength) => {
+            let index, itoId;
+            let copiedDataRow, shiftRowType;
+            rowIds.forEach((rowId, rowIndex) => {
+                index = rowId.indexOf("_");
+                shiftRowType = rowId.substring(0, index);
+                itoId = rowId.substring(index + 1);
+                copiedDataRow = copiedData[rowIndex];
+                for (let x = dateOfMonth; x < dateOfMonth + copiedDataRow.length; x++) {
+                    if (x <= monthLength) {
+                        if (shiftRowType === "rosterRow") {
+                            this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth], noOfWorkingDay, monthLength);
+                        }
+                        if (shiftRowType === "preferredShiftRow") {
+                            this.updatePreferredShift(itoId, x, copiedDataRow[x - dateOfMonth]);
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            });
+        }
+        this.reDo = () => {
+            if (rosterDataHistory.canRedo()) {
+                let backupItem = rosterDataHistory.redo();
+                roster.rosterRow = backupItem.rosterRow;
+                rosterSchedulerData = backupItem.rosterSchedulerData;
+            }
+        }
+        this.saveRosterToDB = async () => {
+            await fetchAPI.saveRosterToDB(
+                {
+                    rosterData:
+                    {
+                        rosterRow: roster.rosterRow,
+                        preferredShiftList:rosterSchedulerData.preferredShiftList,
+                        month: roster.month,
+                        year: roster.year
+                    }
+                });
+        }
+        this.unDo = () => {
+            if (rosterDataHistory.canUndo()) {
+                let backupItem = rosterDataHistory.undo();
+                roster.rosterRow = backupItem.rosterRow;
+                rosterSchedulerData = backupItem.rosterSchedulerData;
+            }
+        }
+        this.updatePreferredShift = (itoId, dateOfMonth, newShift) => {
+            let oldPreferredShift;
+            try {
+                oldPreferredShift = rosterSchedulerData.preferredShiftList[itoId][dateOfMonth];
+            } catch (error) {
+                oldPreferredShift = '';
+            }
+
+            let newPreferredShift = newShift.trim();
+            switch (true) {
+                case ((oldPreferredShift === undefined) && (newPreferredShift !== '')):
+                case ((oldPreferredShift !== undefined) && (newPreferredShift !== oldPreferredShift)):
+                    if (rosterSchedulerData.preferredShiftList[itoId] === undefined) {
+                        rosterSchedulerData.preferredShiftList[itoId] = {};
+                    }
+                    rosterSchedulerData.preferredShiftList[itoId][dateOfMonth] = newPreferredShift;
+                    backupRosterData();
+                    break;
+                default:
+                    break;
+            }
+        }
+        this.updateShift = (itoId, dateOfMonth, newShift, noOfWorkingDay, monthLength) => {
+            let oldShift = roster.rosterRow[itoId].shiftList[dateOfMonth];
+            let newRosterShift = newShift.trim();
+            switch (true) {
+                case ((oldShift === undefined) && (newRosterShift !== '')):
+                case ((oldShift !== undefined) && (newRosterShift !== oldShift)):
+                    roster.rosterRow[itoId].shiftList[dateOfMonth] = newRosterShift;
+                    updateRosterStatistic(noOfWorkingDay, monthLength);
+                    backupRosterData();
+                    break;
+                default:
+                    break;
+            }
+        }
+        //====================================================================================================================================================
+        let backupRosterData = () => {
+            console.log("backup Roster Data");
+            let temp = {
+                rosterRow: roster.rosterRow,
+                rosterSchedulerData: rosterSchedulerData
+            }
+            //console.log(temp);
+            if (rosterDataHistory === null) {
+                rosterDataHistory = new UndoableData(temp);
+            } else {
+                rosterDataHistory.set(temp);
+            }
+        }
+        let updateRosterStatistic = (noOfWorkingDay, monthLength) => {
+            let { getITOStat } = ITOShiftStatUtil();
+            let itoIdList = this.getItoIdList();
+            for (let i = 0; i < itoIdList.length; i++) {
+                let rosterInfo = getITOStat(roster.activeShiftList, noOfWorkingDay, roster.rosterRow[[itoIdList[i]]]);
+                roster.rosterRow[[itoIdList[i]]] = rosterInfo;
+            }
+            let { getAllITOStat } = AdminShiftStatUtil();
+            //console.log(rosterSchedulerData.blackListShiftPattern);
+            let temp = getAllITOStat(roster.activeShiftList, 1, monthLength, roster.rosterRow, rosterSchedulerData.blackListShiftPattern);
+            //console.log(temp, roster.rosterRow);
+            rosterSchedulerData.duplicateShiftList = temp.duplicateShiftList;
+            rosterSchedulerData.vacantShiftList = temp.vacantShiftList;
+        }
     }
 }

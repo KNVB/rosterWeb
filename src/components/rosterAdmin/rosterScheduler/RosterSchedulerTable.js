@@ -29,10 +29,10 @@ export default function RosterSchedulerTable({ autoPlanResult, roster, rosterMon
                 uiAction={uiAction} />
             <tfoot>
                 <tr>
-                    <td colSpan="7" className="pt-1">
+                    <td colSpan="7" className="align-top pt-1">
                         <ShiftInfoLegend activeShiftList={roster.activeShiftList} />
                     </td>
-                    <td colSpan="20" className="align-top pt-0">
+                    <td colSpan="20" className="align-top pt-1">
                         <AutoPlanner
                             autoPlanResult={autoPlanResult}
                             rosterMonth={rosterMonth}
@@ -56,7 +56,7 @@ export default function RosterSchedulerTable({ autoPlanResult, roster, rosterMon
                             </div>
                         </div>
                     </td>
-                    <td colSpan="12" className="align-top p-0">
+                    <td colSpan="12" className="align-top p-1">
                         <YearlyRosterStatisticTable 
                             yearlyRosterStatistic={rosterSchedulerData.yearlyRosterStatistic}/>
                     </td>    

@@ -6,7 +6,7 @@ export default class FetchAPI {
         }
         this.getActiveShiftList = async () => {
             return (await fetch(null, "get", "/rosterWeb/publicAPI/getActiveShiftList"));
-        }
+        }        
         this.getITOBlackListShiftPattern = async (year, month) => {
             return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getITOBlackListShiftPattern"));
         }
