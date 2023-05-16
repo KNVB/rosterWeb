@@ -6,6 +6,7 @@ export default function PreferredShiftRow({ calendarDateList, itoId, rosterSched
     let className = '';
     let rosterDetail = rosterSchedulerData.preferredShiftList[itoId];
     let preferredShift = '', shiftCellList = [];
+
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         shiftCellList.push(<ShiftCell key={"prev-preferred-" + i} />)
     }

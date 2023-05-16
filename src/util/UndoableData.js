@@ -29,14 +29,16 @@ export default class UndoableData {
         }
         this.set = (newValue) => {
             console.log('UndoableData:set');
+            console.log(newValue.rosterSchedulerData.preferredShiftList);
             pastValue.push(presentValue);
             presentValue = JSON.stringify(newValue);
         }
         this.undo = () => {
             console.log('UndoableData:undo:' + this.canUndo());
             if (pastValue.length > 0) {
-                futureValue.push(presentValue);               
-                presentValue=pastValue.pop();
+                futureValue.push(presentValue);
+                presentValue = pastValue.pop();
+                console.log(JSON.parse(presentValue).rosterSchedulerData.preferredShiftList);
                 return JSON.parse(presentValue);
             }
         }

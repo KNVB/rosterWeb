@@ -1,4 +1,6 @@
+import AdminShiftStatUtil from "./AdminShiftStatUtil";
 import ITOShiftStatUtil from "./ITOShiftStatUtil";
+
 export class Utility{
     static genITOStat=(roster,noOfWorkingDay)=>{
         let { getITOStat } = ITOShiftStatUtil();
@@ -9,7 +11,10 @@ export class Utility{
             let itoId=itoIdList[i];
             result[itoId]=getITOStat(roster.activeShiftList,noOfWorkingDay,roster.rosterRow[itoId]);
         }
-        
         return result;
+    }
+    static getAllITOStat= (activeShiftList, startDate, endDate, rosterRow) => {
+        let { getAllITOStat } = AdminShiftStatUtil();
+        return getAllITOStat(activeShiftList, startDate, endDate, rosterRow);
     }
 }
