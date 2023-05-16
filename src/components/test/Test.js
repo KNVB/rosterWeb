@@ -5,6 +5,7 @@ export default function Test() {
     if (error) {
         return handleAPIError(error);
     }
+    console.log(isLoading,roster);
     if (isLoading === false) {
         //console.log(itemList.dataUtil.getRoster().rosterRow);
         return (

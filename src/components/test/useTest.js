@@ -7,8 +7,9 @@ let reducer = (state, action) => {
     switch (action.type) {
         case "init":
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
-            result.superDataUtil = { ...action.superDataUtil };
+            result.roster = action.superDataUtil.getRoster();
             result.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
+            result.superDataUtil = { ...action.superDataUtil };
             result.systemParam = action.systemParam;
             result.isLoading = false;
             break;
@@ -31,7 +32,8 @@ export function useTest() {
         error: null,
         isLoading: true,
         noOfWorkingDay: -1,
-        superDataUtil: new SuperDataUtil(),
+        roster: null,
+        superDataUtil: null,
         systemParam: null,
     });
     useEffect(() => {
@@ -46,12 +48,12 @@ export function useTest() {
                 let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
                 let superDataUtil = new SuperDataUtil();
                 await superDataUtil.init(itemList.calendarUtility.weekdayNames);
-                await superDataUtil.loadData(rosterYear,rosterMonth+1,monthlyCalendar.noOfWorkingDay,monthlyCalendar.calendarDateList.length);
+                await superDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
                 //console.log(dataUtil.getRoster());
 
                 updateItemList({
-                    superDataUtil: superDataUtil,
                     monthlyCalendar,
+                    superDataUtil,
                     systemParam,
                     type: "init"
                 });
@@ -73,7 +75,7 @@ export function useTest() {
     return {
         error: itemList.error,
         isLoading: itemList.isLoading,
-        roster: itemList.superDataUtil.getRoster(),
+        roster: itemList.roster,
         uiAction: {
             go
         }
