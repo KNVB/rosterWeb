@@ -7,9 +7,7 @@ let reducer = (state, action) => {
     switch (action.type) {
         case "init":
             result.monthlyCalendar = action.monthlyCalendar;
-            result.roster = action.rosterDataUtil.getRoster();
-            result.rosterDataUtil = action.rosterDataUtil;
-            result.systemParam = action.systemParam;
+            result.roster = result.rosterDataUtil.getRoster();           
             result.isLoading = false;
             break;
         case "setError":
@@ -27,7 +25,7 @@ export function useTestRoster() {
         error: null,
         isLoading: true,
         roster: null,
-        rosterDataUtil: null,
+        rosterDataUtil: new RosterDataUtil(),
         systemParam: null,
     });
     useEffect(() => {
@@ -41,12 +39,10 @@ export function useTestRoster() {
                 let systemParam = await systemUtil.getSystemParam();
                 systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
                 systemParam.noOfPrevDate = 0;
-                let rosterDataUtil = new RosterDataUtil();
-                await rosterDataUtil.init(itemList.calendarUtility.weekdayNames);
-                await rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);
+                await itemList.rosterDataUtil.init(itemList.calendarUtility.weekdayNames);
+                await itemList.rosterDataUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);
                 updateItemList({
                     monthlyCalendar,
-                    rosterDataUtil,
                     systemParam,
                     type: "init"
                 });

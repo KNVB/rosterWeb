@@ -18,7 +18,8 @@ export default class RosterDataUtil {
             roster.year = year;
             roster.month = month;
             roster.rosterRow = await fetchAPI.getRoster(year, month);
-            roster.rosterRow = Utility.genITOStat(roster, noOfWorkingDay);
+            console.log(roster.rosterRow);
+            //roster.rosterRow = Utility.genITOStat(roster, noOfWorkingDay);
         }
     }
 }
