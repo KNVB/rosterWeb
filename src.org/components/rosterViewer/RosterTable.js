@@ -1,6 +1,6 @@
-import HeaderRows from "../common/rows/HeaderRows";
+import HeaderRows from "../rows/HeaderRows";
 import RosterBody from "./RosterBody";
-import ShiftInfoLegend from "../common/ShiftInfoLegend";
+import ShiftInfoLegend from "../util/ShiftInfoLegend";
 export default function RosterTable({roster,rosterMonth,systemParam,uiAction}){
     return(
         <table className="m-1 p-0 rosterTable">
@@ -13,7 +13,6 @@ export default function RosterTable({roster,rosterMonth,systemParam,uiAction}){
             <RosterBody
                 roster={roster}
                 rosterMonth={rosterMonth}
-                systemParam={systemParam}
                 uiAction={uiAction}/>
             <tfoot>
                 <tr>

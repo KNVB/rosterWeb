@@ -1,9 +1,8 @@
-import NameCell from "../common/cells/NameCell";
-import ShiftCell from "../common/cells/ShiftCell";
-import StatCell from "../common/cells/StatCell";
-
-export default function RosterRow({calendarDateList,itoId,roster, rowIndex,systemParam,uiAction}){
-    let className = "";
+import NameCell from "../cells/NameCell";
+import ShiftCell from "../cells/ShiftCell";
+import StatCell from "../cells/StatCell";
+export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, uiAction }) {
+    let className = [];
     let rosterDetail = roster.rosterRow[itoId];
     let shift = '', shiftCellList = [];
     function handleMouseEnterEvent(e) {
