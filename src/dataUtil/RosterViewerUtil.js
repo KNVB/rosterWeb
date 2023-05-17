@@ -10,6 +10,22 @@ export default class RosterViewerUtil {
             });
             roster.rosterRow = Utility.genITOStat(roster, noOfWorkingDay);
         }
+        this.fillEmptyShiftWithO = (monthLength,noOfWorkingDay) => {
+            this.getItoIdList().forEach(itoId => {
+                let temp={};
+                for (let i = 1; i <= monthLength; i++) {
+                    if ((roster.rosterRow[itoId].shiftList[i] === undefined) || (roster.rosterRow[itoId].shiftList[i] === '')) {
+                        temp[i]="O";
+                        //roster.rosterRow[itoId].shiftList[i] = 'O';
+                        //roster.rosterRow[itoId].shiftList={...roster.rosterRow[itoId].shiftList,i:"O"};
+                    }else {
+                        temp[i]=roster.rosterRow[itoId].shiftList[i];
+                    }
+                }
+                roster.rosterRow[itoId].shiftList=temp;
+            });
+            roster.rosterRow = Utility.genITOStat(roster, noOfWorkingDay);
+        }
         this.getItoIdList = () => {
             return Object.keys(roster.rosterRow);
         }

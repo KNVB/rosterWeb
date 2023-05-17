@@ -1,15 +1,15 @@
-import AdminShiftStatUtil from '../../../../util/AdminShiftStatUtil';
+import AdminShiftStatUtil from '../util/AdminShiftStatUtil';
 export default class AutoPlannerUtil {
     constructor() {
         let iterationCount = 100;
         let startDate = 1, endDate;
-        this.autoPlan = (rosterSchedulerDataUtil, systemParam) => {
+        this.autoPlan = (rosterSchedulerUtil, systemParam) => {
             if (startDate > endDate) {
                 throw new Error("Invalid start date or end date selection");
             } else {
                 let finalResult = [], tempResult = [];
                 for (let i = 0; i < iterationCount; i++) {
-                    tempResult.push(this.genResult(rosterSchedulerDataUtil, systemParam));
+                    tempResult.push(this.genResult(rosterSchedulerUtil, systemParam));
                 }
                 tempResult.sort(sortByVacantShiftCount);
                 //console.log(tempResult);
@@ -20,18 +20,18 @@ export default class AutoPlannerUtil {
                 return finalResult;
             }
         }
-        this.genResult = (rosterSchedulerDataUtil, systemParam) => {
-            let activeShiftList = rosterSchedulerDataUtil.getActiveShiftList();
+        this.genResult = (rosterSchedulerUtil, systemParam) => {
+            let activeShiftList = rosterSchedulerUtil.getActiveShiftList();
             let availableShiftList;
             let essentialShift = '';
             let itoIdList;
             let preferredShift, preferredShiftList, previousShiftList = {};
-            let resultantRoster = { rosterRow: {} }, resultantShiftList, rosterSchedulerData = JSON.parse(JSON.stringify(rosterSchedulerDataUtil.getRosterSchedulerData()));
+            let resultantRoster = { rosterRow: {} }, resultantShiftList, rosterSchedulerData = JSON.parse(JSON.stringify(rosterSchedulerUtil.getRosterSchedulerData()));
             let { getAllITOStat } = AdminShiftStatUtil();
             preferredShiftList = rosterSchedulerData.preferredShiftList;
             for (let dateIndex = startDate; dateIndex <= endDate; dateIndex++) {
                 essentialShift = activeShiftList.essentialShift;
-                itoIdList = getShuffledItoIdList(rosterSchedulerDataUtil.getItoIdList());
+                itoIdList = getShuffledItoIdList(rosterSchedulerUtil.getItoIdList());
                 for (let i = 0; i < itoIdList.length; i++) {
                     if (resultantRoster.rosterRow[itoIdList[i]] === undefined) {
                         resultantRoster.rosterRow[itoIdList[i]] = {
@@ -63,7 +63,7 @@ export default class AutoPlannerUtil {
                             previousShiftList.push(preferredShift);
                             break;
                         default:                            
-                            availableShiftList = getAvailableShift(itoIdList[i], preferredShift, previousShiftList, rosterSchedulerDataUtil, resultantShiftList, systemParam);
+                            availableShiftList = getAvailableShift(itoIdList[i], preferredShift, previousShiftList, rosterSchedulerUtil, resultantShiftList, systemParam);
                             console.log("itoId="+itoIdList[i]+",dateIndex="+dateIndex+",availableShiftList="+availableShiftList+",previousShiftList="+previousShiftList );
                             if ((essentialShift === '') || (availableShiftList.length === 0)) {
                                 resultantShiftList[dateIndex] = "O";

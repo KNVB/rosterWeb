@@ -1,8 +1,11 @@
 import { useEffect } from "react";
+import AutoPlanner from "./autoPlanner/AutoPlanner";
 import HeaderRows from "../../common/rows/HeaderRows";
 import RosterBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../common/ShiftInfoLegend";
-export default function RosterSchedulerTable({ roster, rosterMonth, rosterSchedulerData, systemParam, uiAction }) {
+import YearlyRosterStatisticTable from "./YearlyRosterStaticTable";
+import "./RosterSchedulerTable.css";
+export default function RosterSchedulerTable({autoPlanResult, roster, rosterMonth, rosterSchedulerData, systemParam, uiAction }) {
     useEffect(() => {
         const mouseUp = () => uiAction.endSelect();
         document.addEventListener("mouseup", mouseUp);
@@ -29,7 +32,33 @@ export default function RosterSchedulerTable({ roster, rosterMonth, rosterSchedu
                     <td colSpan="7" className="pt-1">
                         <ShiftInfoLegend activeShiftList={roster.activeShiftList} />
                     </td>
-                    <td colSpan={37}>
+                    <td colSpan="20" className="align-top pt-1">
+                        <AutoPlanner
+                            autoPlanResult={autoPlanResult}
+                            rosterMonth={rosterMonth}
+                            uiAction={uiAction} />                        
+                        <div className="d-flex flex-row ms-1">
+                            <div className="d-flex flex-column flex-grow-1 mb-1">
+                                <div className="d-flex flex-grow-1 justify-content-center">
+                                    <div className="clearAllButton" onClick={uiAction.clearAllShiftData}>Clear All Shift Data</div>
+                                </div>
+                                <div className="d-flex flex-grow-1 justify-content-center mt-1">
+                                    <div className="exportButton" onClick={uiAction.exportRosterDataToExcel}>Export To Excel File</div>                                    
+                                </div>
+                            </div>
+                            <div className="d-flex flex-column flex-grow-1">
+                                <div className="d-flex flex-grow-1 justify-content-center">
+                                    <div className="fillEmptyShiftWithOButton" onClick={uiAction.fillEmptyShiftWithO}>Fill empty shift with "O"</div>
+                                </div>
+                                <div className="d-flex flex-grow-1 justify-content-center mt-1">
+                                    <div className="saveRosterToDBButton" onClick={uiAction.saveRosterToDB}>Save All Data To DB</div>
+                                </div>   
+                            </div>
+                        </div>
+                    </td>
+                    <td colSpan="12" className="align-top p-1">
+                        <YearlyRosterStatisticTable 
+                            yearlyRosterStatistic={rosterSchedulerData.yearlyRosterStatistic}/>
                     </td>
                 </tr>
             </tfoot>

@@ -2,7 +2,7 @@ import {useRosterScheduler} from "../../../hooks/useRosterScheduler";
 import handleAPIError from "../../common/handleAPIError";
 import RosterSchedulerTable from "./RosterSchedulerTable";
 export default function RosterScheduler(){
-    const { error, isLoading, roster,rosterMonth, rosterSchedulerData, systemParam, uiAction } = useRosterScheduler();
+    const {autoPlanResult, error, isLoading, roster,rosterMonth, rosterSchedulerData, systemParam, uiAction } = useRosterScheduler();
     if (error) {
         return handleAPIError(error);
     }
@@ -11,6 +11,7 @@ export default function RosterScheduler(){
         //console.log(rosterSchedulerData);        
         return (
             <RosterSchedulerTable
+                autoPlanResult={autoPlanResult}
                 roster={roster}
                 rosterMonth={rosterMonth}
                 rosterSchedulerData={rosterSchedulerData}                

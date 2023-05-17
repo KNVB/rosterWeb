@@ -11,7 +11,7 @@ export default class RosterSchedulerUtil {
         let rosterViewerUtil = new RosterViewerUtil();
         this.clearAllShiftData = (noOfWorkingDay, monthLength) => {
             rosterViewerUtil.clearAllShiftData(noOfWorkingDay);
-            updateRosterStatistic(1, monthLength); 
+            updateRosterStatistic(1, monthLength);
         }
         this.copy = copyRegion => {
             let index, itoId, shiftList;
@@ -21,7 +21,7 @@ export default class RosterSchedulerUtil {
                 shiftRowType = row.substring(0, index);
                 itoId = row.substring(index + 1);
                 temp = [];
-                let roster=this.getRoster();
+                let roster = this.getRoster();
                 if (shiftRowType === "rosterRow") {
                     shiftList = { ...roster.rosterRow[itoId].shiftList };
                 }
@@ -60,6 +60,12 @@ export default class RosterSchedulerUtil {
                     }
                 }
             });
+        }
+        this.fillEmptyShiftWithO = (monthLength, noOfWorkingDay) => {
+            rosterViewerUtil.fillEmptyShiftWithO(monthLength, noOfWorkingDay);
+        }
+        this.getActiveShiftList =()=>{
+            return rosterViewerUtil.getRoster().activeShiftList;
         }
         this.getCopyDataRowCount = () => {
             if (copiedData === null) {
@@ -110,6 +116,17 @@ export default class RosterSchedulerUtil {
 
             updateRosterStatistic(1, monthLength);
             backupRosterData();
+        }
+        this.loadAutoPlanResult = (autoPlanResult, noOfWorkingDay, monthLength) => {
+            //console.log(autoPlanResult);
+            let itoIdList = this.getItoIdList(), shiftList;
+            for (let i = 0; i < itoIdList.length; i++) {
+                shiftList = autoPlanResult.rosterRow[itoIdList[i]].shiftList;
+                for (let [dateOfMonth, shiftType] of Object.entries(shiftList)) {
+                    //console.log(itoIdList[i],dateOfMonth,shiftType);
+                    this.updateShift(itoIdList[i], dateOfMonth, shiftType, noOfWorkingDay, monthLength);
+                }
+            }
         }
         this.paste = (dateOfMonth, rowIds, noOfWorkingDay, monthLength) => {
             let index, itoId;
@@ -167,7 +184,7 @@ export default class RosterSchedulerUtil {
             rosterViewerUtil.updateShift(itoId, dateOfMonth, newShift, noOfWorkingDay, monthLength);
             updateRosterStatistic(1, monthLength);
             backupRosterData();
-        }        
+        }
         this.unDo = () => {
             console.log("undo");
             if (rosterDataHistory.canUndo()) {
@@ -182,7 +199,7 @@ export default class RosterSchedulerUtil {
             console.log("backup Roster Data");
             let temp = {
                 rosterRow: roster.rosterRow,
-                rosterSchedulerData: rosterSchedulerData,                
+                rosterSchedulerData: rosterSchedulerData,
             }
             //console.log(temp);
             if (rosterDataHistory === null) {
