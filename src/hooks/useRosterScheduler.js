@@ -104,6 +104,13 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
+    let exportRosterDataToExcel = async e => {
+        try {
+            await itemList.rosterSchedulerUtil.exportRosterDataToExcel(itemList.calendarDateList);
+        } catch (error) {
+            updateItemList({ "error": error, "type": "setError" });
+        }
+    }
     let fillEmptyShiftWithO = () => {
         itemList.rosterSchedulerUtil.fillEmptyShiftWithO(itemList.calendarDateList.length, itemList.noOfWorkingDay);
         updateItemList({ "type": "refresh" });
@@ -163,6 +170,14 @@ export function useRosterScheduler() {
             let rowIds = itemList.rosterSchedulerTableUtil.getPasteRowIds(cell, rowCount);
             itemList.rosterSchedulerUtil.paste(dateOfMonth, rowIds, itemList.noOfWorkingDay, itemList.calendarDateList.length);
             updateItemList({ type: "refresh" });
+        }
+    }
+    let saveRosterToDB = async e => {
+        try {
+            await itemList.rosterSchedulerUtil.saveRosterToDB();
+            alert("Roster Data is saved to DB successfully.");
+        } catch (error) {
+            updateItemList({ "error": error, "type": "setError" });
         }
     }
     let setFocusCell = e => {
@@ -230,6 +245,7 @@ export function useRosterScheduler() {
             clearAllShiftData,
             copyRosterData,
             endSelect,
+            exportRosterDataToExcel,
             fillEmptyShiftWithO,
             getAutoPlanEndDate,
             getAutoPlanIterationCount,
@@ -242,6 +258,7 @@ export function useRosterScheduler() {
             isHighLightCell,
             isHighLightRow,
             pasteRosterData,
+            saveRosterToDB,
             setFocusCell,
             showAutoPlanResult,
             startAutoPlan,

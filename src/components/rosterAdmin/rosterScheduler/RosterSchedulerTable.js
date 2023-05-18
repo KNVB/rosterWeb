@@ -18,7 +18,7 @@ export default function RosterSchedulerTable({autoPlanResult, roster, rosterMont
             <HeaderRows
                 rosterMonth={rosterMonth}
                 weekdayNames={roster.weekdayNames}
-                caption="EMSTF Computer Operator Roster"
+                caption="EMSTF Computer Operator Roster Scheduler"
                 systemParam={systemParam}
                 uiAction={uiAction} />
             <RosterBody

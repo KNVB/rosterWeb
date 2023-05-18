@@ -61,6 +61,13 @@ export default class RosterSchedulerUtil {
                 }
             });
         }
+        this.exportRosterDataToExcel = async (calendarDateList) => {
+            let genExcelData = JSON.parse(JSON.stringify(this.getRoster()));
+            genExcelData.calendarDateList = JSON.parse(JSON.stringify(calendarDateList));
+            genExcelData.vacantShiftList = JSON.parse(JSON.stringify(rosterSchedulerData.vacantShiftList));
+            //console.log(genExcelData);
+            await fetchAPI.exportRosterDataToExcel({ "genExcelData": genExcelData });
+        }
         this.fillEmptyShiftWithO = (monthLength, noOfWorkingDay) => {
             rosterViewerUtil.fillEmptyShiftWithO(monthLength, noOfWorkingDay);
         }
@@ -157,6 +164,19 @@ export default class RosterSchedulerUtil {
                 rosterViewerUtil.setRosterRow(backupItem.rosterRow);
                 rosterSchedulerData = backupItem.rosterSchedulerData;
             }
+        }
+        this.saveRosterToDB = async () => {
+            let roster=this.getRoster();
+            await fetchAPI.saveRosterToDB(
+                {
+                    rosterData:
+                    {
+                        rosterRow: roster.rosterRow,
+                        preferredShiftList:rosterSchedulerData.preferredShiftList,
+                        month: roster.month,
+                        year: roster.year
+                    }
+                });
         }
         this.updatePreferredShift = (itoId, dateOfMonth, newShift) => {
             let oldPreferredShift;
