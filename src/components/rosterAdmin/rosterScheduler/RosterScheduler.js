@@ -14,7 +14,7 @@ export default function RosterScheduler(){
                 autoPlanResult={autoPlanResult}
                 roster={roster}
                 rosterMonth={rosterMonth}
-                rosterSchedulerData={rosterSchedulerData}                
+                rosterSchedulerData={rosterSchedulerData}
                 systemParam={systemParam}
                 uiAction={uiAction} />
         )

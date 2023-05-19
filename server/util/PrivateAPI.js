@@ -1,5 +1,6 @@
 import RosterExporter from './RosterExporter.js';
 import Express from 'express';
+import ITOUtil from './ITOUtil.js';
 import RosterUtil from "./RosterUtil.js";
 import ShiftUtil from './ShiftUtil.js';
 export function PrivateAPI(systemParam) {
@@ -7,6 +8,7 @@ export function PrivateAPI(systemParam) {
     let rosterUtil;
     router.get('/:action', async (req, res, next) => {
         switch (req.params.action) {
+            /*
             case "getITOBlackListShiftPattern":
                 sendResponse(res, getITOBlackListShiftPattern, { year: req.query.year, month: req.query.month });
                 break;
@@ -15,6 +17,10 @@ export function PrivateAPI(systemParam) {
                 break;
             case "getPreviousMonthShiftList":
                 sendResponse(res, getPreviousMonthShiftList, { year: req.query.year, month: req.query.month, systemParam: systemParam });
+                break;
+            */
+            case "getITOList":
+                sendResponse(res,getITOList);
                 break;
             case "getRosterSchedulerData":
                 sendResponse(res, getRosterSchedulerData, { year: req.query.year, month: req.query.month, systemParam: systemParam });
@@ -69,6 +75,10 @@ let getPreviousMonthShiftList = async (params) => {
     let rosterUtil = new RosterUtil();
     let previousMonthShiftList = await rosterUtil.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
     return previousMonthShiftList;
+}
+let getITOList =async () =>{
+    let itoUtil = new ITOUtil();
+    return await itoUtil.getITOList();
 }
 let getRosterSchedulerData = async params => {
     let rosterUtil = new RosterUtil();

@@ -32,7 +32,9 @@
 .copiedShiftCellBorderRight {
 	border-right: 1px dashed black;
 }
-
+.cursor-pointer {
+	cursor:pointer
+}
 .copiedShiftCellBorderTop {
 	border-top: 1px dashed black;
 }

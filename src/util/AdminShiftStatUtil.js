@@ -18,7 +18,7 @@ export default function AdminShiftStatUtil() {
             itoIdList.forEach(itoId => {
                 let itoRoster = inITORosterList[itoId];
                 //blist=blackListShiftPattern[itoId];
-                if (itoRoster.shiftList[i] !== undefined) {
+                if ((itoRoster.shiftList[i] !== undefined) && (itoRoster.shiftList[i] !== '') && (itoRoster.shiftList[i] !== null)) {
                     let shiftTypeList = itoRoster.shiftList[i].split("+");
                     shiftTypeList.forEach(shiftType => {
                         if (shiftType === "b1") {

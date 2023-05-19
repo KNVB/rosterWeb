@@ -9,7 +9,7 @@ export default function ItemList(){
                 <a href="/rosterWeb/admin/rosterScheduler">Roster Scheduler</a>
             </li>
             <li>
-                <a href="/rosterWeb/admin/itoManagement">ITO Management</a>
+                <a href="/rosterWeb/admin/itoManagement/list">ITO Management</a>
             </li>
             <li>
                 <span className='logout' onClick={logout}>

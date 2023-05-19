@@ -1,12 +1,16 @@
 import axios from "axios";
 export default class FetchAPI {
     constructor() {
+        this.addITO =async ito=>{
+            return (await fetch(ito, "post", "/rosterWeb/privateAPI/addITOToDB"));
+        }
         this.exportRosterDataToExcel = async genExcelData => {
             return (await fetch(genExcelData, "post", "/rosterWeb/privateAPI/exportRosterDataToExcel", "blob"));
         }
         this.getActiveShiftList = async () => {
             return (await fetch(null, "get", "/rosterWeb/publicAPI/getActiveShiftList"));
-        }        
+        }
+        /*        
         this.getITOBlackListShiftPattern = async (year, month) => {
             return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getITOBlackListShiftPattern"));
         }
@@ -15,6 +19,10 @@ export default class FetchAPI {
         }
         this.getPreviousMonthShiftList = async (year, month) => {
             return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getPreviousMonthShiftList"));
+        }
+        */
+        this.getITOList = async () => {
+            return (await fetch(null, "get", "/rosterWeb/privateAPI/getITOList"));
         }
         this.getRoster = async (year, month) => {
             return (await fetch({ year: year, month: month }, "get", "/rosterWeb/publicAPI/getRoster"));

@@ -98,7 +98,7 @@ export function useRosterViewer() {
     }
     return {
         error: itemList.error,
-        isLoading: itemList.isLoading,        
+        isLoading: itemList.isLoading,
         roster: itemList.roster,
         rosterMonth: {
             calendarDateList: itemList.calendarDateList,

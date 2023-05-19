@@ -12,6 +12,10 @@ export default class Dbo {
             sqlString = "select * from shift_info where active=1 order by shift_type";
             return await executeQuery(sqlString);
         }
+        this.getITOList = async () =>{
+            sqlString = "select * from ito_info a inner join black_list_pattern b on a.ito_id = b.ito_id order by a.ito_id";
+            return await executeQuery(sqlString);
+        }
         this.getITOBlackListShiftPattern = async (year, month) => {
             let result = getStartEndDateString(year, month);
             sqlString = "select ito_info.ito_id,black_list_pattern ";
