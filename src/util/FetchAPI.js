@@ -2,7 +2,7 @@ import axios from "axios";
 export default class FetchAPI {
     constructor() {
         this.addITO =async ito=>{
-            return (await fetch(ito, "post", "/rosterWeb/privateAPI/addITOToDB"));
+            return (await fetch({"ito":ito}, "post", "/rosterWeb/privateAPI/addITOToDB"));
         }
         this.exportRosterDataToExcel = async genExcelData => {
             return (await fetch(genExcelData, "post", "/rosterWeb/privateAPI/exportRosterDataToExcel", "blob"));
@@ -35,9 +35,12 @@ export default class FetchAPI {
         }
         this.getYearlyRosterStatistic= async (year, month) => {
             return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getYearlyRosterStatistic"));
-        }
+        }        
         this.saveRosterToDB = async rosterData => {
             return (await fetch(rosterData, "post", "/rosterWeb/privateAPI/saveRosterToDB"));
+        }
+        this.updateITO=async ito =>{
+            return (await fetch({"ito":ito}, "post","/rosterWeb/privateAPI/updateITO"));
         }
         //================================================================================================================
         // create and configure an axios instance

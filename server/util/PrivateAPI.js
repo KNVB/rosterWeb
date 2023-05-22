@@ -20,7 +20,7 @@ export function PrivateAPI(systemParam) {
                 break;
             */
             case "getITOList":
-                sendResponse(res,getITOList);
+                sendResponse(res, getITOList);
                 break;
             case "getRosterSchedulerData":
                 sendResponse(res, getRosterSchedulerData, { year: req.query.year, month: req.query.month, systemParam: systemParam });
@@ -35,6 +35,9 @@ export function PrivateAPI(systemParam) {
     });
     router.post('/:action', async (req, res, next) => {
         switch (req.params.action) {
+            case "addITOToDB":
+                sendResponse(res, addITOToDB, req.body.ito);
+                break;
             case "exportRosterDataToExcel":
                 try {
                     let rosterExporter = new RosterExporter();
@@ -52,6 +55,9 @@ export function PrivateAPI(systemParam) {
             case "saveRosterToDB":
                 sendResponse(res, saveRosterToDB, req.body.rosterData);
                 break;
+            case "updateITO":
+                sendResponse(res, updateITO, req.body.ito);
+                break;
             default:
                 next();
                 break
@@ -61,6 +67,10 @@ export function PrivateAPI(systemParam) {
 
 }
 //====================================================================================================================================
+let addITOToDB = async ito=>{
+    let itoUtil=new ITOUtil();
+    return await itoUtil.addITOToDB(ito);
+}
 let getITOBlackListShiftPattern = async (params) => {
     let shiftUtil = new ShiftUtil();
     let itoBlackListShiftPattern = await shiftUtil.getITOBlackListShiftPattern(params.year, params.month);
@@ -76,7 +86,7 @@ let getPreviousMonthShiftList = async (params) => {
     let previousMonthShiftList = await rosterUtil.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
     return previousMonthShiftList;
 }
-let getITOList =async () =>{
+let getITOList = async () => {
     let itoUtil = new ITOUtil();
     return await itoUtil.getITOList();
 }
@@ -105,6 +115,10 @@ let saveRosterToDB = async rosterData => {
     let rosterUtil = new RosterUtil();
     await rosterUtil.saveRosterToDB(rosterData);
     return "";
+}
+let updateITO = async ito =>{
+    let itoUtil=new ITOUtil();
+    return await itoUtil.updateITO(ito);    
 }
 //====================================================================================================================================
 let sendResponse = async (res, action, param) => {

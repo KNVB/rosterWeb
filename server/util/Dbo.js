@@ -8,11 +8,43 @@ export default class Dbo {
 
         const connection = mysql.createConnection(DbConfig);
         let sqlString;
+        this.addITO = async ito => {
+            try {
+                await connection.promise().beginTransaction();
+                console.log("Add ITO info. transaction start.");
+                console.log("===============================");
+                console.log(ito);
+                sqlString = "insert into ito_info (available_Shift,ito_Id,join_date,leave_date,ito_name,post_name,working_hour_per_day) values(?,?,?,?,?,?,?)";
+                await executeQuery(sqlString, [
+                    ito.availableShift.join(","),
+                    ito.itoId,
+                    ito.joinDate,
+                    ito.leaveDate,
+                    ito.name,
+                    ito.post,
+                    ito.workingHourPerDay
+                ]);
+                sqlString = "insert into black_list_pattern (ito_Id, black_list_pattern) values(?,?)";
+                for (let i = 0; i < ito.blackListedShiftPattern.length; i++) {
+                    let shiftPattern = ito.blackListedShiftPattern[i];
+                    await executeQuery(sqlString, [ito.itoId, shiftPattern]);
+                }
+                await connection.promise().commit();
+                console.log("ITO info added successfully.");
+                console.log("===============================");
+                return true;
+            } catch (error) {
+                if (connection) {
+                    await connection.promise().rollback();
+                }
+                throw error;
+            }
+        }
         this.getActiveShiftList = async () => {
             sqlString = "select * from shift_info where active=1 order by shift_type";
             return await executeQuery(sqlString);
         }
-        this.getITOList = async () =>{
+        this.getITOList = async () => {
             sqlString = "select * from ito_info a inner join black_list_pattern b on a.ito_id = b.ito_id order by a.ito_id";
             return await executeQuery(sqlString);
         }
@@ -126,6 +158,41 @@ export default class Dbo {
                     console.log("===============================");
                 }
                 await connection.promise().commit();
+                return true;
+            } catch (error) {
+                if (connection) {
+                    await connection.promise().rollback();
+                }
+                throw error;
+            }
+        }
+        this.updateITO = async ito =>{
+            try {
+                await connection.promise().beginTransaction();
+                console.log("Update ITO ("+ito.itoId+") info. transaction start.");
+                console.log("===============================");
+                console.log(ito);
+                sqlString = "update ito_info set available_Shift=?,join_date=?,leave_date=?,ito_name=?,post_name=?,working_hour_per_day=?";
+                sqlString +=" where ito_Id=?";
+                await executeQuery(sqlString, [
+                    ito.availableShift.join(","),
+                    new Date(ito.joinDate),
+                    new Date(ito.leaveDate),
+                    ito.name,
+                    ito.post,
+                    ito.workingHourPerDay,
+                    ito.itoId
+                ]);
+                sqlString = "delete from black_list_pattern where ito_Id=?";
+                await executeQuery(sqlString, [ito.itoId]);
+                sqlString = "insert into black_list_pattern (ito_Id, black_list_pattern) values(?,?)";
+                for (let i = 0; i < ito.blackListedShiftPattern.length; i++) {
+                    let shiftPattern = ito.blackListedShiftPattern[i];
+                    await executeQuery(sqlString, [ito.itoId, shiftPattern]);
+                }
+                await connection.promise().commit();
+                console.log("ITO ("+ito.itoId+")info updated successfully.");
+                console.log("===============================");
                 return true;
             } catch (error) {
                 if (connection) {

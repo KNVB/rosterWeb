@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Button } from 'react-bootstrap';
 import { DashCircleFill, PlusCircleFill } from 'react-bootstrap-icons';
 import handleAPIError from "../../common/handleAPIError";
-
+import DatePicker from "react-date-picker";
+import 'react-date-picker/dist/DatePicker.css';
+import 'react-calendar/dist/Calendar.css';
 export default function ITOForm({ itoAction }) {
    const { activeShiftList, error, isLoading, ito, updateAction } = useITOForm();
    let navigate = useNavigate();
@@ -61,6 +63,7 @@ export default function ITOForm({ itoAction }) {
          updateAction.updateAvailableShift("remove", field.value);
       }
    }
+   
    let updateShiftPattern = e => {
       let field = e.target;
       let index = Number(field.name.replace("blackListedShiftPattern_", ""));
@@ -161,13 +164,21 @@ export default function ITOForm({ itoAction }) {
                      <tr>
                         <td className="border border-dark">Join Date</td>
                         <td className="border border-dark">
-                           <input onChange={updateTextField} name="joinDate" required type="date" value={new Date(ito.joinDate).toLocaleDateString("en-CA")} />
+                           <DatePicker 
+                              locale="en-ca"                                                         
+                              onChange={joinDate=>updateTextField({target:{name:"joinDate",value:joinDate}})} 
+                              required={true}
+                              value={ito.joinDate} />
                         </td>
                      </tr>
                      <tr>
                         <td className="border border-dark">Leave Date</td>
                         <td className="border border-dark">
-                           <input onChange={updateTextField} name="leaveDate" required type="date" value={new Date(ito.leaveDate).toLocaleDateString("en-CA")} />
+                           <DatePicker 
+                              locale="en-ca"
+                              onChange={leaveDate=>updateTextField({target:{name:"leaveDate",value:leaveDate}})} 
+                              required={true}
+                              value={ito.leaveDate} />
                            &nbsp;"2099-12-31" mean active member
                         </td>
                      </tr>

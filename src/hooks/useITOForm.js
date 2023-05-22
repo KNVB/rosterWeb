@@ -107,6 +107,7 @@ export function useITOForm() {
                 break;
         }
     }
+    
     let updateITO=async()=>{
         try{
             await itemList.itoManagementUtil.updateITO(itemList.ito);
@@ -138,7 +139,7 @@ export function useITOForm() {
             addITO,
             addShiftPattern,
             removeShiftPattern,
-            updateAvailableShift,
+            updateAvailableShift,            
             updateITO,
             updateShiftPattern,
             updateTextField
