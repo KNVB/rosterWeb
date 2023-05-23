@@ -179,7 +179,7 @@ export default function ITOForm({ itoAction }) {
                               onChange={leaveDate=>updateTextField({target:{name:"leaveDate",value:leaveDate}})} 
                               required={true}
                               value={ito.leaveDate} />
-                           &nbsp;"2099-12-31" mean active member
+                           &nbsp;*2099-12-31" mean active member
                         </td>
                      </tr>
                   </tbody>
