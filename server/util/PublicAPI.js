@@ -1,4 +1,5 @@
 import Express from 'express';
+import AdminUtil from './AdminUtil.js';
 import RosterUtil from './RosterUtil.js';
 import ShiftUtil from './ShiftUtil.js';
 export function PublicAPI(adminUtil, systemParam) {
@@ -19,6 +20,21 @@ export function PublicAPI(adminUtil, systemParam) {
                 break;
         }
 
+    });
+    router.post('/:action', async (req, res, next) => {
+        switch (req.params.action) {
+            case "login":
+                try {
+                    let loginResult = adminUtil.login(req.body.loginObj);
+                    res.send(loginResult);
+                } catch (error) {
+                    res.status(400).send(error.message);
+                }
+                break;
+            default:
+                next();
+                break;
+        }
     });
     return router;
 }

@@ -1,46 +1,41 @@
 import axios from "axios";
 export default class FetchAPI {
     constructor() {
-        this.addITO =async ito=>{
-            return (await fetch({"ito":ito}, "post", "/rosterWeb/privateAPI/addITOToDB"));
+        this.addITO = async ito => {
+            return (await secureFetch({ "ito": ito }, "post", "/privateAPI/addITOToDB"));
         }
         this.exportRosterDataToExcel = async genExcelData => {
-            return (await fetch(genExcelData, "post", "/rosterWeb/privateAPI/exportRosterDataToExcel", "blob"));
+            return (await secureFetch(genExcelData, "post", "/privateAPI/exportRosterDataToExcel", "blob"));
         }
         this.getActiveShiftList = async () => {
-            return (await fetch(null, "get", "/rosterWeb/publicAPI/getActiveShiftList"));
+            return (await fetch(null, "get", "/publicAPI/getActiveShiftList"));
         }
-        /*        
-        this.getITOBlackListShiftPattern = async (year, month) => {
-            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getITOBlackListShiftPattern"));
-        }
-        this.getPreferredShiftList = async (year, month) => {
-            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getPreferredShiftList"));
-        }
-        this.getPreviousMonthShiftList = async (year, month) => {
-            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getPreviousMonthShiftList"));
-        }
-        */
         this.getITOList = async () => {
-            return (await fetch(null, "get", "/rosterWeb/privateAPI/getITOList"));
+            return (await secureFetch(null, "get", "/privateAPI/getITOList"));
         }
         this.getRoster = async (year, month) => {
-            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/publicAPI/getRoster"));
+            return (await fetch({ year: year, month: month }, "get", "/publicAPI/getRoster"));
         }
-        this.getRosterSchedulerData = async (year,month)=>{
-            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getRosterSchedulerData"));
+        this.getRosterSchedulerData = async (year, month) => {
+            return (await secureFetch({ year: year, month: month }, "get", "/privateAPI/getRosterSchedulerData"));
         }
         this.getSystemParam = async () => {
-            return (await fetch(null, "get", "/rosterWeb/publicAPI/getSystemParam"));
+            return (await fetch(null, "get", "/publicAPI/getSystemParam"));
         }
-        this.getYearlyRosterStatistic= async (year, month) => {
-            return (await fetch({ year: year, month: month }, "get", "/rosterWeb/privateAPI/getYearlyRosterStatistic"));
-        }        
+        this.getYearlyRosterStatistic = async (year, month) => {
+            return (await secureFetch({ year: year, month: month }, "get", "/privateAPI/getYearlyRosterStatistic"));
+        }
+        this.login = async loginObj => {
+            return await fetch({ loginObj: loginObj }, "post", "/publicAPI/login");
+        }
+        this.logout = async () => {
+            return await secureFetch(null, "get", "/privateAPI/logout");
+        }
         this.saveRosterToDB = async rosterData => {
-            return (await fetch(rosterData, "post", "/rosterWeb/privateAPI/saveRosterToDB"));
+            return (await secureFetch(rosterData, "post", "/privateAPI/saveRosterToDB"));
         }
-        this.updateITO=async ito =>{
-            return (await fetch({"ito":ito}, "post","/rosterWeb/privateAPI/updateITO"));
+        this.updateITO = async ito => {
+            return (await secureFetch({ "ito": ito }, "post", "/privateAPI/updateITO"));
         }
         //================================================================================================================
         // create and configure an axios instance
@@ -88,5 +83,8 @@ export default class FetchAPI {
             }
             return response.data;
         };
+        let secureFetch = async (data, method, url, responseType) => {
+            return await fetch(data, method, url, responseType, { "access-token": sessionStorage.getItem("accessToken") });
+        }
     }
 }

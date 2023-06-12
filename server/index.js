@@ -14,8 +14,8 @@ app.use(Express.json());
 dotenv.config({ path: './.env.' + process.env.NODE_ENV });
 let adminUtil = new AdminUtil(process.env.SESSION_TIMEOUT);
 let systemParam=new SystemParam();
-app.use('/rosterWeb/publicAPI', PublicAPI(adminUtil,systemParam));
-app.use('/rosterWeb/privateAPI', adminUtil.isAuthenticated, PrivateAPI(systemParam));
+app.use('/publicAPI', PublicAPI(adminUtil,systemParam));
+app.use('/privateAPI',PrivateAPI(adminUtil,systemParam));
 if (process.env.NODE_ENV === "production") {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);

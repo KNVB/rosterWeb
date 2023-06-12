@@ -3,9 +3,18 @@ import Express from 'express';
 import ITOUtil from './ITOUtil.js';
 import RosterUtil from "./RosterUtil.js";
 import ShiftUtil from './ShiftUtil.js';
-export function PrivateAPI(systemParam) {
+export function PrivateAPI(adminUtil, systemParam) {
     const router = Express.Router();
-    let rosterUtil;
+    //===================================================================================================    
+    router.use((req, res, next) => {
+        let isAuthenticated = adminUtil.isAuthenticated(req.headers['access-token']);
+        console.log("PrivateAPI:access token:" + req.headers['access-token'] + ",isAuthenticated=" + isAuthenticated);
+        if (isAuthenticated) {
+            next();
+        } else {
+            res.status(401).send("You are not authorized to access this API, please login first.");
+        }
+    });
     router.get('/:action', async (req, res, next) => {
         switch (req.params.action) {
             /*
@@ -27,6 +36,9 @@ export function PrivateAPI(systemParam) {
                 break;
             case "getYearlyRosterStatistic":
                 sendResponse(res, getYearlyRosterStatistic, { year: req.query.year, month: req.query.month });
+                break;
+            case "logout":
+                sendResponse(res, logout, req.headers['access-token']);
                 break;
             default:
                 next();
@@ -63,12 +75,14 @@ export function PrivateAPI(systemParam) {
                 break
         }
     });
+    let logout = (accessToken) => {
+        return adminUtil.logout(accessToken);
+    }
     return router;
-
 }
 //====================================================================================================================================
-let addITOToDB = async ito=>{
-    let itoUtil=new ITOUtil();
+let addITOToDB = async ito => {
+    let itoUtil = new ITOUtil();
     return await itoUtil.addITOToDB(ito);
 }
 let getITOBlackListShiftPattern = async (params) => {
@@ -116,9 +130,9 @@ let saveRosterToDB = async rosterData => {
     await rosterUtil.saveRosterToDB(rosterData);
     return "";
 }
-let updateITO = async ito =>{
-    let itoUtil=new ITOUtil();
-    return await itoUtil.updateITO(ito);    
+let updateITO = async ito => {
+    let itoUtil = new ITOUtil();
+    return await itoUtil.updateITO(ito);
 }
 //====================================================================================================================================
 let sendResponse = async (res, action, param) => {

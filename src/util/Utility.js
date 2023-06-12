@@ -1,7 +1,7 @@
 import AdminShiftStatUtil from "./AdminShiftStatUtil";
 import ITOShiftStatUtil from "./ITOShiftStatUtil";
 
-export class Utility{
+export class Utility{    
     static genITOStat=(roster,noOfWorkingDay)=>{
         let { getITOStat } = ITOShiftStatUtil();
         let result={};
