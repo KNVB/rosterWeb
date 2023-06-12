@@ -204,6 +204,19 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.startSelect(cell.cellIndex, rowIndex);
         updateItemList({ type: "refresh" });
     }
+    let updateAutoPlanEndDate = endDate => {
+        itemList.autoPlannerUtil.setEndDate(endDate);
+        updateItemList({ type: "refresh" });
+    }
+    let updateAutoPlanIterationCount = count => {
+        itemList.autoPlannerUtil.setIterationCount(count);
+        updateItemList({ type: "refresh" });
+    }
+    let updateAutoPlanStartDate = startDate => {
+        itemList.autoPlannerUtil.setStartDate(startDate);
+        updateItemList({ type: "refresh" });
+    }
+
     let updatePreferredShift = (itoId, dateOfMonth, newPreferredShift) => {
         itemList.rosterSchedulerUtil.updatePreferredShift(itoId, dateOfMonth, newPreferredShift);
         updateItemList({ type: "refresh" });
@@ -212,7 +225,7 @@ export function useRosterScheduler() {
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
         let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
         try {
-            await itemList.rosterSchedulerUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay);
+            await itemList.rosterSchedulerUtil.loadData(rosterYear, rosterMonth + 1, monthlyCalendar.noOfWorkingDay, monthlyCalendar.calendarDateList.length);
             updateItemList({
                 monthlyCalendar,
                 type: "updateRosterMonth"
@@ -263,6 +276,9 @@ export function useRosterScheduler() {
             showAutoPlanResult,
             startAutoPlan,
             startSelect,
+            updateAutoPlanEndDate,
+            updateAutoPlanIterationCount,
+            updateAutoPlanStartDate,
             updatePreferredShift,
             updateRosterMonth,
             updateShift,
