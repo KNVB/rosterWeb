@@ -6,13 +6,13 @@ import Login from './components/rosterAdmin/Login';
 import RosterAdminGateKeeper from './components/rosterAdmin/RosterAdminGateKeeper';
 import RosterScheduler from "./components/rosterAdmin/rosterScheduler/RosterScheduler";
 import RosterViewer from './components/rosterViewer/RosterViewer';
-
 function App() {
   return (
     <Router>
       <Routes>
         <Route path='/' element={<RosterViewer/>} />
         <Route path='/admin' element={<RosterAdminGateKeeper/>}>
+          <Route index element={<RosterAdminGateKeeper/>} />
           <Route path="itoManagement/:action" element={<ITOManagement/>}/>
           <Route path="rosterScheduler" element={<RosterScheduler/>}/>
         </Route>
