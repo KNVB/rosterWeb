@@ -6,7 +6,7 @@ export default function DateCell({ calendarDate,  isHighLightCell  }) {
         textContent = calendarDate.dateOfMonth;
     }
     return (
-        <td className={"borderCell dateCell text-center" + (isHighLightCell ? " highlightCell" : "") + (isToday ? " todayCell" : "")}>
+        <td className={"borderCell dateCell text-center" + (isHighLightCell ? " highlightCell" : "") + (isToday ? " todayCell" : "")} title={(isToday ?"Today":"")}>
             {textContent}
         </td>
     )
