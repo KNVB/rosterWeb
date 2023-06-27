@@ -7,6 +7,8 @@ export function PrivateAPI(adminUtil, systemParam) {
     const router = Express.Router();
     //===================================================================================================    
     router.use((req, res, next) => {
+        next();
+        /*
         let isAuthenticated = adminUtil.isAuthenticated(req.headers['access-token']);
         console.log("PrivateAPI:access token:" + req.headers['access-token'] + ",isAuthenticated=" + isAuthenticated);
         if (isAuthenticated) {
@@ -14,6 +16,7 @@ export function PrivateAPI(adminUtil, systemParam) {
         } else {
             res.status(401).send("You are not authorized to access this API, please login first.");
         }
+        */
     });
     router.get('/:action', async (req, res, next) => {
         switch (req.params.action) {

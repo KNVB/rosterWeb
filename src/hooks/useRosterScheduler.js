@@ -167,8 +167,11 @@ export function useRosterScheduler() {
         let rowCount = itemList.rosterSchedulerUtil.getCopyDataRowCount();
         if (rowCount > -1) {
             let cell = e.target.closest("td");
-            let rowIds = itemList.rosterSchedulerTableUtil.getPasteRowIds(cell, rowCount);
-            itemList.rosterSchedulerUtil.paste(dateOfMonth, rowIds, itemList.noOfWorkingDay, itemList.calendarDateList.length);
+            //let rowIds = itemList.rosterSchedulerTableUtil.getPasteRowIds(cell, rowCount);
+            let selectedLocation=itemList.rosterSchedulerTableUtil.getSelectedLocation();
+            //console.log(rowIds,selectedLocation);
+            //itemList.rosterSchedulerUtil.paste(dateOfMonth, rowIds, itemList.noOfWorkingDay, itemList.calendarDateList.length);
+            itemList.rosterSchedulerUtil.paste(dateOfMonth,itemList.noOfWorkingDay, itemList.calendarDateList.length,selectedLocation);
             updateItemList({ type: "refresh" });
         }
     }
