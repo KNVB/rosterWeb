@@ -157,36 +157,37 @@ export default class RosterSchedulerUtil {
             let selectX = selectedLocation.column.end - selectedLocation.column.start + 1;
             let selectY = selectedLocation.rows.length;
 
-            let timeX = Math.floor(selectX / copyX);
-            let timeY = Math.floor(selectY / copyY);
+            let horizontalCopyTime = Math.floor(selectX / copyX);
+            let verticalCopyTime = Math.floor(selectY / copyY);
 
-            if (timeX === 0) {
-                timeX = 1;
+            if (horizontalCopyTime === 0) {
+                horizontalCopyTime = 1;
             }
-            if (timeY === 0) {
-                timeY = 1;
+            if (verticalCopyTime === 0) {
+                verticalCopyTime = 1;
             }
-            for (let h = 0; h < timeY; h++) {
-                startY = firstRowNo + (h * copyY);
+
+            for (let v = 0; v < verticalCopyTime; v++) {
+                startY = firstRowNo + (v * copyY);
                 endY = startY + copyY;
-                for (let i = startY; i < endY; i++) {
-                    if (i <= endRowNo) {
-                        rowId = rosterTable.rows[i].id;
+                for (let y = startY; y < endY; y++) {
+                    if (y <= endRowNo) {
+                        rowId = rosterTable.rows[y].id;
                         index = rowId.indexOf("_");
                         shiftRowType = rowId.substring(0, index);
                         itoId = rowId.substring(index + 1);
-                        copiedDataRow = copiedData[i - firstRowNo - (h * copyY)];
-                        for (let j = 0; j < timeX; j++) {
-                            startX = dateOfMonth + (j * copyX);
+                        copiedDataRow = copiedData[y - firstRowNo - (v * copyY)];
+                        for (let h = 0; h < horizontalCopyTime; h++) {
+                            startX = dateOfMonth + (h * copyX);
                             endX = startX + copiedDataRow.length;
                             for (let x = startX; x < endX; x++) {
                                 if (x <= monthLength) {
                                     //console.log(shiftRowType);
                                     if (shiftRowType === "rosterRow") {
-                                        this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth - (j * copyX)], noOfWorkingDay, monthLength);
+                                        this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)], noOfWorkingDay, monthLength);
                                     }
                                     if (shiftRowType === "preferredShiftRow") {
-                                        this.updatePreferredShift(itoId, x, copiedDataRow[x - dateOfMonth - (j * copyX)]);
+                                        this.updatePreferredShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)]);
                                     }
                                 } else {
                                     break;
