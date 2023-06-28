@@ -67,6 +67,7 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil{
         }
         return { cellIndex: nextCellIndex, rowIndex: nextRowIndex }
     }
+    /*
     getPasteRowIds = (cell, rowCount) => {
         let result = [];
         let row = cell.closest("tr");
@@ -82,7 +83,7 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil{
             }
         }
         return result;
-    }
+    }*/
     getSelectedCssClass = (cellIndex, rowIndex) => {
         let result = this.#copiedRegion.getCopiedClass(cellIndex, rowIndex);
         if (result.length === 0) {

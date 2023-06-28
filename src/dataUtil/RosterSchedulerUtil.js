@@ -13,6 +13,9 @@ export default class RosterSchedulerUtil {
             rosterViewerUtil.clearAllShiftData(noOfWorkingDay);
             updateRosterStatistic(1, monthLength);
         }
+        this.clearCopiedData = () => {
+            copiedData = null;
+        }
         this.copy = copyRegion => {
             let index, itoId, shiftList;
             let temp, result = [], shiftRowType;
@@ -136,41 +139,61 @@ export default class RosterSchedulerUtil {
             }
         }
         this.paste = (dateOfMonth, noOfWorkingDay, monthLength, selectedLocation) => {
-            console.log(selectedLocation);
-            console.log(copiedData);
-            let copiedDataRow;
-            let copyX = copiedData[0].length, copyY = copiedData.length;
-            let endX;
-            let index, itoId;
-            let shiftRowType;
+            let copiedDataRow, copyX = copiedData[0].length, copyY = copiedData.length;
+            let endRowNo, endX, endY, firstRowNo, index, itoId, itoIdList, rosterTable, rowId;
+            let startX, startY, shiftRowType;
+            console.log("selectedLocation=" + JSON.stringify(selectedLocation));
+            console.log("copiedData=" + JSON.stringify(copiedData));
+
+            itoIdList = this.getItoIdList();
+            firstRowNo = document.getElementById(selectedLocation.rows[0]).rowIndex;
+            endRowNo = document.getElementById("preferredShiftRow_" + itoIdList[itoIdList.length - 1]).rowIndex;
+            rosterTable = document.getElementsByClassName("rosterTable")[0];
+            console.log("firstRowNo=" + firstRowNo);
+            console.log("endRowNo=" + endRowNo);
+            console.log("itoIdList=" + itoIdList);
+            console.log("last ito ID=" + itoIdList[itoIdList.length - 1]);
+
             let selectX = selectedLocation.column.end - selectedLocation.column.start + 1;
             let selectY = selectedLocation.rows.length;
-            let startX;
+
             let timeX = Math.floor(selectX / copyX);
             let timeY = Math.floor(selectY / copyY);
+
             if (timeX === 0) {
                 timeX = 1;
             }
-            console.log("timeX=" + timeX);
-            index = selectedLocation.rows[0].indexOf("_");
-            shiftRowType = selectedLocation.rows[0].substring(0, index);
-            itoId = selectedLocation.rows[0].substring(index + 1);
-            copiedDataRow = copiedData[0];
-
-            console.log("dateOfMonth=" + dateOfMonth + ",length=" + copiedDataRow.length + ", monthLength=" + monthLength);
-
-            for (let j = 0; j < timeX; j++) {
-                startX = dateOfMonth +(j * copyX);
-                endX = startX + copiedDataRow.length;
-                for (let x = startX; x < endX; x++) {
-                    if (x <= monthLength) {
-                        if (shiftRowType === "rosterRow") {
-                            this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth-(j * copyX)], noOfWorkingDay, monthLength);
+            if (timeY === 0) {
+                timeY = 1;
+            }
+            for (let h = 0; h < timeY; h++) {
+                startY = firstRowNo + (h * copyY);
+                endY = startY + copyY;
+                for (let i = startY; i < endY; i++) {
+                    if (i <= endRowNo) {
+                        rowId = rosterTable.rows[i].id;
+                        index = rowId.indexOf("_");
+                        shiftRowType = rowId.substring(0, index);
+                        itoId = rowId.substring(index + 1);
+                        copiedDataRow = copiedData[i - firstRowNo - (h * copyY)];
+                        for (let j = 0; j < timeX; j++) {
+                            startX = dateOfMonth + (j * copyX);
+                            endX = startX + copiedDataRow.length;
+                            for (let x = startX; x < endX; x++) {
+                                if (x <= monthLength) {
+                                    //console.log(shiftRowType);
+                                    if (shiftRowType === "rosterRow") {
+                                        this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth - (j * copyX)], noOfWorkingDay, monthLength);
+                                    }
+                                    if (shiftRowType === "preferredShiftRow") {
+                                        this.updatePreferredShift(itoId, x, copiedDataRow[x - dateOfMonth - (j * copyX)]);
+                                    }
+                                } else {
+                                    break;
+                                }
+                            }
                         }
-                        if (shiftRowType === "preferredShiftRow") {
-                            this.updatePreferredShift(itoId, x, copiedDataRow[x - dateOfMonth]-(j * copyX));
-                        }    
-                    }else {
+                    } else {
                         break;
                     }
                 }
