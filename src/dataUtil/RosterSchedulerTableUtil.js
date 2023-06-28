@@ -67,23 +67,6 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil{
         }
         return { cellIndex: nextCellIndex, rowIndex: nextRowIndex }
     }
-    /*
-    getPasteRowIds = (cell, rowCount) => {
-        let result = [];
-        let row = cell.closest("tr");
-        result.push(row.id);
-        for (let y = 1; y < rowCount; y++) {
-            row = row.nextSibling;
-            if ((row) && (row.id !== undefined) &&
-                (row.id.startsWith("rosterRow_") ||
-                    row.id.startsWith("preferredShiftRow_"))) {
-                result.push(row.id);
-            } else {
-                break;
-            }
-        }
-        return result;
-    }*/
     getSelectedCssClass = (cellIndex, rowIndex) => {
         let result = this.#copiedRegion.getCopiedClass(cellIndex, rowIndex);
         if (result.length === 0) {

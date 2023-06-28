@@ -142,18 +142,20 @@ export default class RosterSchedulerUtil {
             let copiedDataRow, copyX = copiedData[0].length, copyY = copiedData.length;
             let endRowNo, endX, endY, firstRowNo, index, itoId, itoIdList, rosterTable, rowId;
             let startX, startY, shiftRowType;
+            /*
             console.log("selectedLocation=" + JSON.stringify(selectedLocation));
             console.log("copiedData=" + JSON.stringify(copiedData));
-
+            */
             itoIdList = this.getItoIdList();
             firstRowNo = document.getElementById(selectedLocation.rows[0]).rowIndex;
             endRowNo = document.getElementById("preferredShiftRow_" + itoIdList[itoIdList.length - 1]).rowIndex;
             rosterTable = document.getElementsByClassName("rosterTable")[0];
+            /*
             console.log("firstRowNo=" + firstRowNo);
             console.log("endRowNo=" + endRowNo);
             console.log("itoIdList=" + itoIdList);
             console.log("last ito ID=" + itoIdList[itoIdList.length - 1]);
-
+            */
             let selectX = selectedLocation.column.end - selectedLocation.column.start + 1;
             let selectY = selectedLocation.rows.length;
 
