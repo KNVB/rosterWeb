@@ -2,10 +2,10 @@ import { Navigate } from 'react-router-dom';
 import RosterAdminContent from "./RosterAdminContent";
 export default function RosterAdminGateKeeper(){
     let finalComponent;
-    if (sessionStorage.getItem("accessToken")){
+    //if (sessionStorage.getItem("accessToken")){
         finalComponent=<RosterAdminContent/>
-    } else {
+    /*} else {
         finalComponent=<Navigate to="/login"/>
-    }
+    }*/
     return finalComponent;
 }

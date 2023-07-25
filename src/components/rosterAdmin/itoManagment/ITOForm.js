@@ -79,10 +79,10 @@ export default function ITOForm({ itoAction }) {
    if (isLoading) {
       return <div className="modalBackground"><img src="/icon.gif" /></div>
    } else {
-      let activeShiftRow = [], blackListedShiftPattern = "(";
+      let activeShiftRow = [], blackListedShiftPattern = "(a|(b[1]?)|c|d[123]?)(,(a|(b[1]?)|c|d[123]?))*";
       Object.keys(activeShiftList).forEach(shiftType => {
          if ((shiftType !== "essentialShift") && (shiftType !== "s")) {
-            blackListedShiftPattern += shiftType + ")(";
+            //blackListedShiftPattern += shiftType + ")(";
             activeShiftRow.push(
                <label key={shiftType}>
                   {shiftType}&nbsp;
@@ -96,8 +96,10 @@ export default function ITOForm({ itoAction }) {
             );
          }
       });
+      /*
       blackListedShiftPattern = blackListedShiftPattern.substring(0, blackListedShiftPattern.length - 1);
       blackListedShiftPattern = "[" + blackListedShiftPattern + "]{1}(,[" + blackListedShiftPattern + "])*";
+      */
       //console.log(blackListedShiftPattern);
       return (
          <div className="d-flex flex-grow-1 justify-content-center">
@@ -138,9 +140,9 @@ export default function ITOForm({ itoAction }) {
                                     ito.blackListedShiftPattern.map((pattern, index) => (
                                        <div className="align-items-center d-flex flex-grow-1" key={"blackListedShiftPattern_" + index}>
                                           <input
-                                             name={"blackListedShiftPattern_" + index}
-                                             pattern={blackListedShiftPattern}
+                                             name={"blackListedShiftPattern_" + index}                                            
                                              onChange={updateShiftPattern}
+                                             pattern={blackListedShiftPattern}
                                              required
                                              type="text"
                                              value={pattern} />&nbsp;
