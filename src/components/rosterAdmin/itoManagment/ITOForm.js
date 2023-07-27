@@ -35,7 +35,7 @@ export default function ITOForm({ itoAction }) {
       e.preventDefault();
       if (form.reportValidity()) {
          //console.log(form.availableShift);
-         if (missingAvailableShift("a") || missingAvailableShift("O")) {
+         if (missingAvailableShift("O")) {
             return
          }
          let temp = ito.availableShift.join();
@@ -54,7 +54,7 @@ export default function ITOForm({ itoAction }) {
                alertInvalidShift(matches, "bx");
                return
             }
-            if (missingAvailableShift("c")){
+            if (missingAvailableShift("a") || missingAvailableShift("c")){
                return
             } 
          }

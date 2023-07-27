@@ -34,8 +34,8 @@ let reducer = (state, action) => {
             result.ito.isOperator = action.value;
             switch (action.value) {
                 case "0":
-                    result.ito.availableShift = ["a", "d1", "O"];
-                    result.ito.blackListedShiftPattern = ["b", "b1", "c"];
+                    result.ito.availableShift = ["d1", "O"];
+                    result.ito.blackListedShiftPattern = ["a","b", "b1", "c"];
                     break;
                 case "1":
                     result.ito.availableShift = ["a", "b", "c", "d1", "O"];

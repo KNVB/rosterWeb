@@ -106,11 +106,12 @@ export default class RosterSchedulerUtil {
         this.loadData = async (year, month, noOfWorkingDay, monthLength) => {
             await rosterViewerUtil.loadData(year, month, noOfWorkingDay);
             let temp = await fetchAPI.getRosterSchedulerData(year, month);
-            rosterSchedulerData = { blackListShiftPattern: {}, preferredShiftList: {}, previousMonthShiftList: {} };
+            rosterSchedulerData = { activeITOList:{},blackListShiftPattern: {}, preferredShiftList: {}, previousMonthShiftList: {} };
             rosterSchedulerData.yearlyRosterStatistic = temp.yearlyRosterStatistic;
             rosterDataHistory = null;
             rosterRowIdList = [];
             this.getItoIdList().forEach(itoId => {
+                rosterSchedulerData.activeITOList[itoId]=temp.activeITOList[itoId];
                 rosterSchedulerData.blackListShiftPattern[itoId] = temp.itoBlackListShiftPattern[itoId];
                 rosterRowIdList.push("rosterRow_" + itoId);
                 rosterRowIdList.push("preferredShiftRow_" + itoId);

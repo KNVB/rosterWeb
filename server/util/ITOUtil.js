@@ -18,6 +18,27 @@ export default class ITOUtil {
                 dboObj.close();
             };
         }
+        this.getActiveITOList = async (year, month) => {
+            let dboObj = new Dbo();
+            try {
+                let queryResult = await dboObj.getActiveITOList(year, month);
+                let result = {};
+                queryResult.forEach(record => {
+                    result[record.ito_id] = {
+                        joinDate: record.join_date,
+                        leaveDate: record.leave_date
+                    }
+                });
+                console.log("Get (" + year + "," + month + ") Active ITO List successfully!");
+                return result;
+            } catch (error) {
+                console.log("Something wrong when getting active ITO List from DB:" + error);
+                throw (error);
+            }
+            finally {
+                dboObj.close();
+            };
+        }
         this.getITOList = async () => {
             let dboObj = new Dbo();
             try {
@@ -27,7 +48,7 @@ export default class ITOUtil {
                     if (result[record.ito_id] === undefined) {
                         result[record.ito_id] = {
                             availableShift: record.available_shift.split(","),
-                            active:record.active,
+                            active: record.active,
                             blackListedShiftPattern: [record.black_list_pattern],
                             itoId: record.ito_id,
                             isOperator: record.isOperator,

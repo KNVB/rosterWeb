@@ -41,6 +41,19 @@ export default class Dbo {
                 throw error;
             }
         }
+        this.getActiveITOList= async (year, month) => {
+            let result = getStartEndDateString(year, month);
+            sqlString = "select ito_info.ito_id,ito_info.leave_date,ito_info.join_date ";
+            sqlString += "from ito_info ";
+            sqlString += "where ito_info.join_date<=? and ito_info.leave_date >=?";
+            sqlString += "order by ito_info.ito_id";
+            return await executeQuery(sqlString,
+                [
+                    result.endDateString,
+                    result.startDateString
+                ]
+            );
+        }
         this.getActiveShiftList = async () => {
             sqlString = "select * from shift_info where active=1 order by shift_type";
             return await executeQuery(sqlString);
@@ -54,7 +67,7 @@ export default class Dbo {
             sqlString = "select ito_info.ito_id,black_list_pattern ";
             sqlString += "from ito_info inner join black_list_pattern on ito_info.join_date<=? and ito_info.leave_date >=? ";
             sqlString += "and ito_info.ito_id = black_list_pattern.ito_id";
-            return await executeQuery(sqlString, [result.startDateString, result.endDateString]);
+            return await executeQuery(sqlString, [result.endDateString, result.startDateString]);
         }
         this.getPreferredShiftList = async (year, month) => {
             let result = getStartEndDateString(year, month);
@@ -85,8 +98,8 @@ export default class Dbo {
 
             return await executeQuery(sqlString,
                 [
-                    result.startDateString,
                     result.endDateString,
+                    result.startDateString,
                     result.startDateString,
                     result.endDateString,
                     result.startDateString
@@ -117,8 +130,8 @@ export default class Dbo {
             let result = getStartEndDateString(year, month);
             return await executeQuery(sqlString,
                 [
-                    result.startDateString,
                     result.endDateString,
+                    result.startDateString,
                     year,
                     month
                 ]);
