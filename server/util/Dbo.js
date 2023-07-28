@@ -43,7 +43,7 @@ export default class Dbo {
         }
         this.getActiveITOList= async (year, month) => {
             let result = getStartEndDateString(year, month);
-            sqlString = "select ito_info.ito_id,ito_info.leave_date,ito_info.join_date ";
+            sqlString = "select ito_info.isOperator,ito_info.ito_id,ito_info.leave_date,ito_info.join_date ";
             sqlString += "from ito_info ";
             sqlString += "where ito_info.join_date<=? and ito_info.leave_date >=?";
             sqlString += "order by ito_info.ito_id";

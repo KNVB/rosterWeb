@@ -48,7 +48,7 @@ export default function EditableRosterRow({ calendarDateList, itoId, roster, ros
                 </EditableShiftCell>
             );
         } else {
-            shiftCellList.push(<ShiftCell key={itoId + '_' + index}>&nbsp;</ShiftCell>)
+            shiftCellList.push(<ShiftCell cssClassName="disabled" key={itoId + '_' + index}>&nbsp;</ShiftCell>)
         }
 
     });

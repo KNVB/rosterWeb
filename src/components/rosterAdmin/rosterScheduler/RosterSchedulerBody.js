@@ -4,7 +4,7 @@ import VacantShiftRow from "./rows/VacantShiftRow";
 export default function RosterSchedulerBody({ roster, rosterMonth, rosterSchedulerData, systemParam, uiAction }) {
     let rowList = [];
     let itoIdList = Object.keys(roster.rosterRow);
-    console.log(rosterSchedulerData);
+    //console.log(rosterSchedulerData);
     itoIdList.forEach((itoId, index) => {
         rowList.push(
             <EditableRosterRow

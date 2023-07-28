@@ -25,6 +25,7 @@ export default class ITOUtil {
                 let result = {};
                 queryResult.forEach(record => {
                     result[record.ito_id] = {
+                        isOperator:record.isOperator,
                         joinDate: record.join_date,
                         leaveDate: record.leave_date
                     }
