@@ -23,23 +23,34 @@ export default function EditableRosterRow({ calendarDateList, itoId, roster, ros
             </ShiftCell>
         )
     }
+   
+    let ito = rosterSchedulerData.activeITOList[itoId];
+    let leaveDate = new Date(ito.leaveDate);
+    let joinDate = new Date(ito.joinDate);
     calendarDateList.forEach((calendarDate, index) => {
-        shift = rosterDetail.shiftList[index + 1];
-        className = uiAction.getEditableShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex, shift);
-        
-        if (uiAction.isDuplicateShift(itoId, calendarDate.dateOfMonth)) {
-            className.push("errorRedBlackGround");
+        let theDate = index + 1;
+        let theDateObj = new Date(roster.year + "-" + roster.month + "-" + theDate);
+        shift = rosterDetail.shiftList[theDate];
+
+        if ((theDateObj >= joinDate) && (theDateObj <= leaveDate)) {
+            className = uiAction.getEditableShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex, shift);
+            if (uiAction.isDuplicateShift(itoId, calendarDate.dateOfMonth)) {
+                className.push("errorRedBlackGround");
+            }
+            shiftCellList.push(
+                <EditableShiftCell
+                    cssClassName={className.join(" ")}
+                    key={itoId + '_' + index}
+                    onBlur={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
+                    onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
+                    uiAction={uiAction}>
+                    {shift}
+                </EditableShiftCell>
+            );
+        } else {
+            shiftCellList.push(<ShiftCell cssClassName="disabled" key={itoId + '_' + index}>&nbsp;</ShiftCell>)
         }
-        shiftCellList.push(
-            <EditableShiftCell
-                cssClassName={className.join(" ")}
-                key={itoId + '_' + index}
-                onBlur={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
-                onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
-                uiAction={uiAction}>
-                {shift}
-            </EditableShiftCell>
-        );
+
     });
 
     for (let i = calendarDateList.length; i < 31; i++) {

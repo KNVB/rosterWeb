@@ -1,0 +1,8 @@
+.on{
+    color:blue;
+    cursor: pointer;
+}
+.off{
+    color:rgb(222,226,230);
+    cursor: pointer;
+}

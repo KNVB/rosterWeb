@@ -14,10 +14,11 @@ export default class Dbo {
                 console.log("Add ITO info. transaction start.");
                 console.log("===============================");
                 console.log(ito);
-                sqlString = "insert into ito_info (available_Shift,ito_Id,join_date,leave_date,ito_name,post_name,working_hour_per_day) values(?,?,?,?,?,?,?)";
+                sqlString = "insert into ito_info (available_Shift,isOperator,ito_Id,join_date,leave_date,ito_name,post_name,working_hour_per_day) values(?,?,?,?,?,?,?,?)";
                 await executeQuery(sqlString, [
-                    ito.availableShift.join(","),
-                    ito.itoId,
+                    ito.availableShift.join(","),                    
+                    parseInt(ito.isOperator),
+                    ito.itoId,                    
                     ito.joinDate,
                     ito.leaveDate,
                     ito.name,
@@ -40,12 +41,25 @@ export default class Dbo {
                 throw error;
             }
         }
+        this.getActiveITOList= async (year, month) => {
+            let result = getStartEndDateString(year, month);
+            sqlString = "select ito_info.isOperator,ito_info.ito_id,ito_info.leave_date,ito_info.join_date ";
+            sqlString += "from ito_info ";
+            sqlString += "where ito_info.join_date<=? and ito_info.leave_date >=?";
+            sqlString += "order by ito_info.ito_id";
+            return await executeQuery(sqlString,
+                [
+                    result.endDateString,
+                    result.startDateString
+                ]
+            );
+        }
         this.getActiveShiftList = async () => {
             sqlString = "select * from shift_info where active=1 order by shift_type";
             return await executeQuery(sqlString);
         }
         this.getITOList = async () => {
-            sqlString = "select * from ito_info a inner join black_list_pattern b on a.ito_id = b.ito_id order by a.ito_id";
+            sqlString = "SELECT *, (case when leave_date>sysdate() then \"Yes\" else \"No\" end) as \"active\" from ito_info a inner join black_list_pattern b on a.ito_id = b.ito_id order by a.ito_id";
             return await executeQuery(sqlString);
         }
         this.getITOBlackListShiftPattern = async (year, month) => {
@@ -53,7 +67,7 @@ export default class Dbo {
             sqlString = "select ito_info.ito_id,black_list_pattern ";
             sqlString += "from ito_info inner join black_list_pattern on ito_info.join_date<=? and ito_info.leave_date >=? ";
             sqlString += "and ito_info.ito_id = black_list_pattern.ito_id";
-            return await executeQuery(sqlString, [result.startDateString, result.endDateString]);
+            return await executeQuery(sqlString, [result.endDateString, result.startDateString]);
         }
         this.getPreferredShiftList = async (year, month) => {
             let result = getStartEndDateString(year, month);
@@ -84,8 +98,8 @@ export default class Dbo {
 
             return await executeQuery(sqlString,
                 [
-                    result.startDateString,
                     result.endDateString,
+                    result.startDateString,
                     result.startDateString,
                     result.endDateString,
                     result.startDateString
@@ -116,8 +130,8 @@ export default class Dbo {
             let result = getStartEndDateString(year, month);
             return await executeQuery(sqlString,
                 [
-                    result.startDateString,
                     result.endDateString,
+                    result.startDateString,
                     year,
                     month
                 ]);
@@ -172,10 +186,11 @@ export default class Dbo {
                 console.log("Update ITO ("+ito.itoId+") info. transaction start.");
                 console.log("===============================");
                 console.log(ito);
-                sqlString = "update ito_info set available_Shift=?,join_date=?,leave_date=?,ito_name=?,post_name=?,working_hour_per_day=?";
+                sqlString = "update ito_info set available_Shift=?,isOperator=?,join_date=?,leave_date=?,ito_name=?,post_name=?,working_hour_per_day=?";
                 sqlString +=" where ito_Id=?";
                 await executeQuery(sqlString, [
                     ito.availableShift.join(","),
+                    parseInt(ito.isOperator),
                     new Date(ito.joinDate),
                     new Date(ito.leaveDate),
                     ito.name,

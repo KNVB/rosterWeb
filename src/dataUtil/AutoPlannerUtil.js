@@ -41,7 +41,12 @@ export default class AutoPlannerUtil {
                     } else {
                         resultantShiftList = resultantRoster.rosterRow[itoIdList[i]].shiftList;
                     }
-                    previousShiftList = JSON.parse(JSON.stringify(rosterSchedulerData.previousMonthShiftList[itoIdList[i]]));
+                    if (rosterSchedulerData.previousMonthShiftList[itoIdList[i]]){
+                        previousShiftList = JSON.parse(JSON.stringify(rosterSchedulerData.previousMonthShiftList[itoIdList[i]]));    
+                    } else {
+                        previousShiftList = [];
+                    }                 
+                    
                     if (preferredShiftList[itoIdList[i]] === undefined) {
                         preferredShiftList[itoIdList[i]] = {};
                         preferredShift = "";
