@@ -9,11 +9,11 @@ export function PrivateAPI(adminUtil, systemParam) {
     router.use((req, res, next) => {
         let isAuthenticated = adminUtil.isAuthenticated(req.headers['access-token']);
         console.log("PrivateAPI:access token:" + req.headers['access-token'] + ",isAuthenticated=" + isAuthenticated);
-        //if (isAuthenticated) {
+        if (isAuthenticated) {
             next();
-        /*} else {
+        } else {
             res.status(401).send("You are not authorized to access this API, please login first.");
-        }*/
+        }
     });
     router.get('/:action', async (req, res, next) => {
         switch (req.params.action) {
