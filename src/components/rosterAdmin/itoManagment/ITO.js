@@ -3,7 +3,6 @@ export default class ITO{
         this.availableShift= ["a","b","c","d1","O"];
         this.blackListedShiftPattern=[""];
         this.itoId="";
-        this.isOperator="1";
         this.joinDate=new Date();
         this.leaveDate=new Date("2099-12-31");
         this.name="";

@@ -105,9 +105,7 @@ let getITOList = async () => {
     return await itoUtil.getITOList();
 }
 let getRosterSchedulerData = async params => {
-    let itoUtil = new ITOUtil();
     let rosterUtil = new RosterUtil();
-    let activeITOList= await itoUtil.getActiveITOList(params.year, params.month);
     let previousMonthShiftList = await rosterUtil.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
     let preferredShiftList = await rosterUtil.getPreferredShiftList(params.year, params.month);
     let yearlyRosterStatistic = await rosterUtil.getYearlyRosterStatistic(params.year, params.month);
@@ -116,7 +114,6 @@ let getRosterSchedulerData = async params => {
     let itoBlackListShiftPattern = await shiftUtil.getITOBlackListShiftPattern(params.year, params.month);
 
     return {
-        activeITOList,
         itoBlackListShiftPattern,
         previousMonthShiftList,
         preferredShiftList,

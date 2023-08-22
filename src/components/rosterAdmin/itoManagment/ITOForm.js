@@ -12,53 +12,31 @@ export default function ITOForm({ itoAction }) {
    let backToITOlList = e => {
       navigate("../itoManagement/list")
    }
-   let missingAvailableShift = shiftType => {
-      //console.log(shiftType, !ito.availableShift.includes(shiftType));
-      if (!ito.availableShift.includes(shiftType)) {
-         alert("Missing " + shiftType + " shift in available shift.");
+   let missingAvailableShift=shiftType=>{
+      console.log(shiftType,!ito.availableShift.includes(shiftType));
+      if (!ito.availableShift.includes(shiftType)){
+         alert("Missing "+shiftType+" shift in available shift.");
          return true
       }
       return false
    }
-   let alertInvalidShift = (matches, shiftType) => {
-      if (matches === null) {
-         alert("Missing " + shiftType + " shift in available shift.");
-         return
-      }
-      if (matches.length > 1) {
-         alert("Invalid " + shiftType + " shift setting in available shift.");
-         return
-      }
-   }
-   let doUpdate = async e => {
+   let doUpdate =async e => {
       let form = e.target.form;
       e.preventDefault();
       if (form.reportValidity()) {
          //console.log(form.availableShift);
-         if (missingAvailableShift("O")) {
+         if (missingAvailableShift("a")||missingAvailableShift("c")||missingAvailableShift("O")){
             return
          }
-         let temp = ito.availableShift.join();
-         let regex = /d[123]?/g;
-         let matches = temp.match(regex);
-
-         if ((matches === null) || (matches.length !== 1)) {
-            alertInvalidShift(matches, "dx");
+         if (!ito.availableShift.includes("b") && !ito.availableShift.includes("b1")){
+            alert("Missing bx shift in available shift.");
             return
          }
-         
-         if (ito.isOperator === 1) {
-            regex = /b[1]?/g;
-            matches = temp.match(regex);
-            if ((matches === null) || (matches.length !== 1)) {
-               alertInvalidShift(matches, "bx");
-               return
-            }
-            if (missingAvailableShift("a") || missingAvailableShift("c")){
-               return
-            } 
+         if (!ito.availableShift.includes("d") && !ito.availableShift.includes("d1")  && !ito.availableShift.includes("d2")  && !ito.availableShift.includes("d3")){
+            alert("Missing dx shift in available shift.");
+            return
          }
-         switch (itoAction) {
+         switch (itoAction){
             case "add":
                await updateAction.addITO();
                alert("New ITO added");
@@ -70,7 +48,7 @@ export default function ITOForm({ itoAction }) {
                backToITOlList();
                break;
             default:
-               break;
+               break;   
          }
       }
    }
@@ -85,9 +63,7 @@ export default function ITOForm({ itoAction }) {
          updateAction.updateAvailableShift("remove", field.value);
       }
    }
-   let updateOperatorType = e => {
-      updateAction.updateOperatorType(e.target.value);
-   }
+   
    let updateShiftPattern = e => {
       let field = e.target;
       let index = Number(field.name.replace("blackListedShiftPattern_", ""));
@@ -101,125 +77,125 @@ export default function ITOForm({ itoAction }) {
       return handleAPIError(error);
    }
    if (isLoading) {
-      return <div className="modalBackground"><img alt="Loading" src="/icon.gif" /></div>
-   }
-   let activeShiftRow = [];
-   Object.keys(activeShiftList).forEach(shiftType => {
-      if ((shiftType !== "essentialShift") && (shiftType !== "s")) {
-         activeShiftRow.push(
-            <label key={shiftType}>
-               {shiftType}&nbsp;
-               <input
-                  checked={ito.availableShift.includes(shiftType)}
-                  name="availableShift"
-                  onChange={updateAvailableShift}
-                  type="checkbox"
-                  value={shiftType} />
-            </label>
-         );
-      }
-   });
-   //console.log(ito);
-   return (
-      <div className="d-flex flex-grow-1 justify-content-center">
-         <form onSubmit={() => { return false }}>
-            <table className="border m-1 p-0">
-               <thead>
-                  <tr>
-                     <th className="border border-dark text-center" colSpan={4}>{(itoAction === "edit") ? "Edit" : "Add"} ITO Info</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <tr>
-                     <td className="border border-dark">ITO Name</td>
-                     <td className="border border-dark">
-                        <input name="name" onChange={updateTextField} required type="text" value={ito.name} />
-                     </td>
-                  </tr>
-                  <tr>
-                     <td className="border border-dark">Post Name</td>
-                     <td className="border border-dark">
-                        <input name="post" onChange={updateTextField} pattern="ITO\d{1}" required type="text" value={ito.post} />
-                     </td>
-                  </tr>
-                  <tr>
-                     <td className="border border-dark">Available Shift</td>
-                     <td className="border border-dark">
-                        <div className="d-flex flex-column justify-content-around">
-                           <select onChange={updateOperatorType} name="isOperator" value={ito.isOperator}>
-                              <option value="0">Network Team</option>
-                              <option value="1">Operator</option>
-                           </select>
+      return <div className="modalBackground"><img src="/icon.gif" /></div>
+   } else {
+      let activeShiftRow = [], blackListedShiftPattern = "(a|(b[1]?)|c|d[123]?)(,(a|(b[1]?)|c|d[123]?))*";
+      Object.keys(activeShiftList).forEach(shiftType => {
+         if ((shiftType !== "essentialShift") && (shiftType !== "s")) {
+            //blackListedShiftPattern += shiftType + ")(";
+            activeShiftRow.push(
+               <label key={shiftType}>
+                  {shiftType}&nbsp;
+                  <input
+                     checked={ito.availableShift.includes(shiftType)}
+                     name="availableShift"
+                     onChange={updateAvailableShift}
+                     type="checkbox"
+                     value={shiftType}/>
+               </label>
+            );
+         }
+      });
+      /*
+      blackListedShiftPattern = blackListedShiftPattern.substring(0, blackListedShiftPattern.length - 1);
+      blackListedShiftPattern = "[" + blackListedShiftPattern + "]{1}(,[" + blackListedShiftPattern + "])*";
+      */
+      //console.log(blackListedShiftPattern);
+      return (
+         <div className="d-flex flex-grow-1 justify-content-center">
+            <form onSubmit={() => { return false }}>
+               <table className="border m-1 p-0">
+                  <thead>
+                     <tr>
+                        <th className="border border-dark text-center" colSpan={4}>{(itoAction === "edit") ? "Edit" : "Add"} ITO Info</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td className="border border-dark">ITO Name</td>
+                        <td className="border border-dark">
+                           <input name="name" onChange={updateTextField} required type="text" value={ito.name} />
+                        </td>
+                     </tr>
+                     <tr>
+                        <td className="border border-dark">Post Name</td>
+                        <td className="border border-dark">
+                           <input name="post" onChange={updateTextField} pattern="ITO\d{1}" required type="text" value={ito.post} />
+                        </td>
+                     </tr>
+                     <tr>
+                        <td className="border border-dark">Available Shift</td>
+                        <td className="border border-dark">
                            <div className="d-flex justify-content-around">
                               {activeShiftRow}
                            </div>
-                        </div>
-                     </td>
-                  </tr>
-                  <tr>
-                     <td className="border border-dark">Black Listed Shift Type</td>
-                     <td className="border border-dark">
-                        <div className="d-flex flex-row flex-grow-1">
-                           <div className="border border-dark d-flex flex-column flex-grow-1">
-                              {
-                                 ito.blackListedShiftPattern.map((pattern, index) => (
-                                    <div className="align-items-center d-flex flex-grow-1" key={"blackListedShiftPattern_" + index}>
-                                       <input
-                                          name={"blackListedShiftPattern_" + index}
-                                          onChange={updateShiftPattern}
-                                          pattern="(a|(b[1]?)|c|d[123]?)(,(a|(b[1]?)|c|d[123]?))*"
-                                          required
-                                          type="text"
-                                          value={pattern} />&nbsp;
-                                       <DashCircleFill className="cursor-pointer" onClick={e => removeShiftPattern(index)} />
-                                    </div>
-                                 ))
-                              }
+                        </td>
+                     </tr>
+                     <tr>
+                        <td className="border border-dark">Black Listed Shift Type</td>
+                        <td className="border border-dark">
+                           <div className="d-flex flex-row flex-grow-1">
+                              <div className="border border-dark d-flex flex-column flex-grow-1">
+                                 {
+                                    ito.blackListedShiftPattern.map((pattern, index) => (
+                                       <div className="align-items-center d-flex flex-grow-1" key={"blackListedShiftPattern_" + index}>
+                                          <input
+                                             name={"blackListedShiftPattern_" + index}                                            
+                                             onChange={updateShiftPattern}
+                                             pattern={blackListedShiftPattern}
+                                             required
+                                             type="text"
+                                             value={pattern} />&nbsp;
+                                          <DashCircleFill className="cursor-pointer" onClick={e => removeShiftPattern(index)} />
+                                       </div>
+                                    ))
+                                 }
+                              </div>
+                              <div className="align-items-center border border-dark d-flex flex-grow-1 justify-content-center">
+                                 <PlusCircleFill className="cursor-pointer" onClick={updateAction.addShiftPattern} />
+                              </div>
                            </div>
-                           <div className="align-items-center border border-dark d-flex flex-grow-1 justify-content-center">
-                              <PlusCircleFill className="cursor-pointer" onClick={updateAction.addShiftPattern} />
-                           </div>
-                        </div>
-                     </td>
-                  </tr>
-                  <tr>
-                     <td className="border border-dark">No. of Working Hour Per Day</td>
-                     <td className="border border-dark">
-                        <input onChange={updateTextField} name="workingHourPerDay" pattern="\d+.?\d*" required type="text" value={ito.workingHourPerDay} />
-                     </td>
-                  </tr>
-                  <tr>
-                     <td className="border border-dark">Join Date</td>
-                     <td className="border border-dark">
-                        <DatePicker
-                           locale="en-ca"
-                           onChange={joinDate => updateTextField({ target: { name: "joinDate", value: joinDate } })}
-                           required={true}
-                           value={ito.joinDate} />
-                     </td>
-                  </tr>
-                  <tr>
-                     <td className="border border-dark">Leave Date</td>
-                     <td className="border border-dark">
-                        <DatePicker
-                           locale="en-ca"
-                           onChange={leaveDate => updateTextField({ target: { name: "leaveDate", value: leaveDate } })}
-                           required={true}
-                           value={ito.leaveDate} />
-                        &nbsp;*2099-12-31" mean active member
-                     </td>
-                  </tr>
-               </tbody>
-               <tfoot>
-                  <tr>
-                     <td className="border border-dark text-center" colSpan={4}>
-                        <Button onClick={backToITOlList}>Cancel</Button>&nbsp;
-                        <Button onClick={doUpdate}>{(itoAction === "edit") ? "Update" : "Add"} ITO Info </Button>
-                     </td>
-                  </tr>
-               </tfoot>
-            </table>
-         </form>
-      </div>
-   )
+                        </td>
+                     </tr>
+                     <tr>
+                        <td className="border border-dark">No. of Working Hour Per Day</td>
+                        <td className="border border-dark">
+                           <input onChange={updateTextField} name="workingHourPerDay" pattern="\d+.?\d*" required type="text" value={ito.workingHourPerDay} />
+                        </td>
+                     </tr>
+                     <tr>
+                        <td className="border border-dark">Join Date</td>
+                        <td className="border border-dark">
+                           <DatePicker 
+                              locale="en-ca"                                                         
+                              onChange={joinDate=>updateTextField({target:{name:"joinDate",value:joinDate}})} 
+                              required={true}
+                              value={ito.joinDate} />
+                        </td>
+                     </tr>
+                     <tr>
+                        <td className="border border-dark">Leave Date</td>
+                        <td className="border border-dark">
+                           <DatePicker 
+                              locale="en-ca"
+                              onChange={leaveDate=>updateTextField({target:{name:"leaveDate",value:leaveDate}})} 
+                              required={true}
+                              value={ito.leaveDate} />
+                           &nbsp;*2099-12-31" mean active member
+                        </td>
+                     </tr>
+                  </tbody>
+                  <tfoot>
+                     <tr>
+                        <td className="border border-dark text-center" colSpan={4}>
+                           <Button onClick={backToITOlList}>Cancel</Button>&nbsp;
+                           <Button onClick={doUpdate}>{(itoAction === "edit") ? "Update" : "Add"} ITO Info </Button>
+                        </td>
+                     </tr>
+                  </tfoot>
+               </table>
+            </form>
+         </div>
+      )
+   }
 }

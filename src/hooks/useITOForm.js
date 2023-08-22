@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect,useReducer } from 'react';
 import { useLocation } from 'react-router-dom';
 import ITOManagementUtil from "../dataUtil/ITOManagementUtil";
 let reducer = (state, action) => {
@@ -23,26 +23,12 @@ let reducer = (state, action) => {
                 }
             });
             result.ito.blackListedShiftPattern = temp;
-            break;
+            break;            
         case "setError":
             result.error = action.error;
             break;
         case "updateAvailableShift":
             result.ito.availableShift = action.value;
-            break;
-        case "updateOperatorType":
-            result.ito.isOperator = action.value;
-            switch (action.value) {
-                case "0":
-                    result.ito.availableShift = ["d1", "O"];
-                    result.ito.blackListedShiftPattern = ["a","b", "b1", "c"];
-                    break;
-                case "1":
-                    result.ito.availableShift = ["a", "b", "c", "d1", "O"];
-                    break;
-                default:
-                    break;
-            }
             break;
         case "updateTextField":
             result.ito[action.fieldName] = action.value;
@@ -51,7 +37,7 @@ let reducer = (state, action) => {
             temp = JSON.parse(JSON.stringify(result.ito.blackListedShiftPattern));
             temp[action.index] = action.value;
             result.ito.blackListedShiftPattern = temp;
-            break
+            break            
         default:
             break;
     }
@@ -65,9 +51,9 @@ export function useITOForm() {
         error: null,
         isLoading: true
     });
-    useEffect(() => {
+    useEffect(()=>{
         let getData = async () => {
-            try {
+            try{
                 let itoManagementUtil = new ITOManagementUtil();
                 let activeShiftList = await itoManagementUtil.getActiveShiftList();
                 updateItemList({
@@ -81,15 +67,15 @@ export function useITOForm() {
             }
         }
         getData();
-    }, []);
-    let addITO = async () => {
-        try {
+    },[]);
+    let addITO=async ()=>{
+        try{
             await itemList.itoManagementUtil.addITO(itemList.ito);
-        } catch (error) {
+        }catch (error) {
             console.log(error);
             updateItemList({ "error": error, "type": "setError" });
-        }
-    }
+        }  
+    }    
     let addShiftPattern = () => {
         updateItemList({ type: "addShiftPattern" });
     }
@@ -121,26 +107,20 @@ export function useITOForm() {
                 break;
         }
     }
-
-    let updateITO = async () => {
-        try {
+    
+    let updateITO=async()=>{
+        try{
             await itemList.itoManagementUtil.updateITO(itemList.ito);
-        } catch (error) {
+        }catch (error) {
             console.log(error);
             updateItemList({ "error": error, "type": "setError" });
-        }
-    }
-    let updateOperatorType = type => {
-        updateItemList({
-            "type": "updateOperatorType",
-            "value": type
-        });
+        }  
     }
     let updateShiftPattern = (index, value) => {
         updateItemList({
             index: index,
-            type: "updateShiftPattern",
-            value: value
+            value: value,
+            type: "updateShiftPattern"
         });
     }
     let updateTextField = (fieldName, value) => {
@@ -150,18 +130,17 @@ export function useITOForm() {
             type: "updateTextField"
         });
     }
-    return {
-        activeShiftList: itemList.activeShiftList,
-        error: itemList.error,
-        isLoading: itemList.isLoading,
-        ito: itemList.ito,
-        updateAction: {
+    return{
+        activeShiftList:itemList.activeShiftList,
+        error:itemList.error,
+        isLoading:itemList.isLoading,
+        ito:itemList.ito,
+        updateAction:{
             addITO,
             addShiftPattern,
             removeShiftPattern,
-            updateAvailableShift,
+            updateAvailableShift,            
             updateITO,
-            updateOperatorType,
             updateShiftPattern,
             updateTextField
         }

@@ -120,9 +120,7 @@
 	*/
 	font-family: "Times New Roman", Times, serif;
 }
-.disabled {
-	background-color:#f0f0f0
-}
+
 .rosterTable tbody tr:last-child td.borderCell {
 	border-bottom: 1px inset #e0e0e0;
 }
