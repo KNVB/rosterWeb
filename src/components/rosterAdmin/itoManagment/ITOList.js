@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Pencil, PlusLg} from 'react-bootstrap-icons';
 import handleAPIError from "../../common/handleAPIError";
 import ITO from "./ITO";
+import Loading from "../../common/Loading";
 export default function ITOList(){
     const { error, isLoading, itoList } = useITOList();
     if (error) {
@@ -70,6 +71,6 @@ export default function ITOList(){
             </table>
         )
     }else {
-        return <div className="modalBackground"><img src="/icon.gif" /></div>
+        return <Loading/>
     }
 }

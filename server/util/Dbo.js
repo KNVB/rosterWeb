@@ -45,7 +45,7 @@ export default class Dbo {
             return await executeQuery(sqlString);
         }
         this.getITOList = async () => {
-            sqlString = "select * from ito_info a inner join black_list_pattern b on a.ito_id = b.ito_id order by a.ito_id";
+            sqlString = "select * from ito_info a inner join black_list_pattern b on a.ito_id = b.ito_id order by leave_date desc,a.ito_id";
             return await executeQuery(sqlString);
         }
         this.getITOBlackListShiftPattern = async (year, month) => {

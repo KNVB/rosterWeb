@@ -1,6 +1,7 @@
 import { useRosterViewer } from "../../hooks/useRosterViewer";
 import handleAPIError from "../common/handleAPIError";
 import RosterTable from "./RosterTable";
+import Loading from "../common/Loading";
 export default function RosterViewer() {
     const { error, isLoading, roster, rosterMonth, systemParam, uiAction } = useRosterViewer();
     if (error) {
@@ -17,6 +18,6 @@ export default function RosterViewer() {
                 uiAction={uiAction} />
         );
     } else {
-        return <div className="modalBackground"><img src="/icon.gif" /></div>
+        return <Loading/>
     }
 }

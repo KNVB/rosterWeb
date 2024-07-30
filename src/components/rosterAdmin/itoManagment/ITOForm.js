@@ -6,6 +6,7 @@ import handleAPIError from "../../common/handleAPIError";
 import DatePicker from "react-date-picker";
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
+import Loading from "../../common/Loading";
 export default function ITOForm({ itoAction }) {
    const { activeShiftList, error, isLoading, ito, updateAction } = useITOForm();
    let navigate = useNavigate();
@@ -77,7 +78,7 @@ export default function ITOForm({ itoAction }) {
       return handleAPIError(error);
    }
    if (isLoading) {
-      return <div className="modalBackground"><img src="/icon.gif" /></div>
+      return <Loading/>
    } else {
       let activeShiftRow = [], blackListedShiftPattern = "(a|(b[1]?)|c|d[123]?)(,(a|(b[1]?)|c|d[123]?))*";
       Object.keys(activeShiftList).forEach(shiftType => {

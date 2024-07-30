@@ -1,6 +1,7 @@
 import {useRosterScheduler} from "../../../hooks/useRosterScheduler";
 import handleAPIError from "../../common/handleAPIError";
 import RosterSchedulerTable from "./RosterSchedulerTable";
+import Loading from "../../common/Loading";
 export default function RosterScheduler(){
     const {autoPlanResult, error, isLoading, roster,rosterMonth, rosterSchedulerData, systemParam, uiAction } = useRosterScheduler();
     if (error) {
@@ -19,6 +20,6 @@ export default function RosterScheduler(){
                 uiAction={uiAction} />
         )
     } else {
-        return <div className="modalBackground"><img src="/icon.gif" /></div>
+        return <Loading/>
     }
 }

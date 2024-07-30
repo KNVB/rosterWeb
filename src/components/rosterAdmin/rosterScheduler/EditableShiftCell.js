@@ -1,6 +1,6 @@
 import ShiftCell from "../../common/cells/ShiftCell";
 export default function EditableShiftCell(props) {
-    let {  uiAction, cssClassName, children, onBlur, onPaste } = props;
+    let { cssClassName, children, onBlur, onPaste, title, uiAction } = props;
     function handleMouseEnterEvent(e) {
         e.preventDefault();
         let cell = e.target.closest("td");
@@ -14,11 +14,12 @@ export default function EditableShiftCell(props) {
     let isLastCell = ((cssClassName.indexOf("selectCellBorderRight") > -1) && (cssClassName.indexOf("selectCellBorderBottom") > -1));
     return (
         <ShiftCell
-            cssClassName={cssClassName+" m-0 p-0 position-relative"}
+            cssClassName={cssClassName + " m-0 p-0 position-relative"}
             onMouseDown={uiAction.startSelect}
             onMouseEnter={handleMouseEnterEvent}
             onMouseLeave={handleMouseLeaveEvent}
-            onPaste={onPaste}>
+            onPaste={onPaste}
+            title={title}>
             <div
                 className="shiftContent"
                 contentEditable={true}

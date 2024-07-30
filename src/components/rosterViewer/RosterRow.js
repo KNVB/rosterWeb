@@ -24,7 +24,8 @@ export default function RosterRow({calendarDateList,itoId,roster, rowIndex,syste
                 cssClassName={className}
                 key={itoId + '_' + index}
                 onMouseEnter={handleMouseEnterEvent}
-                onMouseLeave={handleMouseLeaveEvent}>
+                onMouseLeave={handleMouseLeaveEvent}
+                title={shift}>
                 {shift}
             </ShiftCell>
         )

@@ -36,6 +36,7 @@ export default function EditableRosterRow({ calendarDateList, itoId, roster, ros
                 key={itoId + '_' + index}
                 onBlur={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
                 onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
+                title={shift}
                 uiAction={uiAction}>
                 {shift}
             </EditableShiftCell>
