@@ -18,8 +18,8 @@ export default class Dbo {
                 await executeQuery(sqlString, [
                     ito.availableShift.join(","),
                     ito.itoId,
-                    ito.joinDate,
-                    ito.leaveDate,
+                    new Date(ito.joinDate),
+                    new Date(ito.leaveDate),
                     ito.name,
                     ito.post,
                     ito.workingHourPerDay
