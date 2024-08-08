@@ -27,6 +27,9 @@ export default class FetchAPI {
     getActiveShiftList = async () => {
         return (await this.#fetch(null, "get", "/publicAPI/getActiveShiftList"));
     }
+    getITOList = async () => {
+        return (await this.#secureFetch(null, "get", "/privateAPI/getITOList"));
+    }
     getRoster = async (year, month) => {
         return (await this.#fetch({ year: year, month: month }, "get", "/publicAPI/getRoster"));
     }
@@ -38,6 +41,9 @@ export default class FetchAPI {
     }
     logout = async () => {
         return await this.#secureFetch(null, "get", "/privateAPI/logout");
+    }
+    updateITO = async ito => {
+        return (await this.#secureFetch({ "ito": ito }, "post", "/privateAPI/updateITO"));
     }
     //================================================================================================================================
     #fetch = async (data, method, url, responseType, headers) => {

@@ -11,6 +11,10 @@ export default class Dbo {
         this.#sqlString = "select * from shift_info where active=1 order by shift_type";
         return await this.#executeQuery(this.#sqlString);
     }
+    getITOList = async () => {
+        this.#sqlString = "select * from ito_info a inner join black_list_pattern b on a.ito_id = b.ito_id order by leave_date desc,a.ito_id";
+        return await this.#executeQuery(this.#sqlString);
+    }
     getRoster = async (year, month) => {
         let result = this.#getStartEndDateString(year, month);
         this.#sqlString = "select v.available_shift,v.ito_id,post_name,ito_name,working_hour_per_day,balance,day(Shift_date) as d,shift ";
@@ -36,6 +40,41 @@ export default class Dbo {
     getSystemParam = async () => {
         this.#sqlString = "select * from system_param order by param_type,param_key,param_value";
         return await this.#executeQuery(this.#sqlString);
+    }
+    updateITO = async ito =>{
+        try {
+            await this.#connection.promise().beginTransaction();
+            console.log("Update ITO ("+ito.itoId+") info. transaction start.");
+            console.log("===============================");
+            console.log(ito);
+            this.#sqlString = "update ito_info set available_Shift=?,join_date=?,leave_date=?,ito_name=?,post_name=?,working_hour_per_day=?";
+            this.#sqlString +=" where ito_Id=?";
+            await this.#executeQuery(this.#sqlString, [
+                ito.availableShift.join(","),
+                ito.joinDate,
+                ito.leaveDate,
+                ito.name,
+                ito.post,
+                ito.workingHourPerDay,
+                ito.itoId
+            ]);
+            this.#sqlString = "delete from black_list_pattern where ito_Id=?";
+            await executeQuery(this.#sqlString, [ito.itoId]);
+            sqlString = "insert into black_list_pattern (ito_Id, black_list_pattern) values(?,?)";
+            for (let i = 0; i < ito.blackListedShiftPattern.length; i++) {
+                let shiftPattern = ito.blackListedShiftPattern[i];
+                await this.#executeQuery(this.#sqlString, [ito.itoId, shiftPattern]);
+            }
+            await this.#connection.promise().commit();
+            console.log("ITO ("+ito.itoId+")info updated successfully.");
+            console.log("===============================");
+            return true;
+        } catch (error) {
+            if (this.#connection) {
+                await this.#connection.promise().rollback();
+            }
+            throw error;
+        }
     }
     close(){
         this.#connection.end(err => {
