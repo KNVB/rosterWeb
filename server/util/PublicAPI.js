@@ -19,6 +19,21 @@ export default function PublicAPI(adminUtil, systemParam){
                 break;
         }
     });
+    router.post('/:action', async (req, res, next) => {
+        switch (req.params.action) {
+            case "login":
+                try {
+                    let loginResult = adminUtil.login(req.body.loginObj);
+                    res.send(loginResult);
+                } catch (error) {
+                    res.status(400).send(error.message);
+                }
+                break;
+            default:
+                next();
+                break;
+        }
+    });
     return router;
 }
 //====================================================================================================================================

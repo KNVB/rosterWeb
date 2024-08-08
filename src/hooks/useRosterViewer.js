@@ -28,6 +28,9 @@ let reducer = (state, action) => {
         case "setError":
             result.error = action.error;
             break;
+        case "updateLoading":
+            result.isLoading = action.loading;
+            break
         case "updateRosterMonth":
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.roster = {

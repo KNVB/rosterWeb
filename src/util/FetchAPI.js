@@ -36,6 +36,9 @@ export default class FetchAPI {
     login = async loginObj => {
         return await this.#fetch({ loginObj: loginObj }, "post", "/publicAPI/login");
     }
+    logout = async () => {
+        return await this.#secureFetch(null, "get", "/privateAPI/logout");
+    }
     //================================================================================================================================
     #fetch = async (data, method, url, responseType, headers) => {
         const requestObj = {
@@ -48,5 +51,8 @@ export default class FetchAPI {
         console.log(requestObj);
         const response = await this.#api(requestObj);
         return response.data;
+    }
+    #secureFetch = async (data, method, url, responseType) => {
+        return await this.#fetch(data, method, url, responseType, { "access-token": sessionStorage.getItem("accessToken") });
     }
 }

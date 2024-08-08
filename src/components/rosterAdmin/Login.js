@@ -4,7 +4,7 @@ import {Button, Container,Col,Row } from 'react-bootstrap';
 import AdminUtil from "../../util/AdminUtil";
 export default function Login(){
     document.title="EMSTF Roster Administration Page";
-    const[loginObj,updateObj]=useState({"password":'',"userName":""});
+    const[loginObj,updateObj]=useState({"password":"","userName":""});
     const navigate = useNavigate ();
     let adminUtil=new AdminUtil();
     let login=async e=>{
