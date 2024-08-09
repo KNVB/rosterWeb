@@ -6,6 +6,9 @@ export default class ITOManagementUtil {
         this.#fetchAPI = new FetchAPI();
         this.itoList = {};
     }
+    addITO=async ito =>{
+        await this.#fetchAPI.addITO(ito);
+    }
     getITOList = async () => {
         this.#itoList = await this.#fetchAPI.getITOList();
         return this.#itoList;

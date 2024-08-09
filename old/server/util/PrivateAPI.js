@@ -3,6 +3,7 @@ import ITOUtil from './ITOUtil.js';
 export default function PrivateAPI(adminUtil, systemParam) {
     const router = Express.Router();
     //===================================================================================================    
+    /*
     router.use((req, res, next) => {
         let isAuthenticated = adminUtil.isAuthenticated(req.headers['access-token']);
         console.log("PrivateAPI:access token:" + req.headers['access-token'] + ",isAuthenticated=" + isAuthenticated);
@@ -12,6 +13,7 @@ export default function PrivateAPI(adminUtil, systemParam) {
             res.status(401).send("You are not authorized to access this API, please login first.");
         }
     });
+    */
     router.get('/:action', async (req, res, next) => {
         switch (req.params.action) {
             case "getITOList":
@@ -27,6 +29,9 @@ export default function PrivateAPI(adminUtil, systemParam) {
     });
     router.post('/:action', async (req, res, next) => {
         switch (req.params.action) {
+            case "addITOToDB":
+                sendResponse(res, addITOToDB, req.body.ito);
+                break;
             case "updateITO":
                 sendResponse(res, updateITO, req.body.ito);
                 break;
@@ -41,6 +46,10 @@ export default function PrivateAPI(adminUtil, systemParam) {
     return router;
 }
 //====================================================================================================================================
+let addITOToDB = async ito => {
+    let itoUtil = new ITOUtil();
+    return await itoUtil.addITOToDB(ito);
+}
 let getITOList = async () => {
     let itoUtil = new ITOUtil();
     return await itoUtil.getITOList();

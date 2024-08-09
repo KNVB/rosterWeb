@@ -7,6 +7,38 @@ export default class Dbo {
     constructor() {
         this.#connection = mysql.createConnection(DbConfig);
     }
+    addITO = async ito => {
+        try {
+            await this.#connection.promise().beginTransaction();
+            console.log("Add ITO info. transaction start.");
+            console.log("===============================");
+            console.log(ito);
+            this.#sqlString = "insert into ito_info (available_Shift,ito_Id,join_date,leave_date,ito_name,post_name,working_hour_per_day) values(?,?,?,?,?,?,?)";
+            await this.#executeQuery(this.#sqlString, [
+                ito.availableShift.join(","),
+                ito.itoId,
+                new Date(ito.joinDate).toLocaleDateString("en-ca"),
+                new Date(ito.leaveDate).toLocaleDateString("en-ca"),
+                ito.name,
+                ito.post,
+                ito.workingHourPerDay
+            ]);
+            this.#sqlString = "insert into black_list_pattern (ito_Id, black_list_pattern) values(?,?)";
+            for (let i = 0; i < ito.blackListedShiftPattern.length; i++) {
+                let shiftPattern = ito.blackListedShiftPattern[i];
+                await this.#executeQuery(this.#sqlString, [ito.itoId, shiftPattern]);
+            }
+            await this.#connection.promise().commit();
+            console.log("ITO info added successfully.");
+            console.log("===============================");
+            return true;
+        } catch (error) {
+            if (this.#connection) {
+                await this.#connection.promise().rollback();
+            }
+            throw error;
+        }
+    }
     getActiveShiftList = async () => {
         this.#sqlString = "select * from shift_info where active=1 order by shift_type";
         return await this.#executeQuery(this.#sqlString);
@@ -51,16 +83,16 @@ export default class Dbo {
             this.#sqlString +=" where ito_Id=?";
             await this.#executeQuery(this.#sqlString, [
                 ito.availableShift.join(","),
-                ito.joinDate,
-                ito.leaveDate,
+                new Date(ito.joinDate).toLocaleDateString("en-ca"),
+                new Date(ito.leaveDate).toLocaleDateString("en-ca"),
                 ito.name,
                 ito.post,
                 ito.workingHourPerDay,
                 ito.itoId
             ]);
             this.#sqlString = "delete from black_list_pattern where ito_Id=?";
-            await executeQuery(this.#sqlString, [ito.itoId]);
-            sqlString = "insert into black_list_pattern (ito_Id, black_list_pattern) values(?,?)";
+            await this.#executeQuery(this.#sqlString, [ito.itoId]);
+            this.#sqlString = "insert into black_list_pattern (ito_Id, black_list_pattern) values(?,?)";
             for (let i = 0; i < ito.blackListedShiftPattern.length; i++) {
                 let shiftPattern = ito.blackListedShiftPattern[i];
                 await this.#executeQuery(this.#sqlString, [ito.itoId, shiftPattern]);

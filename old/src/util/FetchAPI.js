@@ -24,6 +24,9 @@ export default class FetchAPI {
             }
         );
     }
+    addITO = async ito => {
+        return (await this.#secureFetch({ "ito": ito }, "post", "/privateAPI/addITOToDB"));
+    }
     getActiveShiftList = async () => {
         return (await this.#fetch(null, "get", "/publicAPI/getActiveShiftList"));
     }
