@@ -5,15 +5,16 @@ import { fileURLToPath } from 'url';
 
 import Express from 'express';
 import PublicAPI from "./util/PublicAPI.js";
-import SystemParam from './util/SystemParam.js';
-let systemParam = new SystemParam();
+import SystemParam from './classes/SystemParam.js';
+
 dotenv.config({ path: './.env.' + process.env.NODE_ENV });
+let systemParam =await SystemParam();
 let app = new Express();
 let httpServer = http.createServer(app);
 
 
 app.use(Express.json());
-app.use('/publicAPI', PublicAPI(adminUtil, systemParam));
+app.use('/publicAPI', PublicAPI(null, systemParam));
 
 if (process.env.NODE_ENV === "production") {
     const __filename = fileURLToPath(import.meta.url);

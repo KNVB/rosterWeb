@@ -1,5 +1,7 @@
 import Express from 'express';
-export default function PublicAPI(adminUtil, systemParam){
+import Roster from '../classes/Roster.js';
+import ShiftInfo from "../classes/ShiftInfo.js";
+export default function PublicAPI(adminUtil, systemParam) {
     const router = Express.Router();
     router.get('/:action', async (req, res, next) => {
         switch (req.params.action) {
@@ -21,9 +23,12 @@ export default function PublicAPI(adminUtil, systemParam){
 }
 //====================================================================================================================================
 let getActiveShiftList = async () => {
-    let shiftInfo = new ShiftInfo();
-    let activeShiftList = await shiftInfo.getActiveShiftList();
-    return activeShiftList;
+    let shiftInfo = await ShiftInfo.create();
+    return shiftInfo.activeShiftList;
+}
+let getRoster = async (params) => {
+    let roster = new Roster();
+    return await roster.getRoster(params.year, params.month);
 }
 //====================================================================================================================================
 let sendResponse = async (res, action, param) => {
