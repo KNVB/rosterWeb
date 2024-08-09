@@ -33,7 +33,9 @@
     "server": "nodemon -r dotenv/config ./server/index.js",
     "start": "react-scripts start",
     "test": "react-scripts test",
-    "testRoster": "cross-env NODE_ENV=development node ./server/util/RosterUtil.js"
+    "testITOInfo": "cross-env NODE_ENV=development node ./server/test/TestITOInfo.js",
+    "testRoster": "cross-env NODE_ENV=development node ./server/test/TestRoster.js",
+    "testShiftInfo":"cross-env NODE_ENV=development node ./server/test/TestShiftInfo.js"
   },
   "eslintConfig": {
     "extends": [
