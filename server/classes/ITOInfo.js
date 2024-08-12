@@ -1,8 +1,20 @@
 import Dbo from "../util/Dbo.js";
-export default class ITOInfo{
+export default class ITOInfo {
     #dboObj;
-    constructor(){
-        this.#dboObj=new Dbo();
+    constructor() {
+        this.#dboObj = new Dbo();
+    }
+    addITO = async ito => {
+        ito.itoId = ito.post + "_" + ito.joinDate;
+        try {
+            return await this.#dboObj.addITO(ito);
+        } catch (error) {
+            console.log("Something wrong when adding an ITO info to DB:" + error);
+            throw (error);
+        }
+        finally {
+            this.#dboObj.close();
+        };
     }
     getITOList = async () => {
         try {
@@ -13,9 +25,10 @@ export default class ITOInfo{
                     result[record.ito_id] = {
                         availableShift: record.available_shift.split(","),
                         blackListedShiftPattern: [record.black_list_pattern],
+                        dutyPattern: record.duty_pattern,
                         itoId: record.ito_id,
-                        joinDate: record.join_date,
-                        leaveDate: record.leave_date,
+                        joinDate: record.join_date.toLocaleDateString("en-CA"),
+                        leaveDate: record.leave_date.toLocaleDateString("en-CA"),
                         name: record.ito_name,
                         post: record.post_name,
                         workingHourPerDay: record.working_hour_per_day
@@ -27,6 +40,17 @@ export default class ITOInfo{
             return result;
         } catch (error) {
             console.log("Something wrong when getting ITO list:" + error);
+            throw (error);
+        }
+        finally {
+            this.#dboObj.close();
+        };
+    }
+    updateITO = async (ito) => {
+        try {
+            return await this.#dboObj.updateITO(ito);
+        } catch (error) {
+            console.log("Something wrong when updating an ITO info to DB:" + error);
             throw (error);
         }
         finally {
