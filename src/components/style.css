@@ -46,6 +46,9 @@
 	margin: 0px;
 	width: 29px;
 }
+.highLight:hover{
+	background-color:gainsboro;
+}
 .errorRedBlackGround{
 	animation: blinker 1s linear infinite;
 	background-color: red !important;	

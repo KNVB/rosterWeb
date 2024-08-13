@@ -17,7 +17,7 @@ export default function ITOList() {
         for (const [itoId, ito] of Object.entries(itoList)) {
             isLeft = (ito.leaveDate !== "2099-12-31");
             itoRowList.push(
-                <tr className={(isLeft ? "text-secondary" : "")} key={itoId} title={(isLeft ? ito.name+" has left on "+ito.leaveDate : "")}>
+                <tr className={(isLeft ? "highLight text-secondary" : "highLight")} key={itoId} title={(isLeft ? ito.name+" has left on "+ito.leaveDate : "")}>
                     <td className="border">
                         {ito.name}
                     </td>

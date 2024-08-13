@@ -1,20 +1,22 @@
 import { useEffect, useReducer } from "react";
-import ActiveShiftList from "../dataUtil/ActiveShiftList";
 import CalendarUtility from "../util/calendar/CalendarUtility";
-import Roster from "../dataUtil/Roster";
-import SystemParam from "../dataUtil/SystemParam";
+import RosterViewerData from "../dataUtil/RosterViewerData";
 import { Utility } from "../util/Utility";
 let reducer = (state, action) => {
     let result = { ...state };
+    let temp;
     switch (action.type) {
         case "init":
-            result.activeShiftList = action.activeShiftList;
+            result.activeShiftList = action.rosterViewerData.activeShiftList;
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.roster = {
                 noOfWorkingDay: action.monthlyCalendar.noOfWorkingDay,
-                rosterRow: Utility.genITOStat(action.activeShiftList, action.roster, action.monthlyCalendar.noOfWorkingDay)
+                rosterRow: Utility.genITOStat(action.rosterViewerData.activeShiftList, action.rosterViewerData.rosterData, action.monthlyCalendar.noOfWorkingDay)
             }
-            result.systemParam = action.systemParam;
+            console.log(action.rosterViewerData)
+            temp = action.rosterViewerData.systemParam;
+            temp.monthPickerMinDate = new Date(temp.monthPickerMinDate);
+            result.systemParam = temp;
             result.isLoading = false;
             break;
         case "refresh":
@@ -30,7 +32,7 @@ let reducer = (state, action) => {
             result.calendarDateList = action.monthlyCalendar.calendarDateList;
             result.roster = {
                 noOfWorkingDay: action.monthlyCalendar.noOfWorkingDay,
-                rosterRow: Utility.genITOStat(result.activeShiftList, action.roster, action.monthlyCalendar.noOfWorkingDay)
+                rosterRow: Utility.genITOStat(result.activeShiftList, action.rosterViewerData.rosterData, action.monthlyCalendar.noOfWorkingDay)
             }
             result.roster.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
             break
@@ -49,7 +51,6 @@ export function useRosterViewer() {
         roster: null,
         systemParam: null,
         tableParam: { highLightCellIndex: -1, highLightRowIndex: -1 },
-        uiAction: null,
     });
     useEffect(() => {
         let getData = async () => {
@@ -57,16 +58,10 @@ export function useRosterViewer() {
             let rosterYear = now.getFullYear();
             let rosterMonth = now.getMonth();
             let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
-            let activeShiftList = await ActiveShiftList();
-            let roster = await Roster(rosterYear, rosterMonth + 1);
-            let systemParam = await SystemParam();
-            systemParam.monthPickerMinDate = new Date(systemParam.monthPickerMinDate.year, systemParam.monthPickerMinDate.month - 1, systemParam.monthPickerMinDate.date);
-            systemParam.noOfPrevDate = 0;
+            let rosterViewerData = await RosterViewerData(rosterYear, rosterMonth + 1);
             updateItemList({
-                activeShiftList,
                 monthlyCalendar,
-                roster,
-                systemParam,
+                rosterViewerData,
                 type: "init"
             });
         }
@@ -82,12 +77,13 @@ export function useRosterViewer() {
         return (itemList.tableParam.highLightRowIndex === rowIndex);
     }
     let updateRosterMonth = async (newRosterMonth) => {
+
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
         let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
         try {
-            let roster = await Roster(rosterYear, rosterMonth + 1);
+            let rosterViewerData = await RosterViewerData(rosterYear, rosterMonth + 1);
             updateItemList({
-                roster,
+                rosterViewerData,
                 monthlyCalendar,
                 type: "updateRosterMonth"
             });
@@ -106,7 +102,7 @@ export function useRosterViewer() {
         isLoading: itemList.isLoading,
         roster: itemList.roster,
         systemParam: itemList.systemParam,
-        uiAction: {
+        "uiAction": {
             getShiftCssClassName,
             isHighLightCell,
             isHighLightRow,

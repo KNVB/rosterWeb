@@ -33,8 +33,11 @@ export default class FetchAPI {
     getITOList = async () => {
         return (await this.#secureFetch(null, "get", "/privateAPI/getITOList"));
     }
-    getRoster = async (year, month) => {
-        return (await this.#fetch({ year: year, month: month }, "get", "/publicAPI/getRoster"));
+    getRosterViewerData = async (year, month) => {
+        return (await this.#fetch({ year: year, month: month }, "get", "/publicAPI/getRosterViewerData"));
+    }
+    getRosterSchedulerData = async (year, month) => {
+        return (await  this.#secureFetch({ year: year, month: month }, "get", "/privateAPI/getRosterSchedulerData"));
     }
     getSystemParam = async () => {
         return (await this.#fetch(null, "get", "/publicAPI/getSystemParam"));

@@ -15,19 +15,18 @@ let reducer = (state, action) => {
     }
     return result;
 }
-export function useITOList(){
+export function useITOList() {
     const [itemList, updateItemList] = useReducer(reducer, {
         error: null,
         isLoading: true,
-        ito:new ITO(),
+        ito: new ITO(),
         itoList: {}
     });
     useEffect(() => {
         let getData = async () => {
             try {
-               
                 let itoList = await itemList.ito.getITOList();
-                updateItemList({                    
+                updateItemList({
                     itoList,
                     type: "init"
                 });
