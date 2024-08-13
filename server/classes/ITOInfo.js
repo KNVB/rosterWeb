@@ -23,16 +23,19 @@ export default class ITOInfo {
             queryResult.forEach(record => {
                 if (result[record.ito_id] === undefined) {
                     result[record.ito_id] = {
-                        availableShift: record.available_shift.split(","),
-                        blackListedShiftPattern: [record.black_list_pattern],
+                        availableShift: record.available_shift.split(","),                       
                         dutyPattern: record.duty_pattern,
                         itoId: record.ito_id,
-                        joinDate: record.join_date.toLocaleDateString("en-CA"),
-                        leaveDate: record.leave_date.toLocaleDateString("en-CA"),
+                        joinDate: record.join_date,
+                        leaveDate: record.leave_date,
                         name: record.ito_name,
                         post: record.post_name,
                         workingHourPerDay: record.working_hour_per_day
                     };
+                    if (record.black_list_pattern)
+                        result[record.ito_id].blackListedShiftPattern=[record.black_list_pattern];
+                    else 
+                        result[record.ito_id].blackListedShiftPattern=[];
                 } else {
                     result[record.ito_id].blackListedShiftPattern.push(record.black_list_pattern);
                 }

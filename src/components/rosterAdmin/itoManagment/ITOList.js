@@ -1,22 +1,23 @@
-import {useITOList} from "../../../hooks/useITOList";
+import { useITOList } from "../../../hooks/useITOList";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { Pencil, PlusLg} from 'react-bootstrap-icons';
+import { Pencil, PlusLg } from 'react-bootstrap-icons';
 import handleAPIError from "../../common/handleAPIError";
 import ITO from "./ITO";
 import Loading from "../../common/Loading";
-export default function ITOList(){
+export default function ITOList() {
     const { error, isLoading, itoList } = useITOList();
     if (error) {
         return handleAPIError(error);
     }
-    if (isLoading){
-        return <Loading/>
-    }else{
-        let itoRowList = [];
+    if (isLoading) {
+        return <Loading />
+    } else {
+        let itoRowList = [], isLeft;
         for (const [itoId, ito] of Object.entries(itoList)) {
+            isLeft = (ito.leaveDate !== "2099-12-31");
             itoRowList.push(
-                <tr key={itoId}>
+                <tr className={(isLeft ? "text-secondary" : "")} key={itoId} title={(isLeft ? ito.name+" has left on "+ito.leaveDate : "")}>
                     <td className="border">
                         {ito.name}
                     </td>
@@ -31,7 +32,7 @@ export default function ITOList(){
                     </td>
                     <td className="border text-center">
                         <Link state={{ "ito": ito }} to="../itoManagement/edit">
-                            <Button variant="warning"><Pencil/></Button>
+                            <Button variant="warning"><Pencil /></Button>
                         </Link>
                     </td>
                 </tr>
@@ -59,7 +60,7 @@ export default function ITOList(){
                         <td className="" colSpan={5}>
                             <div className="d-flex flex-grow-1 justify-content-end p-1">
                                 <Link
-                                    state={{"ito":ITO()}}
+                                    state={{ "ito": ITO() }}
                                     to="../itoManagement/add">
                                     <Button className="d-flex align-items-center">
                                         <PlusLg />

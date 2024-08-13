@@ -45,7 +45,14 @@ export default class Dbo {
         return await this.#executeQuery(this.#sqlString);
     }
     getITOList = async () => {
-        this.#sqlString = "select * from ito_info a left join black_list_pattern b on a.ito_id = b.ito_id order by leave_date desc,a.ito_id";
+        this.#sqlString = "select a.ito_id,a.ito_name,a.available_shift,";
+        this.#sqlString += "b.black_list_pattern,duty_pattern,";
+        this.#sqlString += "DATE_FORMAT(join_date,\"%Y-%m-%d\") as join_date,";
+        this.#sqlString += "DATE_FORMAT(leave_Date ,\"%Y-%m-%d\") as leave_date,";
+        this.#sqlString += "post_name,working_hour_per_day ";
+        this.#sqlString += "from ito_info a ";
+        this.#sqlString += "left join black_list_pattern b on a.ito_id = b.ito_id ";
+        this.#sqlString += "order by leave_date desc,a.ito_id";
         return await this.#executeQuery(this.#sqlString);
     }
     getRoster = async (year, month) => {
