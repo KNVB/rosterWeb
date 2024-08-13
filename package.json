@@ -29,6 +29,7 @@
   "scripts": {
     "build": "react-scripts build",
     "dev": "cross-env NODE_ENV=development run-p server start",
+    "dev_server":"cross-env NODE_ENV=development nodemon -r dotenv/config ./server/index.js",
     "eject": "react-scripts eject",
     "server": "nodemon -r dotenv/config ./server/index.js",
     "start": "react-scripts start",
