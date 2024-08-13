@@ -25,7 +25,7 @@ export default class FetchAPI {
         );
     }
     addITO = async ito => {
-        return (await this.#secureFetch({ "ito": ito }, "post", "/privateAPI/addITOToDB"));
+        return (await this.#secureFetch({ "ito": ito }, "post", "/privateAPI/addITO"));
     }
     getActiveShiftList = async () => {
         return (await this.#fetch(null, "get", "/publicAPI/getActiveShiftList"));
@@ -33,8 +33,11 @@ export default class FetchAPI {
     getITOList = async () => {
         return (await this.#secureFetch(null, "get", "/privateAPI/getITOList"));
     }
-    getRoster = async (year, month) => {
-        return (await this.#fetch({ year: year, month: month }, "get", "/publicAPI/getRoster"));
+    getRosterViewerData = async (year, month) => {
+        return (await this.#fetch({ year: year, month: month }, "get", "/publicAPI/getRosterViewerData"));
+    }
+    getRosterSchedulerData = async (year, month) => {
+        return (await  this.#secureFetch({ year: year, month: month }, "get", "/privateAPI/getRosterSchedulerData"));
     }
     getSystemParam = async () => {
         return (await this.#fetch(null, "get", "/publicAPI/getSystemParam"));

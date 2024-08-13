@@ -1,8 +1,20 @@
 import Dbo from "../util/Dbo.js";
-export default class ITOInfo{
+export default class ITOInfo {
     #dboObj;
-    constructor(){
-        this.#dboObj=new Dbo();
+    constructor() {
+        this.#dboObj = new Dbo();
+    }
+    addITO = async ito => {
+        ito.itoId = ito.post + "_" + ito.joinDate;
+        try {
+            return await this.#dboObj.addITO(ito);
+        } catch (error) {
+            console.log("Something wrong when adding an ITO info to DB:" + error);
+            throw (error);
+        }
+        finally {
+            this.#dboObj.close();
+        };
     }
     getITOList = async () => {
         try {
@@ -11,8 +23,8 @@ export default class ITOInfo{
             queryResult.forEach(record => {
                 if (result[record.ito_id] === undefined) {
                     result[record.ito_id] = {
-                        availableShift: record.available_shift.split(","),
-                        blackListedShiftPattern: [record.black_list_pattern],
+                        availableShift: record.available_shift.split(","),                       
+                        dutyPattern: record.duty_pattern,
                         itoId: record.ito_id,
                         joinDate: record.join_date,
                         leaveDate: record.leave_date,
@@ -20,6 +32,10 @@ export default class ITOInfo{
                         post: record.post_name,
                         workingHourPerDay: record.working_hour_per_day
                     };
+                    if (record.black_list_pattern)
+                        result[record.ito_id].blackListedShiftPattern=[record.black_list_pattern];
+                    else 
+                        result[record.ito_id].blackListedShiftPattern=[];
                 } else {
                     result[record.ito_id].blackListedShiftPattern.push(record.black_list_pattern);
                 }
@@ -27,6 +43,17 @@ export default class ITOInfo{
             return result;
         } catch (error) {
             console.log("Something wrong when getting ITO list:" + error);
+            throw (error);
+        }
+        finally {
+            this.#dboObj.close();
+        };
+    }
+    updateITO = async (ito) => {
+        try {
+            return await this.#dboObj.updateITO(ito);
+        } catch (error) {
+            console.log("Something wrong when updating an ITO info to DB:" + error);
             throw (error);
         }
         finally {

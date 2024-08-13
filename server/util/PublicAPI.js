@@ -5,14 +5,11 @@ export default function PublicAPI(adminUtil, systemParam) {
     const router = Express.Router();
     router.get('/:action', async (req, res, next) => {
         switch (req.params.action) {
-            case "getActiveShiftList":
-                sendResponse(res, getActiveShiftList);
-                break;
-            case "getRoster":
-                sendResponse(res, getRoster, { year: req.query.year, month: req.query.month });
-                break;
-            case "getSystemParam":
-                res.send(systemParam);
+            case "getRosterViewerData":
+                sendResponse(res, getRosterViewerData, { 
+                    month: req.query.month, year: req.query.year,
+                    systemParam 
+                });
                 break;
             default:
                 next();
@@ -22,13 +19,18 @@ export default function PublicAPI(adminUtil, systemParam) {
     return router;
 }
 //====================================================================================================================================
-let getActiveShiftList = async () => {
-    let shiftInfo = await ShiftInfo.create();
-    return shiftInfo.activeShiftList;
-}
-let getRoster = async (params) => {
+let getRosterViewerData = async (params) => {
     let roster = new Roster();
-    return await roster.getRoster(params.year, params.month);
+    let rosterData=await roster.getRoster(params.year, params.month);
+    let shiftInfo = await ShiftInfo.create();
+    let sP=structuredClone(params.systemParam);
+    sP.monthPickerMinDate = new Date(sP.monthPickerMinDate.year, sP.monthPickerMinDate.month - 1, sP.monthPickerMinDate.date);
+    sP.noOfPrevDate = 0;    
+    return {
+        activeShiftList:shiftInfo.activeShiftList,
+        rosterData,
+        systemParam:sP
+    }
 }
 //====================================================================================================================================
 let sendResponse = async (res, action, param) => {
