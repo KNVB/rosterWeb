@@ -18,6 +18,9 @@ export default function PrivateAPI(adminUtil, systemParam) {
     */
     router.get('/:action', async (req, res, next) => {
         switch (req.params.action) {
+            case "getActiveShiftList":
+                sendResponse(res,getActiveShiftList);
+                break
             case "getITOList":
                 sendResponse(res, getITOList);
                 break;
@@ -47,6 +50,10 @@ export default function PrivateAPI(adminUtil, systemParam) {
 let addITO = async ito => {
     let itoUtil = new ITOInfo();
     return await itoUtil.addITO(ito);
+}
+let getActiveShiftList=async()=>{
+    let shiftInfo = await ShiftInfo.create();
+    return shiftInfo.activeShiftList;
 }
 let getITOList = async () => {
     let itoUtil = new ITOInfo();
