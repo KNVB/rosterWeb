@@ -3,6 +3,7 @@ import PreferredShiftRow from "./PreferredShiftRow";
 export default function RosterSchedulerBody({ calendarDateList, preferredShiftList, previousMonthShiftList, roster, systemParam, uiAction }) {
     let rowList = [];
     let itoIdList = Object.keys(roster.rosterRow);
+    console.log(roster.rosterRow)
     itoIdList.forEach((itoId, index) => {
         rowList.push(
             <EditableShiftRow
