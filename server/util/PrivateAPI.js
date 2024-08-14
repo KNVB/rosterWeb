@@ -19,7 +19,7 @@ export default function PrivateAPI(adminUtil, systemParam) {
     router.get('/:action', async (req, res, next) => {
         switch (req.params.action) {
             case "getActiveShiftList":
-                sendResponse(res,getActiveShiftList);
+                sendResponse(res, getActiveShiftList);
                 break
             case "getITOList":
                 sendResponse(res, getITOList);
@@ -51,7 +51,7 @@ let addITO = async ito => {
     let itoUtil = new ITOInfo();
     return await itoUtil.addITO(ito);
 }
-let getActiveShiftList=async()=>{
+let getActiveShiftList = async () => {
     let shiftInfo = await ShiftInfo.create();
     return shiftInfo.activeShiftList;
 }
@@ -59,16 +59,39 @@ let getITOList = async () => {
     let itoUtil = new ITOInfo();
     return await itoUtil.getITOList();
 }
-let getRosterSchedulerData= async params=>{
+let getRosterSchedulerData = async params => {
+    let temp;
     let roster = new Roster();
-    let rosterData=await roster.getRoster(params.year, params.month);
-    let shiftInfo = await ShiftInfo.create();
-    let sP=structuredClone(params.systemParam);
+    let preferredShiftList = {};
+    let previousMonthShiftList = {};
+    
+    let rosterData = await roster.getRoster(params.year, params.month);
+    let shiftInfo = new ShiftInfo();
+    let sP = structuredClone(params.systemParam);
+    await shiftInfo.init();
     sP.monthPickerMinDate = new Date(sP.monthPickerMinDate.year, sP.monthPickerMinDate.month - 1, sP.monthPickerMinDate.date);
+    temp = await roster.getPreferredShiftList(params.year, params.month);
+    temp.forEach(p => {
+        if (preferredShiftList[p.ito_id] === undefined) {
+            preferredShiftList[p.ito_id] = {};
+        }
+        preferredShiftList[p.ito_id][p.d]= p.preferred_shift;
+    });
+    temp=await roster.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
+    temp.forEach(p => {
+       if (previousMonthShiftList[p.ito_id]=== undefined) {
+        previousMonthShiftList[p.ito_id]=[];
+       }
+       previousMonthShiftList[p.ito_id].push(p.shift);
+    });
     return {
-        activeShiftList:shiftInfo.activeShiftList,
+        activeShiftList: shiftInfo.activeShiftList,
+        essentialShift: shiftInfo.essentialShift,
+        itoBlackListShiftPattern: await shiftInfo.getITOBlackListShiftPattern(params.year, params.month),
+        preferredShiftList,
+        previousMonthShiftList,
         rosterData,
-        systemParam:sP
+        systemParam: sP
     }
 }
 let updateITO = async ito => {

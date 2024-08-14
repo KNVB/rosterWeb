@@ -44,6 +44,13 @@ export default class Dbo {
         this.#sqlString = "select * from shift_info where active=1 order by shift_type";
         return await this.#executeQuery(this.#sqlString);
     }
+    getITOBlackListShiftPattern = async (year, month) => {
+        let result = this.#getStartEndDateString(year, month);
+        this.#sqlString = "select ito_info.ito_id,black_list_pattern ";
+        this.#sqlString += "from ito_info inner join black_list_pattern on ito_info.join_date<=? and ito_info.leave_date >=? ";
+        this.#sqlString += "and ito_info.ito_id = black_list_pattern.ito_id";
+        return await this.#executeQuery(this.#sqlString, [result.startDateString, result.endDateString]);
+    }
     getITOList = async () => {
         this.#sqlString = "select a.ito_id,a.ito_name,a.available_shift,";
         this.#sqlString += "b.black_list_pattern,duty_pattern,";
@@ -54,6 +61,21 @@ export default class Dbo {
         this.#sqlString += "left join black_list_pattern b on a.ito_id = b.ito_id ";
         this.#sqlString += "order by leave_date desc,a.ito_id";
         return await this.#executeQuery(this.#sqlString);
+    }
+    getPreferredShiftList = async (year, month) => {
+        let result = this.#getStartEndDateString(year, month);
+        this.#sqlString = "select ito_id,preferred_shift,day(shift_date) as d from preferred_shift where shift_date between ? and ? order by ito_id,shift_date";
+        return await this.#executeQuery(this.#sqlString, [result.startDateString, result.endDateString]);
+    }
+    getPreviousMonthShiftList = async (year, month, systemParam) => {
+        let result = this.#getStartEndDateString(year, month);
+        this.#sqlString = "select ito_id,shift from shift_record where shift_date >= ? and shift_date < ? order by ito_id,shift_date";
+        result.endDateString = result.startDateString;
+        let tempDate = new Date(result.startDateString);
+        tempDate.setTime(tempDate.getTime() - systemParam.maxConsecutiveWorkingDay * 86400000);
+        result.startDateString = tempDate.toLocaleDateString("en-CA");
+        console.log(result.startDateString, result.endDateString);
+        return await this.#executeQuery(this.#sqlString, [result.startDateString, result.endDateString]);
     }
     getRoster = async (year, month) => {
         let result = this.#getStartEndDateString(year, month);

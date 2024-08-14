@@ -1,13 +1,40 @@
 import Dbo from "../util/Dbo.js";
-export default class Roster{
-    #dbo
-    constructor(){
-        this.#dbo=new Dbo();
+export default class Roster {
+    constructor() {
+    }
+    getPreferredShiftList = async (year, month) => {
+        let dboObj = new Dbo();
+        try {
+            let results = await dboObj.getPreferredShiftList(year, month);
+            console.log("Get (" + year + "," + month + ") Preferred Shift List successfully!");
+            return results;
+        } catch (error) {
+            console.log("Something wrong when getting Preferred shift list:" + error);
+            throw (error);
+        }
+        finally {
+            dboObj.close();
+        };
+    }
+    getPreviousMonthShiftList = async (year, month, systemParam) => {
+        let dboObj = new Dbo();
+        try {
+            let results = await dboObj.getPreviousMonthShiftList(year, month, systemParam);
+            console.log("Get (" + year + "," + month + ") Previous Month Shift List successfully!");
+            return results;
+        } catch (error) {
+            console.log("Something wrong when getting Previous month shift list:" + error);
+            throw (error);
+        }
+        finally {
+            dboObj.close();
+        };
     }
     getRoster = async (year, month) => {
+        let dbo = new Dbo();
         let itoRosterList = {};
         try {
-            let results = await this.#dbo.getRoster(year, month);
+            let results = await dbo.getRoster(year, month);
             console.log("Get (" + year + "," + month + ") Roster successfully!");
             results.forEach(record => {
                 if (itoRosterList[record.ito_id] === undefined) {
@@ -38,7 +65,7 @@ export default class Roster{
             console.log(error);
             throw (error);
         } finally {
-            this.#dbo.close();
+            dbo.close();
         }
     }
 }

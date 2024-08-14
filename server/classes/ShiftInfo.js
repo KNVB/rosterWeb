@@ -1,14 +1,34 @@
 import Dbo from "../util/Dbo.js";
 export default class ShiftInfo {
-    constructor(activeShiftList, essentialShift) {
-        this.activeShiftList = activeShiftList;
-        this.essentialShift = essentialShift;
+    constructor(){
+        this.activeShiftList = {};
+        this.essentialShift = "";
     }
-    static async create() {
+    getITOBlackListShiftPattern = async (year, month) => {
         let dboObj = new Dbo();
-        let essentialShift = "";
-        let shiftInfoList = {};
+        let itoBlackListShiftPattern = {};
         try {
+            let results = await dboObj.getITOBlackListShiftPattern(year, month);
+            console.log("Get (" + year + "," + month + ") ITO black list shift pattern successfully!");
+            results.forEach(record => {
+                if (itoBlackListShiftPattern[record.ito_id] === undefined) {
+                    itoBlackListShiftPattern[record.ito_id] = [];
+                }
+                itoBlackListShiftPattern[record.ito_id].push(record.black_list_pattern);
+            });
+            return itoBlackListShiftPattern;
+        } catch (error) {
+            console.log("Something wrong when getting ITO black list shift pattern:" + error);
+            console.log(itoBlackListShiftPattern);
+            throw (error);
+        }
+        finally {
+            dboObj.close();
+        };
+    }
+    async init(){
+        let dboObj = new Dbo();
+        try{
             let results = await dboObj.getActiveShiftList();
             results.forEach(record => {
                 let shift = {};
@@ -17,14 +37,13 @@ export default class ShiftInfo {
                 shift.isEssential = (record.is_essential === 1);
                 shift.timeSlot = record.time_slot;
                 shift.type = record.shift_type;
-                shiftInfoList[shift.type] = shift;
+                this.activeShiftList[shift.type] = shift;
                 if (record.is_essential === 1) {
-                    essentialShift += shift.type;
+                    this.essentialShift += shift.type;
                 }
             });
             console.log("Get All Active Shift Info. success.");
-            return new ShiftInfo(shiftInfoList, essentialShift);
-        } catch (error) {
+        }catch (error) {
             console.log("An error occur when getting active shift list from DB.");
             throw (error);
         } finally {

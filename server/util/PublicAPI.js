@@ -22,12 +22,14 @@ export default function PublicAPI(adminUtil, systemParam) {
 let getRosterViewerData = async (params) => {
     let roster = new Roster();
     let rosterData=await roster.getRoster(params.year, params.month);
-    let shiftInfo = await ShiftInfo.create();
+    let shiftInfo = new ShiftInfo();
     let sP=structuredClone(params.systemParam);
+    await shiftInfo.init();
+    
     sP.monthPickerMinDate = new Date(sP.monthPickerMinDate.year, sP.monthPickerMinDate.month - 1, sP.monthPickerMinDate.date);
-    sP.noOfPrevDate = 0;    
+    sP.noOfPrevDate = 0;
     return {
-        activeShiftList:shiftInfo.activeShiftList,
+        "activeShiftList":shiftInfo.activeShiftList,
         rosterData,
         systemParam:sP
     }
