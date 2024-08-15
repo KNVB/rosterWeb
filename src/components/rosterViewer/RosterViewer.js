@@ -1,23 +1,21 @@
 import { useRosterViewer } from "../../hooks/useRosterViewer";
 import handleAPIError from "../common/handleAPIError";
-import RosterTable from "./RosterTable";
 import Loading from "../common/Loading";
-export default function RosterViewer(){
-    const { activeShiftList, calendarDateList, error, isLoading, roster, systemParam, uiAction } = useRosterViewer();
+import RosterTable from "./RosterTable";
+export default function RosterViewer() {
+    const { error, isLoading, rosterViewerData, uiAction } = useRosterViewer();
     if (error) {
         return handleAPIError(error);
     }
-    if (isLoading){
+    if (isLoading === false) {
+        //console.log(roster.rosterRow);
+        document.title = "EMSTF Computer Operator Roster";
+        return (
+            <RosterTable
+                rosterViewerData={rosterViewerData}
+                uiAction={uiAction} />
+        );
+    } else {
         return <Loading />
     }
-    document.title = "EMSTF Computer Operator Roster";
-    
-    return (
-        <RosterTable
-            activeShiftList={activeShiftList}
-            calendarDateList={calendarDateList}
-            roster={roster}
-            systemParam={systemParam}
-            uiAction={uiAction} />
-    );
 }

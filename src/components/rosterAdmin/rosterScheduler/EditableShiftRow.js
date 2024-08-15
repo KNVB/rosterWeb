@@ -2,8 +2,9 @@ import EditableShiftCell from "./EditableShiftCell";
 import NameCell from "../../common/cells/NameCell";
 import ShiftCell from "../../common/cells/ShiftCell";
 import StatCell from "../../common/cells/StatCell";
-export default function EditableShiftRow({ calendarDateList, itoId, previousMonthShiftList, rosterRow, rowIndex, systemParam, uiAction }) {
-    let className = '', shift = '', shiftCellList = [];
+export default function EditableShiftRow({ calendarDateList, itoId, previousMonthShiftList, roster, rowIndex, systemParam, uiAction }) {
+    let className = '';
+    let shift = '', shiftCellList = [];
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         className = '';
         shift = '';
@@ -19,56 +20,60 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
             </ShiftCell>
         )
     }
-    
     calendarDateList.forEach((calendarDate, index) => {
-        shift = rosterRow.shiftList[index + 1];
-        console.log(shift);
+        shift = roster.shiftList[index + 1];
+        className = uiAction.getEditableShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex, shift);
         shiftCellList.push(
             <EditableShiftCell
+                cssClassName={className.join(" ")}
                 key={itoId + '_' + index}
                 title={shift}
                 uiAction={uiAction}>
-                {shift}
+                {shift}    
             </EditableShiftCell>
         );
+                
     });
+    for (let i = calendarDateList.length; i < 31; i++) {
+        shiftCellList.push(<ShiftCell key={itoId + '_' + i}>&nbsp;</ShiftCell>)
+    }
     return (
         <tr id={"rosterRow_" + itoId}>
             <NameCell isHighLightRow={uiAction.isHighLightRow(rowIndex)}>
-                {rosterRow.itoName}
+                {roster.itoName}
                 <br />
-                {rosterRow.itoPostName} Extn. 2458
+                {roster.itoPostName} Extn. 2458
             </NameCell>
             {shiftCellList}
             <StatCell>
-                {rosterRow.expectedWorkingHour.toFixed(2)}
+                {roster.expectedWorkingHour.toFixed(2)}
             </StatCell>
             <StatCell>
-                {rosterRow.actualWorkingHour.toFixed(2)}
+                {roster.actualWorkingHour.toFixed(2)}
             </StatCell>
             <StatCell>
-                {rosterRow.lastMonthBalance.toFixed(2)}
+                {roster.lastMonthBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {rosterRow.thisMonthBalance.toFixed(2)}
+                {roster.thisMonthBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {rosterRow.totalBalance.toFixed(2)}
+                {roster.totalBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {rosterRow.shiftCountList.aShiftCount}
+                {roster.shiftCountList.aShiftCount}
             </StatCell>
             <StatCell>
-                {rosterRow.shiftCountList.bxShiftCount}
+                {roster.shiftCountList.bxShiftCount}
             </StatCell>
             <StatCell>
-                {rosterRow.shiftCountList.cShiftCount}
+                {roster.shiftCountList.cShiftCount}
             </StatCell>
             <StatCell>
-                {rosterRow.shiftCountList.dxShiftCount}
+                {roster.shiftCountList.dxShiftCount}
             </StatCell>
             <StatCell>
-                {rosterRow.actualWorkingDayCount}
+                {roster.actualWorkingDayCount}
             </StatCell>
         </tr>
     )

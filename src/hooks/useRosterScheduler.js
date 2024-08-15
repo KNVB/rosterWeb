@@ -1,42 +1,18 @@
 import { useEffect, useReducer } from "react";
-import CalendarUtility from "../util/calendar/CalendarUtility";
 import RosterSchedulerData from "../dataUtil/RosterSchedulerData";
-import { Utility } from "../util/Utility";
+import RosterSchedulerTableUtil from "../dataUtil/RosterSchedulerTableUtil";
 let reducer = (state, action) => {
     let result = { ...state };
-    let temp;
     switch (action.type) {
         case "init":
-            result.activeShiftList = action.rosterSchedulerData.activeShiftList;
-            result.essentialShift = action.rosterSchedulerData.essentialShift;
-            result.calendarDateList = action.monthlyCalendar.calendarDateList;
-            result.itoBlackListShiftPattern = action.rosterSchedulerData.itoBlackListShiftPattern;
-            result.preferredShiftList = action.rosterSchedulerData.preferredShiftList;
-            result.previousMonthShiftList = action.rosterSchedulerData.previousMonthShiftList;
-            result.roster = {
-                noOfWorkingDay: action.monthlyCalendar.noOfWorkingDay,
-                rosterRow: Utility.genITOStat(action.rosterSchedulerData.activeShiftList, action.rosterSchedulerData.rosterData, action.monthlyCalendar.noOfWorkingDay)
-            }            
-            temp = action.rosterSchedulerData.systemParam;
-            temp.monthPickerMinDate = new Date(temp.monthPickerMinDate);
-            result.systemParam = temp;
+            result.rosterSchedulerData = action.rosterSchedulerData;
             result.isLoading = false;
             break;
-        case "updateRosterMonth":
-            result.activeShiftList = action.rosterSchedulerData.activeShiftList;
-            result.essentialShift = action.rosterSchedulerData.essentialShift;
-            result.calendarDateList = action.monthlyCalendar.calendarDateList;
-            result.itoBlackListShiftPattern = action.rosterSchedulerData.itoBlackListShiftPattern;
-            result.preferredShiftList = action.rosterSchedulerData.preferredShiftList;
-            result.previousMonthShiftList = action.rosterSchedulerData.previousMonthShiftList;
-            result.roster = {
-                noOfWorkingDay: action.monthlyCalendar.noOfWorkingDay,
-                rosterRow: Utility.genITOStat(action.rosterSchedulerData.activeShiftList, action.rosterSchedulerData.rosterData, action.monthlyCalendar.noOfWorkingDay)
-            }
+        case "refresh":
             break;
         case "setError":
             result.error = action.error;
-            break;            
+            break;
         default:
             break;
     }
@@ -44,74 +20,72 @@ let reducer = (state, action) => {
 }
 export function useRosterScheduler() {
     const [itemList, updateItemList] = useReducer(reducer, {
-        activeShiftList: null,
-        calendarUtility: new CalendarUtility(),
-        calendarDateList: null,
         error: null,
         essentialShift: "",
         isLoading: true,
-        itoBlackListShiftPattern: null,
-        preferredShiftList: null,
-        previousMonthShiftList: null,
-        roster: null,
+        rosterSchedulerData: null,
+        rosterSchedulerTableUtil:new RosterSchedulerTableUtil(),       
         systemParam: null,
-        tableParam: { highLightCellIndex: -1, highLightRowIndex: -1 }
     });
     useEffect(() => {
         let getData = async () => {
             let now = new Date();
             let rosterYear = now.getFullYear();
             let rosterMonth = now.getMonth();
-            let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
-            let rosterSchedulerData = await RosterSchedulerData(rosterYear, rosterMonth + 1);
-            updateItemList({
-                monthlyCalendar,
-                rosterSchedulerData,
-                type: "init"
-            });
+            let rosterSchedulerData =new RosterSchedulerData();
+            try {
+                await rosterSchedulerData.load(rosterYear, rosterMonth + 1);
+                updateItemList({
+                    rosterSchedulerData,
+                    type: "init"
+                });
+            } catch (error) {
+                console.log(error);
+                updateItemList({ "error": error, "type": "setError" });
+            }
         }
         getData();
     }, []);
     let getShiftCssClassName = shiftType => {
-        return itemList.activeShiftList[shiftType].cssClassName;
+        return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
+    }
+    let getEditableShiftCellCssClassName=(cellIndex, rowIndex, shift)=>{
+        let className = [];
+        let temp=getShiftCssClassName(shift);
+        if (temp!==""){
+            className.push(temp);
+        }
+        return className;
     }
     let isHighLightCell = cellIndex => {
-        return (itemList.tableParam.highLightCellIndex === cellIndex);
+        return itemList.rosterSchedulerTableUtil.isHighLightCell(cellIndex);
     }
     let isHighLightRow = rowIndex => {
-        return (itemList.tableParam.highLightRowIndex === rowIndex);
+        return itemList.rosterSchedulerTableUtil.isHighLightRow(rowIndex);
     }
     let updateRosterMonth = async (newRosterMonth) => {
-        let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
-        let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
         try {
-            let rosterSchedulerData = await RosterSchedulerData(rosterYear, rosterMonth + 1);
+            await itemList.rosterSchedulerData.reload(newRosterMonth);
             updateItemList({
-                monthlyCalendar,
-                rosterSchedulerData,
-                type: "updateRosterMonth"
+                type: "refresh"
             });
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
             updateItemList({ "error": error, "type": "setError" });
         }
     }
     let updateUI = (cellIndex, rowIndex) => {
-
+        itemList.rosterSchedulerTableUtil.updateUI(cellIndex,rowIndex);
+        updateItemList({
+            type: "refresh"
+        });
     }
     return {
-        activeShiftList: itemList.activeShiftList,
-        calendarDateList: itemList.calendarDateList,
         error: itemList.error,
-        essentialShift: itemList.essentialShift,
         isLoading: itemList.isLoading,
-        itoBlackListShiftPattern: null,
-        preferredShiftList: itemList.preferredShiftList,
-        previousMonthShiftList: itemList.previousMonthShiftList,
-        roster: itemList.roster,
-        systemParam: itemList.systemParam,
+        rosterSchedulerData: itemList.rosterSchedulerData,
         "uiAction": {
+            getEditableShiftCellCssClassName,
             getShiftCssClassName,
             isHighLightCell,
             isHighLightRow,

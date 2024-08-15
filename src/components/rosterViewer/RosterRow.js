@@ -1,10 +1,8 @@
 import NameCell from "../common/cells/NameCell";
 import ShiftCell from "../common/cells/ShiftCell";
 import StatCell from "../common/cells/StatCell";
-
-export default function RosterRow({calendarDateList,itoId,roster, rowIndex,uiAction}){
+export default function RosterRow({calendarDateList,itoId,roster, rowIndex,systemParam,uiAction}){
     let className = "";
-    let rosterDetail = roster.rosterRow[itoId];
     let shift = '', shiftCellList = [];
     function handleMouseEnterEvent(e) {
         e.preventDefault();
@@ -17,14 +15,8 @@ export default function RosterRow({calendarDateList,itoId,roster, rowIndex,uiAct
         uiAction.updateUI(-1, -1);
     }
     calendarDateList.forEach((calendarDate, index) => {
-        shift = rosterDetail.shiftList[index + 1];
-        if (shift){
-            className = uiAction.getShiftCssClassName(shift);
-        }else {
-            className =null;
-        }
-        
-
+        shift = roster.shiftList[index + 1];
+        className = uiAction.getShiftCssClassName(shift);
         shiftCellList.push(
             <ShiftCell
                 cssClassName={className}
@@ -41,42 +33,42 @@ export default function RosterRow({calendarDateList,itoId,roster, rowIndex,uiAct
     }
     return (
         <tr id={"rosterRow_" + itoId}>
-            <NameCell isHighLightRow={uiAction.isHighLightRow(rowIndex)}>
-                {rosterDetail.itoName}
+             <NameCell isHighLightRow={uiAction.isHighLightRow(rowIndex)}>
+                {roster.itoName}
                 <br />
-                {rosterDetail.itoPostName} Extn. 2458
+                {roster.itoPostName} Extn. 2458
             </NameCell>
             {shiftCellList}
             <StatCell>
-                {rosterDetail.expectedWorkingHour.toFixed(2)}
+                {roster.expectedWorkingHour.toFixed(2)}
             </StatCell>
             <StatCell>
-                {rosterDetail.actualWorkingHour.toFixed(2)}
+                {roster.actualWorkingHour.toFixed(2)}
             </StatCell>
             <StatCell>
-                {rosterDetail.lastMonthBalance.toFixed(2)}
+                {roster.lastMonthBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {rosterDetail.thisMonthBalance.toFixed(2)}
+                {roster.thisMonthBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {rosterDetail.totalBalance.toFixed(2)}
+                {roster.totalBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {rosterDetail.shiftCountList.aShiftCount}
+                {roster.shiftCountList.aShiftCount}
             </StatCell>
             <StatCell>
-                {rosterDetail.shiftCountList.bxShiftCount}
+                {roster.shiftCountList.bxShiftCount}
             </StatCell>
             <StatCell>
-                {rosterDetail.shiftCountList.cShiftCount}
+                {roster.shiftCountList.cShiftCount}
             </StatCell>
             <StatCell>
-                {rosterDetail.shiftCountList.dxShiftCount}
+                {roster.shiftCountList.dxShiftCount}
             </StatCell>
             <StatCell>
-                {rosterDetail.actualWorkingDayCount}
+                {roster.actualWorkingDayCount}
             </StatCell>
         </tr>
-    )
+    );
 }

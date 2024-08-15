@@ -1,17 +1,19 @@
 import RosterRow from "./RosterRow";
-export default function RosterBody({roster,calendarDateList,systemParam,uiAction}){
+export default function RosterBody({ calendarDateList, roster, systemParam, uiAction }) {
     let itoIdList = Object.keys(roster.rosterRow);
     let rowList = [];
+    console.log(roster);    
     itoIdList.forEach((itoId, index) => {
         rowList.push(
             <RosterRow
                 calendarDateList={calendarDateList}
                 itoId={itoId}
                 key={"rosterRow_" + itoId}
-                roster={roster}
                 rowIndex={(index + 5)}
+                roster={roster.rosterRow[itoId]}                
                 systemParam={systemParam}
-                uiAction={uiAction} />
+                uiAction={uiAction}
+            />
         );
     });
     return (

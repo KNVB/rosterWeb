@@ -1,41 +1,16 @@
 import { useEffect, useReducer } from "react";
-import CalendarUtility from "../util/calendar/CalendarUtility";
+import RosterTableUtil from "../dataUtil/RosterTableUtil";
 import RosterViewerData from "../dataUtil/RosterViewerData";
-import { Utility } from "../util/Utility";
 let reducer = (state, action) => {
     let result = { ...state };
-    let temp;
     switch (action.type) {
         case "init":
-            result.activeShiftList = action.rosterViewerData.activeShiftList;
-            result.calendarDateList = action.monthlyCalendar.calendarDateList;
-            result.roster = {
-                noOfWorkingDay: action.monthlyCalendar.noOfWorkingDay,
-                rosterRow: Utility.genITOStat(action.rosterViewerData.activeShiftList, action.rosterViewerData.rosterData, action.monthlyCalendar.noOfWorkingDay)
-            }
-            console.log(action.rosterViewerData)
-            temp = action.rosterViewerData.systemParam;
-            temp.monthPickerMinDate = new Date(temp.monthPickerMinDate);
-            result.systemParam = temp;
+            result.rosterViewerData = action.rosterViewerData;
             result.isLoading = false;
-            break;
-        case "refresh":
-            result.tableParam = {
-                highLightCellIndex: action.cellIndex,
-                highLightRowIndex: action.rowIndex
-            }
             break;
         case "setError":
             result.error = action.error;
             break;
-        case "updateRosterMonth":
-            result.calendarDateList = action.monthlyCalendar.calendarDateList;
-            result.roster = {
-                noOfWorkingDay: action.monthlyCalendar.noOfWorkingDay,
-                rosterRow: Utility.genITOStat(result.activeShiftList, action.rosterViewerData.rosterData, action.monthlyCalendar.noOfWorkingDay)
-            }
-            result.roster.noOfWorkingDay = action.monthlyCalendar.noOfWorkingDay;
-            break
         default:
             break;
     }
@@ -43,49 +18,48 @@ let reducer = (state, action) => {
 }
 export function useRosterViewer() {
     const [itemList, updateItemList] = useReducer(reducer, {
-        activeShiftList: null,
-        calendarUtility: new CalendarUtility(),
-        calendarDateList: null,
         error: null,
         isLoading: true,
-        roster: null,
+        rosterViewerData: null,
+        rosterTableUtil: new RosterTableUtil(),
         systemParam: null,
-        tableParam: { highLightCellIndex: -1, highLightRowIndex: -1 },
     });
     useEffect(() => {
         let getData = async () => {
             let now = new Date();
             let rosterYear = now.getFullYear();
             let rosterMonth = now.getMonth();
-            let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
-            let rosterViewerData = await RosterViewerData(rosterYear, rosterMonth + 1);
-            updateItemList({
-                monthlyCalendar,
-                rosterViewerData,
-                type: "init"
-            });
+            let rosterViewerData = new RosterViewerData();
+            try {
+                await rosterViewerData.load(rosterYear, rosterMonth + 1);
+                updateItemList({
+                    rosterViewerData,
+                    type: "init"
+                });
+            } catch (error) {
+                console.log(error);
+                updateItemList({ "error": error, "type": "setError" });
+            }
         }
         getData();
     }, []);
     let getShiftCssClassName = shiftType => {
-        return itemList.activeShiftList[shiftType].cssClassName;
+        if (itemList.rosterViewerData.activeShiftList[shiftType])
+            return itemList.rosterViewerData.activeShiftList[shiftType].cssClassName;
+        else
+            return "";
     }
     let isHighLightCell = cellIndex => {
-        return (itemList.tableParam.highLightCellIndex === cellIndex);
+        return itemList.rosterTableUtil.isHighLightCell(cellIndex);
     }
     let isHighLightRow = rowIndex => {
-        return (itemList.tableParam.highLightRowIndex === rowIndex);
+        return itemList.rosterTableUtil.isHighLightRow(rowIndex);
     }
     let updateRosterMonth = async (newRosterMonth) => {
-
-        let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
-        let monthlyCalendar = itemList.calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
         try {
-            let rosterViewerData = await RosterViewerData(rosterYear, rosterMonth + 1);
+            await itemList.rosterViewerData.reload(newRosterMonth);
             updateItemList({
-                rosterViewerData,
-                monthlyCalendar,
-                type: "updateRosterMonth"
+                type: "refresh"
             });
         } catch (error) {
             console.log(error);
@@ -93,15 +67,14 @@ export function useRosterViewer() {
         }
     }
     let updateUI = (cellIndex, rowIndex) => {
+        itemList.rosterTableUtil.updateUI(cellIndex, rowIndex);
         updateItemList({ cellIndex, rowIndex, type: "refresh" });
     }
+    console.log(itemList.rosterViewerData);
     return {
-        activeShiftList: itemList.activeShiftList,
-        calendarDateList: itemList.calendarDateList,
         error: itemList.error,
         isLoading: itemList.isLoading,
-        roster: itemList.roster,
-        systemParam: itemList.systemParam,
+        "rosterViewerData": itemList.rosterViewerData,
         "uiAction": {
             getShiftCssClassName,
             isHighLightCell,

@@ -52,7 +52,8 @@ let addITO = async ito => {
     return await itoUtil.addITO(ito);
 }
 let getActiveShiftList = async () => {
-    let shiftInfo = await ShiftInfo.create();
+    let shiftInfo = new ShiftInfo();
+    await shiftInfo.init();
     return shiftInfo.activeShiftList;
 }
 let getITOList = async () => {
@@ -65,7 +66,6 @@ let getRosterSchedulerData = async params => {
     let preferredShiftList = {};
     let previousMonthShiftList = {};
     
-    let rosterData = await roster.getRoster(params.year, params.month);
     let shiftInfo = new ShiftInfo();
     let sP = structuredClone(params.systemParam);
     await shiftInfo.init();
@@ -90,7 +90,6 @@ let getRosterSchedulerData = async params => {
         itoBlackListShiftPattern: await shiftInfo.getITOBlackListShiftPattern(params.year, params.month),
         preferredShiftList,
         previousMonthShiftList,
-        rosterData,
         systemParam: sP
     }
 }
