@@ -25,10 +25,11 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
         className = uiAction.getEditableShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex, shift);
         shiftCellList.push(
             <EditableShiftCell
-                cssClassName={className.join(" ")}
+                cssClassName={className.join(" ")}                
                 key={itoId + '_' + index}
                 title={shift}
-                uiAction={uiAction}>
+                uiAction={uiAction}
+                updateShift={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}>
                 {shift}    
             </EditableShiftCell>
         );

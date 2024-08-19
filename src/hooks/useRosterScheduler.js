@@ -74,6 +74,12 @@ export function useRosterScheduler() {
             updateItemList({ "error": error, "type": "setError" });
         }
     }
+    let updateShift=(itoId, dateOfMonth, shift)=>{
+        itemList.rosterSchedulerData.updateShift(itoId, dateOfMonth, shift);
+        updateItemList({
+            type: "refresh"
+        });
+    }
     let updateUI = (cellIndex, rowIndex) => {
         itemList.rosterSchedulerTableUtil.updateUI(cellIndex,rowIndex);
         updateItemList({
@@ -90,6 +96,7 @@ export function useRosterScheduler() {
             isHighLightCell,
             isHighLightRow,
             updateRosterMonth,
+            updateShift,
             updateUI
         }
     }

@@ -1,14 +1,13 @@
 export default function ITOShiftStatUtil() {
     const getITOStat = (activeShiftInfoList, noOfWorkingDay, inITORoster) => {
       let itoRoster = JSON.parse(JSON.stringify(inITORoster));
-  
       itoRoster.expectedWorkingHour = itoRoster.workingHourPerDay * noOfWorkingDay;
       itoRoster.actualWorkingHour = 0.0;
       Object.keys(itoRoster.shiftList).forEach(date => {
         if (itoRoster.shiftList[date]){
           let item = itoRoster.shiftList[date];
           let shiftTypeList = item.split("+");
-          shiftTypeList.forEach(shiftType => {
+          shiftTypeList.forEach(shiftType => {            
             if (itoRoster.availableShiftList.includes(shiftType)) {
               if (activeShiftInfoList[shiftType]) {
                 itoRoster.actualWorkingHour += activeShiftInfoList[shiftType].duration;

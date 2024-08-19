@@ -12,6 +12,19 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.systemParam = structuredClone(temp.systemParam);
         this.systemParam.monthPickerMinDate = new Date(this.systemParam.monthPickerMinDate);
     }
+    updateShift(itoId, dateOfMonth, newShift){
+        let oldShift = this.roster.rosterRow[itoId].shiftList[dateOfMonth];
+        let newRosterShift = newShift.trim();
+        switch (true) {
+            case ((oldShift === undefined) && (newRosterShift !== '')):
+            case ((oldShift !== undefined) && (newRosterShift !== oldShift)):
+                this.roster.rosterRow[itoId].shiftList[dateOfMonth] = newRosterShift;
+                break;
+            default:
+                break;
+        }
+        this.roster.rosterRow = Utility.genITOStat(this.activeShiftList,this.roster.rosterRow, this.roster.noOfWorkingDay);        
+    }
     async reload(newRosterMonth) {
         await super.reload(newRosterMonth);
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
