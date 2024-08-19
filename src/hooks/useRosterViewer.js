@@ -22,7 +22,6 @@ export function useRosterViewer() {
         isLoading: true,
         rosterViewerData: null,
         rosterTableUtil: new RosterTableUtil(),
-        systemParam: null,
     });
     useEffect(() => {
         let getData = async () => {
@@ -70,7 +69,7 @@ export function useRosterViewer() {
         itemList.rosterTableUtil.updateUI(cellIndex, rowIndex);
         updateItemList({ cellIndex, rowIndex, type: "refresh" });
     }
-    console.log(itemList.rosterViewerData);
+    //console.log(itemList.rosterViewerData);
     return {
         error: itemList.error,
         isLoading: itemList.isLoading,

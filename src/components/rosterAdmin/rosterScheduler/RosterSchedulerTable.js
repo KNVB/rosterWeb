@@ -1,8 +1,16 @@
+import { useEffect } from "react";
 import HeaderRows from "../../common/rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../common/ShiftInfoLegend";
 export default function RosterSchedulerTable({ rosterSchedulerData, uiAction }){
     const { activeShiftList, calendarDateList,preferredShiftList,previousMonthShiftList, roster, systemParam } = rosterSchedulerData;
+    useEffect(() => {
+        const mouseUp = () => uiAction.endSelect();
+        document.addEventListener("mouseup", mouseUp);
+        return () => {
+            document.removeEventListener("mouseup", mouseUp);
+        };
+    }, [uiAction]);
     return (
         <table className="m-1 p-0 rosterTable">
             <HeaderRows

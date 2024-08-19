@@ -1,4 +1,5 @@
 import { useEffect, useReducer } from "react";
+import KeyboardEventHandler from "../util/KeyboardEventHandler";
 import RosterSchedulerData from "../dataUtil/RosterSchedulerData";
 import RosterSchedulerTableUtil from "../dataUtil/RosterSchedulerTableUtil";
 let reducer = (state, action) => {
@@ -6,12 +7,22 @@ let reducer = (state, action) => {
     switch (action.type) {
         case "init":
             result.rosterSchedulerData = action.rosterSchedulerData;
+            result.rosterSchedulerTableUtil.init(
+                action.rosterSchedulerData.calendarDateList, 
+                action.rosterSchedulerData.itoIdList,    
+                action.rosterSchedulerData.systemParam);                
             result.isLoading = false;
             break;
         case "refresh":
             break;
         case "setError":
             result.error = action.error;
+            break;
+        case "updateRosterMonth":            
+            result.rosterSchedulerTableUtil.init(
+            result.rosterSchedulerData.calendarDateList, 
+            result.rosterSchedulerData.itoIdList,    
+            result.rosterSchedulerData.systemParam);
             break;
         default:
             break;
@@ -21,11 +32,11 @@ let reducer = (state, action) => {
 export function useRosterScheduler() {
     const [itemList, updateItemList] = useReducer(reducer, {
         error: null,
-        essentialShift: "",
+        essentialShift: "",        
         isLoading: true,
+        keyboardEventHandler:null,
         rosterSchedulerData: null,
         rosterSchedulerTableUtil:new RosterSchedulerTableUtil(),       
-        systemParam: null,
     });
     useEffect(() => {
         let getData = async () => {
@@ -46,6 +57,11 @@ export function useRosterScheduler() {
         }
         getData();
     }, []);
+    
+    let endSelect = () => {
+        itemList.rosterSchedulerTableUtil.endSelect();
+        updateItemList({ type: "refresh" });
+    }
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
     }
@@ -55,19 +71,38 @@ export function useRosterScheduler() {
         if (temp!==""){
             className.push(temp);
         }
+        temp = itemList.rosterSchedulerTableUtil.getSelectedCssClass(cellIndex, rowIndex);
+        if (temp.length > 0) {
+            className.push(...temp);
+        }
         return className;
     }
+    let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
     let isHighLightCell = cellIndex => {
         return itemList.rosterSchedulerTableUtil.isHighLightCell(cellIndex);
     }
     let isHighLightRow = rowIndex => {
         return itemList.rosterSchedulerTableUtil.isHighLightRow(rowIndex);
     }
+    let setFocusCell = e => {
+        itemList.rosterSchedulerTableUtil.setFocusCell(e);
+        updateItemList({ type: "refresh" });
+    }
+    let startSelect= e => {
+        let cell = e.target.closest("td");
+        let rowIndex = cell.closest("tr").rowIndex;
+        //console.log(cell.cellIndex, rowIndex)
+        e.preventDefault();
+        itemList.rosterSchedulerTableUtil.selectCell(cell.cellIndex, rowIndex);
+        itemList.rosterSchedulerTableUtil.startSelect(cell.cellIndex, rowIndex);
+        updateItemList({ type: "refresh" });
+    }
     let updateRosterMonth = async (newRosterMonth) => {
         try {
             await itemList.rosterSchedulerData.reload(newRosterMonth);
+            
             updateItemList({
-                type: "refresh"
+                type: "updateRosterMonth"
             });
         } catch (error) {
             console.log(error);
@@ -91,10 +126,14 @@ export function useRosterScheduler() {
         isLoading: itemList.isLoading,
         rosterSchedulerData: itemList.rosterSchedulerData,
         "uiAction": {
+            endSelect,
             getEditableShiftCellCssClassName,
             getShiftCssClassName,
+            handleKeyDown,
             isHighLightCell,
             isHighLightRow,
+            setFocusCell,
+            startSelect,
             updateRosterMonth,
             updateShift,
             updateUI
