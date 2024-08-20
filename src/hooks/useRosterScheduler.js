@@ -14,9 +14,13 @@ let reducer = (state, action) => {
             result.isLoading = false;
             break;
         case "refresh":
+            result.isLoading = false;
             break;
         case "setError":
             result.error = action.error;
+            break;
+        case "updateLoading":
+            result.isLoading = action.value;
             break;
         case "updateRosterMonth":
             result.rosterSchedulerTableUtil.init(
@@ -45,7 +49,7 @@ export function useRosterScheduler() {
             let rosterMonth = now.getMonth();
             let rosterSchedulerData = new RosterSchedulerData();
             try {
-                await rosterSchedulerData.load(rosterYear, rosterMonth + 1);
+                await rosterSchedulerData.load(rosterYear, rosterMonth);
                 updateItemList({
                     rosterSchedulerData,
                     type: "init"
@@ -108,11 +112,7 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     let updatePreferredShift = (itoId, dateOfMonth, shift) => {
-        let temp=structuredClone(itemList.rosterSchedulerData.preferredShiftList);
-        let oldPreferredShift = '';
-        
-        //itemList.rosterSchedulerData.updatePreferredShift(itoId, dateOfMonth, shift);
-        
+        itemList.rosterSchedulerData.updatePreferredShift(itoId, dateOfMonth, shift);
         updateItemList({
             type: "refresh"
         });

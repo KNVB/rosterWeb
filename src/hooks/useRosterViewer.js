@@ -8,9 +8,15 @@ let reducer = (state, action) => {
             result.rosterViewerData = action.rosterViewerData;
             result.isLoading = false;
             break;
+        case "refresh":
+            result.isLoading = false;
+            break;    
         case "setError":
             result.error = action.error;
             break;
+        case "updateLoading":
+            result.isLoading = action.value;
+            break;    
         default:
             break;
     }
@@ -30,7 +36,7 @@ export function useRosterViewer() {
             let rosterMonth = now.getMonth();
             let rosterViewerData = new RosterViewerData();
             try {
-                await rosterViewerData.load(rosterYear, rosterMonth + 1);
+                await rosterViewerData.load(rosterYear, rosterMonth);
                 updateItemList({
                     rosterViewerData,
                     type: "init"
@@ -56,6 +62,7 @@ export function useRosterViewer() {
     }
     let updateRosterMonth = async (newRosterMonth) => {
         try {
+            //updateItemList({"type":"updateLoading",value:true});
             await itemList.rosterViewerData.reload(newRosterMonth);
             updateItemList({
                 type: "refresh"

@@ -5,15 +5,16 @@ import StatCell from "../../common/cells/StatCell";
 export default function PreferredShiftRow({ calendarDateList, itoId, preferredShiftList, rowIndex, systemParam, uiAction }) {
     let className = '';
     let preferredShift = '', shiftCellList = [];
+    
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         shiftCellList.push(<ShiftCell key={"prev-preferred-" + i} />)
     }
+   
     calendarDateList.forEach((calendarDate, i) => {
         preferredShift = "";
         className = uiAction.getPreferredShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
-
-        if (preferredShiftList && (preferredShiftList[i] !== undefined)) {
-            preferredShift = preferredShiftList[i];
+        if (preferredShiftList && (preferredShiftList[calendarDate.dateOfMonth] !== undefined)) {
+            preferredShift = preferredShiftList[calendarDate.dateOfMonth];
         }
         shiftCellList.push(
             <EditableShiftCell
@@ -24,7 +25,7 @@ export default function PreferredShiftRow({ calendarDateList, itoId, preferredSh
                 {preferredShift}
             </EditableShiftCell>
         );
-    });
+    });    
     for (let i = calendarDateList.length; i < 31; i++) {
         shiftCellList.push(<ShiftCell key={"preferred_" + itoId + '_' + i} />);
     }

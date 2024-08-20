@@ -83,19 +83,18 @@ export default class RosterSchedulerData extends RosterViewerData {
         }
     }
     updatePreferredShift(itoId, dateOfMonth, newShift) {
-        let item;
         let oldPreferredShift = '';
         try {
             oldPreferredShift = this.preferredShiftList[itoId][dateOfMonth];
         } catch (error) {
-            //console.log(error)
+            if (this.preferredShiftList[itoId] === undefined) {
+                this.preferredShiftList[itoId] = {};
+            }
         } finally {
             let newPreferredShift = newShift.trim();
             if (newPreferredShift !== oldPreferredShift) {
-                if (this.preferredShiftList[itoId]===undefined){
-                    this.preferredShiftList[itoId]={};
-                }
-                this.preferredShiftList[itoId][dateOfMonth]=newPreferredShift;                
+                this.preferredShiftList[itoId][dateOfMonth] = newPreferredShift;
+                this.#recordRosterSchedulerData();
             }
         }
     }
@@ -117,7 +116,7 @@ export default class RosterSchedulerData extends RosterViewerData {
         await super.reload(newRosterMonth);
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
         let fetchAPI = new FetchAPI();
-        let temp = await fetchAPI.getRosterSchedulerData(rosterYear, rosterMonth + 1);
+        let temp = await fetchAPI.getRosterSchedulerData(rosterYear, rosterMonth);
         this.itoIdList = Object.keys(this.roster.rosterRow);
         this.preferredShiftList = structuredClone(temp.preferredShiftList);
         this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
