@@ -27,9 +27,9 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
             <EditableShiftCell
                 cssClassName={className.join(" ")}                
                 key={itoId + '_' + index}
+                onBlur={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
                 title={shift}
-                uiAction={uiAction}
-                updateShift={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}>
+                uiAction={uiAction}>
                 {shift}    
             </EditableShiftCell>
         );

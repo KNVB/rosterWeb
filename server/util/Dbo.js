@@ -74,7 +74,7 @@ export default class Dbo {
         let tempDate = new Date(result.startDateString);
         tempDate.setTime(tempDate.getTime() - systemParam.maxConsecutiveWorkingDay * 86400000);
         result.startDateString = tempDate.toLocaleDateString("en-CA");
-        console.log(result.startDateString, result.endDateString);
+        //console.log(result.startDateString, result.endDateString);
         return await this.#executeQuery(this.#sqlString, [result.startDateString, result.endDateString]);
     }
     getRoster = async (year, month) => {
@@ -102,6 +102,16 @@ export default class Dbo {
     getSystemParam = async () => {
         this.#sqlString = "select * from system_param order by param_type,param_key,param_value";
         return await this.#executeQuery(this.#sqlString);
+    }
+    getTimeOffList = async (year, month) => {
+        let result = this.#getStartEndDateString(year, month);
+        this.#sqlString = "select * from time_off where time_off_start <=? and time_off_end >=?";
+        this.#sqlString += " order by ito_id,time_off_start";
+        return await this.#executeQuery(this.#sqlString,
+            [
+                result.endDateString,
+                result.startDateString
+            ]);
     }
     updateITO = async ito => {
         try {

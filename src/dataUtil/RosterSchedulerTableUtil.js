@@ -7,7 +7,7 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
     #maxCellIndex; #maxRowIndex; #minCellIndex;
     #minX = -1; #minY = -1; #maxX = -1; #maxY = -1;
     #minRowIndex = 5;
-    clearCopiedRegion=()=>{
+    clearCopiedRegion = () => {
         this.#copiedRegion.clear();
     }
     endSelect = () => {
@@ -19,7 +19,7 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
     init = (calendarDateList, itoIdList, systemParam) => {
         this.#maxCellIndex = systemParam.noOfPrevDate + calendarDateList.length;
         //this.#maxRowIndex = itoIdList.length * 2 + 4;
-        this.#maxRowIndex = itoIdList.length + this.#minRowIndex - 1;
+        this.#maxRowIndex = itoIdList.length * 2 + this.#minRowIndex - 1;
         this.#minCellIndex = systemParam.noOfPrevDate + 1;
         this.#minX = -1; this.#minY = -1; this.#maxX = -1; this.#maxY = -1;
         this.#copiedRegion.clear();
@@ -89,7 +89,7 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
         }
         return result;
     }
-    getSelectedLocation=()=>{
+    getSelectedLocation = () => {
         let result = { column: { start: this.#minX, end: this.#maxX }, rows: [] };
         let row;
         let table = document.querySelector("table.rosterTable");
@@ -127,7 +127,7 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
         let shiftContentDiv = cell.firstChild;
         shiftContentDiv.focus();
         sel.collapse(shiftContentDiv.firstChild, 1);
-        this.#isFirstInput=false;
+        this.#isFirstInput = false;
     }
     startSelect = (cellIndex, rowIndex) => {
         this.#minX = cellIndex;

@@ -65,7 +65,7 @@ let getRosterSchedulerData = async params => {
     let roster = new Roster();
     let preferredShiftList = {};
     let previousMonthShiftList = {};
-    
+    let timeOffList={};
     let shiftInfo = new ShiftInfo();
     let sP = structuredClone(params.systemParam);
     await shiftInfo.init();
@@ -84,13 +84,21 @@ let getRosterSchedulerData = async params => {
        }
        previousMonthShiftList[p.ito_id].push(p.shift);
     });
+    temp=await roster.getTimeOffList(params.year, params.month);
+    temp.forEach(timeOff=>{
+        if (timeOffList[timeOff.ito_id]===undefined){
+            timeOffList[timeOff.ito_id]=[]
+        }
+        timeOffList[timeOff.ito_id].push(timeOff);
+    });
     return {
         activeShiftList: shiftInfo.activeShiftList,
         essentialShift: shiftInfo.essentialShift,
         itoBlackListShiftPattern: await shiftInfo.getITOBlackListShiftPattern(params.year, params.month),
         preferredShiftList,
         previousMonthShiftList,
-        systemParam: sP
+        systemParam: sP,
+        timeOffList
     }
 }
 let updateITO = async ito => {

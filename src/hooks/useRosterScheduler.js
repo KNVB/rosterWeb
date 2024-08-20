@@ -8,9 +8,9 @@ let reducer = (state, action) => {
         case "init":
             result.rosterSchedulerData = action.rosterSchedulerData;
             result.rosterSchedulerTableUtil.init(
-                action.rosterSchedulerData.calendarDateList, 
-                action.rosterSchedulerData.itoIdList,    
-                action.rosterSchedulerData.systemParam);                
+                action.rosterSchedulerData.calendarDateList,
+                action.rosterSchedulerData.itoIdList,
+                action.rosterSchedulerData.systemParam);
             result.isLoading = false;
             break;
         case "refresh":
@@ -18,11 +18,11 @@ let reducer = (state, action) => {
         case "setError":
             result.error = action.error;
             break;
-        case "updateRosterMonth":            
+        case "updateRosterMonth":
             result.rosterSchedulerTableUtil.init(
-            result.rosterSchedulerData.calendarDateList, 
-            result.rosterSchedulerData.itoIdList,    
-            result.rosterSchedulerData.systemParam);
+                result.rosterSchedulerData.calendarDateList,
+                result.rosterSchedulerData.itoIdList,
+                result.rosterSchedulerData.systemParam);
             break;
         default:
             break;
@@ -32,18 +32,18 @@ let reducer = (state, action) => {
 export function useRosterScheduler() {
     const [itemList, updateItemList] = useReducer(reducer, {
         error: null,
-        essentialShift: "",        
+        essentialShift: "",
         isLoading: true,
-        keyboardEventHandler:null,
+        keyboardEventHandler: null,
         rosterSchedulerData: null,
-        rosterSchedulerTableUtil:new RosterSchedulerTableUtil(),       
+        rosterSchedulerTableUtil: new RosterSchedulerTableUtil(),
     });
     useEffect(() => {
         let getData = async () => {
             let now = new Date();
             let rosterYear = now.getFullYear();
             let rosterMonth = now.getMonth();
-            let rosterSchedulerData =new RosterSchedulerData();
+            let rosterSchedulerData = new RosterSchedulerData();
             try {
                 await rosterSchedulerData.load(rosterYear, rosterMonth + 1);
                 updateItemList({
@@ -64,13 +64,21 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
+    let getPreferredShiftCellCssClassName = (cellIndex, rowIndex) => {
+        let className = [];
+        let temp = itemList.rosterSchedulerTableUtil.getSelectedCssClass(cellIndex, rowIndex);
+        if (temp.length > 0) {
+            className.push(...temp);
+        }
+        return className;
+    }
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
     }
-    let getEditableShiftCellCssClassName=(cellIndex, rowIndex, shift)=>{
+    let getEditableShiftCellCssClassName = (cellIndex, rowIndex, shift) => {
         let className = [];
-        let temp=getShiftCssClassName(shift);
-        if (temp!==""){
+        let temp = getShiftCssClassName(shift);
+        if (temp !== "") {
             className.push(temp);
         }
         temp = itemList.rosterSchedulerTableUtil.getSelectedCssClass(cellIndex, rowIndex);
@@ -90,7 +98,7 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
-    let startSelect= e => {
+    let startSelect = e => {
         let cell = e.target.closest("td");
         let rowIndex = cell.closest("tr").rowIndex;
         //console.log(cell.cellIndex, rowIndex)
@@ -99,10 +107,20 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.startSelect(cell.cellIndex, rowIndex);
         updateItemList({ type: "refresh" });
     }
+    let updatePreferredShift = (itoId, dateOfMonth, shift) => {
+        let temp=structuredClone(itemList.rosterSchedulerData.preferredShiftList);
+        let oldPreferredShift = '';
+        
+        //itemList.rosterSchedulerData.updatePreferredShift(itoId, dateOfMonth, shift);
+        
+        updateItemList({
+            type: "refresh"
+        });
+    }
     let updateRosterMonth = async (newRosterMonth) => {
         try {
             await itemList.rosterSchedulerData.reload(newRosterMonth);
-            
+
             updateItemList({
                 type: "updateRosterMonth"
             });
@@ -111,14 +129,14 @@ export function useRosterScheduler() {
             updateItemList({ "error": error, "type": "setError" });
         }
     }
-    let updateShift=(itoId, dateOfMonth, shift)=>{
+    let updateShift = (itoId, dateOfMonth, shift) => {
         itemList.rosterSchedulerData.updateShift(itoId, dateOfMonth, shift);
         updateItemList({
             type: "refresh"
         });
     }
     let updateUI = (cellIndex, rowIndex) => {
-        itemList.rosterSchedulerTableUtil.updateUI(cellIndex,rowIndex);
+        itemList.rosterSchedulerTableUtil.updateUI(cellIndex, rowIndex);
         updateItemList({
             type: "refresh"
         });
@@ -131,12 +149,14 @@ export function useRosterScheduler() {
             copyRosterData,
             endSelect,
             getEditableShiftCellCssClassName,
+            getPreferredShiftCellCssClassName,
             getShiftCssClassName,
             handleKeyDown,
             isHighLightCell,
             isHighLightRow,
             setFocusCell,
             startSelect,
+            updatePreferredShift,
             updateRosterMonth,
             updateShift,
             updateUI

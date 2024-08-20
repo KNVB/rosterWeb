@@ -1,5 +1,5 @@
 import ShiftCell from "../../common/cells/ShiftCell";
-export default function EditableShiftCell({ children, cssClassName, title, uiAction, updateShift }) {
+export default function EditableShiftCell({ children, cssClassName,onBlur, title, uiAction }) {
     function handleMouseEnterEvent(e) {
         e.preventDefault();
         let cell = e.target.closest("td");
@@ -21,7 +21,7 @@ export default function EditableShiftCell({ children, cssClassName, title, uiAct
             <div
                 className="shiftContent"
                 contentEditable={true}
-                onBlur={updateShift}
+                onBlur={onBlur}
                 onDoubleClick={uiAction.setFocusCell}
                 onCopy={uiAction.copyRosterData}
                 onKeyDown={uiAction.handleKeyDown}
