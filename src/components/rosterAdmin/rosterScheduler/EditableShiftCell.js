@@ -23,6 +23,7 @@ export default function EditableShiftCell({ children, cssClassName, title, uiAct
                 contentEditable={true}
                 onBlur={updateShift}
                 onDoubleClick={uiAction.setFocusCell}
+                onCopy={uiAction.copyRosterData}
                 onKeyDown={uiAction.handleKeyDown}
                 suppressContentEditableWarning={true}>
                 {children}

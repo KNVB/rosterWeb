@@ -57,7 +57,9 @@ export function useRosterScheduler() {
         }
         getData();
     }, []);
-    
+    let copyRosterData = (e) => {
+        itemList.rosterSchedulerData.copy();
+    }
     let endSelect = () => {
         itemList.rosterSchedulerTableUtil.endSelect();
         updateItemList({ type: "refresh" });
@@ -126,6 +128,7 @@ export function useRosterScheduler() {
         isLoading: itemList.isLoading,
         rosterSchedulerData: itemList.rosterSchedulerData,
         "uiAction": {
+            copyRosterData,
             endSelect,
             getEditableShiftCellCssClassName,
             getShiftCssClassName,
