@@ -62,7 +62,12 @@ export function useRosterScheduler() {
         getData();
     }, []);
     let copyRosterData = (e) => {
-        itemList.rosterSchedulerData.copy();
+        e.preventDefault();
+        let copyRegion = itemList.rosterSchedulerTableUtil.getCopyRegionLocation();
+        copyRegion.column.end -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        copyRegion.column.start -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        itemList.rosterSchedulerData.copy(copyRegion);
+        updateItemList({ type: "refresh" });
     }
     let endSelect = () => {
         itemList.rosterSchedulerTableUtil.endSelect();
@@ -97,6 +102,17 @@ export function useRosterScheduler() {
     }
     let isHighLightRow = rowIndex => {
         return itemList.rosterSchedulerTableUtil.isHighLightRow(rowIndex);
+    }
+    let pasteRosterData = (dateOfMonth, e) => {
+        e.preventDefault();
+        let rowCount = itemList.rosterSchedulerData.getCopyDataRowCount();
+        if (rowCount > -1) {
+            let selectedLocation=itemList.rosterSchedulerTableUtil.getSelectedLocation();
+            itemList.rosterSchedulerData.paste(
+                dateOfMonth,                
+                selectedLocation);
+            updateItemList({ type: "refresh" });
+        }
     }
     let setFocusCell = e => {
         itemList.rosterSchedulerTableUtil.setFocusCell(e);
@@ -154,6 +170,7 @@ export function useRosterScheduler() {
             handleKeyDown,
             isHighLightCell,
             isHighLightRow,
+            pasteRosterData,
             setFocusCell,
             startSelect,
             updatePreferredShift,

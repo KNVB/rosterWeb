@@ -21,6 +21,7 @@ export default function PreferredShiftRow({ calendarDateList, itoId, preferredSh
                 cssClassName={className.join(" ")}
                 key={"preferred_" + itoId + '_' + i}
                 onBlur={(e) => uiAction.updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
+                onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
                 uiAction={uiAction}>
                 {preferredShift}
             </EditableShiftCell>

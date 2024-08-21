@@ -24,6 +24,11 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
         this.#minX = -1; this.#minY = -1; this.#maxX = -1; this.#maxY = -1;
         this.#copiedRegion.clear();
     }
+    getCopyRegionLocation = () => {
+        let result=this.getSelectedLocation();
+        this.#copiedRegion.init({ maxX:this.#maxX, minX:this.#minX, minY:this.#minY, maxY:this.#maxY });
+        return result;
+    }
     getNextCell = (cell, yOffset, xOffset) => {
         let nextCellIndex, nextRowIndex;
         let row = cell.closest("tr");

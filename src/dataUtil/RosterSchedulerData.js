@@ -3,16 +3,40 @@ import { Utility } from "../util/Utility";
 import UndoableData from "../util/UndoableData";
 import RosterViewerData from "./RosterViewerData";
 export default class RosterSchedulerData extends RosterViewerData {
+    #copiedData = null;
+    #rosterRowIdList = [];
     #rosterSchedulerDataHistory;
     constructor() {
         super();
-        this.copiedData = null
     }
-    copy = () => {
+    copy = copyRegion => {
+        let index, itoId, shiftList;
+        let temp, result = [], shiftRowType;
+        copyRegion.rows.forEach(row => {
+            index = row.indexOf("_");
+            shiftRowType = row.substring(0, index);
+            itoId = row.substring(index + 1);
+            temp = [];
+            if (shiftRowType === "rosterRow") {
+                shiftList = { ...this.roster.rosterRow[itoId].shiftList };
+            }
+            if (shiftRowType === "preferredShiftRow") {
+                shiftList = { ...this.preferredShiftList[itoId] };
+            }
 
+            for (let i = copyRegion.column.start; i <= copyRegion.column.end; i++) {
+                if (shiftList[i] === undefined) {
+                    temp.push('')
+                } else {
+                    temp.push(shiftList[i])
+                }
+            }
+            result.push(temp);
+        });
+        this.#copiedData = result;
     }
     clearCopiedData = () => {
-        this.copiedData = null;
+        this.#copiedData = null;
     }
     deleteSelectedData(selectedLocation, noOfWorkingDay, monthLength) {
         let index, itoId, shiftRowType;
@@ -39,6 +63,13 @@ export default class RosterSchedulerData extends RosterViewerData {
             }
         });
     }
+    getCopyDataRowCount = () => {
+        if (this.#copiedData === null) {
+            return -1;
+        } else {
+            return this.#copiedData.length;
+        }
+    }
     async load(year, month) {
         await super.load(year, month);
         let fetchAPI = new FetchAPI();
@@ -46,11 +77,16 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.#rosterSchedulerDataHistory = null;
         this.essentialShift = temp.essentialShift;
         this.itoIdList = Object.keys(this.roster.rosterRow);
+        this.itoIdList.forEach(itoId => {
+            this.#rosterRowIdList.push("rosterRow_" + itoId);
+            this.#rosterRowIdList.push("preferredShiftRow_" + itoId);
+        });
         this.preferredShiftList = structuredClone(temp.preferredShiftList);
         this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
         this.systemParam = structuredClone(temp.systemParam);
         this.systemParam.monthPickerMinDate = new Date(this.systemParam.monthPickerMinDate);
         this.timeOffList = structuredClone(temp.timeOffList);
+
         this.#rosterSchedulerDataHistory = new UndoableData({
             calendarDateList: this.calendarDateList,
             itoIdList: this.itoIdList,
@@ -60,12 +96,72 @@ export default class RosterSchedulerData extends RosterViewerData {
             timeOffList: this.timeOffList
         });
     }
+    paste = (dateOfMonth, selectedLocation) => {
+        let copiedDataRow, copyX = this.#copiedData[0].length, copyY = this.#copiedData.length;
+        let endRowNo, endX, endY, firstRowNo, index, itoId, itoIdList, rosterTable, rowId;
+        let startX, startY, shiftRowType;
+
+        console.log("selectedLocation=" + JSON.stringify(selectedLocation));
+        console.log("copiedData=" + JSON.stringify(this.#copiedData));
+        //console.log("rosterRowIdList=" + JSON.stringify(rosterRowIdList));
+
+        firstRowNo = this.#rosterRowIdList.indexOf(selectedLocation.rows[0]);
+        endRowNo = this.#rosterRowIdList.length - 1;
+      
+        let selectX = selectedLocation.column.end - selectedLocation.column.start + 1;
+        let selectY = selectedLocation.rows.length;
+
+        let horizontalCopyTime = Math.floor(selectX / copyX);
+        let verticalCopyTime = Math.floor(selectY / copyY);
+
+        if (horizontalCopyTime === 0) {
+            horizontalCopyTime = 1;
+        }
+        if (verticalCopyTime === 0) {
+            verticalCopyTime = 1;
+        }
+        for (let v = 0; v < verticalCopyTime; v++) {
+            startY = firstRowNo + (v * copyY);
+            endY = startY + copyY;
+            //console.log("startY="+startY+",endY="+endY);
+            for (let y = startY; y < endY; y++) {
+                if (y <= endRowNo) {
+                    rowId = this.#rosterRowIdList[y];
+                    index = rowId.indexOf("_");
+                    shiftRowType = rowId.substring(0, index);
+                    itoId = rowId.substring(index + 1);
+                    copiedDataRow = this.#copiedData[y - firstRowNo - (v * copyY)];
+                    //console.log(`rowId=${rowId},shiftRowType=${shiftRowType},itoId=${itoId},copiedDataRow=${copiedDataRow}`);
+                    for (let h = 0; h < horizontalCopyTime; h++) {
+                        startX = dateOfMonth + (h * copyX);
+                        endX = startX + copiedDataRow.length;
+                        for (let x = startX; x < endX; x++) {
+                            if (x <= this.calendarDateList.length) {
+                                //console.log(shiftRowType);
+                                if (shiftRowType === "rosterRow") {
+                                    this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)], this.roster.noOfWorkingDay, this.calendarDateList.length);
+                                }
+                                if (shiftRowType === "preferredShiftRow") {
+                                    this.updatePreferredShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)]);
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+    }
     reDo = () => {
         console.log("redo");
         if (this.#rosterSchedulerDataHistory.canRedo()) {
             let backupItem = this.#rosterSchedulerDataHistory.redo();
             this.calendarDateList = backupItem.calendarDateList;
             this.itoIdList = backupItem.itoIdList
+            this.#rosterRowIdList = backupItem.rosterRowIdList;
             this.preferredShiftList = backupItem.preferredShiftList
             this.previousMonthShiftList = backupItem.previousMonthShiftList
             this.roster = backupItem.roster;
@@ -80,6 +176,11 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.preferredShiftList = structuredClone(temp.preferredShiftList);
         this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
         this.timeOffList = structuredClone(temp.timeOffList);
+        this.#rosterRowIdList = []
+        this.itoIdList.forEach(itoId => {
+            this.#rosterRowIdList.push("rosterRow_" + itoId);
+            this.#rosterRowIdList.push("preferredShiftRow_" + itoId);
+        });
         this.#recordRosterSchedulerData();
     }
     unDo = () => {
@@ -88,6 +189,7 @@ export default class RosterSchedulerData extends RosterViewerData {
             let backupItem = this.#rosterSchedulerDataHistory.undo();
             this.calendarDateList = backupItem.calendarDateList;
             this.itoIdList = backupItem.itoIdList
+            this.#rosterRowIdList = backupItem.rosterRowIdList;
             this.preferredShiftList = backupItem.preferredShiftList
             this.previousMonthShiftList = backupItem.previousMonthShiftList
             this.roster = backupItem.roster;
@@ -129,6 +231,7 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.#rosterSchedulerDataHistory.set({
             calendarDateList: this.calendarDateList,
             itoIdList: this.itoIdList,
+            rosterRowIdList: this.#rosterRowIdList,
             preferredShiftList: this.preferredShiftList,
             previousMonthShiftList: this.previousMonthShiftList,
             roster: this.roster,
