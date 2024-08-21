@@ -10,13 +10,13 @@ let reducer = (state, action) => {
             break;
         case "refresh":
             result.isLoading = false;
-            break;    
+            break;
         case "setError":
             result.error = action.error;
             break;
         case "updateLoading":
             result.isLoading = action.value;
-            break;    
+            break;
         default:
             break;
     }

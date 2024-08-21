@@ -42,7 +42,7 @@ export default class RosterSchedulerData extends RosterViewerData {
     async load(year, month) {
         await super.load(year, month);
         let fetchAPI = new FetchAPI();
-        let temp = await fetchAPI.getRosterSchedulerData(year, month);
+        let temp = await fetchAPI.getRosterSchedulerData(year, month + 1);
         this.#rosterSchedulerDataHistory = null;
         this.essentialShift = temp.essentialShift;
         this.itoIdList = Object.keys(this.roster.rosterRow);
@@ -70,6 +70,17 @@ export default class RosterSchedulerData extends RosterViewerData {
             this.previousMonthShiftList = backupItem.previousMonthShiftList
             this.roster = backupItem.roster;
         }
+    }
+    async reload(newRosterMonth) {
+        await super.reload(newRosterMonth);
+        let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
+        let fetchAPI = new FetchAPI();
+        let temp = await fetchAPI.getRosterSchedulerData(rosterYear, rosterMonth + 1);
+        this.itoIdList = Object.keys(this.roster.rosterRow);
+        this.preferredShiftList = structuredClone(temp.preferredShiftList);
+        this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
+        this.timeOffList = structuredClone(temp.timeOffList);
+        this.#recordRosterSchedulerData();
     }
     unDo = () => {
         console.log("undo");
@@ -112,17 +123,7 @@ export default class RosterSchedulerData extends RosterViewerData {
                 break;
         }
     }
-    async reload(newRosterMonth) {
-        await super.reload(newRosterMonth);
-        let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
-        let fetchAPI = new FetchAPI();
-        let temp = await fetchAPI.getRosterSchedulerData(rosterYear, rosterMonth);
-        this.itoIdList = Object.keys(this.roster.rosterRow);
-        this.preferredShiftList = structuredClone(temp.preferredShiftList);
-        this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
-        this.timeOffList = structuredClone(temp.timeOffList);
-        this.#recordRosterSchedulerData();
-    }
+
     //=========================================================================================================================================
     #recordRosterSchedulerData() {
         this.#rosterSchedulerDataHistory.set({

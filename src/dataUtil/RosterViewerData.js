@@ -9,7 +9,7 @@ export default class RosterViewerData {
     async load(year, month) {
         let monthlyCalendar = this.#calendarUtility.getMonthlyCalendar(year, month);
         let fetchAPI = new FetchAPI();
-        let temp = await fetchAPI.getRosterViewerData(year, month);
+        let temp = await fetchAPI.getRosterViewerData(year, month + 1);
         this.activeShiftList = structuredClone(temp.activeShiftList);
         this.calendarDateList = monthlyCalendar.calendarDateList;
         this.systemParam = structuredClone(temp.systemParam);
@@ -32,7 +32,7 @@ export default class RosterViewerData {
         //console.log(newRosterMonth);
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
         let monthlyCalendar = this.#calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
-        let temp = await fetchAPI.getRosterViewerData(rosterYear, rosterMonth);
+        let temp = await fetchAPI.getRosterViewerData(rosterYear, rosterMonth + 1);
         this.calendarDateList = monthlyCalendar.calendarDateList;
         let rosterData = structuredClone(temp.rosterData);
         this.roster = {

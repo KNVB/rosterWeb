@@ -88,7 +88,7 @@ export default class Dbo {
         this.#sqlString += "on v.ito_id=shift_record.ITO_ID and  (shift_record.shift_date between ? and ?)";
         this.#sqlString += "left join last_month_balance on v.ito_id=last_month_balance.ITO_ID and shift_month=? ";
         this.#sqlString += "order by v.ito_id,shift_date";
-
+        
         return await this.#executeQuery(this.#sqlString,
             [
                 result.endDateString,
