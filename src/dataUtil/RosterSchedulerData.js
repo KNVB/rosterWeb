@@ -93,6 +93,7 @@ export default class RosterSchedulerData extends RosterViewerData {
             preferredShiftList: this.preferredShiftList,
             previousMonthShiftList: this.previousMonthShiftList,
             roster: this.roster,
+            rosterRowIdList:this.#rosterRowIdList,
             timeOffList: this.timeOffList
         });
     }
