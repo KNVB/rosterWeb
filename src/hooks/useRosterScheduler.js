@@ -99,7 +99,9 @@ export function useRosterScheduler() {
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
     }
-
+    let getTotalTimeOff=itoId=>{
+        return 0
+    }
     let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
     let isHighLightCell = cellIndex => {
         return itemList.rosterSchedulerTableUtil.isHighLightCell(cellIndex);
@@ -172,6 +174,7 @@ export function useRosterScheduler() {
             getPreferredShiftCellCssClassName,
             getRowIndex,
             getShiftCssClassName,
+            getTotalTimeOff,
             handleKeyDown,
             isHighLightCell,
             isHighLightRow,

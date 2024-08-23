@@ -59,7 +59,7 @@ export default function KeyboardEventHandler(itemList, updateItemList) {
         let selectedLocation = getSelectedLocation(itemList.rosterSchedulerTableUtil, itemList.rosterSchedulerData.systemParam);        
         itemList.rosterSchedulerData.deleteSelectedData(
             selectedLocation, 
-            itemList.rosterSchedulerData.roster.noOfWorkingDay, 
+            itemList.rosterSchedulerData.noOfWorkingDay, 
             itemList.rosterSchedulerData.calendarDateList.length);
         updateItemList({ type: "refresh" });
     }

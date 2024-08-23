@@ -2,6 +2,7 @@ import EditableShiftCell from "./EditableShiftCell";
 import NameCell from "../../common/cells/NameCell";
 import ShiftCell from "../../common/cells/ShiftCell";
 import StatCell from "../../common/cells/StatCell";
+import TimeOff from "./timeOff/TimeOff";
 export default function PreferredShiftRow({ calendarDateList, itoId, preferredShiftList, rowIndex, systemParam, uiAction }) {
     let className = '';
     let preferredShift = '', shiftCellList = [];
@@ -36,7 +37,12 @@ export default function PreferredShiftRow({ calendarDateList, itoId, preferredSh
                 Preferred Shift
             </NameCell>
             {shiftCellList}
-            <td className='borderCell' colSpan={5}></td>
+            <td className='borderCell' colSpan={5}>
+                <TimeOff 
+                    itoId={itoId}
+                    uiAction={uiAction}
+                />
+            </td>
             <StatCell></StatCell>
             <StatCell></StatCell>
             <StatCell></StatCell>

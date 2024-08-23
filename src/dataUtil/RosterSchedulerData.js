@@ -14,7 +14,7 @@ export default class RosterSchedulerData extends RosterViewerData {
             itoId = row.substring(index + 1);
             temp = [];
             if (shiftRowType === "rosterRow") {
-                shiftList = { ...this.roster.rosterRow[itoId].shiftList };
+                shiftList = { ...this.roster[itoId].shiftList };
             }
             if (shiftRowType === "preferredShiftRow") {
                 shiftList = { ...this.preferredShiftList[itoId] };
@@ -72,7 +72,7 @@ export default class RosterSchedulerData extends RosterViewerData {
         let temp = await fetchAPI.getRosterSchedulerData(year, month + 1);
         this.#rosterSchedulerDataHistory = null;
         this.essentialShift = temp.essentialShift;
-        this.itoIdList = Object.keys(this.roster.rosterRow);
+        this.itoIdList = Object.keys(this.roster);
        
         this.preferredShiftList = structuredClone(temp.preferredShiftList);
         this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
@@ -130,7 +130,7 @@ export default class RosterSchedulerData extends RosterViewerData {
                                 //console.log(shiftRowType);
                                 switch (shiftRowType){
                                     case "rosterRow":
-                                        this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)], this.roster.noOfWorkingDay, this.calendarDateList.length);
+                                        this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)], this.noOfWorkingDay, this.calendarDateList.length);
                                         break
                                     case "preferredShiftRow":
                                         this.updatePreferredShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)]);
@@ -166,15 +166,11 @@ export default class RosterSchedulerData extends RosterViewerData {
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
         let fetchAPI = new FetchAPI();
         let temp = await fetchAPI.getRosterSchedulerData(rosterYear, rosterMonth + 1);
-        this.itoIdList = Object.keys(this.roster.rosterRow);
+        this.itoIdList = Object.keys(this.roster);
         this.preferredShiftList = structuredClone(temp.preferredShiftList);
         this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
         this.timeOffList = structuredClone(temp.timeOffList);
-        this.rosterRowIdList = []
-        this.itoIdList.forEach(itoId => {
-            this.rosterRowIdList.push("rosterRow_" + itoId);
-            this.rosterRowIdList.push("preferredShiftRow_" + itoId);
-        });
+        
         this.#recordRosterSchedulerData();
     }
     unDo = () => {
@@ -206,13 +202,13 @@ export default class RosterSchedulerData extends RosterViewerData {
         }
     }
     updateShift(itoId, dateOfMonth, newShift) {
-        let oldShift = this.roster.rosterRow[itoId].shiftList[dateOfMonth];
+        let oldShift = this.roster[itoId].shiftList[dateOfMonth];
         let newRosterShift = newShift.trim();
         switch (true) {
             case ((oldShift === undefined) && (newRosterShift !== '')):
             case ((oldShift !== undefined) && (newRosterShift !== oldShift)):
-                this.roster.rosterRow[itoId].shiftList[dateOfMonth] = newRosterShift;
-                this.roster.rosterRow = Utility.genITOStat(this.activeShiftList, this.roster.rosterRow, this.roster.noOfWorkingDay);
+                this.roster[itoId].shiftList[dateOfMonth] = newRosterShift;
+                this.roster= Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
                 this.#recordRosterSchedulerData();
                 break;
             default:
@@ -225,7 +221,6 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.#rosterSchedulerDataHistory.set({
             calendarDateList: this.calendarDateList,
             itoIdList: this.itoIdList,
-            rosterRowIdList: this.rosterRowIdList,
             preferredShiftList: this.preferredShiftList,
             previousMonthShiftList: this.previousMonthShiftList,
             roster: this.roster,

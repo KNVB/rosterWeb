@@ -1,6 +1,6 @@
 import RosterRow from "./RosterRow";
 export default function RosterBody({ calendarDateList, roster, systemParam, uiAction }) {
-    let itoIdList = Object.keys(roster.rosterRow);
+    let itoIdList = Object.keys(roster);
     let rowList = [];
     //console.log(roster);    
     itoIdList.forEach((itoId, index) => {
@@ -10,7 +10,7 @@ export default function RosterBody({ calendarDateList, roster, systemParam, uiAc
                 itoId={itoId}
                 key={"rosterRow_" + itoId}
                 rowIndex={(index + 5)}
-                roster={roster.rosterRow[itoId]}                
+                roster={roster[itoId]}                
                 systemParam={systemParam}
                 uiAction={uiAction}
             />
