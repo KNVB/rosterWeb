@@ -18,7 +18,7 @@ export default function TimeOff({ itoId, uiAction }) {
                     <Modal.Title>Time off</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <DatePicker/> <PlusLg />
+                    <DatePicker/> <PlusLg />                    
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
