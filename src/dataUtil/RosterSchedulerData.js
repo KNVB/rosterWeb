@@ -95,10 +95,6 @@ export default class RosterSchedulerData extends RosterViewerData {
         let endRowNo, endX, endY, firstRowNo, index, itoId, rowId;
         let startX, startY, shiftRowType;
 
-        console.log("selectedLocation=" + JSON.stringify(selectedLocation));
-        console.log("copiedData=" + JSON.stringify(this.#copiedData));
-        //console.log("rosterRowIdList=" + JSON.stringify(rosterRowIdList));
-
         firstRowNo = rosterRowIdList.indexOf(selectedLocation.rows[0]);
         endRowNo = rosterRowIdList.length - 1;
       
@@ -132,11 +128,15 @@ export default class RosterSchedulerData extends RosterViewerData {
                         for (let x = startX; x < endX; x++) {
                             if (x <= this.calendarDateList.length) {
                                 //console.log(shiftRowType);
-                                if (shiftRowType === "rosterRow") {
-                                    this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)], this.roster.noOfWorkingDay, this.calendarDateList.length);
-                                }
-                                if (shiftRowType === "preferredShiftRow") {
-                                    this.updatePreferredShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)]);
+                                switch (shiftRowType){
+                                    case "rosterRow":
+                                        this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)], this.roster.noOfWorkingDay, this.calendarDateList.length);
+                                        break
+                                    case "preferredShiftRow":
+                                        this.updatePreferredShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)]);
+                                        break;
+                                    default:
+                                        break;        
                                 }
                             } else {
                                 break;
