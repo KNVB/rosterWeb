@@ -49,7 +49,7 @@ export function useRosterScheduler() {
             let rosterMonth = now.getMonth();
             let rosterSchedulerData = new RosterSchedulerData();
             try {
-                await rosterSchedulerData.load(rosterYear, rosterMonth);
+                await rosterSchedulerData.load(rosterYear, rosterMonth);               
                 updateItemList({
                     rosterSchedulerData,
                     type: "init"
@@ -73,17 +73,6 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
-    let getPreferredShiftCellCssClassName = (cellIndex, rowIndex) => {
-        let className = [];
-        let temp = itemList.rosterSchedulerTableUtil.getSelectedCssClass(cellIndex, rowIndex);
-        if (temp.length > 0) {
-            className.push(...temp);
-        }
-        return className;
-    }
-    let getShiftCssClassName = shiftType => {
-        return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
-    }
     let getEditableShiftCellCssClassName = (cellIndex, rowIndex, shift) => {
         let className = [];
         let temp = getShiftCssClassName(shift);
@@ -96,6 +85,21 @@ export function useRosterScheduler() {
         }
         return className;
     }
+    let getPreferredShiftCellCssClassName = (cellIndex, rowIndex) => {
+        let className = [];
+        let temp = itemList.rosterSchedulerTableUtil.getSelectedCssClass(cellIndex, rowIndex);
+        if (temp.length > 0) {
+            className.push(...temp);
+        }
+        return className;
+    }
+    let getRowIndex = rowName => {
+        return itemList.rosterSchedulerTableUtil.getRowIndex(rowName);
+    }
+    let getShiftCssClassName = shiftType => {
+        return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
+    }
+
     let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
     let isHighLightCell = cellIndex => {
         return itemList.rosterSchedulerTableUtil.isHighLightCell(cellIndex);
@@ -107,9 +111,10 @@ export function useRosterScheduler() {
         e.preventDefault();
         let rowCount = itemList.rosterSchedulerData.getCopyDataRowCount();
         if (rowCount > -1) {
-            let selectedLocation=itemList.rosterSchedulerTableUtil.getSelectedLocation();
+            let selectedLocation = itemList.rosterSchedulerTableUtil.getSelectedLocation();
             itemList.rosterSchedulerData.paste(
-                dateOfMonth,                
+                dateOfMonth,
+                itemList.rosterSchedulerTableUtil.rosterRowIdList,
                 selectedLocation);
             updateItemList({ type: "refresh" });
         }
@@ -136,7 +141,6 @@ export function useRosterScheduler() {
     let updateRosterMonth = async (newRosterMonth) => {
         try {
             await itemList.rosterSchedulerData.reload(newRosterMonth);
-
             updateItemList({
                 type: "updateRosterMonth"
             });
@@ -166,6 +170,7 @@ export function useRosterScheduler() {
             endSelect,
             getEditableShiftCellCssClassName,
             getPreferredShiftCellCssClassName,
+            getRowIndex,
             getShiftCssClassName,
             handleKeyDown,
             isHighLightCell,

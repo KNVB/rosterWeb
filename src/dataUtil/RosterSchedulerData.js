@@ -4,11 +4,7 @@ import UndoableData from "../util/UndoableData";
 import RosterViewerData from "./RosterViewerData";
 export default class RosterSchedulerData extends RosterViewerData {
     #copiedData = null;
-    #rosterRowIdList = [];
     #rosterSchedulerDataHistory;
-    constructor() {
-        super();
-    }
     copy = copyRegion => {
         let index, itoId, shiftList;
         let temp, result = [], shiftRowType;
@@ -77,10 +73,7 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.#rosterSchedulerDataHistory = null;
         this.essentialShift = temp.essentialShift;
         this.itoIdList = Object.keys(this.roster.rosterRow);
-        this.itoIdList.forEach(itoId => {
-            this.#rosterRowIdList.push("rosterRow_" + itoId);
-            this.#rosterRowIdList.push("preferredShiftRow_" + itoId);
-        });
+       
         this.preferredShiftList = structuredClone(temp.preferredShiftList);
         this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
         this.systemParam = structuredClone(temp.systemParam);
@@ -93,21 +86,21 @@ export default class RosterSchedulerData extends RosterViewerData {
             preferredShiftList: this.preferredShiftList,
             previousMonthShiftList: this.previousMonthShiftList,
             roster: this.roster,
-            rosterRowIdList:this.#rosterRowIdList,
+            rosterRowIdList:this.rosterRowIdList,
             timeOffList: this.timeOffList
         });
     }
-    paste = (dateOfMonth, selectedLocation) => {
+    paste = (dateOfMonth, rosterRowIdList,selectedLocation) => {
         let copiedDataRow, copyX = this.#copiedData[0].length, copyY = this.#copiedData.length;
-        let endRowNo, endX, endY, firstRowNo, index, itoId, itoIdList, rosterTable, rowId;
+        let endRowNo, endX, endY, firstRowNo, index, itoId, rowId;
         let startX, startY, shiftRowType;
 
         console.log("selectedLocation=" + JSON.stringify(selectedLocation));
         console.log("copiedData=" + JSON.stringify(this.#copiedData));
         //console.log("rosterRowIdList=" + JSON.stringify(rosterRowIdList));
 
-        firstRowNo = this.#rosterRowIdList.indexOf(selectedLocation.rows[0]);
-        endRowNo = this.#rosterRowIdList.length - 1;
+        firstRowNo = rosterRowIdList.indexOf(selectedLocation.rows[0]);
+        endRowNo = rosterRowIdList.length - 1;
       
         let selectX = selectedLocation.column.end - selectedLocation.column.start + 1;
         let selectY = selectedLocation.rows.length;
@@ -127,7 +120,7 @@ export default class RosterSchedulerData extends RosterViewerData {
             //console.log("startY="+startY+",endY="+endY);
             for (let y = startY; y < endY; y++) {
                 if (y <= endRowNo) {
-                    rowId = this.#rosterRowIdList[y];
+                    rowId = rosterRowIdList[y];
                     index = rowId.indexOf("_");
                     shiftRowType = rowId.substring(0, index);
                     itoId = rowId.substring(index + 1);
@@ -162,7 +155,7 @@ export default class RosterSchedulerData extends RosterViewerData {
             let backupItem = this.#rosterSchedulerDataHistory.redo();
             this.calendarDateList = backupItem.calendarDateList;
             this.itoIdList = backupItem.itoIdList
-            this.#rosterRowIdList = backupItem.rosterRowIdList;
+            this.rosterRowIdList = backupItem.rosterRowIdList;
             this.preferredShiftList = backupItem.preferredShiftList
             this.previousMonthShiftList = backupItem.previousMonthShiftList
             this.roster = backupItem.roster;
@@ -177,10 +170,10 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.preferredShiftList = structuredClone(temp.preferredShiftList);
         this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
         this.timeOffList = structuredClone(temp.timeOffList);
-        this.#rosterRowIdList = []
+        this.rosterRowIdList = []
         this.itoIdList.forEach(itoId => {
-            this.#rosterRowIdList.push("rosterRow_" + itoId);
-            this.#rosterRowIdList.push("preferredShiftRow_" + itoId);
+            this.rosterRowIdList.push("rosterRow_" + itoId);
+            this.rosterRowIdList.push("preferredShiftRow_" + itoId);
         });
         this.#recordRosterSchedulerData();
     }
@@ -190,7 +183,7 @@ export default class RosterSchedulerData extends RosterViewerData {
             let backupItem = this.#rosterSchedulerDataHistory.undo();
             this.calendarDateList = backupItem.calendarDateList;
             this.itoIdList = backupItem.itoIdList
-            this.#rosterRowIdList = backupItem.rosterRowIdList;
+            this.rosterRowIdList = backupItem.rosterRowIdList;
             this.preferredShiftList = backupItem.preferredShiftList
             this.previousMonthShiftList = backupItem.previousMonthShiftList
             this.roster = backupItem.roster;
@@ -232,7 +225,7 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.#rosterSchedulerDataHistory.set({
             calendarDateList: this.calendarDateList,
             itoIdList: this.itoIdList,
-            rosterRowIdList: this.#rosterRowIdList,
+            rosterRowIdList: this.rosterRowIdList,
             preferredShiftList: this.preferredShiftList,
             previousMonthShiftList: this.previousMonthShiftList,
             roster: this.roster,

@@ -11,7 +11,7 @@ export default function RosterSchedulerBody({ calendarDateList, preferredShiftLi
                 itoId={itoId}
                 key={"rosterRow_" + itoId}
                 previousMonthShiftList={previousMonthShiftList[itoId]}
-                rowIndex={(index * 2 + 5)}
+                rowIndex={uiAction.getRowIndex("rosterRow_" + itoId)}
                 roster={roster.rosterRow[itoId]}
                 systemParam={systemParam}
                 uiAction={uiAction}
@@ -23,7 +23,7 @@ export default function RosterSchedulerBody({ calendarDateList, preferredShiftLi
                 itoId={itoId}
                 key={"preferredShiftRow_" + itoId}
                 preferredShiftList={preferredShiftList[itoId]}
-                rowIndex={(index * 2 + 6)}
+                rowIndex={uiAction.getRowIndex("preferredShiftRow_" + itoId)}
                 systemParam={systemParam}
                 uiAction={uiAction} />
         )

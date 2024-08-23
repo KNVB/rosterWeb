@@ -7,6 +7,11 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
     #maxCellIndex; #maxRowIndex; #minCellIndex;
     #minX = -1; #minY = -1; #maxX = -1; #maxY = -1;
     #minRowIndex = 5;
+    constructor(){
+        super();
+        this.rosterRowIdList=[];
+    }
+   
     clearCopiedRegion = () => {
         this.#copiedRegion.clear();
     }
@@ -23,6 +28,11 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
         this.#minCellIndex = systemParam.noOfPrevDate + 1;
         this.#minX = -1; this.#minY = -1; this.#maxX = -1; this.#maxY = -1;
         this.#copiedRegion.clear();
+        this.rosterRowIdList=[];
+        itoIdList.forEach(itoId => {
+            this.rosterRowIdList.push("rosterRow_" + itoId);
+            this.rosterRowIdList.push("preferredShiftRow_" + itoId);
+        });
     }
     getCopyRegionLocation = () => {
         let result=this.getSelectedLocation();
@@ -75,6 +85,9 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
                 break
         }
         return { cellIndex: nextCellIndex, rowIndex: nextRowIndex }
+    }
+    getRowIndex=rowName=>{
+        return this.rosterRowIdList.indexOf(rowName)+this.#minRowIndex;
     }
     getSelectedCssClass = (cellIndex, rowIndex) => {
         let result = this.#copiedRegion.getCopiedClass(cellIndex, rowIndex);
