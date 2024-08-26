@@ -65,7 +65,7 @@ let getRosterSchedulerData = async params => {
     let roster = new Roster();
     let preferredShiftList = {};
     let previousMonthShiftList = {};
-    let timeOffList={};
+    let timeOffList = {};
     let shiftInfo = new ShiftInfo();
     let sP = structuredClone(params.systemParam);
     await shiftInfo.init();
@@ -75,19 +75,19 @@ let getRosterSchedulerData = async params => {
         if (preferredShiftList[p.ito_id] === undefined) {
             preferredShiftList[p.ito_id] = {};
         }
-        preferredShiftList[p.ito_id][p.d]= p.preferred_shift;
+        preferredShiftList[p.ito_id][p.d] = p.preferred_shift;
     });
-    temp=await roster.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
+    temp = await roster.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
     temp.forEach(p => {
-       if (previousMonthShiftList[p.ito_id]=== undefined) {
-        previousMonthShiftList[p.ito_id]=[];
-       }
-       previousMonthShiftList[p.ito_id].push(p.shift);
+        if (previousMonthShiftList[p.ito_id] === undefined) {
+            previousMonthShiftList[p.ito_id] = [];
+        }
+        previousMonthShiftList[p.ito_id].push(p.shift);
     });
-    temp=await roster.getTimeOffList(params.year, params.month);
-    temp.forEach(timeOff=>{
-        if (timeOffList[timeOff.ito_id]===undefined){
-            timeOffList[timeOff.ito_id]=[]
+    temp = await roster.getTimeOffList(params.year, params.month);
+    temp.forEach(timeOff => {
+        if (timeOffList[timeOff.ito_id] === undefined) {
+            timeOffList[timeOff.ito_id] = []
         }
         timeOffList[timeOff.ito_id].push(timeOff);
     });
