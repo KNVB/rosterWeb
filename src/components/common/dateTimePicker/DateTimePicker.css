@@ -1,19 +1,38 @@
 .dateTimePicker{
+    display: inline-block;
+    font-size: 12px;
     position:relative;    
 }
 .dateTimeResult{
     border: 1px solid black;
     cursor: pointer;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 .pickerContainer{
     background-color: white;
     position: absolute;
     z-index: 1000;
 }
-.pickerTable{
+.calendarTable{
+    border: 1px solid black;
     margin: 0px;
 }
-.pickerTable td{
-    border: 1px solid black;
+.calendarTable td{
+    min-height:33px;
+    min-width:33px;
     text-align: center;
+}
+.clickable{
+    cursor: pointer;
+}
+.calendarTable > tbody td:not(:empty):hover,
+.dayRow td:hover{
+    background-color:#ccffff;
+    color: black;
+}
+.selectedDate{
+    background-color:red;
+    color:white;
+    font-weight: bold;
 }

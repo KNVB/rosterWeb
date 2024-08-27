@@ -12,17 +12,19 @@ export default function TimeOff({ itoId, timeOffList, uiAction }) {
     return (
         <div className='d-flex align-items-center'>
             <span className='me-2'>Time off in hour:{uiAction.getTotalTimeOff(itoId)}</span>
-            <Pencil onClick={handleShow} title='Edit Time off' variant="primary" />
-            <Modal show={showModal} onHide={handleClose}>
+            <button className="btn btn-outline-dark">
+                <Pencil onClick={handleShow} title='Edit Time off' variant="dark" />
+            </button>
+            
+            
+            <Modal show={showModal} size="lg" onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Time off</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className='align-items-center d-flex flex-row'>
-                        start time:&nbsp;<DateTimePicker />&nbsp;
-                        end time:&nbsp;<DateTimePicker />&nbsp;
-                        <button className="btn btn-primary ms-2" value="-">-</button>
-                    </div>
+                    start time:&nbsp;<DateTimePicker value={new Date("2024-2-3")} />&nbsp;
+                    {/*end time:&nbsp;<DateTimePicker />&nbsp;*/}
+                    <button className="btn btn-primary ms-2" value="-">-</button>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
