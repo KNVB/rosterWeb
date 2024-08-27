@@ -15,8 +15,6 @@ export default function TimeOff({ itoId, timeOffList, uiAction }) {
             <button className="btn btn-outline-dark">
                 <Pencil onClick={handleShow} title='Edit Time off' variant="dark" />
             </button>
-            
-            
             <Modal show={showModal} size="lg" onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Time off</Modal.Title>
