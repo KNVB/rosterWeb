@@ -21,16 +21,16 @@ export default class JPickerUtil{
         "December"
     ];
     static monthShortName = [
-        'JAN',
-        'FEB',
-        'MAR',
-        'APR',
-        'MAY',
-        'JUN',
-        'JUL',
-        'AUG',
-        'SEP',
-        'OCT',
-        'NOV',
-        'DEC'];    
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'];    
 }

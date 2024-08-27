@@ -1,0 +1,19 @@
+.dateTimePicker{
+    position:relative;    
+}
+.dateTimeResult{
+    border: 1px solid black;
+    cursor: pointer;
+}
+.pickerContainer{
+    background-color: white;
+    position: absolute;
+    z-index: 1000;
+}
+.pickerTable{
+    margin: 0px;
+}
+.pickerTable td{
+    border: 1px solid black;
+    text-align: center;
+}

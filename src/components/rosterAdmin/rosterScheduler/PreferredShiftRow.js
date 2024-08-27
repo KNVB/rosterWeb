@@ -3,7 +3,7 @@ import NameCell from "../../common/cells/NameCell";
 import ShiftCell from "../../common/cells/ShiftCell";
 import StatCell from "../../common/cells/StatCell";
 import TimeOff from "./timeOff/TimeOff";
-export default function PreferredShiftRow({ calendarDateList, itoId, preferredShiftList, rowIndex, systemParam, uiAction }) {
+export default function PreferredShiftRow({ calendarDateList, itoId, preferredShiftList, rowIndex, systemParam, timeOffList, uiAction }) {
     let className = '';
     let preferredShift = '', shiftCellList = [];
     
@@ -40,6 +40,7 @@ export default function PreferredShiftRow({ calendarDateList, itoId, preferredSh
             <td className='borderCell' colSpan={5}>
                 <TimeOff 
                     itoId={itoId}
+                    timeOffList={timeOffList}
                     uiAction={uiAction}
                 />
             </td>

@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import HeaderRows from "../../common/rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../common/ShiftInfoLegend";
-export default function RosterSchedulerTable({ rosterSchedulerData, uiAction }){
-    const { activeShiftList, calendarDateList,preferredShiftList,previousMonthShiftList, roster, systemParam } = rosterSchedulerData;
+export default function RosterSchedulerTable({ rosterSchedulerData, uiAction }) {
+    const { activeShiftList, calendarDateList, preferredShiftList, previousMonthShiftList, roster, systemParam, timeOffList } = rosterSchedulerData;
     useEffect(() => {
         const mouseUp = () => uiAction.endSelect();
         document.addEventListener("mouseup", mouseUp);
@@ -18,12 +18,13 @@ export default function RosterSchedulerTable({ rosterSchedulerData, uiAction }){
                 calendarDateList={calendarDateList}
                 systemParam={systemParam}
                 uiAction={uiAction} />
-             <RosterSchedulerBody
+            <RosterSchedulerBody
                 calendarDateList={calendarDateList}
                 preferredShiftList={preferredShiftList}
                 previousMonthShiftList={previousMonthShiftList}
                 roster={roster}
                 systemParam={systemParam}
+                timeOffList={timeOffList}
                 uiAction={uiAction}
             />
             <tfoot>

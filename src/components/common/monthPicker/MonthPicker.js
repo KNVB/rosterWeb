@@ -76,7 +76,7 @@ export default function MonthPicker(props) {
     }
 },[mouseDown]);  
   return (
-    <div ref={obj} className="pickerContainter">
+    <div ref={obj} className="monthPickerContainter">
       <SmallStepSelector context={context} updateValue={updateValue}/>
     {
       context.isShowBigStepSelector && 

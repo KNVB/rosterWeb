@@ -7,6 +7,7 @@ import handleAPIError from "../../common/handleAPIError";
 import DatePicker from "react-date-picker";
 import Loading from "../../common/Loading";
 
+
 export default function ITOForm({ itoAction }) {
     const { activeShiftList, addShiftPattern,
         backToITOlList, doUpdate,
@@ -27,6 +28,7 @@ export default function ITOForm({ itoAction }) {
         e.preventDefault();
         doUpdate(form,itoAction);
     }
+    console.log(ito.joinDate)
     return (
         <div className="d-flex flex-grow-1 justify-content-center">
             <form onSubmit={() => { return false }}>
@@ -110,7 +112,7 @@ export default function ITOForm({ itoAction }) {
                         </tr>
                         <tr>
                             <td className="border border-dark">Join Date</td>
-                            <td className="border border-dark">
+                            <td className="border border-dark">                              
                                 <DatePicker
                                     locale="en-ca"
                                     onChange={joinDate => updateDate("joinDate", joinDate)}

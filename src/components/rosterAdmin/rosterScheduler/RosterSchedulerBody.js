@@ -1,6 +1,6 @@
 import EditableShiftRow from "./EditableShiftRow";
 import PreferredShiftRow from "./PreferredShiftRow";
-export default function RosterSchedulerBody({ calendarDateList, preferredShiftList, previousMonthShiftList, roster, systemParam, uiAction }) {
+export default function RosterSchedulerBody({ calendarDateList, preferredShiftList, previousMonthShiftList, roster, systemParam, timeOffList, uiAction }) {
     let itoIdList = Object.keys(roster);
     let rowList = [];
     //console.log(roster);    
@@ -25,6 +25,7 @@ export default function RosterSchedulerBody({ calendarDateList, preferredShiftLi
                 preferredShiftList={preferredShiftList[itoId]}
                 rowIndex={uiAction.getRowIndex("preferredShiftRow_" + itoId)}
                 systemParam={systemParam}
+                timeOffList={timeOffList[itoId]}
                 uiAction={uiAction} />
         )
     });
