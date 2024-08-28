@@ -1,5 +1,6 @@
 import "./DateTimePicker.css";
 import CalendarTable from "./CalendarTable";
+import TimeSelector from "./TimeSelector";
 import useDateTimePicker from "./useDateTimePicker";
 export default function DateTimePicker({ value }) {
     let dateFormatter = new Intl.DateTimeFormat('en-ZA', {
@@ -25,8 +26,13 @@ export default function DateTimePicker({ value }) {
                         prevMonth={action.prevMonth}
                         prevYear={action.prevYear}
                         selectedDate={result}
-                        setSelectedDate={action.setSelectedDate}
+                        selectToday={action.selectToday}
+                        setSelectedDate={action.updateValue}
                         weekDayNameList={weekDayNameList}/>
+                    Time: 
+                    <TimeSelector
+                        selectedTime={result}
+                    />    
                 </div>
             }
         </div>

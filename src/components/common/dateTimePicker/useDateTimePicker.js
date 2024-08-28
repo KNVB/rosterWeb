@@ -16,6 +16,7 @@ let initObj = {
         "December"
     ],
     monthlyCalendar: null,
+    tempValue: null,
     weekDayNameList: ["Su", "M", "T", "W", "Th", "F", "S"]
 };
 let genMonthlyCalendar = (result) => {
@@ -58,11 +59,11 @@ let reducer = (state, action) => {
     switch (action.type) {
         case "init":
             result.result = action.result;
+            result.tempValue = action.result;
             result.monthlyCalendar = genMonthlyCalendar(action.result);
             break;
-        case "setSelectedDate":
-            result.result=action.selectedDate;
-            result.isShowPicker = false;
+        case "updateValue":
+            result.result = action.newValue;
             break
         case "showPicker":
             result.isShowPicker = true;
@@ -93,7 +94,7 @@ export default function useDateTimePicker(defaultValue) {
         temp.setMonth(temp.getMonth() - 1);
         updateItemList({ "type": "init", "result": temp });
     }
-    let prevYear = () => { 
+    let prevYear = () => {
         let temp = new Date(itemList.result.getTime());
         temp.setFullYear(temp.getFullYear() - 1);
         updateItemList({ "type": "init", "result": temp });
@@ -107,24 +108,30 @@ export default function useDateTimePicker(defaultValue) {
         let temp = new Date(itemList.result.getTime());
         temp.setFullYear(temp.getFullYear() + 1);
         updateItemList({ "type": "init", "result": temp });
-     }
-    let setSelectedDate=date=>{
+    }
+    let selectToday = () => {
+        let temp = new Date();
+        updateItemList({ "newValue": temp, "type": "updateValue" });
+    }
+    let updateValue = date => {
         let temp = new Date(itemList.result.getTime());
         temp.setDate(date);
-        updateItemList({"selectedDate":temp,"type":"setSelectedDate"});
+        updateItemList({ "newValue": temp, "type": "updateValue" });
     }
     return {
         isShowPicker: itemList.isShowPicker,
         monthFullNameList: itemList.monthFullNameList,
         monthlyCalendar: itemList.monthlyCalendar,
         result: itemList.result,
+        tempValue: itemList.tempValue,
         weekDayNameList: itemList.weekDayNameList,
         action: {
             prevMonth,
             prevYear,
             nextMonth,
             nextYear,
-            setSelectedDate,
+            selectToday,
+            updateValue,
             showPicker,
         }
     }

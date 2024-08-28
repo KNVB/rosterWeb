@@ -6,6 +6,7 @@ export default function CalendarTable({
     prevMonth,
     prevYear,
     selectedDate,
+    selectToday,
     setSelectedDate,
     weekDayNameList }) {
     let calendarRows = [];
@@ -27,6 +28,7 @@ export default function CalendarTable({
             calendarRows.push(<tr key={"dateTime_" + rowIndex}>{calendarRow}</tr>);
         });
     }
+    
     return (
         <table className="calendarTable">
             <thead>
@@ -51,6 +53,13 @@ export default function CalendarTable({
             <tbody>
                 {calendarRows}
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colSpan={7} className="text-end">
+                        <span className="clickable" onClick={selectToday}>Today</span>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     )
 }

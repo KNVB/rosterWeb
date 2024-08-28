@@ -12,8 +12,8 @@ export default function TimeOff({ itoId, timeOffList, uiAction }) {
     return (
         <div className='d-flex align-items-center'>
             <span className='me-2'>Time off in hour:{uiAction.getTotalTimeOff(itoId)}</span>
-            <button className="btn btn-outline-dark">
-                <Pencil onClick={handleShow} title='Edit Time off' variant="dark" />
+            <button className="btn btn-outline-dark" onClick={handleShow}>
+                <Pencil title='Edit Time off' variant="dark" />
             </button>
             <Modal show={showModal} size="lg" onHide={handleClose}>
                 <Modal.Header closeButton>

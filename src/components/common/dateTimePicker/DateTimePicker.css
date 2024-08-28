@@ -1,6 +1,5 @@
 .dateTimePicker{
-    display: inline-block;
-    font-size: 12px;
+    display: inline-block;   
     position:relative;    
 }
 .dateTimeResult{
@@ -16,6 +15,7 @@
 }
 .calendarTable{
     border: 1px solid black;
+    font-size: 12px;
     margin: 0px;
 }
 .calendarTable td{
@@ -35,4 +35,21 @@
     background-color:red;
     color:white;
     font-weight: bold;
+}
+.timeSelector{
+    border: 1px solid black;
+    display: inline-block;
+    align-items: center;    
+    margin-top: 2px;
+    padding: 1px;    
+}
+.timeSelectorUpDown{
+    cursor: pointer;
+    display: inline-flex;
+    flex-direction: column;
+    flex-grow: 1;
+    font-size: 10px;
+    margin: 0px;
+    padding: 0px;    
+    vertical-align:middle;
 }
