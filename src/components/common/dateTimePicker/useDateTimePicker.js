@@ -62,6 +62,9 @@ let reducer = (state, action) => {
             result.tempValue = action.result;
             result.monthlyCalendar = genMonthlyCalendar(action.result);
             break;
+        case "updateTemnpValue":
+            result.tempValue = action.newTempValue;
+            break
         case "updateValue":
             result.result = action.newValue;
             break
@@ -113,6 +116,11 @@ export default function useDateTimePicker(defaultValue) {
         let temp = new Date();
         updateItemList({ "newValue": temp, "type": "updateValue" });
     }
+    let updateTempValue = date => {
+        let temp = new Date(itemList.result.getTime());
+        temp.setDate(date);
+        updateItemList({ "newTempValue": temp, "type": "updateTempValue" });
+    }
     let updateValue = date => {
         let temp = new Date(itemList.result.getTime());
         temp.setDate(date);
@@ -131,6 +139,7 @@ export default function useDateTimePicker(defaultValue) {
             nextMonth,
             nextYear,
             selectToday,
+            updateTempValue,
             updateValue,
             showPicker,
         }

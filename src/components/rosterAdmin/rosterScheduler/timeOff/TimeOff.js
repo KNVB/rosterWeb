@@ -15,14 +15,16 @@ export default function TimeOff({ itoId, timeOffList, uiAction }) {
             <button className="btn btn-outline-dark" onClick={handleShow}>
                 <Pencil title='Edit Time off' variant="dark" />
             </button>
-            <Modal show={showModal} size="lg" onHide={handleClose}>
+            <Modal onHide={handleClose} show={showModal} size="lg" >
                 <Modal.Header closeButton>
                     <Modal.Title>Time off</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    start time:&nbsp;<DateTimePicker value={new Date("2024-2-3")} />&nbsp;
-                    {/*end time:&nbsp;<DateTimePicker />&nbsp;*/}
-                    <button className="btn btn-primary ms-2" value="-">-</button>
+                    <div>
+                        start time:&nbsp;<DateTimePicker value={new Date("2024-2-3")} />&nbsp;
+                        end time:&nbsp;<DateTimePicker />&nbsp;
+                        <button className="btn btn-primary ms-2" value="-">-</button>
+                    </div>                    
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>

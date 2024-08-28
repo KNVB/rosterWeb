@@ -4,10 +4,12 @@ import ITOManagement from './components/rosterAdmin/itoManagment/ITOManagement';
 import RosterViewer from './components/rosterViewer/RosterViewer';
 import RosterAdminContent from "./components/rosterAdmin/RosterAdminContent";
 import RosterScheduler from "./components/rosterAdmin/rosterScheduler/RosterScheduler";
+import TestModal from "./components/testing/testingModal/TestModal";
 export default function App() {
   return (
     <Router>
       <Routes>
+        <Route path='/test' element={<TestModal/>}/>
         <Route path='/' element={<RosterViewer />} /> 
           <Route path='/admin' element={<RosterAdminContent/>}>
             <Route index element={<RosterAdminContent/>}/>

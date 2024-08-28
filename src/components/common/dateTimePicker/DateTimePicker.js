@@ -11,7 +11,7 @@ export default function DateTimePicker({ value }) {
         month: "2-digit",
         year: "numeric"
     });
-    const { isShowPicker, monthFullNameList, monthlyCalendar, result, weekDayNameList, action } = useDateTimePicker(value);
+    const { isShowPicker, monthFullNameList, monthlyCalendar, result,tempValue, weekDayNameList, action } = useDateTimePicker(value);
    
     return (
         <div className="dateTimePicker">
@@ -25,13 +25,13 @@ export default function DateTimePicker({ value }) {
                         nextYear={action.nextYear}
                         prevMonth={action.prevMonth}
                         prevYear={action.prevYear}
-                        selectedDate={result}
+                        selectedDate={tempValue}
                         selectToday={action.selectToday}
-                        setSelectedDate={action.updateValue}
+                        setSelectedDate={action.updateTempValue}
                         weekDayNameList={weekDayNameList}/>
                     Time: 
                     <TimeSelector
-                        selectedTime={result}
+                        selectedTime={tempValue}
                     />    
                 </div>
             }

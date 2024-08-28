@@ -23,12 +23,19 @@ export default function CalendarTable({
                         className.push("clickable");
                     }
                 }
-                calendarRow.push(<td key={rowIndex + "_" + columIndex} className={className.join(" ")} onClick={() => setSelectedDate(d)}>{d}</td>)
+                calendarRow.push(
+                    <td
+                        className={className.join(" ")}
+                        key={rowIndex + "_" + columIndex}
+                        onClick={() => setSelectedDate(d)}>
+                        {d}
+                    </td>
+                );
             });
             calendarRows.push(<tr key={"dateTime_" + rowIndex}>{calendarRow}</tr>);
         });
     }
-    
+
     return (
         <table className="calendarTable">
             <thead>
