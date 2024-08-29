@@ -37,12 +37,7 @@ export default function PreferredShiftRow({ calendarDateList, itoId, preferredSh
                 Preferred Shift
             </NameCell>
             {shiftCellList}
-            <td className='borderCell' colSpan={5}>
-                <TimeOff 
-                    itoId={itoId}
-                    timeOffList={timeOffList}
-                    uiAction={uiAction}
-                />
+            <td className='borderCell' colSpan={5}>              
             </td>
             <StatCell></StatCell>
             <StatCell></StatCell>
