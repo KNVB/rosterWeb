@@ -1,0 +1,43 @@
+.calendarTable{
+    border: 1px solid black;
+    font-size: 12px;
+    margin: 1px;
+}
+.calendarTable td{
+    min-height:33px;
+    min-width:33px;
+    text-align: center;
+}
+.clickable{
+    cursor: pointer;
+}
+.calendarTable > tbody td:not(:empty):hover{
+    background-color:#ccffff;
+    color: black;
+    cursor: pointer;
+}
+.dateTimePicker{
+    display: inline-block;
+    flex-direction: column;
+}
+.dateTimeResult{
+    border: 1px solid black;
+    cursor: pointer;
+    margin: 1px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.ph{
+    color:red;
+    font-weight: bold;
+}
+.pickerContainer{
+    background-color: white;
+    position: absolute;
+    z-index: 1000;
+}
+.selectedItem{
+    background-color:red;
+    color:white;
+    font-weight: bold;
+}
