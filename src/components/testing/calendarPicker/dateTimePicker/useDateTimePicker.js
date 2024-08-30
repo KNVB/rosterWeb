@@ -1,5 +1,4 @@
-import { useEffect, useReducer } from "react";
-
+import { useReducer } from "react";
 let genMonthlyCalendar = (result) => {
     let temp = new Date(result.getTime());
     temp.setMonth(temp.getMonth() + 1);
@@ -57,8 +56,13 @@ let reducer = (state, action) => {
     switch (action.type) {
         case "init":
             result.result = action.result;
+            result.tempValue = action.result;
             result.monthlyCalendar = genMonthlyCalendar(action.result);
             break;
+        case "updateTempValue":
+            result.tempValue = action.newTempValue;
+            result.monthlyCalendar = genMonthlyCalendar(action.newTempValue);
+            break
         case "updateValue":
             result.result = action.newValue;
             result.monthlyCalendar = genMonthlyCalendar(action.newValue);
@@ -89,59 +93,71 @@ export default function useDateTimePicker(defaultValue) {
             "November",
             "December"
         ],
-        monthlyCalendar: genMonthlyCalendar(defaultValue??new Date()),
-        result: (defaultValue??new Date()),       
+        monthlyCalendar: genMonthlyCalendar(defaultValue ?? new Date()),
+        result: (defaultValue ?? new Date()),
+        tempValue: (defaultValue ?? new Date()),
         weekDayNameList: ["Su", "M", "T", "W", "Th", "F", "S"]
     };
-    
+
     const [itemList, updateItemList] = useReducer(reducer, initObj);
     let togglePicker = () => {
         updateItemList({ "type": "togglePicker" })
     }
     let prevMonth = () => {
-        let temp = new Date(itemList.result.getTime());
+        let temp = new Date(itemList.tempValue.getTime());
         temp.setMonth(temp.getMonth() - 1);
-        updateItemList({ "type": "init", "result": temp });
+        updateItemList({ "newTempValue": temp, "type": "updateTempValue" });
     }
     let prevYear = () => {
-        let temp = new Date(itemList.result.getTime());
+        let temp = new Date(itemList.tempValue.getTime());
         temp.setFullYear(temp.getFullYear() - 1);
-        updateItemList({ "type": "init", "result": temp });
+        updateItemList({ "newTempValue": temp, "type": "updateTempValue" });
     }
     let nextMonth = () => {
-        let temp = new Date(itemList.result.getTime());
+        let temp = new Date(itemList.tempValue.getTime());
         temp.setMonth(temp.getMonth() + 1);
-        updateItemList({ "type": "init", "result": temp });
+        updateItemList({ "newTempValue": temp, "type": "updateTempValue" });
     }
     let nextYear = () => {
-        let temp = new Date(itemList.result.getTime());
+        let temp = new Date(itemList.tempValue.getTime());
         temp.setFullYear(temp.getFullYear() + 1);
-        updateItemList({ "type": "init", "result": temp });
+        updateItemList({ "newTempValue": temp, "type": "updateTempValue" });
     }
     let selectToday = () => {
         let temp = new Date();
-        updateItemList({ "newValue": temp, "type": "updateValue" });
+        updateItemList({ "newTempValue": temp, "type": "updateTempValue" });
     }
-    
+    let updateDateValue = date => {
+        let temp = new Date(itemList.tempValue.getTime());
+        temp.setDate(date);
+        updateItemList({ "newTempValue": temp, "type": "updateTempValue" });
+    }
     let updateValue = date => {
         let temp = new Date(itemList.result.getTime());
         temp.setDate(date);
         updateItemList({ "newValue": temp, "type": "updateValue" });
+    }
+    let updateTempValue = dateObj => {   
+        let temp = new Date(dateObj.getTime());     
+        updateItemList({ "newTempValue": temp, "type": "updateTempValue" });
     }
     return {
         isShowPicker: itemList.isShowPicker,
         monthFullNameList: itemList.monthFullNameList,
         monthlyCalendar: itemList.monthlyCalendar,
         result: itemList.result,
+        tempValue: itemList.tempValue,
         weekDayNameList: itemList.weekDayNameList,
         action: {
             prevMonth,
             prevYear,
             nextMonth,
             nextYear,
-            selectToday,            
+            selectToday,
             togglePicker,
-            updateValue,            
+            updateDateValue,
+            updateTempValue,
+            updateValue,
         }
     }
 }

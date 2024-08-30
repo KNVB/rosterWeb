@@ -1,5 +1,7 @@
 import "../CalendarPicker.css";
+import { Button } from "react-bootstrap";
 import CalendarTable from "../CalendarTable";
+import TimeSelector from "../timeSelector/TimeSelector";
 import useDateTimePicker from "./useDateTimePicker";
 export default function DateTimePicker({ value }) {
     let dateFormatter = new Intl.DateTimeFormat('en-ZA', {
@@ -10,7 +12,7 @@ export default function DateTimePicker({ value }) {
         month: "2-digit",
         year: "numeric"
     });
-    const { isShowPicker, monthFullNameList, monthlyCalendar, result, weekDayNameList, action } = useDateTimePicker(value);
+    const { isShowPicker, monthFullNameList, monthlyCalendar, result, tempValue, weekDayNameList, action } = useDateTimePicker(value);
     let headerRow = { columnList: [] };
 
     weekDayNameList.forEach((weekDayName, index) => {
@@ -26,26 +28,39 @@ export default function DateTimePicker({ value }) {
     });
     let getSelectedItem = value => {
         if (value !== "") {
-            action.updateValue(value);
+            action.updateDateValue(value);
         }
     }
 
     return (
         <div className="dateTimePicker">
-            <div className="dateTimeResult" onClick={action.togglePicker}>{dateFormatter.format(result)}</div>
+            <div
+                className="dateTimeResult"
+                onClick={action.togglePicker}>
+                {dateFormatter.format(result)}
+            </div>
             {isShowPicker &&
                 <div className="pickerContainer">
-                <CalendarTable
-                    bigPrev={action.prevYear}
-                    bigNext={action.nextYear}
-                    bodyRow={monthlyCalendar}
-                    headerRow={headerRow}
-                    getSelectedItem={getSelectedItem}
-                    selectedItem={result.getDate()}
-                    smallPrev={action.prevMonth}
-                    smallNext={action.nextMonth}
-                    title={monthFullNameList[result.getMonth()] + " " + result.getFullYear()}
-                />
+                    <CalendarTable
+                        bigPrev={action.prevYear}
+                        bigNext={action.nextYear}
+                        bodyRow={monthlyCalendar}
+                        headerRow={headerRow}
+                        getSelectedItem={getSelectedItem}
+                        selectedItem={tempValue.getDate()}
+                        smallPrev={action.prevMonth}
+                        smallNext={action.nextMonth}
+                        title={monthFullNameList[tempValue.getMonth()] + " " + tempValue.getFullYear()}
+                    />                    
+                    
+                    <div className="todayButton">
+                        <Button onClick={action.selectToday}>Today</Button>
+                    </div>
+                    <div className="center">
+                        <TimeSelector 
+                            getSelectedTime={action.updateTempValue}
+                            value={tempValue}/>
+                    </div>
                 </div>
             }
         </div>

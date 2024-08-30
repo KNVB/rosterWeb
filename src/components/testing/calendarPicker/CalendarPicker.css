@@ -16,6 +16,9 @@
     color: black;
     cursor: pointer;
 }
+.center{
+    text-align: center;
+}
 .dateTimePicker{
     display: inline-block;
     flex-direction: column;
@@ -33,6 +36,8 @@
 }
 .pickerContainer{
     background-color: white;
+    border:1px solid black;
+    margin:0px;
     position: absolute;
     z-index: 1000;
 }
@@ -40,4 +45,28 @@
     background-color:red;
     color:white;
     font-weight: bold;
+}
+.timeSelector{
+    border: 1px solid black;
+    display: inline-block;
+    align-items: center;    
+    margin-top: 2px;
+    padding: 1px;    
+}
+.timeSelectorDigit{
+    outline:none;
+}
+.timeSelectorUpDown{
+    cursor: pointer;
+    display: inline-flex;
+    flex-direction: column;
+    flex-grow: 1;
+    font-size: 10px;
+    margin: 0px;
+    padding: 0px;    
+    vertical-align:middle;
+}
+.todayButton{
+    margin: 2px;
+    text-align: right;
 }

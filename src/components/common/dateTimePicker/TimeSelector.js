@@ -19,20 +19,20 @@ export default function TimeSelector({ selectedTime }) {
     return (
         <div className="timeSelector">
             <span
+                className="timeSelectorDigit"
                 contentEditable={true}
-                onClick={highLight}
-                style={{"outline":"none"}}
+                onClick={highLight}                
                 suppressContentEditableWarning={true}
             >{hour}</span>&nbsp;:&nbsp;
             <span
+                className="timeSelectorDigit"
                 contentEditable={true}
                 onClick={highLight}
-                style={{"outline":"none"}}
                 suppressContentEditableWarning={true}>{minute}</span>&nbsp;
             <span
+                className="timeSelectorDigit"
                 contentEditable={true}
                 onClick={highLight}
-                style={{"outline":"none"}}
                 suppressContentEditableWarning={true}>{aPM}</span>
             <div className="timeSelectorUpDown">
                 <div>▲</div>
