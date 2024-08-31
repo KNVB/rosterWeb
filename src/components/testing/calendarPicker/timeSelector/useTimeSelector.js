@@ -1,17 +1,12 @@
-import { useReducer } from "react";
-
-let timeFormatter = new Intl.DateTimeFormat('en-ZA', {
-    hour: "2-digit",
-    hour12: true,
-    minute: "2-digit"
-});
+import { useEffect, useReducer } from "react";
 let reducer = (state, action) => {
     let result = { ...state };
+    let temp;
     switch (action.type) {
-        case "updateAPM":
-            console.log(result.hour + ":" + result.minute + " " + action.value);
-            console.log()
-            result.aPM = action.value;
+        case "updateResult":
+            temp = genObj(new Date(action.newValue.getTime()));
+            temp.selectedItem = result.selectedItem;
+            result = temp;
             break;
         case "updateSelectedItem":
             result.selectedItem = action.item;
@@ -22,41 +17,81 @@ let reducer = (state, action) => {
     //console.log(result);
     return result;
 }
-export default function useTimeSelector({
-    hourRef,
-    minRef,
-    aPMRef
-}) {
-
+let genObj = value => {
     let timeString = timeFormatter.format(value);
-    let initObj = {
-        /*
+    return {
         aPM: timeString.substring(timeString.length - 2).toUpperCase().trim(),
-        aPMRef: aPMRef,
         hour: timeString.substring(0, 2),
-        hourRef: hourRef,
         minute: timeString.substring(3, 5),
-        minRef: minRef,
-      */
-        selectedItem: "hour"
-    };
-    //console.log(timeString,value,initObj);   
+        result: value
+    }
+}
+let timeFormatter = new Intl.DateTimeFormat('en-ZA', {
+    hour: "2-digit",
+    hour12: true,
+    minute: "2-digit"
+});
+export default function useTimeSelector(defaultValue) {
+    let temp = defaultValue ?? new Date();
+    let initObj = genObj(temp);
+    initObj.selectedItem = "hour";
     const [itemList, updateItemList] = useReducer(reducer, initObj);
+    useEffect(() => {
+        updateItemList({ "newValue": defaultValue, "type": "updateResult" })
+    }, [defaultValue]);
+    let downHour = () => {
+        let temp = new Date(itemList.result);
+        temp.setHours(temp.getHours() - 1);
+        console.log(temp);
+        return temp;
+    }
+    let downMin= () => {
+        let temp = new Date(itemList.result);
+        temp.setMinutes(temp.getMinutes() - 1);       
+        return temp;
+    }
+    let toggleAPM = () => {
+        let timeString = timeFormatter.format(itemList.result);
+        let aPM = timeString.substring(timeString.length - 2).toUpperCase().trim();
+        let temp = new Date(itemList.result.getTime());
+        if (aPM === "AM") {
+            temp.setHours(temp.getHours() + 12);
+        } else {
+            temp.setHours(temp.getHours() - 12);
+        }
+        return temp
+    }
     let updateSelectedItem = item => {
         updateItemList({
             "item": item,
             "type": "updateSelectedItem"
         })
     };
-    console.log(timeString, value, initObj,itemList);
+    let upHour = () => {
+        let temp = new Date(itemList.result);
+        temp.setHours(temp.getHours() + 1);
+        
+        return temp;
+    }
+    let upMin= () => {
+        let temp = new Date(itemList.result);
+        temp.setMinutes(temp.getMinutes() + 1);       
+        return temp;
+    }
+    
     return {
-        /*
         aPM: itemList.aPM,
         hour: itemList.hour,
         minute: itemList.minute,
-     */ 
+        result: itemList.result,
         selectedItem: itemList.selectedItem,
         action: {
+            downHour,
+            downMin,
+            timeFormatter,
+            toggleAPM,
+            upHour,
+            upMin,
             updateSelectedItem,
         }
     }
