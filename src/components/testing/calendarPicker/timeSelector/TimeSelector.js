@@ -17,7 +17,7 @@ export default function TimeSelector({ getSelectedTime, value }) {
         }
     }
     let handleKeyBoardEvent = (event, field) => {
-        
+        return false;
     }
     let toggleAPM = () => {
         getSelectedTime(action.toggleAPM());

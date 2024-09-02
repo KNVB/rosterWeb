@@ -1,7 +1,10 @@
 .calendarTable {
-    border: none;
+    border: 1px gray solid;
+    border-collapse: separate; 
+    border-radius: 5%;    
     font-size: 12px;
     margin: 0px;
+    margin-bottom: 2px;
 }
 .calendarTable td {
     min-height: 33px;
@@ -58,6 +61,7 @@
     border: 1px solid black;
     border-radius: 5%;
     margin: 0px;
+    padding: 0px;
     position: absolute;
     z-index: 1000;
 }
@@ -71,7 +75,7 @@
 .timeSelector {
     align-items: center;
     border: 1px solid black;
-    border-radius: 5%;
+    border-radius: 10%;
     display: inline-flex;
     margin-top: 0px;
     padding-left: 2px;
