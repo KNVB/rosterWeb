@@ -1,75 +1,91 @@
-.calendarTable{
-    
+.calendarTable {
+    border: none;
     font-size: 12px;
-    margin: 2px;
+    margin: 0px;
 }
-.calendarTable td{
-    min-height:33px;
-    min-width:33px;
-    text-align: center;    
-}
-.clickable{
-    cursor: pointer;
-}
-.calendarTable > tbody td{
-    margin:1px
-}
-.calendarTable > tbody td:not(:empty):hover{
-    background-color:#ccffff;
-    color: black;
-    cursor: pointer;    
-}
-.center{
+.calendarTable td {
+    min-height: 33px;
+    min-width: 33px;
     text-align: center;
 }
-.dateTimePicker{
+
+.calendarTable>tbody td {
+    margin: 1px
+}
+
+.calendarTable>tbody td:not(:empty):hover {
+    background-color: #ccffff;
+    color: black;
+    cursor: pointer;
+}
+
+.center {
+    text-align: center;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.dateTimePicker {
     display: inline-block;
     flex-direction: column;
 }
-.dateTimePickerTimeSelector{
+
+.dateTimePickerTimeSelector {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
 }
-.dateTimeResult{
+
+.dateTimeResult {
     border: 1px solid black;
     cursor: pointer;
     margin: 1px;
     padding-left: 2px;
     padding-right: 2px;
 }
-.ph{
-    color:red;
+
+.ph {
+    color: red;
     font-weight: bold;
 }
-.pickerContainer{
+
+.pickerContainer {
     background-color: white;
-    border:1px solid black;
-    margin:0px;
+    border: 1px solid black;
+    border-radius: 5%;
+    margin: 0px;
     position: absolute;
     z-index: 1000;
 }
-.selectedItem{
-    background-color:red;
-    color:white;
+
+.selectedItem {
+    background-color: red;
+    color: white;
     font-weight: bold;
 }
-.timeSelector{
-    align-items: center;  
+
+.timeSelector {
+    align-items: center;
     border: 1px solid black;
-    border-radius:5%;
-    display: inline-block;
-    margin-top: 2px;
-    padding: 1px;
-    padding-bottom: none;
+    border-radius: 5%;
+    display: inline-flex;
+    margin-top: 0px;
+    padding-left: 2px;
+    padding-bottom: 0px;
     padding-top: none;
 }
-.timeSelectorDigit{
+
+.timeSelectorDigit {
     margin: 0px;
-    outline:none;
+    outline: none;
+    padding: 0px;
 }
-.timeSelectorUpDown{    
+
+.timeSelectorUpDown {
     cursor: pointer;
     display: inline-flex;
     flex-direction: column;
@@ -78,7 +94,13 @@
     margin: 0px;
     padding: 0px;
 }
-.todayRow{
+
+.timeSelectorUpDown>div {
+    margin: 0px;
+    padding: 0px;
+}
+
+.todayRow {
     display: flex;
     flex-direction: row;
     justify-content: space-between;

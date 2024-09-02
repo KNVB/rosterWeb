@@ -47,7 +47,7 @@ export default function DateTimePicker({getSelectedValue, value }) {
                 {dateFormatter.format(result)}
             </div>
             {isShowPicker &&
-                <div className="pickerContainer">
+                <div className="pickerContainer p-1">
                     <CalendarTable
                         bigPrev={action.prevYear}
                         bigNext={action.nextYear}
@@ -60,15 +60,15 @@ export default function DateTimePicker({getSelectedValue, value }) {
                         title={monthFullNameList[tempValue.getMonth()] + " " + tempValue.getFullYear()}
                     />                    
                     <div className="dateTimePickerTimeSelector">
-                        <Button onClick={setTimeToNow}>Now</Button>
+                        <Button className="btn-sm ms-1" onClick={setTimeToNow}>Now</Button>
                         <TimeSelector 
                             getSelectedTime={action.updateTempValue}
                             value={tempValue}/>
                     </div>
                     <div className="todayRow">
-                        <Button onClick={action.selectToday}>Today</Button>
-                        <Button onClick={action.closePicker}>Cancel</Button>
-                        <Button onClick={submitValue}>Ok</Button>
+                        <Button className="btn-sm ms-1" onClick={action.selectToday}>Today</Button>
+                        <Button className="btn-sm" onClick={action.closePicker}>Cancel</Button>
+                        <Button className="btn-sm me-1" onClick={submitValue}>Ok</Button>
                     </div>
                 </div>
             }

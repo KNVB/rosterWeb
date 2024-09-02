@@ -16,6 +16,9 @@ export default function TimeSelector({ getSelectedTime, value }) {
                 break;
         }
     }
+    let handleKeyBoardEvent = (event, field) => {
+        
+    }
     let toggleAPM = () => {
         getSelectedTime(action.toggleAPM());
     }
@@ -40,6 +43,7 @@ export default function TimeSelector({ getSelectedTime, value }) {
                 className={"timeSelectorDigit" + (selectedItem === "hour" ? " selectedItem" : "")}
                 contentEditable={true}
                 onClick={() => action.updateSelectedItem("hour")}
+                onKeyUp={e => handleKeyBoardEvent(e, "hour")}
                 suppressContentEditableWarning={true}
             >{hour}</span>&nbsp;:&nbsp;
             <span
