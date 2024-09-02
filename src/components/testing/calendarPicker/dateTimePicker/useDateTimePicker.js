@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 let genMonthlyCalendar = (selectedDate) => {
     let temp = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
     console.log("===================");
@@ -106,6 +106,9 @@ export default function useDateTimePicker(defaultValue) {
     };
 
     const [itemList, updateItemList] = useReducer(reducer, initObj);
+    useEffect(()=>{
+        updateItemList({"result":defaultValue, "type":"init"});
+    },[defaultValue])
     let closePicker = () => {
         updateItemList({ "type": "closePicker" })
     }
