@@ -1,11 +1,13 @@
 import { useReducer } from "react";
-let genMonthlyCalendar = (result) => {
-    let temp = new Date(result.getTime());
-    temp.setMonth(temp.getMonth() + 1);
-    temp.setDate(0);
+let genMonthlyCalendar = (selectedDate) => {
+    let temp = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
+    console.log("===================");
+    console.log("selectedDate:" + selectedDate);
+    console.log("temp:" + temp);
+    console.log("===================");
     let monthEndDate = temp.getDate();
     let monthlyCalendar = { rowList: [] };
-    temp = new Date(result.getTime());
+    temp = new Date(selectedDate.getTime());
     temp.setDate(1);
     let date = 1, firstWeekday = temp.getDay();
     let weekRow = [];
@@ -25,7 +27,7 @@ let genMonthlyCalendar = (result) => {
     }
     monthlyCalendar.rowList.push(structuredClone(weekRow));
     weekRow = [];
-    temp = new Date(result.getTime());
+    temp = new Date(selectedDate.getTime());
     while (date <= monthEndDate) {
         temp.setDate(date);
         switch (temp.getDay()) {
@@ -54,12 +56,16 @@ let genMonthlyCalendar = (result) => {
 let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
+        case "closePicker":
+            result.isShowPicker = false;
+            break;
         case "init":
             result.result = action.result;
             result.tempValue = action.result;
             result.monthlyCalendar = genMonthlyCalendar(action.result);
             break;
         case "updateTempValue":
+            console.log(action);
             result.tempValue = action.newTempValue;
             result.monthlyCalendar = genMonthlyCalendar(action.newTempValue);
             break
@@ -100,8 +106,8 @@ export default function useDateTimePicker(defaultValue) {
     };
 
     const [itemList, updateItemList] = useReducer(reducer, initObj);
-    let togglePicker = () => {
-        updateItemList({ "type": "togglePicker" })
+    let closePicker = () => {
+        updateItemList({ "type": "closePicker" })
     }
     let prevMonth = () => {
         let temp = new Date(itemList.tempValue.getTime());
@@ -127,6 +133,9 @@ export default function useDateTimePicker(defaultValue) {
         let temp = new Date();
         updateItemList({ "newTempValue": temp, "type": "updateTempValue" });
     }
+    let togglePicker = () => {
+        updateItemList({ "type": "togglePicker" })
+    }
     let updateDateValue = date => {
         let temp = new Date(itemList.tempValue.getTime());
         temp.setDate(date);
@@ -137,8 +146,9 @@ export default function useDateTimePicker(defaultValue) {
         temp.setDate(date);
         updateItemList({ "newValue": temp, "type": "updateValue" });
     }
-    let updateTempValue = dateObj => {   
-        let temp = new Date(dateObj.getTime());     
+    let updateTempValue = dateObj => {
+        let temp = new Date(dateObj.getTime());
+        console.log(temp);
         updateItemList({ "newTempValue": temp, "type": "updateTempValue" });
     }
     return {
@@ -149,6 +159,7 @@ export default function useDateTimePicker(defaultValue) {
         tempValue: itemList.tempValue,
         weekDayNameList: itemList.weekDayNameList,
         action: {
+            closePicker,
             prevMonth,
             prevYear,
             nextMonth,

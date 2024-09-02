@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import CalendarTable from "../CalendarTable";
 import TimeSelector from "../timeSelector/TimeSelector";
 import useDateTimePicker from "./useDateTimePicker";
-export default function DateTimePicker({ value }) {
+export default function DateTimePicker({getSelectedValue, value }) {
     let dateFormatter = new Intl.DateTimeFormat('en-ZA', {
         day: "2-digit",
         hour: "2-digit",
@@ -31,7 +31,14 @@ export default function DateTimePicker({ value }) {
             action.updateDateValue(value);
         }
     }
-
+    let setTimeToNow=()=>{
+        action.updateTempValue(new Date());
+    }
+    let submitValue=e=>{
+        getSelectedValue(tempValue);
+        action.closePicker();
+    }
+    
     return (
         <div className="dateTimePicker">
             <div
@@ -52,14 +59,16 @@ export default function DateTimePicker({ value }) {
                         smallNext={action.nextMonth}
                         title={monthFullNameList[tempValue.getMonth()] + " " + tempValue.getFullYear()}
                     />                    
-                    
-                    <div className="todayButton">
-                        <Button onClick={action.selectToday}>Today</Button>
-                    </div>
-                    <div className="center">
+                    <div className="dateTimePickerTimeSelector">
+                        <Button onClick={setTimeToNow}>Now</Button>
                         <TimeSelector 
                             getSelectedTime={action.updateTempValue}
                             value={tempValue}/>
+                    </div>
+                    <div className="todayRow">
+                        <Button onClick={action.selectToday}>Today</Button>
+                        <Button onClick={action.closePicker}>Cancel</Button>
+                        <Button onClick={submitValue}>Ok</Button>
                     </div>
                 </div>
             }

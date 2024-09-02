@@ -1,8 +1,7 @@
 import useTimeSelector from "./useTimeSelector"
 export default function TimeSelector({ getSelectedTime, value }) {
-    const { aPM, hour, minute, result, selectedItem, action } = useTimeSelector(value);
+    const { aPM, hour, minute, selectedItem, action } = useTimeSelector(value);
     let downValue = () => {
-        let temp;
         switch (selectedItem) {
             case "APM":
                 toggleAPM();
@@ -21,7 +20,6 @@ export default function TimeSelector({ getSelectedTime, value }) {
         getSelectedTime(action.toggleAPM());
     }
     let upValue = () => {
-        let temp;
         switch (selectedItem) {
             case "APM":
                 toggleAPM();

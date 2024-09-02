@@ -35,6 +35,7 @@ export default function useTimeSelector(defaultValue) {
     let temp = defaultValue ?? new Date();
     let initObj = genObj(temp);
     initObj.selectedItem = "hour";
+    //console.log(defaultValue);
     const [itemList, updateItemList] = useReducer(reducer, initObj);
     useEffect(() => {
         updateItemList({ "newValue": defaultValue, "type": "updateResult" })
@@ -42,7 +43,6 @@ export default function useTimeSelector(defaultValue) {
     let downHour = () => {
         let temp = new Date(itemList.result);
         temp.setHours(temp.getHours() - 1);
-        console.log(temp);
         return temp;
     }
     let downMin= () => {
@@ -82,8 +82,7 @@ export default function useTimeSelector(defaultValue) {
     return {
         aPM: itemList.aPM,
         hour: itemList.hour,
-        minute: itemList.minute,
-        result: itemList.result,
+        minute: itemList.minute,       
         selectedItem: itemList.selectedItem,
         action: {
             downHour,

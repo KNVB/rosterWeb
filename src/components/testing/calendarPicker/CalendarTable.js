@@ -70,6 +70,9 @@ export default function CalendarTable({
                     ))
                 }
             </tbody>
+            <tfoot>
+                <tr><td colSpan={headerRow.columnList.length}></td></tr>
+            </tfoot>
         </table>
     )
 }
