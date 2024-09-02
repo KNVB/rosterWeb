@@ -45,9 +45,9 @@ export default function useTimeSelector(defaultValue) {
         temp.setHours(temp.getHours() - 1);
         return temp;
     }
-    let downMin= () => {
+    let downMin = () => {
         let temp = new Date(itemList.result);
-        temp.setMinutes(temp.getMinutes() - 1);       
+        temp.setMinutes(temp.getMinutes() - 1);
         return temp;
     }
     let toggleAPM = () => {
@@ -67,22 +67,39 @@ export default function useTimeSelector(defaultValue) {
             "type": "updateSelectedItem"
         })
     };
+    let updateTimeFieldValue = (fieldName, value) => {
+        console.log(fieldName, value);
+        let difference;
+        let temp = new Date(itemList.result);
+        switch (fieldName) {
+            case "hour":
+                difference = itemList.hour - value;
+                temp.setHours(temp.getHours() - difference);
+                break;
+            case "minute":
+                difference = itemList.minute - value;
+                temp.setMinutes(temp.getMinutes() - difference);
+                break;
+            default:
+                break
+        }
+        return temp;
+    }
     let upHour = () => {
         let temp = new Date(itemList.result);
         temp.setHours(temp.getHours() + 1);
-        
         return temp;
     }
-    let upMin= () => {
+    let upMin = () => {
         let temp = new Date(itemList.result);
-        temp.setMinutes(temp.getMinutes() + 1);       
+        temp.setMinutes(temp.getMinutes() + 1);
         return temp;
     }
-    
+
     return {
         aPM: itemList.aPM,
         hour: itemList.hour,
-        minute: itemList.minute,       
+        minute: itemList.minute,
         selectedItem: itemList.selectedItem,
         action: {
             downHour,
@@ -92,6 +109,7 @@ export default function useTimeSelector(defaultValue) {
             upHour,
             upMin,
             updateSelectedItem,
+            updateTimeFieldValue
         }
     }
 }

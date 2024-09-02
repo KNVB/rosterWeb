@@ -16,11 +16,12 @@ export default function TimeSelector({ getSelectedTime, value }) {
                 break;
         }
     }
-    let handleKeyBoardEvent = (event, field) => {
-        return false;
-    }
+
     let toggleAPM = () => {
         getSelectedTime(action.toggleAPM());
+    }
+    let updateTimeFieldValue=(fieldName, value) => {
+        getSelectedTime(action.updateTimeFieldValue(fieldName, value));
     }
     let upValue = () => {
         switch (selectedItem) {
@@ -39,11 +40,31 @@ export default function TimeSelector({ getSelectedTime, value }) {
     }
     return (
         <div className="timeSelector">
+            <input
+                className={"timeSelectorDigit" + (selectedItem === "hour" ? " selectedItem" : "")}
+                max="13"
+                min="0"
+                onChange={e => updateTimeFieldValue("hour", e.target.value)}
+                onClick={() => action.updateSelectedItem("hour")}
+                type="number"
+                value={hour} />&nbsp;:&nbsp;
+            <input
+                className={"timeSelectorDigit" + (selectedItem === "minute" ? " selectedItem" : "")}
+                max="60"
+                min="-1"
+                onChange={e => updateTimeFieldValue("minute", e.target.value)}
+                onClick={() => action.updateSelectedItem("minute")}
+                type="number"
+                value={minute} />&nbsp;
             <span
+                className={"timeSelectorDigit" + (selectedItem === "APM" ? " selectedItem" : "")}
+                onClick={() => action.updateSelectedItem("APM")}
+                suppressContentEditableWarning={true}>{aPM}</span>
+            {/*           <span
                 className={"timeSelectorDigit" + (selectedItem === "hour" ? " selectedItem" : "")}
                 contentEditable={true}
                 onClick={() => action.updateSelectedItem("hour")}
-                onKeyUp={e => handleKeyBoardEvent(e, "hour")}
+                onKeyUp={e =>{ return handleKeyBoardEvent(e, "hour");}}
                 suppressContentEditableWarning={true}
             >{hour}</span>&nbsp;:&nbsp;
             <span
@@ -56,6 +77,7 @@ export default function TimeSelector({ getSelectedTime, value }) {
                 contentEditable={true}
                 onClick={() => action.updateSelectedItem("APM")}
                 suppressContentEditableWarning={true}>{aPM}</span>
+*/}
             <div className="timeSelectorUpDown">
                 <div onClick={upValue}>▲</div>
                 <div onClick={downValue}>▼</div>
