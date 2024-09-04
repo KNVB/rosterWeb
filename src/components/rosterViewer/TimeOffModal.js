@@ -18,6 +18,7 @@ export default function TimeOffModal({ hideTimeOff, isShowTimeOff, rosterViewerD
                     <td>{dateFormatter.format(record.timeOffStart)}</td>
                     <td>{dateFormatter.format(record.timeOffEnd)}</td>
                     <td>{record.description}</td>
+                    <td>{record.timeOffAmount}</td>
                 </tr>
             );
         });
@@ -34,11 +35,24 @@ export default function TimeOffModal({ hideTimeOff, isShowTimeOff, rosterViewerD
                                 <td>Start Time</td>
                                 <td>End Time</td>
                                 <td>Description</td>
+                                <td>No of hour applied for</td>
                             </tr>
                         </thead>
                         <tbody>
                             {timeOffRecords}
                         </tbody>
+                        <tfoot style={{"borderTop":"1px black solid"}}>
+                            <tr>
+                                <td colSpan={2}>
+                                </td>
+                                <td style={{"textAlign":"right"}}>
+                                    Total:
+                                </td>
+                                <td>      
+                                    {timeOffList[selectedITOId].total}
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </Modal.Body>
                 <Modal.Footer>

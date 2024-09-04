@@ -51,6 +51,7 @@ export default class RosterViewerData {
                 result[key].records.push({
                     timeOffEnd:new Date(v.timeOffEnd),
                     timeOffStart:new Date(v.timeOffStart),
+                    timeOffAmount:v.timeOffAmount,
                     "description":v.description
                 })     
             });

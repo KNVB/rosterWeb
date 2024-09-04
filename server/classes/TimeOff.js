@@ -15,6 +15,7 @@ export default class TimeOff {
                 if (record.time_off_start !== null) {
                     itoTimeOffList[record.ito_id].records.push({
                         description: record.description,
+                        timeOffAmount: record.no_of_hour_applied_for,
                         timeOffEnd: record.time_off_end,
                         timeOffStart: record.time_off_start,
                     });
