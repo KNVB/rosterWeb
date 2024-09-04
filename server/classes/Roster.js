@@ -67,19 +67,5 @@ export default class Roster {
         } finally {
             dbo.close();
         }
-    }
-    getTimeOffList = async (year, month) => {
-        let dboObj = new Dbo();
-        try {
-            let results = await dboObj.getTimeOffList(year, month);
-            console.log("Get (" + year + "," + month + ") Previous Month Shift List successfully!");
-            return results;
-        } catch (error) {
-            console.log("Something wrong when getting Previous month shift list:" + error);
-            throw (error);
-        }
-        finally {
-            dboObj.close();
-        };
-    }
+    }   
 }

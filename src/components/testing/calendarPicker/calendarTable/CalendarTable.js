@@ -1,3 +1,5 @@
+import "../CalendarPicker.css";
+import "./CalendarTable.css";
 export default function CalendarTable({
     bigPrev,
     bigNext,
@@ -43,10 +45,10 @@ export default function CalendarTable({
                 }
                 {
                     headerRow &&
-                    <tr className={headerRow.className}>
+                    <tr className={(headerRow.className??null)}>
                         {
                             headerRow.columnList.map((headerColumn, index) => (
-                                <td className={headerColumn.className} key={"calendartable_header_row_" + index}>{headerColumn.value}</td>
+                                <td className={(headerColumn.className??null)} key={"calendartable_header_row_" + index}>{headerColumn.value}</td>
                             ))
                         }
                     </tr>
@@ -56,10 +58,10 @@ export default function CalendarTable({
                 {
                     bodyRow &&
                     bodyRow.rowList.map((row, index) => (
-                        <tr className={row.className} key={"calendartable_body_row_" + index}>
+                        <tr className={(row.className??null)} key={"calendartable_body_row_" + index}>
                             {
                                 row.map((col, colIndex) => (
-                                    <td className={col.className + (selectedItem === col.value ? " selectedItem" : "")}
+                                    <td className={(col.className??null) + (selectedItem === col.value ? " selectedItem" : "")}
                                         key={"calendartable_body_row_" + index + "_col_" + colIndex}
                                         onClick={()=>getSelectedItem(col.value)}>
                                         {col.value}

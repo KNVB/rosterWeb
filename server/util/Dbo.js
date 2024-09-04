@@ -88,7 +88,7 @@ export default class Dbo {
         this.#sqlString += "on v.ito_id=shift_record.ITO_ID and  (shift_record.shift_date between ? and ?)";
         this.#sqlString += "left join last_month_balance on v.ito_id=last_month_balance.ITO_ID and shift_month=? ";
         this.#sqlString += "order by v.ito_id,shift_date";
-        
+
         return await this.#executeQuery(this.#sqlString,
             [
                 result.endDateString,
@@ -103,12 +103,25 @@ export default class Dbo {
         this.#sqlString = "select * from system_param order by param_type,param_key,param_value";
         return await this.#executeQuery(this.#sqlString);
     }
-    getTimeOffList = async (year, month) => {
+    getTimeOff = async (year, month) => {
         let result = this.#getStartEndDateString(year, month);
-        this.#sqlString = "select * from time_off where time_off_start <=? and time_off_end >=?";
-        this.#sqlString += " order by ito_id,time_off_start";
+        this.#sqlString = "select b.ito_id,time_off_start,";
+        this.#sqlString += "time_off_end,description,no_of_hour_applied_for ";
+        this.#sqlString += "from ";
+        this.#sqlString += "(select *";
+        this.#sqlString += "from time_off ";
+        this.#sqlString += "where time_off_start between ? and ?) a right join ";
+        this.#sqlString += "(select ";
+        this.#sqlString += "ito_id ";
+        this.#sqlString += "from ito_info ";
+        this.#sqlString += "where ";
+        this.#sqlString += "join_date<=? and leave_date >=?";
+        this.#sqlString += ")b on a.ito_id=b.ito_id";
+
         return await this.#executeQuery(this.#sqlString,
             [
+                result.startDateString,
+                result.endDateString,                
                 result.endDateString,
                 result.startDateString
             ]);

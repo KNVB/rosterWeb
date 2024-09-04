@@ -4,6 +4,9 @@ import RosterViewerData from "../dataUtil/RosterViewerData";
 let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
+        case "hideTimeOff":
+            result.isShowTimeOff = false;
+            break;
         case "init":
             result.rosterViewerData = action.rosterViewerData;
             result.isLoading = false;
@@ -13,6 +16,10 @@ let reducer = (state, action) => {
             break;
         case "setError":
             result.error = action.error;
+            break;
+        case "showTimeOff":
+            result.isShowTimeOff = true;
+            result.selectedITOId = action.itoId
             break;
         case "updateLoading":
             result.isLoading = action.value;
@@ -26,8 +33,10 @@ export function useRosterViewer() {
     const [itemList, updateItemList] = useReducer(reducer, {
         error: null,
         isLoading: true,
+        isShowTimeOff: false,
         rosterViewerData: null,
         rosterTableUtil: new RosterTableUtil(),
+        selectedITOId: null
     });
     useEffect(() => {
         let getData = async () => {
@@ -54,11 +63,23 @@ export function useRosterViewer() {
         else
             return "";
     }
+    let hideTimeOff = () => {
+        updateItemList({
+            "type": "hideTimeOff"
+        });
+    }
     let isHighLightCell = cellIndex => {
         return itemList.rosterTableUtil.isHighLightCell(cellIndex);
     }
     let isHighLightRow = rowIndex => {
         return itemList.rosterTableUtil.isHighLightRow(rowIndex);
+    }
+    let showTimeOff = itoId => {
+
+        updateItemList({
+            itoId,
+            "type": "showTimeOff"
+        });
     }
     let updateRosterMonth = async (newRosterMonth) => {
         try {
@@ -80,11 +101,15 @@ export function useRosterViewer() {
     return {
         error: itemList.error,
         isLoading: itemList.isLoading,
+        isShowTimeOff: itemList.isShowTimeOff,
         "rosterViewerData": itemList.rosterViewerData,
+        selectedITOId: itemList.selectedITOId,
         "uiAction": {
             getShiftCssClassName,
+            hideTimeOff,
             isHighLightCell,
             isHighLightRow,
+            showTimeOff,
             updateRosterMonth,
             updateUI
         }

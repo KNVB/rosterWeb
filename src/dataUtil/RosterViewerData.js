@@ -15,9 +15,10 @@ export default class RosterViewerData {
         this.systemParam = structuredClone(temp.systemParam);
         this.systemParam.monthPickerMinDate = new Date(this.systemParam.monthPickerMinDate);
         this.systemParam.noOfPrevDate = 0;
+        this.timeOffList = structuredClone(temp.timeOffList);
         let rosterData = structuredClone(temp.rosterData);
-        this.roster=Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay);
-        this.noOfWorkingDay= monthlyCalendar.noOfWorkingDay;
+        this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.timeOffList);
+        this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
     }
     getShiftCssClassName(shiftType) {
         if (this.activeShiftList[shiftType])
@@ -33,7 +34,8 @@ export default class RosterViewerData {
         let temp = await fetchAPI.getRosterViewerData(rosterYear, rosterMonth + 1);
         this.calendarDateList = monthlyCalendar.calendarDateList;
         let rosterData = structuredClone(temp.rosterData);
-        this.roster=Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay);
-        this.noOfWorkingDay= monthlyCalendar.noOfWorkingDay;
+        this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.timeOffList);
+        this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
+        this.timeOffList = structuredClone(temp.timeOffList);
     }
 }

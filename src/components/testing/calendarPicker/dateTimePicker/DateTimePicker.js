@@ -1,6 +1,7 @@
 import "../CalendarPicker.css";
+import "./DateTimePicker.css";
 import { Button } from "react-bootstrap";
-import CalendarTable from "../CalendarTable";
+import CalendarTable from "../calendarTable/CalendarTable";
 import TimeSelector from "../timeSelector/TimeSelector";
 import useDateTimePicker from "./useDateTimePicker";
 export default function DateTimePicker({getSelectedValue, value }) {

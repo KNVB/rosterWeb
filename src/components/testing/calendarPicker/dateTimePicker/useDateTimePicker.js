@@ -12,7 +12,7 @@ let genMonthlyCalendar = (selectedDate) => {
     let date = 1, firstWeekday = temp.getDay();
     let weekRow = [];
     for (let i = 0; i < firstWeekday; i++) {
-        weekRow.push({ value: "" });
+        weekRow.push({ className: null, value: "" });
     }
     for (let i = firstWeekday; i <= 6; i++) {
         switch (i) {
@@ -106,9 +106,9 @@ export default function useDateTimePicker(defaultValue) {
     };
 
     const [itemList, updateItemList] = useReducer(reducer, initObj);
-    useEffect(()=>{
-        updateItemList({"result":defaultValue, "type":"init"});
-    },[defaultValue])
+    useEffect(() => {
+        updateItemList({ "result": defaultValue, "type": "init" });
+    }, [defaultValue])
     let closePicker = () => {
         updateItemList({ "type": "closePicker" })
     }

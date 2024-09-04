@@ -158,12 +158,16 @@
 	width: 60px
 }
 
+.timeOff{
+	cursor: pointer;
+}
 .todayCell {
 	background-color: #11ACF0;
 	color: #ffff;
 	font-weight: 100;
 	font-family: sans-serif;
 }
+
 .vacantShiftLabel {
 	color: #ff6600;
 }

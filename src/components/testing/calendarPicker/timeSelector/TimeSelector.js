@@ -1,3 +1,4 @@
+import "./TimeSelector.css";
 import useTimeSelector from "./useTimeSelector"
 export default function TimeSelector({ getSelectedTime, value }) {
     const { aPM, hour, minute, selectedItem, action } = useTimeSelector(value);

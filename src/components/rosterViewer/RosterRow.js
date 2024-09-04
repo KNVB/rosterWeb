@@ -1,7 +1,7 @@
 import NameCell from "../common/cells/NameCell";
 import ShiftCell from "../common/cells/ShiftCell";
 import StatCell from "../common/cells/StatCell";
-export default function RosterRow({calendarDateList,itoId,roster, rowIndex,systemParam,uiAction}){
+export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, timeOff, uiAction }) {
     let className = "";
     let shift = '', shiftCellList = [];
     function handleMouseEnterEvent(e) {
@@ -14,6 +14,7 @@ export default function RosterRow({calendarDateList,itoId,roster, rowIndex,syste
         e.preventDefault();
         uiAction.updateUI(-1, -1);
     }
+
     calendarDateList.forEach((calendarDate, index) => {
         shift = roster.shiftList[index + 1];
         className = uiAction.getShiftCssClassName(shift);
@@ -33,7 +34,7 @@ export default function RosterRow({calendarDateList,itoId,roster, rowIndex,syste
     }
     return (
         <tr id={"rosterRow_" + itoId}>
-             <NameCell isHighLightRow={uiAction.isHighLightRow(rowIndex)}>
+            <NameCell isHighLightRow={uiAction.isHighLightRow(rowIndex)}>
                 {roster.itoName}
                 <br />
                 {roster.itoPostName} Extn. 2458
@@ -50,6 +51,13 @@ export default function RosterRow({calendarDateList,itoId,roster, rowIndex,syste
             </StatCell>
             <StatCell>
                 {roster.thisMonthBalance.toFixed(2)}
+            </StatCell>
+            <StatCell>
+                <div
+                    className={(timeOff.total === 0) ? null : "timeOff"}
+                    onClick={() => uiAction.showTimeOff(itoId)}>
+                    {timeOff.total}
+                </div>
             </StatCell>
             <StatCell>
                 {roster.totalBalance.toFixed(2)}
