@@ -15,10 +15,12 @@ export default class RosterViewerData {
         this.systemParam = structuredClone(temp.systemParam);
         this.systemParam.monthPickerMinDate = new Date(this.systemParam.monthPickerMinDate);
         this.systemParam.noOfPrevDate = 0;
-        this.timeOffList = structuredClone(temp.timeOffList);
+       
         let rosterData = structuredClone(temp.rosterData);
         this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.timeOffList);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
+        this.timeOffList = this.#formatTimeOffObj(temp.timeOffList);
+       
     }
     getShiftCssClassName(shiftType) {
         if (this.activeShiftList[shiftType])
@@ -36,6 +38,23 @@ export default class RosterViewerData {
         let rosterData = structuredClone(temp.rosterData);
         this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.timeOffList);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
-        this.timeOffList = structuredClone(temp.timeOffList);
+        this.timeOffList = this.#formatTimeOffObj(temp.timeOffList);
+    }
+    #formatTimeOffObj(inObj){
+        let result={};
+        for (const [key, value] of Object.entries(inObj)) {
+            result[key] = {
+                records: [],
+                total: value.total
+            };
+            value.records.forEach(v=>{
+                result[key].records.push({
+                    timeOffEnd:new Date(v.timeOffEnd),
+                    timeOffStart:new Date(v.timeOffStart),
+                    "description":v.description
+                })     
+            });
+        }
+       return result;
     }
 }

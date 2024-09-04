@@ -55,7 +55,8 @@ export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, t
             <StatCell>
                 <div
                     className={(timeOff.total === 0) ? null : "timeOff"}
-                    onClick={() => uiAction.showTimeOff(itoId)}>
+                    onClick={() => uiAction.showTimeOff(itoId)}
+                    title="Show Time off record">
                     {timeOff.total}
                 </div>
             </StatCell>

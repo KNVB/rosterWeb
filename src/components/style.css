@@ -160,6 +160,7 @@
 
 .timeOff{
 	cursor: pointer;
+	text-decoration: underline;
 }
 .todayCell {
 	background-color: #11ACF0;

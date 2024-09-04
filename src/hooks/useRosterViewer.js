@@ -75,7 +75,6 @@ export function useRosterViewer() {
         return itemList.rosterTableUtil.isHighLightRow(rowIndex);
     }
     let showTimeOff = itoId => {
-
         updateItemList({
             itoId,
             "type": "showTimeOff"
