@@ -4,6 +4,7 @@ import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../common/ShiftInfoLegend";
 export default function RosterSchedulerTable({ rosterSchedulerData, uiAction }) {
     const { activeShiftList, calendarDateList, preferredShiftList, previousMonthShiftList, roster, systemParam, timeOffList } = rosterSchedulerData;
+    //console.log(rosterSchedulerData);
     useEffect(() => {
         const mouseUp = () => uiAction.endSelect();
         document.addEventListener("mouseup", mouseUp);
@@ -24,7 +25,7 @@ export default function RosterSchedulerTable({ rosterSchedulerData, uiAction }) 
                 previousMonthShiftList={previousMonthShiftList}
                 roster={roster}
                 systemParam={systemParam}
-                timeOffList={timeOffList}
+                timeOffList={timeOffList}                 
                 uiAction={uiAction}
             />
             <tfoot>

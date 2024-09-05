@@ -14,6 +14,7 @@ export default function RosterSchedulerBody({ calendarDateList, preferredShiftLi
                 rowIndex={uiAction.getRowIndex("rosterRow_" + itoId)}
                 roster={roster[itoId]}
                 systemParam={systemParam}
+                timeOff={timeOffList[itoId]}
                 uiAction={uiAction}
             />
         );
@@ -25,7 +26,6 @@ export default function RosterSchedulerBody({ calendarDateList, preferredShiftLi
                 preferredShiftList={preferredShiftList[itoId]}
                 rowIndex={uiAction.getRowIndex("preferredShiftRow_" + itoId)}
                 systemParam={systemParam}
-                timeOffList={timeOffList[itoId]}
                 uiAction={uiAction} />
         )
     });

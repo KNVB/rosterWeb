@@ -78,7 +78,7 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
         this.systemParam = structuredClone(temp.systemParam);
         this.systemParam.monthPickerMinDate = new Date(this.systemParam.monthPickerMinDate);
-        this.timeOffList = structuredClone(temp.timeOffList);
+        
 
         this.#rosterSchedulerDataHistory = new UndoableData({
             calendarDateList: this.calendarDateList,
@@ -168,9 +168,7 @@ export default class RosterSchedulerData extends RosterViewerData {
         let temp = await fetchAPI.getRosterSchedulerData(rosterYear, rosterMonth + 1);
         this.itoIdList = Object.keys(this.roster);
         this.preferredShiftList = structuredClone(temp.preferredShiftList);
-        this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
-        this.timeOffList = structuredClone(temp.timeOffList);
-        
+        this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);        
         this.#recordRosterSchedulerData();
     }
     unDo = () => {

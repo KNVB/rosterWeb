@@ -5,6 +5,9 @@ import RosterSchedulerTableUtil from "../dataUtil/RosterSchedulerTableUtil";
 let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
+        case "hideTimeOff":
+            result.isShowTimeOff = false;
+            break;
         case "init":
             result.rosterSchedulerData = action.rosterSchedulerData;
             result.rosterSchedulerTableUtil.init(
@@ -18,6 +21,10 @@ let reducer = (state, action) => {
             break;
         case "setError":
             result.error = action.error;
+            break;
+        case "showTimeOff":
+            result.isShowTimeOff = true;
+            result.selectedITOId = action.itoId;
             break;
         case "updateLoading":
             result.isLoading = action.value;
@@ -38,9 +45,11 @@ export function useRosterScheduler() {
         error: null,
         essentialShift: "",
         isLoading: true,
+        isShowTimeOff: false,
         keyboardEventHandler: null,
         rosterSchedulerData: null,
         rosterSchedulerTableUtil: new RosterSchedulerTableUtil(),
+        selectedITOId: null
     });
     useEffect(() => {
         let getData = async () => {
@@ -49,7 +58,7 @@ export function useRosterScheduler() {
             let rosterMonth = now.getMonth();
             let rosterSchedulerData = new RosterSchedulerData();
             try {
-                await rosterSchedulerData.load(rosterYear, rosterMonth);               
+                await rosterSchedulerData.load(rosterYear, rosterMonth);
                 updateItemList({
                     rosterSchedulerData,
                     type: "init"
@@ -99,10 +108,13 @@ export function useRosterScheduler() {
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
     }
-    let getTotalTimeOff=itoId=>{
-        return 0
-    }
+   
     let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
+    let hideTimeOff = () => {
+        updateItemList({
+            "type": "hideTimeOff"
+        });
+    }
     let isHighLightCell = cellIndex => {
         return itemList.rosterSchedulerTableUtil.isHighLightCell(cellIndex);
     }
@@ -124,6 +136,13 @@ export function useRosterScheduler() {
     let setFocusCell = e => {
         itemList.rosterSchedulerTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
+    }
+    let showTimeOff = itoId => {
+        
+        updateItemList({
+            itoId,
+            "type": "showTimeOff"
+        });
     }
     let startSelect = e => {
         let cell = e.target.closest("td");
@@ -166,19 +185,22 @@ export function useRosterScheduler() {
     return {
         error: itemList.error,
         isLoading: itemList.isLoading,
+        isShowTimeOff: itemList.isShowTimeOff,
         rosterSchedulerData: itemList.rosterSchedulerData,
+        selectedITOId: itemList.selectedITOId,
         "uiAction": {
             copyRosterData,
             endSelect,
             getEditableShiftCellCssClassName,
             getPreferredShiftCellCssClassName,
             getRowIndex,
-            getShiftCssClassName,
-            getTotalTimeOff,
+            getShiftCssClassName,           
             handleKeyDown,
+            hideTimeOff,
             isHighLightCell,
             isHighLightRow,
             pasteRosterData,
+            showTimeOff,
             setFocusCell,
             startSelect,
             updatePreferredShift,

@@ -3,7 +3,7 @@ import handleAPIError from "../common/handleAPIError";
 import Loading from "../common/Loading";
 
 import RosterTable from "./RosterTable";
-import TimeOffModal from "./TimeOffModal";
+import TimeOffModal from "../common/timeOffModal/TimeOffModal";
 export default function RosterViewer() {
     const { error, isLoading, isShowTimeOff, rosterViewerData, selectedITOId, uiAction } = useRosterViewer();
     if (error) {

@@ -2,7 +2,7 @@ import EditableShiftCell from "./EditableShiftCell";
 import NameCell from "../../common/cells/NameCell";
 import ShiftCell from "../../common/cells/ShiftCell";
 import StatCell from "../../common/cells/StatCell";
-export default function EditableShiftRow({ calendarDateList, itoId, previousMonthShiftList, roster, rowIndex, systemParam, uiAction }) {
+export default function EditableShiftRow({ calendarDateList, itoId, previousMonthShiftList, roster, rowIndex, systemParam, timeOff, uiAction }) {
     let className = '';
     let shift = '', shiftCellList = [];
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
@@ -25,16 +25,16 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
         className = uiAction.getEditableShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex, shift);
         shiftCellList.push(
             <EditableShiftCell
-                cssClassName={className.join(" ")}                
+                cssClassName={className.join(" ")}
                 key={itoId + '_' + index}
                 onBlur={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
                 onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
                 title={shift}
                 uiAction={uiAction}>
-                {shift}    
+                {shift}
             </EditableShiftCell>
         );
-                
+
     });
     for (let i = calendarDateList.length; i < 31; i++) {
         shiftCellList.push(<ShiftCell key={itoId + '_' + i}>&nbsp;</ShiftCell>)
@@ -58,6 +58,14 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
             </StatCell>
             <StatCell>
                 {roster.thisMonthBalance.toFixed(2)}
+            </StatCell>
+            <StatCell>
+                <div
+                    className={(timeOff.total === 0) ? null : "timeOff"}
+                    onClick={() => uiAction.showTimeOff(itoId)}
+                    title="Show Time off record">
+                    {timeOff.total}
+                </div>
             </StatCell>
             <StatCell>
                 {roster.totalBalance.toFixed(2)}
