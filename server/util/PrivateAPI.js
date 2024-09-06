@@ -2,6 +2,7 @@ import Express from 'express';
 import ITOInfo from '../classes/ITOInfo.js';
 import Roster from '../classes/Roster.js';
 import ShiftInfo from "../classes/ShiftInfo.js";
+import TimeOff from '../classes/TimeOff.js';
 export default function PrivateAPI(adminUtil, systemParam) {
     const router = Express.Router();
     //===================================================================================================    
@@ -26,6 +27,9 @@ export default function PrivateAPI(adminUtil, systemParam) {
                 break;
             case "getRosterSchedulerData":
                 sendResponse(res, getRosterSchedulerData, { month: req.query.month, "systemParam": systemParam, "year": req.query.year });
+                break;
+            case "getITOTimeOffList":
+                sendResponse(res, getITOTimeOffList, { month: req.query.month, "year": req.query.year });
                 break;
             default:
                 next();
@@ -65,7 +69,6 @@ let getRosterSchedulerData = async params => {
     let roster = new Roster();
     let preferredShiftList = {};
     let previousMonthShiftList = {};
-    let timeOffList = {};
     let shiftInfo = new ShiftInfo();
     let sP = structuredClone(params.systemParam);
     await shiftInfo.init();
@@ -83,7 +86,7 @@ let getRosterSchedulerData = async params => {
             previousMonthShiftList[p.ito_id] = [];
         }
         previousMonthShiftList[p.ito_id].push(p.shift);
-    });    
+    });
     return {
         activeShiftList: shiftInfo.activeShiftList,
         essentialShift: shiftInfo.essentialShift,
@@ -92,6 +95,10 @@ let getRosterSchedulerData = async params => {
         previousMonthShiftList,
         systemParam: sP
     }
+}
+let getITOTimeOffList = async params => {
+    let timeOff = new TimeOff();
+    return await timeOff.getITOTimeOffList(params.year, params.month);;
 }
 let updateITO = async ito => {
     let itoUtil = new ITOInfo();

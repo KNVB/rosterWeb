@@ -27,6 +27,9 @@ export default function ItemList(){
                 <a href="/admin/itoManagement/list">ITO Management</a>
             </li>
             <li>
+                <a href="/admin/timeOffManagement/list">Time Off Management</a>
+            </li>
+            <li>
                 <span className='logout' onClick={logout}>
                     Logout
                 </span>

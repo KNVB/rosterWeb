@@ -22,7 +22,7 @@ export default function PublicAPI(adminUtil, systemParam) {
 //====================================================================================================================================
 let getRosterViewerData = async (params) => {
     let roster = new Roster();
-    let timeOff=new TimeOff()
+    let timeOff=new TimeOff();
     let rosterData=await roster.getRoster(params.year, params.month);
     let shiftInfo = new ShiftInfo();
     let sP=structuredClone(params.systemParam);
@@ -30,7 +30,7 @@ let getRosterViewerData = async (params) => {
     
     sP.monthPickerMinDate = new Date(sP.monthPickerMinDate.year, sP.monthPickerMinDate.month - 1, sP.monthPickerMinDate.date);
     sP.noOfPrevDate = 0;
-    let timeOffList = await timeOff.getTimeOff(params.year, params.month);
+    let timeOffList = await timeOff.getTimeOffList(params.year, params.month);
     
     return {
         "activeShiftList":shiftInfo.activeShiftList,

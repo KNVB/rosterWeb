@@ -42,6 +42,9 @@ export default class FetchAPI {
     getSystemParam = async () => {
         return (await this.#fetch(null, "get", "/publicAPI/getSystemParam"));
     }
+    getITOTimeOffList = async (year, month) => {
+        return (await this.#secureFetch({ year: year, month: month }, "get", "/privateAPI/getITOTimeOffList"));
+    }
     login = async loginObj => {
         return await this.#fetch({ loginObj: loginObj }, "post", "/publicAPI/login");
     }

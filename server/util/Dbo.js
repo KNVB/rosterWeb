@@ -62,6 +62,29 @@ export default class Dbo {
         this.#sqlString += "order by leave_date desc,a.ito_id";
         return await this.#executeQuery(this.#sqlString);
     }
+    getITOTimeOffList = async (year, month) => {
+        let result = this.#getStartEndDateString(year, month);
+        this.#sqlString = "select b.ito_id,b.post_name,b.ito_name,time_off_start,";
+        this.#sqlString += "time_off_end,description,no_of_hour_applied_for,time_off_id ";
+        this.#sqlString += "from ";
+        this.#sqlString += "(select *";
+        this.#sqlString += "from time_off ";
+        this.#sqlString += "where time_off_start between ? and ?) a right join ";
+        this.#sqlString += "(select ";
+        this.#sqlString += "ito_id,post_name,ito_name ";
+        this.#sqlString += "from ito_info ";
+        this.#sqlString += "where ";
+        this.#sqlString += "join_date<=? and leave_date >=?";
+        this.#sqlString += ")b on a.ito_id=b.ito_id";
+
+        return await this.#executeQuery(this.#sqlString,
+            [
+                result.startDateString,
+                result.endDateString,                
+                result.endDateString,
+                result.startDateString
+            ]);
+    }
     getPreferredShiftList = async (year, month) => {
         let result = this.#getStartEndDateString(year, month);
         this.#sqlString = "select ito_id,preferred_shift,day(shift_date) as d from preferred_shift where shift_date between ? and ? order by ito_id,shift_date";

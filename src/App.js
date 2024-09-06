@@ -5,6 +5,7 @@ import RosterViewer from './components/rosterViewer/RosterViewer';
 import RosterAdminContent from "./components/rosterAdmin/RosterAdminContent";
 import RosterScheduler from "./components/rosterAdmin/rosterScheduler/RosterScheduler";
 import TestModal from "./components/testing/testingModal/TestModal";
+import TimeOffManagement from "./components/rosterAdmin/timeOffManagement/TimeOffManagement";
 export default function App() {
   return (
     <Router>
@@ -15,6 +16,7 @@ export default function App() {
             <Route index element={<RosterAdminContent/>}/>
             <Route path="itoManagement/:action" element={<ITOManagement />} />
             <Route path="rosterScheduler" element={<RosterScheduler/>}/>
+            <Route path="timeOffManagement/:action" element={<TimeOffManagement />} />
           </Route> 
       </Routes>
     </Router>
