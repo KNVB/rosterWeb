@@ -53,6 +53,7 @@ export default class TimeOff {
                         description: record.description,
                         timeOffAmount: record.no_of_hour_applied_for,
                         timeOffEnd: record.time_off_end,
+                        timeOffId: record.time_off_id,
                         timeOffStart: record.time_off_start,
                         timeOffStatus: record.time_off_status,
                     });

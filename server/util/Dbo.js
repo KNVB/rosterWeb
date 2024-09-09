@@ -129,7 +129,7 @@ export default class Dbo {
     getTimeOff = async (year, month) => {
         let result = this.#getStartEndDateString(year, month);
         this.#sqlString = "select b.ito_id,time_off_start,";
-        this.#sqlString += "time_off_end,description,no_of_hour_applied_for ";
+        this.#sqlString += "time_off_end,time_off_id,description,no_of_hour_applied_for ";
         this.#sqlString += "from ";
         this.#sqlString += "(select *";
         this.#sqlString += "from time_off ";
