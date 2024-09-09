@@ -24,6 +24,7 @@ export default class TimeOff {
                         timeOffEnd: record.time_off_end,
                         timeOffId: record.time_off_id,
                         timeOffStart: record.time_off_start,
+                        timeOffStatus: record.time_off_status,
                     });
                     itoTimeOffList[record.ito_id].total += record.no_of_hour_applied_for;
                 }
@@ -53,6 +54,7 @@ export default class TimeOff {
                         timeOffAmount: record.no_of_hour_applied_for,
                         timeOffEnd: record.time_off_end,
                         timeOffStart: record.time_off_start,
+                        timeOffStatus: record.time_off_status,
                     });
                     timeOffList[record.ito_id].total += record.no_of_hour_applied_for;
                 }

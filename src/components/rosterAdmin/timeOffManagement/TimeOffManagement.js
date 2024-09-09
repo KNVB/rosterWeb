@@ -9,7 +9,7 @@ export default function TimeOffManagement(){
     switch (params.action) {
       case "add":
       case "edit":
-        obj = <TimeOffForm itoAction={params.action}/>
+        obj = <TimeOffForm timeOffAction={params.action}/>
         break;
       case "list":
         obj = <TimeOffList />

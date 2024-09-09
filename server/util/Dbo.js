@@ -65,7 +65,7 @@ export default class Dbo {
     getITOTimeOffList = async (year, month) => {
         let result = this.#getStartEndDateString(year, month);
         this.#sqlString = "select b.ito_id,b.post_name,b.ito_name,time_off_start,";
-        this.#sqlString += "time_off_end,description,no_of_hour_applied_for,time_off_id ";
+        this.#sqlString += "time_off_end,description,no_of_hour_applied_for,time_off_id,time_off_status ";
         this.#sqlString += "from ";
         this.#sqlString += "(select *";
         this.#sqlString += "from time_off ";
