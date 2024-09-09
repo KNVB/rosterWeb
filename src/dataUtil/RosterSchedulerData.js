@@ -206,7 +206,7 @@ export default class RosterSchedulerData extends RosterViewerData {
             case ((oldShift === undefined) && (newRosterShift !== '')):
             case ((oldShift !== undefined) && (newRosterShift !== oldShift)):
                 this.roster[itoId].shiftList[dateOfMonth] = newRosterShift;
-                this.roster= Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
+                this.roster= Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay,this.timeOffList);
                 this.#recordRosterSchedulerData();
                 break;
             default:
