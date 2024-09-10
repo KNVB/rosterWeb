@@ -17,7 +17,9 @@ export default function CalendarTable({
         }
         return false
     }
-    let colSpan = headerRow.columnList.length;
+    let colCount, colSpan;
+    colCount = (isNull(headerRow) ? bodyRow.rowList[0].length : headerRow.columnList.length);
+    colSpan = colCount;
     if (!isNull(bigNext)) {
         colSpan--;
     }
@@ -29,20 +31,30 @@ export default function CalendarTable({
     }
     if (!isNull(smallPrev)) {
         colSpan--;
-    }    
+    }
+
     return (
         <table className="calendarTable">
             <thead>
-                {
-                    (colSpan !== headerRow.columnList.length) &&
-                    <tr>
+                <tr>
+                    {
+                        (!isNull(bigPrev)) &&
                         <td className="clickable" onClick={bigPrev}>&lt;&lt;</td>
+                    }
+                    {
+                        (!isNull(smallPrev)) &&
                         <td className="clickable" onClick={smallPrev}>&lt;</td>
-                        <td colSpan={colSpan}>{title}</td>
+                    }
+                    <td colSpan={colSpan}>{title}</td>
+                    {
+                        (!isNull(smallNext)) &&
                         <td className="clickable" onClick={smallNext}>&gt;</td>
+                    }
+                    {
+                        (!isNull(bigNext)) &&
                         <td className="clickable" onClick={bigNext}>&gt;&gt;</td>
-                    </tr>
-                }
+                    }
+                </tr>
                 {
                     headerRow &&
                     <tr className={(headerRow.className??null)}>
@@ -52,7 +64,7 @@ export default function CalendarTable({
                             ))
                         }
                     </tr>
-                }
+                }                
             </thead>
             <tbody>
                 {
@@ -73,7 +85,7 @@ export default function CalendarTable({
                 }
             </tbody>
             <tfoot>
-                <tr><td colSpan={headerRow.columnList.length}></td></tr>
+                <tr><td colSpan={colCount}></td></tr>
             </tfoot>
         </table>
     )

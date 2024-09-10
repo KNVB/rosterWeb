@@ -1,5 +1,5 @@
 .calendarTable {
-    border: 1px gray solid;
+    border: 1px #5dade2 solid;
     border-collapse: separate; 
     border-radius: 5%;    
     font-size: 12px;
@@ -17,7 +17,7 @@
 }
 
 .calendarTable>tbody td:not(:empty):hover {
-    background-color: #ccffff;
+    background-color: #5dade2;
     color: black;
     cursor: pointer;
 }
