@@ -14,18 +14,26 @@ export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, t
         e.preventDefault();
         uiAction.updateUI(-1, -1);
     }
-
+    function showTimeOffRecord(itoId,date) {
+        if (timeOff.total>0){
+            uiAction.showTimeOff(itoId,timeOff.records[date]);
+        }else {
+            return;
+        }        
+    }
     calendarDateList.forEach((calendarDate, index) => {
         shift = roster.shiftList[index + 1];
-        className = uiAction.getShiftCssClassName(shift);
+        className = "cursor-pointer " + uiAction.getShiftCssClassName(shift);
         shiftCellList.push(
             <ShiftCell
                 cssClassName={className}
                 key={itoId + '_' + index}
                 onMouseEnter={handleMouseEnterEvent}
                 onMouseLeave={handleMouseLeaveEvent}
-                title={shift}>
-                {shift}
+                title={(shift === "t") ? "show time off record" : ""}>
+                <div className="m-0 p-0" onClick={() => showTimeOffRecord(itoId,calendarDate.dateOfMonth)}>
+                    {shift}
+                </div>
             </ShiftCell>
         )
     });
@@ -53,12 +61,7 @@ export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, t
                 {roster.thisMonthBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                <div
-                    className={(timeOff.total === 0) ? null : "timeOff"}
-                    onClick={() => uiAction.showTimeOff(itoId)}
-                    title="Show Time off record">
-                    {timeOff.total}
-                </div>
+                {timeOff.total}
             </StatCell>
             <StatCell>
                 {roster.totalBalance.toFixed(2)}

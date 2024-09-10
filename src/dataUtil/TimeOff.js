@@ -21,20 +21,12 @@ export default class TimeOff {
             result[key] = {
                 name: value.name,
                 postName: value.postName,
-                records: [],
+                records: {},
                 total: value.total
             };
-            value.records.forEach(v => {
-                result[key].records.push({
-                    timeOffEnd: new Date(v.timeOffEnd),
-                    timeOffId: v.timeOffId,
-                    timeOffStart: new Date(v.timeOffStart),
-                    timeOffStatus: v.timeOffStatus,
-                    timeOffAmount: v.timeOffAmount,
-                    "description": v.description
-                })
-            });
+            console.log(value.records);
         }
+
         return result;
     }
 }

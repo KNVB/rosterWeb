@@ -1,5 +1,6 @@
 import Dbo from "../util/Dbo.js";
 export default class TimeOff {
+    
     constructor() {
     }
     getITOTimeOffList = async (year, month) => {
@@ -46,18 +47,18 @@ export default class TimeOff {
             console.log("Get (" + year + "," + month + ") Time off List successfully!");
             results.forEach(record => {
                 if (timeOffList[record.ito_id] === undefined) {
-                    timeOffList[record.ito_id] = { records: [], total: 0 };
+                    timeOffList[record.ito_id] = { records: {}, total: 0 };
                 }
                 if (record.time_off_start !== null) {
-                    timeOffList[record.ito_id].records.push({
+                    timeOffList[record.ito_id].records[record.time_off_start.getDate()]={
                         description: record.description,
                         timeOffAmount: record.no_of_hour_applied_for,
                         timeOffEnd: record.time_off_end,
                         timeOffId: record.time_off_id,
                         timeOffStart: record.time_off_start,
                         timeOffStatus: record.time_off_status,
-                    });
-                    timeOffList[record.ito_id].total += record.no_of_hour_applied_for;
+                    };
+                    timeOffList[record.ito_id].total += record.no_of_hour_applied_for;                    
                 }
             });
             return timeOffList;

@@ -18,8 +18,9 @@ let reducer = (state, action) => {
             result.error = action.error;
             break;
         case "showTimeOff":
+            result.selectedITOInfo=action.itoInfo;
             result.isShowTimeOff = true;
-            result.selectedITOId = action.itoId
+            result.selectedTimeOff = action.timeOffRecord;
             break;
         case "updateLoading":
             result.isLoading = action.value;
@@ -36,7 +37,8 @@ export function useRosterViewer() {
         isShowTimeOff: false,
         rosterViewerData: null,
         rosterTableUtil: new RosterTableUtil(),
-        selectedITOId: null
+        selectedITOInfo: null,
+        selectedTimeOff: null
     });
     useEffect(() => {
         let getData = async () => {
@@ -74,9 +76,10 @@ export function useRosterViewer() {
     let isHighLightRow = rowIndex => {
         return itemList.rosterTableUtil.isHighLightRow(rowIndex);
     }
-    let showTimeOff = itoId => {
+    let showTimeOff = (itoId,timeOffRecord) => {
         updateItemList({
-            itoId,
+            itoInfo:itemList.rosterViewerData.roster[itoId],
+            timeOffRecord,
             "type": "showTimeOff"
         });
     }
@@ -102,7 +105,8 @@ export function useRosterViewer() {
         isLoading: itemList.isLoading,
         isShowTimeOff: itemList.isShowTimeOff,
         "rosterViewerData": itemList.rosterViewerData,
-        selectedITOId: itemList.selectedITOId,
+        selectedITOInfo: itemList.selectedITOInfo,
+        selectedTimeOff: itemList.selectedTimeOff,
         "uiAction": {
             getShiftCssClassName,
             hideTimeOff,

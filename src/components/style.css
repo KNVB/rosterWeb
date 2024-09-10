@@ -1,18 +1,22 @@
-.autoPlanResult{
+.autoPlanResult {
 	cursor: pointer;
 }
-.blackListedShift{
+
+.blackListedShift {
 	animation: blinker 1s linear infinite;
 	background-color: black !important;
-	color:white;
+	color: white;
 }
+
 .borderCell {
 	border-left: 1px inset #e0e0e0;
 	border-top: 1px inset #e0e0e0;
 }
-.borderCell:after {	
-	border:2px inset transparent;
+
+.borderCell:after {
+	border: 2px inset transparent;
 }
+
 .borderCell:last-child {
 	border-right: 1px inset #e0e0e0;
 }
@@ -21,6 +25,7 @@
 	text-align: center;
 	text-decoration: underline;
 }
+
 .copiedShiftCellBorderBottom {
 	border-bottom: 1px dashed black !important;
 }
@@ -32,32 +37,39 @@
 .copiedShiftCellBorderRight {
 	border-right: 1px dashed black;
 }
+
 .cursor-pointer {
-	cursor:pointer
+	cursor: pointer
 }
+
 .copiedShiftCellBorderTop {
 	border-top: 1px dashed black;
 }
+
 .dateCell,
 .dayCell,
 .holidayCell {
-	font-size: 17px;	
+	font-size: 17px;
 	padding: 0px;
 	margin: 0px;
 	width: 29px;
 }
-.highLight:hover{
-	background-color:gainsboro;
+
+.highLight:hover {
+	background-color: gainsboro;
 }
-.errorRedBlackGround{
+
+.errorRedBlackGround {
 	animation: blinker 1s linear infinite;
-	background-color: red !important;	
+	background-color: red !important;
 }
+
 @keyframes blinker {
 	50% {
 		opacity: 0;
 	}
 }
+
 .highlightCell {
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffc477), color-stop(1, #fb9e25));
 	background: -moz-linear-gradient(top, #ffc477 5%, #fb9e25 100%);
@@ -69,12 +81,12 @@
 	background-color: #ffc477;
 }
 
-.itoNameCell {	
+.itoNameCell {
 	font-size: 15px;
 	padding-bottom: 0px;
 	padding-left: 3px;
 	padding-right: 0px;
-	padding-top: 0px;	
+	padding-top: 0px;
 	width: 200px
 }
 
@@ -91,21 +103,22 @@
 .littleSquareDiv:hover {
 	cursor: crosshair;
 }
-.modalBackground
-{
-	left:0;
-	top:0;
-	display:flex;
-	justify-content:center;
-	align-items:center;
-	position:fixed;
-	width:100%;
-	height:100%;
-	z-index:10;
-	background-color:white;
+
+.modalBackground {
+	left: 0;
+	top: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	background-color: white;
 	opacity: 0.5;
 	align-items: center;
 }
+
 .phCell {
 	color: #ff0000;
 	font-size: 17px;
@@ -113,11 +126,11 @@
 	text-align: center;
 }
 
-.rosterTable {	
+.rosterTable {
 	/*
 	border-collapse: separate;
 	*/
-	border-spacing: 0px;	
+	border-spacing: 0px;
 	/*
 	The above border setting can prevent border from overlap
 	*/
@@ -148,20 +161,23 @@
 	min-width: 27px;
 	text-align: center;
 }
+
 .shiftContent:focus,
-.shiftContent::selection{
+.shiftContent::selection {
 	outline: none;
 }
+
 .statCell {
 	padding: 0px;
 	font-size: 15px;
 	width: 60px
 }
 
-.timeOff{
+.timeOff {
 	cursor: pointer;
 	text-decoration: underline;
 }
+
 .todayCell {
 	background-color: #11ACF0;
 	color: #ffff;
@@ -172,35 +188,36 @@
 .vacantShiftLabel {
 	color: #ff6600;
 }
+
 /*******************************************************************************************************
  *                                                                                                     *
  *    Shift color style                                                                                *
  *                                                                                                     *
  *******************************************************************************************************/
- .aShiftColor
- {
-	 background-color:#ff99cc;
- }
- .bShiftColor
- { 
-	 background-color:#ffffcc;
- }
- .cShiftColor
- {
-	 background-color:#ccffcc;
- }
- .oShiftColor
- {
-	 background-color:#ffffff;
- }
- .dShiftColor
- {
-	 background-color:#ccffff;
- }
- .sickLeaveColor
- {
-	 background-color:#cc99ff;
- }
- .trainingColor{
-	background-color:#e6e6fa;
- }
+.aShiftColor {
+	background-color: #ff99cc;
+}
+
+.bShiftColor {
+	background-color: #ffffcc;
+}
+
+.cShiftColor {
+	background-color: #ccffcc;
+}
+
+.oShiftColor {
+	background-color: #ffffff;
+}
+
+.dShiftColor {
+	background-color: #ccffff;
+}
+
+.sickLeaveColor {
+	background-color: #ba94e0;
+}
+
+.trainingColor {
+	background-color: SandyBrown;
+}

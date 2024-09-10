@@ -15,12 +15,11 @@ export default class RosterViewerData {
         this.systemParam = structuredClone(temp.systemParam);
         this.systemParam.monthPickerMinDate = new Date(this.systemParam.monthPickerMinDate);
         this.systemParam.noOfPrevDate = 0;
-       
+
         let rosterData = structuredClone(temp.rosterData);
         this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.timeOffList);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
-        this.timeOffList = this.#formatTimeOffObj(temp.timeOffList);
-       
+        this.timeOffList = this.#formatTimeOffObj(temp.timeOffList);       
     }
     getShiftCssClassName(shiftType) {
         if (this.activeShiftList[shiftType])
@@ -40,22 +39,27 @@ export default class RosterViewerData {
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
         this.timeOffList = this.#formatTimeOffObj(temp.timeOffList);
     }
-    #formatTimeOffObj(inObj){
-        let result={};
-        for (const [key, value] of Object.entries(inObj)) {
-            result[key] = {
-                records: [],
-                total: value.total
-            };
-            value.records.forEach(v=>{
-                result[key].records.push({
-                    timeOffEnd:new Date(v.timeOffEnd),
-                    timeOffStart:new Date(v.timeOffStart),
-                    timeOffAmount:v.timeOffAmount,
-                    "description":v.description
-                })     
-            });
+    #formatTimeOffObj(inObj) {
+        let result = {};
+        for (const [itoId, timeOffRecords] of Object.entries(inObj)) {
+            //console.log(itoId, timeOffRecords);
+            result[itoId] = {
+                records: {},
+                total: timeOffRecords.total
+            }
+            if (timeOffRecords.total > 0) {
+                for (const [date, timeOffRecord] of Object.entries(timeOffRecords.records)) {
+                    result[itoId].records[date] = {
+                        "description": timeOffRecord.description,
+                        timeOffAmount: timeOffRecord.timeOffAmount,
+                        timeOffEnd: new Date(timeOffRecord.timeOffEnd),
+                        timeOffId: timeOffRecord.timeOffId,
+                        timeOffStart: new Date(timeOffRecord.timeOffStart),
+                        timeOffStatus: timeOffRecord.timeOffStatus,
+                    }
+                }
+            }
         }
-       return result;
+        return result;
     }
 }
