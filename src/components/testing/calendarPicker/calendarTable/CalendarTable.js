@@ -18,6 +18,7 @@ export default function CalendarTable({
         return false
     }
     let colCount, colSpan;
+    //console.log(bodyRow);
     colCount = (isNull(headerRow) ? bodyRow.rowList[0].length : headerRow.columnList.length);
     colSpan = colCount;
     if (!isNull(bigNext)) {
@@ -73,10 +74,10 @@ export default function CalendarTable({
                         <tr className={(row.className??null)} key={"calendartable_body_row_" + index}>
                             {
                                 row.map((col, colIndex) => (
-                                    <td className={(col.className??null) + (selectedItem === col.value ? " selectedItem" : "")}
+                                    <td className={(col.className??null)}
                                         key={"calendartable_body_row_" + index + "_col_" + colIndex}
                                         onClick={()=>getSelectedItem(col.value)}>
-                                        {col.value}
+                                        {col.text??col.value}
                                     </td>
                                 ))
                             }

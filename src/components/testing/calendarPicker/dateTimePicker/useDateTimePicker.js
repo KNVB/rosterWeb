@@ -1,4 +1,25 @@
 import { useEffect, useReducer } from "react";
+let genDateObj = (date, weekDay, selectedDate) => {
+    let className = [];
+    if (date === selectedDate.getDate()) {
+        className.push("selectedItem");
+    }
+    switch (weekDay) {
+        case 0:
+        case 6:
+            className.push("ph");
+            break;
+        default:
+            break;
+    }
+    let result = { "value": date };
+    if (className.length === 0) {
+        result.className = null;
+    } else {
+        result.className = className.join(" ");
+    }
+    return result;
+}
 let genMonthlyCalendar = (selectedDate) => {
     let temp = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
     console.log("===================");
@@ -15,42 +36,28 @@ let genMonthlyCalendar = (selectedDate) => {
         weekRow.push({ className: null, value: "" });
     }
     for (let i = firstWeekday; i <= 6; i++) {
-        switch (i) {
-            case 0:
-            case 6:
-                weekRow.push({ className: "ph", value: date++ });
-                break;
-            default:
-                weekRow.push({ value: date++ });
-                break;
-        }
+        weekRow.push(genDateObj(date++, i, selectedDate));
     }
     monthlyCalendar.rowList.push(structuredClone(weekRow));
     weekRow = [];
+    //console.log(monthlyCalendar);
     temp = new Date(selectedDate.getTime());
     while (date <= monthEndDate) {
         temp.setDate(date);
-        switch (temp.getDay()) {
-            case 0:
-                weekRow.push({ className: "ph", value: date++ });
-                break;
-            case 6:
-                weekRow.push({ className: "ph", value: date++ });
-                monthlyCalendar.rowList.push(structuredClone(weekRow));
-                weekRow = [];
-                break;
-            default:
-                weekRow.push({ value: date++ });
-                break;
+        weekRow.push(genDateObj(date++, temp.getDay(), selectedDate));
+        if (temp.getDay() === 6) {
+            monthlyCalendar.rowList.push(structuredClone(weekRow));
+            weekRow = [];
         }
     }
     if (temp.getDay() < 6) {
         for (let i = temp.getDay(); i < 6; i++) {
             weekRow.push({ value: "" });
         }
-        weekRow[weekRow.length - 1].className = "ph";
+        //weekRow[weekRow.length - 1].className = "ph";
         monthlyCalendar.rowList.push(structuredClone(weekRow));
     }
+    //console.log(monthlyCalendar);
     return monthlyCalendar;
 }
 let reducer = (state, action) => {

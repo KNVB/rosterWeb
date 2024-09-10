@@ -1,6 +1,7 @@
 .monthPicker{
     display: inline-block;
     flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .monthPickResult {
