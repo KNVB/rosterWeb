@@ -3,16 +3,10 @@ import "./DateTimePicker.css";
 import { Button } from "react-bootstrap";
 import CalendarTable from "../calendarTable/CalendarTable";
 import TimeSelector from "../timeSelector/TimeSelector";
+import Utility from "../Utility";
 import useDateTimePicker from "./useDateTimePicker";
 export default function DateTimePicker({getSelectedValue, value }) {
-    let dateFormatter = new Intl.DateTimeFormat('en-ZA', {
-        day: "2-digit",
-        hour: "2-digit",
-        hour12: true,
-        minute: "2-digit",
-        month: "2-digit",
-        year: "numeric"
-    });
+  
     const { isShowPicker, monthFullNameList, monthlyCalendar, result, tempValue, weekDayNameList, action } = useDateTimePicker(value);
     let headerRow = { columnList: [] };
 
@@ -45,7 +39,7 @@ export default function DateTimePicker({getSelectedValue, value }) {
             <div
                 className="dateTimeResult"
                 onClick={action.togglePicker}>
-                {dateFormatter.format(result)}
+                {Utility.dateFormatter.format(result)}
             </div>
             {isShowPicker &&
                 <div className="pickerContainer p-1">

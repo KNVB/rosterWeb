@@ -7,39 +7,52 @@ export default function MonthPicker({ defaultValue, maxDate, minDate, onChange }
         month: "long",
         year: "numeric"
     });
-    const { bodyRow, isShowPicker, hasNextYear, hasPrevYear, result, tempResult, action } = useMonthPicker(defaultValue, maxDate, minDate);
+    const { 
+        bodyRow,
+        hasNextMonth, hasNextYear,
+        hasPrevMonth, hasPrevYear,
+        isShowPicker, result,
+        tempResult, action } = useMonthPicker(defaultValue, maxDate, minDate);
     let getSelectedItem = value => {
         let temp = new Date(tempResult.getFullYear(), value, 1);
         action.updateValue(temp);
         onChange(temp);
     }
-    let nextYear = () => {
+    let nextMonth = () => {
         let temp = new Date(result.getTime());
-        temp.setFullYear(temp.getFullYear() + 1);
+        temp.setMonth(temp.getMonth() + 1);
         action.updateValue(temp);
         onChange(temp);
     }
-    let prevYear = () => {
+    let prevMonth = () => {
         let temp = new Date(result.getTime());
-        temp.setFullYear(temp.getFullYear() - 1);
+        temp.setMonth(temp.getMonth() - 1);
         action.updateValue(temp);
         onChange(temp);
     }
+
     return (
         <div className="monthPicker">
             <div
                 className="monthPickResult">
-                <span onClick={prevYear}>&lt;</span>
-                &nbsp;
+                {
+                    hasPrevMonth &&
+                    <span onClick={prevMonth}>&lt;</span>
+                }
                 <span onClick={action.togglePicker}>{monthFormatter.format(result)}</span>
                 &nbsp;
-                <span onClick={nextYear}>&gt;</span>
+                {
+                    hasNextMonth &&
+                    <span onClick={nextMonth}>&gt;</span>
+                }
             </div>
             {isShowPicker &&
                 <div className="pickerContainer p-1">
                     <CalendarTable
                         bodyRow={bodyRow}
                         getSelectedItem={getSelectedItem}
+                        hasSmallPrev={hasPrevYear}
+                        hasSmallNext={hasNextYear}
                         smallPrev={action.prevYear}
                         smallNext={action.nextYear}
                         title={tempResult.getFullYear()}

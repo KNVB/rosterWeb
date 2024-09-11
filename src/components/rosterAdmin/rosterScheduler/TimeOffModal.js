@@ -1,6 +1,6 @@
 import { Button, Modal } from 'react-bootstrap';
 
-export default function TimeOffModal({ date,hideTimeOff, isShowTimeOff, selectedITOInfo, selectedTimeOff }) {
+export default function TimeOffModal({ hideTimeOff, isShowTimeOff, selectedITOInfo, selectedTimeOff }) {
     let dateFormatter = new Intl.DateTimeFormat('en-ZA', {
         day: "2-digit",
         hour: "2-digit",

@@ -24,7 +24,9 @@ let reducer = (state, action) => {
             break;
         case "showTimeOff":
             result.isShowTimeOff = true;
-            result.selectedITOId = action.itoId;
+            result.selectedITOInfo = action.itoInfo;
+            result.selectedTimeOff = action.timeOff;
+            result.selectedTimeOffDate = action.date;
             break;
         case "updateLoading":
             result.isLoading = action.value;
@@ -49,7 +51,9 @@ export function useRosterScheduler() {
         keyboardEventHandler: null,
         rosterSchedulerData: null,
         rosterSchedulerTableUtil: new RosterSchedulerTableUtil(),
-        selectedITOId: null
+        selectedITOInfo: null,
+        selectedTimeOff: null,
+        selectedTimeOffDate: null,
     });
     useEffect(() => {
         let getData = async () => {
@@ -108,7 +112,7 @@ export function useRosterScheduler() {
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
     }
-   
+
     let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
     let hideTimeOff = () => {
         updateItemList({
@@ -137,10 +141,35 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
-    let showTimeOff = itoId => {
-        
+    let showTimeOff = (itoId, date) => {
+        //console.log(itemList.rosterSchedulerData);
+        /*
+        console.log(itemList.rosterSchedulerData.roster[itoId].itoName,
+            itemList.rosterSchedulerData.roster[itoId].itoPostName,
+            itemList.rosterSchedulerData.timeOffList[itoId].records[date]);
+        */
+        let timeOff={}
+        if (itemList.rosterSchedulerData.timeOffList[itoId].records[date]){
+            timeOff=structuredClone(itemList.rosterSchedulerData.timeOffList[itoId].records[date]);
+        }else {
+            let now=new Date();
+            now.setHours(0);
+            now.setMinutes(0);
+            timeOff={
+                description:"",
+                timeOffAmount:"",
+                timeOffEnd:new Date(now.getTime()),
+                timeOffStart:new Date(now.getTime()),
+            }
+        }
         updateItemList({
-            itoId,
+            itoInfo: {
+                itoId: itoId,
+                itoName: itemList.rosterSchedulerData.roster[itoId].itoName,
+                itoPostName: itemList.rosterSchedulerData.roster[itoId].itoPostName,
+            },
+            date,
+            "timeOff": timeOff,
             "type": "showTimeOff"
         });
     }
@@ -187,14 +216,16 @@ export function useRosterScheduler() {
         isLoading: itemList.isLoading,
         isShowTimeOff: itemList.isShowTimeOff,
         rosterSchedulerData: itemList.rosterSchedulerData,
-        selectedITOId: itemList.selectedITOId,
+        selectedITOInfo: itemList.selectedITOInfo,
+        selectedTimeOff: itemList.selectedTimeOff,
+        selectedTimeOffDate: itemList.selectedTimeOffDate,
         "uiAction": {
             copyRosterData,
             endSelect,
             getEditableShiftCellCssClassName,
             getPreferredShiftCellCssClassName,
             getRowIndex,
-            getShiftCssClassName,           
+            getShiftCssClassName,
             handleKeyDown,
             hideTimeOff,
             isHighLightCell,
