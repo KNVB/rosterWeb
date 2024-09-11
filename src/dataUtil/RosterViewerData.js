@@ -18,8 +18,9 @@ export default class RosterViewerData {
 
         let rosterData = structuredClone(temp.rosterData);
         this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.timeOffList);
+        this.rosterMonth = new Date(year, month, 1);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
-        this.timeOffList = this.#formatTimeOffObj(temp.timeOffList);       
+        this.timeOffList = this.#formatTimeOffObj(temp.timeOffList);
     }
     getShiftCssClassName(shiftType) {
         if (this.activeShiftList[shiftType])
@@ -36,6 +37,7 @@ export default class RosterViewerData {
         this.calendarDateList = monthlyCalendar.calendarDateList;
         let rosterData = structuredClone(temp.rosterData);
         this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.timeOffList);
+        this.rosterMonth = new Date(rosterYear, rosterMonth, 1);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
         this.timeOffList = this.#formatTimeOffObj(temp.timeOffList);
     }

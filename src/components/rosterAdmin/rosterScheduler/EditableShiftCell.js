@@ -1,5 +1,5 @@
 import ShiftCell from "../../common/cells/ShiftCell";
-export default function EditableShiftCell({ children, cssClassName, date, itoId, onBlur, onPaste, title, uiAction }) {
+export default function EditableShiftCell({ children, cssClassName, onBlur, onContextMenu, onPaste, title, uiAction }) {
     function handleMouseEnterEvent(e) {
         e.preventDefault();
         let cell = e.target.closest("td");
@@ -14,6 +14,7 @@ export default function EditableShiftCell({ children, cssClassName, date, itoId,
     return (
         <ShiftCell
             cssClassName={cssClassName + " m-0 p-0 position-relative"}
+            onContextMenu={onContextMenu}
             onMouseDown={uiAction.startSelect}
             onMouseEnter={handleMouseEnterEvent}
             onMouseLeave={handleMouseLeaveEvent}
@@ -31,7 +32,7 @@ export default function EditableShiftCell({ children, cssClassName, date, itoId,
             </div>
             {
                 isLastCell &&
-                <div className="littleSquareDiv m-0 p-0" onClick={()=>uiAction.showTimeOff(itoId,date) }></div>
+                <div className="littleSquareDiv m-0 p-0"></div>
             }
         </ShiftCell>
     );

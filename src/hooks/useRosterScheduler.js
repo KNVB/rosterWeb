@@ -24,8 +24,7 @@ let reducer = (state, action) => {
             break;
         case "showTimeOff":
             result.isShowTimeOff = true;
-            result.selectedITOInfo = action.itoInfo;
-            result.selectedTimeOff = action.timeOff;
+            result.selectedITOId = action.itoId;           
             result.selectedTimeOffDate = action.date;
             break;
         case "updateLoading":
@@ -141,35 +140,10 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
-    let showTimeOff = (itoId, date) => {
-        //console.log(itemList.rosterSchedulerData);
-        /*
-        console.log(itemList.rosterSchedulerData.roster[itoId].itoName,
-            itemList.rosterSchedulerData.roster[itoId].itoPostName,
-            itemList.rosterSchedulerData.timeOffList[itoId].records[date]);
-        */
-        let timeOff={}
-        if (itemList.rosterSchedulerData.timeOffList[itoId].records[date]){
-            timeOff=structuredClone(itemList.rosterSchedulerData.timeOffList[itoId].records[date]);
-        }else {
-            let now=new Date();
-            now.setHours(0);
-            now.setMinutes(0);
-            timeOff={
-                description:"",
-                timeOffAmount:"",
-                timeOffEnd:new Date(now.getTime()),
-                timeOffStart:new Date(now.getTime()),
-            }
-        }
-        updateItemList({
-            itoInfo: {
-                itoId: itoId,
-                itoName: itemList.rosterSchedulerData.roster[itoId].itoName,
-                itoPostName: itemList.rosterSchedulerData.roster[itoId].itoPostName,
-            },
+    let showTimeOff = (itoId, date) => {        
+        updateItemList({            
+            itoId: itoId,
             date,
-            "timeOff": timeOff,
             "type": "showTimeOff"
         });
     }
@@ -216,8 +190,7 @@ export function useRosterScheduler() {
         isLoading: itemList.isLoading,
         isShowTimeOff: itemList.isShowTimeOff,
         rosterSchedulerData: itemList.rosterSchedulerData,
-        selectedITOInfo: itemList.selectedITOInfo,
-        selectedTimeOff: itemList.selectedTimeOff,
+        selectedITOId: itemList.selectedITOId,
         selectedTimeOffDate: itemList.selectedTimeOffDate,
         "uiAction": {
             copyRosterData,

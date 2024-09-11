@@ -4,7 +4,7 @@ import Loading from "../../common/Loading";
 import RosterSchedulerTable from "./RosterSchedulerTable";
 import TimeOffModal from "./TimeOffModal";
 export default function RosterScheduler() {
-    const { error, isLoading, isShowTimeOff, rosterSchedulerData, selectedITOInfo, selectedTimeOff, selectedTimeOffDate,uiAction } = useRosterScheduler();
+    const { error, isLoading, isShowTimeOff, rosterSchedulerData, selectedITOId, selectedTimeOffDate, uiAction } = useRosterScheduler();
     if (error) {
         return handleAPIError(error);
     }
@@ -15,12 +15,15 @@ export default function RosterScheduler() {
                 <RosterSchedulerTable
                     rosterSchedulerData={rosterSchedulerData}
                     uiAction={uiAction} />
-                <TimeOffModal
-                    date={selectedTimeOffDate}
-                    hideTimeOff={uiAction.hideTimeOff} 
-                    isShowTimeOff={isShowTimeOff}
-                    selectedITOInfo={selectedITOInfo}
-                    selectedTimeOff={selectedTimeOff}/>
+                {
+                    isShowTimeOff &&
+                    <TimeOffModal
+                        date={selectedTimeOffDate}
+                        hideTimeOff={uiAction.hideTimeOff}
+                        isShowTimeOff={isShowTimeOff}
+                        rosterSchedulerData={rosterSchedulerData}
+                        selectedITOId={selectedITOId} />
+                }
             </>
         );
     } else {

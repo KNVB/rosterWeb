@@ -1,12 +1,13 @@
-export default function ShiftCell(props){
-    let {cssClassName,children, onMouseDown, onMouseEnter,onMouseLeave,onPaste,title}=props;
-    let className=["borderCell","shiftCell"];
-    if (cssClassName !== undefined){
+export default function ShiftCell(props) {
+    let { cssClassName, children, onContextMenu, onMouseDown, onMouseEnter, onMouseLeave, onPaste, title } = props;
+    let className = ["borderCell", "shiftCell"];
+    if (cssClassName !== undefined) {
         className.push(cssClassName);
     }
     return (
-        <td             
+        <td
             className={className.join(" ")}
+            onContextMenu={onContextMenu}
             onMouseDown={onMouseDown}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
