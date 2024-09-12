@@ -1,5 +1,5 @@
 import FetchAPI from "../util/FetchAPI";
-import { Utility } from "../util/Utility";
+import Utility from "../util/Utility";
 import UndoableData from "../util/UndoableData";
 import RosterViewerData from "./RosterViewerData";
 export default class RosterSchedulerData extends RosterViewerData {

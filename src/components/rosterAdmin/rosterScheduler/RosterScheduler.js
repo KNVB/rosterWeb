@@ -2,9 +2,9 @@ import { useRosterScheduler } from "../../../hooks/useRosterScheduler";
 import handleAPIError from "../../common/handleAPIError";
 import Loading from "../../common/Loading";
 import RosterSchedulerTable from "./RosterSchedulerTable";
-import TimeOffModal from "./TimeOffModal";
+import ShiftDetailModal from "./shiftDetailModal/ShiftDetailModal";
 export default function RosterScheduler() {
-    const { error, isLoading, isShowTimeOff, rosterSchedulerData, selectedITOId, selectedTimeOffDate, uiAction } = useRosterScheduler();
+    const { error, isLoading, isShowShiftDetail, rosterSchedulerData, selectedITOId, selectedShiftDetailDate, uiAction } = useRosterScheduler();
     if (error) {
         return handleAPIError(error);
     }
@@ -16,13 +16,13 @@ export default function RosterScheduler() {
                     rosterSchedulerData={rosterSchedulerData}
                     uiAction={uiAction} />
                 {
-                    isShowTimeOff &&
-                    <TimeOffModal
-                        date={selectedTimeOffDate}
-                        hideTimeOff={uiAction.hideTimeOff}
-                        isShowTimeOff={isShowTimeOff}
+                    isShowShiftDetail &&
+                    <ShiftDetailModal
+                        hideShiftDetail={uiAction.hideShiftDetail}
+                        isShowShiftDetail={isShowShiftDetail}
                         rosterSchedulerData={rosterSchedulerData}
-                        selectedITOId={selectedITOId} />
+                        selectedITOId={selectedITOId}
+                        selectedShiftDetailDate={selectedShiftDetailDate} />
                 }
             </>
         );

@@ -29,7 +29,7 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
                 date={index + 1}
                 key={itoId + '_' + index}
                 onBlur={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
-                onContextMenu={e => showTimeOff(e, itoId, index + 1)}
+                onContextMenu={e => showShiftDetail(e, itoId, index + 1)}
                 onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
                 itoId={itoId}
                 title={shift}
@@ -42,9 +42,9 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
     for (let i = calendarDateList.length; i < 31; i++) {
         shiftCellList.push(<ShiftCell key={itoId + '_' + i}>&nbsp;</ShiftCell>)
     }
-    let showTimeOff = (e, itoId, date) => {
+    let showShiftDetail = (e, itoId, date) => {
         e.preventDefault();
-        uiAction.showTimeOff(itoId, date);
+        uiAction.showShiftDetail(itoId, date);
     }
     return (
         <tr id={"rosterRow_" + itoId}>

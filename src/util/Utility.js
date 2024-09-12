@@ -1,7 +1,19 @@
 import AdminShiftStatUtil from "./AdminShiftStatUtil";
 import ITOShiftStatUtil from "./ITOShiftStatUtil";
 
-export class Utility{    
+export default class Utility{
+    static dateFormatter = new Intl.DateTimeFormat('en-ZA', {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    });
+    static dateTimeFormatter = new Intl.DateTimeFormat('en-ZA', {
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    });    
     static genITOStat=(activeShiftList,roster,noOfWorkingDay,timeOffList)=>{
         let { getITOStat } = ITOShiftStatUtil();
         let result={};

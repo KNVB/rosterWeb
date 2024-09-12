@@ -3,9 +3,9 @@ import handleAPIError from "../common/handleAPIError";
 import Loading from "../common/Loading";
 
 import RosterTable from "./RosterTable";
-import TimeOffModal from "./TimeOffModal";
+import ShiftDetailModal from "./ShiftDetailModal";
 export default function RosterViewer() {
-    const { error, isLoading, isShowTimeOff, rosterViewerData,selectedITOInfo, selectedTimeOff, uiAction } = useRosterViewer();
+    const { error, isLoading, isShowShiftDetail, rosterViewerData, selectedITOId, selectedShiftDetailDate, uiAction } = useRosterViewer();
     if (error) {
         return handleAPIError(error);
     }
@@ -16,12 +16,13 @@ export default function RosterViewer() {
             <>
                 <RosterTable
                     rosterViewerData={rosterViewerData}
-                    uiAction={uiAction} />              
-                <TimeOffModal
-                    hideTimeOff={uiAction.hideTimeOff}
-                    isShowTimeOff={isShowTimeOff}
-                    selectedITOInfo={selectedITOInfo}
-                    selectedTimeOff={selectedTimeOff}/>
+                    uiAction={uiAction} />
+                <ShiftDetailModal
+                    hideShiftDetail={uiAction.hideShiftDetail}
+                    isShowShiftDetail={isShowShiftDetail}
+                    rosterViewerData={rosterViewerData}
+                    selectedITOId={selectedITOId}
+                    selectedShiftDetailDate={selectedShiftDetailDate} />
             </>
         );
     } else {

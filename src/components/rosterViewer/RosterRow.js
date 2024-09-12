@@ -4,6 +4,7 @@ import StatCell from "../common/cells/StatCell";
 export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, timeOff, uiAction }) {
     let className = "";
     let shift = '', shiftCellList = [];
+    //console.log(roster);
     function handleMouseEnterEvent(e) {
         e.preventDefault();
         let cell = e.target.closest("td");
@@ -14,12 +15,9 @@ export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, t
         e.preventDefault();
         uiAction.updateUI(-1, -1);
     }
-    function showTimeOffRecord(itoId,date) {
-        if (timeOff.total>0){
-            uiAction.showTimeOff(itoId,timeOff.records[date]);
-        }else {
-            return;
-        }        
+    function showTimeOffRecord(e,date) {
+        e.preventDefault();
+        uiAction.showShiftDetail(itoId,date);
     }
     calendarDateList.forEach((calendarDate, index) => {
         shift = roster.shiftList[index + 1];
@@ -28,10 +26,11 @@ export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, t
             <ShiftCell
                 cssClassName={className}
                 key={itoId + '_' + index}
+                onContextMenu={e => showTimeOffRecord(e,calendarDate.dateOfMonth)}
                 onMouseEnter={handleMouseEnterEvent}
                 onMouseLeave={handleMouseLeaveEvent}
-                title={(shift === "t") ? "show time off record" : ""}>
-                <div className="m-0 p-0" onClick={() => showTimeOffRecord(itoId,calendarDate.dateOfMonth)}>
+                title="Right Click to Show Shift Detail">
+                <div className="m-0 p-0">
                     {shift}
                 </div>
             </ShiftCell>

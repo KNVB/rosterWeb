@@ -5,8 +5,8 @@ import RosterSchedulerTableUtil from "../dataUtil/RosterSchedulerTableUtil";
 let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
-        case "hideTimeOff":
-            result.isShowTimeOff = false;
+        case "hideShiftDetail":
+            result.isShowShiftDetail = false;
             break;
         case "init":
             result.rosterSchedulerData = action.rosterSchedulerData;
@@ -22,10 +22,10 @@ let reducer = (state, action) => {
         case "setError":
             result.error = action.error;
             break;
-        case "showTimeOff":
-            result.isShowTimeOff = true;
+        case "showShiftDetail":
+            result.isShowShiftDetail = true;
             result.selectedITOId = action.itoId;           
-            result.selectedTimeOffDate = action.date;
+            result.selectedShiftDetailDate = action.date;
             break;
         case "updateLoading":
             result.isLoading = action.value;
@@ -46,13 +46,12 @@ export function useRosterScheduler() {
         error: null,
         essentialShift: "",
         isLoading: true,
-        isShowTimeOff: false,
+        isShowShiftDetail: false,
         keyboardEventHandler: null,
         rosterSchedulerData: null,
         rosterSchedulerTableUtil: new RosterSchedulerTableUtil(),
-        selectedITOInfo: null,
-        selectedTimeOff: null,
-        selectedTimeOffDate: null,
+        selectedITOId: null,        
+        selectedShiftDetailDate: null,
     });
     useEffect(() => {
         let getData = async () => {
@@ -113,9 +112,9 @@ export function useRosterScheduler() {
     }
 
     let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
-    let hideTimeOff = () => {
+    let hideShiftDetail = () => {
         updateItemList({
-            "type": "hideTimeOff"
+            "type": "hideShiftDetail"
         });
     }
     let isHighLightCell = cellIndex => {
@@ -140,11 +139,11 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
-    let showTimeOff = (itoId, date) => {        
+    let showShiftDetail = (itoId, date) => {        
         updateItemList({            
             itoId: itoId,
             date,
-            "type": "showTimeOff"
+            "type": "showShiftDetail"
         });
     }
     let startSelect = e => {
@@ -188,10 +187,10 @@ export function useRosterScheduler() {
     return {
         error: itemList.error,
         isLoading: itemList.isLoading,
-        isShowTimeOff: itemList.isShowTimeOff,
+        isShowShiftDetail: itemList.isShowShiftDetail,
         rosterSchedulerData: itemList.rosterSchedulerData,
         selectedITOId: itemList.selectedITOId,
-        selectedTimeOffDate: itemList.selectedTimeOffDate,
+        selectedShiftDetailDate: itemList.selectedShiftDetailDate,
         "uiAction": {
             copyRosterData,
             endSelect,
@@ -200,12 +199,12 @@ export function useRosterScheduler() {
             getRowIndex,
             getShiftCssClassName,
             handleKeyDown,
-            hideTimeOff,
+            hideShiftDetail,
             isHighLightCell,
             isHighLightRow,
-            pasteRosterData,
-            showTimeOff,
+            pasteRosterData,            
             setFocusCell,
+            showShiftDetail,
             startSelect,
             updatePreferredShift,
             updateRosterMonth,

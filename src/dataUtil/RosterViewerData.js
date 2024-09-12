@@ -1,6 +1,6 @@
 import FetchAPI from "../util/FetchAPI";
 import CalendarUtility from "../util/calendar/CalendarUtility";
-import { Utility } from "../util/Utility";
+import Utility from "../util/Utility";
 export default class RosterViewerData {
     #calendarUtility;
     constructor() {

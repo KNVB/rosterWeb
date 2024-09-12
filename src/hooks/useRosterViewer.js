@@ -3,9 +3,10 @@ import RosterTableUtil from "../dataUtil/RosterTableUtil";
 import RosterViewerData from "../dataUtil/RosterViewerData";
 let reducer = (state, action) => {
     let result = { ...state };
+    
     switch (action.type) {
-        case "hideTimeOff":
-            result.isShowTimeOff = false;
+        case "hideShiftDetail":
+            result.isShowShiftDetail = false;
             break;
         case "init":
             result.rosterViewerData = action.rosterViewerData;
@@ -17,10 +18,10 @@ let reducer = (state, action) => {
         case "setError":
             result.error = action.error;
             break;
-        case "showTimeOff":
-            result.selectedITOInfo=action.itoInfo;
-            result.isShowTimeOff = true;
-            result.selectedTimeOff = action.timeOffRecord;
+        case "showShiftDetail":
+            result.selectedITOId = action.itoId;
+            result.isShowShiftDetail= true;
+            result.selectedShiftDetailDate = action.date;
             break;
         case "updateLoading":
             result.isLoading = action.value;
@@ -34,11 +35,11 @@ export function useRosterViewer() {
     const [itemList, updateItemList] = useReducer(reducer, {
         error: null,
         isLoading: true,
-        isShowTimeOff: false,
+        isShowShiftDetail: false,
         rosterViewerData: null,
         rosterTableUtil: new RosterTableUtil(),
-        selectedITOInfo: null,
-        selectedTimeOff: null
+        selectedITOId: null,
+        selectedShiftDetailDate: null
     });
     useEffect(() => {
         let getData = async () => {
@@ -65,9 +66,9 @@ export function useRosterViewer() {
         else
             return "";
     }
-    let hideTimeOff = () => {
+    let hideShiftDetail = () => {
         updateItemList({
-            "type": "hideTimeOff"
+            "type": "hideShiftDetail"
         });
     }
     let isHighLightCell = cellIndex => {
@@ -76,11 +77,11 @@ export function useRosterViewer() {
     let isHighLightRow = rowIndex => {
         return itemList.rosterTableUtil.isHighLightRow(rowIndex);
     }
-    let showTimeOff = (itoId,timeOffRecord) => {
+    let showShiftDetail = (itoId, date) => {
         updateItemList({
-            itoInfo:itemList.rosterViewerData.roster[itoId],
-            timeOffRecord,
-            "type": "showTimeOff"
+            itoId,
+            date,
+            "type": "showShiftDetail"
         });
     }
     let updateRosterMonth = async (newRosterMonth) => {
@@ -103,16 +104,16 @@ export function useRosterViewer() {
     return {
         error: itemList.error,
         isLoading: itemList.isLoading,
-        isShowTimeOff: itemList.isShowTimeOff,
+        isShowShiftDetail: itemList.isShowShiftDetail,
         "rosterViewerData": itemList.rosterViewerData,
-        selectedITOInfo: itemList.selectedITOInfo,
-        selectedTimeOff: itemList.selectedTimeOff,
+        selectedITOId: itemList.selectedITOId,
+        selectedShiftDetailDate: itemList.selectedShiftDetailDate,
         "uiAction": {
             getShiftCssClassName,
-            hideTimeOff,
+            hideShiftDetail,
             isHighLightCell,
             isHighLightRow,
-            showTimeOff,
+            showShiftDetail,
             updateRosterMonth,
             updateUI
         }
