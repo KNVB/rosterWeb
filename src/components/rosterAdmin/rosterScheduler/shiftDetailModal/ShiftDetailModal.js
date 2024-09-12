@@ -15,7 +15,7 @@ export default function ShiftDetailModal({ hideShiftDetail, isShowShiftDetail, r
     } = useShiftDetailModal(rosterSchedulerData, selectedITOId, selectedShiftDetailDate);
     let resetData=e=>{
         uiAction.reset();
-        //hideShiftDetail();
+        hideShiftDetail();
     }
     let updateEndTime = newValue => {
         uiAction.updateEndTime(newValue);
@@ -23,10 +23,13 @@ export default function ShiftDetailModal({ hideShiftDetail, isShowShiftDetail, r
     let updateShiftDetail = e => {
         uiAction.updateShiftDetail(e.target.value);
     }
-    let updateShiftType = e => { }
+    let updateShiftType = e => { 
+        uiAction.updateShiftType(e.target.value);
+    }
     let updateStartTime = newValue => {
         uiAction.updateStartTime(newValue);
     }
+    
     if (selectedITOId) {       
         return (
             <Modal contentClassName='h-75' onHide={resetData} scrollable show={isShowShiftDetail} size="lg">

@@ -24,10 +24,22 @@ let reducer = (state, action) => {
             break
         case "reset":
             console.log("reset");
-            let oldRoster = structuredClone[result.rosterSchedulerData.roster[result.selectedITOId]];
-            let oldShiftDetail = structuredClone[result.rosterSchedulerData.timeOffList[action.selectedITOId].records[action.selectedShiftDetailDate]];
-            result.shiftType = oldRoster.shiftList[result.selectedShiftDetailDate];
-            result.selectedShiftDetailDate = oldShiftDetail;
+            let oldRoster = structuredClone(result.rosterSchedulerData.roster[result.selectedITOId]);
+            let oldTimeOffList = structuredClone(result.rosterSchedulerData.timeOffList[result.selectedITOId]);
+
+            if ((oldTimeOffList === undefined) ||
+                (oldTimeOffList.records[result.selectedShiftDetailDate] === undefined)) {
+                result.selectedShiftDetail = undefined;
+            } else {
+                //console.log(result.selectedShiftDetail,oldTimeOffList.records[result.selectedShiftDetailDate]);
+                result.selectedShiftDetail = oldTimeOffList.records[result.selectedShiftDetailDate];
+            }
+            if ((oldRoster === undefined) ||
+                (oldRoster.shiftList[result.selectedShiftDetailDate] === undefined)) {
+                result.shiftType = "";
+            } else {
+                result.shiftType = oldRoster.shiftList[result.selectedShiftDetailDate];
+            }
             break;
         case "updateEndTime":
             result.selectedShiftDetail.timeOffAmount = action.amount;
@@ -36,8 +48,20 @@ let reducer = (state, action) => {
         case "updateShiftDetail":
             result.selectedShiftDetail.description = action.value;
             break;
+        case "updateShiftType":
+            result.shiftType = action.value;
+            if ((action.value === "t") && (result.selectedShiftDetail === undefined)) {
+                result.selectedShiftDetail={
+                    description:"",
+                    timeOffAmount:0,
+                    timeOffEnd:new Date(),
+                    timeOffStart :new Date(),
+                } 
+            }
+            break;
         case "updateStartTime":
             result.selectedShiftDetail.timeOffStart = action.value;
+            result.selectedShiftDetail.timeOffAmount = action.amount;
             break;
         default:
             break;
@@ -75,6 +99,9 @@ export default function useShiftDetailModal(rosterSchedulerData, selectedITOId, 
     let updateShiftDetail = newValue => {
         updateItemList({ "type": "updateShiftDetail", value: newValue });
     }
+    let updateShiftType = newValue => {
+        updateItemList({ "type": "updateShiftType", value: newValue });
+    }
     let updateStartTime = newValue => {
         let amount = (itemList.selectedShiftDetail.timeOffEnd - newValue) / 1000 / 60 / 60;
         updateItemList({ amount, "type": "updateStartTime", value: newValue });
@@ -90,6 +117,7 @@ export default function useShiftDetailModal(rosterSchedulerData, selectedITOId, 
             reset,
             updateEndTime,
             updateShiftDetail,
+            updateShiftType,
             updateStartTime,
         }
     }
