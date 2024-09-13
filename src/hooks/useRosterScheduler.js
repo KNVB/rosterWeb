@@ -24,8 +24,10 @@ let reducer = (state, action) => {
             break;
         case "showShiftDetail":
             result.isShowShiftDetail = true;
+            /*
             result.selectedITOId = action.itoId;           
             result.selectedShiftDetailDate = action.date;
+            */
             break;
         case "updateLoading":
             result.isLoading = action.value;
@@ -50,8 +52,9 @@ export function useRosterScheduler() {
         keyboardEventHandler: null,
         rosterSchedulerData: null,
         rosterSchedulerTableUtil: new RosterSchedulerTableUtil(),
-        selectedITOId: null,        
+        selectedITOId: null,
         selectedShiftDetailDate: null,
+        shiftDetail: null
     });
     useEffect(() => {
         let getData = async () => {
@@ -139,8 +142,8 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
-    let showShiftDetail = (itoId, date) => {        
-        updateItemList({            
+    let showShiftDetail = (itoId, date) => {
+        updateItemList({
             itoId: itoId,
             date,
             "type": "showShiftDetail"
@@ -173,10 +176,22 @@ export function useRosterScheduler() {
         }
     }
     let updateShift = (itoId, dateOfMonth, shift) => {
-        itemList.rosterSchedulerData.updateShift(itoId, dateOfMonth, shift);
-        updateItemList({
-            type: "refresh"
-        });
+        let isShowShiftDetail = itemList.rosterSchedulerData.updateShift(itoId, dateOfMonth, shift);
+        if (isShowShiftDetail) {
+
+            let showShiftDetail = {
+                itoName: "",
+                itoPostName: "",
+                description: "",
+                timeOffAmount: 0,
+                timeOffEnd: new Date(),
+                timeOffStart: new Date(),
+            }
+        } else {
+            updateItemList({
+                type: "refresh"
+            });
+        }
     }
     let updateUI = (cellIndex, rowIndex) => {
         itemList.rosterSchedulerTableUtil.updateUI(cellIndex, rowIndex);
@@ -202,7 +217,7 @@ export function useRosterScheduler() {
             hideShiftDetail,
             isHighLightCell,
             isHighLightRow,
-            pasteRosterData,            
+            pasteRosterData,
             setFocusCell,
             showShiftDetail,
             startSelect,

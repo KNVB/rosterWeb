@@ -15,15 +15,15 @@ export default function RosterScheduler() {
                 <RosterSchedulerTable
                     rosterSchedulerData={rosterSchedulerData}
                     uiAction={uiAction} />
-                {
+                {/*
                     isShowShiftDetail &&
                     <ShiftDetailModal
                         hideShiftDetail={uiAction.hideShiftDetail}
                         isShowShiftDetail={isShowShiftDetail}
-                        rosterSchedulerData={rosterSchedulerData}
                         selectedITOId={selectedITOId}
-                        selectedShiftDetailDate={selectedShiftDetailDate} />
-                }
+                        selectedShiftDetailDate={selectedShiftDetailDate} 
+                        uiAction={uiAction}/>
+                */}
             </>
         );
     } else {
