@@ -214,6 +214,7 @@ export default class RosterSchedulerData extends RosterViewerData {
                         itoName: this.roster[itoId].itoName,
                         itoPostName: this.roster[itoId].itoPostName,
                         description: "",
+                        oldShift,
                         shiftDetailDate,
                         shiftType:"t",
                         timeOffAmount: 0,

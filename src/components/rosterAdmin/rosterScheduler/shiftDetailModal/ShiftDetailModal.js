@@ -6,7 +6,7 @@ export default function ShiftDetailModal(
         activeShiftList, isShowShiftDetail,
         shiftDetail, uiAction
     }) {
-    console.log(shiftDetail);
+    //console.log(shiftDetail);
 
     let updateEndTime = newValue => {
         if (newValue > shiftDetail.timeOffStart) {

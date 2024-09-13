@@ -28,7 +28,7 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
                 cssClassName={className.join(" ")}
                 date={index + 1}
                 key={itoId + '_' + index}
-                onBlur={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
+                onBlur={(e) => uiAction.updateShift(itoId, calendarDate.dateOfMonth, e.target)}
                 onContextMenu={e => showShiftDetail(e, itoId, index + 1)}
                 onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
                 itoId={itoId}

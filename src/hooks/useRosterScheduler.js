@@ -7,6 +7,7 @@ let reducer = (state, action) => {
     switch (action.type) {
         case "hideShiftDetail":
             result.isShowShiftDetail = false;
+            result.shiftDetail = null;
             break;
         case "init":
             result.rosterSchedulerData = action.rosterSchedulerData;
@@ -24,7 +25,7 @@ let reducer = (state, action) => {
             break;
         case "showShiftDetail":
             result.isShowShiftDetail = true;
-            result.shiftDetail= action.shiftDetail;
+            result.shiftDetail = action.shiftDetail;
             break;
         case "updateLoading":
             result.isLoading = action.value;
@@ -34,6 +35,9 @@ let reducer = (state, action) => {
                 result.rosterSchedulerData.calendarDateList,
                 result.rosterSchedulerData.itoIdList,
                 result.rosterSchedulerData.systemParam);
+            break;
+        case "updateShiftDetailShiftType":
+            result.shiftDetail.shiftType = action.value;
             break;
         default:
             break;
@@ -48,7 +52,7 @@ export function useRosterScheduler() {
         isShowShiftDetail: false,
         keyboardEventHandler: null,
         rosterSchedulerData: null,
-        rosterSchedulerTableUtil: new RosterSchedulerTableUtil(),      
+        rosterSchedulerTableUtil: new RosterSchedulerTableUtil(),
         shiftDetail: null
     });
     useEffect(() => {
@@ -170,18 +174,26 @@ export function useRosterScheduler() {
             updateItemList({ "error": error, "type": "setError" });
         }
     }
-    let updateShift = (itoId, dateOfMonth, shift) => {
+    let updateShift = (itoId, dateOfMonth, element) => {
+        let shift = element.textContent;
         let shiftDetail = itemList.rosterSchedulerData.updateShift(itoId, dateOfMonth, shift);
         if (shiftDetail) {
+            element.textContent = shiftDetail.oldShift;
             updateItemList({
                 shiftDetail,
-                "type":"showShiftDetail"
+                "type": "showShiftDetail"
             });
         } else {
             updateItemList({
                 type: "refresh"
             });
         }
+    }
+    let updateShiftDetailShiftType = newShiftType => {
+        updateItemList({
+            type: "updateShiftDetailShiftType",
+            value: newShiftType
+        });
     }
     let updateUI = (cellIndex, rowIndex) => {
         itemList.rosterSchedulerTableUtil.updateUI(cellIndex, rowIndex);
@@ -193,7 +205,7 @@ export function useRosterScheduler() {
         error: itemList.error,
         isLoading: itemList.isLoading,
         isShowShiftDetail: itemList.isShowShiftDetail,
-        rosterSchedulerData: itemList.rosterSchedulerData,        
+        rosterSchedulerData: itemList.rosterSchedulerData,
         shiftDetail: itemList.shiftDetail,
         "uiAction": {
             copyRosterData,
@@ -213,6 +225,7 @@ export function useRosterScheduler() {
             updatePreferredShift,
             updateRosterMonth,
             updateShift,
+            updateShiftDetailShiftType,
             updateUI
         }
     }
