@@ -200,14 +200,26 @@ export default class RosterSchedulerData extends RosterViewerData {
         }
     }
     updateShift(itoId, dateOfMonth, newShift) {
-        let result=false;
+        let result=null;
         let oldShift = this.roster[itoId].shiftList[dateOfMonth];
         let newRosterShift = newShift.trim();
         switch (true) {
             case ((oldShift === undefined) && (newRosterShift !== '')):
             case ((oldShift !== undefined) && (newRosterShift !== oldShift)):
                 if (newRosterShift ==="t"){
-                    result=true;
+                    let shiftDetailDate=new Date(this.rosterMonth.getTime());
+                    shiftDetailDate.setDate(dateOfMonth);
+                    result={                        
+                        itoId, 
+                        itoName: this.roster[itoId].itoName,
+                        itoPostName: this.roster[itoId].itoPostName,
+                        description: "",
+                        shiftDetailDate,
+                        shiftType:"t",
+                        timeOffAmount: 0,
+                        timeOffEnd: new Date(),
+                        timeOffStart: new Date(),
+                    };
                 }else {
                     this.roster[itoId].shiftList[dateOfMonth] = newRosterShift;
                     this.roster= Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay,this.timeOffList);

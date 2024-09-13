@@ -24,10 +24,7 @@ let reducer = (state, action) => {
             break;
         case "showShiftDetail":
             result.isShowShiftDetail = true;
-            /*
-            result.selectedITOId = action.itoId;           
-            result.selectedShiftDetailDate = action.date;
-            */
+            result.shiftDetail= action.shiftDetail;
             break;
         case "updateLoading":
             result.isLoading = action.value;
@@ -51,9 +48,7 @@ export function useRosterScheduler() {
         isShowShiftDetail: false,
         keyboardEventHandler: null,
         rosterSchedulerData: null,
-        rosterSchedulerTableUtil: new RosterSchedulerTableUtil(),
-        selectedITOId: null,
-        selectedShiftDetailDate: null,
+        rosterSchedulerTableUtil: new RosterSchedulerTableUtil(),      
         shiftDetail: null
     });
     useEffect(() => {
@@ -176,17 +171,12 @@ export function useRosterScheduler() {
         }
     }
     let updateShift = (itoId, dateOfMonth, shift) => {
-        let isShowShiftDetail = itemList.rosterSchedulerData.updateShift(itoId, dateOfMonth, shift);
-        if (isShowShiftDetail) {
-
-            let showShiftDetail = {
-                itoName: "",
-                itoPostName: "",
-                description: "",
-                timeOffAmount: 0,
-                timeOffEnd: new Date(),
-                timeOffStart: new Date(),
-            }
+        let shiftDetail = itemList.rosterSchedulerData.updateShift(itoId, dateOfMonth, shift);
+        if (shiftDetail) {
+            updateItemList({
+                shiftDetail,
+                "type":"showShiftDetail"
+            });
         } else {
             updateItemList({
                 type: "refresh"
@@ -203,9 +193,8 @@ export function useRosterScheduler() {
         error: itemList.error,
         isLoading: itemList.isLoading,
         isShowShiftDetail: itemList.isShowShiftDetail,
-        rosterSchedulerData: itemList.rosterSchedulerData,
-        selectedITOId: itemList.selectedITOId,
-        selectedShiftDetailDate: itemList.selectedShiftDetailDate,
+        rosterSchedulerData: itemList.rosterSchedulerData,        
+        shiftDetail: itemList.shiftDetail,
         "uiAction": {
             copyRosterData,
             endSelect,

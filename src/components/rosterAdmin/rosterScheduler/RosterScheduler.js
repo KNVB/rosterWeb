@@ -4,7 +4,7 @@ import Loading from "../../common/Loading";
 import RosterSchedulerTable from "./RosterSchedulerTable";
 import ShiftDetailModal from "./shiftDetailModal/ShiftDetailModal";
 export default function RosterScheduler() {
-    const { error, isLoading, isShowShiftDetail, rosterSchedulerData, selectedITOId, selectedShiftDetailDate, uiAction } = useRosterScheduler();
+    const { error, isLoading, isShowShiftDetail, rosterSchedulerData, shiftDetail, uiAction } = useRosterScheduler();
     if (error) {
         return handleAPIError(error);
     }
@@ -15,15 +15,15 @@ export default function RosterScheduler() {
                 <RosterSchedulerTable
                     rosterSchedulerData={rosterSchedulerData}
                     uiAction={uiAction} />
-                {/*
+                {
                     isShowShiftDetail &&
                     <ShiftDetailModal
-                        hideShiftDetail={uiAction.hideShiftDetail}
-                        isShowShiftDetail={isShowShiftDetail}
-                        selectedITOId={selectedITOId}
-                        selectedShiftDetailDate={selectedShiftDetailDate} 
+                        activeShiftList={rosterSchedulerData.activeShiftList}
+                       
+                        isShowShiftDetail={isShowShiftDetail}                       
+                        shiftDetail={shiftDetail} 
                         uiAction={uiAction}/>
-                */}
+                }
             </>
         );
     } else {
