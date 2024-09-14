@@ -36,8 +36,19 @@ let reducer = (state, action) => {
                 result.rosterSchedulerData.itoIdList,
                 result.rosterSchedulerData.systemParam);
             break;
+        case "updateShiftDetailDesc":
+            result.shiftDetail.description = action.value;
+            break
+        case "updateShiftDetailEndTime":
+            result.shiftDetail.timeOffEnd = action.value;
+            result.shiftDetail.timeOffAmount = action.timeOffAmount;
+            break;
         case "updateShiftDetailShiftType":
-            result.shiftDetail.shiftType = action.value;
+            result.shiftDetail.shiftType = action.value;            
+            break;
+        case "updateShiftDetailStartTime":
+            result.shiftDetail.timeOffStart = action.value;
+            result.shiftDetail.timeOffAmount = action.timeOffAmount;
             break;
         default:
             break;
@@ -142,11 +153,15 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     let showShiftDetail = (itoId, date) => {
+        let temp=itemList.rosterSchedulerData.getShiftDetail(itoId, date);
+        console.log(temp);
+        /*
         updateItemList({
             itoId: itoId,
             date,
             "type": "showShiftDetail"
         });
+        */
     }
     let startSelect = e => {
         let cell = e.target.closest("td");
@@ -189,10 +204,40 @@ export function useRosterScheduler() {
             });
         }
     }
+    let updateShiftDetail=()=>{
+        itemList.rosterSchedulerData.updateShiftDetail(itemList.shiftDetail);
+        console.log(itemList.rosterSchedulerData);
+        updateItemList({
+            type: "hideShiftDetail"
+        });
+    }
+    let updateShiftDetailDesc = newDesc => {
+        updateItemList({
+            type: "updateShiftDetailDesc",
+            value: newDesc
+        });
+    }
     let updateShiftDetailShiftType = newShiftType => {
         updateItemList({
             type: "updateShiftDetailShiftType",
             value: newShiftType
+        });
+    }
+    let updateShiftDetailEndTime = newEndTime => {
+        let timeOffAmount = ((newEndTime - itemList.shiftDetail.timeOffStart) / 1000 / 60 / 60).toFixed(2);
+        updateItemList({
+            timeOffAmount,
+            type: "updateShiftDetailEndTime",
+            value: newEndTime
+        });
+    }
+
+    let updateShiftDetailStartTime = newStartTime => {
+        let timeOffAmount = ((itemList.shiftDetail.timeOffEnd - newStartTime) / 1000 / 60 / 60).toFixed(2)
+        updateItemList({
+            timeOffAmount,
+            type: "updateShiftDetailStartTime",
+            value: newStartTime
         });
     }
     let updateUI = (cellIndex, rowIndex) => {
@@ -225,7 +270,11 @@ export function useRosterScheduler() {
             updatePreferredShift,
             updateRosterMonth,
             updateShift,
+            updateShiftDetail,
+            updateShiftDetailDesc,
+            updateShiftDetailEndTime,
             updateShiftDetailShiftType,
+            updateShiftDetailStartTime,
             updateUI
         }
     }

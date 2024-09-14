@@ -14,7 +14,21 @@ export default function ShiftDetailModal(
         } else {
             alert("The end time must later than the start time.");
         }
-
+    }
+    let updateShiftDetail = e => {
+        if (shiftDetail.timeOffStart >= shiftDetail.timeOffEnd) {
+            alert("The start time must earlier than the end time.");
+            return
+        }
+        if ((shiftDetail.shiftType === undefined) || (shiftDetail.shiftType === "")) {
+            alert("Please enter the shift type.");
+            return
+        }
+        if (shiftDetail.description === "") {
+            alert("Please enter the description.");
+            return
+        }
+        uiAction.updateShiftDetail();
     }
     let updateShiftDetailDesc = e => {
         if (e.target.value.trim() === "") {
@@ -103,7 +117,11 @@ export default function ShiftDetailModal(
                 </table>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary">Update</Button>
+                <Button
+                    onClick={updateShiftDetail}
+                    variant="secondary">
+                    Update
+                </Button>
                 <Button
                     onClick={uiAction.hideShiftDetail}
                     variant="secondary">

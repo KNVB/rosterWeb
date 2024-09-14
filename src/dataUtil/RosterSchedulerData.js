@@ -66,6 +66,29 @@ export default class RosterSchedulerData extends RosterViewerData {
             return this.#copiedData.length;
         }
     }
+    getShiftDetail = (itoId, date) => {
+        let shiftDetail=this.timeOffList[itoId].records[date];
+        let shiftDetailDate = new Date(this.rosterMonth.getTime());
+        if (shiftDetail){
+            result = {
+                itoId,
+                itoName: this.roster[itoId].itoName,
+                itoPostName: this.roster[itoId].itoPostName,
+                description: shiftDetail.description,
+                oldShift,
+                shiftDetailDate,
+                shiftType: "t",
+                timeOffAmount: 0,
+                timeOffId: -1,
+                timeOffEnd: new Date(),
+                timeOffStart: new Date(),
+            };
+        }
+        /*
+        let shiftDetailDate = new Date(this.rosterMonth.getTime());
+        shiftDetailDate.setDate(date);
+        */
+    }
     async load(year, month) {
         await super.load(year, month);
         let fetchAPI = new FetchAPI();
@@ -73,12 +96,12 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.#rosterSchedulerDataHistory = null;
         this.essentialShift = temp.essentialShift;
         this.itoIdList = Object.keys(this.roster);
-       
+
         this.preferredShiftList = structuredClone(temp.preferredShiftList);
         this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
         this.systemParam = structuredClone(temp.systemParam);
         this.systemParam.monthPickerMinDate = new Date(this.systemParam.monthPickerMinDate);
-        
+
 
         this.#rosterSchedulerDataHistory = new UndoableData({
             calendarDateList: this.calendarDateList,
@@ -86,18 +109,18 @@ export default class RosterSchedulerData extends RosterViewerData {
             preferredShiftList: this.preferredShiftList,
             previousMonthShiftList: this.previousMonthShiftList,
             roster: this.roster,
-            rosterRowIdList:this.rosterRowIdList,
+            rosterRowIdList: this.rosterRowIdList,
             timeOffList: this.timeOffList
         });
     }
-    paste = (dateOfMonth, rosterRowIdList,selectedLocation) => {
+    paste = (dateOfMonth, rosterRowIdList, selectedLocation) => {
         let copiedDataRow, copyX = this.#copiedData[0].length, copyY = this.#copiedData.length;
         let endRowNo, endX, endY, firstRowNo, index, itoId, rowId;
         let startX, startY, shiftRowType;
 
         firstRowNo = rosterRowIdList.indexOf(selectedLocation.rows[0]);
         endRowNo = rosterRowIdList.length - 1;
-      
+
         let selectX = selectedLocation.column.end - selectedLocation.column.start + 1;
         let selectY = selectedLocation.rows.length;
 
@@ -128,7 +151,7 @@ export default class RosterSchedulerData extends RosterViewerData {
                         for (let x = startX; x < endX; x++) {
                             if (x <= this.calendarDateList.length) {
                                 //console.log(shiftRowType);
-                                switch (shiftRowType){
+                                switch (shiftRowType) {
                                     case "rosterRow":
                                         this.updateShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)], this.noOfWorkingDay, this.calendarDateList.length);
                                         break
@@ -136,7 +159,7 @@ export default class RosterSchedulerData extends RosterViewerData {
                                         this.updatePreferredShift(itoId, x, copiedDataRow[x - dateOfMonth - (h * copyX)]);
                                         break;
                                     default:
-                                        break;        
+                                        break;
                                 }
                             } else {
                                 break;
@@ -168,7 +191,7 @@ export default class RosterSchedulerData extends RosterViewerData {
         let temp = await fetchAPI.getRosterSchedulerData(rosterYear, rosterMonth + 1);
         this.itoIdList = Object.keys(this.roster);
         this.preferredShiftList = structuredClone(temp.preferredShiftList);
-        this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);        
+        this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
         this.#recordRosterSchedulerData();
     }
     unDo = () => {
@@ -200,30 +223,31 @@ export default class RosterSchedulerData extends RosterViewerData {
         }
     }
     updateShift(itoId, dateOfMonth, newShift) {
-        let result=null;
+        let result = null;
         let oldShift = this.roster[itoId].shiftList[dateOfMonth];
         let newRosterShift = newShift.trim();
         switch (true) {
             case ((oldShift === undefined) && (newRosterShift !== '')):
             case ((oldShift !== undefined) && (newRosterShift !== oldShift)):
-                if (newRosterShift ==="t"){
-                    let shiftDetailDate=new Date(this.rosterMonth.getTime());
+                if (newRosterShift === "t") {
+                    let shiftDetailDate = new Date(this.rosterMonth.getTime());
                     shiftDetailDate.setDate(dateOfMonth);
-                    result={                        
-                        itoId, 
+                    result = {
+                        itoId,
                         itoName: this.roster[itoId].itoName,
                         itoPostName: this.roster[itoId].itoPostName,
                         description: "",
                         oldShift,
                         shiftDetailDate,
-                        shiftType:"t",
+                        shiftType: "t",
                         timeOffAmount: 0,
+                        timeOffId: -1,
                         timeOffEnd: new Date(),
                         timeOffStart: new Date(),
                     };
-                }else {
+                } else {
                     this.roster[itoId].shiftList[dateOfMonth] = newRosterShift;
-                    this.roster= Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay,this.timeOffList);
+                    this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay, this.timeOffList);
                     this.#recordRosterSchedulerData();
                 }
                 break;
@@ -232,7 +256,19 @@ export default class RosterSchedulerData extends RosterViewerData {
         }
         return result;
     }
-
+    updateShiftDetail(newShiftDetail) {
+        let dateOfMonth = newShiftDetail.shiftDetailDate.getDate();
+        let temp = {
+            description: newShiftDetail.description,
+            timeOffAmount: newShiftDetail.timeOffAmount,
+            timeOffEnd: newShiftDetail.timeOffEnd,
+            timeOffId: newShiftDetail.timeOffId,
+            timeOffStart: newShiftDetail.timeOffStart,
+        };
+        this.roster[newShiftDetail.itoId].shiftList[dateOfMonth] = "t";
+        this.timeOffList[newShiftDetail.itoId].records[dateOfMonth] = temp;
+        this.timeOffList[newShiftDetail.itoId].total += newShiftDetail.timeOffAmount;
+    }
     //=========================================================================================================================================
     #recordRosterSchedulerData() {
         this.#rosterSchedulerDataHistory.set({
