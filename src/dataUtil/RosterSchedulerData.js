@@ -247,6 +247,10 @@ export default class RosterSchedulerData extends RosterViewerData {
                     };
                 } else {
                     this.roster[itoId].shiftList[dateOfMonth] = newRosterShift;
+                    if (this.timeOffList[itoId].records[dateOfMonth]){
+                        this.timeOffList[itoId].total-=this.timeOffList[itoId].records[dateOfMonth].timeOffAmount;
+                        delete this.timeOffList[itoId].records[dateOfMonth];
+                    }
                     this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay, this.timeOffList);
                     this.#recordRosterSchedulerData();
                 }
