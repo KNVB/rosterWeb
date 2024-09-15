@@ -26,7 +26,7 @@ export default function KeyboardEventHandler(itemList, updateItemList) {
                     } else {
                         handleArrowKeyEvent(e, 0, 1);
                     }
-                    break;
+                    break;                   
                 case "y"://handle redo 
                     if (e.ctrlKey) {
                         e.preventDefault();

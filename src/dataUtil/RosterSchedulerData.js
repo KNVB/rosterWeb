@@ -66,6 +66,9 @@ export default class RosterSchedulerData extends RosterViewerData {
             return this.#copiedData.length;
         }
     }
+    getShift = (itoId, date) => {
+        return this.roster[itoId].shiftList[date]??"";
+    }
     getShiftDetail = (itoId, date) => {
         let shiftDetailDate = new Date(this.rosterMonth.getTime());
         let result = {

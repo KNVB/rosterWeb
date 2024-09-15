@@ -44,7 +44,7 @@ let reducer = (state, action) => {
             result.shiftDetail.timeOffAmount = action.timeOffAmount;
             break;
         case "updateShiftDetailShiftType":
-            result.shiftDetail.shiftType = action.value;            
+            result.shiftDetail.shiftType = action.value;
             break;
         case "updateShiftDetailStartTime":
             result.shiftDetail.timeOffStart = action.value;
@@ -125,6 +125,11 @@ export function useRosterScheduler() {
     }
 
     let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
+    let handleBlur = (newShift, itoId, date) => {
+        newShift = newShift.trim();
+        itemList.rosterSchedulerData.updateShift(itoId, date, newShift);
+        updateItemList({ type: "refresh" });
+    }
     let hideShiftDetail = () => {
         updateItemList({
             "type": "hideShiftDetail"
@@ -153,7 +158,7 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     let showShiftDetail = (itoId, date) => {
-        let temp=itemList.rosterSchedulerData.getShiftDetail(itoId, date);
+        let temp = itemList.rosterSchedulerData.getShiftDetail(itoId, date);
         console.log(temp);
         /*
         updateItemList({
@@ -204,7 +209,7 @@ export function useRosterScheduler() {
             });
         }
     }
-    let updateShiftDetail=()=>{
+    let updateShiftDetail = () => {
         itemList.rosterSchedulerData.updateShiftDetail(itemList.shiftDetail);
         console.log(itemList.rosterSchedulerData);
         updateItemList({
@@ -259,6 +264,7 @@ export function useRosterScheduler() {
             getPreferredShiftCellCssClassName,
             getRowIndex,
             getShiftCssClassName,
+            handleBlur,
             handleKeyDown,
             hideShiftDetail,
             isHighLightCell,
