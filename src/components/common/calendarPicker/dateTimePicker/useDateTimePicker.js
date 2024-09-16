@@ -22,12 +22,10 @@ let genDateObj = (date, weekDay, selectedDate) => {
 }
 let genMonthlyCalendar = (selectedDate) => {
     let temp = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
-    /*
     console.log("===================");
     console.log("selectedDate:" + selectedDate);
     console.log("temp:" + temp);
     console.log("===================");
-    */
     let monthEndDate = temp.getDate();
     let monthlyCalendar = { rowList: [] };
     temp = new Date(selectedDate.getTime());

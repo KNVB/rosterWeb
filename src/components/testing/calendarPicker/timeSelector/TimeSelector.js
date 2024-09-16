@@ -2,15 +2,34 @@ import "./TimeSelector.css";
 import useTimeSelector from "./useTimeSelector";
 export default function TimeSelector({ getSelectedTime, value }) {
     const { aPM, hour, minute, selectedItem, action } = useTimeSelector(value);
+    let downValue = () => {
+        switch (selectedItem) {
+            case "APM":
+                toggleAPM();
+                break;
+            case "hour":
+                getSelectedTime(action.downHour());
+                break;
+            case "minute":
+                getSelectedTime(action.downMin());
+                break;
+            default:
+                break;
+        }
+    }
     let handleClick = (fieldName, element) => {
         action.updateSelectedItem(fieldName);
         let value = element.value;
         element.value = "";
         element.value = value;
     }
+    let toggleAPM = () => {
+        getSelectedTime(action.toggleAPM());
+    }
     let updateHourFieldValue = (element) => {
         let temp = element.value;
         let result;
+        //console.log(temp,(Number(temp) < Number(element.max)));
         if (Number(temp) < Number(element.max)) {
             if ((temp === "0") || (temp === "")) {
                 result = 12;
@@ -18,42 +37,47 @@ export default function TimeSelector({ getSelectedTime, value }) {
                 result = Number(temp);
             }
         } else {
-            switch (true){
+            switch (true) {
                 case (Number(temp) === Number(element.max)):
-                    result=1;
+                    result = 1;
                     break;
-                case (temp === "0") :
-                        
-
+                case (temp === "0"):
+                    result = 12;
+                    break;
+                default:
+                    temp = temp.substring(temp.length - 1);
+                    result = Number(temp);
+                    break;
             }
-            /*
-            swith (true) 
-                
-
-            }
-            
-            if 
-                temp=1;
-            temp = temp.substring(temp.length - 1);
-            
-            if (temp === "0") {
-                result = 12;
-            } else {
-                result = Number(temp);
-            }*/
         }
-        getSelectedTime(action.updateTimeFieldValue("hour" , String(result).padStart(2, '0')));
+        //console.log("result="+result);
+        getSelectedTime(action.updateTimeFieldValue("hour", String(result).padStart(2, '0')));
     }
-    let updateMinuteField=element=>{
+    let updateMinuteField = element => {
         let temp = element.value;
         let result;
         if (Number(temp) < Number(element.max)) {
             result = Number(temp);
-        }else {
+        } else {
             temp = temp.substring(temp.length - 1);
             result = Number(temp);
         }
-        getSelectedTime(action.updateTimeFieldValue("minute" , String(result).padStart(2, '0')));
+        getSelectedTime(action.updateTimeFieldValue("minute", String(result).padStart(2, '0')));
+    }
+    let upValue = () => {
+        switch (selectedItem) {
+            case "APM":
+                toggleAPM();
+                break;
+            case "hour":
+                getSelectedTime(action.upHour());
+                break;
+            case "minute":
+                getSelectedTime(action.upMin());
+                break;
+            default:
+                break;
+        }
     }
     return (
         <div className="timeSelector">
@@ -73,6 +97,15 @@ export default function TimeSelector({ getSelectedTime, value }) {
                 onClick={e => handleClick("minute", e.target)}
                 type="number"
                 value={minute} />&nbsp;
+            <span
+                className={"timeSelectorDigit" + (selectedItem === "APM" ? " selectedItem" : "")}
+                onClick={() => action.updateSelectedItem("APM")}
+                >{aPM}
+            </span>
+            <div className="timeSelectorUpDown">
+                <div onClick={upValue}>▲</div>
+                <div onClick={downValue}>▼</div>
+            </div>      
         </div>
     );
 }
