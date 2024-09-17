@@ -20,8 +20,8 @@ export default function TimeSelector({ getSelectedTime, value }) {
     let handleClick = (fieldName, element) => {
         action.updateSelectedItem(fieldName);
         let value = element.value;
-        element.value = "";
-        element.value = value;
+        element.value = "";   //This is a trick for 
+        element.value = value;//setting cursor at the end of the input box
     }
     let toggleAPM = () => {
         getSelectedTime(action.toggleAPM());

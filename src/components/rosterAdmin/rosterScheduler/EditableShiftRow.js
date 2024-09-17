@@ -5,7 +5,7 @@ import StatCell from "../../common/cells/StatCell";
 export default function EditableShiftRow({ calendarDateList, itoId, previousMonthShiftList, roster, rowIndex, systemParam, timeOff, uiAction }) {
     let className = '';
     let shift = '', shiftCellList = [];
-
+    //console.log(roster);
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         className = '';
         shift = '';

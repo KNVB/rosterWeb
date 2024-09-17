@@ -241,7 +241,6 @@ export function useRosterScheduler() {
     }
     let updateShiftDetail = () => {
         itemList.rosterSchedulerData.updateShiftDetail(itemList.shiftDetail);
-        console.log(itemList.rosterSchedulerData);
         updateItemList({
             type: "hideShiftDetail"
         });
