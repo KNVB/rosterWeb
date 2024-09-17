@@ -7,11 +7,10 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
     #maxCellIndex; #maxRowIndex; #minCellIndex;
     #minX = -1; #minY = -1; #maxX = -1; #maxY = -1;
     #minRowIndex = 5;
-    constructor(){
+    constructor() {
         super();
-        this.rosterRowIdList=[];
+        this.rosterRowIdList = [];
     }
-   
     clearCopiedRegion = () => {
         this.#copiedRegion.clear();
     }
@@ -21,28 +20,15 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
             this.#isFirstInput = true;
         }
     }
-    init = (calendarDateList, itoIdList, systemParam) => {
-        this.#maxCellIndex = systemParam.noOfPrevDate + calendarDateList.length;
-        //this.#maxRowIndex = itoIdList.length * 2 + 4;
-        this.#maxRowIndex = itoIdList.length * 2 + this.#minRowIndex - 1;
-        this.#minCellIndex = systemParam.noOfPrevDate + 1;
-        this.#minX = -1; this.#minY = -1; this.#maxX = -1; this.#maxY = -1;
-        this.#copiedRegion.clear();
-        this.rosterRowIdList=[];
-        itoIdList.forEach(itoId => {
-            this.rosterRowIdList.push("rosterRow_" + itoId);
-            this.rosterRowIdList.push("preferredShiftRow_" + itoId);
-        });
-    }
     getCopyRegionLocation = () => {
-        let result=this.getSelectedLocation();
-        this.#copiedRegion.init({ maxX:this.#maxX, minX:this.#minX, minY:this.#minY, maxY:this.#maxY });
+        let result = this.getSelectedLocation();
+        this.#copiedRegion.init({ maxX: this.#maxX, minX: this.#minX, minY: this.#minY, maxY: this.#maxY });
         return result;
     }
-    getNextCell = (cell, yOffset, xOffset) => {
+    getNextCell = (cell, xOffset, yOffset) => {
         let nextCellIndex, nextRowIndex;
         let row = cell.closest("tr");
-        console.log(this.#minCellIndex, this.#maxCellIndex, this.#minRowIndex, this.#maxRowIndex);
+        //console.log(this.#minCellIndex, this.#maxCellIndex, this.#minRowIndex, this.#maxRowIndex);
         switch (true) {
             case (yOffset < 0):
                 nextRowIndex = row.rowIndex - 1;
@@ -86,8 +72,8 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
         }
         return { cellIndex: nextCellIndex, rowIndex: nextRowIndex }
     }
-    getRowIndex=rowName=>{
-        return this.rosterRowIdList.indexOf(rowName)+this.#minRowIndex;
+    getRowIndex = rowName => {
+        return this.rosterRowIdList.indexOf(rowName) + this.#minRowIndex;
     }
     getSelectedCssClass = (cellIndex, rowIndex) => {
         let result = this.#copiedRegion.getCopiedClass(cellIndex, rowIndex);
@@ -116,6 +102,19 @@ export default class RosterSchedulerTableUtil extends RosterTableUtil {
             result.rows.push(row.id);
         }
         return result;
+    }
+    init = (calendarDateList, itoIdList, systemParam) => {
+        this.#maxCellIndex = systemParam.noOfPrevDate + calendarDateList.length;
+        //this.#maxRowIndex = itoIdList.length * 2 + 4;
+        this.#maxRowIndex = itoIdList.length * 2 + this.#minRowIndex - 1;
+        this.#minCellIndex = systemParam.noOfPrevDate + 1;
+        this.#minX = -1; this.#minY = -1; this.#maxX = -1; this.#maxY = -1;
+        this.#copiedRegion.clear();
+        this.rosterRowIdList = [];
+        itoIdList.forEach(itoId => {
+            this.rosterRowIdList.push("rosterRow_" + itoId);
+            this.rosterRowIdList.push("preferredShiftRow_" + itoId);
+        });
     }
     isFirstInput = () => {
         return this.#isFirstInput;

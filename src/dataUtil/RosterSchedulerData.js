@@ -85,6 +85,11 @@ export default class RosterSchedulerData extends RosterViewerData {
             result.timeOffId = shiftDetail.timeOffId;
             result.timeOffEnd = shiftDetail.timeOffEnd;
             result.timeOffStart = shiftDetail.timeOffStart;
+        }else {
+            let shift = this.roster[itoId].shiftList[date];
+            if (shift){
+                result.shiftType =shift;
+            }
         }
         /*
         let shiftDetailDate = new Date(this.rosterMonth.getTime());

@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from "react";
-import KeyboardEventHandler from "../util/KeyboardEventHandler";
+import KeyboardEventHandler from "../util/KeyboardEventHandler.js";
 import RosterSchedulerData from "../dataUtil/RosterSchedulerData";
 import RosterSchedulerTableUtil from "../dataUtil/RosterSchedulerTableUtil";
 let reducer = (state, action) => {
@@ -93,6 +93,16 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerData.copy(copyRegion);
         updateItemList({ type: "refresh" });
     }
+    let deleteSelectedData=()=>{
+        let selectedLocation = itemList.rosterSchedulerTableUtil.getSelectedLocation();
+        selectedLocation.column.end -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        selectedLocation.column.start -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        itemList.rosterSchedulerData.deleteSelectedData(
+            selectedLocation,
+            itemList.rosterSchedulerData.noOfWorkingDay,
+            itemList.rosterSchedulerData.calendarDateList.length);
+        updateItemList({ type: "refresh" });
+    }
     let endSelect = () => {
         itemList.rosterSchedulerTableUtil.endSelect();
         updateItemList({ type: "refresh" });
@@ -120,14 +130,26 @@ export function useRosterScheduler() {
     let getRowIndex = rowName => {
         return itemList.rosterSchedulerTableUtil.getRowIndex(rowName);
     }
+  
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
     }
 
-    let { handleKeyDown } = KeyboardEventHandler(itemList, updateItemList);
+    let { handleKeyDown } = KeyboardEventHandler();
     let handleBlur = (newShift, itoId, date) => {
         newShift = newShift.trim();
         itemList.rosterSchedulerData.updateShift(itoId, date, newShift);
+        updateItemList({ type: "refresh" });
+    }
+    let handleEscKeyEvent=()=>{
+        itemList.rosterSchedulerTableUtil.clearCopiedRegion();
+        itemList.rosterSchedulerData.clearCopiedData();
+        updateItemList({ type: "refresh" });
+    }
+    let handleArrowKeyEvent = (cell, xOffset, yOffset) => {
+        let nextCell = itemList.rosterSchedulerTableUtil.getNextCell(cell, xOffset, yOffset);
+        itemList.rosterSchedulerTableUtil.selectCell(nextCell.cellIndex, nextCell.rowIndex);
+        itemList.rosterSchedulerTableUtil.select(nextCell.cellIndex, nextCell.rowIndex);
         updateItemList({ type: "refresh" });
     }
     let hideShiftDetail = () => {
@@ -141,6 +163,10 @@ export function useRosterScheduler() {
     let isHighLightRow = rowIndex => {
         return itemList.rosterSchedulerTableUtil.isHighLightRow(rowIndex);
     }
+    let isSingleCellSelected = () => {
+        return (itemList.rosterSchedulerTableUtil.isFirstInput())
+    }
+
     let pasteRosterData = (dateOfMonth, e) => {
         e.preventDefault();
         let rowCount = itemList.rosterSchedulerData.getCopyDataRowCount();
@@ -153,20 +179,20 @@ export function useRosterScheduler() {
             updateItemList({ type: "refresh" });
         }
     }
+    let reDo=()=>{
+        itemList.rosterSchedulerData.reDo();
+        updateItemList({ type: "refresh" });
+    }
     let setFocusCell = e => {
         itemList.rosterSchedulerTableUtil.setFocusCell(e);
         updateItemList({ type: "refresh" });
     }
     let showShiftDetail = (itoId, date) => {
         let temp = itemList.rosterSchedulerData.getShiftDetail(itoId, date);
-        console.log(temp);
-        /*
         updateItemList({
-            itoId: itoId,
-            date,
+            shiftDetail: temp,
             "type": "showShiftDetail"
         });
-        */
     }
     let startSelect = e => {
         let cell = e.target.closest("td");
@@ -175,6 +201,10 @@ export function useRosterScheduler() {
         e.preventDefault();
         itemList.rosterSchedulerTableUtil.selectCell(cell.cellIndex, rowIndex);
         itemList.rosterSchedulerTableUtil.startSelect(cell.cellIndex, rowIndex);
+        updateItemList({ type: "refresh" });
+    }
+    let unDo=()=>{
+        itemList.rosterSchedulerData.unDo();
         updateItemList({ type: "refresh" });
     }
     let updatePreferredShift = (itoId, dateOfMonth, shift) => {
@@ -259,20 +289,26 @@ export function useRosterScheduler() {
         shiftDetail: itemList.shiftDetail,
         "uiAction": {
             copyRosterData,
+            deleteSelectedData,
             endSelect,
             getEditableShiftCellCssClassName,
             getPreferredShiftCellCssClassName,
-            getRowIndex,
+            getRowIndex,            
             getShiftCssClassName,
             handleBlur,
+            handleEscKeyEvent,
             handleKeyDown,
+            handleArrowKeyEvent,
             hideShiftDetail,
             isHighLightCell,
             isHighLightRow,
+            isSingleCellSelected,
             pasteRosterData,
+            reDo,
             setFocusCell,
             showShiftDetail,
             startSelect,
+            unDo,
             updatePreferredShift,
             updateRosterMonth,
             updateShift,

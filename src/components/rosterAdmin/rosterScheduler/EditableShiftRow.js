@@ -5,7 +5,7 @@ import StatCell from "../../common/cells/StatCell";
 export default function EditableShiftRow({ calendarDateList, itoId, previousMonthShiftList, roster, rowIndex, systemParam, timeOff, uiAction }) {
     let className = '';
     let shift = '', shiftCellList = [];
-  
+
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         className = '';
         shift = '';
@@ -29,7 +29,8 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
                 cssClassName={className.join(" ")}
                 date={index + 1}
                 key={itoId + '_' + index}
-                onBlur={e=>uiAction.handleBlur(e.target.textContent, itoId, index + 1)}
+                keyDownHandler={e => uiAction.handleKeyDown("editableShiftCell", index + 1, e, itoId, uiAction)}
+                onBlur={e => uiAction.handleBlur(e.target.textContent, itoId, index + 1)}
                 onContextMenu={e => showShiftDetail(e, itoId, index + 1)}
                 onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
                 itoId={itoId}

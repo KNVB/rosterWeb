@@ -5,11 +5,11 @@ import StatCell from "../../common/cells/StatCell";
 export default function PreferredShiftRow({ calendarDateList, itoId, preferredShiftList, rowIndex, systemParam, uiAction }) {
     let className = '';
     let preferredShift = '', shiftCellList = [];
-    
+
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         shiftCellList.push(<ShiftCell key={"prev-preferred-" + i} />)
     }
-   
+
     calendarDateList.forEach((calendarDate, i) => {
         preferredShift = "";
         className = uiAction.getPreferredShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
@@ -20,13 +20,14 @@ export default function PreferredShiftRow({ calendarDateList, itoId, preferredSh
             <EditableShiftCell
                 cssClassName={className.join(" ")}
                 key={"preferred_" + itoId + '_' + i}
-                onBlur={(e) => uiAction.updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
-                onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
+                keyDownHandler={e => uiAction.handleKeyDown("preferShiftCell", i + 1, e, itoId, uiAction)}
+                onBlur={e => uiAction.updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
+                onPaste={e => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
                 uiAction={uiAction}>
                 {preferredShift}
             </EditableShiftCell>
         );
-    });    
+    });
     for (let i = calendarDateList.length; i < 31; i++) {
         shiftCellList.push(<ShiftCell key={"preferred_" + itoId + '_' + i} />);
     }
@@ -36,7 +37,7 @@ export default function PreferredShiftRow({ calendarDateList, itoId, preferredSh
                 Preferred Shift
             </NameCell>
             {shiftCellList}
-            <td className='borderCell' colSpan={6}>              
+            <td className='borderCell' colSpan={6}>
             </td>
             <StatCell></StatCell>
             <StatCell></StatCell>

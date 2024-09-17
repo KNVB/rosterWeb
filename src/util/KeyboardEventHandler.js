@@ -1,79 +1,61 @@
-export default function KeyboardEventHandler(itemList, updateItemList) {
-    const handleKeyDown = e => {
-        if (itemList.rosterSchedulerTableUtil.isFirstInput()) {
+export default function KeyboardEventHandler() {
+    const handleKeyDown = (cellType, date, e, itoId, uiAction) => {
+        if (uiAction.isSingleCellSelected()) {
             switch (e.key) {
                 case "ArrowDown"://handle down arrow key event
-                    handleArrowKeyEvent(e, 1, 0);
+                    handleArrowKeyEvent(e, 0, 1, uiAction);
                     break;
                 case "ArrowLeft"://handle left arrow key event
-                    handleArrowKeyEvent(e, 0, -1);
+                    handleArrowKeyEvent(e, -1, 0, uiAction);
                     break;
                 case "ArrowRight"://handle right arrow key event
-                    handleArrowKeyEvent(e, 0, 1);
+                    handleArrowKeyEvent(e, 1, 0, uiAction);
                     break;
                 case "ArrowUp"://handle up arrow key event
-                    handleArrowKeyEvent(e, -1, 0);
+                    handleArrowKeyEvent(e, 0, -1, uiAction);
                     break;
                 case "Delete"://handle delete key event
-                    handleDelKeyEvent(e);
+                    handleDelKeyEvent(e, uiAction);
                     break;
                 case "Escape"://handle esc key event
-                    handleEscKeyEvent(e);
+                    handleEscKeyEvent(e, uiAction);
                     break;
                 case "Tab"://handle tab key
                     if (e.shiftKey) {
-                        handleArrowKeyEvent(e, 0, -1);
+                        handleArrowKeyEvent(e, -1, 0, uiAction);
                     } else {
-                        handleArrowKeyEvent(e, 0, 1);
+                        handleArrowKeyEvent(e, 1, 0, uiAction);
                     }
-                    break;                   
+                    break;
                 case "y"://handle redo 
                     if (e.ctrlKey) {
                         e.preventDefault();
-                        itemList.rosterSchedulerData.reDo();
-                        updateItemList({ type: "refresh" });
+                        uiAction.reDo();
                     }
-                    break;
+                    break
                 case "z"://handle undo 
                     if (e.ctrlKey) {
-                        e.preventDefault();                        
-                        itemList.rosterSchedulerData.unDo();
-                        updateItemList({ type: "refresh" });
+                        e.preventDefault();
+                        uiAction.unDo();
                     }
-                    break;
+                    break
                 default:
                     break
             }
         }
     }
-    const handleArrowKeyEvent = (e, yOffset, xOffset) => {
+    const handleArrowKeyEvent = (e, xOffset, yOffset, uiAction) => {
         e.preventDefault();
         let cell = e.target.closest("td");
-        let nextCell = itemList.rosterSchedulerTableUtil.getNextCell(cell, yOffset, xOffset);
-        itemList.rosterSchedulerTableUtil.selectCell(nextCell.cellIndex, nextCell.rowIndex);
-        itemList.rosterSchedulerTableUtil.select(nextCell.cellIndex, nextCell.rowIndex);
-        updateItemList({ type: "refresh" });
+        uiAction.handleArrowKeyEvent(cell, xOffset, yOffset);
     }
-    const handleDelKeyEvent = (e) => {
+    const handleDelKeyEvent = (e, uiAction) => {
         e.preventDefault();
-        let selectedLocation = getSelectedLocation(itemList.rosterSchedulerTableUtil, itemList.rosterSchedulerData.systemParam);        
-        itemList.rosterSchedulerData.deleteSelectedData(
-            selectedLocation, 
-            itemList.rosterSchedulerData.noOfWorkingDay, 
-            itemList.rosterSchedulerData.calendarDateList.length);
-        updateItemList({ type: "refresh" });
+        uiAction.deleteSelectedData();
     }
-    const handleEscKeyEvent = (e) => {
+    const handleEscKeyEvent = (e, uiAction) => {
         e.preventDefault();
-        itemList.rosterSchedulerTableUtil.clearCopiedRegion();
-        itemList.rosterSchedulerData.clearCopiedData();
-        updateItemList({ type: "refresh" });
-    }
-    let getSelectedLocation = (rosterSchedulerTableUtil, systemParam) => {
-        let selectedLocation = rosterSchedulerTableUtil.getSelectedLocation();
-        selectedLocation.column.end -= systemParam.noOfPrevDate;
-        selectedLocation.column.start -= systemParam.noOfPrevDate;
-        return selectedLocation;
+        uiAction.handleEscKeyEvent();
     }
     return { handleKeyDown };
 }
