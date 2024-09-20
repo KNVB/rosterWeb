@@ -45,6 +45,13 @@ let reducer = (state, action) => {
             break;
         case "updateShiftDetailShiftType":
             result.shiftDetail.shiftType = action.value;
+            if (action.value === "t") {
+                result.shiftDetail.description = "";
+                result.shiftDetail.timeOffAmount = 0;
+                result.shiftDetail.timeOffId = -1;
+                result.shiftDetail.timeOffEnd = new Date(result.shiftDetail.shiftDetailDate.getTime());
+                result.shiftDetail.timeOffStart = new Date(result.shiftDetail.shiftDetailDate.getTime());
+            }
             break;
         case "updateShiftDetailStartTime":
             result.shiftDetail.timeOffStart = action.value;
@@ -93,7 +100,7 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerData.copy(copyRegion);
         updateItemList({ type: "refresh" });
     }
-    let deleteSelectedData=()=>{
+    let deleteSelectedData = () => {
         let selectedLocation = itemList.rosterSchedulerTableUtil.getSelectedLocation();
         selectedLocation.column.end -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
         selectedLocation.column.start -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
@@ -130,7 +137,7 @@ export function useRosterScheduler() {
     let getRowIndex = rowName => {
         return itemList.rosterSchedulerTableUtil.getRowIndex(rowName);
     }
-  
+
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
     }
@@ -141,7 +148,7 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerData.updateShift(itoId, date, newShift);
         updateItemList({ type: "refresh" });
     }
-    let handleEscKeyEvent=()=>{
+    let handleEscKeyEvent = () => {
         itemList.rosterSchedulerTableUtil.clearCopiedRegion();
         itemList.rosterSchedulerData.clearCopiedData();
         updateItemList({ type: "refresh" });
@@ -179,7 +186,7 @@ export function useRosterScheduler() {
             updateItemList({ type: "refresh" });
         }
     }
-    let reDo=()=>{
+    let reDo = () => {
         itemList.rosterSchedulerData.reDo();
         updateItemList({ type: "refresh" });
     }
@@ -203,7 +210,7 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.startSelect(cell.cellIndex, rowIndex);
         updateItemList({ type: "refresh" });
     }
-    let unDo=()=>{
+    let unDo = () => {
         itemList.rosterSchedulerData.unDo();
         updateItemList({ type: "refresh" });
     }
@@ -258,7 +265,7 @@ export function useRosterScheduler() {
         });
     }
     let updateShiftDetailEndTime = newEndTime => {
-        let timeOffAmount = ((newEndTime - itemList.shiftDetail.timeOffStart) / 1000 / 60 / 60).toFixed(2);
+        let timeOffAmount = ((newEndTime - itemList.shiftDetail.timeOffStart) / 1000 / 60 / 60);
         updateItemList({
             timeOffAmount,
             type: "updateShiftDetailEndTime",
@@ -267,7 +274,7 @@ export function useRosterScheduler() {
     }
 
     let updateShiftDetailStartTime = newStartTime => {
-        let timeOffAmount = ((itemList.shiftDetail.timeOffEnd - newStartTime) / 1000 / 60 / 60).toFixed(2)
+        let timeOffAmount = ((itemList.shiftDetail.timeOffEnd - newStartTime) / 1000 / 60 / 60);
         updateItemList({
             timeOffAmount,
             type: "updateShiftDetailStartTime",
@@ -292,7 +299,7 @@ export function useRosterScheduler() {
             endSelect,
             getEditableShiftCellCssClassName,
             getPreferredShiftCellCssClassName,
-            getRowIndex,            
+            getRowIndex,
             getShiftCssClassName,
             handleBlur,
             handleEscKeyEvent,

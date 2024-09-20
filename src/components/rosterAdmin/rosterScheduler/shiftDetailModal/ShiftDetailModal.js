@@ -96,13 +96,13 @@ export default function ShiftDetailModal(
                                 <tr>
                                     <td className='border border-dark pe-1 text-end'>Start Time</td>
                                     <td className="border border-dark ps-1">
-                                        <DateTimePicker onChange={value => updateStartTime(value)} value={shiftDetail.timeOffStart} />
+                                        <DateTimePicker getSelectedValue={value => updateStartTime(value)} value={shiftDetail.timeOffStart} />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td className='border border-dark pe-1 text-end'>End Time</td>
                                     <td className="border border-dark ps-1">
-                                        <DateTimePicker onChange={value => updateEndTime(value)} value={shiftDetail.timeOffEnd} />
+                                        <DateTimePicker getSelectedValue={value => updateEndTime(value)} value={shiftDetail.timeOffEnd} />
                                     </td>
                                 </tr>
                                 <tr>

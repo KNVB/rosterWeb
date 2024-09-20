@@ -71,6 +71,7 @@ export default class RosterSchedulerData extends RosterViewerData {
     }
     getShiftDetail = (itoId, date) => {
         let shiftDetailDate = new Date(this.rosterMonth.getTime());
+        shiftDetailDate.setDate(date);
         let result = {
             itoId,
             itoName: this.roster[itoId].itoName,
@@ -94,8 +95,8 @@ export default class RosterSchedulerData extends RosterViewerData {
                 result.description = "";
                 result.timeOffAmount = 0;
                 result.timeOffId = -1;
-                result.timeOffEnd = new Date();
-                result.timeOffStart = new Date();
+                result.timeOffEnd = new Date(shiftDetailDate.getTime());
+                result.timeOffStart = new Date(shiftDetailDate.getTime());
             }
         }
         return result
@@ -253,8 +254,8 @@ export default class RosterSchedulerData extends RosterViewerData {
                         shiftType: "t",
                         timeOffAmount: 0,
                         timeOffId: -1,
-                        timeOffEnd: new Date(),
-                        timeOffStart: new Date(),
+                        timeOffEnd: new Date(shiftDetailDate.getTime()),
+                        timeOffStart: new Date(shiftDetailDate.getTime()),
                     };
                 } else {
                     this.roster[itoId].shiftList[dateOfMonth] = newRosterShift;
@@ -282,8 +283,13 @@ export default class RosterSchedulerData extends RosterViewerData {
                 timeOffId: newShiftDetail.timeOffId,
                 timeOffStart: newShiftDetail.timeOffStart,
             };
-            this.timeOffList[newShiftDetail.itoId].total += newShiftDetail.timeOffAmount;
+            //console.log(this.timeOffList[newShiftDetail.itoId].total,newShiftDetail.timeOffAmount);
             this.timeOffList[newShiftDetail.itoId].records[dateOfMonth] = temp;
+            temp=0;
+            Object.values(this.timeOffList[newShiftDetail.itoId].records).forEach(timeOffRecord=>{
+                temp+=timeOffRecord.timeOffAmount;
+            });
+            this.timeOffList[newShiftDetail.itoId].total=temp;
         }
         this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay, this.timeOffList);
     }
