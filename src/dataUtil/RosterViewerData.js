@@ -1,5 +1,6 @@
 import FetchAPI from "../util/FetchAPI";
 import CalendarUtility from "../util/calendar/CalendarUtility";
+import ShiftDetail from "./ShiftDetail";
 import Utility from "../util/Utility";
 export default class RosterViewerData {
     #calendarUtility;
@@ -27,6 +28,28 @@ export default class RosterViewerData {
             return this.activeShiftList[shiftType].cssClassName;
         else
             return "";
+    }
+    getShiftDetail = (itoId, date) => {
+        let shiftDetailDate = new Date(this.rosterMonth.getTime());
+        shiftDetailDate.setDate(date);
+        let shiftDetail=new ShiftDetail(
+            itoId,
+            this.roster[itoId].itoName,
+            this.roster[itoId].itoPostName,
+            shiftDetailDate,
+            this.roster[itoId].shiftList[date]
+        );
+        let temp=this.shiftDetailList[itoId].records[date];
+        if (temp){
+            shiftDetail.claimType = temp.claimType;
+            shiftDetail.description = temp.description;
+            shiftDetail.duration = temp.duration;
+            shiftDetail.endTime = new Date(temp.endTime.getTime());
+            shiftDetail.shiftDetailId=temp.shiftDetailId;
+            shiftDetail.startTime = new Date(temp.startTime.getTime());
+            shiftDetail.status=temp.status;
+        }
+        return shiftDetail;
     }
     async reload(newRosterMonth) {
         let fetchAPI = new FetchAPI();

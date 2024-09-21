@@ -15,7 +15,7 @@ export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, s
         e.preventDefault();
         uiAction.updateUI(-1, -1);
     }
-    function showTimeOffRecord(e,date) {
+    function showShiftDetail(e,date) {
         e.preventDefault();
         uiAction.showShiftDetail(itoId,date);
     }
@@ -26,7 +26,7 @@ export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, s
             <ShiftCell
                 cssClassName={className}
                 key={itoId + '_' + index}
-                onContextMenu={e => showTimeOffRecord(e,calendarDate.dateOfMonth)}
+                onContextMenu={e => showShiftDetail(e,calendarDate.dateOfMonth)}
                 onMouseEnter={handleMouseEnterEvent}
                 onMouseLeave={handleMouseLeaveEvent}
                 title="Right Click to Show Shift Detail">

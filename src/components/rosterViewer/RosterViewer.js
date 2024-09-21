@@ -5,7 +5,7 @@ import Loading from "../common/Loading";
 import RosterTable from "./RosterTable";
 import ShiftDetailModal from "./ShiftDetailModal";
 export default function RosterViewer() {
-    const { error, isLoading, isShowShiftDetail, rosterViewerData, selectedITOId, selectedShiftDetailDate, uiAction } = useRosterViewer();
+    const { error, isLoading, isShowShiftDetail, rosterViewerData, selectedShiftDetail, uiAction } = useRosterViewer();
     if (error) {
         return handleAPIError(error);
     }
@@ -20,9 +20,7 @@ export default function RosterViewer() {
                 <ShiftDetailModal
                     hideShiftDetail={uiAction.hideShiftDetail}
                     isShowShiftDetail={isShowShiftDetail}
-                    rosterViewerData={rosterViewerData}
-                    selectedITOId={selectedITOId}
-                    selectedShiftDetailDate={selectedShiftDetailDate} />
+                    selectedShiftDetail={selectedShiftDetail} />
             </>
         );
     } else {

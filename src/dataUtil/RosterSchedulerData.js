@@ -69,38 +69,7 @@ export default class RosterSchedulerData extends RosterViewerData {
     getShift = (itoId, date) => {
         return this.roster[itoId].shiftList[date] ?? "";
     }
-    getShiftDetail = (itoId, date) => {
-        let shiftDetailDate = new Date(this.rosterMonth.getTime());
-        shiftDetailDate.setDate(date);
-        let result = {
-            itoId,
-            itoName: this.roster[itoId].itoName,
-            itoPostName: this.roster[itoId].itoPostName,
-            shiftDetailDate
-        };
-        let shiftDetail = this.timeOffList[itoId].records[date];
-        if (shiftDetail) {
-            result.description = shiftDetail.description;
-            result.shiftType = "t";
-            result.timeOffAmount = shiftDetail.timeOffAmount;
-            result.timeOffId = shiftDetail.timeOffId;
-            result.timeOffEnd = shiftDetail.timeOffEnd;
-            result.timeOffStart = shiftDetail.timeOffStart;
-        } else {
-            let shift = this.roster[itoId].shiftList[date];
-            if (shift) {
-                result.shiftType = shift;
-            } else {
-                result.shiftType = "t";
-                result.description = "";
-                result.timeOffAmount = 0;
-                result.timeOffId = -1;
-                result.timeOffEnd = new Date(shiftDetailDate.getTime());
-                result.timeOffStart = new Date(shiftDetailDate.getTime());
-            }
-        }
-        return result
-    }
+   
     async load(year, month) {
         await super.load(year, month);
         let fetchAPI = new FetchAPI();
