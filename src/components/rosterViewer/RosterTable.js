@@ -2,7 +2,7 @@ import HeaderRows from "../common/rows/HeaderRows";
 import RosterBody from "./RosterBody";
 import ShiftInfoLegend from "../common/ShiftInfoLegend";
 export default function RosterTable({ rosterViewerData, uiAction }) {
-    const { activeShiftList, calendarDateList, roster, systemParam,timeOffList } = rosterViewerData;    
+    const { activeShiftList, calendarDateList, roster, systemParam,shiftDetailList } = rosterViewerData;    
     
     return (
         <table className="m-1 p-0 rosterTable">
@@ -14,7 +14,7 @@ export default function RosterTable({ rosterViewerData, uiAction }) {
             <RosterBody
                 calendarDateList={calendarDateList}
                 roster={roster}               
-                timeOffList={timeOffList}
+                shiftDetailList={shiftDetailList}
                 uiAction={uiAction}
             />
             <tfoot>

@@ -1,6 +1,7 @@
 import Express from 'express';
 import Roster from '../classes/Roster.js';
 import ShiftInfo from "../classes/ShiftInfo.js";
+import ShiftDetail from "../classes/ShiftDetail.js";
 import TimeOff from '../classes/TimeOff.js';
 export default function PublicAPI(adminUtil, systemParam) {
     const router = Express.Router();
@@ -22,21 +23,23 @@ export default function PublicAPI(adminUtil, systemParam) {
 //====================================================================================================================================
 let getRosterViewerData = async (params) => {
     let roster = new Roster();
-    let timeOff=new TimeOff();
+    //let timeOff=new TimeOff();
     let rosterData=await roster.getRoster(params.year, params.month);
+    let shiftDetail=new ShiftDetail();
     let shiftInfo = new ShiftInfo();
     let sP=structuredClone(params.systemParam);
     await shiftInfo.init();
     
     sP.monthPickerMinDate = new Date(sP.monthPickerMinDate.year, sP.monthPickerMinDate.month - 1, sP.monthPickerMinDate.date);
     sP.noOfPrevDate = 0;
-    let timeOffList = await timeOff.getTimeOffList(params.year, params.month);
-    
+    //let timeOffList = await timeOff.getTimeOffList(params.year, params.month);
+    let shiftDetailList=await shiftDetail.getShiftDetailList(params.year, params.month);
     return {
         "activeShiftList":shiftInfo.activeShiftList,
         rosterData,
         systemParam:sP,
-        timeOffList
+        shiftDetailList
+    //    timeOffList
     }
 }
 //====================================================================================================================================

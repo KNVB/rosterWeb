@@ -122,6 +122,28 @@ export default class Dbo {
             ]
         );
     }
+    getShiftDetailList = async (year, month) => {
+        let result = this.#getStartEndDateString(year, month);
+        this.#sqlString = "select b.ito_id,start_time,claim_type,";
+        this.#sqlString += "end_time,shift_detail_id,description,no_of_hour_applied_for ";
+        this.#sqlString += "from ";
+        this.#sqlString += "(select *";
+        this.#sqlString += "from shift_detail ";
+        this.#sqlString += "where start_time between ? and ?) a right join ";
+        this.#sqlString += "(select ";
+        this.#sqlString += "ito_id ";
+        this.#sqlString += "from ito_info ";
+        this.#sqlString += "where ";
+        this.#sqlString += "join_date<=? and leave_date >=?";
+        this.#sqlString += ")b on a.ito_id=b.ito_id";
+        return await this.#executeQuery(this.#sqlString,
+            [
+                result.startDateString,
+                result.endDateString,                
+                result.endDateString,
+                result.startDateString
+            ]);
+    }
     getSystemParam = async () => {
         this.#sqlString = "select * from system_param order by param_type,param_key,param_value";
         return await this.#executeQuery(this.#sqlString);

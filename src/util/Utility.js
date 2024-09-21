@@ -14,14 +14,14 @@ export default class Utility{
         month: "2-digit",
         year: "numeric"
     });    
-    static genITOStat=(activeShiftList,roster,noOfWorkingDay,timeOffList)=>{
+    static genITOStat=(activeShiftList,roster,noOfWorkingDay,shiftDetailList)=>{
         let { getITOStat } = ITOShiftStatUtil();
         let result={};
        
         let itoIdList=Object.keys(roster);
         for (let i=0; i< itoIdList.length;i++){
             let itoId=itoIdList[i];
-            result[itoId]=getITOStat(activeShiftList,noOfWorkingDay,roster[itoId],timeOffList[itoId].total);
+            result[itoId]=getITOStat(activeShiftList,noOfWorkingDay,roster[itoId],shiftDetailList[itoId].total);
         }
         return result;
     }

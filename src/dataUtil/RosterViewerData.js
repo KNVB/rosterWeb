@@ -17,10 +17,10 @@ export default class RosterViewerData {
         this.systemParam.noOfPrevDate = 0;
 
         let rosterData = structuredClone(temp.rosterData);
-        this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.timeOffList);
+        this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.shiftDetailList);
         this.rosterMonth = new Date(year, month, 1);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
-        this.timeOffList = this.#formatTimeOffObj(temp.timeOffList);
+        this.shiftDetailList = this.#formatTimeOffObj(temp.shiftDetailList);
     }
     getShiftCssClassName(shiftType) {
         if (this.activeShiftList[shiftType])

@@ -1,7 +1,7 @@
 import NameCell from "../common/cells/NameCell";
 import ShiftCell from "../common/cells/ShiftCell";
 import StatCell from "../common/cells/StatCell";
-export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, timeOff, uiAction }) {
+export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, shiftDetailList, uiAction }) {
     let className = "";
     let shift = '', shiftCellList = [];
     //console.log(roster);
@@ -60,7 +60,7 @@ export default function RosterRow({ calendarDateList, itoId, roster, rowIndex, t
                 {roster.thisMonthBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {timeOff.total}
+                {shiftDetailList.total}
             </StatCell>
             <StatCell>
                 {roster.totalBalance.toFixed(2)}
