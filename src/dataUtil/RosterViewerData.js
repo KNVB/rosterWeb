@@ -21,7 +21,7 @@ export default class RosterViewerData {
         this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.shiftDetailList);
         this.rosterMonth = new Date(year, month, 1);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
-        this.shiftDetailList = this.#formatTimeOffObj(temp.shiftDetailList);
+        this.shiftDetailList = this.#formatShiftDetailObj(temp.shiftDetailList);
     }
     getShiftCssClassName(shiftType) {
         if (this.activeShiftList[shiftType])
@@ -59,28 +59,28 @@ export default class RosterViewerData {
         let temp = await fetchAPI.getRosterViewerData(rosterYear, rosterMonth + 1);
         this.calendarDateList = monthlyCalendar.calendarDateList;
         let rosterData = structuredClone(temp.rosterData);
-        this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.timeOffList);
+        this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay, temp.shiftDetailList);
         this.rosterMonth = new Date(rosterYear, rosterMonth, 1);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
-        this.timeOffList = this.#formatTimeOffObj(temp.timeOffList);
+        this.shiftDetailList = this.#formatShiftDetailObj(temp.shiftDetailList);
     }
-    #formatTimeOffObj(inObj) {
+    #formatShiftDetailObj(inObj) {
         let result = {};
-        for (const [itoId, timeOffRecords] of Object.entries(inObj)) {
-            //console.log(itoId, timeOffRecords);
+        for (const [itoId, shiftDetails] of Object.entries(inObj)) {
             result[itoId] = {
                 records: {},
-                total: timeOffRecords.total
+                total:shiftDetails.total
             }
-            if (timeOffRecords.total > 0) {
-                for (const [date, timeOffRecord] of Object.entries(timeOffRecords.records)) {
+            if (shiftDetails.total >0){
+                for (const [date, shiftDetail] of Object.entries(shiftDetails.records)) {
                     result[itoId].records[date] = {
-                        "description": timeOffRecord.description,
-                        timeOffAmount: timeOffRecord.timeOffAmount,
-                        timeOffEnd: new Date(timeOffRecord.timeOffEnd),
-                        timeOffId: timeOffRecord.timeOffId,
-                        timeOffStart: new Date(timeOffRecord.timeOffStart),
-                        timeOffStatus: timeOffRecord.timeOffStatus,
+                        "claimType":shiftDetail.claimType,
+                        "description":shiftDetail.description,
+                        "duration":shiftDetail.duration,
+                        "endTime":new Date(shiftDetail.endTime),
+                        "shiftDetailId":shiftDetail.shiftDetailId,
+                        "status":shiftDetail.status,
+                        "startTime":new Date(shiftDetail.startTime)
                     }
                 }
             }
