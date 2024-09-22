@@ -18,7 +18,7 @@ export default function RosterScheduler() {
                 {
                     <ShiftDetailModal                 
                         isShowShiftDetail={isShowShiftDetail}                       
-                        shiftDetail={shiftDetail} 
+                        selectedShiftDetail={shiftDetail} 
                         uiAction={uiAction}/>
                 }
             </>

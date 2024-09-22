@@ -5,7 +5,7 @@ import CalendarTable from "../calendarTable/CalendarTable";
 import TimeSelector from "../timeSelector/TimeSelector";
 import Utility from "../Utility";
 import useDateTimePicker from "./useDateTimePicker";
-export default function DateTimePicker({getSelectedValue, value }) {
+export default function DateTimePicker({onChange, value }) {
   
     const { isShowPicker, monthFullNameList, monthlyCalendar, result, tempValue, weekDayNameList, action } = useDateTimePicker(value);
     let headerRow = { columnList: [] };
@@ -30,7 +30,7 @@ export default function DateTimePicker({getSelectedValue, value }) {
         action.updateTempValue(new Date());
     }
     let submitValue=e=>{
-        getSelectedValue(tempValue);
+        onChange(tempValue);
         action.closePicker();
     }
     

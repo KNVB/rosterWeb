@@ -39,6 +39,7 @@ let reducer = (state, action) => {
         default:
             break;
     }
+    //console.log(result);
     return result;
 }
 export function useRosterScheduler() {
@@ -181,7 +182,7 @@ export function useRosterScheduler() {
     let showShiftDetail = (itoId, date) => {
         let temp = itemList.rosterSchedulerData.getShiftDetail(itoId, date);
         updateItemList({
-            shiftDetail: temp,
+            "shiftDetail": temp,
             "type": "showShiftDetail"
         });
     }
