@@ -27,12 +27,14 @@ export default function KeyboardEventHandler() {
                         handleArrowKeyEvent(e, 1, 0, uiAction);
                     }
                     break;
+                /*    
                 case "t":
                     if (cellType === "editableShiftCell"){
                         e.preventDefault();
                         uiAction.showShiftDetail(itoId, date);
                     }
                     break;
+                    */
                 case "y"://handle redo 
                     if (e.ctrlKey) {
                         e.preventDefault();

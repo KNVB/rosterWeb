@@ -16,10 +16,7 @@ export default function RosterScheduler() {
                     rosterSchedulerData={rosterSchedulerData}
                     uiAction={uiAction} />
                 {
-                    isShowShiftDetail &&
-                    <ShiftDetailModal
-                        activeShiftList={rosterSchedulerData.activeShiftList}
-                       
+                    <ShiftDetailModal                 
                         isShowShiftDetail={isShowShiftDetail}                       
                         shiftDetail={shiftDetail} 
                         uiAction={uiAction}/>

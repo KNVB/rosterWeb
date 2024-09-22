@@ -2,7 +2,7 @@ import EditableShiftCell from "./EditableShiftCell";
 import NameCell from "../../common/cells/NameCell";
 import ShiftCell from "../../common/cells/ShiftCell";
 import StatCell from "../../common/cells/StatCell";
-export default function EditableShiftRow({ calendarDateList, itoId, previousMonthShiftList, roster, rowIndex, systemParam, timeOff, uiAction }) {
+export default function EditableShiftRow({ calendarDateList, itoId, previousMonthShiftList, roster, rowIndex, systemParam, shiftDetailList, uiAction }) {
     let className = '';
     let shift = '', shiftCellList = [];
     //console.log(roster);
@@ -69,7 +69,7 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
                 {roster.thisMonthBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {timeOff.total}
+                {shiftDetailList.total}
             </StatCell>
             <StatCell>
                 {roster.totalBalance.toFixed(2)}

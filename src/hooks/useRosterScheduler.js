@@ -36,27 +36,6 @@ let reducer = (state, action) => {
                 result.rosterSchedulerData.itoIdList,
                 result.rosterSchedulerData.systemParam);
             break;
-        case "updateShiftDetailDesc":
-            result.shiftDetail.description = action.value;
-            break
-        case "updateShiftDetailEndTime":
-            result.shiftDetail.timeOffEnd = action.value;
-            result.shiftDetail.timeOffAmount = action.timeOffAmount;
-            break;
-        case "updateShiftDetailShiftType":
-            result.shiftDetail.shiftType = action.value;
-            if (action.value === "t") {
-                result.shiftDetail.description = "";
-                result.shiftDetail.timeOffAmount = 0;
-                result.shiftDetail.timeOffId = -1;
-                result.shiftDetail.timeOffEnd = new Date(result.shiftDetail.shiftDetailDate.getTime());
-                result.shiftDetail.timeOffStart = new Date(result.shiftDetail.shiftDetailDate.getTime());
-            }
-            break;
-        case "updateShiftDetailStartTime":
-            result.shiftDetail.timeOffStart = action.value;
-            result.shiftDetail.timeOffAmount = action.timeOffAmount;
-            break;
         default:
             break;
     }
@@ -114,6 +93,9 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
+    let getActiveShiftList=()=>{
+        return itemList.rosterSchedulerData.activeShiftList;
+    }
     let getEditableShiftCellCssClassName = (cellIndex, rowIndex, shift) => {
         let className = [];
         let temp = getShiftCssClassName(shift);
@@ -141,22 +123,24 @@ export function useRosterScheduler() {
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
     }
-
     let { handleKeyDown } = KeyboardEventHandler();
-    let handleBlur = (newShift, itoId, date) => {
-        newShift = newShift.trim();
-        itemList.rosterSchedulerData.updateShift(itoId, date, newShift);
-        updateItemList({ type: "refresh" });
-    }
-    let handleEscKeyEvent = () => {
-        itemList.rosterSchedulerTableUtil.clearCopiedRegion();
-        itemList.rosterSchedulerData.clearCopiedData();
-        updateItemList({ type: "refresh" });
-    }
     let handleArrowKeyEvent = (cell, xOffset, yOffset) => {
         let nextCell = itemList.rosterSchedulerTableUtil.getNextCell(cell, xOffset, yOffset);
         itemList.rosterSchedulerTableUtil.selectCell(nextCell.cellIndex, nextCell.rowIndex);
         itemList.rosterSchedulerTableUtil.select(nextCell.cellIndex, nextCell.rowIndex);
+        updateItemList({ type: "refresh" });
+    }
+    let handleBlur = (newShift, itoId, date) => {
+        //console.log(itemList.isShowShiftDetail,newShift, itoId, date);
+        newShift = newShift.trim();
+        let result = itemList.rosterSchedulerData.updateShift(itoId, date, newShift);
+        if (result === null) {
+            updateItemList({ type: "refresh" });
+        }
+    }
+    let handleEscKeyEvent = () => {
+        itemList.rosterSchedulerTableUtil.clearCopiedRegion();
+        itemList.rosterSchedulerData.clearCopiedData();
         updateItemList({ type: "refresh" });
     }
     let hideShiftDetail = () => {
@@ -252,35 +236,8 @@ export function useRosterScheduler() {
             type: "hideShiftDetail"
         });
     }
-    let updateShiftDetailDesc = newDesc => {
-        updateItemList({
-            type: "updateShiftDetailDesc",
-            value: newDesc
-        });
-    }
-    let updateShiftDetailShiftType = newShiftType => {
-        updateItemList({
-            type: "updateShiftDetailShiftType",
-            value: newShiftType
-        });
-    }
-    let updateShiftDetailEndTime = newEndTime => {
-        let timeOffAmount = ((newEndTime - itemList.shiftDetail.timeOffStart) / 1000 / 60 / 60);
-        updateItemList({
-            timeOffAmount,
-            type: "updateShiftDetailEndTime",
-            value: newEndTime
-        });
-    }
 
-    let updateShiftDetailStartTime = newStartTime => {
-        let timeOffAmount = ((itemList.shiftDetail.timeOffEnd - newStartTime) / 1000 / 60 / 60);
-        updateItemList({
-            timeOffAmount,
-            type: "updateShiftDetailStartTime",
-            value: newStartTime
-        });
-    }
+
     let updateUI = (cellIndex, rowIndex) => {
         itemList.rosterSchedulerTableUtil.updateUI(cellIndex, rowIndex);
         updateItemList({
@@ -297,6 +254,7 @@ export function useRosterScheduler() {
             copyRosterData,
             deleteSelectedData,
             endSelect,
+            getActiveShiftList,
             getEditableShiftCellCssClassName,
             getPreferredShiftCellCssClassName,
             getRowIndex,
@@ -319,10 +277,6 @@ export function useRosterScheduler() {
             updateRosterMonth,
             updateShift,
             updateShiftDetail,
-            updateShiftDetailDesc,
-            updateShiftDetailEndTime,
-            updateShiftDetailShiftType,
-            updateShiftDetailStartTime,
             updateUI
         }
     }
