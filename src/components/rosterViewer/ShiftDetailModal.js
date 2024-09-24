@@ -3,7 +3,7 @@ import Utility from '../../util/Utility';
 export default function ShiftDetailModal({ hideShiftDetail, isShowShiftDetail, selectedShiftDetail }) {
     if (isShowShiftDetail) {
         let body = [];
-        console.log(selectedShiftDetail);
+        //console.log(selectedShiftDetail);
         selectedShiftDetail.shiftList.forEach((shift, index) => {
             if (shift.shiftType === "t") {
                 body.push(

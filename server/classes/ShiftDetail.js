@@ -23,6 +23,7 @@ export default class ShiftDetail {
                         description: record.description,
                         duration:record.no_of_hour_applied_for,
                         endTime:record.end_time,
+                        shiftDetailId:record.shift_detail_id,
                         startTime:record.start_time,
                         status:record.status
                     });
@@ -54,6 +55,7 @@ export default class ShiftDetail {
                         description: record.description,
                         duration:record.no_of_hour_applied_for,
                         endTime:record.end_time,
+                        shiftDetailId:record.shift_detail_id,
                         startTime:record.start_time,
                         status:record.status
                     }

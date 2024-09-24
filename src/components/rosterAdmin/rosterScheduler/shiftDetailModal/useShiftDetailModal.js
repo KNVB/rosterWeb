@@ -1,98 +1,87 @@
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 let reducer = (state, action) => {
     let result = { ...state };
-    //console.log(action);
     switch (action.type) {
         case "init":
-            result.claimType = action.value.claimType;
-            result.date = action.value.date;
-            result.description = action.value.description;
-            result.duration = action.value.duration;
-            result.endTime = action.value.endTime;
-            result.itoId = action.value.itoId;
-            result.itoName = action.value.itoName;
-            result.itoPostName = action.value.itoPostName;
-            result.shiftDetailId = action.value.shiftDetailId;
-            result.shiftType = action.value.shiftType;
-            result.status = action.value.status;
-            result.startTime = action.value.startTime;
+            result.shiftDetail = action.value;
             break;
         case "updateClaimType":
-            result.ClaimType = action.value;
+            result.shiftDetail.shiftList[action.index].claimType = action.claimType;
             break;
-        case "updateDesc":
-            result.description = action.value;
+        case "updatDesc":
+            result.shiftDetail.shiftList[action.index].description = action.desc;
             break;
         case "updateEndTime":
-            result.endTime = action.value;
-            result.duration = (action.value - result.startTime) / 1000 / 60 / 60;
+            result.shiftDetail.shiftList[action.index].endTime = new Date(action.endTime.getTime());
+            result.shiftDetail.shiftList[action.index].duration = (action.endTime - result.shiftDetail.shiftList[action.index].startTime) / 1000 / 3600;
             break;
         case "updateShiftType":
-            result.shiftType = action.value;
+            /*
+            console.log("before");
+            console.log(result.shiftDetail.shiftList[action.index]);
+            */
+            result.shiftDetail.shiftList[action.index].shiftType = action.shiftType;
+            if (action.shiftType === "t") {
+                result.shiftDetail.shiftList[action.index].claimType = undefined;
+                result.shiftDetail.shiftList[action.index].description = "";
+                result.shiftDetail.shiftList[action.index].duration = 0;
+                result.shiftDetail.shiftList[action.index].endTime = new Date(result.shiftDetail.date.getTime());
+                result.shiftDetail.shiftList[action.index].startTime = new Date(result.shiftDetail.date.getTime());
+                result.shiftDetail.shiftList[action.index].status = "";
+            } else {
+                delete result.shiftDetail.shiftList[action.index].claimType;
+                delete result.shiftDetail.shiftList[action.index].description;
+                delete result.shiftDetail.shiftList[action.index].duration;
+                delete result.shiftDetail.shiftList[action.index].endTime;
+                delete result.shiftDetail.shiftList[action.index].startTime;
+                delete result.shiftDetail.shiftList[action.index].status;
+            }
+            /*
+            console.log("after");
+            console.log(result.shiftDetail.shiftList[action.index]);
+            */
             break;
         case "updateStartTime":
-            result.startTime = action.value;
-            result.duration = (result.endTime - action.value) / 1000 / 60 / 60;
+            result.shiftDetail.shiftList[action.index].startTime = new Date(action.startTime.getTime());
+            result.shiftDetail.shiftList[action.index].duration = (result.shiftDetail.shiftList[action.index].endTime - action.startTime) / 1000 / 3600;
             break;
         default:
             break;
     }
     return result;
 }
-export default function useShiftDetailModal(inShiftDetail) {
-    const [itemList, updateShiftDetail] = useReducer(reducer, {
-        claimType: "",
-        date: null,
-        description: "",
-        duration: 0,
-        endTime: null,
-        itoId: "",
-        itoName: "",
-        itoPostName: "",
-        shiftDetailId: "",
-        shiftType: "",
-        status: "",
-        startTime: null,
-    });
+export default function useShiftDetailModal(shiftDetail) {
+    let [itemList, updateItemList] = useReducer(reducer, { shiftDetail });
 
-    useEffect(() => {
-        if (inShiftDetail) {
-            //console.log(inShiftDetail);
-            updateShiftDetail({ "type": "init", "value": inShiftDetail });
-        }
-    }, [inShiftDetail]);
-    let updateClaimType = newClaimType => {
-        updateShiftDetail({ "type": "updateClaimType", "value": newClaimType });
+    let update = newShiftDetail => {
+        updateItemList({
+            "type": "init",
+            value: newShiftDetail
+        })
     }
-    let updatDesc = newDesc => {
-        updateShiftDetail({ "type": "updateDesc", "value": newDesc });
+    let updateClaimType = (index, claimType) => {
+        updateItemList({ "type": "updateClaimType", index, claimType });
     }
-    let updateEndTime = newEndTime => {
-        updateShiftDetail({ "type": "updateEndTime", "value": newEndTime });
+    let updatDesc = (index, desc) => {
+        updateItemList({ "type": "updatDesc", index, desc });
     }
-    let updateShiftType = newShiftType => {
-        updateShiftDetail({ "type": "updateShiftType", "value": newShiftType });
+    let updateEndTime = (index, endTime) => {
+        updateItemList({ "type": "updateEndTime", index, endTime });
     }
-    let updateStartTime = newStartTime => {
-        updateShiftDetail({ "type": "updateStartTime", "value": newStartTime });
+    let updateShiftType = (index, shiftType) => {
+        updateItemList({ "type": "updateShiftType", index, shiftType });
     }
+    let updateStartTime = (index, startTime) => {
+        updateItemList({ "type": "updateStartTime", index, startTime });
+    }
+
     return {
-        claimType: itemList.claimType,
-        date: itemList.date,
-        description: itemList.description,
-        duration: itemList.duration,
-        endTime: itemList.endTime,
-        itoId: itemList.itoId,
-        itoName: itemList.itoName,
-        itoPostName: itemList.itoPostName,
-        shiftDetailId: itemList.shiftDetailId,
-        shiftType: itemList.shiftType,
-        status: itemList.status,
-        startTime: itemList.startTime,
-        shiftDetailMethod: {
+        tempShiftDetail: itemList.shiftDetail,
+        action: {
+            update,
             updateClaimType,
-            updateEndTime,
             updatDesc,
+            updateEndTime,
             updateShiftType,
             updateStartTime
         }
