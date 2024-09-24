@@ -1,12 +1,13 @@
 import "../CalendarPicker.css";
 import "./DateTimePicker.css";
+import { useCallback, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import CalendarTable from "../calendarTable/CalendarTable";
 import TimeSelector from "../timeSelector/TimeSelector";
 import Utility from "../Utility";
 import useDateTimePicker from "./useDateTimePicker";
-export default function DateTimePicker({onChange, value }) {
-  
+export default function DateTimePicker({ onChange, value }) {
+    const obj = useRef();
     const { isShowPicker, monthFullNameList, monthlyCalendar, result, tempValue, weekDayNameList, action } = useDateTimePicker(value);
     let headerRow = { columnList: [] };
 
@@ -26,16 +27,26 @@ export default function DateTimePicker({onChange, value }) {
             action.updateDateValue(value);
         }
     }
-    let setTimeToNow=()=>{
+    let mouseDown = useCallback(e => {
+        if (isShowPicker && (!obj.current.contains(e.target))) {
+            action.closePicker();
+        }
+    },[isShowPicker,action]);
+    let setTimeToNow = () => {
         action.updateTempValue(new Date());
     }
-    let submitValue=e=>{
+    let submitValue = e => {
         onChange(tempValue);
         action.closePicker();
     }
-    
+    useEffect(() => {
+        document.addEventListener('mousedown', mouseDown);
+        return () => {
+            document.removeEventListener('mousedown', mouseDown);
+        }
+    }, [mouseDown]);
     return (
-        <div className="dateTimePicker">
+        <div className="dateTimePicker" ref={obj}>
             <div
                 className="dateTimeResult"
                 onClick={action.togglePicker}>
@@ -53,12 +64,12 @@ export default function DateTimePicker({onChange, value }) {
                         smallPrev={action.prevMonth}
                         smallNext={action.nextMonth}
                         title={monthFullNameList[tempValue.getMonth()] + " " + tempValue.getFullYear()}
-                    />                    
+                    />
                     <div className="dateTimePickerTimeSelector">
                         <Button className="btn-sm ms-1" onClick={setTimeToNow}>Now</Button>
-                        <TimeSelector 
+                        <TimeSelector
                             getSelectedTime={action.updateTempValue}
-                            value={tempValue}/>
+                            value={tempValue} />
                     </div>
                     <div className="todayRow">
                         <Button className="btn-sm ms-1" onClick={action.selectToday}>Today</Button>

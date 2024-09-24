@@ -1,8 +1,10 @@
 import "../CalendarPicker.css";
 import "./MonthPicker.css";
+import { useCallback, useEffect, useRef } from "react";
 import useMonthPicker from "./useMonthPicker";
 import CalendarTable from "../calendarTable/CalendarTable";
 export default function MonthPicker({ defaultValue, maxDate, minDate, onChange }) {
+    const obj = useRef();
     let monthFormatter = new Intl.DateTimeFormat('en-ZA', {
         month: "long",
         year: "numeric"
@@ -30,9 +32,19 @@ export default function MonthPicker({ defaultValue, maxDate, minDate, onChange }
         action.updateValue(temp);
         onChange(temp);
     }
-
+    let mouseDown = useCallback(e => {
+        if (isShowPicker && (!obj.current.contains(e.target))) {
+            action.closePicker();
+        }
+    },[isShowPicker,action]);
+    useEffect(() => {
+        document.addEventListener('mousedown', mouseDown);
+        return () => {
+            document.removeEventListener('mousedown', mouseDown);
+        }
+    }, [mouseDown]);
     return (
-        <div className="monthPicker">
+        <div className="monthPicker" ref={obj}>
             <div
                 className="monthPickResult">
                 {

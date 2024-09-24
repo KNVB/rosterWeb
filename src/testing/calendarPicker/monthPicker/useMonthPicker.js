@@ -122,7 +122,7 @@ export default function useMonthPicker(defaultValue, maxDate, minDate) {
         }
         let { hasNextMonth, hasNextYear, hasPrevMonth, hasPrevYear } = genPreNext(defaultValue, maxDate, minDate);
         updateItemList({ hasNextMonth, hasNextYear, hasPrevMonth, hasPrevYear, maxDate, minDate, "result": defaultValue ?? new Date(), "type": "init" });
-    }, [defaultValue])
+    }, [defaultValue, maxDate, minDate])
     let closePicker = () => {
         updateItemList({ "type": "closePicker" })
     }

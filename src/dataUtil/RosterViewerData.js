@@ -31,23 +31,38 @@ export default class RosterViewerData {
     }
     getShiftDetail = (itoId, date) => {
         let shiftDetailDate = new Date(this.rosterMonth.getTime());
+        let temp;
         shiftDetailDate.setDate(date);
-        let shiftDetail=new ShiftDetail(
-            itoId,
+        let shiftDetail = new ShiftDetail(itoId,
             this.roster[itoId].itoName,
             this.roster[itoId].itoPostName,
-            shiftDetailDate,
-            this.roster[itoId].shiftList[date]
-        );
-        let temp=this.shiftDetailList[itoId].records[date];
-        if (temp){
-            shiftDetail.claimType = temp.claimType;
-            shiftDetail.description = temp.description;
-            shiftDetail.duration = temp.duration;
-            shiftDetail.endTime = new Date(temp.endTime.getTime());
-            shiftDetail.shiftDetailId=temp.shiftDetailId;
-            shiftDetail.startTime = new Date(temp.startTime.getTime());
-            shiftDetail.status=temp.status;
+            shiftDetailDate);
+        temp = this.roster[itoId].shiftList[date];
+        if (temp) {
+            let shiftTypeList = temp.split("+");
+            shiftTypeList.forEach(shiftType => {
+                switch (shiftType) {
+                    case "t":
+                        temp = this.shiftDetailList[itoId].records[date];
+                        if (temp) {
+                            shiftDetail.shiftList.push({
+                                claimType: temp.claimType,
+                                description: temp.description,
+                                duration: temp.duration,
+                                endTime: new Date(temp.endTime.getTime()),
+                                shiftDetailId: temp.shiftDetailId,
+                                "shiftType": shiftType,
+                                startTime: new Date(temp.startTime.getTime()),
+                                status: temp.status
+                            });
+                        }
+                        break;
+                    default:
+                        shiftDetail.shiftList.push({ "shiftType": shiftType });
+                }
+            });
+        } else {
+            shiftDetail.shiftList.push({ "shiftType": undefined });
         }
         return shiftDetail;
     }
@@ -69,18 +84,18 @@ export default class RosterViewerData {
         for (const [itoId, shiftDetails] of Object.entries(inObj)) {
             result[itoId] = {
                 records: {},
-                total:shiftDetails.total
+                total: shiftDetails.total
             }
-            if (shiftDetails.total >0){
+            if (shiftDetails.total > 0) {
                 for (const [date, shiftDetail] of Object.entries(shiftDetails.records)) {
                     result[itoId].records[date] = {
-                        "claimType":shiftDetail.claimType,
-                        "description":shiftDetail.description,
-                        "duration":shiftDetail.duration,
-                        "endTime":new Date(shiftDetail.endTime),
-                        "shiftDetailId":shiftDetail.shiftDetailId,
-                        "status":shiftDetail.status,
-                        "startTime":new Date(shiftDetail.startTime)
+                        "claimType": shiftDetail.claimType,
+                        "description": shiftDetail.description,
+                        "duration": shiftDetail.duration,
+                        "endTime": new Date(shiftDetail.endTime),
+                        "shiftDetailId": shiftDetail.shiftDetailId,
+                        "status": shiftDetail.status,
+                        "startTime": new Date(shiftDetail.startTime)
                     }
                 }
             }

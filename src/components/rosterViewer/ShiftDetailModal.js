@@ -1,65 +1,62 @@
 import { Button, Modal } from 'react-bootstrap';
 import Utility from '../../util/Utility';
 export default function ShiftDetailModal({ hideShiftDetail, isShowShiftDetail, selectedShiftDetail }) {
-    let body = [];
     if (isShowShiftDetail) {
-        switch (selectedShiftDetail.shiftType) {
-            case undefined:
+        let body = [];
+        console.log(selectedShiftDetail);
+        selectedShiftDetail.shiftList.forEach((shift, index) => {
+            if (shift.shiftType === "t") {
                 body.push(
-                    <tr key={"detail_row_1"}>
-                        <td className='border border-dark pe-1 text-end'>Shift Type</td>
-                        <td className="border border-dark ps-1">Not Assigned</td>
-                    </tr>
-                );
-                break;
-            case "t":
-                body.push(
-                    <tr key={"detail_row_1"}>
-                        <td className='border border-dark pe-1 text-end'>Shift Type</td>
-                        <td className="border border-dark ps-1">{selectedShiftDetail.shiftType}</td>
+                    <tr key={"shift_" + index}>
+                        <td className='border border-dark pe-1 text-end w-25'>Shift Type</td>
+                        <td className="border border-dark ps-1">{shift.shiftType}</td>
                     </tr>
                 );
                 body.push(
-                    <tr key={"detail_row_6"}>
+                    <tr key={"shift_" + index+"_0"}>
                         <td className='border border-dark pe-1 text-end w-25'>Claim Type</td>
-                        <td className="border border-dark ps-1">{selectedShiftDetail.claimType}</td>
+                        <td className="border border-dark ps-1">{shift.claimType}</td>
                     </tr>
                 );
                 body.push(
-                    <tr key={"detail_row_2"}>
+                    <tr key={"shift_" + index+"_1"}>
                         <td className='border border-dark pe-1 text-end'>Description</td>
-                        <td className="border border-dark ps-1">{selectedShiftDetail.description}</td>
+                        <td className="border border-dark ps-1">{shift.description}</td>
                     </tr>
                 );
                 body.push(
-                    <tr key={"detail_row_3"}>
+                    <tr key={"shift_" + index+"_2"}>
                         <td className='border border-dark pe-1 text-end'>Start Time</td>
-                        <td className="border border-dark ps-1">{Utility.dateTimeFormatter.format(selectedShiftDetail.startTime)}</td>
+                        <td className="border border-dark ps-1">{Utility.dateTimeFormatter.format(shift.startTime)}</td>
                     </tr>
                 );
                 body.push(
-                    <tr key={"detail_row_4"}>
+                    <tr key={"shift_" + index+"_2"}>
                         <td className='border border-dark pe-1 text-end'>End Time</td>
-                        <td className="border border-dark ps-1">{Utility.dateTimeFormatter.format(selectedShiftDetail.endTime)}</td>
+                        <td className="border border-dark ps-1">{Utility.dateTimeFormatter.format(shift.endTime)}</td>
                     </tr>
                 );
                 body.push(
-                    <tr key={"detail_row_5"}>
+                    <tr key={"shift_" + index+"_3"}>
                         <td className='border border-dark pe-1 text-end w-25'>Duration in hour</td>
-                        <td className="border border-dark ps-1">{selectedShiftDetail.duration}</td>
+                        <td className="border border-dark ps-1">{shift.duration}</td>
                     </tr>
                 );
-               
-                break;
-            default:
                 body.push(
-                    <tr key={"detail_row_1"}>
-                        <td className='border border-dark pe-1 text-end'>Shift Type</td>
-                        <td className="border border-dark ps-1">{selectedShiftDetail.shiftType}</td>
+                    <tr key={"shift_" + index+"_4"}>
+                        <td className='border border-dark pe-1 text-end w-25'>Status</td>
+                        <td className="border border-dark ps-1">{shift.status}</td>
                     </tr>
                 );
-                break;
-        }
+            } else {
+                body.push(
+                    <tr key={"shift_" + index}>
+                        <td className='border border-dark pe-1 text-end w-25'>Shift Type</td>
+                        <td className="border border-dark ps-1">{(shift.shiftType) ? shift.shiftType : "Not Assigned"}</td>
+                    </tr>
+                );
+            }
+        });
         return (
             <Modal onHide={hideShiftDetail} scrollable show={isShowShiftDetail} size="lg">
                 <Modal.Header closeButton>
