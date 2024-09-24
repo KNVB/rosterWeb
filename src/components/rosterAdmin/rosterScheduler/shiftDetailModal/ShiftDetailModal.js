@@ -21,6 +21,20 @@ export default function ShiftDetailModal({ isShowShiftDetail, selectedShiftDetai
     let updatDesc = (index, desc) => {
         action.updatDesc(index, desc);
     }
+    let updateShiftDetail = e => {
+        let isValid=true;
+        tempShiftDetail.shiftList.forEach(shiftDetail=>{
+            if (shiftDetail.shiftType==="t"){
+                if (shiftDetail.startTime>=shiftDetail.endTime){
+                    alert("The start time must be earlier than end time.");
+                    isValid=false;
+                } 
+            }
+        });
+        if (isValid){
+            uiAction.updateShiftDetail(tempShiftDetail);
+        }
+    }
     let updateShiftType = (index, shiftType) => {
         action.updateShiftType(index, shiftType);
     }
@@ -124,7 +138,7 @@ export default function ShiftDetailModal({ isShowShiftDetail, selectedShiftDetai
                 </Modal.Body>
                 <Modal.Footer>
                     <Button>Add</Button>
-                    <Button>Update</Button>
+                    <Button onClick={updateShiftDetail}>Update</Button>
                     <Button onClick={uiAction.hideShiftDetail}>Cancel</Button>
                 </Modal.Footer>
             </Modal>

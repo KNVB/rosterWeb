@@ -231,11 +231,12 @@ export function useRosterScheduler() {
             });
         }
     }
-    let updateShiftDetail = () => {
+    let updateShiftDetail = (shiftDetail) => {
+        /*
         itemList.rosterSchedulerData.updateShiftDetail(itemList.shiftDetail);
         updateItemList({
             type: "hideShiftDetail"
-        });
+        });*/
     }
 
 
