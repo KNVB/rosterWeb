@@ -232,11 +232,10 @@ export function useRosterScheduler() {
         }
     }
     let updateShiftDetail = (shiftDetail) => {
-        /*
-        itemList.rosterSchedulerData.updateShiftDetail(itemList.shiftDetail);
+        itemList.rosterSchedulerData.updateShiftDetail(shiftDetail);
         updateItemList({
             type: "hideShiftDetail"
-        });*/
+        });
     }
 
 

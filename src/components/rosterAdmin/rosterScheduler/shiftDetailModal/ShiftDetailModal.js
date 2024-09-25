@@ -22,16 +22,16 @@ export default function ShiftDetailModal({ isShowShiftDetail, selectedShiftDetai
         action.updatDesc(index, desc);
     }
     let updateShiftDetail = e => {
-        let isValid=true;
-        tempShiftDetail.shiftList.forEach(shiftDetail=>{
-            if (shiftDetail.shiftType==="t"){
-                if (shiftDetail.startTime>=shiftDetail.endTime){
+        let isValid = true;
+        tempShiftDetail.shiftList.forEach(shiftDetail => {
+            if (shiftDetail.shiftType === "t") {
+                if (shiftDetail.startTime >= shiftDetail.endTime) {
                     alert("The start time must be earlier than end time.");
-                    isValid=false;
-                } 
+                    isValid = false;
+                }
             }
         });
-        if (isValid){
+        if (isValid) {
             uiAction.updateShiftDetail(tempShiftDetail);
         }
     }
@@ -49,6 +49,13 @@ export default function ShiftDetailModal({ isShowShiftDetail, selectedShiftDetai
         let activeShiftList = uiAction.getActiveShiftList();
         let body = [];
         tempShiftDetail.shiftList.forEach((shift, index) => {
+            if (index > 0) {
+                body.push(
+                    <tr key={"shift_" + index + "_-1"}>
+                        <td className="border border-dark" colSpan={2}></td>
+                    </tr>
+                );
+            }            
             body.push(
                 <tr key={"shift_" + index}>
                     <td className='border border-dark pe-1 text-end w-25'>Shift Type</td>
@@ -68,7 +75,7 @@ export default function ShiftDetailModal({ isShowShiftDetail, selectedShiftDetai
                     </td>
                 </tr>
             );
-            if (shift.shiftType === "t") {
+            if (shift.shiftType === "t") {                
                 body.push(
                     <tr key={"shift_" + index + "_0"}>
                         <td className='border border-dark pe-1 text-end'>Claim Type</td>
@@ -136,9 +143,8 @@ export default function ShiftDetailModal({ isShowShiftDetail, selectedShiftDetai
                         </tbody>
                     </table>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button>Add</Button>
-                    <Button onClick={updateShiftDetail}>Update</Button>
+                <Modal.Footer>                  
+                    <Button onClick={updateShiftDetail}>Update to roster</Button>
                     <Button onClick={uiAction.hideShiftDetail}>Cancel</Button>
                 </Modal.Footer>
             </Modal>

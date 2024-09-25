@@ -2,7 +2,6 @@ import FetchAPI from "../util/FetchAPI";
 import Utility from "../util/Utility";
 import UndoableData from "../util/UndoableData";
 import RosterViewerData from "./RosterViewerData";
-import ShiftDetail from "./ShiftDetail";
 export default class RosterSchedulerData extends RosterViewerData {
     #copiedData = null;
     #rosterSchedulerDataHistory;
@@ -234,12 +233,44 @@ export default class RosterSchedulerData extends RosterViewerData {
                         }
                     }
                 });
+                if ((!shiftList.includes("t")) && (this.shiftDetailList[itoId].records[dateOfMonth])){
+                    this.shiftDetailList[itoId].total -= this.shiftDetailList[itoId].records[dateOfMonth].duration;
+                    delete this.shiftDetailList[itoId].records[dateOfMonth];
+                }
                 break;
         }
-        
+
         this.roster[itoId].shiftList[dateOfMonth] = newShift;
         this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay, this.shiftDetailList);
         this.#recordRosterSchedulerData();
+    }
+    updateShiftDetail(shiftDetail){
+        let dateOfMonth=shiftDetail.date.getDate();
+        let resultantShift=[];
+        shiftDetail.shiftList.forEach(shift=>{
+            resultantShift.push(shift.shiftType);
+            if (shift.shiftType ==="t"){
+                this.shiftDetailList[shiftDetail.itoId].records[dateOfMonth]={
+                    claimType:shift.claimType,
+                    description:shift.description,
+                    duration:shift.duration,
+                    endTime:new Date(shift.endTime.getTime()),
+                    startTime:new Date(shift.startTime.getTime()),
+                    shiftDetailId:shift.shiftDetailId,
+                    status:shift.status
+                }
+            }
+            //console.log(this.shiftDetailList[shiftDetail.itoId]);
+        });
+        this.roster[shiftDetail.itoId].shiftList[dateOfMonth] = resultantShift.join("+");
+        let total=0;
+        Object.values(this.shiftDetailList[shiftDetail.itoId].records).forEach(shift=>{
+            total+=shift.duration;
+        });
+        this.shiftDetailList[shiftDetail.itoId].total=total;
+        this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay, this.shiftDetailList);
+        this.#recordRosterSchedulerData();
+        //console.log(shiftDetail);
     }
     //=========================================================================================================================================
     #recordRosterSchedulerData() {
