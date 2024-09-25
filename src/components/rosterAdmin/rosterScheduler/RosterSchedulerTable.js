@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import HeaderRows from "../../common/rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../common/ShiftInfoLegend";
-export default function RosterSchedulerTable({rosterSchedulerData, uiAction }) {
-    const { activeShiftList, calendarDateList, preferredShiftList, previousMonthShiftList, roster, systemParam, shiftDetailList } = rosterSchedulerData;
+export default function RosterSchedulerTable({ rosterSchedulerData, uiAction }) {
+    const { activeShiftList, calendarDateList, preferredShiftList, previousMonthShiftList, roster, systemParam, shiftDetailList, vacantShiftList } = rosterSchedulerData;
     //console.log(rosterSchedulerData);
     useEffect(() => {
         const mouseUp = () => uiAction.endSelect();
@@ -25,8 +25,9 @@ export default function RosterSchedulerTable({rosterSchedulerData, uiAction }) {
                 previousMonthShiftList={previousMonthShiftList}
                 roster={roster}
                 systemParam={systemParam}
-                shiftDetailList={shiftDetailList}                 
+                shiftDetailList={shiftDetailList}
                 uiAction={uiAction}
+                vacantShiftList={vacantShiftList}
             />
             <tfoot>
                 <tr>

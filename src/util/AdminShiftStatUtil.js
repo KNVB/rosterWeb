@@ -1,5 +1,5 @@
 export default function AdminShiftStatUtil() {
-    const getAllITOStat = (activeShiftInfoList, startDate, endDate, inITORosterList) => {
+    const getAllITOStat = (essentialShift, startDate, endDate, inITORosterList) => {
         let blackListShiftList = {};
         let duplicateShiftList = {};
         let vacantShiftList = {};
@@ -12,7 +12,7 @@ export default function AdminShiftStatUtil() {
         });
         //console.log("startDate:"+startDate+",endDate:"+endDate);
         for (let i = startDate; i <= endDate; i++) {
-            let vacantShift = activeShiftInfoList.essentialShift;
+            let vacantShift = essentialShift;
             let temp = [];
 
             itoIdList.forEach(itoId => {

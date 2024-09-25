@@ -94,18 +94,22 @@ export function useRosterScheduler() {
         itemList.rosterSchedulerTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
-    let getActiveShiftList=()=>{
+    let getActiveShiftList = () => {
         return itemList.rosterSchedulerData.activeShiftList;
     }
-    let getEditableShiftCellCssClassName = (cellIndex, rowIndex, shift) => {
+    let getEditableShiftCellCssClassName = (dateOfMonth, itoId, rowIndex, shift) => {
         let className = [];
         let temp = getShiftCssClassName(shift);
         if (temp !== "") {
             className.push(temp);
         }
+        let cellIndex = dateOfMonth + itemList.rosterSchedulerData.systemParam.noOfPrevDate;
         temp = itemList.rosterSchedulerTableUtil.getSelectedCssClass(cellIndex, rowIndex);
         if (temp.length > 0) {
             className.push(...temp);
+        }
+        if ( itemList.rosterSchedulerData.isDuplicateShift(dateOfMonth, itoId)){
+            className.push("errorRedBlackGround");
         }
         return className;
     }

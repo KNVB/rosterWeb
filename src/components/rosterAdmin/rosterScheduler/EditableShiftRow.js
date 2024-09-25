@@ -23,7 +23,7 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
     }
     calendarDateList.forEach((calendarDate, index) => {
         shift = roster.shiftList[index + 1];
-        className = uiAction.getEditableShiftCellCssClassName(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex, shift);
+        className = uiAction.getEditableShiftCellCssClassName(calendarDate.dateOfMonth, itoId, rowIndex, shift);
         shiftCellList.push(
             <EditableShiftCell
                 cssClassName={className.join(" ")}

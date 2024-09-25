@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
+import { PlusLg } from 'react-bootstrap-icons';
 import useShiftDetailModal from "./useShiftDetailModal";
 import DateTimePicker from "../../../common/calendarPicker/dateTimePicker/DateTimePicker";
 import Utility from '../../../../util/Utility';
@@ -8,6 +9,14 @@ export default function ShiftDetailModal({ isShowShiftDetail, selectedShiftDetai
     useEffect(() => {
         action.update(selectedShiftDetail);
     }, [selectedShiftDetail]);
+    let addNewEntry=()=>{
+        action.addNewEntry();
+    }
+    let removeEntry = index => {
+        if (window.confirm("Are you sure to delete this shift entry?")) {
+            action.removeEntry(index);
+        }
+    }
     let updateClaimType = (index, claimType) => {
         action.updateClaimType(index, claimType);
     }
@@ -55,27 +64,32 @@ export default function ShiftDetailModal({ isShowShiftDetail, selectedShiftDetai
                         <td className="border border-dark" colSpan={2}></td>
                     </tr>
                 );
-            }            
+            }
             body.push(
                 <tr key={"shift_" + index}>
                     <td className='border border-dark pe-1 text-end w-25'>Shift Type</td>
-                    <td className="border border-dark ps-1">
-                        <select onChange={e => updateShiftType(index, e.target.value)} name="shiftType" value={shift.shiftType}>
-                            <option value="">Not Assigned</option>
-                            {
-                                Object.keys(activeShiftList).map((shift, index) => (
-                                    <option key={"shiftType_" + index} value={shift}>{shift}</option>
-                                ))
-                            }
-                        </select>
-                        {
-                            (shift.shiftType === "t") &&
-                            <span className='ps-2'>i.e. {activeShiftList["t"].timeSlot}</span>
-                        }
+                    <td className="border border-dark ps-1 m-0">
+                        <div className='d-flex flex-row m-0 w-100 justify-content-between'>
+                            <div>
+                                <select className="text-start" onChange={e => updateShiftType(index, e.target.value)} name="shiftType" value={shift.shiftType}>
+                                    <option value="">Not Assigned</option>
+                                    {
+                                        Object.keys(activeShiftList).map((shift, index) => (
+                                            <option key={"shiftType_" + index} value={shift}>{shift}</option>
+                                        ))
+                                    }
+                                </select>
+                                {
+                                    (shift.shiftType === "t") &&
+                                    <span className='ps-2'>i.e. {activeShiftList["t"].timeSlot}</span>
+                                }
+                            </div>
+                            <div onClick={e => removeEntry(index)} style={{ "cursor": "pointer" }} title="Remove this entry">&#x1F5D1;</div>
+                        </div>
                     </td>
                 </tr>
             );
-            if (shift.shiftType === "t") {                
+            if (shift.shiftType === "t") {
                 body.push(
                     <tr key={"shift_" + index + "_0"}>
                         <td className='border border-dark pe-1 text-end'>Claim Type</td>
@@ -137,13 +151,18 @@ export default function ShiftDetailModal({ isShowShiftDetail, selectedShiftDetai
                         <tbody>
                             <tr>
                                 <td className='border border-dark pe-1 text-end'>Date</td>
-                                <td className="border border-dark ps-1">{Utility.dateFormatter.format(tempShiftDetail.date)}</td>
+                                <td className="border border-dark ps-1">
+                                    <div className='align-items-center d-flex flex-row m-0 w-100'>
+                                        {Utility.dateFormatter.format(tempShiftDetail.date)} &nbsp; &nbsp;&nbsp;
+                                        <PlusLg onClick={addNewEntry} style={{ "cursor": "pointer" }} title="Add new entry"/>
+                                    </div>
+                                </td>
                             </tr>
                             {body}
                         </tbody>
                     </table>
                 </Modal.Body>
-                <Modal.Footer>                  
+                <Modal.Footer>
                     <Button onClick={updateShiftDetail}>Update to roster</Button>
                     <Button onClick={uiAction.hideShiftDetail}>Cancel</Button>
                 </Modal.Footer>

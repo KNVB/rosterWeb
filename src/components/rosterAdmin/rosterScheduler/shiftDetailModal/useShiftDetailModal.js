@@ -2,8 +2,14 @@ import { useReducer } from "react";
 let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
+        case "addEntry":
+            result.shiftDetail.shiftList.push({"shiftType":""});
+            break;
         case "init":
             result.shiftDetail = action.value;
+            break;
+        case "removeEntry":
+            delete result.shiftDetail.shiftList[action.index];
             break;
         case "updateClaimType":
             result.shiftDetail.shiftList[action.index].claimType = action.claimType;
@@ -52,7 +58,17 @@ let reducer = (state, action) => {
 }
 export default function useShiftDetailModal(shiftDetail) {
     let [itemList, updateItemList] = useReducer(reducer, { shiftDetail });
-
+    let addNewEntry=()=>{
+        updateItemList({
+            "type":"addEntry" 
+        });
+    }
+    let removeEntry = index => { 
+        updateItemList({
+            index,
+            "type":"removeEntry" 
+        });
+    }
     let update = newShiftDetail => {
         updateItemList({
             "type": "init",
@@ -78,6 +94,8 @@ export default function useShiftDetailModal(shiftDetail) {
     return {
         tempShiftDetail: itemList.shiftDetail,
         action: {
+            addNewEntry,
+            removeEntry,
             update,
             updateClaimType,
             updatDesc,
