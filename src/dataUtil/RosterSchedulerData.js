@@ -29,6 +29,7 @@ export default class RosterSchedulerData extends RosterViewerData {
             }
             result.push(temp);
         });
+        
         this.#copiedData = result;
     }
     clearCopiedData = () => {

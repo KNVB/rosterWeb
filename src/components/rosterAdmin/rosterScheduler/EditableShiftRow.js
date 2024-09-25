@@ -26,14 +26,12 @@ export default function EditableShiftRow({ calendarDateList, itoId, previousMont
         className = uiAction.getEditableShiftCellCssClassName(calendarDate.dateOfMonth, itoId, rowIndex, shift);
         shiftCellList.push(
             <EditableShiftCell
-                cssClassName={className.join(" ")}
-                date={index + 1}
+                cssClassName={className.join(" ")}                
                 key={itoId + '_' + index}
                 keyDownHandler={e => uiAction.handleKeyDown("editableShiftCell", index + 1, e, itoId, uiAction)}
                 onBlur={e => uiAction.handleBlur(e.target.textContent, itoId, index + 1)}
                 onContextMenu={e => showShiftDetail(e, itoId, index + 1)}
-                onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}
-                itoId={itoId}
+                onPaste={(e) => uiAction.pasteRosterData(calendarDate.dateOfMonth, e)}                
                 title={shift}
                 uiAction={uiAction}>
                 {shift}
