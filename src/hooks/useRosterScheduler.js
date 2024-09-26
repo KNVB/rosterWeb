@@ -108,7 +108,7 @@ export function useRosterScheduler() {
         if (temp.length > 0) {
             className.push(...temp);
         }
-        if ( itemList.rosterSchedulerData.isDuplicateShift(dateOfMonth, itoId)){
+        if (itemList.rosterSchedulerData.isDuplicateShift(dateOfMonth, itoId)) {
             className.push("errorRedBlackGround");
         }
         return className;
@@ -138,9 +138,40 @@ export function useRosterScheduler() {
     let handleBlur = (newShift, itoId, date) => {
         //console.log(itemList.isShowShiftDetail,newShift, itoId, date);
         newShift = newShift.trim();
-        let result = itemList.rosterSchedulerData.updateShift(itoId, date, newShift);
-        if (result === null) {
-            updateItemList({ type: "refresh" });
+
+        let oldShift = itemList.rosterSchedulerData.getShiftData(itoId, date);
+        if (oldShift !== newShift) {
+            let temp = newShift.split("+");
+            let shiftObjList = [];
+            temp.forEach(shiftType => {
+                let shiftObj = { "shiftType": shiftType.trim() }
+                if (shiftObj.shiftType === "t") {
+                    let shiftDetail = itemList.rosterSchedulerData.getShiftDetailData(itoId, date);
+                    //console.log(shiftDetail);
+                    if (shiftDetail) {
+                        shiftObj.claimType = shiftDetail.claimType;
+                        shiftObj.description = shiftDetail.description;
+                        shiftObj.duration = shiftDetail.duration;
+                        shiftObj.endTime = shiftDetail.endTime;
+                        shiftObj.shiftDetailId = shiftDetail.shiftDetailId;
+                        shiftObj.startTime = shiftDetail.startTime;
+                        shiftObj.status = shiftDetail.status;
+                    } else {
+                        let shiftDetailDate = new Date(this.rosterMonth.getTime());
+                        shiftDetailDate.setDate(date);
+                        shiftObj.claimType = "";
+                        shiftObj.description = "";
+                        shiftObj.duration = 0;
+                        shiftObj.endTime = new Date(shiftDetailDate.getTime());
+                        shiftObj.shiftDetailId = -1;
+                        shiftObj.startTime = new Date(shiftDetailDate.getTime());
+                        shiftObj.status = "";
+                    }
+                }
+                shiftObjList.push(shiftObj);
+            });
+            //console.log(shiftObjList);
+            itemList.rosterSchedulerData.updateShift(itoId, date, shiftObjList);
         }
     }
     let handleEscKeyEvent = () => {
@@ -204,10 +235,40 @@ export function useRosterScheduler() {
         updateItemList({ type: "refresh" });
     }
     let updatePreferredShift = (itoId, dateOfMonth, shift) => {
-        itemList.rosterSchedulerData.updatePreferredShift(itoId, dateOfMonth, shift);
-        updateItemList({
-            type: "refresh"
-        });
+        let newShift = shift.trim();
+        let oldShift = itemList.rosterSchedulerData.getPreferredShiftData(itoId, dateOfMonth);
+        if (oldShift !== newShift) {
+            let temp = newShift.split("+");
+            let shiftObjList = [];
+            temp.forEach(shiftType => {
+                let shiftObj = { "shiftType": shiftType.trim() }
+                if (shiftObj.shiftType === "t") {
+                    let shiftDetail = itemList.rosterSchedulerData.getShiftDetailData(itoId, dateOfMonth);
+                    //console.log(shiftDetail);
+                    if (shiftDetail) {
+                        shiftObj.claimType = shiftDetail.claimType;
+                        shiftObj.description = shiftDetail.description;
+                        shiftObj.duration = shiftDetail.duration;
+                        shiftObj.endTime = shiftDetail.endTime;
+                        shiftObj.shiftDetailId = shiftDetail.shiftDetailId;
+                        shiftObj.startTime = shiftDetail.startTime;
+                        shiftObj.status = shiftDetail.status;
+                    } else {
+                        let shiftDetailDate = new Date(this.rosterMonth.getTime());
+                        shiftDetailDate.setDate(dateOfMonth);
+                        shiftObj.claimType = "";
+                        shiftObj.description = "";
+                        shiftObj.duration = 0;
+                        shiftObj.endTime = new Date(shiftDetailDate.getTime());
+                        shiftObj.shiftDetailId = -1;
+                        shiftObj.startTime = new Date(shiftDetailDate.getTime());
+                        shiftObj.status = "";
+                    }
+                }
+                shiftObjList.push(shiftObj);
+            });
+            itemList.rosterSchedulerData.updatePreferredShift(itoId, dateOfMonth, shiftObjList);
+        }
     }
     let updateRosterMonth = async (newRosterMonth) => {
         try {
@@ -220,28 +281,13 @@ export function useRosterScheduler() {
             updateItemList({ "error": error, "type": "setError" });
         }
     }
-    let updateShift = (itoId, dateOfMonth, element) => {
-        let shift = element.textContent;
-        let shiftDetail = itemList.rosterSchedulerData.updateShift(itoId, dateOfMonth, shift);
-        if (shiftDetail) {
-            element.textContent = shiftDetail.oldShift;
-            updateItemList({
-                shiftDetail,
-                "type": "showShiftDetail"
-            });
-        } else {
-            updateItemList({
-                type: "refresh"
-            });
-        }
-    }
+
     let updateShiftDetail = (shiftDetail) => {
         itemList.rosterSchedulerData.updateShiftDetail(shiftDetail);
         updateItemList({
             type: "hideShiftDetail"
         });
     }
-
 
     let updateUI = (cellIndex, rowIndex) => {
         itemList.rosterSchedulerTableUtil.updateUI(cellIndex, rowIndex);
@@ -280,7 +326,6 @@ export function useRosterScheduler() {
             unDo,
             updatePreferredShift,
             updateRosterMonth,
-            updateShift,
             updateShiftDetail,
             updateUI
         }

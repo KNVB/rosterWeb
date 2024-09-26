@@ -28,7 +28,7 @@ export default class RosterViewerData {
             return this.activeShiftList[shiftType].cssClassName;
         else
             return "";
-    }
+    }    
     getShiftDetail = (itoId, date) => {
         let shiftDetailDate = new Date(this.rosterMonth.getTime());
         let temp;

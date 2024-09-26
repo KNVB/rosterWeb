@@ -31,19 +31,19 @@ export default function ShiftDetailModal({ hideShiftDetail, isShowShiftDetail, s
                     </tr>
                 );
                 body.push(
-                    <tr key={"shift_" + index+"_2"}>
+                    <tr key={"shift_" + index+"_3"}>
                         <td className='border border-dark pe-1 text-end'>End Time</td>
                         <td className="border border-dark ps-1">{Utility.dateTimeFormatter.format(shift.endTime)}</td>
                     </tr>
                 );
                 body.push(
-                    <tr key={"shift_" + index+"_3"}>
+                    <tr key={"shift_" + index+"_4"}>
                         <td className='border border-dark pe-1 text-end w-25'>Duration in hour</td>
                         <td className="border border-dark ps-1">{shift.duration}</td>
                     </tr>
                 );
                 body.push(
-                    <tr key={"shift_" + index+"_4"}>
+                    <tr key={"shift_" + index+"_5"}>
                         <td className='border border-dark pe-1 text-end w-25'>Status</td>
                         <td className="border border-dark ps-1">{shift.status}</td>
                     </tr>

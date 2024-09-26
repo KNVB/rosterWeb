@@ -5,7 +5,9 @@ import useShiftDetailModal from "./useShiftDetailModal";
 import DateTimePicker from "../../../common/calendarPicker/dateTimePicker/DateTimePicker";
 import Utility from '../../../../util/Utility';
 export default function ShiftDetailModal({ isShowShiftDetail, selectedShiftDetail, uiAction }) {
+    
     const { tempShiftDetail, action } = useShiftDetailModal(selectedShiftDetail);
+
     useEffect(() => {
         action.update(selectedShiftDetail);
     }, [selectedShiftDetail]);
