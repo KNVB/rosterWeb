@@ -102,38 +102,40 @@ export default class Dbo {
     }
     getRoster = async (year, month) => {
         let result = this.#getStartEndDateString(year, month);
-		SELECT v.available_shift,
-			   v.ito_id,
-			   post_name,
-			   ito_name,
-			   working_hour_per_day,
-			   balance,
-			   Day(shift_date) AS d,
-			   shift,
-			   claim_type,
-			   description,
-			   start_time,
-			   end_time
-		FROM   (SELECT available_shift,
-					   ito_info.ito_id,
-					   post_name,
-					   ito_name,
-					   working_hour_per_day
-				FROM   ito_info
-				WHERE  ito_info.join_date <= '2024-9-30'
-					   AND ito_info.leave_date >= '2024-9-1') AS v
-			   LEFT JOIN shift_record
-					  ON v.ito_id = shift_record.ito_id
-						 AND ( shift_record.shift_date BETWEEN
-							   '2024-9-1' AND '2024-9-30' )
-			   LEFT JOIN last_month_balance
-					  ON v.ito_id = last_month_balance.ito_id
-						 AND shift_month = '2024-9-1'
-			   LEFT JOIN shift_detail
-					  ON v.ito_id = shift_detail.ito_id
-						 AND Cast(start_time AS DATE) = shift_date
-		ORDER  BY v.ito_id,
-				  shift_date
+		this.#sqlString ="SELECT v.available_shift,";
+		this.#sqlString+="	   v.ito_id,";
+		this.#sqlString+="	   post_name,";
+		this.#sqlString+="	   ito_name,";
+		this.#sqlString+="	   working_hour_per_day,";
+		this.#sqlString+="	   balance,";
+		this.#sqlString+="	   Day(shift_date) AS d,";
+		this.#sqlString+="	   shift,";
+		this.#sqlString+="	   claim_type,";
+		this.#sqlString+="	   description,";
+		this.#sqlString+="	   start_time,";
+		this.#sqlString+="	   end_time,";
+		this.#sqlString+="	   shift_detail.status ";
+		this.#sqlString+="FROM   (SELECT available_shift,";
+		this.#sqlString+="			   ito_info.ito_id,";
+		this.#sqlString+="			   post_name,";
+		this.#sqlString+="			   ito_name,";
+		this.#sqlString+="			   working_hour_per_day ";
+		this.#sqlString+="		FROM   ito_info ";
+		this.#sqlString+="		WHERE  ito_info.join_date <= ?";
+		this.#sqlString+="			   AND ito_info.leave_date >= ?) AS v";
+		this.#sqlString+="	   LEFT JOIN shift_record";
+		this.#sqlString+="			  ON v.ito_id = shift_record.ito_id";
+		this.#sqlString+="				 AND ( shift_record.shift_date BETWEEN";
+		this.#sqlString+="					   ? AND ? )";
+		this.#sqlString+="	   LEFT JOIN last_month_balance";
+		this.#sqlString+="			  ON v.ito_id = last_month_balance.ito_id";
+		this.#sqlString+="				 AND shift_month = ?";
+		this.#sqlString+="	   LEFT JOIN shift_detail";
+		this.#sqlString+="			  ON v.ito_id = shift_detail.ito_id";
+		this.#sqlString+="				 AND Cast(start_time AS DATE) = shift_date ";
+		this.#sqlString+="ORDER  BY v.ito_id,";
+		this.#sqlString+="		  shift_date";
+
 /*		
         this.#sqlString = "select v.available_shift,v.ito_id,post_name,ito_name,working_hour_per_day,balance,day(Shift_date) as d,shift ";
         this.#sqlString += "from (";

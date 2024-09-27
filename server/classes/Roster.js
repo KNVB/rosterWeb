@@ -43,6 +43,7 @@ export default class Roster {
                         itoName: record.ito_name,
                         itoPostName: record.post_name,
                         lastMonthBalance: 0.0,
+                        shiftDetail: {},
                         shiftList: {},
                         thisMonthBalance: 0.0,
                         workingHourPerDay: parseFloat(record.working_hour_per_day)
@@ -57,6 +58,18 @@ export default class Roster {
                     } else {
                         itoRosterList[record.ito_id].shiftList[record.d] += "+" + record.shift;
                     }
+                    if (record.shift === "t") {
+                        if (itoRosterList[record.ito_id].shiftDetail[record.d]=== undefined){
+                            itoRosterList[record.ito_id].shiftDetail[record.d] =[];    
+                        }
+                        itoRosterList[record.ito_id].shiftDetail[record.d].push({
+                            claimType: record.claim_type,
+                            description: record.description,
+                            endTime: record.end_time,
+                            startTime: record.start_time,
+                            status: record.status
+                        });
+                    }
                 }
             });
             return itoRosterList;
@@ -67,5 +80,5 @@ export default class Roster {
         } finally {
             dbo.close();
         }
-    }   
+    }
 }
