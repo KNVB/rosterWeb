@@ -1,6 +1,34 @@
 import Dbo from "../util/Dbo.js";
-export default class Roster{
-    constructor(){        
+export default class Roster {
+    constructor() {
+    }
+    getPreferredShiftList = async (year, month) => {
+        let dboObj = new Dbo();
+        try {
+            let results = await dboObj.getPreferredShiftList(year, month);
+            console.log("Get (" + year + "," + month + ") Preferred Shift List successfully!");
+            return results;
+        } catch (error) {
+            console.log("Something wrong when getting Preferred shift list:" + error);
+            throw (error);
+        }
+        finally {
+            dboObj.close();
+        };
+    }
+    getPreviousMonthShiftList = async (year, month, systemParam) => {
+        let dboObj = new Dbo();
+        try {
+            let results = await dboObj.getPreviousMonthShiftList(year, month, systemParam);
+            console.log("Get (" + year + "," + month + ") Previous Month Shift List successfully!");
+            return results;
+        } catch (error) {
+            console.log("Something wrong when getting Previous month shift list:" + error);
+            throw (error);
+        }
+        finally {
+            dboObj.close();
+        };
     }
     getRoster = async (year, month) => {
         let dbo = new Dbo();

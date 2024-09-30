@@ -37,6 +37,7 @@
     "testITOInfo": "cross-env NODE_ENV=development node ./server/test/TestITOInfo.js",
     "testITSQM": "cross-env NODE_ENV=production node ./server/test/TestITSQM.js",
     "testRoster": "cross-env NODE_ENV=development node ./server/test/TestRoster.js",
+    "testServer": "cross-env NODE_ENV=development npm run server",
     "testShiftInfo": "cross-env NODE_ENV=development node ./server/test/TestShiftInfo.js",
     "testSystemParam": "cross-env NODE_ENV=development node ./server/test/TestSystemParam.js",
     "testTimeOff": "cross-env NODE_ENV=development node ./server/test/TestTimeOff.js"
