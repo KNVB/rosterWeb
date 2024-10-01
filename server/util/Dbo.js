@@ -28,9 +28,10 @@ export default class Dbo {
 		this.#sqlString+="	   Day(shift_date) AS d,";
 		this.#sqlString+="	   shift,";
 		this.#sqlString+="	   claim_type,";
-		this.#sqlString+="	   description,";
-		this.#sqlString+="	   start_time,";
+		this.#sqlString+="	   description,";        
+        this.#sqlString+="     no_of_hour_applied_for,";
 		this.#sqlString+="	   end_time,";
+        this.#sqlString+="	   start_time,";		
 		this.#sqlString+="	   shift_detail.status ";
 		this.#sqlString+="FROM   (SELECT available_shift,";
 		this.#sqlString+="			   ito_info.ito_id,";

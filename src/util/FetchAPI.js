@@ -24,20 +24,35 @@ export default class FetchAPI {
             }
         );
     }
+    addITO = async ito => {
+        return (await this.#secureFetch({ "ito": ito }, "post", "/privateAPI/addITO"));
+    }
     getActiveShiftList = async () => {
         return (await this.#fetch(null, "get", "/privateAPI/getActiveShiftList"));
+    }
+    getITOList = async () => {
+        return (await this.#secureFetch(null, "get", "/privateAPI/getITOList"));
     }
     getRosterViewerData = async (year, month) => {
         return (await this.#fetch({ year: year, month: month }, "get", "/publicAPI/getRosterViewerData"));
     }
+    getRosterSchedulerData = async (year, month) => {
+        return (await  this.#secureFetch({ year: year, month: month }, "get", "/privateAPI/getRosterSchedulerData"));
+    }
     getSystemParam = async () => {
         return (await this.#fetch(null, "get", "/publicAPI/getSystemParam"));
+    }
+    getITOTimeOffList = async (year, month) => {
+        return (await this.#secureFetch({ year: year, month: month }, "get", "/privateAPI/getITOTimeOffList"));
     }
     login = async loginObj => {
         return await this.#fetch({ loginObj: loginObj }, "post", "/publicAPI/login");
     }
     logout = async () => {
         return await this.#secureFetch(null, "get", "/privateAPI/logout");
+    }
+    updateITO = async ito => {
+        return (await this.#secureFetch({ "ito": ito }, "post", "/privateAPI/updateITO"));
     }
     //================================================================================================================================
     #fetch = async (data, method, url, responseType, headers) => {

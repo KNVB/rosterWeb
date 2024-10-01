@@ -14,7 +14,7 @@ export default class Utility{
         month: "2-digit",
         year: "numeric"
     });    
-    static genITOStat=(activeShiftList,roster,noOfWorkingDay,shiftDetailList)=>{
+    static genITOStat=(activeShiftList,roster,noOfWorkingDay)=>{
         let { getITOStat } = ITOShiftStatUtil();
         let result={};
        

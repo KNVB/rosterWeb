@@ -1,6 +1,6 @@
 import Dbo from "../util/Dbo.js";
-export default class Roster{
-    constructor(){        
+export default class Roster {
+    constructor() {
     }
     getRoster = async (year, month) => {
         let dbo = new Dbo();
@@ -15,7 +15,10 @@ export default class Roster{
                         itoName: record.ito_name,
                         itoPostName: record.post_name,
                         lastMonthBalance: 0.0,
-                        shiftDetail: {},
+                        shiftDetail: {
+                            records: {},
+                            total: 0
+                        },
                         shiftList: {},
                         thisMonthBalance: 0.0,
                         workingHourPerDay: parseFloat(record.working_hour_per_day)
@@ -30,17 +33,19 @@ export default class Roster{
                     } else {
                         itoRosterList[record.ito_id].shiftList[record.d] += "+" + record.shift;
                     }
-                    if (record.shift === "t") {
-                        if (itoRosterList[record.ito_id].shiftDetail[record.d]=== undefined){
-                            itoRosterList[record.ito_id].shiftDetail[record.d] =[];    
+                    if (record.shift === "t") {                       
+                        if (itoRosterList[record.ito_id].shiftDetail.records[record.d] === undefined) {
+                            itoRosterList[record.ito_id].shiftDetail.records[record.d] = [];
                         }
-                        itoRosterList[record.ito_id].shiftDetail[record.d].push({
+                        itoRosterList[record.ito_id].shiftDetail.records[record.d].push({
                             claimType: record.claim_type,
                             description: record.description,
+                            duration: record.no_of_hour_applied_for,
                             endTime: record.end_time,
                             startTime: record.start_time,
                             status: record.status
                         });
+                        itoRosterList[record.ito_id].shiftDetail.total += record.no_of_hour_applied_for;
                     }
                 }
             });

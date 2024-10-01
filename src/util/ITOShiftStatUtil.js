@@ -20,9 +20,10 @@ export default function ITOShiftStatUtil() {
     itoRoster.actualWorkingDayCount = itoRoster.shiftCountList.aShiftCount
       + itoRoster.shiftCountList.bxShiftCount
       + itoRoster.shiftCountList.cShiftCount
-      + itoRoster.shiftCountList.dxShiftCount;
+      + itoRoster.shiftCountList.dxShiftCount;  
     itoRoster.thisMonthBalance = itoRoster.actualWorkingHour - itoRoster.expectedWorkingHour;
-    itoRoster.totalBalance = itoRoster.lastMonthBalance + itoRoster.thisMonthBalance + timeOff;
+    itoRoster.totalBalance = itoRoster.lastMonthBalance + itoRoster.thisMonthBalance;
+    itoRoster.totalBalance+=inITORoster.shiftDetail.total;    
     return itoRoster;
   };
   const getShiftCountList = itoRoster => {
