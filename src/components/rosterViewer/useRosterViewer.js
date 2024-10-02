@@ -2,15 +2,21 @@ import { useEffect, useReducer } from "react";
 import RosterViewerData from "../../dataUtil/RosterViewerData";
 let reducer = (state, action) => {
     let result = { ...state };
-
     switch (action.type) {
+        case "hideShiftDetail":
+            result.isShowShiftDetail = false;
+            break;
         case "init":
             result.rosterViewerData = action.rosterViewerData;
             result.isLoading = false;
             break;
+        case "setSelectedShift":
+            result.isShowShiftDetail = true;
+            result.selectedShift = action.selectedShift;
+            break;
         default:
             break;
-    }
+    }   
     return result;
 }
 export default function useRosterViewer() {
@@ -41,12 +47,47 @@ export default function useRosterViewer() {
         }
         getData();
     }, []);
+    let getShiftCssClassName = shiftType => {
+        if (itemList.rosterViewerData.activeShiftList[shiftType])
+            return itemList.rosterViewerData.activeShiftList[shiftType].cssClassName;
+        else
+            return "";
+    }
+    let hideShiftDetail = () => {
+        updateItemList({
+            "type": "hideShiftDetail"
+        });
+    }
+    let showShiftDetail = (itoId, date) => {
+        let selectedShift = itemList.rosterViewerData.getShift(itoId, date);
+        updateItemList({
+            "selectedShift":selectedShift,
+            "type": "setSelectedShift"
+        });
+    }
+    let updateRosterMonth = async newRosterMonth => {
+        try {
+            //updateItemList({"type":"updateLoading",value:true});
+            await itemList.rosterViewerData.reload(newRosterMonth);
+            updateItemList({
+                type: "refresh"
+            });
+        } catch (error) {
+            console.log(error);
+            updateItemList({ "error": error, "type": "setError" });
+        }
+    }
     return {
         error: itemList.error,
         isLoading: itemList.isLoading,
         isShowShiftDetail: itemList.isShowShiftDetail,
-        rosterViewerData:itemList.rosterViewerData,
-        selectedShift: null,
-        action:{}
+        rosterViewerData: itemList.rosterViewerData,
+        selectedShift: itemList.selectedShift,
+        dataAction: {
+            getShiftCssClassName,
+            hideShiftDetail,
+            showShiftDetail,
+            updateRosterMonth
+        }
     }
 } 

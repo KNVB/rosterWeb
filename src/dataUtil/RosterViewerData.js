@@ -1,10 +1,23 @@
 import FetchAPI from "../util/FetchAPI";
 import CalendarUtility from "../util/calendar/CalendarUtility";
 import Utility from "../util/Utility";
-export default class RosterViewerData{
+export default class RosterViewerData {
     #calendarUtility;
     constructor() {
         this.#calendarUtility = new CalendarUtility();
+    }
+    getShift = (itoId, date) => {
+        let shiftType = this.roster[itoId].shiftList[date];
+        let shiftDetail = this.roster[itoId].shiftDetail.records[date];
+        let shiftDate=new Date(this.rosterMonth.getTime());
+        shiftDate.setDate(date);
+        return {
+            itoName: this.roster[itoId].itoName,
+            itoPostName: this.roster[itoId].itoPostName,
+            date:shiftDate,
+            shiftType,
+            shiftDetail
+        }
     }
     async load(year, month) {
         let monthlyCalendar = this.#calendarUtility.getMonthlyCalendar(year, month);
@@ -19,6 +32,17 @@ export default class RosterViewerData{
         let rosterData = structuredClone(temp.rosterData);
         this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay);
         this.rosterMonth = new Date(year, month, 1);
+        this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
+    }
+    async reload(newRosterMonth) {
+        let fetchAPI = new FetchAPI();
+        let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
+        let monthlyCalendar = this.#calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
+        let temp = await fetchAPI.getRosterViewerData(rosterYear, rosterMonth + 1);
+        this.calendarDateList = monthlyCalendar.calendarDateList;
+        let rosterData = structuredClone(temp.rosterData);
+        this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay);
+        this.rosterMonth = new Date(rosterYear, rosterMonth, 1);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
     }
 }
