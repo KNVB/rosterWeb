@@ -17,6 +17,28 @@ export default class Dbo {
         this.#sqlString = "select * from shift_info where active=1 order by shift_type";
         return await this.#executeQuery(this.#sqlString);
     }
+    getITOBlackListShiftPattern = async (year, month) => {
+        let result = this.#getStartEndDateString(year, month);
+        this.#sqlString = "select ito_info.ito_id,black_list_pattern ";
+        this.#sqlString += "from ito_info inner join black_list_pattern on ito_info.join_date<=? and ito_info.leave_date >=? ";
+        this.#sqlString += "and ito_info.ito_id = black_list_pattern.ito_id";
+        return await this.#executeQuery(this.#sqlString, [result.startDateString, result.endDateString]);
+    }
+    getPreferredShiftList = async (year, month) => {
+        let result = this.#getStartEndDateString(year, month);
+        this.#sqlString = "select ito_id,preferred_shift,day(shift_date) as d from preferred_shift where shift_date between ? and ? order by ito_id,shift_date";
+        return await this.#executeQuery(this.#sqlString, [result.startDateString, result.endDateString]);
+    }
+    getPreviousMonthShiftList = async (year, month, systemParam) => {
+        let result = this.#getStartEndDateString(year, month);
+        this.#sqlString = "select ito_id,shift from shift_record where shift_date >= ? and shift_date < ? order by ito_id,shift_date";
+        result.endDateString = result.startDateString;
+        let tempDate = new Date(result.startDateString);
+        tempDate.setTime(tempDate.getTime() - systemParam.maxConsecutiveWorkingDay * 86400000);
+        result.startDateString = tempDate.toLocaleDateString("en-CA");
+        //console.log(result.startDateString, result.endDateString);
+        return await this.#executeQuery(this.#sqlString, [result.startDateString, result.endDateString]);
+    }
     getRoster = async (year, month) => {
         let result = this.#getStartEndDateString(year, month);
 		this.#sqlString ="SELECT v.available_shift,";
@@ -52,7 +74,8 @@ export default class Dbo {
 		this.#sqlString+="			  ON v.ito_id = shift_detail.ito_id";
 		this.#sqlString+="				 AND Cast(start_time AS DATE) = shift_date ";
 		this.#sqlString+="ORDER  BY v.ito_id,";
-		this.#sqlString+="		  shift_date";
+		this.#sqlString+="		  shift_date,";
+        this.#sqlString+="		  shift";
         return await this.#executeQuery(this.#sqlString,
             [
                 result.endDateString,

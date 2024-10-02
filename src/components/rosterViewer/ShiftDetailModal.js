@@ -12,6 +12,7 @@ export default function ShiftDetailModal({ hideShiftDetail, isShowShiftDetail, s
                     <td className="border border-dark ps-1">{shift}</td>
                 </tr>
             );
+            
             if (shift === "t") {
                 selectedShift.shiftDetail.forEach((shift, detailIndex) => {
                     body.push(
@@ -50,9 +51,20 @@ export default function ShiftDetailModal({ hideShiftDetail, isShowShiftDetail, s
                             <td className="border border-dark ps-1">{shift.status}</td>
                         </tr>
                     );
+                    body.push(
+                        <tr key={"shift_" + index + "_" + detailIndex + "_6"}>
+                            <td className="border border-dark ps-1" colSpan={2}></td>
+                        </tr>
+                    );
                 });
-            }
-        })
+            } else {
+                body.push(
+                    <tr key={"shift_" + index + "_6"}>
+                        <td className="border border-dark ps-1" colSpan={2}></td>
+                    </tr>
+                );
+            }            
+        });
         return (
             <Modal onHide={hideShiftDetail} scrollable show={isShowShiftDetail} size="lg">
                 <Modal.Header closeButton>
