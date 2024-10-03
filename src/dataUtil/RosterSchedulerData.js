@@ -3,7 +3,7 @@ import RosterViewerData from "./RosterViewerData";
 import Utility from "../util/Utility";
 import UndoableData from "../util/UndoableData";
 
-export default class RosterSchedulerData extends RosterViewerData{
+export default class RosterSchedulerData extends RosterViewerData {
     #copiedData = null;
     #rosterSchedulerDataHistory;
     async load(year, month) {
@@ -35,5 +35,36 @@ export default class RosterSchedulerData extends RosterViewerData{
     }
     async reload(newRosterMonth) {
         await super.reload(newRosterMonth);
+        let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
+        let fetchAPI = new FetchAPI();
+        let temp = await fetchAPI.getRosterSchedulerData(rosterYear, rosterMonth + 1);
+        this.itoIdList = Object.keys(this.roster);
+        this.preferredShiftList = structuredClone(temp.preferredShiftList);
+        this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
+        this.#updateRosterSchedulerData();
+    }
+    updateShiftFromTable(itoId, date, newShift) {
+        this.roster[itoId].shiftList[date] = newShift;
+        this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
+        this.#updateRosterSchedulerData();
+    }
+    //=========================================================================================================================================
+    #updateRosterSchedulerData(){
+        let temp = Utility.getAllITOStat(this.essentialShift, 1, this.calendarDateList.length, this.roster);
+        this.duplicateShiftList = structuredClone(temp.duplicateShiftList);
+        this.vacantShiftList = structuredClone(temp.vacantShiftList);
+        this.#recordRosterSchedulerData();
+    }
+    #recordRosterSchedulerData() {
+        this.#rosterSchedulerDataHistory.set({
+            calendarDateList: this.calendarDateList,
+            duplicateShiftList: this.duplicateShiftList,
+            itoIdList: this.itoIdList,
+            preferredShiftList: this.preferredShiftList,
+            previousMonthShiftList: this.previousMonthShiftList,
+            roster: this.roster,
+            shiftDetailList: this.shiftDetailList,
+            vacantShiftList: this.vacantShiftList
+        });
     }
 }

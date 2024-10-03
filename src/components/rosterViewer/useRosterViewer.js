@@ -48,10 +48,7 @@ export default function useRosterViewer() {
         getData();
     }, []);
     let getShiftCssClassName = shiftType => {
-        if (itemList.rosterViewerData.activeShiftList[shiftType])
-            return itemList.rosterViewerData.activeShiftList[shiftType].cssClassName;
-        else
-            return "";
+       return itemList.rosterViewerData.getShiftCssClassName(shiftType);
     }
     let hideShiftDetail = () => {
         updateItemList({

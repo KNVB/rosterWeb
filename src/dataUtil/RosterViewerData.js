@@ -9,15 +9,21 @@ export default class RosterViewerData {
     getShift = (itoId, date) => {
         let shiftType = this.roster[itoId].shiftList[date];
         let shiftDetail = this.roster[itoId].shiftDetail.records[date];
-        let shiftDate=new Date(this.rosterMonth.getTime());
+        let shiftDate = new Date(this.rosterMonth.getTime());
         shiftDate.setDate(date);
         return {
             itoName: this.roster[itoId].itoName,
             itoPostName: this.roster[itoId].itoPostName,
-            date:shiftDate,
+            date: shiftDate,
             shiftType,
             shiftDetail
         }
+    }
+    getShiftCssClassName = shiftType => {
+        if (this.activeShiftList[shiftType])
+            return this.activeShiftList[shiftType].cssClassName;
+        else
+            return "";
     }
     async load(year, month) {
         let monthlyCalendar = this.#calendarUtility.getMonthlyCalendar(year, month);

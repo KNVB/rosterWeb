@@ -3,7 +3,7 @@ import DateRow from "./DateRow";
 import DayRow from "./DayRow";
 import MonthPicker from "../calendarPicker/monthPicker/MonthPicker";
 import HolidayRow from "./HolidayRow";
-export default function HeaderRows({ caption,calendarDateList , systemParam, dataAction,uiAction }) {    
+export default function HeaderRows({ caption,calendarDateList , dataAction, rosterMonth,systemParam,uiAction }) {    
     return (
         <thead>
             <tr>
@@ -13,7 +13,7 @@ export default function HeaderRows({ caption,calendarDateList , systemParam, dat
             </tr>
             <tr>
                 <CaptionCell colSpan="42">
-                    <MonthPicker minDate={systemParam.monthPickerMinDate} onChange={dataAction.updateRosterMonth}/>
+                    <MonthPicker minDate={systemParam.monthPickerMinDate} onChange={dataAction.updateRosterMonth} value={rosterMonth}/>
                 </CaptionCell>
             </tr>
             <HolidayRow calendarDateList={calendarDateList} noOfPrevDate={systemParam.noOfPrevDate} />

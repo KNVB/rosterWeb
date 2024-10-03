@@ -3,21 +3,21 @@ import HeaderRows from "../common/rows/HeaderRows";
 import RosterBody from "./RosterBody"
 import ShiftInfoLegend from "../common/ShiftInfoLegend";
 export default function RosterTable({ rosterViewerData, dataAction }) {
-    const { activeShiftList, calendarDateList, roster, systemParam, shiftDetailList } = rosterViewerData;
+    const { activeShiftList, calendarDateList, roster,rosterMonth, systemParam } = rosterViewerData;
     const { uiAction } = useRosterTable();
     return (
         <table className="m-1 p-0 rosterTable">
             <HeaderRows
                 caption="EMSTF Computer Operator Roster"
                 calendarDateList={calendarDateList}
-                systemParam={systemParam}
                 dataAction={dataAction}
+                rosterMonth={rosterMonth}
+                systemParam={systemParam}                
                 uiAction={uiAction} />
             <RosterBody
                 calendarDateList={calendarDateList}
                 dataAction={dataAction}
                 roster={roster}               
-                shiftDetailList={shiftDetailList}
                 uiAction={uiAction}
             />                
             <tfoot>
