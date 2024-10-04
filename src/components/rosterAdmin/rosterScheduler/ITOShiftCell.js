@@ -1,10 +1,11 @@
 import ShiftCell from "../../common/cells/ShiftCell";
-export default function ITOShiftCell({ children, cssClassName, eventHandler, onBlur, onPaste, title }) {
-    
+export default function ITOShiftCell({ children, cssClassName, eventHandler, onBlur, onContextMenu, onPaste, title }) {
+
     let isLastCell = ((cssClassName.indexOf("selectCellBorderRight") > -1) && (cssClassName.indexOf("selectCellBorderBottom") > -1));
     return (
         <ShiftCell
             cssClassName={cssClassName + " m-0 p-0 position-relative"}
+            onContextMenu={onContextMenu}
             onMouseDown={eventHandler.handleMouseDownEvent}
             onMouseEnter={eventHandler.handleMouseEnterEvent}
             onMouseLeave={eventHandler.handleMouseLeaveEvent}

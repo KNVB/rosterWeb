@@ -2,7 +2,7 @@ import useRosterScheduler from "./useRosterScheduler";
 import handleAPIError from "../../common/handleAPIError";
 import Loading from "../../common/Loading";
 import RosterSchedulerTable from "./RosterSchedulerTable";
-import ShiftDetailModal from "./ShiftDetailModal";
+import ShiftDetailModal from "./shiftDetailModal/ShiftDetailModal";
 export default function RosterScheduler() {
     const { error, isLoading, isShowShiftDetail, rosterSchedulerData, selectedShift, dataAction } = useRosterScheduler();
     if (error) {
@@ -16,9 +16,10 @@ export default function RosterScheduler() {
                     dataAction={dataAction}
                     rosterSchedulerData={rosterSchedulerData} />
                 <ShiftDetailModal
+                    activeShiftList={rosterSchedulerData.activeShiftList}
                     hideShiftDetail={dataAction.hideShiftDetail}
                     isShowShiftDetail={isShowShiftDetail}
-                    selectedShift={selectedShift}
+                    incomingShiftObj={selectedShift}
                 />
             </>
         )

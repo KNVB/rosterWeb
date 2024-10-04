@@ -4,7 +4,7 @@ import ShiftCell from "../../common/cells/ShiftCell";
 import StatCell from "../../common/cells/StatCell";
 export default function ITOShiftRow({ calendarDateList, dataAction, eventHandler, itoId, previousMonthShiftList, roster, rowIndex, systemParam, uiAction }) {
     let className = '';
-    let shift = '', shiftCellList = [];    
+    let shift = '', shiftCellList = [];
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         className = '';
         shift = '';
@@ -32,6 +32,7 @@ export default function ITOShiftRow({ calendarDateList, dataAction, eventHandler
                 key={itoId + '_' + index}
                 keyDownHandler={eventHandler.handleKeyDownEvent}
                 onBlur={e => dataAction.updateShiftFromTable(itoId, index + 1, e.target.textContent)}
+                onContextMenu={e => dataAction.showShiftDetail(e, itoId, index + 1)}
                 onPaste={e => eventHandler.handlePaste(e, calendarDate.dateOfMonth)}
             >
                 {shift}

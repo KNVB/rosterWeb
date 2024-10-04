@@ -11,6 +11,9 @@ let reducer = (state, action) => {
             result.isShowShiftDetail = true;
             result.selectedShift = action.selectedShift;
             break;
+        case "hideShiftDetail":
+            result.isShowShiftDetail = false;
+            break;
         default:
             break;
     }
@@ -33,7 +36,7 @@ export default function useRosterScheduler() {
             let rosterSchedulerData = new RosterSchedulerData();
             try {
                 await rosterSchedulerData.load(2024, 8);
-                console.log(rosterSchedulerData);
+                //console.log(rosterSchedulerData);
                 updateItemList({
                     rosterSchedulerData,
                     type: "init"
@@ -45,7 +48,7 @@ export default function useRosterScheduler() {
         }
         getData();
     }, []);
-    let copyRosterData = copyRegion =>{
+    let copyRosterData = copyRegion => {
         copyRegion.column.end -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
         copyRegion.column.start -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
         itemList.rosterSchedulerData.copy(copyRegion);
@@ -60,13 +63,13 @@ export default function useRosterScheduler() {
             itemList.rosterSchedulerData.calendarDateList.length);
         updateItemList({ type: "refresh" });
     }
-    let getCopyDataRowCount=()=>{
+    let getCopyDataRowCount = () => {
         return itemList.rosterSchedulerData.getCopyDataRowCount();
     }
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
     }
-    let handleEscKeyEvent=()=>{
+    let handleEscKeyEvent = () => {
         itemList.rosterSchedulerData.clearCopiedData();
         updateItemList({ type: "refresh" });
     }
@@ -75,7 +78,7 @@ export default function useRosterScheduler() {
             "type": "hideShiftDetail"
         });
     }
-    let paste=(dateOfMonth,rosterRowIdList, selectedLocation)=>{
+    let paste = (dateOfMonth, rosterRowIdList, selectedLocation) => {
         itemList.rosterSchedulerData.paste(dateOfMonth, rosterRowIdList, selectedLocation);
         updateItemList({ type: "refresh" });
     }
@@ -83,7 +86,8 @@ export default function useRosterScheduler() {
         itemList.rosterSchedulerData.reDo();
         updateItemList({ type: "refresh" });
     }
-    let showShiftDetail = (itoId, date) => {
+    let showShiftDetail = (e, itoId, date) => {
+        e.preventDefault();
         let selectedShift = itemList.rosterSchedulerData.getShift(itoId, date);
         updateItemList({
             "selectedShift": selectedShift,
@@ -92,7 +96,7 @@ export default function useRosterScheduler() {
     }
     let updatePreferredShift = (itoId, date, newPreferredShift) => {
         itemList.rosterSchedulerData.updatePreferredShift(itoId, date, newPreferredShift);
-        updateItemList({"type": "refresh" });
+        updateItemList({ "type": "refresh" });
     }
     let updateRosterMonth = async newRosterMonth => {
         try {
@@ -108,7 +112,7 @@ export default function useRosterScheduler() {
     }
     let updateShiftFromTable = (itoId, date, newShift) => {
         itemList.rosterSchedulerData.updateShiftFromTable(itoId, date, newShift);
-        updateItemList({"type": "refresh" });
+        updateItemList({ "type": "refresh" });
     }
     let unDo = () => {
         itemList.rosterSchedulerData.unDo();
