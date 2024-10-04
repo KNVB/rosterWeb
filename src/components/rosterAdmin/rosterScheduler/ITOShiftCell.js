@@ -1,30 +1,22 @@
 import ShiftCell from "../../common/cells/ShiftCell";
-export default function ITOShiftCell({ children, cssClassName, keyDownHandler, onBlur, title, uiAction }) {
-    function handleMouseEnterEvent(e) {
-        e.preventDefault();
-        let cell = e.target.closest("td");
-        let rowIndex = cell.closest("tr").rowIndex;
-        uiAction.updateUI(cell.cellIndex, rowIndex);
-    }
-    function handleMouseLeaveEvent(e) {
-        e.preventDefault();
-        uiAction.updateUI(-1, -1);
-    }
+export default function ITOShiftCell({ children, cssClassName, eventHandler, onBlur, onPaste, title }) {
+    
     let isLastCell = ((cssClassName.indexOf("selectCellBorderRight") > -1) && (cssClassName.indexOf("selectCellBorderBottom") > -1));
     return (
         <ShiftCell
             cssClassName={cssClassName + " m-0 p-0 position-relative"}
-            onMouseDown={uiAction.startSelect}
-            onMouseEnter={handleMouseEnterEvent}
-            onMouseLeave={handleMouseLeaveEvent}
+            onMouseDown={eventHandler.handleMouseDownEvent}
+            onMouseEnter={eventHandler.handleMouseEnterEvent}
+            onMouseLeave={eventHandler.handleMouseLeaveEvent}
+            onPaste={onPaste}
             title={title}>
             <div
-                className="shiftContent"
+                className="shiftContent m-0 p-0"
                 contentEditable={true}
                 onBlur={onBlur}
-                onDoubleClick={uiAction.setFocusCell}
-                onCopy={uiAction.copyRosterData}
-                onKeyDown={keyDownHandler}
+                onDoubleClick={eventHandler.handleDoubleClick}
+                onCopy={eventHandler.handleCopy}
+                onKeyDown={eventHandler.handleKeyDownEvent}
                 suppressContentEditableWarning={true}>
                 {children}
             </div>

@@ -2,9 +2,9 @@ import ITOShiftCell from "./ITOShiftCell";
 import NameCell from "../../common/cells/NameCell";
 import ShiftCell from "../../common/cells/ShiftCell";
 import StatCell from "../../common/cells/StatCell";
-export default function ITOShiftRow({ calendarDateList, dataAction, itoId, previousMonthShiftList, roster, rowIndex, systemParam, uiAction }) {
+export default function ITOShiftRow({ calendarDateList, dataAction, eventHandler, itoId, previousMonthShiftList, roster, rowIndex, systemParam, uiAction }) {
     let className = '';
-    let shift = '', shiftCellList = [];
+    let shift = '', shiftCellList = [];    
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         className = '';
         shift = '';
@@ -16,22 +16,24 @@ export default function ITOShiftRow({ calendarDateList, dataAction, itoId, previ
             <ShiftCell
                 cssClassName={className}
                 key={"prev-" + i}
-                title={shift}
-                uiAction={uiAction}>
+                title={shift}>
                 {shift}
             </ShiftCell>
         )
     }
     calendarDateList.forEach((calendarDate, index) => {
         shift = roster.shiftList[index + 1];
-        className=uiAction.getSelectedCssClass(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
+        className = uiAction.getSelectedCssClass(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
         className.push(dataAction.getShiftCssClassName(shift));
         shiftCellList.push(
             <ITOShiftCell
                 cssClassName={className.join(" ")}
+                eventHandler={eventHandler}
                 key={itoId + '_' + index}
-                onBlur={e => dataAction.updateShiftFromTable(itoId, index + 1,e.target.textContent, )}
-                uiAction={uiAction}>
+                keyDownHandler={eventHandler.handleKeyDownEvent}
+                onBlur={e => dataAction.updateShiftFromTable(itoId, index + 1, e.target.textContent)}
+                onPaste={e => eventHandler.handlePaste(e, calendarDate.dateOfMonth)}
+            >
                 {shift}
             </ITOShiftCell>
         );

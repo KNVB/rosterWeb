@@ -5,7 +5,7 @@ let reducer = (state, action) => {
     switch (action.type) {
         case "init":
             result.rosterSchedulerData = action.rosterSchedulerData;
-            result.isLoading = false;          
+            result.isLoading = false;
             break;
         case "setSelectedShift":
             result.isShowShiftDetail = true;
@@ -33,6 +33,7 @@ export default function useRosterScheduler() {
             let rosterSchedulerData = new RosterSchedulerData();
             try {
                 await rosterSchedulerData.load(2024, 8);
+                console.log(rosterSchedulerData);
                 updateItemList({
                     rosterSchedulerData,
                     type: "init"
@@ -44,13 +45,43 @@ export default function useRosterScheduler() {
         }
         getData();
     }, []);
+    let copyRosterData = copyRegion =>{
+        copyRegion.column.end -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        copyRegion.column.start -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        itemList.rosterSchedulerData.copy(copyRegion);
+        updateItemList({ type: "refresh" });
+    }
+    let deleteSelectedData = (selectedLocation) => {
+        selectedLocation.column.end -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        selectedLocation.column.start -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        itemList.rosterSchedulerData.deleteSelectedData(
+            selectedLocation,
+            itemList.rosterSchedulerData.noOfWorkingDay,
+            itemList.rosterSchedulerData.calendarDateList.length);
+        updateItemList({ type: "refresh" });
+    }
+    let getCopyDataRowCount=()=>{
+        return itemList.rosterSchedulerData.getCopyDataRowCount();
+    }
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
+    }
+    let handleEscKeyEvent=()=>{
+        itemList.rosterSchedulerData.clearCopiedData();
+        updateItemList({ type: "refresh" });
     }
     let hideShiftDetail = () => {
         updateItemList({
             "type": "hideShiftDetail"
         });
+    }
+    let paste=(dateOfMonth,rosterRowIdList, selectedLocation)=>{
+        itemList.rosterSchedulerData.paste(dateOfMonth, rosterRowIdList, selectedLocation);
+        updateItemList({ type: "refresh" });
+    }
+    let reDo = () => {
+        itemList.rosterSchedulerData.reDo();
+        updateItemList({ type: "refresh" });
     }
     let showShiftDetail = (itoId, date) => {
         let selectedShift = itemList.rosterSchedulerData.getShift(itoId, date);
@@ -58,6 +89,10 @@ export default function useRosterScheduler() {
             "selectedShift": selectedShift,
             "type": "setSelectedShift"
         });
+    }
+    let updatePreferredShift = (itoId, date, newPreferredShift) => {
+        itemList.rosterSchedulerData.updatePreferredShift(itoId, date, newPreferredShift);
+        updateItemList({"type": "refresh" });
     }
     let updateRosterMonth = async newRosterMonth => {
         try {
@@ -71,8 +106,13 @@ export default function useRosterScheduler() {
             updateItemList({ "error": error, "type": "setError" });
         }
     }
-    let updateShiftFromTable=(itoId,date,newShift)=>{
-        itemList.rosterSchedulerData.updateShiftFromTable(itoId,date,newShift);
+    let updateShiftFromTable = (itoId, date, newShift) => {
+        itemList.rosterSchedulerData.updateShiftFromTable(itoId, date, newShift);
+        updateItemList({"type": "refresh" });
+    }
+    let unDo = () => {
+        itemList.rosterSchedulerData.unDo();
+        updateItemList({ type: "refresh" });
     }
     return {
         error: itemList.error,
@@ -81,11 +121,19 @@ export default function useRosterScheduler() {
         rosterSchedulerData: itemList.rosterSchedulerData,
         selectedShift: itemList.selectedShift,
         dataAction: {
+            copyRosterData,
+            deleteSelectedData,
+            getCopyDataRowCount,
             getShiftCssClassName,
+            handleEscKeyEvent,
             hideShiftDetail,
-            showShiftDetail,            
+            paste,
+            reDo,
+            showShiftDetail,
+            updatePreferredShift,
             updateRosterMonth,
-            updateShiftFromTable
+            updateShiftFromTable,
+            unDo
         }
     }
 }

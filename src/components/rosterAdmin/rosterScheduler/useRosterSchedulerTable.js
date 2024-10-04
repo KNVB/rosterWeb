@@ -32,17 +32,39 @@ export default function useRosterSchedulerTable(rosterSchedulerData) {
         itemList.rosterSchedulerTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
+    let getCopyRegionLocation = () => {
+        return itemList.rosterSchedulerTableUtil.getCopyRegionLocation();
+    }
+    let getRosterRowIdList=()=>{
+        return itemList.rosterSchedulerTableUtil.rosterRowIdList;
+    }
     let getSelectedCssClass = (cellIndex, rowIndex) => {
         return itemList.rosterSchedulerTableUtil.getSelectedCssClass(cellIndex, rowIndex);
     }
+    let getSelectedLocation = () =>{
+        return itemList.rosterSchedulerTableUtil.getSelectedLocation();
+    }
     let getRowIndex = rowName => {
         return itemList.rosterSchedulerTableUtil.getRowIndex(rowName);
+    }
+    let handleArrowKeyEvent=(cell, xOffset, yOffset)=>{
+        let nextCell = itemList.rosterSchedulerTableUtil.getNextCell(cell, xOffset, yOffset);
+        itemList.rosterSchedulerTableUtil.selectCell(nextCell.cellIndex, nextCell.rowIndex);
+        itemList.rosterSchedulerTableUtil.select(nextCell.cellIndex, nextCell.rowIndex);
+        updateItemList({ type: "refresh" });
+    }
+    let handleEscKeyEvent = () => {
+        itemList.rosterSchedulerTableUtil.clearCopiedRegion();        
+        updateItemList({ type: "refresh" });
     }
     let isHighLightCell = (cellIndex) => {
         return itemList.rosterSchedulerTableUtil.isHighLightCell(cellIndex);
     }
     let isHighLightRow = rowIndex => {
         return itemList.rosterSchedulerTableUtil.isHighLightRow(rowIndex);
+    }
+    let setFocusCell =e =>{
+        return itemList.rosterSchedulerTableUtil.setFocusCell(e);
     }
     let startSelect = e => {
         let cell = e.target.closest("td");
@@ -56,14 +78,20 @@ export default function useRosterSchedulerTable(rosterSchedulerData) {
     let updateUI = (cellIndex, rowIndex) => {
         itemList.rosterSchedulerTableUtil.updateUI(cellIndex, rowIndex);
         updateItemList({ cellIndex, rowIndex, type: "refresh" });
-    }
+    }    
     return {
         uiAction: {
-            endSelect,            
+            endSelect,
+            getCopyRegionLocation,
+            getRosterRowIdList,
             getRowIndex,
             getSelectedCssClass,
+            getSelectedLocation,
+            handleArrowKeyEvent,
+            handleEscKeyEvent,
             isHighLightCell,
             isHighLightRow,
+            setFocusCell,
             startSelect,
             updateUI
         }
