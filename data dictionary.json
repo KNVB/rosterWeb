@@ -2437,6 +2437,7 @@ SelectedShift={
             "description": "Seminar on Personal Data (Privacy) Ordinance and Personal Data Protection (GES/HK2)",
             "duration": 2,
             "endTime": "2024-09-09T04:00:00.000Z",
+            "shiftDetailId":"sdfsdfsdfsdfsd",
             "startTime": "2024-09-09T02:00:00.000Z",
             "status": "approved"
         }

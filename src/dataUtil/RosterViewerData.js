@@ -6,21 +6,22 @@ export default class RosterViewerData {
     constructor() {
         this.#calendarUtility = new CalendarUtility();
     }
-    getShift = (itoId, date) => {
+
+    getShift(itoId, date) {
         let result;
         let shiftType = this.roster[itoId].shiftList[date];
-        
+
         let shiftDate = new Date(this.rosterMonth.getTime());
         shiftDate.setDate(date);
-        result={
+        result = {
             itoId,
             itoName: this.roster[itoId].itoName,
             itoPostName: this.roster[itoId].itoPostName,
             date: shiftDate,
-            shiftType:shiftType??"",
+            shiftType: shiftType ?? "",
         }
-        if (this.roster[itoId].shiftDetail.records[date]){
-            result.shiftDetail=this.roster[itoId].shiftDetail.records[date];
+        if (this.roster[itoId].shiftDetail.records[date]) {
+            result.shiftDetail = this.roster[itoId].shiftDetail.records[date];
         }
         return result
     }

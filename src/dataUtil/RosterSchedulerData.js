@@ -6,9 +6,7 @@ import UndoableData from "../util/UndoableData";
 export default class RosterSchedulerData extends RosterViewerData {
     #copiedData = null;
     #rosterSchedulerDataHistory;
-    constructor (){
-        super();
-    }
+
     copy = copyRegion => {
         let index, itoId, shiftList;
         let temp, result = [], shiftRowType;
@@ -85,7 +83,22 @@ export default class RosterSchedulerData extends RosterViewerData {
         } else {
             return this.#copiedData.length;
         }
-    }    
+    }
+    getShift(itoId, date) {
+        let shift = super.getShift(itoId, date);
+        if ((shift.shiftType === 't') && (shift.shiftDetail === undefined)) {
+            shift.shiftDetail = [{
+                "claimType": "",
+                "description": "",
+                "duration": 0,
+                "endTime": new Date(shift.date.getTime()),
+                "shiftDetailId": -1,
+                "startTime": new Date(shift.date.getTime()),
+                "status": "approved"
+            }];
+        }
+        return shift
+    }
     async load(year, month) {
         await super.load(year, month);
         let fetchAPI = new FetchAPI();
