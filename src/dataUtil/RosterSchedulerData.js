@@ -85,8 +85,8 @@ export default class RosterSchedulerData extends RosterViewerData {
         }
     }
     getShift(itoId, date) {
-        super.getShift(itoId, date);
-        console.log(itoId, date);
+        console.log(super.getShift(itoId, date));
+        //console.log(itoId, date);
         /*
         let shift = super.getShift(itoId, date);
         alert(shift);
