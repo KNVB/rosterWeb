@@ -89,6 +89,7 @@ export default function useRosterScheduler() {
     let showShiftDetail = (e, itoId, date) => {
         e.preventDefault();
         let selectedShift = itemList.rosterSchedulerData.getShift(itoId, date);
+        
         updateItemList({
             "selectedShift": selectedShift,
             "type": "setSelectedShift"
@@ -109,6 +110,10 @@ export default function useRosterScheduler() {
             console.log(error);
             updateItemList({ "error": error, "type": "setError" });
         }
+    }
+    let updateShiftFromModal = shiftObj => {
+        itemList.rosterSchedulerData.updateShiftFromModal(shiftObj);
+        updateItemList({ "type": "hideShiftDetail" });
     }
     let updateShiftFromTable = (itoId, date, newShift) => {
         itemList.rosterSchedulerData.updateShiftFromTable(itoId, date, newShift);
@@ -136,6 +141,7 @@ export default function useRosterScheduler() {
             showShiftDetail,
             updatePreferredShift,
             updateRosterMonth,
+            updateShiftFromModal,
             updateShiftFromTable,
             unDo
         }

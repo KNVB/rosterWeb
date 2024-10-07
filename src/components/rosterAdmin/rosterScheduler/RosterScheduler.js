@@ -20,6 +20,7 @@ export default function RosterScheduler() {
                     hideShiftDetail={dataAction.hideShiftDetail}
                     isShowShiftDetail={isShowShiftDetail}
                     incomingShiftObj={selectedShift}
+                    updateShiftFromModal={dataAction.updateShiftFromModal}
                 />
             </>
         )

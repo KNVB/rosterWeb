@@ -3,16 +3,28 @@ import { PlusLg } from 'react-bootstrap-icons';
 import useShiftDetailModal from "./useShiftDetailModal";
 import DateTimePicker from "../../../common/calendarPicker/dateTimePicker/DateTimePicker";
 import Utility from "../../../../util/Utility";
-export default function ShiftDetailModal({ activeShiftList, hideShiftDetail, isShowShiftDetail, incomingShiftObj }) {
+export default function ShiftDetailModal({ activeShiftList, hideShiftDetail, isShowShiftDetail, incomingShiftObj, updateShiftFromModal }) {
     const {
         date,
+        errorList,
+        itoId,
         itoName,
         itoPostName,
         shiftDetailList,
         action
     } = useShiftDetailModal(incomingShiftObj);
+    let updateSelectedShift = () => {
+        if (action.isShiftDetailValid()) {
+            updateShiftFromModal({
+                date,
+                itoId,
+                itoName,
+                itoPostName,
+                shiftDetailList
+            });
+        }
+    }
     let body = [];
-    
     shiftDetailList.forEach((obj, index) => {
         body.push(
             <tr key={"shift_" + index}>
@@ -26,6 +38,7 @@ export default function ShiftDetailModal({ activeShiftList, hideShiftDetail, isS
                             ))
                         }
                     </select>
+                    <span className='ms-1 text-danger'>{errorList[index + "_shiftType"]}</span>
                 </td>
             </tr>
         );
@@ -41,6 +54,7 @@ export default function ShiftDetailModal({ activeShiftList, hideShiftDetail, isS
                                 <option value="overTime">Over Time</option>
                                 <option value="training">Training</option>
                             </select>
+                            <span className='ms-1 text-danger'>{errorList[index + "_" + detailIndex + "_claimType"]}</span>
                         </td>
                     </tr>
                 );
@@ -48,7 +62,15 @@ export default function ShiftDetailModal({ activeShiftList, hideShiftDetail, isS
                     <tr key={"shift_" + index + "_" + detailIndex + "_1"}>
                         <td className='border border-dark pe-1 text-end'>Description</td>
                         <td className="border border-dark ps-1">
-                            <textarea className='w-100' onChange={e => action.updatDesc(index, detailIndex, e.target.value)} name="description" value={detail.description} />
+                            <textarea
+                                className='w-100'
+                                onBlur={e => action.updatDesc(index, detailIndex, e.target.value)}
+                                onChange={e => action.updatDesc(index, detailIndex, e.target.value)}
+                                name="description"
+                                value={detail.description} />
+                            {
+                                (errorList[index + "_" + detailIndex + "_desc"]) ? <div className='text-danger'>{errorList[index + "_" + detailIndex + "_desc"]}</div> : ""
+                            }
                         </td>
                     </tr>
                 );
@@ -57,6 +79,7 @@ export default function ShiftDetailModal({ activeShiftList, hideShiftDetail, isS
                         <td className='border border-dark pe-1 text-end'>Start Time</td>
                         <td className="border border-dark ps-1">
                             <DateTimePicker onChange={value => action.updateStartTime(index, detailIndex, value)} value={detail.startTime} />
+                            <span className='ms-1 text-danger'>{errorList[index + "_" + detailIndex + "_startTime"]}</span>
                         </td>
                     </tr>
                 );
@@ -65,6 +88,7 @@ export default function ShiftDetailModal({ activeShiftList, hideShiftDetail, isS
                         <td className='border border-dark pe-1 text-end'>End Time</td>
                         <td className="border border-dark ps-1">
                             <DateTimePicker onChange={value => action.updateEndTime(index, detailIndex, value)} value={detail.endTime} />
+                            <span className='ms-1 text-danger'>{errorList[index + "_" + detailIndex + "_endTime"]}</span>
                         </td>
                     </tr>
                 );
@@ -105,6 +129,7 @@ export default function ShiftDetailModal({ activeShiftList, hideShiftDetail, isS
                 </table>
             </Modal.Body>
             <Modal.Footer>
+                <Button onClick={updateSelectedShift} variant="secondary">Update</Button>
                 <Button onClick={hideShiftDetail} variant="secondary">Close</Button>
             </Modal.Footer>
         </Modal>

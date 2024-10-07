@@ -6,6 +6,9 @@ export default function ShiftDetailModal({ hideShiftDetail, isShowShiftDetail, s
         let body = [];
         let shiftList = selectedShift.shiftType.split("+");
         shiftList.forEach((shift, index) => {
+            if (shift === ""){
+                shift ="Not Assigned";
+            }
             body.push(
                 <tr key={"shift_" + index}>
                     <td className='border border-dark pe-1 text-end w-25'>Shift Type</td>

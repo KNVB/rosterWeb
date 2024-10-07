@@ -66,10 +66,11 @@ export default class Roster {
                             itoRosterList[record.ito_id].shiftDetail.records[record.d] = [];
                         }
                         itoRosterList[record.ito_id].shiftDetail.records[record.d].push({
-                            claimType: record.claim_type,
+                            claimType: record.claim_type,                            
                             description: record.description,
                             duration: record.no_of_hour_applied_for,
                             endTime: record.end_time,
+                            shiftDetailId:record.shift_detail_id,
                             startTime: record.start_time,
                             status: record.status
                         });

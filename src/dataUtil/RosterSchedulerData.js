@@ -84,6 +84,22 @@ export default class RosterSchedulerData extends RosterViewerData {
             return this.#copiedData.length;
         }
     }
+    getShift(itoId, date) {
+        super.getShift(itoId, date);
+        console.log(itoId, date);
+        /*
+        let shift = super.getShift(itoId, date);
+        alert(shift);
+        
+        if ((shift.shiftType === "t") && (shift.shiftDetail === undefined)) {
+            shift.shiftDetail={
+                records:{},
+                "total":0
+            }
+        }
+        return shift
+        */
+    }
     async load(year, month) {
         await super.load(year, month);
         let fetchAPI = new FetchAPI();
@@ -220,14 +236,37 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.#updateRosterSchedulerData();
     }
     updatePreferredShiftFromPaste(itoId, dateOfMonth, shiftObj) {
-        let temp=[];
-        shiftObj.forEach(shift=>{
+        let temp = [];
+        shiftObj.forEach(shift => {
             temp.push(shift.shiftType);
         });
         if (this.preferredShiftList[itoId] === undefined) {
             this.preferredShiftList[itoId] = {};
         }
-        this.preferredShiftList[itoId][dateOfMonth] =temp.join("+");
+        this.preferredShiftList[itoId][dateOfMonth] = temp.join("+");
+        this.#updateRosterSchedulerData();
+    }
+    updateShiftFromModal(shiftObj) {
+        console.log(shiftObj);
+        let dateOfMonth = shiftObj.date.getDate();
+        let shiftTypeList = [], shiftDetailTotal = 0;
+        shiftObj.shiftDetailList.forEach(item => {
+            shiftTypeList.push(item.shiftType);
+            item.shiftDetailList.forEach(detailObj => {
+                console.log(detailObj)
+            });
+        })
+        this.roster[shiftObj.itoId].shiftList[dateOfMonth] = shiftTypeList.join("+");
+        this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
+        this.#updateRosterSchedulerData();
+    }
+    updateShiftFromPaste(itoId, date, shiftObj) {
+        let temp = [];
+        shiftObj.forEach(shift => {
+            temp.push(shift.shiftType);
+        });
+        this.roster[itoId].shiftList[date] = temp.join("+");
+        this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
         this.#updateRosterSchedulerData();
     }
     updateShiftFromTable(itoId, date, newShift) {
@@ -236,15 +275,6 @@ export default class RosterSchedulerData extends RosterViewerData {
             this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
             this.#updateRosterSchedulerData();
         }
-    }
-    updateShiftFromPaste(itoId, date, shiftObj) {
-        let temp=[];
-        shiftObj.forEach(shift=>{
-            temp.push(shift.shiftType);
-        });
-        this.roster[itoId].shiftList[date] = temp.join("+");
-        this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
-        this.#updateRosterSchedulerData();
     }
     //=========================================================================================================================================
     #updateRosterSchedulerData() {

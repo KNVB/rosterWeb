@@ -54,7 +54,8 @@ export default class Dbo {
         this.#sqlString+="     no_of_hour_applied_for,";
 		this.#sqlString+="	   end_time,";
         this.#sqlString+="	   start_time,";		
-		this.#sqlString+="	   shift_detail.status ";
+		this.#sqlString+="	   shift_detail.status,";
+        this.#sqlString+="     shift_detail_id ";
 		this.#sqlString+="FROM   (SELECT available_shift,";
 		this.#sqlString+="			   ito_info.ito_id,";
 		this.#sqlString+="			   post_name,";

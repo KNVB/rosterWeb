@@ -29,4 +29,7 @@ export default class Utility{
         let { getAllITOStat } = AdminShiftStatUtil();
         return getAllITOStat(activeShiftList, startDate, endDate, rosterRow);
     }
+    static getDurationInHour=(startTime,endTime)=>{
+        return (endTime-startTime)/1000/3600
+    }
 }
