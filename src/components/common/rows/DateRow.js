@@ -37,9 +37,9 @@ export default function DateRow({ calendarDateList, uiAction, noOfPrevDate }) {
                 Month
             </StatCell>
             <StatCell rowSpan="1">
-                Time
+                Extra
                 <br />
-                Off
+                Time
             </StatCell>
             <StatCell rowSpan="1">
                 Total

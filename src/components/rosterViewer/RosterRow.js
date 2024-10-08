@@ -3,7 +3,7 @@ import ShiftCell from "../common/cells/ShiftCell";
 import StatCell from "../common/cells/StatCell";
 export default function RosterRow({ calendarDateList, dataAction, itoId, roster, rowIndex, uiAction }) {
     let className = "";
-    let shift = '', shiftCellList = [];
+    let shiftCellList = [];
     //console.log(roster);
     function handleMouseEnterEvent(e) {
         e.preventDefault();
@@ -20,7 +20,18 @@ export default function RosterRow({ calendarDateList, dataAction, itoId, roster,
         dataAction.showShiftDetail(itoId, date);
     }
     calendarDateList.forEach((calendarDate, index) => {
-        shift = roster.shiftList[index + 1];
+        let shift;
+        let itemList = structuredClone(roster.shiftList[index + 1]);
+        if (itemList === undefined) {
+            shift = "";
+        } else {
+            let temp=[];
+            itemList.forEach(item=>{
+                temp.push(item.shiftType);
+            });
+            shift=temp.join("+");
+        }
+        
         className = "cursor-pointer " + dataAction.getShiftCssClassName(shift);
         shiftCellList.push(
             <ShiftCell
@@ -60,24 +71,22 @@ export default function RosterRow({ calendarDateList, dataAction, itoId, roster,
                 {roster.thisMonthBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {
-                    roster.shiftDetail.total
-                }
+                {roster.extraHour}
             </StatCell>
             <StatCell>
                 {roster.totalBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {roster.shiftCountList.aShiftCount}
+                {roster.aShiftCount}
             </StatCell>
             <StatCell>
-                {roster.shiftCountList.bxShiftCount}
+                {roster.bxShiftCount}
             </StatCell>
             <StatCell>
-                {roster.shiftCountList.cShiftCount}
+                {roster.cShiftCount}
             </StatCell>
             <StatCell>
-                {roster.shiftCountList.dxShiftCount}
+                {roster.dxShiftCount}
             </StatCell>
             <StatCell>
                 {roster.actualWorkingDayCount}

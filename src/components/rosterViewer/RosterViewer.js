@@ -10,6 +10,7 @@ export default function RosterViewer() {
     }
     if (isLoading === false) {
         document.title = "EMSTF Computer Operator Roster";
+        //console.log(rosterViewerData);
         return (
             <>
                 <RosterTable

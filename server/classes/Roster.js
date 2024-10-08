@@ -43,10 +43,6 @@ export default class Roster {
                         itoName: record.ito_name,
                         itoPostName: record.post_name,
                         lastMonthBalance: 0.0,
-                        shiftDetail: {
-                            records: {},
-                            total: 0
-                        },
                         shiftList: {},
                         thisMonthBalance: 0.0,
                         workingHourPerDay: parseFloat(record.working_hour_per_day)
@@ -57,25 +53,19 @@ export default class Roster {
                 }
                 if (record.d) {
                     if (itoRosterList[record.ito_id].shiftList[record.d] === undefined) {
-                        itoRosterList[record.ito_id].shiftList[record.d] = record.shift;
-                    } else {
-                        itoRosterList[record.ito_id].shiftList[record.d] += "+" + record.shift;
+                        itoRosterList[record.ito_id].shiftList[record.d] = [];
                     }
-                    if (record.shift === "t") {                       
-                        if (itoRosterList[record.ito_id].shiftDetail.records[record.d] === undefined) {
-                            itoRosterList[record.ito_id].shiftDetail.records[record.d] = [];
-                        }
-                        itoRosterList[record.ito_id].shiftDetail.records[record.d].push({
-                            claimType: record.claim_type,                            
-                            description: record.description,
-                            duration: record.no_of_hour_applied_for,
-                            endTime: record.end_time,
-                            shiftDetailId:record.shift_detail_id,
-                            startTime: record.start_time,
-                            status: record.status
-                        });
-                        itoRosterList[record.ito_id].shiftDetail.total += record.no_of_hour_applied_for;
+                    let temp = { "shiftType": record.shift }
+                    if (record.shift === "t") {
+                        temp.claimType = record.claim_type;
+                        temp.description = record.description;
+                        temp.duration = record.no_of_hour_applied_for;
+                        temp.endTime = record.end_time;
+                        temp.shiftDetailId = record.shift_detail_id;
+                        temp.startTime = record.start_time;
+                        temp.status = record.status;
                     }
+                    itoRosterList[record.ito_id].shiftList[record.d].push(temp);
                 }
             });
             return itoRosterList;

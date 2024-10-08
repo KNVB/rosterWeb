@@ -9,19 +9,18 @@ export default class RosterViewerData {
 
     getShift(itoId, date) {
         let result;
-        let shiftType = this.roster[itoId].shiftList[date];
-
         let shiftDate = new Date(this.rosterMonth.getTime());
+        let shiftInfoList = this.roster[itoId].shiftList[date];
+        if (shiftInfoList === undefined){
+            shiftInfoList=[{shiftType:""}]
+        }
         shiftDate.setDate(date);
         result = {
             itoId,
             itoName: this.roster[itoId].itoName,
             itoPostName: this.roster[itoId].itoPostName,
             date: shiftDate,
-            shiftType: shiftType ?? "",
-        }
-        if (this.roster[itoId].shiftDetail.records[date]) {
-            result.shiftDetail = this.roster[itoId].shiftDetail.records[date];
+            shiftInfoList
         }
         return result
     }
