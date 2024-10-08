@@ -86,6 +86,7 @@ export default class RosterSchedulerData extends RosterViewerData {
     }
     getShift(itoId, date) {
         let shift = super.getShift(itoId, date);
+        /*
         if ((shift.shiftType === 't') && (shift.shiftDetail === undefined)) {
             shift.shiftDetail = [{
                 "claimType": "",
@@ -97,6 +98,7 @@ export default class RosterSchedulerData extends RosterViewerData {
                 "status": "approved"
             }];
         }
+        */
         return shift
     }
     async load(year, month) {
@@ -110,7 +112,7 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
         this.systemParam = structuredClone(temp.systemParam);
         this.systemParam.monthPickerMinDate = new Date(this.systemParam.monthPickerMinDate);
-        temp = Utility.getAllITOStat(this.essentialShift, 1, this.calendarDateList.length, this.roster);
+        temp = Utility.getAllITOStat(this.essentialShift, 1, this.calendarDateList.length, this.itoIdList, this.roster);
 
         this.duplicateShiftList = structuredClone(temp.duplicateShiftList);
         this.vacantShiftList = structuredClone(temp.vacantShiftList);
@@ -122,7 +124,6 @@ export default class RosterSchedulerData extends RosterViewerData {
             previousMonthShiftList: this.previousMonthShiftList,
             roster: this.roster,
             rosterRowIdList: this.rosterRowIdList,
-            shiftDetailList: this.shiftDetailList,
             vacantShiftList: this.vacantShiftList
         });
     }
@@ -198,7 +199,6 @@ export default class RosterSchedulerData extends RosterViewerData {
             this.preferredShiftList = backupItem.preferredShiftList
             this.previousMonthShiftList = backupItem.previousMonthShiftList
             this.roster = backupItem.roster;
-            this.shiftDetailList = backupItem.shiftDetailList;
             this.vacantShiftList = backupItem.vacantShiftList;
         }
     }
@@ -223,7 +223,6 @@ export default class RosterSchedulerData extends RosterViewerData {
             this.preferredShiftList = backupItem.preferredShiftList
             this.previousMonthShiftList = backupItem.previousMonthShiftList
             this.roster = backupItem.roster;
-            this.shiftDetailList = backupItem.shiftDetailList;
             this.vacantShiftList = backupItem.vacantShiftList;
         }
     }
@@ -269,15 +268,23 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.#updateRosterSchedulerData();
     }
     updateShiftFromTable(itoId, date, newShift) {
-        if (this.roster[itoId].shiftList[date] !== newShift) {
-            this.roster[itoId].shiftList[date] = newShift;
-            this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
-            this.#updateRosterSchedulerData();
+        let newShiftList = newShift.split("+");
+
+        if (this.roster[itoId].shiftList[date] === undefined) {
+            this.roster[itoId].shiftList[date] = [];
         }
+        newShiftList.forEach(item => {
+            let result = this.roster[itoId].shiftList[date].filter(shiftInfo => shiftInfo.shiftType === item);
+            if (result.length === 0) {
+                this.roster[itoId].shiftList[date].push({ "shiftType": item });
+                this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
+                this.#updateRosterSchedulerData();
+            }
+        });
     }
     //=========================================================================================================================================
     #updateRosterSchedulerData() {
-        let temp = Utility.getAllITOStat(this.essentialShift, 1, this.calendarDateList.length, this.roster);
+        let temp = Utility.getAllITOStat(this.essentialShift, 1, this.calendarDateList.length,this.itoIdList, this.roster);
         this.duplicateShiftList = structuredClone(temp.duplicateShiftList);
         this.vacantShiftList = structuredClone(temp.vacantShiftList);
         this.#rosterSchedulerDataHistory.set({

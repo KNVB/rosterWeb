@@ -29,7 +29,7 @@ export default class Utility {
             Object.keys(itoRoster.shiftList).forEach(date => {
                 if (itoRoster.shiftList[date]) {
                     let itemList = itoRoster.shiftList[date];
-                    itemList.forEach((item,itemIndex) => {
+                    itemList.forEach((item, itemIndex) => {
                         if (itoRoster.availableShiftList.includes(item.shiftType)) {
                             if (activeShiftList[item.shiftType]) {
                                 itoRoster.actualWorkingHour += activeShiftList[item.shiftType].duration;
@@ -58,13 +58,13 @@ export default class Utility {
                                 case "t":
                                     itoRoster.shiftList[date][itemIndex].endTime = new Date(item.endTime);
                                     itoRoster.shiftList[date][itemIndex].startTime = new Date(item.startTime);
-                                    if (item.claimType === "timeOff"){
+                                    if (item.claimType === "timeOff") {
                                         itoRoster.totalBalance -= item.duration;
                                         itoRoster.extraHour -= item.duration;
-                                    }else {
+                                    } else {
                                         itoRoster.totalBalance += item.duration;
-                                        itoRoster.extraHour+= item.duration;
-                                    }                                    
+                                        itoRoster.extraHour += item.duration;
+                                    }
                                     break;
                                 default:
                                     break;
@@ -79,9 +79,64 @@ export default class Utility {
         }
         return result;
     }
-    static getAllITOStat = (activeShiftList, startDate, endDate, rosterRow) => {
+    static getAllITOStat = (essentialShift, startDate, endDate, itoIdList, roster) => {
+        //console.log(roster);
+        let blackListShiftList = {};
+        let duplicateShiftList = {};
+        let vacantShiftList = {};
+        /*
         let { getAllITOStat } = AdminShiftStatUtil();
         return getAllITOStat(activeShiftList, startDate, endDate, rosterRow);
+        */
+        itoIdList.forEach(itoId => {
+            blackListShiftList[itoId] = [];
+            duplicateShiftList[itoId] = [];
+        });
+        for (let i = startDate; i <= endDate; i++) {
+            let vacantShift = essentialShift;
+            let assignedShiftList = [];
+            itoIdList.forEach(itoId => {
+                let shiftInfoList = roster[itoId].shiftList[i];
+                if (shiftInfoList) {
+                    shiftInfoList.forEach(shiftInfo => {
+                        if (shiftInfo.shiftType === "b1") {
+                            vacantShift = vacantShift.replace("b", "");
+                        } else {
+                            vacantShift = vacantShift.replace(shiftInfo.shiftType, "");
+                        }
+                        switch (shiftInfo.shiftType) {
+                            case "a":
+                            case "c":
+                                if (assignedShiftList.includes(shiftInfo.shiftType)) {
+                                    duplicateShiftList[itoId].push(i);
+                                } else {
+                                    assignedShiftList.push(shiftInfo.shiftType);
+                                }
+                                break;
+                            case "b":
+                            case "b1":
+                                if (assignedShiftList.includes("b")) {
+                                    duplicateShiftList[itoId].push(i);
+                                } else {
+                                    assignedShiftList.push('b');
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                }
+            });
+            if (vacantShift !== '') {
+                vacantShiftList[i] = vacantShift;
+            }
+        }
+
+        return {
+            blackListShiftList,
+            duplicateShiftList,
+            vacantShiftList
+        }
     }
     static getDurationInHour = (startTime, endTime) => {
         return (endTime - startTime) / 1000 / 3600

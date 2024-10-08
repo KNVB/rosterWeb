@@ -22,7 +22,16 @@ export default function ITOShiftRow({ calendarDateList, dataAction, eventHandler
         )
     }
     calendarDateList.forEach((calendarDate, index) => {
-        shift = roster.shiftList[index + 1];
+        let itemList = structuredClone(roster.shiftList[index + 1]);
+        if (itemList === undefined) {
+            shift = "";
+        } else {
+            let temp=[];
+            itemList.forEach(item=>{
+                temp.push(item.shiftType);
+            });
+            shift=temp.join("+");
+        }        
         className = uiAction.getSelectedCssClass(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
         className.push(dataAction.getShiftCssClassName(shift));
         shiftCellList.push(
@@ -63,22 +72,22 @@ export default function ITOShiftRow({ calendarDateList, dataAction, eventHandler
                 {roster.thisMonthBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {roster.shiftDetail.total}
+                {roster.extraHour}
             </StatCell>
             <StatCell>
                 {roster.totalBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-                {roster.shiftCountList.aShiftCount}
+                {roster.aShiftCount}
             </StatCell>
             <StatCell>
-                {roster.shiftCountList.bxShiftCount}
+                {roster.bxShiftCount}
             </StatCell>
             <StatCell>
-                {roster.shiftCountList.cShiftCount}
+                {roster.cShiftCount}
             </StatCell>
             <StatCell>
-                {roster.shiftCountList.dxShiftCount}
+                {roster.dxShiftCount}
             </StatCell>
             <StatCell>
                 {roster.actualWorkingDayCount}

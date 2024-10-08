@@ -87,7 +87,8 @@ export default function useShiftDetailModal(incomingShiftObj) {
         shiftDetailList: []
     });
     useEffect(() => {
-        // console.log(incomingShiftObj);
+        console.log(incomingShiftObj);
+        /*
         if (incomingShiftObj) {
             let tempList = [];
             if (incomingShiftObj.shiftType) {
@@ -125,6 +126,7 @@ export default function useShiftDetailModal(incomingShiftObj) {
                 shiftDetailList: structuredClone(tempList)
             });
         }
+        */
     }, [incomingShiftObj]);
     let isShiftDetailValid = () => {
         let result = true;
