@@ -84,6 +84,7 @@ export default class RosterSchedulerData extends RosterViewerData {
             return this.#copiedData.length;
         }
     }
+    /*
     getShift(itoId, date) {
         let shift = super.getShift(itoId, date);
         /*
@@ -98,9 +99,8 @@ export default class RosterSchedulerData extends RosterViewerData {
                 "status": "approved"
             }];
         }
-        */
         return shift
-    }
+    }*/
     async load(year, month) {
         await super.load(year, month);
         let fetchAPI = new FetchAPI();

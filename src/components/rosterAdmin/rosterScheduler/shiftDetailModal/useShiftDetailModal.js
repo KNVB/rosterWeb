@@ -9,69 +9,76 @@ let reducer = (state, action) => {
             result.itoId = action.itoId;
             result.itoName = action.itoName
             result.itoPostName = action.itoPostName
-            result.shiftDetailList = structuredClone(action.shiftDetailList);
+            result.shiftInfoList = structuredClone(action.shiftInfoList);
             break;
         case "setErrorList":
             result.errorList = structuredClone(action.errorList);
             break
         case "updateClaimType":
-            result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].claimType = action.claimType;
+            result.shiftInfoList[action.index].claimType = action.claimType;
             if (action.claimType === "") {
-                result.errorList[action.index + "_" + action.detailIndex + "_claimType"] = "Please select a claim type."
+                result.errorList[action.index + "_claimType"] = "Please select a claim type."
             } else {
-                delete result.errorList[action.index + "_" + action.detailIndex + "_claimType"];
-            }
-            break
-        case "updatDesc":
-            result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].description = action.desc;
-            if (action.desc === "") {
-                result.errorList[action.index + "_" + action.detailIndex + "_desc"] = "Please enter the description";
-            } else {
-                delete result.errorList[action.index + "_" + action.detailIndex + "_desc"];
-            }
-            break
-        case "updateEndTime":
-            result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].endTime = new Date(action.value.getTime());
-            if (action.value > result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].startTime) {
-                result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].duration = Utility.getDurationInHour(
-                    result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].startTime,
-                    result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].endTime
-                );
-                delete result.errorList[action.index + "_" + action.detailIndex + "_endTime"];
-            } else {
-                result.errorList[action.index + "_" + action.detailIndex + "_endTime"] = "The end time must be later than the start time.";
+                delete result.errorList[action.index + "_claimType"];
             }
             break;
-        case "updateShiftType":
-            result.shiftDetailList[action.index].shiftType = action.shiftType;
-            if (result.shiftDetailList[action.index].shiftDetailList === undefined) {
-                result.shiftDetailList[action.index].shiftDetailList = [{
-                    "claimType": "",
-                    "description": "",
-                    "duration": 0,
-                    "endTime": new Date(result.date.getTime()),
-                    "startTime": new Date(result.date.getTime()),
-                    "status": ""
-                }]
+        case "updatDesc":
+            result.shiftInfoList[action.index].description = action.desc;
+            if (action.desc === "") {
+                result.errorList[action.index + "_desc"] = "Please enter the description";
+            } else {
+                delete result.errorList[action.index + "_desc"];
             }
+            break;
+        case "updateEndTime":
+            result.shiftInfoList[action.index].endTime = new Date(action.value.getTime());
+            if (action.value > result.shiftInfoList[action.index].startTime) {
+                result.shiftInfoList[action.index].duration = Utility.getDurationInHour(
+                    result.shiftInfoList[action.index].startTime,
+                    result.shiftInfoList[action.index].endTime
+                );
+                delete result.errorList[action.index + "_endTime"];
+                delete result.errorList[action.index + "_startTime"];
+            } else {
+                result.errorList[action.index + "_endTime"] = "The end time must be later than the start time.";
+            }
+            break
+        case "updateShiftType":
+            result.shiftInfoList[action.index].shiftType = action.shiftType;
             if (action.shiftType === "") {
                 result.errorList[action.index + "_shiftType"] = "Please select a shift type."
             } else {
+                if (action.shiftType === "t") {
+                    result.shiftInfoList[action.index].claimType = "";
+                    result.shiftInfoList[action.index].description = "";
+                    result.shiftInfoList[action.index].duration = 0;
+                    result.shiftInfoList[action.index].endTime = new Date(result.date.getTime());
+                    result.shiftInfoList[action.index].status = "";
+                    result.shiftInfoList[action.index].startTime = new Date(result.date.getTime());
+                } else {
+                    delete result.shiftInfoList[action.index].claimType;
+                    delete result.shiftInfoList[action.index].description;
+                    delete result.shiftInfoList[action.index].duration;
+                    delete result.shiftInfoList[action.index].endTime;
+                    delete result.shiftInfoList[action.index].status;
+                    delete result.shiftInfoList[action.index].startTime;
+                }
                 delete result.errorList[action.index + "_shiftType"];
             }
             break;
         case "updateStartTime":
-            result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].startTime = new Date(action.value.getTime());
-            if (action.value < result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].endTime) {
-                result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].duration = Utility.getDurationInHour(
-                    result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].startTime,
-                    result.shiftDetailList[action.index].shiftDetailList[action.detailIndex].endTime
+            result.shiftInfoList[action.index].startTime = new Date(action.value.getTime());
+            if (action.value < result.shiftInfoList[action.index].endTime) {
+                result.shiftInfoList[action.index].duration = Utility.getDurationInHour(
+                    result.shiftInfoList[action.index].startTime,
+                    result.shiftInfoList[action.index].endTime
                 );
-                delete result.errorList[action.index + "_" + action.detailIndex + "_startTime"];
+                delete result.errorList[action.index + "_endTime"];
+                delete result.errorList[action.index + "_startTime"];
             } else {
-                result.errorList[action.index + "_" + action.detailIndex + "_startTime"] = "The start time must be ealier than the end time.";
+                result.errorList[action.index + "_startTime"] = "The end time must be later than the start time.";
             }
-            break;
+            break
         default:
             break;
     }
@@ -81,104 +88,70 @@ export default function useShiftDetailModal(incomingShiftObj) {
     let [itemList, updateItemList] = useReducer(reducer, {
         date: null,
         errorList: {},
-        itoId:"",
+        itoId: "",
         itoName: "",
         itoPostName: "",
-        shiftDetailList: []
+        shiftInfoList: []
     });
     useEffect(() => {
-        console.log(incomingShiftObj);
-        /*
         if (incomingShiftObj) {
-            let tempList = [];
-            if (incomingShiftObj.shiftType) {
-                let shiftTypeList = incomingShiftObj.shiftType.split("+");
-                shiftTypeList.forEach(shiftType => {
-                    let tempObj = { "shiftType": shiftType };
-                    if (shiftType === "t") {
-                        tempObj.shiftDetailList = [];
-                        if (incomingShiftObj.shiftDetail){
-                            incomingShiftObj.shiftDetail.forEach(obj => {
-                                tempObj.shiftDetailList.push({
-                                    id:obj.id,
-                                    claimType: obj.claimType,
-                                    description: obj.description,
-                                    duration: obj.duration,
-                                    endTime: new Date(obj.endTime.getTime()),
-                                    startTime: new Date(obj.startTime.getTime()),
-                                    status: obj.status
-                                });
-                            });
-                        }
-                    }
-                    tempList.push(tempObj)
-                });
-            } else {
-                tempList = [{ shiftType: "" }];
-            }
             updateItemList({
                 date: incomingShiftObj.date,
                 errorList: {},
-                itoId:incomingShiftObj.itoId,
+                itoId: incomingShiftObj.itoId,
                 itoName: incomingShiftObj.itoName,
                 itoPostName: incomingShiftObj.itoPostName,
+                shiftInfoList: incomingShiftObj.shiftInfoList,
                 "type": "init",
-                shiftDetailList: structuredClone(tempList)
             });
         }
-        */
     }, [incomingShiftObj]);
     let isShiftDetailValid = () => {
         let result = true;
         let tempErrorList = {};
-        for (let i = 0; i < itemList.shiftDetailList.length; i++) {
-            let item = itemList.shiftDetailList[i];
-            switch (item.shiftType) {
+        itemList.shiftInfoList.forEach((shiftInfo, index) => {
+            switch (shiftInfo.shiftType) {
                 case "":
-                    tempErrorList[i + "_shiftType"] = "Please select a shift type.";
+                    tempErrorList[index + "_shiftType"] = "Please select a shift type.";
                     result = false;
                     break;
                 case "t":
-                    for (let j = 0; j < item.shiftDetailList.length; j++) {
-                        if (item.shiftDetailList[j].claimType === "") {
-                            tempErrorList[i + "_" + j + "_claimType"] = "Please select a claim type.";
-                            result = false;
-                        }
-                        if (item.shiftDetailList[j].description === "") {
-                            tempErrorList[i + "_" + j + "_desc"] = "Please enter the description";
-                            result = false;
-                        }
-                        if (item.shiftDetailList[j].endTime <= item.shiftDetailList[j].startTime) {
-                            tempErrorList[i + "_" + j + "_startTime"] = "The start time must be ealier than the end time.";
-                            tempErrorList[i + "_" + j + "_endTime"] = "The end time must be later than the start time.";
-                            result = false;
-                        }
+                    if (shiftInfo.claimType === "") {
+                        tempErrorList[index + "_claimType"] = "Please select a claim type.";
+                        result = false;
+                    }
+                    if (shiftInfo.description === "") {
+                        tempErrorList[index + "_desc"] = "Please enter the description";
+                        result = false;
+                    }
+                    if (shiftInfo.endTime <= shiftInfo.startTime) {
+                        tempErrorList[index + "_startTime"] = "The start time must be ealier than the end time.";
+                        tempErrorList[index + "_endTime"] = "The end time must be later than the start time.";
+                        result = false;
                     }
                     break;
-                default:
-                    break;
             }
-        }
-        updateItemList({
-            errorList: tempErrorList,
-            "type": "setErrorList"
         });
+        if (!result) {
+            updateItemList({
+                errorList: tempErrorList,
+                "type": "setErrorList"
+            });
+        }
         return result;
     }
-    let updateClaimType = (index, detailIndex, claimType) => {
+    let updateClaimType = (index, claimType) => {
         updateItemList({
             claimType,
-            detailIndex,
             index,
             "type": "updateClaimType"
         });
     };
-    let updateEndTime = (index, detailIndex, value) => {
-        updateItemList({ index, detailIndex, value, "type": "updateEndTime" });
+    let updateEndTime = (index, value) => {
+        updateItemList({ index, value, "type": "updateEndTime" });
     }
-    let updatDesc = (index, detailIndex, desc) => {
+    let updatDesc = (index, desc) => {
         updateItemList({
-            detailIndex,
             desc,
             index,
             "type": "updatDesc"
@@ -187,10 +160,9 @@ export default function useShiftDetailModal(incomingShiftObj) {
     let updateShiftType = (index, shiftType) => {
         updateItemList({ "type": "updateShiftType", index, shiftType });
     };
-    let updateStartTime = (index, detailIndex, value) => {
+    let updateStartTime = (index, value) => {
         updateItemList({
             index,
-            detailIndex,
             value,
             "type": "updateStartTime"
         });
@@ -198,10 +170,10 @@ export default function useShiftDetailModal(incomingShiftObj) {
     return {
         date: itemList.date,
         errorList: itemList.errorList,
-        itoId:itemList.itoId,
+        itoId: itemList.itoId,
         itoName: itemList.itoName,
         itoPostName: itemList.itoPostName,
-        shiftDetailList: itemList.shiftDetailList,
+        shiftInfoList: itemList.shiftInfoList,
         action: {
             isShiftDetailValid,
             updateClaimType,
