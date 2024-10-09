@@ -1898,7 +1898,8 @@ RosterViewerData={
                 "c",
                 "d1",
                 "O",
-                "d2"
+                "d2",
+                "t"
             ],
             "itoName": "TSANG Ka Shing Gary",
             "itoPostName": "ITO1",
@@ -2071,7 +2072,8 @@ RosterViewerData={
             "availableShiftList": [
                 "O",
                 "d",
-                "a"
+                "a",
+                "t"
             ],
             "itoName": "TANG Chi Kwong Ken",
             "itoPostName": "ITO2",
@@ -2094,7 +2096,8 @@ RosterViewerData={
                 "d1",
                 "d2",
                 "O",
-                "a"
+                "a",
+                "t"
             ],
             "itoName": "TANG Chi Keung Ray",
             "itoPostName": "ITO3",
@@ -2270,7 +2273,8 @@ RosterViewerData={
                 "c",
                 "d1",
                 "O",
-                "d2"
+                "d2",
+                "t"
             ],
             "itoName": "HUEN Kwai Leung Andrew",
             "itoPostName": "ITO4",
@@ -2445,7 +2449,8 @@ RosterViewerData={
                 "b",
                 "c",
                 "d1",
-                "O"
+                "O",
+                "t"
             ],
             "itoName": "YIM Man Hong",
             "itoPostName": "ITO5",
@@ -2621,7 +2626,8 @@ RosterViewerData={
                 "c",
                 "d1",
                 "O",
-                "d2"
+                "d2",
+                "t"
             ],
             "itoName": "LI Chi-wai Joseph",
             "itoPostName": "ITO6",
@@ -2668,6 +2674,9 @@ RosterViewerData={
                     }
                 ],
                 "9": [
+                    {
+                        "shiftType": "a"
+                    },
                     {
                         "shiftType": "t",
                         "claimType": "timeOff",
@@ -2792,24 +2801,25 @@ RosterViewerData={
                     }
                 ]
             },
-            "thisMonthBalance": 9.25,
+            "thisMonthBalance": 18.25,
             "workingHourPerDay": 7.8,
-            "actualWorkingDayCount": 20,
-            "actualWorkingHour": 165.25,
-            "aShiftCount": 4,
+            "actualWorkingDayCount": 21,
+            "actualWorkingHour": 174.25,
+            "aShiftCount": 5,
             "bxShiftCount": 8,
             "cShiftCount": 7,
             "dxShiftCount": 1,
             "expectedWorkingHour": 156,
-            "extraHour": 0,
-            "totalBalance": 8.83
+            "extraHour": -1,
+            "totalBalance": 16.83
         },
         "ITO7_2024-04-12": {
             "availableShiftList": [
                 "d1",
                 "d2",
                 "O",
-                "a"
+                "a",
+                "t"
             ],
             "itoName": "CHIM Pui Wa Jeff",
             "itoPostName": "ITO7",
@@ -2985,7 +2995,8 @@ RosterViewerData={
                 "c",
                 "d1",
                 "O",
-                "d2"
+                "d2",
+                "t"
             ],
             "itoName": "CHAN Tai-hin Jimmy",
             "itoPostName": "ITO8",
@@ -3159,7 +3170,8 @@ RosterViewerData={
                 "d1",
                 "d2",
                 "O",
-                "a"
+                "a",
+                "t"
             ],
             "itoName": "Sze Wa Sang Leo",
             "itoPostName": "ITO9",

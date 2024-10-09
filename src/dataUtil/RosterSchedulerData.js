@@ -247,14 +247,7 @@ export default class RosterSchedulerData extends RosterViewerData {
     updateShiftFromModal(shiftObj) {
         console.log(shiftObj);
         let dateOfMonth = shiftObj.date.getDate();
-        let shiftTypeList = [], shiftDetailTotal = 0;
-        shiftObj.shiftDetailList.forEach(item => {
-            shiftTypeList.push(item.shiftType);
-            item.shiftDetailList.forEach(detailObj => {
-                console.log(detailObj)
-            });
-        })
-        this.roster[shiftObj.itoId].shiftList[dateOfMonth] = shiftTypeList.join("+");
+        this.roster[shiftObj.itoId].shiftList[dateOfMonth] = structuredClone(shiftObj.shiftInfoList);
         this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
         this.#updateRosterSchedulerData();
     }
@@ -268,23 +261,42 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.#updateRosterSchedulerData();
     }
     updateShiftFromTable(itoId, date, newShift) {
+        newShift = newShift.trim();
         let newShiftList = newShift.split("+");
-
+        let finalResult = [];
+        let tempDate=new Date(this.rosterMonth.getTime());
+        tempDate.setDate(date)
         if (this.roster[itoId].shiftList[date] === undefined) {
             this.roster[itoId].shiftList[date] = [];
         }
         newShiftList.forEach(item => {
+            let shiftInfo = { "shiftType": item }
             let result = this.roster[itoId].shiftList[date].filter(shiftInfo => shiftInfo.shiftType === item);
+            
             if (result.length === 0) {
-                this.roster[itoId].shiftList[date].push({ "shiftType": item });
-                this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
-                this.#updateRosterSchedulerData();
+                if (item === "t") {
+                    shiftInfo.claimType = "";
+                    shiftInfo.description = "";
+                    shiftInfo.duration = 0;
+                    shiftInfo.endTime=new Date(tempDate.getTime());
+                    shiftInfo.shiftDetailId=-1;
+                    shiftInfo.startTime=new Date(tempDate.getTime());
+                    shiftInfo.status = "";
+                }
+                finalResult.push(shiftInfo);
+            }else{
+                result.forEach(shiftObj=>{
+                    finalResult.push(shiftObj);
+                });
             }
         });
+        this.roster[itoId].shiftList[date]=finalResult;
+        this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
+        this.#updateRosterSchedulerData();
     }
     //=========================================================================================================================================
     #updateRosterSchedulerData() {
-        let temp = Utility.getAllITOStat(this.essentialShift, 1, this.calendarDateList.length,this.itoIdList, this.roster);
+        let temp = Utility.getAllITOStat(this.essentialShift, 1, this.calendarDateList.length, this.itoIdList, this.roster);
         this.duplicateShiftList = structuredClone(temp.duplicateShiftList);
         this.vacantShiftList = structuredClone(temp.vacantShiftList);
         this.#rosterSchedulerDataHistory.set({

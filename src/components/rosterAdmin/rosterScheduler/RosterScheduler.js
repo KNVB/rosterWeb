@@ -10,6 +10,7 @@ export default function RosterScheduler() {
     }
     if (isLoading === false) {
         document.title = "EMSTF Computer Operator Roster Scheduler";
+        console.log(rosterSchedulerData);
         return (
             <>
                 <RosterSchedulerTable

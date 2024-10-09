@@ -50,9 +50,10 @@ let reducer = (state, action) => {
             } else {
                 if (action.shiftType === "t") {
                     result.shiftInfoList[action.index].claimType = "";
-                    result.shiftInfoList[action.index].description = "";
+                    result.shiftInfoList[action.index].description = "";                    
                     result.shiftInfoList[action.index].duration = 0;
                     result.shiftInfoList[action.index].endTime = new Date(result.date.getTime());
+                    result.shiftInfoList[action.index].shiftDetailId=-1;
                     result.shiftInfoList[action.index].status = "";
                     result.shiftInfoList[action.index].startTime = new Date(result.date.getTime());
                 } else {
@@ -60,6 +61,7 @@ let reducer = (state, action) => {
                     delete result.shiftInfoList[action.index].description;
                     delete result.shiftInfoList[action.index].duration;
                     delete result.shiftInfoList[action.index].endTime;
+                    delete result.shiftInfoList[action.index].shiftDetailId;
                     delete result.shiftInfoList[action.index].status;
                     delete result.shiftInfoList[action.index].startTime;
                 }
