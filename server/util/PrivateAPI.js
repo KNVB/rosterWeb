@@ -3,7 +3,7 @@ import Roster from '../classes/Roster.js';
 import ShiftInfo from "../classes/ShiftInfo.js";
 export default function PrivateAPI(adminUtil, systemParam) {
     const router = Express.Router();
-     //===================================================================================================    
+    //===================================================================================================    
     /*
     router.use((req, res, next) => {
         let isAuthenticated = adminUtil.isAuthenticated(req.headers['access-token']);
@@ -31,32 +31,25 @@ export default function PrivateAPI(adminUtil, systemParam) {
 let getRosterSchedulerData = async params => {
     let temp;
     let roster = new Roster();
-    let preferredShiftList = {};
     let previousMonthShiftList = {};
     let shiftInfo = new ShiftInfo();
     let sP = structuredClone(params.systemParam);
     await shiftInfo.init();
-    temp = await roster.getPreferredShiftList(params.year, params.month);
-    temp.forEach(p => {
-        if (preferredShiftList[p.ito_id] === undefined) {
-            preferredShiftList[p.ito_id] = {};
-        }
-        preferredShiftList[p.ito_id][p.d] = p.preferred_shift;
-    });
     temp = await roster.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
     temp.forEach(p => {
         if (previousMonthShiftList[p.ito_id] === undefined) {
             previousMonthShiftList[p.ito_id] = [];
         }
-        previousMonthShiftList[p.ito_id].push(p.shift);
+        previousMonthShiftList[p.ito_id].push({shiftType:p.shift});
     });
+    
     sP.monthPickerMinDate = new Date(sP.monthPickerMinDate.year, sP.monthPickerMinDate.month - 1, sP.monthPickerMinDate.date);
     return {
         activeShiftList: shiftInfo.activeShiftList,
         essentialShift: shiftInfo.essentialShift,
         itoBlackListShiftPattern: await shiftInfo.getITOBlackListShiftPattern(params.year, params.month),
-        preferredShiftList,
-        previousMonthShiftList,
+        preferredShiftList: await roster.getPreferredShiftList(params.year, params.month),
+        previousMonthShiftList: previousMonthShiftList,
         systemParam: sP
     }
 }

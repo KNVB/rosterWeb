@@ -9,10 +9,11 @@ export default function PreferredShiftRow({ calendarDateList, dataAction, eventH
     for (let i = systemParam.maxConsecutiveWorkingDay - systemParam.noOfPrevDate; i < systemParam.maxConsecutiveWorkingDay; i++) {
         shiftCellList.push(<ShiftCell key={"prev-preferred-" + i} />)
     }
+    //console.log(preferredShiftList);
     calendarDateList.forEach((calendarDate, index) => {
         className = uiAction.getSelectedCssClass(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
-        if (preferredShiftList) {
-            preferredShift = preferredShiftList[index + 1];
+        if ((preferredShiftList)&&(preferredShiftList[index + 1])) {
+            preferredShift = preferredShiftList[index + 1][0].shiftType;
         } else {
             preferredShift = '';
         }
@@ -23,7 +24,7 @@ export default function PreferredShiftRow({ calendarDateList, dataAction, eventH
                 eventHandler={eventHandler}
                 key={itoId + '_' + index}
                 keyDownHandler={eventHandler.handleKeyDownEvent}
-                onBlur={e => dataAction.updatePreferredShift(itoId, calendarDate.dateOfMonth, e.target.textContent)}
+                onBlur={e => dataAction.updatePreferredShiftFromTable(itoId, calendarDate.dateOfMonth, e.target.textContent)}
                 onPaste={e => eventHandler.handlePaste(e, calendarDate.dateOfMonth)}>
                 {preferredShift}
             </ITOShiftCell>

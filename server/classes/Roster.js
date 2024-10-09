@@ -4,10 +4,17 @@ export default class Roster {
     }
     getPreferredShiftList = async (year, month) => {
         let dboObj = new Dbo();
+        let itoPreferredShiftList={};
         try {
             let results = await dboObj.getPreferredShiftList(year, month);
             console.log("Get (" + year + "," + month + ") Preferred Shift List successfully!");
-            return results;
+            results.forEach(record => {
+                if (itoPreferredShiftList[record.ito_id] === undefined) {
+                    itoPreferredShiftList[record.ito_id] = {};
+                }
+                itoPreferredShiftList[record.ito_id][record.d]=[{"shiftType":record.preferred_shift}];
+            });
+            return itoPreferredShiftList;
         } catch (error) {
             console.log("Something wrong when getting Preferred shift list:" + error);
             throw (error);

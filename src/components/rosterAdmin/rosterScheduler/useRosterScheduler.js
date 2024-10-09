@@ -95,8 +95,8 @@ export default function useRosterScheduler() {
             "type": "setSelectedShift"
         });
     }
-    let updatePreferredShift = (itoId, date, newPreferredShift) => {
-        itemList.rosterSchedulerData.updatePreferredShift(itoId, date, newPreferredShift);
+    let updatePreferredShiftFromTable = (itoId, date, newPreferredShift) => {
+        itemList.rosterSchedulerData.updatePreferredShiftFromTable(itoId, date, newPreferredShift);
         updateItemList({ "type": "refresh" });
     }
     let updateRosterMonth = async newRosterMonth => {
@@ -139,7 +139,7 @@ export default function useRosterScheduler() {
             paste,
             reDo,
             showShiftDetail,
-            updatePreferredShift,
+            updatePreferredShiftFromTable,
             updateRosterMonth,
             updateShiftFromModal,
             updateShiftFromTable,

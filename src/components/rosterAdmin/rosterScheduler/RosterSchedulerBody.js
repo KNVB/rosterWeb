@@ -21,6 +21,7 @@ export default function RosterSchedulerBody({ rosterSchedulerData, dataAction, u
                 uiAction={uiAction}
             />
         );
+        
         rowList.push(
             <PreferredShiftRow
                 calendarDateList={rosterSchedulerData.calendarDateList}

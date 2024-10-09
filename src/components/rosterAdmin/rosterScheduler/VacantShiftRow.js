@@ -33,7 +33,7 @@ export default function VacantShiftRow({calendarDateList, systemParam,vacantShif
         <tr>
             <td className="border text-end vacantShiftLabel">Vacant Shifts</td>
             {shiftCellList}
-            <td className='borderCell' colSpan={10}></td>
+            <td className='borderCell' colSpan={11}></td>
         </tr>
     )
 }

@@ -9,7 +9,7 @@ export default function ITOShiftRow({ calendarDateList, dataAction, eventHandler
         className = '';
         shift = '';
         if (previousMonthShiftList && (previousMonthShiftList[i] !== undefined)) {
-            shift = previousMonthShiftList[i];
+            shift = previousMonthShiftList[i].shiftType;
             className = dataAction.getShiftCssClassName(shift);
         }
         shiftCellList.push(
