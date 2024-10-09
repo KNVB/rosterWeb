@@ -7,12 +7,18 @@ let reducer = (state, action) => {
             result.rosterSchedulerData = action.rosterSchedulerData;
             result.isLoading = false;
             break;
+        case "hideShiftDetail":
+            result.isShowShiftDetail = false;
+            break;
+        case "refresh":
+            result.isLoading = false;
+            break;
         case "setSelectedShift":
             result.isShowShiftDetail = true;
             result.selectedShift = action.selectedShift;
             break;
-        case "hideShiftDetail":
-            result.isShowShiftDetail = false;
+        case "showLoading":
+            result.isLoading = true;
             break;
         default:
             break;
@@ -89,7 +95,7 @@ export default function useRosterScheduler() {
     let showShiftDetail = (e, itoId, date) => {
         e.preventDefault();
         let selectedShift = itemList.rosterSchedulerData.getShift(itoId, date);
-        
+
         updateItemList({
             "selectedShift": selectedShift,
             "type": "setSelectedShift"
@@ -101,7 +107,7 @@ export default function useRosterScheduler() {
     }
     let updateRosterMonth = async newRosterMonth => {
         try {
-            //updateItemList({"type":"updateLoading",value:true});
+            updateItemList({ "type": "showLoading" });
             await itemList.rosterSchedulerData.reload(newRosterMonth);
             updateItemList({
                 type: "refresh"

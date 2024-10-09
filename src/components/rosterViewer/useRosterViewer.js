@@ -10,9 +10,15 @@ let reducer = (state, action) => {
             result.rosterViewerData = action.rosterViewerData;
             result.isLoading = false;
             break;
+        case "refresh":
+            result.isLoading = false;
+            break;
         case "setSelectedShift":
             result.isShowShiftDetail = true;
             result.selectedShift = action.selectedShift;
+            break;
+        case "showLoading":
+            result.isLoading =true;
             break;
         default:
             break;
@@ -64,7 +70,7 @@ export default function useRosterViewer() {
     }
     let updateRosterMonth = async newRosterMonth => {
         try {
-            //updateItemList({"type":"updateLoading",value:true});
+            updateItemList({"type":"showLoading"});
             await itemList.rosterViewerData.reload(newRosterMonth);
             updateItemList({
                 type: "refresh"
