@@ -1,6 +1,3 @@
-import AdminShiftStatUtil from "./AdminShiftStatUtil";
-import ITOShiftStatUtil from "./ITOShiftStatUtil";
-
 export default class Utility {
     static dateFormatter = new Intl.DateTimeFormat('en-ZA', {
         day: "2-digit",
@@ -80,14 +77,10 @@ export default class Utility {
         return result;
     }
     static getAllITOStat = (essentialShift, startDate, endDate, itoIdList, roster) => {
-        //console.log(roster);
         let blackListShiftList = {};
         let duplicateShiftList = {};
         let vacantShiftList = {};
-        /*
-        let { getAllITOStat } = AdminShiftStatUtil();
-        return getAllITOStat(activeShiftList, startDate, endDate, rosterRow);
-        */
+  
         itoIdList.forEach(itoId => {
             blackListShiftList[itoId] = [];
             duplicateShiftList[itoId] = [];
