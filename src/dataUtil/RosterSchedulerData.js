@@ -25,18 +25,21 @@ export default class RosterSchedulerData extends RosterViewerData {
                 default:
                     break;
             }
-
+            let temp = [];
             if (shiftList) {
-                let temp = [];
                 for (let i = copyRegion.column.start; i <= copyRegion.column.end; i++) {
                     if (shiftList[i] === undefined) {
-                        temp.push({ "shiftType": '' });
+                        temp.push([{ "shiftType": '' }]);
                     } else {
                         temp.push(shiftList[i]);
                     }
                 }
-                result.push(temp);
+            } else {
+                for (let i = copyRegion.column.start; i <= copyRegion.column.end; i++) {
+                    temp.push([{ "shiftType": '' }]);
+                }
             }
+            result.push(temp);
         });
         console.log(result);
         this.#copiedData = result;
@@ -233,7 +236,7 @@ export default class RosterSchedulerData extends RosterViewerData {
         if (this.preferredShiftList[itoId] === undefined) {
             this.preferredShiftList[itoId] = {};
         }
-        this.preferredShiftList[itoId][dateOfMonth] = temp.join("+");
+        this.preferredShiftList[itoId][dateOfMonth] = [{ shiftType: temp.join("+") }];
         this.#updateRosterSchedulerData();
     }
     updateShiftFromModal(shiftObj) {
@@ -246,9 +249,28 @@ export default class RosterSchedulerData extends RosterViewerData {
     updateShiftFromPaste(itoId, date, shiftObj) {
         let temp = [];
         shiftObj.forEach(shift => {
-            temp.push(shift.shiftType);
+            let shiftList = shift.shiftType.split("+");
+            if (shiftList.length === 1) {
+                temp.push(shift);
+            } else {
+                for (let i = 0; i < shiftList.length; i++) {
+                    let qq = { "shiftType": shiftList[i] };
+                    let dateOfShift = new Date(this.rosterMonth.getTime());
+                    dateOfShift.setDate(date);
+                    if (shiftList[i] === "t") {
+                        qq.claimType = "";
+                        qq.description = "";
+                        qq.duration = 0;
+                        qq.endTime = new Date(dateOfShift.getTime());
+                        qq.shiftDetailId = -1;
+                        qq.startTime = new Date(dateOfShift.getTime());
+                        qq.status = "approved";
+                    }
+                    temp.push(qq);
+                }
+            }
         });
-        this.roster[itoId].shiftList[date] = temp.join("+");
+        this.roster[itoId].shiftList[date] = temp;
         this.roster = Utility.genITOStat(this.activeShiftList, this.roster, this.noOfWorkingDay);
         this.#updateRosterSchedulerData();
     }
@@ -275,7 +297,7 @@ export default class RosterSchedulerData extends RosterViewerData {
                     shiftInfo.startTime = new Date(tempDate.getTime());
                     shiftInfo.status = "";
                 }
-                finalResult.push(shiftInfo);
+                finalResult.push([shiftInfo]);
             } else {
                 result.forEach(shiftObj => {
                     finalResult.push(shiftObj);
