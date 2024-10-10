@@ -33,7 +33,11 @@ export default function ITOShiftRow({ calendarDateList, dataAction, eventHandler
             shift=temp.join("+");
         }        
         className = uiAction.getSelectedCssClass(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
-        className.push(dataAction.getShiftCssClassName(shift));
+        if (dataAction.isDuplicateShift(index+1,itoId)){
+            className.push("errorRedBlackGround");   
+        }else{
+            className.push(dataAction.getShiftCssClassName(shift));
+        }
         shiftCellList.push(
             <ITOShiftCell
                 cssClassName={className.join(" ")}

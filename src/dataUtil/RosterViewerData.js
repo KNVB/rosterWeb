@@ -1,5 +1,6 @@
 import FetchAPI from "../util/FetchAPI";
 import CalendarUtility from "../util/calendar/CalendarUtility";
+import ShiftInfo from "./ShiftInfo";
 import Utility from "../util/Utility";
 export default class RosterViewerData {
     #calendarUtility;
@@ -11,8 +12,8 @@ export default class RosterViewerData {
         let result;
         let shiftDate = new Date(this.rosterMonth.getTime());
         let shiftInfoList = this.roster[itoId].shiftList[date];
-        if (shiftInfoList === undefined){
-            shiftInfoList=[{shiftType:""}]
+        if (shiftInfoList === undefined) {
+            shiftInfoList = [new ShiftInfo("")]
         }
         shiftDate.setDate(date);
         result = {
@@ -24,7 +25,7 @@ export default class RosterViewerData {
         }
         return result
     }
-    getShiftCssClassName = shiftType => {
+    getShiftCssClassName(shiftType) {
         if (this.activeShiftList[shiftType])
             return this.activeShiftList[shiftType].cssClassName;
         else
