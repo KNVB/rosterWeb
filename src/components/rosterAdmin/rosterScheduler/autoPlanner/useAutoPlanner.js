@@ -8,12 +8,13 @@ let reducer = (state, action) => {
             result.preferredShiftList = action.preferredShiftList;
             result.previousMonthShiftList = action.previousMonthShiftList;
             result.roster = action.roster;
+            result.systemParam = action.systemParam;
             break;
         case "updateEndDate":
             result.endDate = action.value;
             break;
         case "updateIterationCount":
-            result.iterationCount=action.value;
+            result.iterationCount = action.value;
             break;
         case "updateStartDate":
             result.startDate = action.value;
@@ -41,6 +42,7 @@ export default function useAutoPlanner(rosterSchedulerData, dataAction) {
             preferredShiftList: structuredClone(rosterSchedulerData.preferredShiftList),
             previousMonthShiftList: structuredClone(rosterSchedulerData.previousMonthShiftList),
             roster: structuredClone(rosterSchedulerData.roster),
+            systemParam: structuredClone(rosterSchedulerData.systemParam),
             type: "init"
         });
     }, []);
@@ -50,7 +52,7 @@ export default function useAutoPlanner(rosterSchedulerData, dataAction) {
             "value": e.target.value
         });
     }
-    let updateIterationCount =e=>{
+    let updateIterationCount = e => {
         updateItemList({
             "type": "updateIterationCount",
             "value": e.target.value

@@ -6,7 +6,7 @@ let genMonthTable = (tempResult, result,maxDate,minDate) => {
     for (let i = 0; i < 12; i++) {
         let temp = {disabled:false, text: Utility.monthNameList[i], value: i };
         let tempMonth=new Date(tempResult.getFullYear(),i,1);
-        let className=[];
+        let className=["month"];
         if ((result.getFullYear() === tempResult.getFullYear()) && (i === tempResult.getMonth())) {
             className.push("selectedItem");
         }

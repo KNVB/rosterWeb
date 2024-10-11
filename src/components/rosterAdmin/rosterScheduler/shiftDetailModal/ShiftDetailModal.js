@@ -14,6 +14,7 @@ export default function ShiftDetailModal({ activeShiftList, hideShiftDetail, isS
         shiftInfoList,
         action
     } = useShiftDetailModal(incomingShiftObj);
+    //console.log(incomingShiftObj);
     let updateSelectedShift = () => {
         if (action.isShiftDetailValid()){
             updateShiftFromModal({

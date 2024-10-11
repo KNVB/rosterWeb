@@ -32,11 +32,17 @@ export default function MonthPicker({ maxDate, minDate, onChange, value }) {
         action.updateValue(temp);
         onChange(temp);
     }
+    let thisMonth=()=>{
+        let temp = new Date();
+        action.updateValue(temp);
+        onChange(temp);
+    }
     let mouseDown = useCallback(e => {
         if (isShowPicker && (!obj.current.contains(e.target))) {
             action.closePicker();
         }
     },[isShowPicker,action]);
+    
     useEffect(() => {
         document.addEventListener('mousedown', mouseDown);
         return () => {
@@ -69,6 +75,7 @@ export default function MonthPicker({ maxDate, minDate, onChange, value }) {
                         smallNext={action.nextYear}
                         title={tempResult.getFullYear()}
                     />
+                    <div className="thisMonth" onClick={thisMonth}>This Month</div>
                 </div>
             }
         </div>
