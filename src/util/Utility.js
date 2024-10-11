@@ -1,4 +1,39 @@
 export default class Utility {
+    static autoPlan=({
+        endDate,
+        essentialShift,        
+        itoIdList,
+        iterationCount,
+        preferredShiftList,
+        previousMonthShiftList,
+        roster,
+        startDate,
+        systemParam,
+    })=>{
+        /*console.log(
+            {
+                endDate,
+                essentialShift,
+                itoIdList,
+                iterationCount,
+                preferredShiftList,
+                previousMonthShiftList,
+                roster,
+                startDate,
+                systemParam,
+            }
+        );*/
+        let tempResult={};
+        let previousMonthShiftCount=(systemParam.noOfPrevDate-startDate)+1;
+        itoIdList.forEach(itoId=>{
+            tempResult[itoId]=[];
+        });
+        console.log(tempResult,previousMonthShiftCount)
+        /*
+        Utility.shuffleArray(itoIdList);
+        console.log(itoIdList);
+        */
+    }
     static dateFormatter = new Intl.DateTimeFormat('en-ZA', {
         day: "2-digit",
         month: "2-digit",
@@ -134,4 +169,13 @@ export default class Utility {
     static getDurationInHour = (startTime, endTime) => {
         return (endTime - startTime) / 1000 / 3600
     }
+    static shuffleArray(arr)
+    {
+    	for (let i = 0; i < arr.length; i++){
+            let a = arr[i];
+            let b = Math.floor(Math.random() * arr.length);
+            arr[i] = arr[b];
+            arr[b] = a;
+        }        
+    }	
 }

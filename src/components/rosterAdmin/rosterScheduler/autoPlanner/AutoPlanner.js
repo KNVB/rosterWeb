@@ -31,7 +31,7 @@ export default function AutoPlanner({ rosterSchedulerData, dataAction }) {
                 <tr>
                     <td>Iteration Count:</td>
                     <td><input min="1" onChange={action.updateIterationCount} type="number" value={iterationCount}/></td>
-                    <td>&nbsp;<div className="autoPlannerButton" >Auto Planner</div></td>
+                    <td>&nbsp;<div className="autoPlannerButton" onClick={action.autoPlan}>Auto Planner</div></td>
                 </tr>
             </tbody>
             <tfoot>
