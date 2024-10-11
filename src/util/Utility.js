@@ -1,7 +1,7 @@
 export default class Utility {
-    static autoPlan=({
+    static autoPlan = ({
         endDate,
-        essentialShift,        
+        essentialShift,
         itoIdList,
         iterationCount,
         preferredShiftList,
@@ -9,7 +9,7 @@ export default class Utility {
         roster,
         startDate,
         systemParam,
-    })=>{
+    }) => {
         /*console.log(
             {
                 endDate,
@@ -23,12 +23,51 @@ export default class Utility {
                 systemParam,
             }
         );*/
-        let tempResult={};
-        let previousMonthShiftCount=(systemParam.noOfPrevDate-startDate)+1;
-        itoIdList.forEach(itoId=>{
-            tempResult[itoId]=[];
+        let tempResult = {}, temp;
+        let previousMonthShiftCount = (systemParam.noOfPrevDate - startDate) + 1;
+        let itoAvailableShift={};
+        let startIndex;
+        itoIdList.forEach(itoId => {
+            tempResult[itoId] = [];
+            itoAvailableShift[itoId]={};
+            if (previousMonthShiftList[itoId]) {
+                startIndex = Object.keys(previousMonthShiftList[itoId]).length - previousMonthShiftCount;
+                //console.log(itoId,startIndex);
+                for (let i = startIndex; i < Object.keys(previousMonthShiftList[itoId]).length; i++) {
+                    tempResult[itoId].push({
+                        "shiftType": previousMonthShiftList[itoId][i].shiftType
+                    });
+                }
+            } else {
+                for (let i = 0; i < previousMonthShiftCount; i++) {
+                    tempResult[itoId].push({ "shiftType": "" });
+                }
+            }
+            temp = systemParam.noOfPrevDate - tempResult[itoId].length;
+            if (temp > 0) {
+                for (let i = startDate - temp; i < startDate; i++) {
+                    if (itoId, roster[itoId].shiftList[i]) {
+                        tempResult[itoId].push({ "shiftType": roster[itoId].shiftList[i][0].shiftType })
+                    } else {
+                        tempResult[itoId].push({ "shiftType": "" });
+                    }
+                }
+            }
+            if (preferredShiftList[itoId]){
+                Object.keys(preferredShiftList[itoId]).forEach(dateOfMonth=>{
+                    itoAvailableShift[itoId][dateOfMonth]=structuredClone(roster[itoId].availableShiftList);
+                    let temp=preferredShiftList[itoId][dateOfMonth][0].shiftType;
+                    //itoAvailableShift[itoId][dateOfMonth]=temp;
+                    console.log(itoId,temp);
+                })
+            };
         });
-        console.log(tempResult,previousMonthShiftCount)
+        let itoId="ITO1_1999-01-01";
+        let dateOfMonth=startDate;
+        
+        console.log(itoAvailableShift)
+        //console.log(tempResult);
+        //console.log(tempResult,previousMonthShiftCount)
         /*
         Utility.shuffleArray(itoIdList);
         console.log(itoIdList);
@@ -115,7 +154,7 @@ export default class Utility {
         let blackListShiftList = {};
         let duplicateShiftList = {};
         let vacantShiftList = {};
-  
+
         itoIdList.forEach(itoId => {
             blackListShiftList[itoId] = [];
             duplicateShiftList[itoId] = [];
@@ -169,13 +208,12 @@ export default class Utility {
     static getDurationInHour = (startTime, endTime) => {
         return (endTime - startTime) / 1000 / 3600
     }
-    static shuffleArray(arr)
-    {
-    	for (let i = 0; i < arr.length; i++){
+    static shuffleArray(arr) {
+        for (let i = 0; i < arr.length; i++) {
             let a = arr[i];
             let b = Math.floor(Math.random() * arr.length);
             arr[i] = arr[b];
             arr[b] = a;
-        }        
-    }	
+        }
+    }
 }
