@@ -1,4 +1,4 @@
-import Utility from "../../util/Utility";
+import AutoPlan from "./AutoPlanner";
 export default function TestAutoPlan() {
     let endDate=30;
     let essentialShift = "abc";
@@ -1392,24 +1392,27 @@ export default function TestAutoPlan() {
             "totalBalance": 0.21000000000000002
         }
     };
-    let startDate = 1;
+    let startDate = 20;
     let systemParam = {
         "maxConsecutiveWorkingDay": 6,
         "monthPickerMinDate": "2016-12-31T16:00:00.000Z",
         "noOfPrevDate": 2
     };
     //===================================================================================
-    Utility.autoPlan({
-        endDate,
-        essentialShift,
-        iterationCount,
-        itoIdList,
-        preferredShiftList,
-        previousMonthShiftList,
-        roster,
-        startDate,
-        systemParam
-    })
+    let autoPlanner=new AutoPlan(
+        {
+            endDate,
+            essentialShift,
+            iterationCount,
+            itoIdList,
+            preferredShiftList,
+            previousMonthShiftList,
+            roster,
+            startDate,
+            systemParam
+        }
+    )
+    autoPlanner.doAutoPlan()
     
     return (<></>)
 }

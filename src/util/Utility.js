@@ -1,4 +1,5 @@
 export default class Utility {
+    /*
     static autoPlan = ({
         endDate,
         essentialShift,
@@ -23,13 +24,14 @@ export default class Utility {
                 systemParam,
             }
         );*/
+        /*
         let tempResult = {}, temp;
         let previousMonthShiftCount = (systemParam.noOfPrevDate - startDate) + 1;
-        let itoAvailableShift={};
+        let itoAvailableShift = {};
         let startIndex;
         itoIdList.forEach(itoId => {
             tempResult[itoId] = [];
-            itoAvailableShift[itoId]={};
+            itoAvailableShift[itoId] = {};
             if (previousMonthShiftList[itoId]) {
                 startIndex = Object.keys(previousMonthShiftList[itoId]).length - previousMonthShiftCount;
                 //console.log(itoId,startIndex);
@@ -53,26 +55,57 @@ export default class Utility {
                     }
                 }
             }
-            if (preferredShiftList[itoId]){
-                Object.keys(preferredShiftList[itoId]).forEach(dateOfMonth=>{
-                    itoAvailableShift[itoId][dateOfMonth]=structuredClone(roster[itoId].availableShiftList);
-                    let temp=preferredShiftList[itoId][dateOfMonth][0].shiftType;
+            if (preferredShiftList[itoId]) {
+                Object.keys(preferredShiftList[itoId]).forEach(dateOfMonth => {
+                    //itoAvailableShift[itoId][dateOfMonth]=structuredClone(roster[itoId].availableShiftList);
+                    let temp = preferredShiftList[itoId][dateOfMonth][0].shiftType;
+                    temp = temp.trim();
+                    itoAvailableShift[itoId][dateOfMonth] = [];
+                    if (temp.startsWith("n")) {
+                        itoAvailableShift[itoId][dateOfMonth] = roster[itoId].availableShiftList.filter(shift => {
+                            let result = true
+                            for (let j = 1; j < temp.length; j++) {
+                                if (shift === temp[j]) {
+                                    result = false;
+                                }
+                            }
+                            return result;
+                        });
+                    } else {
+                        itoAvailableShift[itoId][dateOfMonth] = roster[itoId].availableShiftList.filter(shift => {
+                            let result = false;
+                            switch (true) {
+                                case (shift === temp):
+                                    result = true;
+                                    break;
+                                case ((shift === "b") && (temp.startsWith("b"))):
+                                    result = true;
+                                    break;
+                                case ((shift === "d1") && (temp === "al")):
+                                    result = true;
+                                    break;
+                            }
+                            return result;
+                        });
+                    }
+
+                    console.log(itoId, dateOfMonth, temp, itoAvailableShift[itoId][dateOfMonth]);
                     //itoAvailableShift[itoId][dateOfMonth]=temp;
-                    console.log(itoId,temp);
+                    //console.log(itoId,dateOfMonth,temp);
                 })
             };
         });
-        let itoId="ITO1_1999-01-01";
-        let dateOfMonth=startDate;
-        
+        let itoId = "ITO1_1999-01-01";
+        let dateOfMonth = startDate;
+
         console.log(itoAvailableShift)
         //console.log(tempResult);
         //console.log(tempResult,previousMonthShiftCount)
         /*
         Utility.shuffleArray(itoIdList);
         console.log(itoIdList);
-        */
-    }
+        
+    }*/
     static dateFormatter = new Intl.DateTimeFormat('en-ZA', {
         day: "2-digit",
         month: "2-digit",

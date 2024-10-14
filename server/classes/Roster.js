@@ -47,6 +47,7 @@ export default class Roster {
                 if (itoRosterList[record.ito_id] === undefined) {
                     itoRosterList[record.ito_id] = {
                         availableShiftList: record.available_shift.split(","),
+                        dutyPattern:record.duty_pattern,
                         itoName: record.ito_name,
                         itoPostName: record.post_name,
                         lastMonthBalance: 0.0,
