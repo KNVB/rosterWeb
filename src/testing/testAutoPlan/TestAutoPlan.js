@@ -1,6 +1,6 @@
 import AutoPlan from "./AutoPlanner";
 export default function TestAutoPlan() {
-    let endDate=30;
+    let endDate = 30;
     let essentialShift = "abc";
     let itoIdList = [
         "ITO1_1999-01-01",
@@ -11,6 +11,37 @@ export default function TestAutoPlan() {
         "ITO8_1999-01-01"
     ];
     let iterationCount = 1;
+    let itoBlackListShiftPattern = {
+        "ITO1_1999-01-01": [
+            "b,a",
+            "c,a",
+            "c,b",
+            "c,c,c"
+        ],
+        "ITO4_1999-01-01": [
+            "c,a",
+            "c,b",
+            "c,c"
+        ],
+        "ITO5_2021-09-09": [
+            "b,a",
+            "c,a",
+            "c,b",
+            "c,c,c"
+        ],
+        "ITO6_1999-01-01": [
+            "b,a",
+            "c,a",
+            "c,b",
+            "c,c,c"
+        ],
+        "ITO8_1999-01-01": [
+            "b,a",
+            "c,a",
+            "c,b",
+            "c,c,c"
+        ]
+    };
     let preferredShiftList = {
         "ITO1_1999-01-01": {
             "1": [
@@ -1392,18 +1423,19 @@ export default function TestAutoPlan() {
             "totalBalance": 0.21000000000000002
         }
     };
-    let startDate = 20;
+    let startDate = 13;
     let systemParam = {
         "maxConsecutiveWorkingDay": 6,
         "monthPickerMinDate": "2016-12-31T16:00:00.000Z",
         "noOfPrevDate": 2
     };
     //===================================================================================
-    let autoPlanner=new AutoPlan(
+    let autoPlanner = new AutoPlan(
         {
             endDate,
-            essentialShift,
+            essentialShift,            
             iterationCount,
+            itoBlackListShiftPattern,
             itoIdList,
             preferredShiftList,
             previousMonthShiftList,
@@ -1413,6 +1445,6 @@ export default function TestAutoPlan() {
         }
     )
     autoPlanner.doAutoPlan()
-    
+
     return (<></>)
 }

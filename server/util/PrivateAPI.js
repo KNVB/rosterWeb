@@ -41,8 +41,7 @@ let getRosterSchedulerData = async params => {
             previousMonthShiftList[p.ito_id] = [];
         }
         previousMonthShiftList[p.ito_id].push({shiftType:p.shift});
-    });
-    
+    });    
     sP.monthPickerMinDate = new Date(sP.monthPickerMinDate.year, sP.monthPickerMinDate.month - 1, sP.monthPickerMinDate.date);
     return {
         activeShiftList: shiftInfo.activeShiftList,

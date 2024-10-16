@@ -91,6 +91,7 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.#rosterSchedulerDataHistory = null;
         this.essentialShift = temp.essentialShift;
         this.itoIdList = Object.keys(this.roster);
+        this.itoBlackListShiftPattern=structuredClone(temp.itoBlackListShiftPattern);
         this.preferredShiftList = structuredClone(temp.preferredShiftList);
         this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
         this.systemParam = structuredClone(temp.systemParam);

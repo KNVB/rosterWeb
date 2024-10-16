@@ -1,8 +1,9 @@
 export default class AutoPlan {
     #endDate;
     #essentialShift;
-    #itoIdList;
+    #itoBlackListShiftPattern;
     #iterationCount;
+    #itoIdList;
     #preferredShiftList;
     #previousMonthShiftList;
     #roster;
@@ -11,6 +12,7 @@ export default class AutoPlan {
     constructor({
         endDate,
         essentialShift,
+        itoBlackListShiftPattern,
         itoIdList,
         iterationCount,
         preferredShiftList,
@@ -21,8 +23,9 @@ export default class AutoPlan {
     }) {
         this.#endDate = endDate;
         this.#essentialShift = essentialShift;
-        this.#itoIdList = itoIdList;
         this.#iterationCount = iterationCount;
+        this.#itoBlackListShiftPattern = itoBlackListShiftPattern;
+        this.#itoIdList = itoIdList;
         this.#preferredShiftList = preferredShiftList;
         this.#previousMonthShiftList = previousMonthShiftList;
         this.#roster = roster;
@@ -32,17 +35,51 @@ export default class AutoPlan {
     doAutoPlan() {
         let tempResult = {};
         let previousMonthShiftCount = (this.#systemParam.noOfPrevDate - this.#startDate) + 1;
-        let itoAvailableShift = {};
+        let itoAvailableShift, itoAvailableShiftList = {};
 
         this.#itoIdList.forEach(itoId => {
             tempResult[itoId] = this.#buildTempResult(itoId, previousMonthShiftCount);
             if (this.#preferredShiftList[itoId]) {
-                itoAvailableShift[itoId] = this.#buildITOAvailableShift(itoId);
+                itoAvailableShiftList[itoId] = this.#buildITOAvailableShift(itoId);
             }
         });
+        //let itoId = "ITO3_2023-07-12";
         let itoId = "ITO1_1999-01-01";
+        //let itoId = "ITO5_2021-09-09";
         let dateOfMonth = this.#startDate;
-        let essentialShift=this.#essentialShift;
+        let essentialShift = this.#essentialShift;
+        let temp;
+        itoAvailableShift = {};
+        if (itoAvailableShiftList[itoId]) {
+            itoAvailableShift = itoAvailableShiftList[itoId];
+        }
+        console.log(itoAvailableShift);
+
+        for (let i = 0; i < essentialShift.length; i++) {
+            let preShift = [];
+            for (let j = tempResult[itoId].length - this.#systemParam.noOfPrevDate; j < tempResult[itoId].length; j++) {
+                preShift.push(tempResult[itoId][j].shiftType);
+            }
+            preShift = preShift.join(",")
+            console.log(itoAvailableShift,essentialShift[i],itoAvailableShift[dateOfMonth].includes(essentialShift[i]));
+            if (itoAvailableShift[dateOfMonth].includes(essentialShift[i]) ||
+                (Object.keys(itoAvailableShift).length === 0)
+            ) {
+                temp = preShift + "," + essentialShift[i];
+                if (this.#itoBlackListShiftPattern[itoId] === undefined) {
+                    tempResult[itoId].push({ "shiftType": essentialShift[i] });
+                }else {
+                    if (!this.#itoBlackListShiftPattern[itoId].includes(temp)){
+                        tempResult[itoId].push({ "shiftType": essentialShift[i] });
+                    }
+                }
+                //console.log(temp, this.#itoBlackListShiftPattern[itoId].includes(temp));
+                //console.log(this.#itoBlackListShiftPattern[itoId].includes(temp));
+                //tempResult[itoId].push({ "shiftType": essentialShift[i] });
+            }
+        }
+
+        console.log(tempResult[itoId]);
     }
     //======================================================================================
     #buildITOAvailableShift = itoId => {
@@ -78,7 +115,7 @@ export default class AutoPlan {
                             aResult = true;
                             break;
                         default:
-                            break;    
+                            break;
                     }
                     return aResult;
                 });
