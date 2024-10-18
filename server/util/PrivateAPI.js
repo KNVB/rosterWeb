@@ -1,4 +1,5 @@
 import Express from 'express';
+import ITOInfo from "../classes/ITOInfo.js";
 import Roster from '../classes/Roster.js';
 import ShiftInfo from "../classes/ShiftInfo.js";
 export default function PrivateAPI(adminUtil, systemParam) {
@@ -17,8 +18,27 @@ export default function PrivateAPI(adminUtil, systemParam) {
     */
     router.get('/:action', async (req, res, next) => {
         switch (req.params.action) {
+            case "getActiveShiftList":
+                sendResponse(res, getActiveShiftList);
+                break
+            case "getITOList":
+                sendResponse(res, getITOList);
+                break;
             case "getRosterSchedulerData":
                 sendResponse(res, getRosterSchedulerData, { month: req.query.month, "systemParam": systemParam, "year": req.query.year });
+                break;
+            default:
+                next();
+                break;
+        }
+    });
+    router.post('/:action', async (req, res, next) => {
+        switch (req.params.action) {
+            case "addITO":
+                sendResponse(res, addITO, req.body.ito);
+                break;
+            case "updateITO":
+                sendResponse(res, updateITO, req.body.ito);
                 break;
             default:
                 next();
@@ -28,6 +48,19 @@ export default function PrivateAPI(adminUtil, systemParam) {
     return router;
 }
 //====================================================================================================================================
+let addITO = async ito => {
+    let itoUtil = new ITOInfo();
+    return await itoUtil.addITO(ito);
+}
+let getActiveShiftList = async () => {
+    let shiftInfo = new ShiftInfo();
+    await shiftInfo.init();
+    return shiftInfo.activeShiftList;
+}
+let getITOList = async () => {
+    let itoUtil = new ITOInfo();
+    return await itoUtil.getITOList();
+}
 let getRosterSchedulerData = async params => {
     let temp;
     let roster = new Roster();
@@ -51,6 +84,10 @@ let getRosterSchedulerData = async params => {
         previousMonthShiftList: previousMonthShiftList,
         systemParam: sP
     }
+}
+let updateITO = async ito => {
+    let itoUtil = new ITOInfo();
+    return await itoUtil.updateITO(ito);
 }
 let sendResponse = async (res, action, param) => {
     try {

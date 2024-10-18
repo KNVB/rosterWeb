@@ -1,18 +1,22 @@
 import AutoPlan from "./AutoPlanner";
 export default function TestAutoPlan() {
-    let endDate = 30;
+    let endDate = 2;
     let essentialShift = "abc";
     let itoIdList = [
         "ITO1_1999-01-01",
-        "ITO3_2023-07-12",
-        "ITO4_1999-01-01",
         "ITO5_2021-09-09",
         "ITO6_1999-01-01",
         "ITO8_1999-01-01"
     ];
-    let iterationCount = 1;
+    let iterationCount = 2;
     let itoBlackListShiftPattern = {
         "ITO1_1999-01-01": [
+            "b,a",
+            "c,a",
+            "c,b",
+            "c,c,c"
+        ],
+        "ITO3_2023-07-12": [
             "b,a",
             "c,a",
             "c,b",
@@ -355,7 +359,7 @@ export default function TestAutoPlan() {
                 "shiftType": "b"
             }
         ],
-        "ITO3_2023-07-01": [
+        "ITO3_2023-07-12": [
             {
                 "shiftType": "a"
             },
@@ -507,7 +511,8 @@ export default function TestAutoPlan() {
                 "d2",
                 "t"
             ],
-            "itoName": "Gary",
+            "dutyPattern": "operator",
+            "itoName": "TSANG Ka Shing Gary",
             "itoPostName": "ITO1",
             "lastMonthBalance": 27.45,
             "shiftList": {
@@ -674,28 +679,205 @@ export default function TestAutoPlan() {
             "extraHour": 0,
             "totalBalance": 11.45
         },
-        "ITO3_2023-07-12": {
+        "ITO2_2024-08-12": {
             "availableShiftList": [
-                "a",
-                "d2",
                 "O",
+                "d",
+                "a",
                 "t"
             ],
-            "itoName": "Ray",
-            "itoPostName": "ITO3",
+            "dutyPattern": "day",
+            "itoName": "TANG Chi Kwong Ken",
+            "itoPostName": "ITO2",
             "lastMonthBalance": 0,
             "shiftList": {},
-            "thisMonthBalance": -156,
-            "workingHourPerDay": 7.8,
+            "thisMonthBalance": -180,
+            "workingHourPerDay": 9,
             "actualWorkingDayCount": 0,
             "actualWorkingHour": 0,
             "aShiftCount": 0,
             "bxShiftCount": 0,
             "cShiftCount": 0,
             "dxShiftCount": 0,
+            "expectedWorkingHour": 180,
+            "extraHour": 0,
+            "totalBalance": -180
+        },
+        "ITO3_2023-07-12": {
+            "availableShiftList": [
+                "d1",
+                "d2",
+                "O",
+                "a",
+                "t"
+            ],
+            "dutyPattern": "day",
+            "itoName": "TANG Chi Keung Ray",
+            "itoPostName": "ITO3",
+            "lastMonthBalance": 0,
+            "shiftList": {
+                "1": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "2": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "3": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "4": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "5": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "6": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "7": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "8": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "9": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "10": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "11": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "12": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "13": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "14": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "15": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "16": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "17": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "18": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "19": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "20": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "21": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "22": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "23": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "24": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "25": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "26": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "27": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "28": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "29": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "30": [
+                    {
+                        "shiftType": "a"
+                    }
+                ]
+            },
+            "thisMonthBalance": 19,
+            "workingHourPerDay": 7.8,
+            "actualWorkingDayCount": 21,
+            "actualWorkingHour": 175,
+            "aShiftCount": 7,
+            "bxShiftCount": 0,
+            "cShiftCount": 0,
+            "dxShiftCount": 14,
             "expectedWorkingHour": 156,
             "extraHour": 0,
-            "totalBalance": -156
+            "totalBalance": 19
         },
         "ITO4_1999-01-01": {
             "availableShiftList": [
@@ -707,7 +889,8 @@ export default function TestAutoPlan() {
                 "d2",
                 "t"
             ],
-            "itoName": "Andrew",
+            "dutyPattern": "operator",
+            "itoName": "HUEN Kwai Leung Andrew",
             "itoPostName": "ITO4",
             "lastMonthBalance": -0.1,
             "shiftList": {
@@ -880,11 +1063,11 @@ export default function TestAutoPlan() {
                 "b",
                 "c",
                 "d1",
-                "d2",
                 "O",
                 "t"
             ],
-            "itoName": "Hong",
+            "dutyPattern": "operator",
+            "itoName": "YIM Man Hong",
             "itoPostName": "ITO5",
             "lastMonthBalance": -55,
             "shiftList": {
@@ -1061,7 +1244,8 @@ export default function TestAutoPlan() {
                 "d2",
                 "t"
             ],
-            "itoName": "Joseph",
+            "dutyPattern": "operator",
+            "itoName": "LI Chi-wai Joseph",
             "itoPostName": "ITO6",
             "lastMonthBalance": -0.42,
             "shiftList": {
@@ -1111,7 +1295,7 @@ export default function TestAutoPlan() {
                     },
                     {
                         "shiftType": "t",
-                        "claimType": "training",
+                        "claimType": "timeOff",
                         "description": "Seminar on Personal Data (Privacy) Ordinance and Personal Data Protection (GES/HK2)",
                         "duration": 2,
                         "endTime": "2024-09-09T04:00:00.000Z",
@@ -1173,7 +1357,7 @@ export default function TestAutoPlan() {
                 "20": [
                     {
                         "shiftType": "t",
-                        "claimType": "overTime",
+                        "claimType": "training",
                         "description": "Seminar on Personal Data (Privacy) Ordinance and Personal Data Protection (GES/HK2)",
                         "duration": 1,
                         "endTime": "2024-09-20T06:00:00.000Z",
@@ -1242,8 +1426,184 @@ export default function TestAutoPlan() {
             "cShiftCount": 7,
             "dxShiftCount": 1,
             "expectedWorkingHour": 156,
-            "extraHour": 3,
-            "totalBalance": 20.83
+            "extraHour": -1,
+            "totalBalance": 16.83
+        },
+        "ITO7_2024-04-12": {
+            "availableShiftList": [
+                "d1",
+                "d2",
+                "O",
+                "a",
+                "t"
+            ],
+            "dutyPattern": "day",
+            "itoName": "CHIM Pui Wa Jeff",
+            "itoPostName": "ITO7",
+            "lastMonthBalance": 16.4,
+            "shiftList": {
+                "1": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "2": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "3": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "4": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "5": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "6": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "7": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "8": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "9": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "10": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "11": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "12": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "13": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "14": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "15": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "16": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "17": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "18": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "19": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "20": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "21": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "22": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "23": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "24": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "25": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "26": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "27": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "28": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "29": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "30": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ]
+            },
+            "thisMonthBalance": 11,
+            "workingHourPerDay": 7.8,
+            "actualWorkingDayCount": 20,
+            "actualWorkingHour": 167,
+            "aShiftCount": 7,
+            "bxShiftCount": 0,
+            "cShiftCount": 0,
+            "dxShiftCount": 13,
+            "expectedWorkingHour": 156,
+            "extraHour": 0,
+            "totalBalance": 27.4
         },
         "ITO8_1999-01-01": {
             "availableShiftList": [
@@ -1255,7 +1615,8 @@ export default function TestAutoPlan() {
                 "d2",
                 "t"
             ],
-            "itoName": "Jimmy",
+            "dutyPattern": "operator",
+            "itoName": "CHAN Tai-hin Jimmy",
             "itoPostName": "ITO8",
             "lastMonthBalance": -0.29,
             "shiftList": {
@@ -1421,9 +1782,185 @@ export default function TestAutoPlan() {
             "expectedWorkingHour": 156,
             "extraHour": 0,
             "totalBalance": 0.21000000000000002
+        },
+        "ITO9_2024-02-19": {
+            "availableShiftList": [
+                "d1",
+                "d2",
+                "O",
+                "a",
+                "t"
+            ],
+            "dutyPattern": "day",
+            "itoName": "Sze Wa Sang Leo",
+            "itoPostName": "ITO9",
+            "lastMonthBalance": 19.4,
+            "shiftList": {
+                "1": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "2": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "3": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "4": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "5": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "6": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "7": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "8": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "9": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "10": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "11": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "12": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "13": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "14": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "15": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "16": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "17": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "18": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "19": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "20": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "21": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "22": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "23": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "24": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "25": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "26": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "27": [
+                    {
+                        "shiftType": "d2"
+                    }
+                ],
+                "28": [
+                    {
+                        "shiftType": "a"
+                    }
+                ],
+                "29": [
+                    {
+                        "shiftType": "O"
+                    }
+                ],
+                "30": [
+                    {
+                        "shiftType": "O"
+                    }
+                ]
+            },
+            "thisMonthBalance": 11,
+            "workingHourPerDay": 7.8,
+            "actualWorkingDayCount": 20,
+            "actualWorkingHour": 167,
+            "aShiftCount": 7,
+            "bxShiftCount": 0,
+            "cShiftCount": 0,
+            "dxShiftCount": 13,
+            "expectedWorkingHour": 156,
+            "extraHour": 0,
+            "totalBalance": 30.4
         }
     };
-    let startDate = 13;
+    let startDate = 1;
     let systemParam = {
         "maxConsecutiveWorkingDay": 6,
         "monthPickerMinDate": "2016-12-31T16:00:00.000Z",
