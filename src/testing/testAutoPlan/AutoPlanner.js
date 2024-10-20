@@ -35,6 +35,7 @@ export default class AutoPlan {
     }
     doAutoPlan() {
         let assignedShift = "";
+        let finalResult = {};
         let tempResult = {};
         let previousMonthShiftCount = (this.#systemParam.noOfPrevDate - this.#startDate) + 1;
         let itoId, itoAvailableShift, itoAvailableShiftList = {};
@@ -94,7 +95,14 @@ export default class AutoPlan {
             }
         }
         //console.log(tempResult["ITO6_1999-01-01"]);
-        console.log(tempResult);
+        //console.log(tempResult);
+        this.#itoIdList.forEach(itoId => {
+            finalResult[itoId] = { shiftList: {} };
+            for (let i = 2; i < tempResult[itoId].length; i++) {
+                finalResult[itoId].shiftList[i - 2 + this.#startDate] = [tempResult[itoId][i]];
+            }
+        });
+        console.log(finalResult);
     }
     //======================================================================================
     #buildITOAvailableShift = itoId => {
@@ -159,7 +167,18 @@ export default class AutoPlan {
         if (temp > 0) {
             for (let i = this.#startDate - temp; i < this.#startDate; i++) {
                 if (this.#roster[itoId].shiftList[i]) {
-                    result.push({ "shiftType": this.#roster[itoId].shiftList[i][0].shiftType })
+                    let isAssigned=false;
+                    for (let j = 0; j < this.#roster[itoId].shiftList[i].length; j++) {
+                        //console.log(itoId, this.#roster[itoId].shiftList[i][j].shiftType, this.#essentialShift.indexOf(this.#roster[itoId].shiftList[i][j].shiftType))
+                        if (this.#essentialShift.indexOf(this.#roster[itoId].shiftList[i][j].shiftType) > -1) {
+                            result.push({ "shiftType": this.#roster[itoId].shiftList[i][j].shiftType });
+                            isAssigned=true;
+                            break;
+                        }
+                    }
+                    if (!isAssigned){
+                        result.push({ "shiftType": this.#roster[itoId].shiftList[i][0].shiftType })
+                    }                    
                 } else {
                     result.push({ "shiftType": "" });
                 }
@@ -191,10 +210,10 @@ export default class AutoPlan {
         if (lastIndex > -1) {
             for (let i = lastIndex; i < tempResult.length; i++) {
                 shift = tempResult[i];
-                switch (shift.shiftType){
+                switch (shift.shiftType) {
                     case "":
                     case "d":
-                    case "d1":    
+                    case "d1":
                     case "d2":
                     case "d3":
                     case "O":

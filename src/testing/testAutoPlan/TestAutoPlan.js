@@ -1,6 +1,6 @@
 import AutoPlan from "./AutoPlanner";
 export default function TestAutoPlan() {
-    let endDate = 7;
+    let endDate = 16;
     let essentialShift = "abc";
     let itoIdList = [
         "ITO1_1999-01-01",
@@ -1960,7 +1960,7 @@ export default function TestAutoPlan() {
             "totalBalance": 30.4
         }
     };
-    let startDate = 1;
+    let startDate = 10;
     let systemParam = {
         "maxConsecutiveWorkingDay": 6,
         "monthPickerMinDate": "2016-12-31T16:00:00.000Z",
