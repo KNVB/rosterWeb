@@ -1,6 +1,6 @@
 import AutoPlan from "./AutoPlanner";
 export default function TestAutoPlan() {
-    let endDate = 16;
+    let endDate = 20;
     let essentialShift = "abc";
     let itoIdList = [
         "ITO1_1999-01-01",
@@ -1967,6 +1967,11 @@ export default function TestAutoPlan() {
         "noOfPrevDate": 2
     };
     //===================================================================================
+    /*
+    itoIdList.forEach(itoId =>{
+        roster[itoId].shiftList={};
+    });
+    */
     let autoPlanner = new AutoPlan(
         {
             endDate,
