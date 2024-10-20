@@ -1,5 +1,0 @@
-DataStoreImplementationClassName = com.rosterWeb.util.DbOp
-dbUserName={db User Name}
-dbUserPwd={db User Password}
-jdbcDriver = com.mysql.jdbc.Driver
-jdbcURL=jdbc:mysql://{your db server name }:{port}/{dbName}?useUnicode=true&characterEncoding=UTF-8
