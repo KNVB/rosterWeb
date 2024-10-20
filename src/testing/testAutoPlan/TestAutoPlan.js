@@ -1,6 +1,6 @@
 import AutoPlan from "./AutoPlanner";
 export default function TestAutoPlan() {
-    let endDate = 8;
+    let endDate = 7;
     let essentialShift = "abc";
     let itoIdList = [
         "ITO1_1999-01-01",

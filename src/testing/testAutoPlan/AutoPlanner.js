@@ -52,9 +52,9 @@ export default class AutoPlan {
             assignedShift = "";
             let shuffledITOId = structuredClone(this.#itoIdList);
             Utility.shuffleArray(shuffledITOId);
-            //for (let i = 0; i < shuffledITOId.length; i++) {
-            //    itoId = shuffledITOId[i];
-                itoId="ITO6_1999-01-01";
+            for (let i = 0; i < shuffledITOId.length; i++) {
+                itoId = shuffledITOId[i];
+                //itoId="ITO1_1999-01-01";
                 isAssigned = false; preShift = [];
                 //console.log(itoId);
                 if (this.#isUnderMaxConsecutiveWorkingDay(tempResult[itoId])) {
@@ -91,9 +91,10 @@ export default class AutoPlan {
                 if (!isAssigned) {
                     tempResult[itoId].push({ "shiftType": "" });
                 }
-            //}
+            }
         }
-        console.log(assignedShift, tempResult);
+        //console.log(tempResult["ITO6_1999-01-01"]);
+        console.log(tempResult);
     }
     //======================================================================================
     #buildITOAvailableShift = itoId => {
@@ -186,17 +187,29 @@ export default class AutoPlan {
         let result = false;
         let shift;
         //lastIndex -= this.#systemParam.noOfPrevDate;
-        console.log(lastIndex,tempResult.length);
+        //console.log(lastIndex,tempResult.length);
         if (lastIndex > -1) {
-            for (let i = tempResult.length - 1; i >= lastIndex; i--) {
+            for (let i = lastIndex; i < tempResult.length; i++) {
                 shift = tempResult[i];
-                if (this.#essentialShift.indexOf(shift.shiftType) > -1) {
-                    count++;
+                switch (shift.shiftType){
+                    case "":
+                    case "d":
+                    case "d1":    
+                    case "d2":
+                    case "d3":
+                    case "O":
+                        if (count > 0) {
+                            count--;
+                        }
+                        break;
+                    default:
+                        count++;
+                        break;
                 }
             }
-            console.log(count,this.#systemParam.maxConsecutiveWorkingDay);
+            //console.log(count,this.#systemParam.maxConsecutiveWorkingDay);
             result = (count < this.#systemParam.maxConsecutiveWorkingDay);
-            console.log(result);
+            //console.log(result);
         } else {
             result = true;
         }
