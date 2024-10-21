@@ -47,19 +47,19 @@ export default class AutoPlan {
         let isAssigned = false, preShift = [], temp;
         this.#itoIdList.forEach(itoId => {
             finalResult[itoId] = {
-                /*
                 availableShiftList: this.#roster[itoId].availableShiftList,
                 workingHourPerDay: this.#roster[itoId].workingHourPerDay,
-                */
                 shiftList: this.#buildTempResult(itoId, previousMonthShiftCount)
             }
-            /*
             if (this.#preferredShiftList[itoId]) {
                 itoAvailableShiftList[itoId] = this.#buildITOAvailableShift(itoId);
-            }*/
+            }
         });
-
-        //console.log(finalResult)
+        for (let dateOfMonth = this.#startDate; dateOfMonth <= this.#endDate; dateOfMonth++) {
+            assignedShift = "";
+            let shuffledITOId = structuredClone(this.#itoIdList);
+        }
+        console.log(finalResult);
         return finalResult;
     }
     //======================================================================================
@@ -108,12 +108,14 @@ export default class AutoPlan {
         let item, preIndex;
         let result = {};
         let lastIndex = this.#startDate - this.#systemParam.noOfPrevDate;
-        for (let i = lastIndex; i <= this.#endDate; i++) {
+        for (let i = lastIndex; i < this.#startDate; i++) {
             if (i < 1) {
                 preIndex = i + Object.keys(this.#previousMonthShiftList[itoId]).length - 1;
-                item = this.#previousMonthShiftList[itoId][preIndex];
+                item = [this.#previousMonthShiftList[itoId][preIndex]];
+            } else {
+                item = this.#roster[itoId].shiftList[i];
             }
-            result[i] = [item];
+            result[i] = item;
         }
         return result;
     }
