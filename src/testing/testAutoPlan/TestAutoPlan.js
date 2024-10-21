@@ -1,5 +1,86 @@
 import AutoPlan from "./AutoPlanner";
+import NameCell from "../../components/common/cells/NameCell";
+import ShiftCell from "../../components/common/cells/ShiftCell";
 export default function TestAutoPlan() {
+    let activeShiftList={
+            "a": {
+                "cssClassName": "aShiftColor",
+                "duration": 9,
+                "isEssential": true,
+                "timeSlot": "0800H - 1700H",
+                "type": "a"
+            },
+            "b": {
+                "cssClassName": "bShiftColor",
+                "duration": 5.75,
+                "isEssential": true,
+                "timeSlot": "1630H - 2215H",
+                "type": "b"
+            },
+            "b1": {
+                "cssClassName": "bShiftColor",
+                "duration": 7.25,
+                "isEssential": false,
+                "timeSlot": "1500H - 2215H",
+                "type": "b1"
+            },
+            "c": {
+                "cssClassName": "cShiftColor",
+                "duration": 10.75,
+                "isEssential": true,
+                "timeSlot": "2145H - 0830H (the next day)",
+                "type": "c"
+            },
+            "d": {
+                "cssClassName": "dShiftColor",
+                "duration": 9,
+                "isEssential": false,
+                "timeSlot": "0800H - 1800H (on weekdays)",
+                "type": "d"
+            },
+            "d1": {
+                "cssClassName": "dShiftColor",
+                "duration": 8,
+                "isEssential": false,
+                "timeSlot": "0800H - 1700H (on weekdays)",
+                "type": "d1"
+            },
+            "d2": {
+                "cssClassName": "dShiftColor",
+                "duration": 8,
+                "isEssential": false,
+                "timeSlot": "0900H - 1800H (on weekdays)",
+                "type": "d2"
+            },
+            "d3": {
+                "cssClassName": "dShiftColor",
+                "duration": 7.8,
+                "isEssential": false,
+                "timeSlot": "0800H - 1648H (on weekdays)",
+                "type": "d3"
+            },
+            "O": {
+                "cssClassName": "oShiftColor",
+                "duration": 0,
+                "isEssential": false,
+                "timeSlot": "dayoff",
+                "type": "O"
+            },
+            "s": {
+                "cssClassName": "sickLeaveColor",
+                "duration": 0,
+                "isEssential": false,
+                "timeSlot": "sick leave standby",
+                "type": "s"
+            },
+            "t": {
+                "cssClassName": "trainingColor",
+                "duration": 0,
+                "isEssential": false,
+                "timeSlot": "training/time off/over time",
+                "type": "t"
+            }
+        }
     let endDate = 20;
     let essentialShift = "abc";
     let itoIdList = [
@@ -46,6 +127,7 @@ export default function TestAutoPlan() {
             "c,c,c"
         ]
     };
+    let noOfWorkingDay=20;
     let preferredShiftList = {
         "ITO1_1999-01-01": {
             "1": [
@@ -1967,18 +2049,20 @@ export default function TestAutoPlan() {
         "noOfPrevDate": 2
     };
     //===================================================================================
-    /*
+    
     itoIdList.forEach(itoId =>{
         roster[itoId].shiftList={};
     });
-    */
+    
     let autoPlanner = new AutoPlan(
         {
+            activeShiftList,
             endDate,
-            essentialShift,            
+            essentialShift,
             iterationCount,
             itoBlackListShiftPattern,
             itoIdList,
+            noOfWorkingDay,
             preferredShiftList,
             previousMonthShiftList,
             roster,
@@ -1986,7 +2070,42 @@ export default function TestAutoPlan() {
             systemParam
         }
     )
-    autoPlanner.doAutoPlan()
-
-    return (<></>)
+    let bodyRows = []
+    let headerCells = [<td className="borderCell dayCell text-center" key='day_0'></td>];
+    let planResult = autoPlanner.doAutoPlan();    
+    for (let i = startDate; i <= endDate; i++) {
+        headerCells.push(<td className="borderCell dayCell text-center" key={'day_' + i}>{i}</td>)
+    }
+    itoIdList.forEach(itoId => {
+        planResult[itoId].availableShiftList=roster[itoId].availableShiftList;
+        planResult[itoId].workingHourPerDay=roster[itoId].workingHourPerDay;
+        let cells = [];
+        cells.push(<NameCell key={"name_" + itoId}>{roster[itoId].itoName}</NameCell>);
+        for (let i = startDate; i <= endDate; i++) {
+            cells.push(
+                <ShiftCell key={"shift_" + itoId + "_" + i}>
+                    {planResult[itoId].shiftList[i][0].shiftType}
+                </ShiftCell>
+            )
+        }
+        bodyRows.push(
+            <tr key={"row_" + itoId}>
+                {cells}
+            </tr>
+        );
+    });
+    console.log(planResult.duplicateShiftList);
+    console.log(planResult.vacantShiftList);
+    return (
+        <table className="m-1 p-0 rosterTable">
+            <thead>
+                <tr>
+                    {headerCells}
+                </tr>
+            </thead>
+            <tbody>
+                {bodyRows}
+            </tbody>
+        </table>
+    )
 }

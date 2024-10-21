@@ -1,32 +1,38 @@
 import Utility from "../../util/Utility";
 export default class AutoPlan {
+    #activeShiftList;
     #endDate;
     #essentialShift;
     #itoBlackListShiftPattern;
     #iterationCount;
     #itoIdList;
+    #noOfWorkingDay;
     #preferredShiftList;
     #previousMonthShiftList;
     #roster;
     #startDate;
     #systemParam;
     constructor({
+        activeShiftList,
         endDate,
         essentialShift,
         itoBlackListShiftPattern,
         itoIdList,
         iterationCount,
+        noOfWorkingDay,
         preferredShiftList,
         previousMonthShiftList,
         roster,
         startDate,
         systemParam,
     }) {
+        this.#activeShiftList = activeShiftList;
         this.#endDate = endDate;
         this.#essentialShift = essentialShift;
         this.#iterationCount = iterationCount;
         this.#itoBlackListShiftPattern = itoBlackListShiftPattern;
         this.#itoIdList = itoIdList;
+        this.#noOfWorkingDay = noOfWorkingDay;
         this.#preferredShiftList = preferredShiftList;
         this.#previousMonthShiftList = previousMonthShiftList;
         this.#roster = roster;
@@ -97,12 +103,20 @@ export default class AutoPlan {
         //console.log(tempResult["ITO6_1999-01-01"]);
         //console.log(tempResult);
         this.#itoIdList.forEach(itoId => {
-            finalResult[itoId] = { shiftList: {} };
+            finalResult[itoId] = {
+                availableShiftList: this.#roster[itoId].availableShiftList,
+                workingHourPerDay: this.#roster[itoId].workingHourPerDay,
+                shiftList: {}
+            };
             for (let i = 2; i < tempResult[itoId].length; i++) {
                 finalResult[itoId].shiftList[i - 2 + this.#startDate] = [tempResult[itoId][i]];
             }
         });
-        console.log(finalResult);
+        finalResult = Utility.genITOStat(this.#activeShiftList, finalResult, this.#noOfWorkingDay);
+        temp = Utility.getAllITOStat(this.#essentialShift, this.#startDate,this.#endDate , this.#itoIdList, finalResult);
+        finalResult.duplicateShiftList = structuredClone(temp.duplicateShiftList);
+        finalResult.vacantShiftList = structuredClone(temp.vacantShiftList);
+        return finalResult;
     }
     //======================================================================================
     #buildITOAvailableShift = itoId => {
@@ -167,18 +181,18 @@ export default class AutoPlan {
         if (temp > 0) {
             for (let i = this.#startDate - temp; i < this.#startDate; i++) {
                 if (this.#roster[itoId].shiftList[i]) {
-                    let isAssigned=false;
+                    let isAssigned = false;
                     for (let j = 0; j < this.#roster[itoId].shiftList[i].length; j++) {
                         //console.log(itoId, this.#roster[itoId].shiftList[i][j].shiftType, this.#essentialShift.indexOf(this.#roster[itoId].shiftList[i][j].shiftType))
                         if (this.#essentialShift.indexOf(this.#roster[itoId].shiftList[i][j].shiftType) > -1) {
                             result.push({ "shiftType": this.#roster[itoId].shiftList[i][j].shiftType });
-                            isAssigned=true;
+                            isAssigned = true;
                             break;
                         }
                     }
-                    if (!isAssigned){
+                    if (!isAssigned) {
                         result.push({ "shiftType": this.#roster[itoId].shiftList[i][0].shiftType })
-                    }                    
+                    }
                 } else {
                     result.push({ "shiftType": "" });
                 }
