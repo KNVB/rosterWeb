@@ -81,7 +81,7 @@ export default function TestAutoPlan() {
                 "type": "t"
             }
         }
-    let endDate = 20;
+    let endDate = 2;
     let essentialShift = "abc";
     let itoIdList = [
         "ITO1_1999-01-01",
@@ -2042,18 +2042,18 @@ export default function TestAutoPlan() {
             "totalBalance": 30.4
         }
     };
-    let startDate = 10;
+    let startDate = 1;
     let systemParam = {
         "maxConsecutiveWorkingDay": 6,
         "monthPickerMinDate": "2016-12-31T16:00:00.000Z",
         "noOfPrevDate": 2
     };
     //===================================================================================
-    
+    /*
     itoIdList.forEach(itoId =>{
         roster[itoId].shiftList={};
     });
-    
+    */
     let autoPlanner = new AutoPlan(
         {
             activeShiftList,
@@ -2076,6 +2076,7 @@ export default function TestAutoPlan() {
     for (let i = startDate; i <= endDate; i++) {
         headerCells.push(<td className="borderCell dayCell text-center" key={'day_' + i}>{i}</td>)
     }
+    /*
     itoIdList.forEach(itoId => {
         planResult[itoId].availableShiftList=roster[itoId].availableShiftList;
         planResult[itoId].workingHourPerDay=roster[itoId].workingHourPerDay;
@@ -2096,6 +2097,7 @@ export default function TestAutoPlan() {
     });
     console.log(planResult.duplicateShiftList);
     console.log(planResult.vacantShiftList);
+    */
     return (
         <table className="m-1 p-0 rosterTable">
             <thead>
