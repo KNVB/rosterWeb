@@ -2042,7 +2042,7 @@ export default function TestAutoPlan() {
             "totalBalance": 30.4
         }
     };
-    let startDate = 10;
+    let startDate = 15;
     let systemParam = {
         "maxConsecutiveWorkingDay": 6,
         "monthPickerMinDate": "2016-12-31T16:00:00.000Z",
@@ -2076,10 +2076,8 @@ export default function TestAutoPlan() {
     for (let i = startDate; i <= endDate; i++) {
         headerCells.push(<td className="borderCell dayCell text-center" key={'day_' + i}>{i}</td>)
     }
-    /*
+    
     itoIdList.forEach(itoId => {
-        planResult[itoId].availableShiftList=roster[itoId].availableShiftList;
-        planResult[itoId].workingHourPerDay=roster[itoId].workingHourPerDay;
         let cells = [];
         cells.push(<NameCell key={"name_" + itoId}>{roster[itoId].itoName}</NameCell>);
         for (let i = startDate; i <= endDate; i++) {
@@ -2097,7 +2095,7 @@ export default function TestAutoPlan() {
     });
     console.log(planResult.duplicateShiftList);
     console.log(planResult.vacantShiftList);
-    */
+    
     return (
         <table className="m-1 p-0 rosterTable">
             <thead>

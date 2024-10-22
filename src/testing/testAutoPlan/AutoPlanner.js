@@ -44,7 +44,7 @@ export default class AutoPlan {
         let finalResult = {};
         let previousMonthShiftCount = (this.#systemParam.noOfPrevDate - this.#startDate) + 1;
         let itoId, itoAvailableShift, itoAvailableShiftList = {};
-        let isAssigned = false, preShift = [], temp;
+        let isAssigned = false, preShift, temp;
         this.#itoIdList.forEach(itoId => {
             finalResult[itoId] = {
                 availableShiftList: this.#roster[itoId].availableShiftList,
@@ -55,11 +55,61 @@ export default class AutoPlan {
                 itoAvailableShiftList[itoId] = this.#buildITOAvailableShift(itoId);
             }
         });
+
+        //let dateOfMonth = this.#startDate;
         for (let dateOfMonth = this.#startDate; dateOfMonth <= this.#endDate; dateOfMonth++) {
-            assignedShift = "";
             let shuffledITOId = structuredClone(this.#itoIdList);
+            assignedShift = "";
+            for (let i = 0; i < shuffledITOId.length; i++) {
+                //itoId="ITO1_1999-01-01";
+                itoId = shuffledITOId[i];
+                if (this.#isUnderMaxConsecutiveWorkingDay(finalResult[itoId].shiftList, dateOfMonth)) {
+                    preShift = this.#buildPreShift(itoId, dateOfMonth, finalResult);
+                    itoAvailableShift = itoAvailableShiftList[itoId];
+                    if (itoAvailableShift[dateOfMonth]) {
+                        for (let k = 0; k < itoAvailableShift[dateOfMonth].length; k++) {
+                            let preferredShift = itoAvailableShift[dateOfMonth][k];
+                            if (assignedShift.indexOf(preferredShift) === -1){
+                                temp = preShift + "," + preferredShift;
+                                if (!this.#isBlackListShift(itoId, temp)) {
+                                    assignedShift += preferredShift;
+                                    finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": preferredShift }];
+                                    break;
+                                }    
+                            }
+                        }
+                    }
+                }else{
+                    finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": "O" }];
+                }
+            }
+            for (let i = 0; i < shuffledITOId.length; i++) {
+                itoId = shuffledITOId[i];
+                if (finalResult[itoId].shiftList[dateOfMonth] === undefined){
+                    if (this.#isUnderMaxConsecutiveWorkingDay(finalResult[itoId].shiftList, dateOfMonth)) {
+                        preShift = this.#buildPreShift(itoId, dateOfMonth, finalResult);
+                        isAssigned = false;
+                        for (let k = 0; k < this.#essentialShift.length; k++) {
+                            if (assignedShift.indexOf(this.#essentialShift[k]) === -1) {
+                                temp = preShift + "," +this.#essentialShift[k];
+                                if (!this.#isBlackListShift(itoId, temp)) {
+                                    assignedShift +=this.#essentialShift[k];
+                                    finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": this.#essentialShift[k] }];
+                                    isAssigned = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!isAssigned){
+                            finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": "O" }];    
+                        }
+                    }else{
+                        finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": "O" }];
+                    }
+                }
+            }
         }
-        console.log(finalResult);
+        //console.log(finalResult);
         return finalResult;
     }
     //======================================================================================
@@ -104,7 +154,21 @@ export default class AutoPlan {
         });
         return result;
     }
-    #buildTempResult = (itoId, previousMonthShiftCount) => {
+    #buildPreShift = (itoId, dateOfMonth, itoRoster) => {
+        let preShift = [];
+        for (let j = dateOfMonth - this.#systemParam.noOfPrevDate; j < dateOfMonth; j++) {
+            itoRoster[itoId].shiftList[j].forEach(shiftObj => {
+                if ((this.#essentialShift.indexOf(shiftObj.shiftType) > -1) ||
+                        (shiftObj.shiftType ==="O")
+                    ) {
+                    preShift.push(shiftObj.shiftType);
+                }
+            });
+        }
+        preShift = preShift.join(",");
+        return preShift
+    }
+    #buildTempResult = (itoId) => {
         let item, preIndex;
         let result = {};
         let lastIndex = this.#startDate - this.#systemParam.noOfPrevDate;
@@ -116,6 +180,31 @@ export default class AutoPlan {
                 item = this.#roster[itoId].shiftList[i];
             }
             result[i] = item;
+        }
+        return result;
+    }
+    #isBlackListShift = (itoId, newShift) => {
+        let result = false;
+        if (this.#itoBlackListShiftPattern[itoId]) {
+            for (let i = 0; i < this.#itoBlackListShiftPattern[itoId].length; i++) {
+                let blackListShift = this.#itoBlackListShiftPattern[itoId][i];
+                //console.log(newShift, blackListShift, newShift.indexOf(blackListShift));
+                if (newShift.indexOf(blackListShift) > -1) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+    #isUnderMaxConsecutiveWorkingDay = (itoRoster, dateOfMonth) => {
+        let count = 0;
+        let result = true;
+        let firstIndex = dateOfMonth - this.#systemParam.maxConsecutiveWorkingDay;
+        if (itoRoster[firstIndex]) {
+            for (let i = firstIndex; i < dateOfMonth; i++) {
+                console.log(firstIndex, itoRoster[i]);
+            }
         }
         return result;
     }
