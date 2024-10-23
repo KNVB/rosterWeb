@@ -2042,7 +2042,7 @@ export default function TestAutoPlan() {
             "totalBalance": 30.4
         }
     };
-    let startDate = 15;
+    let startDate = 1;
     let systemParam = {
         "maxConsecutiveWorkingDay": 6,
         "monthPickerMinDate": "2016-12-31T16:00:00.000Z",

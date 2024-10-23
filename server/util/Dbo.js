@@ -115,7 +115,7 @@ export default class Dbo {
 		this.#sqlString+="	   LEFT JOIN shift_detail";
 		this.#sqlString+="			  ON v.ito_id = shift_detail.ito_id";
 		this.#sqlString+="				 AND Cast(start_time AS DATE) = shift_date ";
-		this.#sqlString+="ORDER  BY v.ito_id,";
+		this.#sqlString+="ORDER  BY Cast(replace(post_name,\"ITO\",\"\") as unsigned),";
 		this.#sqlString+="		  shift_date,";
         this.#sqlString+="		  shift";
         return await this.#executeQuery(this.#sqlString,
