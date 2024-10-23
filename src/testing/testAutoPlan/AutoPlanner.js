@@ -203,8 +203,27 @@ export default class AutoPlan {
         let firstIndex = dateOfMonth - this.#systemParam.maxConsecutiveWorkingDay;
         if (itoRoster[firstIndex]) {
             for (let i = firstIndex; i < dateOfMonth; i++) {
-                console.log(firstIndex, itoRoster[i]);
+                //console.log(firstIndex, itoRoster[i]);
+                if (itoRoster[i]){
+                    for (let j=0;j < itoRoster[i].length;j++){
+                        switch (itoRoster[i][j].shiftType){
+                            case "d":
+                            case "d1":
+                            case "d2":
+                            case "d3":
+                            case "O":
+                                count--;
+                                break;
+                            default:
+                                if (this.#essentialShift.indexOf(itoRoster[i][j].shiftType) >-1){
+                                    count++
+                                }
+                                break;
+                        }
+                    }
+                }
             }
+            result=(count < this.#systemParam.maxConsecutiveWorkingDay);
         }
         return result;
     }
