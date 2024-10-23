@@ -51,127 +51,131 @@ export default class AutoPlan {
                 workingHourPerDay: this.#roster[itoId].workingHourPerDay,
                 shiftList: this.#buildTempResult(itoId, previousMonthShiftCount)
             }
-            if (this.#preferredShiftList[itoId]) {
-                itoAvailableShiftList[itoId] = this.#buildITOAvailableShift(itoId);
-            }
+            itoAvailableShiftList[itoId] = this.#buildITOAvailableShift(itoId);
         });
 
         //let dateOfMonth = this.#startDate;
         for (let dateOfMonth = this.#startDate; dateOfMonth <= this.#endDate; dateOfMonth++) {
+            assignedShift = "";
             notAssignedITOIdList = [];
             let shuffledITOIdList = structuredClone(this.#itoIdList);
-            assignedShift = "";
             for (let i = 0; i < shuffledITOIdList.length; i++) {
                 let itoId = shuffledITOIdList[i];
-                isAssigned = false;
-                if (this.#isUnderMaxConsecutiveWorkingDay(finalResult[itoId].shiftList, dateOfMonth)) {
-                    let preferredShiftList = itoAvailableShiftList[itoId][dateOfMonth];
-                    if (preferredShiftList) {
-                        preferredShiftList.forEach(preferredShift => {
-                            switch (preferredShift) {
-                                case "d":
-                                case "d1":
-                                case "d2":
-                                case "d3":
-                                case "O":
+                let preferredShiftList = itoAvailableShiftList[itoId][dateOfMonth];
+                console.log("itoId=" + itoId + ",dateOfMonth=" + dateOfMonth + ",preferredShiftList=" + preferredShiftList);
+                if (preferredShiftList) {
+                    isAssigned = false;
+                    for (let q = 0; q < preferredShiftList.length; q++) {
+                        let preferredShift = preferredShiftList[q];
+                        console.log("itoId=" + itoId + ",dateOfMonth=" + dateOfMonth + ",preferredShift=" + preferredShift + ",assignedShift=" + assignedShift + ",isAssignable=" + this.#isAssignable(itoId, dateOfMonth, finalResult[itoId], preferredShift));
+                        switch (preferredShift) {
+                            case "d":
+                            case "d1":
+                            case "d2":
+                            case "d3":
+                            case "O":
+                                finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": preferredShift }];
+                                isAssigned = true;
+                                break;
+                            default:
+                                if ((assignedShift.indexOf(preferredShift) === -1) &&
+                                    (this.#isAssignable(itoId, dateOfMonth, finalResult[itoId], preferredShift))) {
                                     finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": preferredShift }];
+                                    assignedShift += preferredShift;
                                     isAssigned = true;
-                                    break;
-                                default:
-                                    if ((assignedShift.indexOf(preferredShift) === -1) &&
-                                        (this.#isAssignable(itoId, dateOfMonth, finalResult[itoId], preferredShift))) {
-                                        finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": preferredShift }];
-                                        console.log(itoId,dateOfMonth,preferredShift);
-                                        assignedShift += preferredShift;
-                                        isAssigned = true;
-                                    }
-                                    break
-
-                            }
-                        });
+                                }
+                                break;
+                        }
+                        if (isAssigned) {
+                            break
+                        }
+                    }
+                    if (!isAssigned) {
+                        finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": "O" }];
                     }
                 } else {
-                    finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": "O" }];
-                    isAssigned = true;
-                }
-                if (!isAssigned) {
                     notAssignedITOIdList.push(itoId);
                 }
             }
-            for (let k = 0; k < notAssignedITOIdList.length; k++) {
-                let itoId = notAssignedITOIdList[k];
+            for (let i = 0; i < notAssignedITOIdList.length; i++) {
+                let itoId = notAssignedITOIdList[i];
                 isAssigned = false;
-              
                 for (let j = 0; j < this.#essentialShift.length; j++) {
-                    if ((dateOfMonth === 13) && (itoId === "ITO8_1999-01-01")) {
-                        console.log(assignedShift,(this.#isAssignable(itoId, dateOfMonth, finalResult[itoId], this.#essentialShift[j])));
-                    }
-                    if ((assignedShift.indexOf(this.#essentialShift[j]) === -1) &&
-                        (this.#isAssignable(itoId, dateOfMonth, finalResult[itoId], this.#essentialShift[j]))) {
-                        finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": this.#essentialShift[j] }];
-                        assignedShift += this.#essentialShift[j];
-                        isAssigned = true;
+                    let shiftType = this.#essentialShift[j];
+                    if (assignedShift.indexOf(shiftType) === -1) {
+                        if (this.#isAssignable(itoId, dateOfMonth, finalResult[itoId], shiftType)) {
+                            finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": shiftType }];
+                            assignedShift += shiftType;
+                            isAssigned = true;
+                            break;
+                        }
                     }
                 }
                 if (!isAssigned) {
                     finalResult[itoId].shiftList[dateOfMonth] = [{ "shiftType": "O" }];
                 }
-            };
+            }
+            console.log("=======================================================");
         }
-        console.log(finalResult);
+        //console.log(finalResult);
         return finalResult;
     }
     //======================================================================================
     #buildITOAvailableShift = itoId => {
         let result = {};
-        Object.keys(this.#preferredShiftList[itoId]).forEach(dateOfMonth => {
-            let temp = this.#preferredShiftList[itoId][dateOfMonth][0].shiftType;
-            temp = temp.trim();
-            result[dateOfMonth] = [];
-            if (temp.startsWith("n")) {
-                result[dateOfMonth] = this.#roster[itoId].availableShiftList.filter(shift => {
-                    let bResult = true
-                    for (let j = 1; j < temp.length; j++) {
-                        if ((shift === temp[j]) || (this.#essentialShift.indexOf(shift) === -1)) {
-                            bResult = false;
+        if (this.#preferredShiftList[itoId]) {
+            Object.keys(this.#preferredShiftList[itoId]).forEach(dateOfMonth => {
+                let temp = this.#preferredShiftList[itoId][dateOfMonth][0].shiftType;
+                temp = temp.trim();
+                result[dateOfMonth] = [];
+                if (temp.startsWith("n")) {
+                    result[dateOfMonth] = this.#roster[itoId].availableShiftList.filter(shift => {
+                        let bResult = true
+                        for (let j = 1; j < temp.length; j++) {
+                            if ((shift === temp[j]) || (this.#essentialShift.indexOf(shift) === -1)) {
+                                bResult = false;
+                            }
                         }
-                    }
-                    return bResult;
-                });
-            } else {
-                result[dateOfMonth] = this.#roster[itoId].availableShiftList.filter(shift => {
-                    let aResult = false;
-                    switch (true) {
-                        case (shift === temp):
-                            aResult = true;
-                            break;
-                        case ((shift === "b") && (temp.startsWith("b"))):
-                            aResult = true;
-                            break;
-                        case ((shift === "d1") && (temp === "al")):
-                            aResult = true;
-                            break;
-                        case ((shift === "O") && (temp === "o")):
-                            aResult = true;
-                            break;
-                        default:
-                            break;
-                    }
-                    return aResult;
-                });
-            }
-        });
+                        return bResult;
+                    });
+                } else {
+                    result[dateOfMonth] = this.#roster[itoId].availableShiftList.filter(shift => {
+                        let aResult = false;
+                        switch (true) {
+                            case (shift === temp):
+                                aResult = true;
+                                break;
+                            case ((shift === "b") && (temp.startsWith("b"))):
+                                aResult = true;
+                                break;
+                            case ((shift === "d1") && (temp === "al")):
+                                aResult = true;
+                                break;
+                            case ((shift === "O") && (temp === "o")):
+                                aResult = true;
+                                break;
+                            default:
+                                break;
+                        }
+                        return aResult;
+                    });
+                }
+            });
+        }
+
         return result;
     }
     #buildPreShift = (itoRoster, dateOfMonth) => {
         let preShift = [];
         for (let j = dateOfMonth - this.#systemParam.noOfPrevDate; j < dateOfMonth; j++) {
-            for (let k = 0; k < itoRoster.shiftList[j].length; k++) {
-                let shiftObj = itoRoster.shiftList[j][k];
-                if ((this.#essentialShift.indexOf(shiftObj.shiftType) > -1) ||
-                    (shiftObj.shiftType === "O")
-                ) {
-                    preShift.push(shiftObj.shiftType);
+            if (itoRoster.shiftList[j]) {
+                for (let k = 0; k < itoRoster.shiftList[j].length; k++) {
+                    let shiftObj = itoRoster.shiftList[j][k];
+                    if ((this.#essentialShift.indexOf(shiftObj.shiftType) > -1) ||
+                        (shiftObj.shiftType === "O")
+                    ) {
+                        preShift.push(shiftObj.shiftType);
+                    }
                 }
             }
         }
@@ -196,11 +200,15 @@ export default class AutoPlan {
     #isAssignable = (itoId, dateOfMonth, itoRoster, targetShift) => {
         let preShift, temp;
         let result = false;
-        if (this.#essentialShift.indexOf(targetShift) > -1) {
-            preShift = this.#buildPreShift(itoRoster, dateOfMonth);
-            temp = preShift + "," + targetShift;
-            if (!this.#isBlackListShift(itoId, temp)) {
-                result = true;
+        console.log("itoId=" + itoId + ",dateOfMonth=" + dateOfMonth + ",isUnderMaxConsecutiveWorkingDay=" + this.#isUnderMaxConsecutiveWorkingDay(itoRoster.shiftList, dateOfMonth));
+
+        if (this.#isUnderMaxConsecutiveWorkingDay(itoRoster.shiftList, dateOfMonth)) {
+            if (this.#essentialShift.indexOf(targetShift) > -1) {
+                preShift = this.#buildPreShift(itoRoster, dateOfMonth);
+                temp = preShift + "," + targetShift;
+                if (!this.#isBlackListShift(itoId, temp)) {
+                    result = true;
+                }
             }
         }
         return result;

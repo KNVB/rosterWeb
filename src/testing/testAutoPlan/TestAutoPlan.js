@@ -81,10 +81,11 @@ export default function TestAutoPlan() {
                 "type": "t"
             }
         }
-    let endDate = 20;
+    let endDate = 30;
     let essentialShift = "abc";
     let itoIdList = [
         "ITO1_1999-01-01",
+        "ITO4_1999-01-01",
         "ITO5_2021-09-09",
         "ITO6_1999-01-01",
         "ITO8_1999-01-01"
@@ -2042,7 +2043,7 @@ export default function TestAutoPlan() {
             "totalBalance": 30.4
         }
     };
-    let startDate = 8;
+    let startDate = 1;
     let systemParam = {
         "maxConsecutiveWorkingDay": 6,
         "monthPickerMinDate": "2016-12-31T16:00:00.000Z",
@@ -2076,7 +2077,6 @@ export default function TestAutoPlan() {
     for (let i = startDate; i <= endDate; i++) {
         headerCells.push(<td className="borderCell dayCell text-center" key={'day_' + i}>{i}</td>)
     }
-    
     itoIdList.forEach(itoId => {
         let cells = [];
         cells.push(<NameCell key={"name_" + itoId}>{roster[itoId].itoName}</NameCell>);
