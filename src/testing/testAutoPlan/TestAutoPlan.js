@@ -2042,7 +2042,7 @@ export default function TestAutoPlan() {
             "totalBalance": 30.4
         }
     };
-    let startDate = 1;
+    let startDate = 8;
     let systemParam = {
         "maxConsecutiveWorkingDay": 6,
         "monthPickerMinDate": "2016-12-31T16:00:00.000Z",
@@ -2072,7 +2072,7 @@ export default function TestAutoPlan() {
     )
     let bodyRows = []
     let headerCells = [<td className="borderCell dayCell text-center" key='day_0'></td>];
-    let planResult = autoPlanner.doAutoPlan();    
+    let planResult = autoPlanner.start();    
     for (let i = startDate; i <= endDate; i++) {
         headerCells.push(<td className="borderCell dayCell text-center" key={'day_' + i}>{i}</td>)
     }
