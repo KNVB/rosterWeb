@@ -2688,7 +2688,7 @@ let rosterSchedulerData={
             {
                 "shiftType": "O"
             }
-        ]
+        ],
     },
     "duplicateShiftList": {
         "ITO1_1999-01-01": [],

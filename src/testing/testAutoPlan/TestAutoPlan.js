@@ -10,7 +10,7 @@ export default function TestAutoPlan() {
     });
     
     //let endDate=rosterSchedulerData.calendarDateList.length,startDate=1;
-    let startDate=15,endDate=20;
+    let startDate=1,endDate=31;
     let autoPlanner = new AutoPlan(startDate,endDate,rosterSchedulerData);
     let bodyRows = [];
     let headerCells = [<td className="borderCell dayCell text-center" key='day_0'></td>];
