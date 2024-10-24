@@ -1,6 +1,5 @@
 import Utility from "../../util/Utility";
 export default class AutoPlan {
-    #activeShiftList;
     #endDate;
     #essentialShift;
     #itoBlackListShiftPattern;
@@ -12,9 +11,7 @@ export default class AutoPlan {
     #roster;
     #startDate;
     #systemParam;
-    constructor({
-        activeShiftList,
-        endDate,
+    constructor(startDate, endDate, {
         essentialShift,
         itoBlackListShiftPattern,
         itoIdList,
@@ -23,10 +20,8 @@ export default class AutoPlan {
         preferredShiftList,
         previousMonthShiftList,
         roster,
-        startDate,
         systemParam,
     }) {
-        this.#activeShiftList = activeShiftList;
         this.#endDate = endDate;
         this.#essentialShift = essentialShift;
         this.#iterationCount = iterationCount;
@@ -45,6 +40,7 @@ export default class AutoPlan {
         let previousMonthShiftCount = (this.#systemParam.noOfPrevDate - this.#startDate) + 1;
         let itoAvailableShiftList = {};
         let isAssigned = false, notAssignedITOIdList;
+
         this.#itoIdList.forEach(itoId => {
             finalResult[itoId] = {
                 availableShiftList: this.#roster[itoId].availableShiftList,
@@ -59,6 +55,7 @@ export default class AutoPlan {
             assignedShift = "";
             notAssignedITOIdList = [];
             let shuffledITOIdList = structuredClone(this.#itoIdList);
+            Utility.shuffleArray(shuffledITOIdList);
             for (let i = 0; i < shuffledITOIdList.length; i++) {
                 let itoId = shuffledITOIdList[i];
                 let preferredShiftList = itoAvailableShiftList[itoId][dateOfMonth];
@@ -118,6 +115,9 @@ export default class AutoPlan {
             console.log("=======================================================");
         }
         //console.log(finalResult);
+        let temp=Utility.getAllITOStat(this.#essentialShift, this.#startDate, this.#endDate, this.#itoIdList, finalResult);
+        finalResult.duplicateShiftList=temp.duplicateShiftList;
+        finalResult.vacantShiftList=temp.vacantShiftList;
         return finalResult;
     }
     //======================================================================================
@@ -197,17 +197,31 @@ export default class AutoPlan {
         }
         return result;
     }
+    #getNoOfWorkingDay = (dateOfMonth, shiftList) => {
+        let count = 0;
+        for (let i = this.#startDate; i < dateOfMonth; i++) {
+            if (shiftList) {
+                shiftList[i].forEach(shiftObj => {
+                    if (this.#essentialShift.indexOf(shiftObj.shiftType) > -1) {
+                        count++
+                    }
+                });
+            }
+        }
+        return count
+    }
     #isAssignable = (itoId, dateOfMonth, itoRoster, targetShift) => {
         let preShift, temp;
         let result = false;
-        console.log("itoId=" + itoId + ",dateOfMonth=" + dateOfMonth + ",isUnderMaxConsecutiveWorkingDay=" + this.#isUnderMaxConsecutiveWorkingDay(itoRoster.shiftList, dateOfMonth));
-
-        if (this.#isUnderMaxConsecutiveWorkingDay(itoRoster.shiftList, dateOfMonth)) {
-            if (this.#essentialShift.indexOf(targetShift) > -1) {
-                preShift = this.#buildPreShift(itoRoster, dateOfMonth);
-                temp = preShift + "," + targetShift;
-                if (!this.#isBlackListShift(itoId, temp)) {
-                    result = true;
+        console.log("itoId=" + itoId + ",dateOfMonth=" + dateOfMonth + ",isUnderMaxConsecutiveWorkingDay=" + this.#isUnderMaxConsecutiveWorkingDay(itoRoster.shiftList, dateOfMonth) + ",noOfWorkingDay=" + this.#getNoOfWorkingDay(dateOfMonth, itoRoster.shiftList));
+        if (this.#getNoOfWorkingDay(dateOfMonth, itoRoster.shiftList) < this.#noOfWorkingDay) {
+            if (this.#isUnderMaxConsecutiveWorkingDay(itoRoster.shiftList, dateOfMonth)) {
+                if (this.#essentialShift.indexOf(targetShift) > -1) {
+                    preShift = this.#buildPreShift(itoRoster, dateOfMonth);
+                    temp = preShift + "," + targetShift;
+                    if (!this.#isBlackListShift(itoId, temp)) {
+                        result = true;
+                    }
                 }
             }
         }
