@@ -60,7 +60,7 @@ export default class Dbo {
         this.#sqlString += "post_name,working_hour_per_day ";
         this.#sqlString += "from ito_info a ";
         this.#sqlString += "left join black_list_pattern b on a.ito_id = b.ito_id ";
-        this.#sqlString += "order by leave_date desc,a.ito_id";
+        this.#sqlString += "order by leave_date desc,Cast(replace(post_name,\"ITO\",\"\") as unsigned)";
         return await this.#executeQuery(this.#sqlString);
     }
     getPreferredShiftList = async (year, month) => {
