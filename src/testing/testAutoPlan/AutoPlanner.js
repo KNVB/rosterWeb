@@ -181,10 +181,12 @@ export default class AutoPlan {
             if (itoRoster.shiftList[j]) {
                 for (let k = 0; k < itoRoster.shiftList[j].length; k++) {
                     let shiftObj = itoRoster.shiftList[j][k];
-                    if ((this.#essentialShift.indexOf(shiftObj.shiftType) > -1) ||
-                        (shiftObj.shiftType === "O")
-                    ) {
-                        preShift.push(shiftObj.shiftType);
+                    if (shiftObj) {
+                        if ((this.#essentialShift.indexOf(shiftObj.shiftType) > -1) ||
+                            (shiftObj.shiftType === "O")
+                        ) {
+                            preShift.push(shiftObj.shiftType);
+                        }
                     }
                 }
             }
@@ -231,9 +233,9 @@ export default class AutoPlan {
     #isAssignable = (itoId, dateOfMonth, itoRoster, targetShift) => {
         let preShift, temp;
         let result = false;
-        let rosterObj=this.#roster[itoId];
+        let rosterObj = this.#roster[itoId];
         console.log("itoId=" + itoId + ",dateOfMonth=" + dateOfMonth + ",isUnderMaxConsecutiveWorkingDay=" + this.#isUnderMaxConsecutiveWorkingDay(itoRoster.shiftList, dateOfMonth) + ",noOfWorkingDay=" + this.#getNoOfWorkingDay(dateOfMonth, itoRoster.shiftList));
-        if (rosterObj.dutyPattern==="operator"){
+        if (rosterObj.dutyPattern === "operator") {
             if (this.#getNoOfWorkingDay(dateOfMonth, itoRoster.shiftList) < this.#noOfWorkingDay) {
                 if (this.#isUnderMaxConsecutiveWorkingDay(itoRoster.shiftList, dateOfMonth)) {
                     if (this.#essentialShift.indexOf(targetShift) > -1) {
@@ -244,7 +246,7 @@ export default class AutoPlan {
                         }
                     }
                 }
-            }    
+            }
         }
         return result;
     }
@@ -271,19 +273,21 @@ export default class AutoPlan {
                 //console.log(firstIndex, shiftList[i]);
                 if (shiftList[i]) {
                     for (let j = 0; j < shiftList[i].length; j++) {
-                        switch (shiftList[i][j].shiftType) {
-                            case "d":
-                            case "d1":
-                            case "d2":
-                            case "d3":
-                            case "O":
-                                count--;
-                                break;
-                            default:
-                                if (this.#essentialShift.indexOf(shiftList[i][j].shiftType) > -1) {
-                                    count++
-                                }
-                                break;
+                        if (shiftList[i][j]){
+                            switch (shiftList[i][j].shiftType) {
+                                case "d":
+                                case "d1":
+                                case "d2":
+                                case "d3":
+                                case "O":
+                                    count--;
+                                    break;
+                                default:
+                                    if (this.#essentialShift.indexOf(shiftList[i][j].shiftType) > -1) {
+                                        count++
+                                    }
+                                    break;
+                            }
                         }
                     }
                 }

@@ -70,13 +70,25 @@ export default class Dbo {
     }
     getPreviousMonthShiftList = async (year, month, systemParam) => {
         let result = this.#getStartEndDateString(year, month);
-        this.#sqlString = "select ito_id,shift from shift_record where shift_date >= ? and shift_date < ? order by ito_id,shift_date";
-        result.endDateString = result.startDateString;
+        //this.#sqlString = "select ito_id,shift from shift_record where shift_date >= ? and shift_date < ? order by ito_id,shift_date";
+        
+        this.#sqlString = "SELECT v.ito_id, shift ";
+        this.#sqlString += "FROM   (SELECT ito_id ";
+        this.#sqlString += "FROM   ito_info ";
+        this.#sqlString += "WHERE  ito_info.join_date <= ? ";
+        this.#sqlString += "AND ito_info.leave_date >= ?) as v ";
+        this.#sqlString += "LEFT JOIN shift_record ";
+        this.#sqlString += "ON shift_record.ito_id = v.ito_id ";
+        this.#sqlString += "AND shift_date >= ? ";
+        this.#sqlString += "AND shift_date < ? ";
+        this.#sqlString += "order by v.ito_id,shift_date";
+        
+        let lastMonthEndDate=result.startDateString;
         let tempDate = new Date(result.startDateString);
         tempDate.setTime(tempDate.getTime() - systemParam.maxConsecutiveWorkingDay * 86400000);
-        result.startDateString = tempDate.toLocaleDateString("en-CA");
-        //console.log(result.startDateString, result.endDateString);
-        return await this.#executeQuery(this.#sqlString, [result.startDateString, result.endDateString]);
+        let lastMonthStartDate= tempDate.toLocaleDateString("en-CA");
+        //console.log(result.startDateString, result.endDateString,lastMonthStartDate,lastMonthEndDate);
+        return await this.#executeQuery(this.#sqlString, [ result.endDateString,result.startDateString,lastMonthStartDate,lastMonthEndDate]);
     }
     getRoster = async (year, month) => {
         let result = this.#getStartEndDateString(year, month);

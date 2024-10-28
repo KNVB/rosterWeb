@@ -2529,6 +2529,7 @@ let rosterSchedulerData={
         }
     },
     "previousMonthShiftList": {
+        "ITO10_2024-10-14": [],
         "ITO1_1999-01-01": [
             {
                 "shiftType": "O"
@@ -2549,6 +2550,7 @@ let rosterSchedulerData={
                 "shiftType": "O"
             }
         ],
+        "ITO2_2024-08-12": [],
         "ITO3_2023-07-01": [
             {
                 "shiftType": "d2"

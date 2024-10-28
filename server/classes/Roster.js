@@ -25,10 +25,19 @@ export default class Roster {
     }
     getPreviousMonthShiftList = async (year, month, systemParam) => {
         let dboObj = new Dbo();
+        let previousMonthShiftList={};
         try {
             let results = await dboObj.getPreviousMonthShiftList(year, month, systemParam);
+            results.forEach(record => {
+                if (previousMonthShiftList[record.ito_id] === undefined){
+                    previousMonthShiftList[record.ito_id]=[];
+                }
+                if (record.shift){
+                    previousMonthShiftList[record.ito_id].push({shiftType:record.shift});
+                }
+            });
             console.log("Get (" + year + "," + month + ") Previous Month Shift List successfully!");
-            return results;
+            return previousMonthShiftList;
         } catch (error) {
             console.log("Something wrong when getting Previous month shift list:" + error);
             throw (error);

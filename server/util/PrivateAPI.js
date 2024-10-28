@@ -68,13 +68,7 @@ let getRosterSchedulerData = async params => {
     let shiftInfo = new ShiftInfo();
     let sP = structuredClone(params.systemParam);
     await shiftInfo.init();
-    temp = await roster.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
-    temp.forEach(p => {
-        if (previousMonthShiftList[p.ito_id] === undefined) {
-            previousMonthShiftList[p.ito_id] = [];
-        }
-        previousMonthShiftList[p.ito_id].push({shiftType:p.shift});
-    });    
+    previousMonthShiftList = await roster.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
     sP.monthPickerMinDate = new Date(sP.monthPickerMinDate.year, sP.monthPickerMinDate.month - 1, sP.monthPickerMinDate.date);
     return {
         activeShiftList: shiftInfo.activeShiftList,
