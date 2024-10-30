@@ -7,6 +7,9 @@ let reducer = (state, action) => {
             result.rosterSchedulerData = action.rosterSchedulerData;
             result.isLoading = false;
             break;
+        case "hideLoading":
+            result.isLoading = false;
+            break;
         case "hideShiftDetail":
             result.isShowShiftDetail = false;
             break;
@@ -80,6 +83,11 @@ export default function useRosterScheduler() {
         itemList.rosterSchedulerData.clearCopiedData();
         updateItemList({ type: "refresh" });
     }
+    let hideLoading=()=>{
+        updateItemList({
+            "type": "hideLoading"
+        });
+    }
     let hideShiftDetail = () => {
         updateItemList({
             "type": "hideShiftDetail"
@@ -95,6 +103,9 @@ export default function useRosterScheduler() {
     let reDo = () => {
         itemList.rosterSchedulerData.reDo();
         updateItemList({ type: "refresh" });
+    }
+    let showLoading=()=>{
+        updateItemList({ "type": "showLoading" });
     }
     let showShiftDetail = (e, itoId, date) => {
         e.preventDefault();
@@ -145,10 +156,12 @@ export default function useRosterScheduler() {
             getCopyDataRowCount,
             getShiftCssClassName,
             handleEscKeyEvent,
+            hideLoading,
             hideShiftDetail,
             isDuplicateShift,
             paste,
             reDo,
+            showLoading,
             showShiftDetail,
             updatePreferredShiftFromTable,
             updateRosterMonth,

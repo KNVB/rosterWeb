@@ -3,7 +3,7 @@ import useRosterSchedulerTable from "./useRosterSchedulerTable";
 import HeaderRows from "../../common/rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../common/ShiftInfoLegend";
-import AutoPlanner from "./autoPlanner/AutoPlanner";
+import AutoPlanForm from "./autoPlanner/AutoPlanForm";
 export default function RosterSchedulerTable({ rosterSchedulerData, dataAction }) {
     const { uiAction } = useRosterSchedulerTable(rosterSchedulerData);
     useEffect(() => {
@@ -32,7 +32,7 @@ export default function RosterSchedulerTable({ rosterSchedulerData, dataAction }
                         <ShiftInfoLegend activeShiftList={rosterSchedulerData.activeShiftList} />
                     </td>
                     <td colSpan={20}>
-                        <AutoPlanner 
+                        <AutoPlanForm 
                             dataAction={dataAction}
                             rosterSchedulerData={rosterSchedulerData}/>
                     </td>
