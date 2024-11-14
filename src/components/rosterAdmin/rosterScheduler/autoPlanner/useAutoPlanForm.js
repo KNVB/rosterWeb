@@ -39,7 +39,7 @@ export default function useAutoPlanForm(rosterSchedulerData, dataAction) {
     }, []);
     let autoPlan = () => {
         dataAction.showLoading();
-        itemList.autoPlanner.start();
+        console.log(itemList.autoPlanner.start());
         dataAction.hideLoading();
     }
     let updateEndDate = e => {
