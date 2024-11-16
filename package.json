@@ -41,7 +41,8 @@
     "testServer": "cross-env NODE_ENV=development npm run server",
     "testShiftInfo": "cross-env NODE_ENV=development node ./server/test/TestShiftInfo.js",
     "testSystemParam": "cross-env NODE_ENV=development node ./server/test/TestSystemParam.js",
-    "testTimeOff": "cross-env NODE_ENV=development node ./server/test/TestTimeOff.js"
+    "testTimeOff": "cross-env NODE_ENV=development node ./server/test/TestTimeOff.js",
+    "testTimeOffAndOverTime": "cross-env NODE_ENV=development node ./server/test/TestTimeOffAndOverTime.js"
   },
   "eslintConfig": {
     "extends": [

@@ -2,50 +2,6 @@ import Dbo from "../util/Dbo.js";
 export default class Roster {
     constructor() {
     }
-    getPreferredShiftList = async (year, month) => {
-        let dboObj = new Dbo();
-        let itoPreferredShiftList={};
-        try {
-            let results = await dboObj.getPreferredShiftList(year, month);
-            console.log("Get (" + year + "," + month + ") Preferred Shift List successfully!");
-            results.forEach(record => {
-                if (itoPreferredShiftList[record.ito_id] === undefined) {
-                    itoPreferredShiftList[record.ito_id] = {};
-                }
-                itoPreferredShiftList[record.ito_id][record.d]=[{"shiftType":record.preferred_shift}];
-            });
-            return itoPreferredShiftList;
-        } catch (error) {
-            console.log("Something wrong when getting Preferred shift list:" + error);
-            throw (error);
-        }
-        finally {
-            dboObj.close();
-        };
-    }
-    getPreviousMonthShiftList = async (year, month, systemParam) => {
-        let dboObj = new Dbo();
-        let previousMonthShiftList={};
-        try {
-            let results = await dboObj.getPreviousMonthShiftList(year, month, systemParam);
-            results.forEach(record => {
-                if (previousMonthShiftList[record.ito_id] === undefined){
-                    previousMonthShiftList[record.ito_id]=[];
-                }
-                if (record.shift){
-                    previousMonthShiftList[record.ito_id].push({shiftType:record.shift});
-                }
-            });
-            console.log("Get (" + year + "," + month + ") Previous Month Shift List successfully!");
-            return previousMonthShiftList;
-        } catch (error) {
-            console.log("Something wrong when getting Previous month shift list:" + error);
-            throw (error);
-        }
-        finally {
-            dboObj.close();
-        };
-    }
     getRoster = async (year, month) => {
         let dbo = new Dbo();
         let itoRosterList = {};
@@ -56,7 +12,7 @@ export default class Roster {
                 if (itoRosterList[record.ito_id] === undefined) {
                     itoRosterList[record.ito_id] = {
                         availableShiftList: record.available_shift.split(","),
-                        dutyPattern:record.duty_pattern,
+                        dutyPattern: record.duty_pattern,
                         itoName: record.ito_name,
                         itoPostName: record.post_name,
                         lastMonthBalance: 0.0,
@@ -69,24 +25,12 @@ export default class Roster {
                     }
                 }
                 if (record.d) {
-                    if (itoRosterList[record.ito_id].shiftList[record.d] === undefined) {
-                        itoRosterList[record.ito_id].shiftList[record.d] = [];
-                    }
-                    let temp = { "shiftType": record.shift }
-                    if (record.shift === "t") {
-                        temp.claimType = record.claim_type;
-                        temp.description = record.description;
-                        temp.duration = record.no_of_hour_applied_for;
-                        temp.endTime = record.end_time;
-                        temp.shiftDetailId = record.shift_detail_id;
-                        temp.startTime = record.start_time;
-                        temp.status = record.status;
-                    }
-                    itoRosterList[record.ito_id].shiftList[record.d].push(temp);
+                    itoRosterList[record.ito_id].shiftList[record.d] =record.shift;
                 }
             });
             return itoRosterList;
-        } catch (error) {
+        }
+        catch (error) {
             console.log("An error occur when getting roster list from DB.");
             console.log(error);
             throw (error);

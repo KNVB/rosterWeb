@@ -7,6 +7,7 @@ export default class Dbo {
     constructor() {
         this.#connection = mysql.createConnection(DbConfig);
     }
+   
     addITO = async ito => {
         try {
             await this.#connection.promise().beginTransaction();
@@ -40,6 +41,10 @@ export default class Dbo {
             throw error;
         }
     }
+    getActiveShiftList = async () => {
+        this.#sqlString = "select * from shift_info where active=1 order by shift_type";
+        return await this.#executeQuery(this.#sqlString);
+    }
     getITOBlackListShiftPattern = async (year, month) => {
         let result = this.#getStartEndDateString(year, month);
         this.#sqlString = "select ito_info.ito_id,black_list_pattern ";
@@ -66,7 +71,7 @@ export default class Dbo {
     getPreviousMonthShiftList = async (year, month, systemParam) => {
         let result = this.#getStartEndDateString(year, month);
         //this.#sqlString = "select ito_id,shift from shift_record where shift_date >= ? and shift_date < ? order by ito_id,shift_date";
-
+        
         this.#sqlString = "SELECT v.ito_id, shift ";
         this.#sqlString += "FROM   (SELECT ito_id ";
         this.#sqlString += "FROM   ito_info ";
@@ -77,44 +82,54 @@ export default class Dbo {
         this.#sqlString += "AND shift_date >= ? ";
         this.#sqlString += "AND shift_date < ? ";
         this.#sqlString += "order by v.ito_id,shift_date";
-
-        let lastMonthEndDate = result.startDateString;
+        
+        let lastMonthEndDate=result.startDateString;
         let tempDate = new Date(result.startDateString);
         tempDate.setTime(tempDate.getTime() - systemParam.maxConsecutiveWorkingDay * 86400000);
-        let lastMonthStartDate = tempDate.toLocaleDateString("en-CA");
+        let lastMonthStartDate= tempDate.toLocaleDateString("en-CA");
         //console.log(result.startDateString, result.endDateString,lastMonthStartDate,lastMonthEndDate);
-        return await this.#executeQuery(this.#sqlString, [result.endDateString, result.startDateString, lastMonthStartDate, lastMonthEndDate]);
+        return await this.#executeQuery(this.#sqlString, [ result.endDateString,result.startDateString,lastMonthStartDate,lastMonthEndDate]);
     }
     getRoster = async (year, month) => {
         let result = this.#getStartEndDateString(year, month);
-        this.#sqlString = "SELECT v.available_shift,";
-        this.#sqlString += "	   balance,";
-        this.#sqlString += "	   Day(shift_date) AS d,";
-        this.#sqlString += "	   duty_pattern,";
-        this.#sqlString += "	   v.ito_id,";
-        this.#sqlString += "	   ito_name,";
-        this.#sqlString += "	   post_name,";
-        this.#sqlString += "	   shift,";
-        this.#sqlString += "	   working_hour_per_day ";
-        this.#sqlString += "FROM   (SELECT available_shift,";
-        this.#sqlString += "	           duty_pattern,";
-        this.#sqlString += "			   ito_name,";
-        this.#sqlString += "			   ito_info.ito_id,";
-        this.#sqlString += "			   post_name,";
-        this.#sqlString += "			   working_hour_per_day ";
-        this.#sqlString += "		FROM   ito_info ";
-        this.#sqlString += "		WHERE  ito_info.join_date <= ?";
-        this.#sqlString += "			   AND ito_info.leave_date >= ?) AS v";
-        this.#sqlString += "	   LEFT JOIN shift_record";
-        this.#sqlString += "			  ON v.ito_id = shift_record.ito_id";
-        this.#sqlString += "				 AND ( shift_record.shift_date BETWEEN";
-        this.#sqlString += "					   ? AND ? )";
-        this.#sqlString += "	   LEFT JOIN last_month_balance";
-        this.#sqlString += "			  ON v.ito_id = last_month_balance.ito_id";
-        this.#sqlString += "				 AND shift_month = ?";
-        this.#sqlString += "ORDER  BY Cast(replace(post_name,\"ITO\",\"\") as unsigned),";
-        this.#sqlString += "		  shift_date,";
-        this.#sqlString += "		  shift";
+		this.#sqlString ="SELECT v.available_shift,";		
+		this.#sqlString+="	   balance,";
+		this.#sqlString+="	   claim_type,";
+		this.#sqlString+="	   Day(shift_date) AS d,";
+        this.#sqlString+="	   description,";
+        this.#sqlString+="	   duty_pattern,";
+        this.#sqlString+="	   end_time,";
+        this.#sqlString+="	   v.ito_id,";
+		this.#sqlString+="	   ito_name,";		        
+        this.#sqlString+="     no_of_hour_applied_for,";
+		this.#sqlString+="	   post_name,";		
+        this.#sqlString+="	   shift,";	
+		this.#sqlString+="	   shift_detail.status,";
+        this.#sqlString+="     shift_detail_id,";
+		this.#sqlString+="	   start_time,";
+        this.#sqlString+="	   working_hour_per_day ";
+        this.#sqlString+="FROM   (SELECT available_shift,";
+        this.#sqlString+="	           duty_pattern,";
+		this.#sqlString+="			   ito_name,";
+        this.#sqlString+="			   ito_info.ito_id,";
+		this.#sqlString+="			   post_name,";		
+		this.#sqlString+="			   working_hour_per_day ";
+		this.#sqlString+="		FROM   ito_info ";
+		this.#sqlString+="		WHERE  ito_info.join_date <= ?";
+		this.#sqlString+="			   AND ito_info.leave_date >= ?) AS v";
+		this.#sqlString+="	   LEFT JOIN shift_record";
+		this.#sqlString+="			  ON v.ito_id = shift_record.ito_id";
+		this.#sqlString+="				 AND ( shift_record.shift_date BETWEEN";
+		this.#sqlString+="					   ? AND ? )";
+		this.#sqlString+="	   LEFT JOIN last_month_balance";
+		this.#sqlString+="			  ON v.ito_id = last_month_balance.ito_id";
+		this.#sqlString+="				 AND shift_month = ?";
+		this.#sqlString+="	   LEFT JOIN shift_detail";
+		this.#sqlString+="			  ON v.ito_id = shift_detail.ito_id";
+		this.#sqlString+="				 AND Cast(start_time AS DATE) = shift_date ";
+		this.#sqlString+="ORDER  BY Cast(replace(post_name,\"ITO\",\"\") as unsigned),";
+		this.#sqlString+="		  shift_date,";
+        this.#sqlString+="		  shift";
         return await this.#executeQuery(this.#sqlString,
             [
                 result.endDateString,
@@ -128,34 +143,6 @@ export default class Dbo {
     getSystemParam = async () => {
         this.#sqlString = "select * from system_param order by param_type,param_key,param_value";
         return await this.#executeQuery(this.#sqlString);
-    }
-    getTimeOffAndOverTimeSummary = async (year, month) => {
-        let result = this.#getStartEndDateString(year, month);
-        this.#sqlString = "select v.ito_id,sum(k.no_of_hour_applied_for) as 'sum'";
-        this.#sqlString += "from ";
-        this.#sqlString += "		(SELECT ";
-        this.#sqlString += "               ito_info.ito_id,";
-        this.#sqlString += "               post_name";
-        this.#sqlString += "        FROM   ito_info";
-        this.#sqlString += "        WHERE  ito_info.join_date <= ?";
-        this.#sqlString += "               AND ito_info.leave_date >= ?) v";
-        this.#sqlString += "		left join ";
-        this.#sqlString += "(SELECT ito_id,no_of_hour_applied_for ";
-        this.#sqlString += "FROM roster.time_off_and_over_time ";
-        this.#sqlString += "where ";
-        this.#sqlString += "start_time  <= ? ";
-        this.#sqlString += "and end_time>= ?)k";
-        this.#sqlString += "			on v.ito_id=k.ito_id ";
-        this.#sqlString += " group by v.ito_id ";
-        this.#sqlString += " order by  Cast(replace(post_name,\"ITO\",\"\") as unsigned)";
-        return await this.#executeQuery(this.#sqlString,
-            [
-                result.endDateString,
-                result.startDateString,
-                result.endDateString,
-                result.startDateString
-            ]
-        );
     }
     updateITO = async ito => {
         try {
@@ -208,7 +195,7 @@ export default class Dbo {
         } catch (err) {
             throw (err);
         }
-    }
+    }    
     #getStartEndDateString(year, month) {
         let tempDate = new Date(year + "-" + month + "-1");
         let startDateString = tempDate.toLocaleDateString("en-CA");
