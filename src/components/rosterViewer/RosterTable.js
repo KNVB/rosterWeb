@@ -1,5 +1,6 @@
 import useRosterTable from "./useRosterTable";
 import HeaderRows from "../common/rows/HeaderRows";
+import RosterBody from "./RosterBody";
 import ShiftInfoLegend from "../common/ShiftInfoLegend";
 export default function RosterTable({ rosterViewerData, dataAction }) {
     const { activeShiftList, calendarDateList, roster, rosterMonth, systemParam } = rosterViewerData;
@@ -12,7 +13,12 @@ export default function RosterTable({ rosterViewerData, dataAction }) {
                 dataAction={dataAction}
                 highLightAction={highLightAction}
                 rosterMonth={rosterMonth}
-                systemParam={systemParam}/>  
+                systemParam={systemParam}/>
+              <RosterBody
+                calendarDateList={calendarDateList}
+                dataAction={dataAction}
+                highLightAction={highLightAction}
+                roster={roster}/>  
               <tfoot>
                 <tr>
                     <td colSpan="7" className="pt-1">

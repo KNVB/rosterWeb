@@ -7,7 +7,7 @@ export default class RosterTableUtil {
     isHighLightRow = rowIndex => {
         return (this.#highLightRowIndex === rowIndex);
     }
-    updateHighLight(cellIndex, rowIndex) {
+    updateHighLightCell(cellIndex, rowIndex) {
         this.#highLightCellIndex = cellIndex;
         this.#highLightRowIndex = rowIndex;
     }
