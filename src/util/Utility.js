@@ -11,7 +11,7 @@ export default class Utility {
         month: "2-digit",
         year: "numeric"
     });
-    static genITOStat = (activeShiftList, roster, noOfWorkingDay) => {
+    static genITOStat = (activeShiftList, noOfWorkingDay, roster, timeOffAndOverTimeSummary) => {
         let result = {};
         let itoIdList = Object.keys(roster);
         for (let i = 0; i < itoIdList.length; i++) {
@@ -52,14 +52,16 @@ export default class Utility {
                                     itoRoster.actualWorkingDayCount++
                                     break;
                                 default:
-                                    break    
+                                    break
                             }
                         }
                     }
                 });
             });
+            itoRoster.other = timeOffAndOverTimeSummary[itoIdList[i]];
             itoRoster.thisMonthBalance = itoRoster.actualWorkingHour - itoRoster.expectedWorkingHour;
             itoRoster.totalBalance += itoRoster.lastMonthBalance + itoRoster.thisMonthBalance;
+            itoRoster.totalBalance += itoRoster.other;
             result[itoIdList[i]] = itoRoster;
         }
         return result;

@@ -54,7 +54,7 @@ export default function RosterRow({ calendarDateList, dataAction, highLightActio
                 {roster.thisMonthBalance.toFixed(2)}
             </StatCell>
             <StatCell>
-
+                {roster.other}
             </StatCell>
             <StatCell>
                 {roster.totalBalance.toFixed(2)}

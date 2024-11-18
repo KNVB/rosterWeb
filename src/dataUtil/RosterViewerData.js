@@ -26,7 +26,7 @@ export default class RosterViewerData {
         this.systemParam.noOfPrevDate = 0;
 
         let rosterData = structuredClone(temp.rosterData);
-        this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay);
+        this.roster = Utility.genITOStat(this.activeShiftList, monthlyCalendar.noOfWorkingDay, rosterData,temp.timeOffAndOverTimeSummary);
         this.rosterMonth = new Date(year, month, 1);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
 
@@ -39,7 +39,7 @@ export default class RosterViewerData {
         let temp = await fetchAPI.getRosterViewerData(rosterYear, rosterMonth + 1);
         this.calendarDateList = monthlyCalendar.calendarDateList;
         let rosterData = structuredClone(temp.rosterData);
-        this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay);
+        this.roster = Utility.genITOStat(this.activeShiftList, monthlyCalendar.noOfWorkingDay, rosterData,temp.timeOffAndOverTimeSummary);
         this.rosterMonth = new Date(rosterYear, rosterMonth, 1);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
     }
