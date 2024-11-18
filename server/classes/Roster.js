@@ -38,7 +38,11 @@ export default class Roster {
                     }*/
                 }
                 if (record.d) {
-                    itoRosterList[record.ito_id].shiftList[record.d] = record.shift;
+                    if (itoRosterList[record.ito_id].shiftList[record.d]) {
+                        itoRosterList[record.ito_id].shiftList[record.d] += "+" + record.shift;
+                    } else {
+                        itoRosterList[record.ito_id].shiftList[record.d] = record.shift;
+                    }
                 } else {
                     let endDate = Utility.getEndDate(year, month);
                     for (let i = 0; i < endDate; i++) {

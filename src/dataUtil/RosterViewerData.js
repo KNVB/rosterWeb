@@ -8,23 +8,7 @@ export default class RosterViewerData {
         this.#calendarUtility = new CalendarUtility();
     }
 
-    getShift(itoId, date) {
-        let result;
-        let shiftDate = new Date(this.rosterMonth.getTime());
-        let shiftInfoList = this.roster[itoId].shiftList[date];
-        if (shiftInfoList === undefined) {
-            shiftInfoList = [new ShiftInfo("")]
-        }
-        shiftDate.setDate(date);
-        result = {
-            itoId,
-            itoName: this.roster[itoId].itoName,
-            itoPostName: this.roster[itoId].itoPostName,
-            date: shiftDate,
-            shiftInfoList
-        }
-        return result
-    }
+    
     getShiftCssClassName(shiftType) {
         if (this.activeShiftList[shiftType])
             return this.activeShiftList[shiftType].cssClassName;
@@ -45,6 +29,8 @@ export default class RosterViewerData {
         this.roster = Utility.genITOStat(this.activeShiftList, rosterData, monthlyCalendar.noOfWorkingDay);
         this.rosterMonth = new Date(year, month, 1);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
+
+        //console.log(this.roster);
     }
     async reload(newRosterMonth) {
         let fetchAPI = new FetchAPI();

@@ -3,14 +3,14 @@ import HeaderRows from "../common/rows/HeaderRows";
 import ShiftInfoLegend from "../common/ShiftInfoLegend";
 export default function RosterTable({ rosterViewerData, dataAction }) {
     const { activeShiftList, calendarDateList, roster, rosterMonth, systemParam } = rosterViewerData;
-    const hightLightAction = useRosterTable();
+    const highLightAction = useRosterTable();
     return (
         <table className="m-1 p-0 rosterTable">
              <HeaderRows
                 caption="EMSTF Computer Operator Roster"
                 calendarDateList={calendarDateList}
                 dataAction={dataAction}
-                hightLightAction={hightLightAction}
+                highLightAction={highLightAction}
                 rosterMonth={rosterMonth}
                 systemParam={systemParam}/>  
               <tfoot>

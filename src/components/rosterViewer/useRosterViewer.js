@@ -7,6 +7,9 @@ let reducer = (state, action) => {
             result.rosterViewerData = action.rosterViewerData;
             result.isLoading = false;
             break;
+        case "refresh":
+            result.isLoading = false;
+            break;
         case "showLoading":
             result.isLoading =true;
             break;
@@ -29,7 +32,7 @@ export default function useRosterViewer() {
             let rosterViewerData = new RosterViewerData();
             try {
                 //await rosterViewerData.load(rosterYear, rosterMonth);
-                await rosterViewerData.load(2024, 8);                
+                await rosterViewerData.load(2018, 8);                
                 updateItemList({
                     rosterViewerData,
                     type: "init"

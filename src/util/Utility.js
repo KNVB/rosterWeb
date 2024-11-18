@@ -24,14 +24,13 @@ export default class Utility {
             itoRoster.extraHour = 0;
             itoRoster.totalBalance = 0;
             Object.keys(itoRoster.shiftList).forEach(date => {
-                if (itoRoster.shiftList[date]) {
-                    let itemList = itoRoster.shiftList[date];
-                    itemList.forEach((item, itemIndex) => {
-                        if (itoRoster.availableShiftList.includes(item.shiftType)) {
-                            if (activeShiftList[item.shiftType]) {
-                                itoRoster.actualWorkingHour += activeShiftList[item.shiftType].duration;
-                            }
-                            switch (item.shiftType) {
+                let item = itoRoster.shiftList[date];
+                let shiftTypeList = item.split("+");
+                shiftTypeList.forEach(shiftType => {
+                    if (itoRoster.availableShiftList.includes(shiftType)) {
+                        if (activeShiftList[shiftType]) {
+                            itoRoster.actualWorkingHour += activeShiftList[shiftType].duration;
+                            switch (shiftType) {
                                 case "a":
                                     itoRoster.aShiftCount++;
                                     itoRoster.actualWorkingDayCount++;
@@ -52,23 +51,12 @@ export default class Utility {
                                     itoRoster.dxShiftCount++;
                                     itoRoster.actualWorkingDayCount++
                                     break;
-                                case "t":
-                                    itoRoster.shiftList[date][itemIndex].endTime = new Date(item.endTime);
-                                    itoRoster.shiftList[date][itemIndex].startTime = new Date(item.startTime);
-                                    if (item.claimType === "timeOff") {
-                                        itoRoster.totalBalance -= item.duration;
-                                        itoRoster.extraHour -= item.duration;
-                                    } else {
-                                        itoRoster.totalBalance += item.duration;
-                                        itoRoster.extraHour += item.duration;
-                                    }
-                                    break;
                                 default:
-                                    break;
+                                    break    
                             }
                         }
-                    })
-                }
+                    }
+                });
             });
             itoRoster.thisMonthBalance = itoRoster.actualWorkingHour - itoRoster.expectedWorkingHour;
             itoRoster.totalBalance += itoRoster.lastMonthBalance + itoRoster.thisMonthBalance;
