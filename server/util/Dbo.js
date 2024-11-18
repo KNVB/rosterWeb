@@ -1,6 +1,6 @@
 import { DbConfig } from './DbConfig.js';
 import mysql from 'mysql2';
-
+import Utility from './Utility.js';
 export default class Dbo {
     #connection;
     #sqlString;
@@ -40,8 +40,12 @@ export default class Dbo {
             throw error;
         }
     }
+    getActiveShiftList = async () => {
+        this.#sqlString = "select * from shift_info where active=1 order by shift_type";
+        return await this.#executeQuery(this.#sqlString);
+    }
     getITOBlackListShiftPattern = async (year, month) => {
-        let result = this.#getStartEndDateString(year, month);
+        let result = Utility.getStartEndDateString(year, month);
         this.#sqlString = "select ito_info.ito_id,black_list_pattern ";
         this.#sqlString += "from ito_info inner join black_list_pattern on ito_info.join_date<=? and ito_info.leave_date >=? ";
         this.#sqlString += "and ito_info.ito_id = black_list_pattern.ito_id";
@@ -59,12 +63,12 @@ export default class Dbo {
         return await this.#executeQuery(this.#sqlString);
     }
     getPreferredShiftList = async (year, month) => {
-        let result = this.#getStartEndDateString(year, month);
+        let result = Utility.getStartEndDateString(year, month);
         this.#sqlString = "select ito_id,preferred_shift,day(shift_date) as d from preferred_shift where shift_date between ? and ? order by ito_id,shift_date";
         return await this.#executeQuery(this.#sqlString, [result.startDateString, result.endDateString]);
     }
     getPreviousMonthShiftList = async (year, month, systemParam) => {
-        let result = this.#getStartEndDateString(year, month);
+        let result = Utility.getStartEndDateString(year, month);
         //this.#sqlString = "select ito_id,shift from shift_record where shift_date >= ? and shift_date < ? order by ito_id,shift_date";
 
         this.#sqlString = "SELECT v.ito_id, shift ";
@@ -86,7 +90,7 @@ export default class Dbo {
         return await this.#executeQuery(this.#sqlString, [result.endDateString, result.startDateString, lastMonthStartDate, lastMonthEndDate]);
     }
     getRoster = async (year, month) => {
-        let result = this.#getStartEndDateString(year, month);
+        let result = Utility.getStartEndDateString(year, month);
         this.#sqlString = "SELECT v.available_shift,";
         this.#sqlString += "	   balance,";
         this.#sqlString += "	   Day(shift_date) AS d,";
@@ -130,7 +134,7 @@ export default class Dbo {
         return await this.#executeQuery(this.#sqlString);
     }
     getTimeOffAndOverTimeSummary = async (year, month) => {
-        let result = this.#getStartEndDateString(year, month);
+        let result = Utility.getStartEndDateString(year, month);
         this.#sqlString = "select v.ito_id,sum(k.no_of_hour_applied_for) as 'sum'";
         this.#sqlString += "from ";
         this.#sqlString += "		(SELECT ";
@@ -141,10 +145,10 @@ export default class Dbo {
         this.#sqlString += "               AND ito_info.leave_date >= ?) v";
         this.#sqlString += "		left join ";
         this.#sqlString += "(SELECT ito_id,no_of_hour_applied_for ";
-        this.#sqlString += "FROM roster.time_off_and_over_time ";
-        this.#sqlString += "where ";
-        this.#sqlString += "start_time  <= ? ";
-        this.#sqlString += "and end_time>= ?)k";
+        this.#sqlString += " FROM time_off_and_over_time ";
+        this.#sqlString += " where ";
+        this.#sqlString += " start_time  <= ? ";
+        this.#sqlString += " and end_time>= ?)k";
         this.#sqlString += "			on v.ito_id=k.ito_id ";
         this.#sqlString += " group by v.ito_id ";
         this.#sqlString += " order by  Cast(replace(post_name,\"ITO\",\"\") as unsigned)";
@@ -208,13 +212,5 @@ export default class Dbo {
         } catch (err) {
             throw (err);
         }
-    }
-    #getStartEndDateString(year, month) {
-        let tempDate = new Date(year + "-" + month + "-1");
-        let startDateString = tempDate.toLocaleDateString("en-CA");
-        tempDate.setMonth(month);
-        tempDate.setDate(0);
-        let endDateString = tempDate.toLocaleDateString("en-CA");
-        return { "startDateString": startDateString, "endDateString": endDateString };
-    }
+    }   
 }
