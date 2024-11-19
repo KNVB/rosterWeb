@@ -16,14 +16,13 @@ export default function RosterRow({ calendarDateList, dataAction, highLightActio
     }
     calendarDateList.forEach((calendarDate, index) => {
         let shift = roster.shiftList[index + 1];
-        className = "cursor-pointer " + dataAction.getShiftCssClassName(shift);
+        className = dataAction.getShiftCssClassName(shift);
         shiftCellList.push(
             <ShiftCell
                 cssClassName={className}
                 key={itoId + '_' + index}
                 onMouseEnter={handleMouseEnterEvent}
-                onMouseLeave={handleMouseLeaveEvent}
-                title="Right Click to Show Shift Detail">
+                onMouseLeave={handleMouseLeaveEvent}>
                 <div className="m-0 p-0">
                     {shift}
                 </div>
@@ -48,14 +47,14 @@ export default function RosterRow({ calendarDateList, dataAction, highLightActio
                 {roster.actualWorkingHour.toFixed(2)}
             </StatCell>
             <StatCell>
+                {roster.other.toFixed(2)}
+            </StatCell>
+            <StatCell>
                 {roster.lastMonthBalance.toFixed(2)}
             </StatCell>
             <StatCell>
                 {roster.thisMonthBalance.toFixed(2)}
-            </StatCell>
-            <StatCell>
-                {roster.other}
-            </StatCell>
+            </StatCell>          
             <StatCell>
                 {roster.totalBalance.toFixed(2)}
             </StatCell>

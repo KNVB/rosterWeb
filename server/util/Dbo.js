@@ -133,7 +133,7 @@ export default class Dbo {
         this.#sqlString = "select * from system_param order by param_type,param_key,param_value";
         return await this.#executeQuery(this.#sqlString);
     }
-    getTimeOffAndOverTimeSummary = async (year, month) => {
+    getNonStandardWorkingHourSummary = async (year, month) => {
         let result = Utility.getStartEndDateString(year, month);
         this.#sqlString = "select v.ito_id,sum(k.no_of_hour_applied_for) as 'sum'";
         this.#sqlString += "from ";
@@ -145,7 +145,7 @@ export default class Dbo {
         this.#sqlString += "               AND ito_info.leave_date >= ?) v";
         this.#sqlString += "		left join ";
         this.#sqlString += "(SELECT ito_id,no_of_hour_applied_for ";
-        this.#sqlString += " FROM time_off_and_over_time ";
+        this.#sqlString += " FROM non_standard_working_hour";
         this.#sqlString += " where ";
         this.#sqlString += " start_time  <= ? ";
         this.#sqlString += " and end_time>= ?)k";

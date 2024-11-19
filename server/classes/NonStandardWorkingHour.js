@@ -1,12 +1,12 @@
 import Dbo from "../util/Dbo.js";
-export default class TimeOffAndOverTime{
+export default class NonStandardWorkingHour {
     constructor() {
     }
-    getTimeOffAndOverTimeSummary = async (year, month) => {
+    getNonStandardWorkingHourSummary = async (year, month) => {
         let dbo = new Dbo();
         let summary={}
         try{
-            let resultList=await dbo.getTimeOffAndOverTimeSummary(year, month);
+            let resultList=await dbo.getNonStandardWorkingHourSummary(year, month);
             resultList.forEach(record=>{
                 if (record.sum === null){
                     summary[record.ito_id]=0;
@@ -16,7 +16,7 @@ export default class TimeOffAndOverTime{
             });
             return summary;
         }catch(err) {
-            console.log("Some wrong when getting TimeOffAndOverTimeSummary:" + err);
+            console.log("Some wrong when getting Non Standard Working Hour Summary:" + err);
         }
         finally{
             dbo.close();

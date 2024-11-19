@@ -30,7 +30,13 @@ export default function DayRow({ calendarDateList, noOfPrevDate,weekdayNames }) 
                 <br />
                 Hour
             </StatCell>
-            <StatCell colSpan="9">
+            <StatCell rowSpan="2">
+                Non Standard<br/>
+                Working
+                <br />
+                Hour
+            </StatCell>
+            <StatCell colSpan="8">
                 Hour Off Due
             </StatCell>
         </tr>

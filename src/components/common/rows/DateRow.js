@@ -35,12 +35,7 @@ export default function DateRow({ calendarDateList, highLightAction, noOfPrevDat
                 This
                 <br />
                 Month
-            </StatCell>
-            <StatCell rowSpan="1">
-                Other
-                <br />
-                Time
-            </StatCell>
+            </StatCell>          
             <StatCell rowSpan="1">
                 Total
             </StatCell>

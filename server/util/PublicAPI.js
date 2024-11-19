@@ -1,7 +1,7 @@
 import Express from 'express';
 import Roster from '../classes/Roster.js';
 import ShiftInfo from "../classes/ShiftInfo.js";
-import TimeOffAndOverTime from "../classes/TimeOffAndOverTime.js";
+import NonStandardWorkingHour from "../classes/NonStandardWorkingHour.js";
 export default function PublicAPI(adminUtil, systemParam) {
     const router = Express.Router();
     router.get('/:action', async (req, res, next) => {
@@ -22,7 +22,7 @@ export default function PublicAPI(adminUtil, systemParam) {
 //====================================================================================================================================
 let getRosterViewerData = async (params) => {
     let roster = new Roster();
-    let timeOffAndOverTime=new TimeOffAndOverTime();
+    let nonStandardWorkingHour=new NonStandardWorkingHour();
     let rosterData=await roster.getRoster(params.year, params.month);
     let shiftInfo = new ShiftInfo();
     let sP=structuredClone(params.systemParam);
@@ -30,12 +30,12 @@ let getRosterViewerData = async (params) => {
     
     sP.monthPickerMinDate = new Date(sP.monthPickerMinDate.year, sP.monthPickerMinDate.month - 1, sP.monthPickerMinDate.date);
     sP.noOfPrevDate = 0;
-    let timeOffAndOverTimeSummary=await timeOffAndOverTime.getTimeOffAndOverTimeSummary(params.year, params.month);
+    let nonStandardWorkingHourSumary=await nonStandardWorkingHour.getNonStandardWorkingHourSummary(params.year, params.month);
     return {
         "activeShiftList":shiftInfo.activeShiftList,
         rosterData,
         systemParam:sP,
-        timeOffAndOverTimeSummary
+        nonStandardWorkingHourSumary
     }
 }
 //====================================================================================================================================
