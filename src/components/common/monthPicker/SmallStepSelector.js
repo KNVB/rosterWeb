@@ -19,7 +19,7 @@ export default function SmallStepSelector(props) {
         </span>
       );
     } else {
-      return <span className="inActive" title="Next Month">&gt;</span>;
+      return <span className="inActive" title="Next Month">&gt; &nbsp;</span>;
     }
   };
   /*******************************************************************
@@ -40,7 +40,7 @@ export default function SmallStepSelector(props) {
         </span>
       );
     } else {
-      return <span className="inActive" title="Previous Month">&lt;</span>;
+      return <span className="inActive" title="Previous Month">&lt; &nbsp;</span>;
     }
   }
   let updateSelectedMonth=(newSelectedMonth)=>{
@@ -51,13 +51,13 @@ export default function SmallStepSelector(props) {
   }
   return( 
     <div className="monthPickerSmallStepSelector">
-      {genPreviousMonth()}
+      {genPreviousMonth()}      
       <div
         className="monthPickerValue"
         onClick={toggleBigStepSelectorContainer}
         >  
         {MonthPickerUtil.formatMonth(context.selectedMonth)}
-      </div>
+      </div>      
       {genNextMonth()}
     </div>
   );  

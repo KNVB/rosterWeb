@@ -3,7 +3,7 @@ import HeaderRows from "../common/rows/HeaderRows";
 import RosterBody from "./RosterBody";
 import ShiftInfoLegend from "../common/ShiftInfoLegend";
 export default function RosterTable({ rosterViewerData, dataAction }) {
-    const { activeShiftList, calendarDateList, roster, rosterMonth, systemParam } = rosterViewerData;
+    const { activeShiftList, calendarDateList, nonStandardWorkingHourSummary, roster, rosterMonth, systemParam } = rosterViewerData;
     const highLightAction = useRosterTable();
     return (
         <table className="m-1 p-0 rosterTable">
@@ -18,6 +18,7 @@ export default function RosterTable({ rosterViewerData, dataAction }) {
                 calendarDateList={calendarDateList}
                 dataAction={dataAction}
                 highLightAction={highLightAction}
+                nonStandardWorkingHourSummary={nonStandardWorkingHourSummary}
                 roster={roster}/>  
               <tfoot>
                 <tr>

@@ -11,7 +11,7 @@ export default class Utility {
         month: "2-digit",
         year: "numeric"
     });
-    static genITOStat = (activeShiftList, noOfWorkingDay, roster, nonStandardWorkingHourSumary) => {
+    static genITOStat = (activeShiftList, noOfWorkingDay, roster, nonStandardWorkingHourSummary) => {
         let result = {};
         let itoIdList = Object.keys(roster);
         for (let i = 0; i < itoIdList.length; i++) {
@@ -57,11 +57,10 @@ export default class Utility {
                         }
                     }
                 });
-            });
-            itoRoster.other = nonStandardWorkingHourSumary[itoIdList[i]];
+            });            
             itoRoster.thisMonthBalance = itoRoster.actualWorkingHour - itoRoster.expectedWorkingHour;
             itoRoster.totalBalance += itoRoster.lastMonthBalance + itoRoster.thisMonthBalance;
-            itoRoster.totalBalance += itoRoster.other;
+            itoRoster.totalBalance += nonStandardWorkingHourSummary[itoIdList[i]];
             result[itoIdList[i]] = itoRoster;
         }
         return result;
@@ -80,35 +79,34 @@ export default class Utility {
             let assignedShiftList = [];
             itoIdList.forEach(itoId => {
                 let shiftInfoList = roster[itoId].shiftList[i];
-                if (shiftInfoList) {
-                    shiftInfoList.forEach(shiftInfo => {
-                        if (shiftInfo.shiftType === "b1") {
-                            vacantShift = vacantShift.replace("b", "");
-                        } else {
-                            vacantShift = vacantShift.replace(shiftInfo.shiftType, "");
-                        }
-                        switch (shiftInfo.shiftType) {
-                            case "a":
-                            case "c":
-                                if (assignedShiftList.includes(shiftInfo.shiftType)) {
-                                    duplicateShiftList[itoId].push(i);
-                                } else {
-                                    assignedShiftList.push(shiftInfo.shiftType);
-                                }
-                                break;
-                            case "b":
-                            case "b1":
-                                if (assignedShiftList.includes("b")) {
-                                    duplicateShiftList[itoId].push(i);
-                                } else {
-                                    assignedShiftList.push('b');
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    });
-                }
+                shiftInfoList = shiftInfoList.split("+");
+                shiftInfoList.forEach(shiftInfo => {
+                    if (shiftInfo === "b1") {
+                        vacantShift = vacantShift.replace("b", "");
+                    } else {
+                        vacantShift = vacantShift.replace(shiftInfo, "");
+                    }
+                    switch (shiftInfo) {
+                        case "a":
+                        case "c":
+                            if (assignedShiftList.includes(shiftInfo)) {
+                                duplicateShiftList[itoId].push(i);
+                            } else {
+                                assignedShiftList.push(shiftInfo);
+                            }
+                            break;
+                        case "b":
+                        case "b1":
+                            if (assignedShiftList.includes("b")) {
+                                duplicateShiftList[itoId].push(i);
+                            } else {
+                                assignedShiftList.push('b');
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                });
             });
             if (vacantShift !== '') {
                 vacantShiftList[i] = vacantShift;

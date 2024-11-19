@@ -55,13 +55,12 @@ export default function MonthPicker({ maxDate, minDate, onChange, value }) {
                 className="monthPickResult">
                 {
                     hasPrevMonth &&
-                    <span onClick={prevMonth}>&lt;</span>
+                    <span onClick={prevMonth}>&lt;&nbsp;</span>
                 }
                 <span onClick={action.togglePicker}>{monthFormatter.format(result)}</span>
-                &nbsp;
                 {
                     hasNextMonth &&
-                    <span onClick={nextMonth}>&gt;</span>
+                    <span onClick={nextMonth}>&nbsp;&gt;</span>
                 }
             </div>
             {isShowPicker &&

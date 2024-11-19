@@ -133,6 +133,33 @@ export default class Dbo {
         this.#sqlString = "select * from system_param order by param_type,param_key,param_value";
         return await this.#executeQuery(this.#sqlString);
     }
+    getNonStandardWorkingHourRecords = async (year, month) => {
+        let result = Utility.getStartEndDateString(year, month);
+        this.#sqlString = "select v.ito_id,k.end_Time,k.start_time,k.no_of_hour_applied_for,description,id,status,claim_type ";
+        this.#sqlString += "from ";
+        this.#sqlString += "		(SELECT ";
+        this.#sqlString += "               ito_info.ito_id,";
+        this.#sqlString += "               post_name";
+        this.#sqlString += "        FROM   ito_info";
+        this.#sqlString += "        WHERE  ito_info.join_date <= ?";
+        this.#sqlString += "               AND ito_info.leave_date >= ?) v";
+        this.#sqlString += "		left join ";
+        this.#sqlString += "(SELECT  *";
+        this.#sqlString += " FROM non_standard_working_hour";
+        this.#sqlString += " where ";
+        this.#sqlString += " start_time  <= ? ";
+        this.#sqlString += " and end_time>= ?)k";
+        this.#sqlString += "			on v.ito_id=k.ito_id ";
+        this.#sqlString += " order by  Cast(replace(post_name,\"ITO\",\"\") as unsigned)";
+        return await this.#executeQuery(this.#sqlString,
+            [
+                result.endDateString,
+                result.startDateString,
+                result.endDateString,
+                result.startDateString
+            ]
+        );  
+    }
     getNonStandardWorkingHourSummary = async (year, month) => {
         let result = Utility.getStartEndDateString(year, month);
         this.#sqlString = "select v.ito_id,sum(k.no_of_hour_applied_for) as 'sum'";

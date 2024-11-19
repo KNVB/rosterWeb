@@ -1,7 +1,7 @@
 import NameCell from "../common/cells/NameCell";
 import ShiftCell from "../common/cells/ShiftCell";
 import StatCell from "../common/cells/StatCell";
-export default function RosterRow({ calendarDateList, dataAction, highLightAction, itoId, roster, rowIndex }) {
+export default function RosterRow({ calendarDateList, dataAction, highLightAction, itoId,nonStandardWorkingHour, roster, rowIndex }) {
     let className = "";
     let shiftCellList = [];
     function handleMouseEnterEvent(e) {
@@ -47,7 +47,7 @@ export default function RosterRow({ calendarDateList, dataAction, highLightActio
                 {roster.actualWorkingHour.toFixed(2)}
             </StatCell>
             <StatCell>
-                {roster.other.toFixed(2)}
+                {nonStandardWorkingHour.toFixed(2)}
             </StatCell>
             <StatCell>
                 {roster.lastMonthBalance.toFixed(2)}

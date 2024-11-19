@@ -2,6 +2,7 @@ import Express from 'express';
 import ITOInfo from "../classes/ITOInfo.js";
 import Roster from '../classes/Roster.js';
 import ShiftInfo from "../classes/ShiftInfo.js";
+import NonStandardWorkingHour from "../classes/NonStandardWorkingHour.js";
 export default function PrivateAPI(adminUtil, systemParam) {
     const router = Express.Router();
     //===================================================================================================    
@@ -62,18 +63,20 @@ let getITOList = async () => {
     return await itoUtil.getITOList();
 }
 let getRosterSchedulerData = async params => {
-    let temp;
     let roster = new Roster();
     let previousMonthShiftList = {};
     let shiftInfo = new ShiftInfo();
     let sP = structuredClone(params.systemParam);
+    let nonStandardWorkingHour=new NonStandardWorkingHour();
     await shiftInfo.init();
     previousMonthShiftList = await roster.getPreviousMonthShiftList(params.year, params.month, params.systemParam);
     sP.monthPickerMinDate = new Date(sP.monthPickerMinDate.year, sP.monthPickerMinDate.month - 1, sP.monthPickerMinDate.date);
+    let nonStandardWorkingHourRecords=await nonStandardWorkingHour.getNonStandardWorkingHourRecodrds(params.year, params.month);
     return {
         activeShiftList: shiftInfo.activeShiftList,
         essentialShift: shiftInfo.essentialShift,
         itoBlackListShiftPattern: await shiftInfo.getITOBlackListShiftPattern(params.year, params.month),
+        nonStandardWorkingHourRecords,
         preferredShiftList: await roster.getPreferredShiftList(params.year, params.month),
         previousMonthShiftList: previousMonthShiftList,
         systemParam: sP

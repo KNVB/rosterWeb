@@ -30,12 +30,12 @@ let getRosterViewerData = async (params) => {
     
     sP.monthPickerMinDate = new Date(sP.monthPickerMinDate.year, sP.monthPickerMinDate.month - 1, sP.monthPickerMinDate.date);
     sP.noOfPrevDate = 0;
-    let nonStandardWorkingHourSumary=await nonStandardWorkingHour.getNonStandardWorkingHourSummary(params.year, params.month);
+    let nonStandardWorkingHourSummary=await nonStandardWorkingHour.getNonStandardWorkingHourSummary(params.year, params.month);
     return {
         "activeShiftList":shiftInfo.activeShiftList,
         rosterData,
         systemParam:sP,
-        nonStandardWorkingHourSumary
+        nonStandardWorkingHourSummary
     }
 }
 //====================================================================================================================================

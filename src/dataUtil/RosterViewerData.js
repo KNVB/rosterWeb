@@ -1,14 +1,11 @@
 import FetchAPI from "../util/FetchAPI";
 import CalendarUtility from "../util/calendar/CalendarUtility";
-import ShiftInfo from "./ShiftInfo";
 import Utility from "../util/Utility";
 export default class RosterViewerData {
     #calendarUtility;
     constructor() {
         this.#calendarUtility = new CalendarUtility();
-    }
-
-    
+    }    
     getShiftCssClassName(shiftType) {
         if (this.activeShiftList[shiftType])
             return this.activeShiftList[shiftType].cssClassName;
@@ -21,12 +18,13 @@ export default class RosterViewerData {
         let temp = await fetchAPI.getRosterViewerData(year, month + 1);
         this.activeShiftList = structuredClone(temp.activeShiftList);
         this.calendarDateList = monthlyCalendar.calendarDateList;
+        this.nonStandardWorkingHourSummary=structuredClone(temp.nonStandardWorkingHourSummary);
         this.systemParam = structuredClone(temp.systemParam);
         this.systemParam.monthPickerMinDate = new Date(this.systemParam.monthPickerMinDate);
         this.systemParam.noOfPrevDate = 0;
 
         let rosterData = structuredClone(temp.rosterData);
-        this.roster = Utility.genITOStat(this.activeShiftList, monthlyCalendar.noOfWorkingDay, rosterData,temp.nonStandardWorkingHourSumary);
+        this.roster = Utility.genITOStat(this.activeShiftList, monthlyCalendar.noOfWorkingDay, rosterData,temp.nonStandardWorkingHourSummary);
         this.rosterMonth = new Date(year, month, 1);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
 
@@ -38,8 +36,9 @@ export default class RosterViewerData {
         let monthlyCalendar = this.#calendarUtility.getMonthlyCalendar(rosterYear, rosterMonth);
         let temp = await fetchAPI.getRosterViewerData(rosterYear, rosterMonth + 1);
         this.calendarDateList = monthlyCalendar.calendarDateList;
+        this.nonStandardWorkingHourSummary=structuredClone(temp.nonStandardWorkingHourSummary);
         let rosterData = structuredClone(temp.rosterData);
-        this.roster = Utility.genITOStat(this.activeShiftList, monthlyCalendar.noOfWorkingDay, rosterData,temp.nonStandardWorkingHourSumary);
+        this.roster = Utility.genITOStat(this.activeShiftList, monthlyCalendar.noOfWorkingDay, rosterData,temp.nonStandardWorkingHourSummary);
         this.rosterMonth = new Date(rosterYear, rosterMonth, 1);
         this.noOfWorkingDay = monthlyCalendar.noOfWorkingDay;
     }
