@@ -38,6 +38,19 @@ export default function useRosterSchedulerTable (rosterSchedulerData) {
     let getSelectedCssClass = (cellIndex, rowIndex) => {
         return itemList.rosterSchedulerTableUtil.getSelectedCssClass(cellIndex, rowIndex);
     }
+    let getSelectedLocation = () =>{
+        return itemList.rosterSchedulerTableUtil.getSelectedLocation();
+    }
+    let handleArrowKeyEvent=(cell, xOffset, yOffset)=>{
+        let nextCell = itemList.rosterSchedulerTableUtil.getNextCell(cell, xOffset, yOffset);
+        itemList.rosterSchedulerTableUtil.selectCell(nextCell.cellIndex, nextCell.rowIndex);
+        itemList.rosterSchedulerTableUtil.select(nextCell.cellIndex, nextCell.rowIndex);
+        updateItemList({ type: "refresh" });
+    }
+    let handleEscKeyEvent = () => {
+        itemList.rosterSchedulerTableUtil.clearCopiedRegion();        
+        updateItemList({ type: "refresh" });
+    }
     let isHighLightCol = cellIndex => {
         return itemList.rosterSchedulerTableUtil.isHighLightCol(cellIndex);
     }
@@ -64,6 +77,9 @@ export default function useRosterSchedulerTable (rosterSchedulerData) {
         endSelect,
         getRowIndex,
         getSelectedCssClass,
+        getSelectedLocation,
+        handleArrowKeyEvent,
+        handleEscKeyEvent,
         isHighLightCol,
         isHighLightRow,
         setFocusCell,

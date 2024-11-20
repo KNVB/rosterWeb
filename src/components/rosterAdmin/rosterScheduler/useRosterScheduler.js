@@ -40,11 +40,36 @@ export default function useRosterScheduler(){
         }
         getData();
     }, []);
+    let deleteSelectedData = (selectedLocation) => {
+        selectedLocation.column.end -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        selectedLocation.column.start -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        itemList.rosterSchedulerData.deleteSelectedData(
+            selectedLocation,
+            itemList.rosterSchedulerData.noOfWorkingDay,
+            itemList.rosterSchedulerData.calendarDateList.length);
+        updateItemList({ type: "refresh" });
+    }
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
     }
     let isDuplicateShift = (dateOfMonth, itoId)=>{
         return itemList.rosterSchedulerData.isDuplicateShift(dateOfMonth, itoId);
+    }
+    let reDo = () => {
+        itemList.rosterSchedulerData.reDo();
+        updateItemList({ type: "refresh" });
+    }
+    let updateRosterMonth = async newRosterMonth => {
+        try {
+            updateItemList({ "type": "showLoading" });
+            await itemList.rosterSchedulerData.reload(newRosterMonth);
+            updateItemList({
+                type: "refresh"
+            });
+        } catch (error) {
+            console.log(error);
+            updateItemList({ "error": error, "type": "setError" });
+        }
     }
     let updatePreferredShiftFromTable = (itoId, date, newPreferredShift) => {
         itemList.rosterSchedulerData.updatePreferredShiftFromTable(itoId, date, newPreferredShift);
@@ -53,16 +78,24 @@ export default function useRosterScheduler(){
     let updateShiftFromTable = (itoId, date, newShift) => {
         itemList.rosterSchedulerData.updateShiftFromTable(itoId, date, newShift);
         updateItemList({ "type": "refresh" });
+    }
+    let unDo = () => {
+        itemList.rosterSchedulerData.unDo();
+        updateItemList({ type: "refresh" });
     } 
     return {
         error: itemList.error,
         isLoading: itemList.isLoading,
         rosterSchedulerData: itemList.rosterSchedulerData,
         dataAction: {
+            deleteSelectedData,
             getShiftCssClassName,
             isDuplicateShift,
+            reDo,
             updatePreferredShiftFromTable,
+            updateRosterMonth,
             updateShiftFromTable,
+            unDo
         }
     }
 }

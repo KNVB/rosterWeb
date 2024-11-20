@@ -64,8 +64,18 @@ export default class Dbo {
     }
     getPreferredShiftList = async (year, month) => {
         let result = Utility.getStartEndDateString(year, month);
-        this.#sqlString = "select ito_id,preferred_shift,day(shift_date) as d from preferred_shift where shift_date between ? and ? order by ito_id,shift_date";
-        return await this.#executeQuery(this.#sqlString, [result.startDateString, result.endDateString]);
+        this.#sqlString = "select  v.ito_id,preferred_shift,d from";
+        this.#sqlString += "(SELECT ito_info.ito_id , post_name ";
+        this.#sqlString += "    FROM   ito_info ";
+        this.#sqlString += "    WHERE  ito_info.join_date <= ?";
+        this.#sqlString += "    AND ito_info.leave_date >= ?)as v ";
+        this.#sqlString += "left join ";
+        this.#sqlString += "(SELECT ito_id,preferred_shift,day(shift_date) as d ";
+        this.#sqlString += "FROM preferred_shift ";
+        this.#sqlString += "where shift_date between ? and ?) as k ";
+        this.#sqlString += "on v.ito_id=k.ito_id ";
+        this.#sqlString += "order by Cast(replace(post_name,\"ITO\",\"\") as unsigned), d";
+        return await this.#executeQuery(this.#sqlString, [result.endDateString, result.startDateString, result.startDateString, result.endDateString]);
     }
     getPreviousMonthShiftList = async (year, month, systemParam) => {
         let result = Utility.getStartEndDateString(year, month);
@@ -158,7 +168,7 @@ export default class Dbo {
                 result.endDateString,
                 result.startDateString
             ]
-        );  
+        );
     }
     getNonStandardWorkingHourSummary = async (year, month) => {
         let result = Utility.getStartEndDateString(year, month);
@@ -239,5 +249,5 @@ export default class Dbo {
         } catch (err) {
             throw (err);
         }
-    }   
+    }
 }

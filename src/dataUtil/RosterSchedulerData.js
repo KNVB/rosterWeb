@@ -5,6 +5,31 @@ import UndoableData from "../util/UndoableData";
 export default class RosterSchedulerData extends RosterViewerData {
     #copiedData = null;
     #rosterSchedulerDataHistory;
+    deleteSelectedData(selectedLocation, noOfWorkingDay, monthLength) {
+        let index, itoId, shiftRowType;
+        selectedLocation.rows.forEach(rowId => {
+            index = rowId.indexOf("_");
+            shiftRowType = rowId.substring(0, index);
+            itoId = rowId.substring(index + 1);
+            for (let x = selectedLocation.column.start; x <= selectedLocation.column.end; x++) {
+                //console.log(rowId, x)
+                if (x <= monthLength) {
+                    switch (shiftRowType) {
+                        case "rosterRow":
+                            this.updateShiftFromTable(itoId, x, '', noOfWorkingDay, monthLength);
+                            break;
+                        case "preferredShiftRow":
+                            this.updatePreferredShiftFromTable(itoId, x, '');
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    break;
+                }
+            }
+        });
+    }
     isDuplicateShift = (dateOfMonth, itoId) => {
         return this.duplicateShiftList[itoId].includes(dateOfMonth);
     }
@@ -35,6 +60,30 @@ export default class RosterSchedulerData extends RosterViewerData {
             vacantShiftList: this.vacantShiftList
         });
     }
+    reDo = () => {
+        console.log("redo");
+        if (this.#rosterSchedulerDataHistory.canRedo()) {
+            let backupItem = this.#rosterSchedulerDataHistory.redo();
+            this.calendarDateList = backupItem.calendarDateList;
+            this.duplicateShiftList = backupItem.duplicateShiftList;
+            this.itoIdList = backupItem.itoIdList
+            this.rosterRowIdList = backupItem.rosterRowIdList;
+            this.preferredShiftList = backupItem.preferredShiftList
+            this.previousMonthShiftList = backupItem.previousMonthShiftList
+            this.roster = backupItem.roster;
+            this.vacantShiftList = backupItem.vacantShiftList;
+        }
+    }
+    async reload(newRosterMonth) {
+        await super.reload(newRosterMonth);
+        let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();
+        let fetchAPI = new FetchAPI();
+        let temp = await fetchAPI.getRosterSchedulerData(rosterYear, rosterMonth + 1);
+        this.itoIdList = Object.keys(this.roster);
+        this.preferredShiftList = structuredClone(temp.preferredShiftList);
+        this.previousMonthShiftList = structuredClone(temp.previousMonthShiftList);
+        this.#updateRosterSchedulerData();
+    }
     updatePreferredShiftFromTable(itoId, dateOfMonth, newShift) {
         this.preferredShiftList[itoId][dateOfMonth] = newShift;
         this.#updateRosterSchedulerData();
@@ -44,6 +93,20 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.roster[itoId].shiftList[date] = newShift;
         this.roster = Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster,this.nonStandardWorkingHourSummary);
         this.#updateRosterSchedulerData();
+    }
+    unDo = () => {
+        console.log("undo");
+        if (this.#rosterSchedulerDataHistory.canUndo()) {
+            let backupItem = this.#rosterSchedulerDataHistory.undo();
+            this.calendarDateList = backupItem.calendarDateList;
+            this.duplicateShiftList = backupItem.duplicateShiftList;
+            this.itoIdList = backupItem.itoIdList
+            this.rosterRowIdList = backupItem.rosterRowIdList;
+            this.preferredShiftList = backupItem.preferredShiftList
+            this.previousMonthShiftList = backupItem.previousMonthShiftList
+            this.roster = backupItem.roster;
+            this.vacantShiftList = backupItem.vacantShiftList;
+        }
     }
     //=========================================================================================================================================
     #updateRosterSchedulerData() {
