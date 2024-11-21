@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import useRosterSchedulerTable from "./useRosterSchedulerTable";
+import AutoPlanForm from "./autoPlanner/AutoPlanForm";
 import HeaderRows from "../../common/rows/HeaderRows";
 import RosterSchedulerBody from "./RosterSchedulerBody";
 import ShiftInfoLegend from "../../common/ShiftInfoLegend";
@@ -34,7 +35,9 @@ export default function RosterSchedulerTable({ dataAction, rosterSchedulerData }
                         <ShiftInfoLegend activeShiftList={activeShiftList} />
                     </td>
                     <td colSpan={20}>
-
+                        <AutoPlanForm 
+                            dataAction={dataAction}
+                            rosterSchedulerData={rosterSchedulerData}/>
                     </td>
                     <td colSpan={17}>
                     </td>

@@ -79,6 +79,7 @@ export default class Utility {
             let assignedShiftList = [];
             itoIdList.forEach(itoId => {
                 let shiftInfoList = roster[itoId].shiftList[i];
+                //console.log("dateOfMonth="+i+"itoId="+itoId+",shiftList="+JSON.stringify(roster[itoId].shiftList[i]));
                 shiftInfoList = shiftInfoList.split("+");
                 shiftInfoList.forEach(shiftInfo => {
                     if (shiftInfo === "b1") {

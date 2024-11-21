@@ -69,13 +69,6 @@ let rosterSchedulerData={
             "isEssential": false,
             "timeSlot": "sick leave standby",
             "type": "s"
-        },
-        "t": {
-            "cssClassName": "trainingColor",
-            "duration": 0,
-            "isEssential": false,
-            "timeSlot": "training/time off/over time",
-            "type": "t"
         }
     },
     "calendarDateList": [
@@ -592,6 +585,17 @@ let rosterSchedulerData={
             "chineseDayName": "丁酉"
         }
     ],
+    "nonStandardWorkingHourSummary": {
+        "ITO1_1999-01-01": 0,
+        "ITO2_2024-08-12": 0,
+        "ITO3_2023-07-12": 0,
+        "ITO4_1999-01-01": 0,
+        "ITO5_2021-09-09": 0,
+        "ITO6_1999-01-01": 3,
+        "ITO7_2024-04-12": 0,
+        "ITO8_1999-01-01": 0,
+        "ITO9_2024-02-19": 0
+    },
     "systemParam": {
         "maxConsecutiveWorkingDay": 6,
         "monthPickerMinDate": "2016-12-31T16:00:00.000Z",
@@ -606,164 +610,43 @@ let rosterSchedulerData={
                 "c",
                 "d1",
                 "O",
-                "d2",
-                "t"
+                "d2"
             ],
             "dutyPattern": "operator",
             "itoName": "TSANG Ka Shing Gary",
             "itoPostName": "ITO1",
             "lastMonthBalance": 27.45,
             "shiftList": {
-                "1": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "2": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "3": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "4": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "5": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "6": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "7": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "8": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "9": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "10": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "11": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "12": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "13": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "14": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "15": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "16": [
-                    {
-                        "shiftType": "d1"
-                    }
-                ],
-                "17": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "18": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "19": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "20": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "21": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "22": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "23": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "24": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "25": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "26": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "27": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "28": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "29": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "30": [
-                    {
-                        "shiftType": "O"
-                    }
-                ]
+                "1": "c",
+                "2": "O",
+                "3": "O",
+                "4": "b",
+                "5": "b",
+                "6": "c",
+                "7": "c",
+                "8": "O",
+                "9": "O",
+                "10": "O",
+                "11": "b",
+                "12": "O",
+                "13": "O",
+                "14": "b",
+                "15": "b",
+                "16": "d1",
+                "17": "O",
+                "18": "O",
+                "19": "b",
+                "20": "c",
+                "21": "O",
+                "22": "b",
+                "23": "b",
+                "24": "c",
+                "25": "O",
+                "26": "O",
+                "27": "c",
+                "28": "c",
+                "29": "c",
+                "30": "O"
             },
             "thisMonthBalance": -16,
             "workingHourPerDay": 7.8,
@@ -781,14 +664,44 @@ let rosterSchedulerData={
             "availableShiftList": [
                 "O",
                 "d",
-                "a",
-                "t"
+                "a"
             ],
             "dutyPattern": "day",
             "itoName": "TANG Chi Kwong Ken",
             "itoPostName": "ITO2",
             "lastMonthBalance": 0,
-            "shiftList": {},
+            "shiftList": {
+                "1": "",
+                "2": "",
+                "3": "",
+                "4": "",
+                "5": "",
+                "6": "",
+                "7": "",
+                "8": "",
+                "9": "",
+                "10": "",
+                "11": "",
+                "12": "",
+                "13": "",
+                "14": "",
+                "15": "",
+                "16": "",
+                "17": "",
+                "18": "",
+                "19": "",
+                "20": "",
+                "21": "",
+                "22": "",
+                "23": "",
+                "24": "",
+                "25": "",
+                "26": "",
+                "27": "",
+                "28": "",
+                "29": "",
+                "30": ""
+            },
             "thisMonthBalance": -180,
             "workingHourPerDay": 9,
             "actualWorkingDayCount": 0,
@@ -806,164 +719,43 @@ let rosterSchedulerData={
                 "d1",
                 "d2",
                 "O",
-                "a",
-                "t"
+                "a"
             ],
             "dutyPattern": "day",
             "itoName": "TANG Chi Keung Ray",
             "itoPostName": "ITO3",
             "lastMonthBalance": 0,
             "shiftList": {
-                "1": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "2": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "3": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "4": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "5": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "6": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "7": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "8": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "9": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "10": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "11": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "12": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "13": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "14": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "15": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "16": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "17": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "18": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "19": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "20": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "21": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "22": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "23": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "24": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "25": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "26": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "27": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "28": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "29": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "30": [
-                    {
-                        "shiftType": "a"
-                    }
-                ]
+                "1": "O",
+                "2": "d2",
+                "3": "d2",
+                "4": "d2",
+                "5": "d2",
+                "6": "d2",
+                "7": "O",
+                "8": "O",
+                "9": "d2",
+                "10": "d2",
+                "11": "d2",
+                "12": "a",
+                "13": "a",
+                "14": "O",
+                "15": "O",
+                "16": "d2",
+                "17": "d2",
+                "18": "O",
+                "19": "d2",
+                "20": "d2",
+                "21": "O",
+                "22": "a",
+                "23": "a",
+                "24": "d2",
+                "25": "d2",
+                "26": "a",
+                "27": "a",
+                "28": "O",
+                "29": "O",
+                "30": "a"
             },
             "thisMonthBalance": 19,
             "workingHourPerDay": 7.8,
@@ -984,164 +776,43 @@ let rosterSchedulerData={
                 "c",
                 "d1",
                 "O",
-                "d2",
-                "t"
+                "d2"
             ],
             "dutyPattern": "operator",
             "itoName": "HUEN Kwai Leung Andrew",
             "itoPostName": "ITO4",
             "lastMonthBalance": -0.1,
             "shiftList": {
-                "1": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "2": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "3": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "4": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "5": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "6": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "7": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "8": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "9": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "10": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "11": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "12": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "13": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "14": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "15": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "16": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "17": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "18": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "19": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "20": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "21": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "22": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "23": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "24": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "25": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "26": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "27": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ],
-                "28": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "29": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "30": [
-                    {
-                        "shiftType": "d3"
-                    }
-                ]
+                "1": "d3",
+                "2": "d3",
+                "3": "d3",
+                "4": "d3",
+                "5": "d3",
+                "6": "d3",
+                "7": "O",
+                "8": "O",
+                "9": "d3",
+                "10": "d3",
+                "11": "d3",
+                "12": "d3",
+                "13": "d3",
+                "14": "O",
+                "15": "O",
+                "16": "d3",
+                "17": "d3",
+                "18": "O",
+                "19": "d3",
+                "20": "d3",
+                "21": "O",
+                "22": "O",
+                "23": "d3",
+                "24": "d3",
+                "25": "d3",
+                "26": "d3",
+                "27": "d3",
+                "28": "O",
+                "29": "O",
+                "30": "d3"
             },
             "thisMonthBalance": -156,
             "workingHourPerDay": 7.8,
@@ -1161,164 +832,43 @@ let rosterSchedulerData={
                 "b",
                 "c",
                 "d1",
-                "O",
-                "t"
+                "O"
             ],
             "dutyPattern": "operator",
             "itoName": "YIM Man Hong",
             "itoPostName": "ITO5",
             "lastMonthBalance": -55,
             "shiftList": {
-                "1": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "2": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "3": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "4": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "5": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "6": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "7": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "8": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "9": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "10": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "11": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "12": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "13": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "14": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "15": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "16": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "17": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "18": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "19": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "20": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "21": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "22": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "23": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "24": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "25": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "26": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "27": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "28": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "29": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "30": [
-                    {
-                        "shiftType": "b"
-                    }
-                ]
+                "1": "b",
+                "2": "c",
+                "3": "c",
+                "4": "O",
+                "5": "O",
+                "6": "a",
+                "7": "O",
+                "8": "b",
+                "9": "b",
+                "10": "b",
+                "11": "c",
+                "12": "c",
+                "13": "O",
+                "14": "a",
+                "15": "c",
+                "16": "O",
+                "17": "c",
+                "18": "c",
+                "19": "c",
+                "20": "O",
+                "21": "O",
+                "22": "O",
+                "23": "O",
+                "24": "O",
+                "25": "a",
+                "26": "b",
+                "27": "b",
+                "28": "O",
+                "29": "a",
+                "30": "b"
             },
             "thisMonthBalance": 6.25,
             "workingHourPerDay": 7.8,
@@ -1339,181 +889,43 @@ let rosterSchedulerData={
                 "c",
                 "d1",
                 "O",
-                "d2",
-                "t"
+                "d2"
             ],
             "dutyPattern": "operator",
             "itoName": "LI Chi-wai Joseph",
             "itoPostName": "ITO6",
             "lastMonthBalance": -0.42,
             "shiftList": {
-                "1": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "2": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "3": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "4": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "5": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "6": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "7": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "8": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "9": [
-                    {
-                        "shiftType": "a"
-                    },
-                    {
-                        "shiftType": "t",
-                        "claimType": "timeOff",
-                        "description": "Seminar on Personal Data (Privacy) Ordinance and Personal Data Protection (GES/HK2)",
-                        "duration": 2,
-                        "endTime": "2024-09-09T04:00:00.000Z",
-                        "shiftDetailId": "39dd78f14d",
-                        "startTime": "2024-09-09T02:00:00.000Z",
-                        "status": "approved"
-                    }
-                ],
-                "10": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "11": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "12": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "13": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "14": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "15": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "16": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "17": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "18": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "19": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "20": [
-                    {
-                        "shiftType": "t",
-                        "claimType": "training",
-                        "description": "Seminar on Personal Data (Privacy) Ordinance and Personal Data Protection (GES/HK2)",
-                        "duration": 1,
-                        "endTime": "2024-09-20T06:00:00.000Z",
-                        "shiftDetailId": "c66b13698f",
-                        "startTime": "2024-09-20T05:00:00.000Z",
-                        "status": "approved"
-                    }
-                ],
-                "21": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "22": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "23": [
-                    {
-                        "shiftType": "d1"
-                    }
-                ],
-                "24": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "25": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "26": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "27": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "28": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "29": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "30": [
-                    {
-                        "shiftType": "c"
-                    }
-                ]
+                "1": "a",
+                "2": "O",
+                "3": "O",
+                "4": "c",
+                "5": "c",
+                "6": "O",
+                "7": "a",
+                "8": "a",
+                "9": "a+t",
+                "10": "c",
+                "11": "O",
+                "12": "b",
+                "13": "b",
+                "14": "O",
+                "15": "a",
+                "16": "b",
+                "17": "b",
+                "18": "b",
+                "19": "O",
+                "20": "t",
+                "21": "c",
+                "22": "O",
+                "23": "d1",
+                "24": "b",
+                "25": "c",
+                "26": "c",
+                "27": "O",
+                "28": "b",
+                "29": "b",
+                "30": "c"
             },
             "thisMonthBalance": 18.25,
             "workingHourPerDay": 7.8,
@@ -1524,172 +936,51 @@ let rosterSchedulerData={
             "cShiftCount": 7,
             "dxShiftCount": 1,
             "expectedWorkingHour": 156,
-            "extraHour": -1,
-            "totalBalance": 16.83
+            "extraHour": 0,
+            "totalBalance": 20.83
         },
         "ITO7_2024-04-12": {
             "availableShiftList": [
                 "d1",
                 "d2",
                 "O",
-                "a",
-                "t"
+                "a"
             ],
             "dutyPattern": "day",
             "itoName": "CHIM Pui Wa Jeff",
             "itoPostName": "ITO7",
             "lastMonthBalance": 16.4,
             "shiftList": {
-                "1": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "2": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "3": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "4": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "5": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "6": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "7": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "8": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "9": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "10": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "11": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "12": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "13": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "14": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "15": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "16": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "17": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "18": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "19": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "20": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "21": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "22": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "23": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "24": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "25": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "26": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "27": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "28": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "29": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "30": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ]
+                "1": "O",
+                "2": "a",
+                "3": "a",
+                "4": "d2",
+                "5": "d2",
+                "6": "d2",
+                "7": "O",
+                "8": "O",
+                "9": "d2",
+                "10": "a",
+                "11": "a",
+                "12": "d2",
+                "13": "d2",
+                "14": "O",
+                "15": "O",
+                "16": "a",
+                "17": "a",
+                "18": "O",
+                "19": "O",
+                "20": "d2",
+                "21": "a",
+                "22": "O",
+                "23": "d2",
+                "24": "d2",
+                "25": "d2",
+                "26": "d2",
+                "27": "d2",
+                "28": "O",
+                "29": "O",
+                "30": "d2"
             },
             "thisMonthBalance": 11,
             "workingHourPerDay": 7.8,
@@ -1710,164 +1001,43 @@ let rosterSchedulerData={
                 "c",
                 "d1",
                 "O",
-                "d2",
-                "t"
+                "d2"
             ],
             "dutyPattern": "operator",
             "itoName": "CHAN Tai-hin Jimmy",
             "itoPostName": "ITO8",
             "lastMonthBalance": -0.29,
             "shiftList": {
-                "1": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "2": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "3": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "4": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "5": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "6": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "7": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "8": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "9": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "10": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "11": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "12": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "13": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "14": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "15": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "16": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "17": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "18": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "19": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "20": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "21": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "22": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "23": [
-                    {
-                        "shiftType": "c"
-                    }
-                ],
-                "24": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "25": [
-                    {
-                        "shiftType": "b"
-                    }
-                ],
-                "26": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "27": [
-                    {
-                        "shiftType": "d1"
-                    }
-                ],
-                "28": [
-                    {
-                        "shiftType": "d1"
-                    }
-                ],
-                "29": [
-                    {
-                        "shiftType": "d1"
-                    }
-                ],
-                "30": [
-                    {
-                        "shiftType": "d1"
-                    }
-                ]
+                "1": "O",
+                "2": "b",
+                "3": "b",
+                "4": "O",
+                "5": "O",
+                "6": "b",
+                "7": "b",
+                "8": "c",
+                "9": "c",
+                "10": "O",
+                "11": "O",
+                "12": "O",
+                "13": "c",
+                "14": "c",
+                "15": "O",
+                "16": "c",
+                "17": "O",
+                "18": "a",
+                "19": "O",
+                "20": "b",
+                "21": "b",
+                "22": "c",
+                "23": "c",
+                "24": "O",
+                "25": "b",
+                "26": "O",
+                "27": "d1",
+                "28": "d1",
+                "29": "d1",
+                "30": "d1"
             },
             "thisMonthBalance": 0.5,
             "workingHourPerDay": 7.8,
@@ -1886,164 +1056,43 @@ let rosterSchedulerData={
                 "d1",
                 "d2",
                 "O",
-                "a",
-                "t"
+                "a"
             ],
             "dutyPattern": "day",
             "itoName": "Sze Wa Sang Leo",
             "itoPostName": "ITO9",
             "lastMonthBalance": 19.4,
             "shiftList": {
-                "1": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "2": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "3": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "4": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "5": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "6": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "7": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "8": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "9": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "10": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "11": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "12": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "13": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "14": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "15": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "16": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "17": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "18": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "19": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "20": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "21": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "22": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "23": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "24": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "25": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "26": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "27": [
-                    {
-                        "shiftType": "d2"
-                    }
-                ],
-                "28": [
-                    {
-                        "shiftType": "a"
-                    }
-                ],
-                "29": [
-                    {
-                        "shiftType": "O"
-                    }
-                ],
-                "30": [
-                    {
-                        "shiftType": "O"
-                    }
-                ]
+                "1": "O",
+                "2": "d2",
+                "3": "d2",
+                "4": "a",
+                "5": "a",
+                "6": "d2",
+                "7": "O",
+                "8": "O",
+                "9": "a",
+                "10": "d2",
+                "11": "d2",
+                "12": "d2",
+                "13": "d2",
+                "14": "O",
+                "15": "O",
+                "16": "d2",
+                "17": "d2",
+                "18": "O",
+                "19": "a",
+                "20": "a",
+                "21": "O",
+                "22": "O",
+                "23": "d2",
+                "24": "a",
+                "25": "d2",
+                "26": "d2",
+                "27": "d2",
+                "28": "a",
+                "29": "O",
+                "30": "O"
             },
             "thisMonthBalance": 11,
             "workingHourPerDay": 7.8,
@@ -2062,11 +1111,15 @@ let rosterSchedulerData={
     "noOfWorkingDay": 20,
     "essentialShift": "abc",
     "itoIdList": [
-        "ITO1_1999-01-01",           
+        "ITO1_1999-01-01",
+        "ITO2_2024-08-12",
+        "ITO3_2023-07-12",
         "ITO4_1999-01-01",
         "ITO5_2021-09-09",
         "ITO6_1999-01-01",
-        "ITO8_1999-01-01",            
+        "ITO7_2024-04-12",
+        "ITO8_1999-01-01",
+        "ITO9_2024-02-19"
     ],
     "itoBlackListShiftPattern": {
         "ITO1_1999-01-01": [
@@ -2106,294 +1159,82 @@ let rosterSchedulerData={
     },
     "preferredShiftList": {
         "ITO1_1999-01-01": {
-            "1": [
-                {
-                    "shiftType": "c"
-                }
-            ],
-            "2": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "3": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "7": [
-                {
-                    "shiftType": "c"
-                }
-            ],
-            "8": [
-                {
-                    "shiftType": "c"
-                }
-            ],
-            "9": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "10": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "15": [
-                {
-                    "shiftType": "nc"
-                }
-            ],
-            "16": [
-                {
-                    "shiftType": "d1"
-                }
-            ],
-            "17": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "18": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "19": [
-                {
-                    "shiftType": "nc"
-                }
-            ],
-            "20": [
-                {
-                    "shiftType": "na"
-                }
-            ],
-            "21": [
-                {
-                    "shiftType": "c"
-                }
-            ],
-            "22": [
-                {
-                    "shiftType": "c"
-                }
-            ],
-            "28": [
-                {
-                    "shiftType": "c"
-                }
-            ],
-            "29": [
-                {
-                    "shiftType": "c"
-                }
-            ],
-            "30": [
-                {
-                    "shiftType": "o"
-                }
-            ]
+            "1": "c",
+            "2": "o",
+            "3": "o",
+            "7": "c",
+            "8": "c",
+            "9": "o",
+            "10": "o",
+            "15": "nc",
+            "16": "d1",
+            "17": "o",
+            "18": "o",
+            "19": "nc",
+            "20": "na",
+            "21": "c",
+            "22": "c",
+            "28": "c",
+            "29": "c",
+            "30": "o"
+        },
+        "ITO2_2024-08-12": {
+            "null": null
+        },
+        "ITO3_2023-07-12": {
+            "null": null
+        },
+        "ITO4_1999-01-01": {
+            "null": null
         },
         "ITO5_2021-09-09": {
-            "6": [
-                {
-                    "shiftType": "a"
-                }
-            ],
-            "7": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "8": [
-                {
-                    "shiftType": "c"
-                }
-            ],
-            "14": [
-                {
-                    "shiftType": "a"
-                }
-            ],
-            "20": [
-                {
-                    "shiftType": "a"
-                }
-            ],
-            "21": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "22": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "23": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "24": [
-                {
-                    "shiftType": "c"
-                }
-            ],
-            "27": [
-                {
-                    "shiftType": "a"
-                }
-            ],
-            "29": [
-                {
-                    "shiftType": "a"
-                }
-            ]
+            "6": "a",
+            "7": "o",
+            "8": "c",
+            "14": "a",
+            "20": "a",
+            "21": "o",
+            "22": "o",
+            "23": "o",
+            "24": "c",
+            "27": "a",
+            "29": "a"
         },
         "ITO6_1999-01-01": {
-            "6": [
-                {
-                    "shiftType": "nc"
-                }
-            ],
-            "7": [
-                {
-                    "shiftType": "nc"
-                }
-            ],
-            "13": [
-                {
-                    "shiftType": "nc"
-                }
-            ],
-            "14": [
-                {
-                    "shiftType": "nc"
-                }
-            ],
-            "17": [
-                {
-                    "shiftType": "nc"
-                }
-            ],
-            "19": [
-                {
-                    "shiftType": "a"
-                }
-            ],
-            "20": [
-                {
-                    "shiftType": "d1"
-                }
-            ],
-            "21": [
-                {
-                    "shiftType": "nc"
-                }
-            ],
-            "22": [
-                {
-                    "shiftType": "a"
-                }
-            ],
-            "23": [
-                {
-                    "shiftType": "d1"
-                }
-            ],
-            "27": [
-                {
-                    "shiftType": "nc"
-                }
-            ],
-            "28": [
-                {
-                    "shiftType": "nc"
-                }
-            ]
+            "6": "nc",
+            "7": "nc",
+            "13": "nc",
+            "14": "nc",
+            "17": "nc",
+            "19": "a",
+            "20": "d1",
+            "21": "nc",
+            "22": "a",
+            "23": "d1",
+            "27": "nc",
+            "28": "nc"
         },
         "ITO7_2024-04-12": {
-            "20": [
-                {
-                    "shiftType": "d1"
-                }
-            ]
+            "20": "d1"
         },
         "ITO8_1999-01-01": {
-            "3": [
-                {
-                    "shiftType": "nc"
-                }
-            ],
-            "4": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "5": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "11": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "12": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "18": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "19": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "20": [
-                {
-                    "shiftType": "d1"
-                }
-            ],
-            "25": [
-                {
-                    "shiftType": "b"
-                }
-            ],
-            "26": [
-                {
-                    "shiftType": "o"
-                }
-            ],
-            "27": [
-                {
-                    "shiftType": "al"
-                }
-            ],
-            "28": [
-                {
-                    "shiftType": "al"
-                }
-            ],
-            "29": [
-                {
-                    "shiftType": "al"
-                }
-            ],
-            "30": [
-                {
-                    "shiftType": "al"
-                }
-            ]
+            "3": "nc",
+            "4": "o",
+            "5": "o",
+            "11": "o",
+            "12": "o",
+            "18": "o",
+            "19": "o",
+            "20": "d1",
+            "25": "b",
+            "26": "o",
+            "27": "al",
+            "28": "al",
+            "29": "al",
+            "30": "al"
+        },
+        "ITO9_2024-02-19": {
+            "null": null
         }
     },
     "previousMonthShiftList": {
@@ -2417,6 +1258,7 @@ let rosterSchedulerData={
                 "shiftType": "b"
             }
         ],
+        "ITO2_2024-08-12": [],
         "ITO3_2023-07-12": [
             {
                 "shiftType": "a"
@@ -2557,6 +1399,40 @@ let rosterSchedulerData={
                 "shiftType": "O"
             }
         ]
+    },
+    "nonStandardWorkingHourRecords": {
+        "ITO1_1999-01-01": {},
+        "ITO2_2024-08-12": {},
+        "ITO3_2023-07-12": {},
+        "ITO4_1999-01-01": {},
+        "ITO5_2021-09-09": {},
+        "ITO6_1999-01-01": {
+            "9": [
+                {
+                    "claimType": "timeOff",
+                    "description": "Seminar on Personal Data (Privacy) Ordinance and Personal Data Protection (GES/HK2)",
+                    "endTime": "2024-09-09T04:00:00.000Z",
+                    "id": "39dd78f14d",
+                    "noOfHourAppliedFor": 2,
+                    "startTime": "2024-09-09T02:00:00.000Z",
+                    "status": "approved"
+                }
+            ],
+            "20": [
+                {
+                    "claimType": "training",
+                    "description": "Seminar on Personal Data (Privacy) Ordinance and Personal Data Protection (GES/HK2)",
+                    "endTime": "2024-09-20T06:00:00.000Z",
+                    "id": "c66b13698f",
+                    "noOfHourAppliedFor": 1,
+                    "startTime": "2024-09-20T05:00:00.000Z",
+                    "status": "approved"
+                }
+            ]
+        },
+        "ITO7_2024-04-12": {},
+        "ITO8_1999-01-01": {},
+        "ITO9_2024-02-19": {}
     },
     "duplicateShiftList": {
         "ITO1_1999-01-01": [],

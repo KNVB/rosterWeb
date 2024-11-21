@@ -3,7 +3,7 @@ import useRosterScheduler from "./useRosterScheduler";
 import Loading from "../../common/Loading";
 import RosterSchedulerTable from "./RosterSchedulerTable";
 export default function RosterScheduler(){
-    const { error, isLoading, rosterSchedulerData, dataAction } = useRosterScheduler();
+    const { error, isLoading, rosterSchedulerData, dataAction } = useRosterScheduler();    
     let result;
     switch (true){
         case (error):

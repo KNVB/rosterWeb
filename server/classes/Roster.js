@@ -6,7 +6,7 @@ export default class Roster {
     }
     getPreferredShiftList = async (year, month) => {
         let dboObj = new Dbo();
-        let itoPreferredShiftList={};
+        let itoPreferredShiftList = {};
         try {
             let results = await dboObj.getPreferredShiftList(year, month);
             console.log("Get (" + year + "," + month + ") Preferred Shift List successfully!");
@@ -14,7 +14,9 @@ export default class Roster {
                 if (itoPreferredShiftList[record.ito_id] === undefined) {
                     itoPreferredShiftList[record.ito_id] = {};
                 }
-                itoPreferredShiftList[record.ito_id][record.d]=record.preferred_shift;
+                if (record.d) {
+                    itoPreferredShiftList[record.ito_id][record.d] = record.preferred_shift;
+                }
             });
             return itoPreferredShiftList;
         } catch (error) {
@@ -27,15 +29,15 @@ export default class Roster {
     }
     getPreviousMonthShiftList = async (year, month, systemParam) => {
         let dboObj = new Dbo();
-        let previousMonthShiftList={};
+        let previousMonthShiftList = {};
         try {
             let results = await dboObj.getPreviousMonthShiftList(year, month, systemParam);
             results.forEach(record => {
-                if (previousMonthShiftList[record.ito_id] === undefined){
-                    previousMonthShiftList[record.ito_id]=[];
+                if (previousMonthShiftList[record.ito_id] === undefined) {
+                    previousMonthShiftList[record.ito_id] = [];
                 }
-                if (record.shift){
-                    previousMonthShiftList[record.ito_id].push({shiftType:record.shift});
+                if (record.shift) {
+                    previousMonthShiftList[record.ito_id].push(record.shift);
                 }
             });
             console.log("Get (" + year + "," + month + ") Previous Month Shift List successfully!");

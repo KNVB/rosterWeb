@@ -3,9 +3,18 @@ import RosterSchedulerData from "../../../dataUtil/RosterSchedulerData";
 let reducer = (state, action) => {
     let result = { ...state };
     switch (action.type) {
+        case "hideLoading":
+            result.isLoading = false;
+            break;
         case "init":
             result.rosterSchedulerData = action.rosterSchedulerData;
             result.isLoading = false;
+            break;
+        case "refresh":
+            result.isLoading = false;
+            break;
+        case "showLoading":
+            result.isLoading = true;
             break;
         default:
             break;
@@ -13,10 +22,10 @@ let reducer = (state, action) => {
     //console.log(result);
     return result;
 }
-export default function useRosterScheduler(){
+export default function useRosterScheduler() {
     const [itemList, updateItemList] = useReducer(reducer, {
         error: null,
-        isLoading: true,      
+        isLoading: true,
         rosterSchedulerData: null
     });
     useEffect(() => {
@@ -65,7 +74,12 @@ export default function useRosterScheduler(){
         itemList.rosterSchedulerData.clearCopiedData();
         updateItemList({ type: "refresh" });
     }
-    let isDuplicateShift = (dateOfMonth, itoId)=>{
+    let hideLoading = () => {
+        updateItemList({
+            "type": "hideLoading"
+        });
+    }
+    let isDuplicateShift = (dateOfMonth, itoId) => {
         return itemList.rosterSchedulerData.isDuplicateShift(dateOfMonth, itoId);
     }
     let paste = (dateOfMonth, rosterRowIdList, selectedLocation) => {
@@ -75,6 +89,9 @@ export default function useRosterScheduler(){
     let reDo = () => {
         itemList.rosterSchedulerData.reDo();
         updateItemList({ type: "refresh" });
+    }
+    let showLoading = () => {
+        updateItemList({ "type": "showLoading" });
     }
     let updateRosterMonth = async newRosterMonth => {
         try {
@@ -99,7 +116,7 @@ export default function useRosterScheduler(){
     let unDo = () => {
         itemList.rosterSchedulerData.unDo();
         updateItemList({ type: "refresh" });
-    } 
+    }
     return {
         error: itemList.error,
         isLoading: itemList.isLoading,
@@ -110,9 +127,11 @@ export default function useRosterScheduler(){
             getCopyDataRowCount,
             getShiftCssClassName,
             handleEscKeyEvent,
+            hideLoading,
             isDuplicateShift,
             paste,
             reDo,
+            showLoading,
             updatePreferredShiftFromTable,
             updateRosterMonth,
             updateShiftFromTable,
