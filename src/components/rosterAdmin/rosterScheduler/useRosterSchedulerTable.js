@@ -32,6 +32,12 @@ export default function useRosterSchedulerTable (rosterSchedulerData) {
         itemList.rosterSchedulerTableUtil.endSelect();
         updateItemList({ type: "refresh" });
     }
+    let getCopyRegionLocation = () => {
+        return itemList.rosterSchedulerTableUtil.getCopyRegionLocation();
+    }
+    let getRosterRowIdList=()=>{
+        return itemList.rosterSchedulerTableUtil.rosterRowIdList;
+    }
     let getRowIndex = rowName => {
         return itemList.rosterSchedulerTableUtil.getRowIndex(rowName);
     }
@@ -75,6 +81,8 @@ export default function useRosterSchedulerTable (rosterSchedulerData) {
     }
     return {
         endSelect,
+        getCopyRegionLocation,
+        getRosterRowIdList,
         getRowIndex,
         getSelectedCssClass,
         getSelectedLocation,

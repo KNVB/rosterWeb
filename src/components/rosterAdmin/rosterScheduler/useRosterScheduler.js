@@ -40,6 +40,12 @@ export default function useRosterScheduler(){
         }
         getData();
     }, []);
+    let copyRosterData = copyRegion => {
+        copyRegion.column.end -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        copyRegion.column.start -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
+        itemList.rosterSchedulerData.copy(copyRegion);
+        updateItemList({ type: "refresh" });
+    }
     let deleteSelectedData = (selectedLocation) => {
         selectedLocation.column.end -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
         selectedLocation.column.start -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
@@ -49,11 +55,22 @@ export default function useRosterScheduler(){
             itemList.rosterSchedulerData.calendarDateList.length);
         updateItemList({ type: "refresh" });
     }
+    let getCopyDataRowCount = () => {
+        return itemList.rosterSchedulerData.getCopyDataRowCount();
+    }
     let getShiftCssClassName = shiftType => {
         return itemList.rosterSchedulerData.getShiftCssClassName(shiftType);
     }
+    let handleEscKeyEvent = () => {
+        itemList.rosterSchedulerData.clearCopiedData();
+        updateItemList({ type: "refresh" });
+    }
     let isDuplicateShift = (dateOfMonth, itoId)=>{
         return itemList.rosterSchedulerData.isDuplicateShift(dateOfMonth, itoId);
+    }
+    let paste = (dateOfMonth, rosterRowIdList, selectedLocation) => {
+        itemList.rosterSchedulerData.paste(dateOfMonth, rosterRowIdList, selectedLocation);
+        updateItemList({ type: "refresh" });
     }
     let reDo = () => {
         itemList.rosterSchedulerData.reDo();
@@ -88,9 +105,13 @@ export default function useRosterScheduler(){
         isLoading: itemList.isLoading,
         rosterSchedulerData: itemList.rosterSchedulerData,
         dataAction: {
+            copyRosterData,
             deleteSelectedData,
+            getCopyDataRowCount,
             getShiftCssClassName,
+            handleEscKeyEvent,
             isDuplicateShift,
+            paste,
             reDo,
             updatePreferredShiftFromTable,
             updateRosterMonth,
