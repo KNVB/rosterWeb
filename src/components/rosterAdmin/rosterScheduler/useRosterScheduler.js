@@ -35,7 +35,7 @@ export default function useRosterScheduler() {
             let rosterMonth = now.getMonth();
             let rosterSchedulerData = new RosterSchedulerData();
             try {
-                await rosterSchedulerData.load(2024, 8);
+                await rosterSchedulerData.load(2024, 9);
                 //await rosterSchedulerData.load(rosterYear, rosterMonth);
                 console.log(rosterSchedulerData);
                 updateItemList({
@@ -105,6 +105,10 @@ export default function useRosterScheduler() {
             updateItemList({ "error": error, "type": "setError" });
         }
     }
+    let updateShiftFromAutoPlan=planResult=>{
+        itemList.rosterSchedulerData.updateShiftFromAutoPlan(planResult);
+        updateItemList({ "type": "refresh" });
+    }
     let updatePreferredShiftFromTable = (itoId, date, newPreferredShift) => {
         itemList.rosterSchedulerData.updatePreferredShiftFromTable(itoId, date, newPreferredShift);
         updateItemList({ "type": "refresh" });
@@ -134,6 +138,7 @@ export default function useRosterScheduler() {
             showLoading,
             updatePreferredShiftFromTable,
             updateRosterMonth,
+            updateShiftFromAutoPlan,
             updateShiftFromTable,
             unDo
         }

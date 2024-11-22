@@ -1,6 +1,7 @@
 import Utility from "../util/Utility";
 export default class AutoPlanner {
     #essentialShift;
+    #essentialShiftList;
     #itoBlackListShiftPattern;
     #itoIdList;
     #noOfWorkingDay;
@@ -21,106 +22,24 @@ export default class AutoPlanner {
         this.#previousMonthShiftList = structuredClone(rosterSchedulerData.previousMonthShiftList);
         this.#roster = structuredClone(rosterSchedulerData.roster);
         this.#systemParam = structuredClone(rosterSchedulerData.systemParam);
+        this.#essentialShiftList = [];
+        for (let i = 0; i < this.#essentialShift.length; i++) {
+            this.#essentialShiftList.push(this.#essentialShift[i]);
+        }
     }
     start = () => {
         return this.#doAutoPlan();
     }
     //======================================================================================================    
-    #assignShift = (assignedShift, dateOfMonth, finalResult, itoId, shift) => {
-        let isAssigned = false;
-        if ((assignedShift.indexOf(shift) === -1) &&
-            (this.#isAssignable(itoId, dateOfMonth, finalResult[itoId], shift))) {
-            finalResult[itoId].shiftList[dateOfMonth] = shift;
-            assignedShift += shift;
-            isAssigned = true;
-        }
-        return isAssigned
-    }
-    #assignPreferredShift = (assignedShift, dateOfMonth, finalResult, itoId, preferredShiftList) => {
-        let isAssigned = false;
-        for (let q = 0; q < preferredShiftList.length; q++) {
-            let preferredShift = preferredShiftList[q];
-            switch (preferredShift) {
-                case "d":
-                case "d1":
-                case "d2":
-                case "d3":
-                case "O":
-                    finalResult[itoId].shiftList[dateOfMonth] = preferredShift;
-                    isAssigned = true;
-                    break;
-                default:
-                    isAssigned = this.#assignShift(assignedShift, dateOfMonth, finalResult, itoId, preferredShift);
-                    break;
-            }
-            if (isAssigned) {
-                break
-            }
-        }
-        if (!isAssigned) {
-            this.#handleUnAssigned(itoId, dateOfMonth, finalResult);
-        }
-        //return isAssigned
-    }
-    #assignNonPreferredShift = (assignedShift, dateOfMonth, finalResult, notAssignedITOIdList) => {
-        for (let i = 0; i < notAssignedITOIdList.length; i++) {
-            let itoId = notAssignedITOIdList[i];
-            let isAssigned = false;
-            for (let j = 0; j < this.#essentialShift.length; j++) {
-                let shiftType = this.#essentialShift[j];
-                if (this.#assignShift(assignedShift, dateOfMonth, finalResult, itoId, shiftType)) {
-                    isAssigned = true;
-                    break;
-                }
-            }
-            if (!isAssigned) {
-                this.#handleUnAssigned(itoId, dateOfMonth, finalResult);
-            }
-        }
-    }
     #buildITOAvailableShift = itoId => {
         let result = {};
-        if (this.#preferredShiftList[itoId]) {
-            Object.keys(this.#preferredShiftList[itoId]).forEach(dateOfMonth => {
-                //console.log(itoId, this.#preferredShiftList[itoId][dateOfMonth]);
-                let temp = this.#preferredShiftList[itoId][dateOfMonth];
-                temp = temp.trim();
-                result[dateOfMonth] = [];
-                if (temp.startsWith("n")) {
-                    result[dateOfMonth] = this.#roster[itoId].availableShiftList.filter(shift => {
-                        let bResult = true
-                        for (let j = 1; j < temp.length; j++) {
-                            if ((shift === temp[j]) || (this.#essentialShift.indexOf(shift) === -1)) {
-                                bResult = false;
-                            }
-                        }
-                        return bResult;
-                    });
-                } else {
-                    result[dateOfMonth] = this.#roster[itoId].availableShiftList.filter(shift => {
-                        let aResult = false;
-                        switch (true) {
-                            case (shift === temp):
-                                aResult = true;
-                                break;
-                            case ((shift === "b") && (temp.startsWith("b"))):
-                                aResult = true;
-                                break;
-                            case ((shift === "d1") && (temp === "al")):
-                                aResult = true;
-                                break;
-                            case ((shift === "O") && (temp === "o")):
-                                aResult = true;
-                                break;
-                            default:
-                                break;
-                        }
-                        return aResult;
-                    });
-                }
-            });
+        for (let dateOfMonth = this.startDate; dateOfMonth <= this.endDate; dateOfMonth++) {
+            if (this.#preferredShiftList[itoId][dateOfMonth]) {
+                result[dateOfMonth] = this.#processPreferredShiftList(itoId, dateOfMonth);
+            } else {
+                result[dateOfMonth] = structuredClone(this.#essentialShiftList);
+            }           
         }
-
         return result;
     }
     #buildPreShift = (itoRoster, dateOfMonth) => {
@@ -159,6 +78,7 @@ export default class AutoPlanner {
         let previousMonthShiftCount = (this.#systemParam.noOfPrevDate - this.startDate) + 1;
         let itoAvailableShiftList = {};
         let isAssigned = false, notAssignedITOIdList;
+        //console.log(this.#preferredShiftList["ITO4_1999-01-01"]);
         this.#itoIdList.forEach(itoId => {
             finalResult[itoId] = {
                 availableShiftList: this.#roster[itoId].availableShiftList,
@@ -168,22 +88,30 @@ export default class AutoPlanner {
             itoAvailableShiftList[itoId] = this.#buildITOAvailableShift(itoId);
             //console.log(itoId,finalResult[itoId].shiftList);
         });
+
         for (let dateOfMonth = this.startDate; dateOfMonth <= this.endDate; dateOfMonth++) {
             assignedShift = "";
             notAssignedITOIdList = [];
             let shuffledITOIdList = structuredClone(this.#itoIdList);
             Utility.shuffleArray(shuffledITOIdList);
+            isAssigned = false;
             for (let i = 0; i < shuffledITOIdList.length; i++) {
                 let itoId = shuffledITOIdList[i];
-                let preferredShiftList = itoAvailableShiftList[itoId][dateOfMonth];
-                //console.log("itoId=" + itoId + ",dateOfMonth=" + dateOfMonth + ",preferredShiftList=" + preferredShiftList);
-                if (preferredShiftList) {
-                    this.#assignPreferredShift(assignedShift, dateOfMonth, finalResult, itoId, preferredShiftList);
-                } else {
-                    notAssignedITOIdList.push(itoId);
+                let itoAvailableShift = itoAvailableShiftList[itoId][dateOfMonth];
+                isAssigned = false;
+                for (let j = 0; j < itoAvailableShift.length; j++) {
+                    let shift = itoAvailableShift[j];
+                    if (this.#isAssignable(assignedShift, dateOfMonth, itoId, finalResult[itoId], shift)) {
+                        finalResult[itoId].shiftList[dateOfMonth] = shift;
+                        assignedShift += shift;
+                        isAssigned = true;
+                        break;
+                    }
+                }
+                if (!isAssigned) {
+                    finalResult[itoId].shiftList[dateOfMonth] = "";
                 }
             }
-            this.#assignNonPreferredShift(assignedShift, dateOfMonth, finalResult, notAssignedITOIdList);            
         }
         for (const [itoId, rosterObj] of Object.entries(finalResult)) {
             let dateList = Object.keys(rosterObj.shiftList);
@@ -206,9 +134,6 @@ export default class AutoPlanner {
                 delete finalResult[itoId].shiftList[dateList[i]];
             }
         }
-        let temp = Utility.getAllITOStat(this.#essentialShift, this.startDate, this.endDate, this.#itoIdList, finalResult);
-        finalResult.duplicateShiftList = temp.duplicateShiftList;
-        finalResult.vacantShiftList = temp.vacantShiftList;
         return finalResult;
     }
     #getNoOfWorkingDay = (dateOfMonth, shiftList) => {
@@ -223,28 +148,38 @@ export default class AutoPlanner {
         }
         return count
     }
-    #handleUnAssigned = (itoId, dateOfMonth, finalResult) => {
-        let rosterObj = this.#roster[itoId];
-        let shiftType = "";
-        if (rosterObj.dutyPattern === "operator") {
-            shiftType = "O";
-        }
-        finalResult[itoId].shiftList[dateOfMonth] = shiftType;
-    }
-
-    #isAssignable = (itoId, dateOfMonth, itoRoster, targetShift) => {
+    #isAssignable = (assignedShift, dateOfMonth, itoId, itoRoster, targetShift) => {
         let preShift, temp;
         let result = false;
         let rosterObj = this.#roster[itoId];
         //console.log("itoId=" + itoId + ",dateOfMonth=" + dateOfMonth + ",isUnderMaxConsecutiveWorkingDay=" + this.#isUnderMaxConsecutiveWorkingDay(itoRoster.shiftList, dateOfMonth) + ",noOfWorkingDay=" + this.#getNoOfWorkingDay(dateOfMonth, itoRoster.shiftList));
         if (rosterObj.dutyPattern === "operator") {
-            if (this.#getNoOfWorkingDay(dateOfMonth, itoRoster.shiftList) < this.#noOfWorkingDay) {
-                if (this.#isUnderMaxConsecutiveWorkingDay(itoRoster.shiftList, dateOfMonth)) {
-                    if (this.#essentialShift.indexOf(targetShift) > -1) {
-                        preShift = this.#buildPreShift(itoRoster, dateOfMonth);
-                        temp = preShift + "," + targetShift;
-                        if (!this.#isBlackListShift(itoId, temp)) {
-                            result = true;
+            if (assignedShift.indexOf(targetShift) === -1) {
+                /*
+                if (itoId === "ITO4_1999-01-01") {
+                    console.log(itoId,dateOfMonth, assignedShift, itoRoster, 
+                        this.#getNoOfWorkingDay(dateOfMonth, itoRoster.shiftList), 
+                        this.#isUnderMaxConsecutiveWorkingDay(dateOfMonth, itoRoster.shiftList, itoId));
+                }*/
+                if (this.#getNoOfWorkingDay(dateOfMonth, itoRoster.shiftList) < this.#noOfWorkingDay) {
+                    if (this.#isUnderMaxConsecutiveWorkingDay(dateOfMonth, itoRoster.shiftList, itoId)) {
+                        switch (targetShift) {
+                            case "d":
+                            case "d1":
+                            case "d2":
+                            case "d3":
+                            case "O":
+                                result = true;
+                                break;
+                            default:
+                                if (this.#essentialShift.indexOf(targetShift) > -1) {
+                                    preShift = this.#buildPreShift(itoRoster, dateOfMonth);
+                                    temp = preShift + "," + targetShift;
+                                    if (!this.#isBlackListShift(itoId, temp)) {
+                                        result = true;
+                                    }
+                                }
+                                break;
                         }
                     }
                 }
@@ -266,7 +201,7 @@ export default class AutoPlanner {
         }
         return result;
     }
-    #isUnderMaxConsecutiveWorkingDay = (shiftList, dateOfMonth) => {
+    #isUnderMaxConsecutiveWorkingDay = (dateOfMonth, shiftList, itoId) => {
         let count = 0;
         let result = true;
         let firstIndex = dateOfMonth - this.#systemParam.maxConsecutiveWorkingDay;
@@ -294,4 +229,43 @@ export default class AutoPlanner {
         }
         return result;
     }
+    #processPreferredShiftList = (itoId, dateOfMonth) => {
+        let result = [];
+        let temp = this.#preferredShiftList[itoId][dateOfMonth];
+        temp = temp.trim();
+        if (temp.startsWith("n")) {
+            result = this.#roster[itoId].availableShiftList.filter(shift => {
+                let bResult = true
+                for (let j = 1; j < temp.length; j++) {
+                    if ((shift === temp[j]) || (this.#essentialShift.indexOf(shift) === -1)) {
+                        bResult = false;
+                    }
+                }
+                return bResult;
+            });
+        } else {
+            result = this.#roster[itoId].availableShiftList.filter(shift => {
+                let aResult = false;
+                switch (true) {
+                    case (shift === temp):
+                        aResult = true;
+                        break;
+                    case ((shift === "b") && (temp.startsWith("b"))):
+                        aResult = true;
+                        break;
+                    case (((shift === "d") || (shift === "d1") || (shift === "d2") || (shift === "d3")) && (temp === "al")):
+                        aResult = true;
+                        break;
+                    case ((shift === "O") && (temp === "o")):
+                        aResult = true;
+                        break;
+                    default:
+                        break;
+                }
+                return aResult;
+            });
+        }
+        return result
+    }
 }
+

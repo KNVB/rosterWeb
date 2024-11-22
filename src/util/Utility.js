@@ -80,6 +80,7 @@ export default class Utility {
             itoIdList.forEach(itoId => {
                 let shiftInfoList = roster[itoId].shiftList[i];
                 //console.log("dateOfMonth="+i+"itoId="+itoId+",shiftList="+JSON.stringify(roster[itoId].shiftList[i]));
+                //console.log(itoId,shiftInfoList,i);
                 shiftInfoList = shiftInfoList.split("+");
                 shiftInfoList.forEach(shiftInfo => {
                     if (shiftInfo === "b1") {

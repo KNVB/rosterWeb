@@ -202,6 +202,17 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.preferredShiftList[itoId][dateOfMonth]=shiftType;        
         this.#updateRosterSchedulerData();
     }
+    updateShiftFromAutoPlan(planResult){
+        Object.keys(planResult).forEach(itoId=>{
+            let shiftList=planResult[itoId].shiftList;
+            Object.keys(shiftList).forEach(dateOfMonth=>{
+                this.roster[itoId].shiftList[dateOfMonth] = shiftList[dateOfMonth];
+            });
+        });
+        this.roster=Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster, this.nonStandardWorkingHourSummary);
+        this.roster = Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster,this.nonStandardWorkingHourSummary);
+        this.#updateRosterSchedulerData();
+    }
     updateShiftFromTable(itoId, date, newShift) {
         newShift = newShift.trim();        
         this.roster[itoId].shiftList[date] = newShift;

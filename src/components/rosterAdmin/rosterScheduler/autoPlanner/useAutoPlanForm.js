@@ -9,13 +9,13 @@ let reducer = (state, action) => {
             result.isReady = true;
             break;
         case "updateEndDate":
-            result.autoPlanner.endDate = action.value;
+            result.autoPlanner.endDate = parseInt(action.value);
             break;
         case "updateIterationCount":
             result.iterationCount = action.value;
             break;
         case "updateStartDate":
-            result.autoPlanner.startDate = action.value;
+            result.autoPlanner.startDate = parseInt(action.value);
             break;
         default:
             break;
@@ -34,10 +34,10 @@ export default function useAutoPlanForm(rosterSchedulerData, dataAction) {
             rosterSchedulerData,
             "type": "init"
         });
-    }, []);
+    }, [rosterSchedulerData, dataAction]);
     let autoPlan = () => {
         dataAction.showLoading();
-        console.log(itemList.autoPlanner.start());
+        dataAction.updateShiftFromAutoPlan(itemList.autoPlanner.start());
         dataAction.hideLoading();
     }
     let updateEndDate = e => {

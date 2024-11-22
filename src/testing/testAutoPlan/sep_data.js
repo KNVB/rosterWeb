@@ -1178,15 +1178,9 @@ let rosterSchedulerData={
             "29": "c",
             "30": "o"
         },
-        "ITO2_2024-08-12": {
-            "null": null
-        },
-        "ITO3_2023-07-12": {
-            "null": null
-        },
-        "ITO4_1999-01-01": {
-            "null": null
-        },
+        "ITO2_2024-08-12": {},
+        "ITO3_2023-07-12": {},
+        "ITO4_1999-01-01": {},
         "ITO5_2021-09-09": {
             "6": "a",
             "7": "o",
@@ -1233,171 +1227,73 @@ let rosterSchedulerData={
             "29": "al",
             "30": "al"
         },
-        "ITO9_2024-02-19": {
-            "null": null
-        }
+        "ITO9_2024-02-19": {}
     },
     "previousMonthShiftList": {
         "ITO1_1999-01-01": [
-            {
-                "shiftType": "O"
-            },
-            {
-                "shiftType": "c"
-            },
-            {
-                "shiftType": "c"
-            },
-            {
-                "shiftType": "O"
-            },
-            {
-                "shiftType": "a"
-            },
-            {
-                "shiftType": "b"
-            }
+            "O",
+            "c",
+            "c",
+            "O",
+            "a",
+            "b"
         ],
         "ITO2_2024-08-12": [],
         "ITO3_2023-07-12": [
-            {
-                "shiftType": "a"
-            },
-            {
-                "shiftType": "a"
-            },
-            {
-                "shiftType": "a"
-            },
-            {
-                "shiftType": "a"
-            },
-            {
-                "shiftType": "d2"
-            },
-            {
-                "shiftType": "O"
-            }
+            "a",
+            "a",
+            "a",
+            "a",
+            "d2",
+            "O"
         ],
         "ITO4_1999-01-01": [
-            {
-                "shiftType": "d3"
-            },
-            {
-                "shiftType": "d3"
-            },
-            {
-                "shiftType": "d3"
-            },
-            {
-                "shiftType": "d3"
-            },
-            {
-                "shiftType": "d3"
-            },
-            {
-                "shiftType": "O"
-            }
+            "d3",
+            "d3",
+            "d3",
+            "d3",
+            "d3",
+            "O"
         ],
         "ITO5_2021-09-09": [
-            {
-                "shiftType": "O"
-            },
-            {
-                "shiftType": "O"
-            },
-            {
-                "shiftType": "O"
-            },
-            {
-                "shiftType": "O"
-            },
-            {
-                "shiftType": "c"
-            },
-            {
-                "shiftType": "O"
-            }
+            "O",
+            "O",
+            "O",
+            "O",
+            "c",
+            "O"
         ],
         "ITO6_1999-01-01": [
-            {
-                "shiftType": "c"
-            },
-            {
-                "shiftType": "O"
-            },
-            {
-                "shiftType": "O"
-            },
-            {
-                "shiftType": "c"
-            },
-            {
-                "shiftType": "O"
-            },
-            {
-                "shiftType": "a"
-            }
+            "c",
+            "O",
+            "O",
+            "c",
+            "O",
+            "a"
         ],
         "ITO7_2024-04-12": [
-            {
-                "shiftType": "d2"
-            },
-            {
-                "shiftType": "d2"
-            },
-            {
-                "shiftType": "d2"
-            },
-            {
-                "shiftType": "d2"
-            },
-            {
-                "shiftType": "d2"
-            },
-            {
-                "shiftType": "O"
-            }
+            "d2",
+            "d2",
+            "d2",
+            "d2",
+            "d2",
+            "O"
         ],
         "ITO8_1999-01-01": [
-            {
-                "shiftType": "b"
-            },
-            {
-                "shiftType": "b"
-            },
-            {
-                "shiftType": "b"
-            },
-            {
-                "shiftType": "b"
-            },
-            {
-                "shiftType": "b"
-            },
-            {
-                "shiftType": "c"
-            }
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "c"
         ],
         "ITO9_2024-02-19": [
-            {
-                "shiftType": "d2"
-            },
-            {
-                "shiftType": "d2"
-            },
-            {
-                "shiftType": "d2"
-            },
-            {
-                "shiftType": "d2"
-            },
-            {
-                "shiftType": "d2"
-            },
-            {
-                "shiftType": "O"
-            }
+            "d2",
+            "d2",
+            "d2",
+            "d2",
+            "d2",
+            "O"
         ]
     },
     "nonStandardWorkingHourRecords": {
