@@ -46,10 +46,20 @@ export default class Dbo {
     }
     getITOBlackListShiftPattern = async (year, month) => {
         let result = Utility.getStartEndDateString(year, month);
-        this.#sqlString = "select ito_info.ito_id,black_list_pattern ";
-        this.#sqlString += "from ito_info inner join black_list_pattern on ito_info.join_date<=? and ito_info.leave_date >=? ";
-        this.#sqlString += "and ito_info.ito_id = black_list_pattern.ito_id";
-        return await this.#executeQuery(this.#sqlString, [result.startDateString, result.endDateString]);
+        this.#sqlString = "select v.ito_id,black_list_pattern ";
+        this.#sqlString += "from ";
+        this.#sqlString += "(SELECT ito_id , post_name";
+        this.#sqlString += "    FROM   ito_info ";
+        this.#sqlString += "    WHERE  ito_info.join_date <=?";
+        this.#sqlString += "    AND ito_info.leave_date >=?)as v ";
+        this.#sqlString += "left join ";
+        this.#sqlString += "(select ito_id, black_list_pattern ";
+        this.#sqlString += "from black_list_pattern) k ";
+        this.#sqlString += "on v.ito_id=k.ito_id ";
+        this.#sqlString += "order by Cast(replace(post_name,\"ITO\",\"\") as unsigned)";
+        return await this.#executeQuery(this.#sqlString, [
+            result.endDateString, result.startDateString
+        ]);
     }
     getITOList = async () => {
         this.#sqlString = "select a.ito_id,a.ito_name,a.available_shift,";
@@ -75,7 +85,10 @@ export default class Dbo {
         this.#sqlString += "where shift_date between ? and ?) as k ";
         this.#sqlString += "on v.ito_id=k.ito_id ";
         this.#sqlString += "order by Cast(replace(post_name,\"ITO\",\"\") as unsigned), d";
-        return await this.#executeQuery(this.#sqlString, [result.endDateString, result.startDateString, result.startDateString, result.endDateString]);
+        return await this.#executeQuery(this.#sqlString, [
+            result.endDateString, result.startDateString,
+            result.startDateString, result.endDateString
+        ]);
     }
     getPreviousMonthShiftList = async (year, month, systemParam) => {
         let result = Utility.getStartEndDateString(year, month);

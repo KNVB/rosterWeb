@@ -14,7 +14,9 @@ export default class ShiftInfo {
                 if (itoBlackListShiftPattern[record.ito_id] === undefined) {
                     itoBlackListShiftPattern[record.ito_id] = [];
                 }
-                itoBlackListShiftPattern[record.ito_id].push(record.black_list_pattern);
+                if (record.black_list_pattern){
+                    itoBlackListShiftPattern[record.ito_id].push(record.black_list_pattern);
+                }                
             });
             return itoBlackListShiftPattern;
         } catch (error) {

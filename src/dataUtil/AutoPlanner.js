@@ -192,7 +192,7 @@ export default class AutoPlanner {
         if (this.#itoBlackListShiftPattern[itoId]) {
             for (let i = 0; i < this.#itoBlackListShiftPattern[itoId].length; i++) {
                 let blackListShift = this.#itoBlackListShiftPattern[itoId][i];
-                //console.log(newShift, blackListShift, newShift.indexOf(blackListShift));
+                               
                 if (newShift.indexOf(blackListShift) > -1) {
                     result = true;
                     break;
