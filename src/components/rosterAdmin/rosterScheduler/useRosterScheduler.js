@@ -55,6 +55,11 @@ export default function useRosterScheduler() {
         itemList.rosterSchedulerData.copy(copyRegion);
         updateItemList({ type: "refresh" });
     }
+    let clearAllShiftData = e => {
+        console.log("clearAllShiftData");
+        itemList.rosterSchedulerData.clearAllShiftData();
+        updateItemList({ type: "refresh" });
+    }
     let deleteSelectedData = (selectedLocation) => {
         selectedLocation.column.end -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
         selectedLocation.column.start -= itemList.rosterSchedulerData.systemParam.noOfPrevDate;
@@ -62,6 +67,15 @@ export default function useRosterScheduler() {
             selectedLocation,
             itemList.rosterSchedulerData.noOfWorkingDay,
             itemList.rosterSchedulerData.calendarDateList.length);
+        updateItemList({ type: "refresh" });
+    }
+    let exportRosterDataToExcel = e => {
+        console.log("exportRosterDataToExcel");
+        itemList.rosterSchedulerData.exportRosterDataToExcel();
+    }
+    let fillEmptyShiftWithO = e => {
+        console.log("fillEmptyShiftWithO");
+        itemList.rosterSchedulerData.fillEmptyShiftWithO();
         updateItemList({ type: "refresh" });
     }
     let getCopyDataRowCount = () => {
@@ -82,10 +96,10 @@ export default function useRosterScheduler() {
     let isDuplicateShift = (dateOfMonth, itoId) => {
         return itemList.rosterSchedulerData.isDuplicateShift(dateOfMonth, itoId);
     }
-    let load=newRosterData=>{
+    let load = newRosterData => {
         //console.log(newRosterData);
         itemList.rosterSchedulerData.updateShiftFromAutoPlan(newRosterData);
-        updateItemList({ type: "refresh" }); 
+        updateItemList({ type: "refresh" });
     }
     let paste = (dateOfMonth, rosterRowIdList, selectedLocation) => {
         itemList.rosterSchedulerData.paste(dateOfMonth, rosterRowIdList, selectedLocation);
@@ -94,6 +108,9 @@ export default function useRosterScheduler() {
     let reDo = () => {
         itemList.rosterSchedulerData.reDo();
         updateItemList({ type: "refresh" });
+    }
+    let saveRosterToDB = () => {
+        console.log("saveRosterToDB");
     }
     let showLoading = () => {
         updateItemList({ "type": "showLoading" });
@@ -110,7 +127,7 @@ export default function useRosterScheduler() {
             updateItemList({ "error": error, "type": "setError" });
         }
     }
-    let updateShiftFromAutoPlan=planResult=>{
+    let updateShiftFromAutoPlan = planResult => {
         itemList.rosterSchedulerData.updateShiftFromAutoPlan(planResult);
         updateItemList({ "type": "refresh" });
     }
@@ -131,8 +148,11 @@ export default function useRosterScheduler() {
         isLoading: itemList.isLoading,
         rosterSchedulerData: itemList.rosterSchedulerData,
         dataAction: {
+            clearAllShiftData,
             copyRosterData,
             deleteSelectedData,
+            exportRosterDataToExcel,
+            fillEmptyShiftWithO,
             getCopyDataRowCount,
             getShiftCssClassName,
             handleEscKeyEvent,
@@ -141,6 +161,7 @@ export default function useRosterScheduler() {
             load,
             paste,
             reDo,
+            saveRosterToDB,
             showLoading,
             updatePreferredShiftFromTable,
             updateRosterMonth,

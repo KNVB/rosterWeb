@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import "./RosterSchedulerTable.css";
 import useRosterSchedulerTable from "./useRosterSchedulerTable";
 import AutoPlanForm from "./autoPlanner/AutoPlanForm";
 import HeaderRows from "../../common/rows/HeaderRows";
@@ -31,15 +32,34 @@ export default function RosterSchedulerTable({ dataAction, rosterSchedulerData }
                 rosterSchedulerTableUtil={rosterSchedulerTableUtil} />
             <tfoot>
                 <tr>
-                    <td colSpan="7" className="pt-1">
+                    <td colSpan="7" className="mt-1">
                         <ShiftInfoLegend activeShiftList={activeShiftList} />
                     </td>
-                    <td colSpan={20}>
+                    <td className="p-1" colSpan={20}>
                         <AutoPlanForm 
                             dataAction={dataAction}
                             rosterSchedulerData={rosterSchedulerData}/>
+                        <div className="d-flex flex-row ms-1">
+                            <div className="d-flex flex-column flex-grow-1 mb-1">
+                                <div className="d-flex flex-grow-1 justify-content-center">
+                                    <div className="clearAllButton" onClick={dataAction.clearAllShiftData}>Clear All Shift Data</div>
+                                </div>
+                                <div className="d-flex flex-grow-1 justify-content-center mt-1">
+                                    <div className="exportButton" onClick={dataAction.exportRosterDataToExcel}>Export To Excel File</div>                                    
+                                </div>
+                            </div>
+                            <div className="d-flex flex-column flex-grow-1">
+                                <div className="d-flex flex-grow-1 justify-content-center">
+                                    <div className="fillEmptyShiftWithOButton" onClick={dataAction.fillEmptyShiftWithO}>Fill empty shift with "O"</div>
+                                </div>
+                                <div className="d-flex flex-grow-1 justify-content-center mt-1">
+                                    <div className="saveRosterToDBButton" onClick={dataAction.saveRosterToDB}>Save All Data To DB</div>
+                                </div>   
+                            </div>
+                        </div>
                     </td>
                     <td colSpan={17}>
+                        
                     </td>
                 </tr>
             </tfoot>

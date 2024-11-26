@@ -2,9 +2,19 @@ import FetchAPI from "../util/FetchAPI";
 import RosterViewerData from "./RosterViewerData";
 import Utility from "../util/Utility";
 import UndoableData from "../util/UndoableData";
+import WeekDayNames from "../util/calendar/WeekDayNames";
 export default class RosterSchedulerData extends RosterViewerData {
     #copiedData = null;
     #rosterSchedulerDataHistory;
+    clearAllShiftData = () => {
+        Object.keys(this.roster).forEach(itoId => {
+            for (let date = 1; date <= this.calendarDateList.length; date++) {
+                this.roster[itoId].shiftList[date] = "";
+            }
+        });
+        this.roster = Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster, this.nonStandardWorkingHourSummary);
+        this.#updateRosterSchedulerData();
+    }
     copy = copyRegion => {
         let index, itoId;
         let result = [], shiftList, shiftRowType;
@@ -69,6 +79,37 @@ export default class RosterSchedulerData extends RosterViewerData {
                 }
             }
         });
+    }
+    fillEmptyShiftWithO=()=>{
+        Object.keys(this.roster).forEach(itoId => {
+            for (let date = 1; date <= this.calendarDateList.length; date++) {
+                if (this.roster[itoId].shiftList[date] === ""){
+                    this.roster[itoId].shiftList[date] ="O";
+                }
+            }
+        });
+        this.#updateRosterSchedulerData();
+    }
+    exportRosterDataToExcel(){
+        let fetchAPI = new FetchAPI();
+        console.log(this);
+        /*
+          setCaptionRow(workbook, rosterData.month, rosterData.year);
+            setConditionalFormatting(worksheet1,rosterData.roster);
+            setHeaderRow(worksheet1,rosterData.calendarDateList,rosterData.weekdayNames);
+            setRosterData(worksheet1,rosterData.roster,rosterData.activeShiftList);
+            setVacantShiftRow(rosterData.roster,worksheet1,rosterData.vacantShiftList);
+        */       
+        fetchAPI.exportRosterDataToExcel({"genExcelData":{
+            activeShiftList:this.activeShiftList,
+            calendarDateList:this.calendarDateList,
+            month:this.rosterMonth.getMonth()+1,
+            roster:this.roster,
+            vacantShiftList:this.vacantShiftList,
+            weekdayNames:WeekDayNames(),
+            year:this.rosterMonth.getFullYear(),
+        }});
+        
     }
     getCopyDataRowCount = () => {
         if (this.#copiedData === null) {
@@ -203,9 +244,9 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.#updateRosterSchedulerData();
     }
     updateShiftFromAutoPlan(planResult) {
-        this.duplicateShiftList=structuredClone(planResult.duplicateShiftList);
-        this.roster=structuredClone(planResult.roster);
-        this.vacantShiftList=structuredClone(planResult.vacantShiftList);
+        this.duplicateShiftList = structuredClone(planResult.duplicateShiftList);
+        this.roster = structuredClone(planResult.roster);
+        this.vacantShiftList = structuredClone(planResult.vacantShiftList);
         this.#rosterSchedulerDataHistory.set({
             calendarDateList: this.calendarDateList,
             duplicateShiftList: this.duplicateShiftList,

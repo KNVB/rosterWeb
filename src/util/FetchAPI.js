@@ -27,6 +27,9 @@ export default class FetchAPI {
     addITO = async ito => {
         return (await this.#secureFetch({ "ito": ito }, "post", "/privateAPI/addITO"));
     }
+    exportRosterDataToExcel = async genExcelData => {
+        return (await this.#secureFetch(genExcelData, "post", "/privateAPI/exportRosterDataToExcel", "blob"));
+    }
     getActiveShiftList = async () => {
         return (await this.#fetch(null, "get", "/privateAPI/getActiveShiftList"));
     }
@@ -65,6 +68,19 @@ export default class FetchAPI {
         };
         console.log(requestObj);
         const response = await this.#api(requestObj);
+        if (response.request.responseType === "blob") {
+            let fileName = response.headers["content-disposition"];
+            console.log(fileName);
+            let firstIndex = fileName.indexOf("filename=");
+            fileName = fileName.substring(firstIndex + 9);
+
+            const newBlob = new Blob([response.data]);
+            const objUrl = window.URL.createObjectURL(newBlob);
+            const link = document.createElement("a");
+            link.href = objUrl;
+            link.download = fileName;
+            link.click();
+        }
         return response.data;
     }
     #secureFetch = async (data, method, url, responseType) => {
