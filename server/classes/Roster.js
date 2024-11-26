@@ -68,20 +68,6 @@ export default class Roster {
                         itoRoster.lastMonthBalance = parseFloat(record.balance);
                     }
                     itoRosterList[record.ito_id] = itoRoster;
-                    /*
-                    itoRosterList[record.ito_id] = {
-                        availableShiftList: record.available_shift.split(","),
-                        dutyPattern: record.duty_pattern,
-                        itoName: record.ito_name,
-                        itoPostName: record.post_name,
-                        lastMonthBalance: 0.0,
-                        shiftList: {},
-                        thisMonthBalance: 0.0,
-                        workingHourPerDay: parseFloat(record.working_hour_per_day)
-                    }
-                    if (record.balance) {
-                        itoRosterList[record.ito_id].lastMonthBalance = parseFloat(record.balance);
-                    }*/
                 }
                 if (record.d) {
                     if (itoRosterList[record.ito_id].shiftList[record.d]) {
@@ -89,12 +75,15 @@ export default class Roster {
                     } else {
                         itoRosterList[record.ito_id].shiftList[record.d] = record.shift;
                     }
-                } else {
-                    let endDate = Utility.getEndDate(year, month);
-                    for (let i = 0; i < endDate; i++) {
-                        itoRosterList[record.ito_id].shiftList[i + 1] = "";
+                }
+            });
+            let endDate = Utility.getEndDate(year, month);
+            Object.keys(itoRosterList).forEach(itoId => {
+                let itoRoster = itoRosterList[itoId];
+                for (let i = 0; i < endDate; i++) {
+                    if (itoRoster.shiftList[i + 1] === undefined) {
+                        itoRosterList[itoId].shiftList[i + 1] = "";
                     }
-                    //console.log(`year=${year},month=${month},endDate=${endDate}`);
                 }
             });
             return itoRosterList;
