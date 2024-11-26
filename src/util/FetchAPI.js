@@ -40,7 +40,7 @@ export default class FetchAPI {
         return (await this.#fetch({ year: year, month: month }, "get", "/publicAPI/getRosterViewerData"));
     }
     getRosterSchedulerData = async (year, month) => {
-        return (await  this.#secureFetch({ year: year, month: month }, "get", "/privateAPI/getRosterSchedulerData"));
+        return (await this.#secureFetch({ year: year, month: month }, "get", "/privateAPI/getRosterSchedulerData"));
     }
     getSystemParam = async () => {
         return (await this.#fetch(null, "get", "/publicAPI/getSystemParam"));
@@ -58,6 +58,20 @@ export default class FetchAPI {
         return (await this.#secureFetch({ "ito": ito }, "post", "/privateAPI/updateITO"));
     }
     //================================================================================================================================
+    #downloadFile = (fileName, responseData) => {
+        const newBlob = new Blob([responseData]);
+        const objUrl = window.URL.createObjectURL(newBlob);
+        const link = document.createElement("a");
+        link.href = objUrl;
+        link.download = fileName;
+        link.click();
+    }
+    #extractFileName = disposition => {
+        let result = disposition;
+        let firstIndex = result.indexOf("filename=");
+        result = result.substring(firstIndex + 9);
+        return result;
+    }
     #fetch = async (data, method, url, responseType, headers) => {
         const requestObj = {
             url,
@@ -69,17 +83,8 @@ export default class FetchAPI {
         console.log(requestObj);
         const response = await this.#api(requestObj);
         if (response.request.responseType === "blob") {
-            let fileName = response.headers["content-disposition"];
-            console.log(fileName);
-            let firstIndex = fileName.indexOf("filename=");
-            fileName = fileName.substring(firstIndex + 9);
-
-            const newBlob = new Blob([response.data]);
-            const objUrl = window.URL.createObjectURL(newBlob);
-            const link = document.createElement("a");
-            link.href = objUrl;
-            link.download = fileName;
-            link.click();
+            let fileName = this.#extractFileName(response.headers["content-disposition"]);
+            this.#downloadFile(fileName, response.data);            
         }
         return response.data;
     }
