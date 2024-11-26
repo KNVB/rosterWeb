@@ -198,25 +198,29 @@ export default class RosterSchedulerData extends RosterViewerData {
         if (this.preferredShiftList[itoId] === undefined) {
             this.preferredShiftList[itoId] = {};
         }
-        
-        this.preferredShiftList[itoId][dateOfMonth]=shiftType;        
+
+        this.preferredShiftList[itoId][dateOfMonth] = shiftType;
         this.#updateRosterSchedulerData();
     }
-    updateShiftFromAutoPlan(planResult){
-        Object.keys(planResult).forEach(itoId=>{
-            let shiftList=planResult[itoId].shiftList;
-            Object.keys(shiftList).forEach(dateOfMonth=>{
-                this.roster[itoId].shiftList[dateOfMonth] = shiftList[dateOfMonth];
-            });
+    updateShiftFromAutoPlan(planResult) {
+        this.duplicateShiftList=structuredClone(planResult.duplicateShiftList);
+        this.roster=structuredClone(planResult.roster);
+        this.vacantShiftList=structuredClone(planResult.vacantShiftList);
+        this.#rosterSchedulerDataHistory.set({
+            calendarDateList: this.calendarDateList,
+            duplicateShiftList: this.duplicateShiftList,
+            itoIdList: this.itoIdList,
+            preferredShiftList: this.preferredShiftList,
+            previousMonthShiftList: this.previousMonthShiftList,
+            roster: this.roster,
+            shiftDetailList: this.shiftDetailList,
+            vacantShiftList: this.vacantShiftList
         });
-        this.roster=Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster, this.nonStandardWorkingHourSummary);
-        this.roster = Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster,this.nonStandardWorkingHourSummary);
-        this.#updateRosterSchedulerData();
     }
     updateShiftFromTable(itoId, date, newShift) {
-        newShift = newShift.trim();        
+        newShift = newShift.trim();
         this.roster[itoId].shiftList[date] = newShift;
-        this.roster = Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster,this.nonStandardWorkingHourSummary);
+        this.roster = Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster, this.nonStandardWorkingHourSummary);
         this.#updateRosterSchedulerData();
     }
     updateShiftFromPaste(itoId, date, shift) {

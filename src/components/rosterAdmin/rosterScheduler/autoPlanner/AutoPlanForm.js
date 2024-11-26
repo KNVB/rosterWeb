@@ -2,7 +2,10 @@ import "./AutoPlanForm.css";
 import useAutoPlanForm from "./useAutoPlanForm";
 
 export default function AutoPlanForm({ rosterSchedulerData, dataAction }) {
-    const { startDate, endDate, isReady, iterationCount, action } = useAutoPlanForm(rosterSchedulerData, dataAction);
+    const { startDate, endDate, isReady, iterationCount,planResult, action } = useAutoPlanForm(rosterSchedulerData, dataAction);
+    let load=index=>{
+        dataAction.load(planResult[index]);
+    }
     if (isReady) {
         return (
             <table className="mt-1">
@@ -37,7 +40,23 @@ export default function AutoPlanForm({ rosterSchedulerData, dataAction }) {
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colSpan={3} className="text-center">
+                        <td colSpan={3} >
+                         {(planResult.length>0) && 
+                            <>
+                                <div>AutoPlan result:</div>
+                                <ul>
+                                    {
+                                        planResult.map((result,index)=>(
+                                            <li className="cursor-pointer" 
+                                                key={"item_"+index} 
+                                                onClick={()=>load(index)}>
+                                                    Vacant Shift Count: {Object.keys(result.vacantShiftList).length}
+                                            </li>
+                                        ))
+                                    }
+                                </ul>
+                            </>                            
+                         }
                         </td>
                     </tr>
                 </tfoot>

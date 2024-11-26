@@ -82,6 +82,11 @@ export default function useRosterScheduler() {
     let isDuplicateShift = (dateOfMonth, itoId) => {
         return itemList.rosterSchedulerData.isDuplicateShift(dateOfMonth, itoId);
     }
+    let load=newRosterData=>{
+        //console.log(newRosterData);
+        itemList.rosterSchedulerData.updateShiftFromAutoPlan(newRosterData);
+        updateItemList({ type: "refresh" }); 
+    }
     let paste = (dateOfMonth, rosterRowIdList, selectedLocation) => {
         itemList.rosterSchedulerData.paste(dateOfMonth, rosterRowIdList, selectedLocation);
         updateItemList({ type: "refresh" });
@@ -133,6 +138,7 @@ export default function useRosterScheduler() {
             handleEscKeyEvent,
             hideLoading,
             isDuplicateShift,
+            load,
             paste,
             reDo,
             showLoading,

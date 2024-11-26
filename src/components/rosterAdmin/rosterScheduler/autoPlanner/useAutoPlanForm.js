@@ -5,7 +5,6 @@ let reducer = (state, action) => {
     switch (action.type) {
         case "init":
             result.autoPlanner.setRosterSchedulerData(action.rosterSchedulerData);
-            result.iterationCount = 1;
             result.isReady = true;
             break;
         case "updateEndDate":
@@ -13,6 +12,11 @@ let reducer = (state, action) => {
             break;
         case "updateIterationCount":
             result.iterationCount = action.value;
+            break;
+        case "updatePlanResult":
+            for (let i = 0; i < 3; i++) {
+                result.planResult[i] = structuredClone(action.planResult[i]);
+            }
             break;
         case "updateStartDate":
             result.autoPlanner.startDate = parseInt(action.value);
@@ -25,9 +29,10 @@ let reducer = (state, action) => {
 }
 export default function useAutoPlanForm(rosterSchedulerData, dataAction) {
     const [itemList, updateItemList] = useReducer(reducer, {
-        isReady: false,
         autoPlanner: new AutoPlanner(1, rosterSchedulerData.calendarDateList.length),
-        iterationCount: 1,
+        isReady: false,
+        iterationCount:1,
+        planResult: []
     });
     useEffect(() => {
         updateItemList({
@@ -37,7 +42,32 @@ export default function useAutoPlanForm(rosterSchedulerData, dataAction) {
     }, [rosterSchedulerData, dataAction]);
     let autoPlan = () => {
         dataAction.showLoading();
-        dataAction.updateShiftFromAutoPlan(itemList.autoPlanner.start());
+        let temp = [];
+        for (let i = 0; i < itemList.iterationCount; i++) {
+            let tempResult = itemList.autoPlanner.start();
+            temp.push(tempResult);
+        }
+        temp.sort((a, b) => {
+            let result;
+            switch (true) {
+                case (Object.keys(a.vacantShiftList).length > Object.keys(b.vacantShiftList).length):
+                    result = 1;
+                    break;
+                case (Object.keys(a.vacantShiftList).length < Object.keys(b.vacantShiftList).length):
+                    result = -1;
+                    break;
+                default:
+                    result = 0;
+                    break;
+            }
+            return result;
+        });
+        
+        updateItemList({
+            planResult: temp,
+            "type": "updatePlanResult",
+        });
+        //dataAction.updateShiftFromAutoPlan(itemList.autoPlanner.start());
         dataAction.hideLoading();
     }
     let updateEndDate = e => {
@@ -59,7 +89,7 @@ export default function useAutoPlanForm(rosterSchedulerData, dataAction) {
         });
     }
     return {
-        autoPlanResult: itemList.autoPlanner.planResult,
+        planResult: itemList.planResult,
         startDate: itemList.autoPlanner.startDate,
         endDate: itemList.autoPlanner.endDate,
         isReady: itemList.isReady,

@@ -1,9 +1,12 @@
 import Utility from "../util/Utility";
 export default class AutoPlanner {
+    #activeShiftList;
+    #calendarDateList;
     #essentialShift;
     #essentialShiftList;
     #itoBlackListShiftPattern;
     #itoIdList;
+    #nonStandardWorkingHourSummary;
     #noOfWorkingDay;
     #preferredShiftList;
     #previousMonthShiftList;
@@ -14,21 +17,39 @@ export default class AutoPlanner {
         this.startDate = startDate;
     }
     setRosterSchedulerData = (rosterSchedulerData) => {
+        this.#activeShiftList = structuredClone(rosterSchedulerData.activeShiftList);
+        this.#calendarDateList = structuredClone(rosterSchedulerData.calendarDateList);
         this.#essentialShift = rosterSchedulerData.essentialShift;
         this.#itoBlackListShiftPattern = structuredClone(rosterSchedulerData.itoBlackListShiftPattern);
         this.#itoIdList = structuredClone(rosterSchedulerData.itoIdList);
+        this.#nonStandardWorkingHourSummary = structuredClone(rosterSchedulerData.nonStandardWorkingHourSummary);
         this.#noOfWorkingDay = rosterSchedulerData.noOfWorkingDay;
         this.#preferredShiftList = structuredClone(rosterSchedulerData.preferredShiftList);
         this.#previousMonthShiftList = structuredClone(rosterSchedulerData.previousMonthShiftList);
         this.#roster = structuredClone(rosterSchedulerData.roster);
         this.#systemParam = structuredClone(rosterSchedulerData.systemParam);
+
         this.#essentialShiftList = [];
         for (let i = 0; i < this.#essentialShift.length; i++) {
             this.#essentialShiftList.push(this.#essentialShift[i]);
         }
     }
     start = () => {
-        return this.#doAutoPlan();
+        let finalResult = structuredClone(this.#roster);
+        let planResult = this.#doAutoPlan();
+        Object.keys(planResult).forEach(itoId => {
+            let shiftList = planResult[itoId].shiftList;
+            Object.keys(shiftList).forEach(dateOfMonth => {
+                finalResult[itoId].shiftList[dateOfMonth] = shiftList[dateOfMonth];
+            });
+        });
+        finalResult = Utility.genITOStat(this.#activeShiftList, this.#noOfWorkingDay, finalResult, this.#nonStandardWorkingHourSummary);
+        let tempResult = Utility.getAllITOStat(this.#essentialShift, 1, this.#calendarDateList.length, this.#itoIdList, finalResult);
+        return {
+            duplicateShiftList: structuredClone(tempResult.duplicateShiftList),
+            roster:finalResult,
+            vacantShiftList : structuredClone(tempResult.vacantShiftList)
+        };
     }
     //======================================================================================================    
     #buildITOAvailableShift = itoId => {
@@ -38,7 +59,7 @@ export default class AutoPlanner {
                 result[dateOfMonth] = this.#processPreferredShiftList(itoId, dateOfMonth);
             } else {
                 result[dateOfMonth] = structuredClone(this.#essentialShiftList);
-            }           
+            }
         }
         return result;
     }
@@ -77,7 +98,7 @@ export default class AutoPlanner {
         let finalResult = {};
         let previousMonthShiftCount = (this.#systemParam.noOfPrevDate - this.startDate) + 1;
         let itoAvailableShiftList = {};
-        let isAssigned = false, notAssignedITOIdList;
+        let isAssigned = false;
         //console.log(this.#preferredShiftList["ITO4_1999-01-01"]);
         this.#itoIdList.forEach(itoId => {
             finalResult[itoId] = {
@@ -91,7 +112,6 @@ export default class AutoPlanner {
 
         for (let dateOfMonth = this.startDate; dateOfMonth <= this.endDate; dateOfMonth++) {
             assignedShift = "";
-            notAssignedITOIdList = [];
             let shuffledITOIdList = structuredClone(this.#itoIdList);
             Utility.shuffleArray(shuffledITOIdList);
             isAssigned = false;
@@ -192,7 +212,7 @@ export default class AutoPlanner {
         if (this.#itoBlackListShiftPattern[itoId]) {
             for (let i = 0; i < this.#itoBlackListShiftPattern[itoId].length; i++) {
                 let blackListShift = this.#itoBlackListShiftPattern[itoId][i];
-                               
+
                 if (newShift.indexOf(blackListShift) > -1) {
                     result = true;
                     break;
