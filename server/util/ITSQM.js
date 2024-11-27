@@ -23,6 +23,44 @@ export default class ITSQM {
         this.#hkoRootCertPath = hkoRootCertPath;        
         this.#headers = { "authtoken": technicianKey };
     }
+    addTimeOffRecord = async () =>{
+        let method = "post";
+        //let params = structuredClone(this.#commonParam);
+        let url = this.#v3APIPath + "/requests";
+        let params={"request":{
+            "description":"EMSTF Time off/Over time application",
+            "requester": {
+                "id": "6906",
+                "name": "Leo Wa Sang SZE"           
+            },            
+            "subject":"EMSTF Time off/Over time application",
+           
+            "template_id":3906,            
+            "udf_pick_5705":{
+                "value":"Time Off"
+            },            
+            "udf_date_5706": {
+                "value": "1541060100000"
+            },
+            "udf_date_5707": {
+                "value": "1541146542726"
+            },
+            "udf_decimal_5708":{
+                "value":"10"
+            },            
+            "udf_decimal_5709":{
+                "value":"9"
+            }                     
+        }};
+        let response = await this.#fetchAPI.fetch(
+            new URLSearchParams({ input_data: JSON.stringify(params) }),
+            method,
+            url,
+            "json",
+            this.#headers,
+            this.#hkoRootCertPath);
+        console.log(response);    
+    }
     getEMSTFTeamMember = async () => {
         let method = "get";
         let params = structuredClone(this.#commonParam);
