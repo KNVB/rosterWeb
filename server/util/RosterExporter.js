@@ -164,7 +164,7 @@ export default class RosterExporter {
 				formula += genCountIf(address, 'd') + "*" + shiftInfoList["d"].duration + "+";
 				formula += genCountIf(address, 'd1') + "*" + shiftInfoList["d1"].duration + "+";
 				formula += genCountIf(address, 'd2') + "*" + shiftInfoList["d2"].duration + "+";
-				formula += genCountIf(address, 'd3') + "*" + shiftInfoList["d"].duration;
+				formula += genCountIf(address, 'd3') + "*" + shiftInfoList["d3"].duration;
 
 				cell = worksheet.getCell("AH" + rowIndex);
 				cell.alignment = centerAligment;
