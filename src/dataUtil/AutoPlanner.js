@@ -11,6 +11,7 @@ export default class AutoPlanner {
     #preferredShiftList;
     #previousMonthShiftList;
     #roster;
+    #rosterMonth;
     #systemParam;
     constructor(startDate, endDate) {
         this.endDate = endDate;
@@ -27,6 +28,7 @@ export default class AutoPlanner {
         this.#preferredShiftList = structuredClone(rosterSchedulerData.preferredShiftList);
         this.#previousMonthShiftList = structuredClone(rosterSchedulerData.previousMonthShiftList);
         this.#roster = structuredClone(rosterSchedulerData.roster);
+        this.#rosterMonth = structuredClone(rosterSchedulerData.rosterMonth);
         this.#systemParam = structuredClone(rosterSchedulerData.systemParam);
 
         this.#essentialShiftList = [];
@@ -46,7 +48,7 @@ export default class AutoPlanner {
         //finalResult = Utility.genITOStat(this.#activeShiftList, this.#noOfWorkingDay, finalResult, this.#nonStandardWorkingHourSummary);
         Utility.updateITOStat(this.#activeShiftList, finalResult, this.#nonStandardWorkingHourSummary);
         let tempResult = Utility.getAllITOStat(this.#essentialShift, 1, this.#calendarDateList.length, this.#itoIdList, finalResult);
-        console.log(tempResult);
+        //console.log(tempResult);
         return {
             duplicateShiftList: structuredClone(tempResult.duplicateShiftList),
             roster: finalResult,
@@ -56,11 +58,17 @@ export default class AutoPlanner {
     //======================================================================================================    
     #buildITOAvailableShift = itoId => {
         let result = {};
+        let itoRoster = this.#roster[itoId];
         for (let dateOfMonth = this.startDate; dateOfMonth <= this.endDate; dateOfMonth++) {
-            if (this.#preferredShiftList[itoId][dateOfMonth]) {
-                result[dateOfMonth] = this.#processPreferredShiftList(itoId, dateOfMonth);
-            } else {
-                result[dateOfMonth] = structuredClone(this.#essentialShiftList);
+            let theDate=new Date(this.#rosterMonth.getFullYear(),this.#rosterMonth.getMonth(),dateOfMonth);
+            if (theDate < itoRoster.joinDate){
+                result[dateOfMonth] = "o"
+            }else{
+                if (this.#preferredShiftList[itoId][dateOfMonth]) {
+                    result[dateOfMonth] = this.#processPreferredShiftList(itoId, dateOfMonth);    
+                }else {
+                    result[dateOfMonth] = structuredClone(this.#essentialShiftList);     
+                }
             }
         }
         return result;
