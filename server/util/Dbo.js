@@ -120,6 +120,7 @@ export default class Dbo {
         this.#sqlString += "	   duty_pattern,";
         this.#sqlString += "	   v.ito_id,";
         this.#sqlString += "	   ito_name,";
+        this.#sqlString += "       join_date,"; 
         this.#sqlString += "	   post_name,";
         this.#sqlString += "	   shift,";
         this.#sqlString += "	   working_hour_per_day ";
@@ -127,6 +128,7 @@ export default class Dbo {
         this.#sqlString += "	           duty_pattern,";
         this.#sqlString += "			   ito_name,";
         this.#sqlString += "			   ito_info.ito_id,";
+        this.#sqlString += "               join_date,"; 
         this.#sqlString += "			   post_name,";
         this.#sqlString += "			   working_hour_per_day ";
         this.#sqlString += "		FROM   ito_info ";

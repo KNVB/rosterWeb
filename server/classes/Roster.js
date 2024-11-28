@@ -63,6 +63,7 @@ export default class Roster {
                     itoRoster.dutyPattern = record.duty_pattern;
                     itoRoster.itoName = record.ito_name;
                     itoRoster.itoPostName = record.post_name;
+                    itoRoster.joinDate = record.join_date;
                     itoRoster.workingHourPerDay = parseFloat(record.working_hour_per_day);
                     if (record.balance) {
                         itoRoster.lastMonthBalance = parseFloat(record.balance);

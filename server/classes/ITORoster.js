@@ -4,6 +4,7 @@ export default class ITORoster {
         this.dutyPattern = "";
         this.itoName = "";
         this.itoPostName = "";
+        this.joinDate=null;
         this.lastMonthBalance = 0.0;
         this.shiftList = {};
         this.thisMonthBalance = 0.0;
