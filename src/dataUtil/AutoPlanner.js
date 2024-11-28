@@ -46,6 +46,7 @@ export default class AutoPlanner {
         //finalResult = Utility.genITOStat(this.#activeShiftList, this.#noOfWorkingDay, finalResult, this.#nonStandardWorkingHourSummary);
         Utility.updateITOStat(this.#activeShiftList, finalResult, this.#nonStandardWorkingHourSummary);
         let tempResult = Utility.getAllITOStat(this.#essentialShift, 1, this.#calendarDateList.length, this.#itoIdList, finalResult);
+        console.log(tempResult);
         return {
             duplicateShiftList: structuredClone(tempResult.duplicateShiftList),
             roster: finalResult,

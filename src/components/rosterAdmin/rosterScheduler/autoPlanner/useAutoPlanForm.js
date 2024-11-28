@@ -14,9 +14,7 @@ let reducer = (state, action) => {
             result.iterationCount = action.value;
             break;
         case "updatePlanResult":
-            for (let i = 0; i < 3; i++) {
-                result.planResult[i] = structuredClone(action.planResult[i]);
-            }
+            result.planResult = structuredClone(action.planResult);
             break;
         case "updateStartDate":
             result.autoPlanner.startDate = parseInt(action.value);
@@ -31,7 +29,7 @@ export default function useAutoPlanForm(rosterSchedulerData, dataAction) {
     const [itemList, updateItemList] = useReducer(reducer, {
         autoPlanner: new AutoPlanner(1, rosterSchedulerData.calendarDateList.length),
         isReady: false,
-        iterationCount:1,
+        iterationCount: 1,
         planResult: []
     });
     useEffect(() => {
@@ -62,9 +60,14 @@ export default function useAutoPlanForm(rosterSchedulerData, dataAction) {
             }
             return result;
         });
-        
+        let planResult = [];
+        for (let i = 0; i < 3; i++) {
+            if (temp[i]) {
+                planResult.push(temp[i]);
+            }
+        }
         updateItemList({
-            planResult: temp,
+            planResult,
             "type": "updatePlanResult",
         });
         //dataAction.updateShiftFromAutoPlan(itemList.autoPlanner.start());

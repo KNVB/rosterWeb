@@ -6,7 +6,7 @@ export default function AutoPlanForm({ rosterSchedulerData, dataAction }) {
     let load=index=>{
         dataAction.load(planResult[index]);
     }
-    if (isReady) {
+    if (isReady) {        
         return (
             <table className="mt-1">
                 <thead>
