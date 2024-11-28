@@ -11,6 +11,21 @@ export default class Utility {
         month: "2-digit",
         year: "numeric"
     });
+    static buildPreShift = (dateOfMonth, essentialShift, itoRoster, systemParam) => {
+        let preShift = [];
+        for (let j = dateOfMonth - systemParam.noOfPrevDate; j < dateOfMonth; j++) {
+            if (itoRoster.shiftList[j]) {
+                let shiftObj = itoRoster.shiftList[j];
+                if ((essentialShift.indexOf(shiftObj) > -1) ||
+                    (shiftObj === "O")
+                ) {
+                    preShift.push(shiftObj);
+                }
+            }
+        }
+        preShift = preShift.join(",");
+        return preShift
+    }
     static initRoster = (monthlyCalendar, rosterData, rosterMonth) => {
         let result = {};
         let itoIdList = Object.keys(rosterData);
@@ -20,13 +35,25 @@ export default class Utility {
             itoRoster.actualWorkingHour = 0.0;
             itoRoster.aShiftCount = 0; itoRoster.bxShiftCount = 0;
             itoRoster.cShiftCount = 0; itoRoster.dxShiftCount = 0;
-            itoRoster.totalBalance = 0;itoRoster.joinDate=new Date(itoRoster.joinDate);
+            itoRoster.totalBalance = 0; itoRoster.joinDate = new Date(itoRoster.joinDate);
             itoRoster.expectedWorkingHour = Utility.getExpectedWorkingHour(itoRoster, rosterMonth, monthlyCalendar);
             result[itoIdList[i]] = itoRoster;
         }
         return result;
     }
-    
+    static isBlackListShift = (itoBlackListShiftPattern, itoId, newShift) => {
+        let result = false;
+        if (itoBlackListShiftPattern[itoId]) {
+            for (let i = 0; i < itoBlackListShiftPattern[itoId].length; i++) {
+                let blackListShift = itoBlackListShiftPattern[itoId][i];
+                if (newShift.indexOf(blackListShift) > -1) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
     /*
     static genITOStat = (activeShiftList, noOfWorkingDay, roster, nonStandardWorkingHourSummary) => {
         let result = {};
@@ -93,7 +120,7 @@ export default class Utility {
                     result--;
                 }
             }
-        }        
+        }
         result *= itoRoster.workingHourPerDay;
         return result;
     }
