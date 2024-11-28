@@ -43,12 +43,13 @@ export default class AutoPlanner {
                 finalResult[itoId].shiftList[dateOfMonth] = shiftList[dateOfMonth];
             });
         });
-        finalResult = Utility.genITOStat(this.#activeShiftList, this.#noOfWorkingDay, finalResult, this.#nonStandardWorkingHourSummary);
+        //finalResult = Utility.genITOStat(this.#activeShiftList, this.#noOfWorkingDay, finalResult, this.#nonStandardWorkingHourSummary);
+        Utility.updateITOStat(this.#activeShiftList, finalResult, this.#nonStandardWorkingHourSummary);
         let tempResult = Utility.getAllITOStat(this.#essentialShift, 1, this.#calendarDateList.length, this.#itoIdList, finalResult);
         return {
             duplicateShiftList: structuredClone(tempResult.duplicateShiftList),
-            roster:finalResult,
-            vacantShiftList : structuredClone(tempResult.vacantShiftList)
+            roster: finalResult,
+            vacantShiftList: structuredClone(tempResult.vacantShiftList)
         };
     }
     //======================================================================================================    

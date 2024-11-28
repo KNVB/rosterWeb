@@ -12,7 +12,8 @@ export default class RosterSchedulerData extends RosterViewerData {
                 this.roster[itoId].shiftList[date] = "";
             }
         });
-        this.roster = Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster, this.nonStandardWorkingHourSummary);
+        //this.roster = Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster, this.nonStandardWorkingHourSummary);
+        Utility.updateITOStat(this.activeShiftList, this.roster, this.nonStandardWorkingHourSummary);
         this.#updateRosterSchedulerData();
     }
     copy = copyRegion => {
@@ -261,7 +262,8 @@ export default class RosterSchedulerData extends RosterViewerData {
     updateShiftFromTable(itoId, date, newShift) {
         newShift = newShift.trim();
         this.roster[itoId].shiftList[date] = newShift;
-        this.roster = Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster, this.nonStandardWorkingHourSummary);
+        Utility.updateITOStat(this.activeShiftList, this.roster, this.nonStandardWorkingHourSummary);
+        //this.roster = Utility.genITOStat(this.activeShiftList, this.noOfWorkingDay, this.roster, this.nonStandardWorkingHourSummary);
         this.#updateRosterSchedulerData();
     }
     updateShiftFromPaste(itoId, date, shift) {

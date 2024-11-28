@@ -11,6 +11,23 @@ export default class Utility {
         month: "2-digit",
         year: "numeric"
     });
+    static initRoster = (monthlyCalendar, rosterData, rosterMonth) => {
+        let result = {};
+        let itoIdList = Object.keys(rosterData);
+        for (let i = 0; i < itoIdList.length; i++) {
+            let itoRoster = structuredClone(rosterData[itoIdList[i]]);
+            itoRoster.actualWorkingDayCount = 0;
+            itoRoster.actualWorkingHour = 0.0;
+            itoRoster.aShiftCount = 0; itoRoster.bxShiftCount = 0;
+            itoRoster.cShiftCount = 0; itoRoster.dxShiftCount = 0;
+            itoRoster.totalBalance = 0;itoRoster.joinDate=new Date(itoRoster.joinDate);
+            itoRoster.expectedWorkingHour = Utility.getExpectedWorkingHour(itoRoster, rosterMonth, monthlyCalendar);
+            result[itoIdList[i]] = itoRoster;
+        }
+        return result;
+    }
+    
+    /*
     static genITOStat = (activeShiftList, noOfWorkingDay, roster, nonStandardWorkingHourSummary) => {
         let result = {};
         let itoIdList = Object.keys(roster);
@@ -21,7 +38,6 @@ export default class Utility {
             itoRoster.aShiftCount = 0; itoRoster.bxShiftCount = 0;
             itoRoster.cShiftCount = 0; itoRoster.dxShiftCount = 0;
             itoRoster.expectedWorkingHour = itoRoster.workingHourPerDay * noOfWorkingDay;
-            itoRoster.extraHour = 0;
             itoRoster.totalBalance = 0;
             Object.keys(itoRoster.shiftList).forEach(date => {
                 let item = itoRoster.shiftList[date];
@@ -63,6 +79,22 @@ export default class Utility {
             itoRoster.totalBalance += nonStandardWorkingHourSummary[itoIdList[i]];
             result[itoIdList[i]] = itoRoster;
         }
+        return result;
+    }*/
+
+    static getExpectedWorkingHour = (itoRoster, firstDayObj, monthlyCalendar) => {
+        let result = monthlyCalendar.noOfWorkingDay;
+        if (itoRoster.joinDate > firstDayObj) {
+            for (let i = 0; i < (itoRoster.joinDate.getDate() - 1); i++) {
+                let calendarDate = monthlyCalendar.calendarDateList[i];
+                if ((calendarDate.dayOfWeek > 0) &&
+                    (calendarDate.dayOfWeek < 6) &&
+                    (!calendarDate.isPublicHoliday)) {
+                    result--;
+                }
+            }
+        }        
+        result *= itoRoster.workingHourPerDay;
         return result;
     }
     static getAllITOStat = (essentialShift, startDate, endDate, itoIdList, roster) => {
@@ -123,6 +155,54 @@ export default class Utility {
     }
     static getDurationInHour = (startTime, endTime) => {
         return (endTime - startTime) / 1000 / 3600
+    }
+    static updateITOStat = (activeShiftList, roster, nonStandardWorkingHourSummary) => {
+        Object.keys(roster).forEach(itoId => {
+            let itoRoster = roster[itoId];
+            itoRoster.actualWorkingDayCount = 0;
+            itoRoster.actualWorkingHour = 0.0;
+            itoRoster.aShiftCount = 0; itoRoster.bxShiftCount = 0;
+            itoRoster.cShiftCount = 0; itoRoster.dxShiftCount = 0;
+            itoRoster.totalBalance = 0;
+            Object.keys(itoRoster.shiftList).forEach(date => {
+                let item = itoRoster.shiftList[date];
+                let shiftTypeList = item.split("+");
+                shiftTypeList.forEach(shiftType => {
+                    if (itoRoster.availableShiftList.includes(shiftType)) {
+                        if (activeShiftList[shiftType]) {
+                            itoRoster.actualWorkingHour += activeShiftList[shiftType].duration;
+                            switch (shiftType) {
+                                case "a":
+                                    itoRoster.aShiftCount++;
+                                    itoRoster.actualWorkingDayCount++;
+                                    break;
+                                case "b":
+                                case "b1":
+                                    itoRoster.bxShiftCount++;
+                                    itoRoster.actualWorkingDayCount++
+                                    break;
+                                case "c":
+                                    itoRoster.cShiftCount++;
+                                    itoRoster.actualWorkingDayCount++
+                                    break;
+                                case "d":
+                                case "d1":
+                                case "d2":
+                                case "d3":
+                                    itoRoster.dxShiftCount++;
+                                    itoRoster.actualWorkingDayCount++
+                                    break;
+                                default:
+                                    break
+                            }
+                        }
+                    }
+                });
+            });
+            itoRoster.thisMonthBalance = itoRoster.actualWorkingHour - itoRoster.expectedWorkingHour;
+            itoRoster.totalBalance += itoRoster.lastMonthBalance + itoRoster.thisMonthBalance;
+            itoRoster.totalBalance += nonStandardWorkingHourSummary[itoId];
+        });
     }
     static shuffleArray(arr) {
         for (let i = 0; i < arr.length; i++) {
