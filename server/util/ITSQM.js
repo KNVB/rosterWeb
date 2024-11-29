@@ -39,15 +39,15 @@ export default class ITSQM {
                     "id": "3906"
                 },
                 "udf_fields": {
-                    "udf_pick_5705": "Time Off",
-                    "udf_date_5706": {
+                    "udf_pick_5705": "Time Off", //Claim Type
+                    "udf_date_5706": {    //End Time
                         "value": "1541060100000"
                     },
-                    "udf_date_5707": {
+                    "udf_date_5707": {   //Start Time
                         "value": "1541146542726"
                     },
-                    "udf_decimal_5708":  10.0,
-                    "udf_decimal_5709": 9
+                    "udf_decimal_5708":  10.0, //Remaining Time off balance
+                    "udf_decimal_5709": 9 //Time off balance available
                 }
             }
         };
