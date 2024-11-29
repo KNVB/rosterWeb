@@ -20,38 +20,37 @@ export default class ITSQM {
         //let v3API = this.#hostName + "/api/v3";
         this.#v3APIPath = this.#hostName + "/api/v3";
         this.#fetchAPI = new FetchAPI();
-        this.#hkoRootCertPath = hkoRootCertPath;        
+        this.#hkoRootCertPath = hkoRootCertPath;
         this.#headers = { "authtoken": technicianKey };
     }
-    addTimeOffRecord = async () =>{
+    addTimeOffRecord = async () => {
         let method = "post";
         //let params = structuredClone(this.#commonParam);
         let url = this.#v3APIPath + "/requests";
-        let params={"request":{
-            "description":"EMSTF Time off/Over time application",
-            "requester": {
-                "id": "6906",
-                "name": "Leo Wa Sang SZE"           
-            },            
-            "subject":"EMSTF Time off/Over time application",
-           
-            "template_id":3906,            
-            "udf_pick_5705":{
-                "value":"Time Off"
-            },            
-            "udf_date_5706": {
-                "value": "1541060100000"
-            },
-            "udf_date_5707": {
-                "value": "1541146542726"
-            },
-            "udf_decimal_5708":{
-                "value":"10"
-            },            
-            "udf_decimal_5709":{
-                "value":"9"
-            }                     
-        }};
+        let params = {
+            "request": {
+                "description": "EMSTF Time off/Over time application",
+                "requester": {
+                    "id": "6906",
+                    "name": "Leo Wa Sang SZE"
+                },
+                "subject": "EMSTF Time off/Over time application",
+                "template": {
+                    "id": "3906"
+                },
+                "udf_fields": {
+                    "udf_pick_5705": "Time Off",
+                    "udf_date_5706": {
+                        "value": "1541060100000"
+                    },
+                    "udf_date_5707": {
+                        "value": "1541146542726"
+                    },
+                    "udf_decimal_5708":  10.0,
+                    "udf_decimal_5709": 9
+                }
+            }
+        };
         let response = await this.#fetchAPI.fetch(
             new URLSearchParams({ input_data: JSON.stringify(params) }),
             method,
@@ -59,7 +58,7 @@ export default class ITSQM {
             "json",
             this.#headers,
             this.#hkoRootCertPath);
-        console.log(response);    
+        console.log(response);
     }
     getEMSTFTeamMember = async () => {
         let method = "get";
@@ -68,15 +67,15 @@ export default class ITSQM {
         params.list_info["search_criteria"] = [
             {
                 "condition": "starts with",
-                "field": "jobtitle",                
+                "field": "jobtitle",
                 "logical_operator": "and",
                 "values": ["ITO"]
             },
             {
-                "condition":"starts with",
-                "field":"jobtitle",
-                "logical_operator":"or",
-                "values":["SITO"]
+                "condition": "starts with",
+                "field": "jobtitle",
+                "logical_operator": "or",
+                "values": ["SITO"]
             },
         ];
         params["fields_required"] = [
@@ -86,7 +85,7 @@ export default class ITSQM {
             "jobtitle",
             "status"
         ];
-      
+
         let response = await this.#fetchAPI.fetch(
             new URLSearchParams({ input_data: JSON.stringify(params) }),
             method,
@@ -98,14 +97,14 @@ export default class ITSQM {
     }
     query = async query => {
         let data = { "query": query };
-      
+
         let url = this.#v3APIPath + '/reports/execute_query';
         let response = await this.#fetchAPI.fetch(
-            new URLSearchParams({ input_data: JSON.stringify(data) }), 
-            "post", 
+            new URLSearchParams({ input_data: JSON.stringify(data) }),
+            "post",
             url,
-            "json", 
-            this.#headers, 
+            "json",
+            this.#headers,
             this.#hkoRootCertPath);
         return response.execute_query.data;
     }
