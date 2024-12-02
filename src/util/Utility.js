@@ -124,11 +124,11 @@ export default class Utility {
         result *= itoRoster.workingHourPerDay;
         return result;
     }
-    static getAllITOStat = (essentialShift, startDate, endDate, itoIdList, roster) => {
+    static getAllITOStat = (essentialShift, startDate, endDate, itoBlackListShiftPattern, itoIdList, systemParam, roster) => {
         let blackListShiftList = {};
         let duplicateShiftList = {};
         let vacantShiftList = {};
-
+        let preShift = "";
         itoIdList.forEach(itoId => {
             blackListShiftList[itoId] = [];
             duplicateShiftList[itoId] = [];
@@ -155,6 +155,10 @@ export default class Utility {
                             } else {
                                 assignedShiftList.push(shiftInfo);
                             }
+                            preShift = Utility.buildPreShift(i, essentialShift, roster[itoId], systemParam);
+                            if (Utility.isBlackListShift(itoBlackListShiftPattern, itoId, preShift + "," + shiftInfo)) {
+                                blackListShiftList[itoId].push(i);
+                            }
                             break;
                         case "b":
                         case "b1":
@@ -162,6 +166,10 @@ export default class Utility {
                                 duplicateShiftList[itoId].push(i);
                             } else {
                                 assignedShiftList.push('b');
+                            }
+                            preShift = Utility.buildPreShift(i, essentialShift, roster[itoId], systemParam);
+                            if (Utility.isBlackListShift(itoBlackListShiftPattern, itoId, preShift + "," + shiftInfo)) {
+                                blackListShiftList[itoId].push(i);
                             }
                             break;
                         default:

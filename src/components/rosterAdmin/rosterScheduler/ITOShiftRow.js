@@ -24,10 +24,16 @@ export default function ITOShiftRow({ calendarDateList, dataAction, eventHandler
     calendarDateList.forEach((calendarDate, index) => {
         shift = roster.shiftList[index + 1];
         className = rosterSchedulerTableUtil.getSelectedCssClass(calendarDate.dateOfMonth + systemParam.noOfPrevDate, rowIndex);
-        if (dataAction.isDuplicateShift(index + 1, itoId)) {
-            className.push("errorRedBlackGround");
-        } else {
-            className.push(dataAction.getShiftCssClassName(shift));
+        switch (true){
+            case (dataAction.isBlackListedShift(index + 1, itoId)):
+                className.push("blackListedShift");
+                break;
+            case (dataAction.isDuplicateShift(index + 1, itoId)):
+                className.push("duplicatedShift");
+                break;
+            default:
+                className.push(dataAction.getShiftCssClassName(shift));
+                break            
         }
         shiftCellList.push(
             <ITOShiftCell

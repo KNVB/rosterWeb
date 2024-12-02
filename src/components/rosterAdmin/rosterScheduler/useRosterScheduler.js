@@ -93,6 +93,9 @@ export default function useRosterScheduler() {
             "type": "hideLoading"
         });
     }
+    let isBlackListedShift=(dateOfMonth, itoId) => {
+        return itemList.rosterSchedulerData.isBlackListedShift(dateOfMonth, itoId);
+    }
     let isDuplicateShift = (dateOfMonth, itoId) => {
         return itemList.rosterSchedulerData.isDuplicateShift(dateOfMonth, itoId);
     }
@@ -157,6 +160,7 @@ export default function useRosterScheduler() {
             getShiftCssClassName,
             handleEscKeyEvent,
             hideLoading,
+            isBlackListedShift,
             isDuplicateShift,
             load,
             paste,

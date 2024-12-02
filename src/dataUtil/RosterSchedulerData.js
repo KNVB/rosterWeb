@@ -81,17 +81,17 @@ export default class RosterSchedulerData extends RosterViewerData {
             }
         });
     }
-    fillEmptyShiftWithO=()=>{
+    fillEmptyShiftWithO = () => {
         Object.keys(this.roster).forEach(itoId => {
             for (let date = 1; date <= this.calendarDateList.length; date++) {
-                if (this.roster[itoId].shiftList[date] === ""){
-                    this.roster[itoId].shiftList[date] ="O";
+                if (this.roster[itoId].shiftList[date] === "") {
+                    this.roster[itoId].shiftList[date] = "O";
                 }
             }
         });
         this.#updateRosterSchedulerData();
     }
-    exportRosterDataToExcel(){
+    exportRosterDataToExcel() {
         let fetchAPI = new FetchAPI();
         console.log(this);
         /*
@@ -100,17 +100,19 @@ export default class RosterSchedulerData extends RosterViewerData {
             setHeaderRow(worksheet1,rosterData.calendarDateList,rosterData.weekdayNames);
             setRosterData(worksheet1,rosterData.roster,rosterData.activeShiftList);
             setVacantShiftRow(rosterData.roster,worksheet1,rosterData.vacantShiftList);
-        */       
-        fetchAPI.exportRosterDataToExcel({"genExcelData":{
-            activeShiftList:this.activeShiftList,
-            calendarDateList:this.calendarDateList,
-            month:this.rosterMonth.getMonth()+1,
-            roster:this.roster,
-            vacantShiftList:this.vacantShiftList,
-            weekdayNames:WeekDayNames(),
-            year:this.rosterMonth.getFullYear(),
-        }});
-        
+        */
+        fetchAPI.exportRosterDataToExcel({
+            "genExcelData": {
+                activeShiftList: this.activeShiftList,
+                calendarDateList: this.calendarDateList,
+                month: this.rosterMonth.getMonth() + 1,
+                roster: this.roster,
+                vacantShiftList: this.vacantShiftList,
+                weekdayNames: WeekDayNames(),
+                year: this.rosterMonth.getFullYear(),
+            }
+        });
+
     }
     getCopyDataRowCount = () => {
         if (this.#copiedData === null) {
@@ -118,6 +120,9 @@ export default class RosterSchedulerData extends RosterViewerData {
         } else {
             return this.#copiedData.length;
         }
+    }
+    isBlackListedShift = (dateOfMonth, itoId) => {
+        return this.blackListShiftList[itoId].includes(dateOfMonth);
     }
     isDuplicateShift = (dateOfMonth, itoId) => {
         return this.duplicateShiftList[itoId].includes(dateOfMonth);
@@ -134,11 +139,13 @@ export default class RosterSchedulerData extends RosterViewerData {
         this.systemParam = structuredClone(temp.systemParam);
         this.systemParam.monthPickerMinDate = new Date(this.systemParam.monthPickerMinDate);
         this.nonStandardWorkingHourRecords = structuredClone(temp.nonStandardWorkingHourRecords);
-        temp = Utility.getAllITOStat(this.essentialShift, 1, this.calendarDateList.length, this.itoIdList, this.roster);
+        temp = Utility.getAllITOStat(this.essentialShift, 1, this.calendarDateList.length, this.itoBlackListShiftPattern, this.itoIdList, this.systemParam, this.roster);
 
+        this.blackListShiftList = structuredClone(temp.blackListShiftList);
         this.duplicateShiftList = structuredClone(temp.duplicateShiftList);
         this.vacantShiftList = structuredClone(temp.vacantShiftList);
         this.#rosterSchedulerDataHistory = new UndoableData({
+            blackListShiftList: this.blackListShiftList,
             calendarDateList: this.calendarDateList,
             duplicateShiftList: this.duplicateShiftList,
             itoIdList: this.itoIdList,
@@ -285,10 +292,12 @@ export default class RosterSchedulerData extends RosterViewerData {
     }
     //=========================================================================================================================================
     #updateRosterSchedulerData() {
-        let temp = Utility.getAllITOStat(this.essentialShift, 1, this.calendarDateList.length, this.itoIdList, this.roster);
+        let temp = Utility.getAllITOStat(this.essentialShift, 1, this.calendarDateList.length, this.itoBlackListShiftPattern, this.itoIdList, this.systemParam, this.roster);
+        this.blackListShiftList = structuredClone(temp.blackListShiftList);
         this.duplicateShiftList = structuredClone(temp.duplicateShiftList);
         this.vacantShiftList = structuredClone(temp.vacantShiftList);
         this.#rosterSchedulerDataHistory.set({
+            blackListShiftList: this.blackListShiftList,
             calendarDateList: this.calendarDateList,
             duplicateShiftList: this.duplicateShiftList,
             itoIdList: this.itoIdList,

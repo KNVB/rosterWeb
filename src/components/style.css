@@ -58,8 +58,12 @@
 .highLight:hover {
 	background-color: gainsboro;
 }
-
-.errorRedBlackGround {
+.blackListedShift {
+	animation: blinker 1s linear infinite;
+	background-color: black !important;
+	color:white;
+}
+.duplicatedShift {
 	animation: blinker 1s linear infinite;
 	background-color: red !important;
 }
