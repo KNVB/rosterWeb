@@ -125,6 +125,7 @@ export default class Utility {
         return result;
     }
     static getAllITOStat = (essentialShift, startDate, endDate, itoBlackListShiftPattern, itoIdList, systemParam, roster) => {
+        let essentialShiftList=new Set();
         let blackListShiftList = {};
         let duplicateShiftList = {};
         let vacantShiftList = {};
@@ -133,6 +134,9 @@ export default class Utility {
             blackListShiftList[itoId] = [];
             duplicateShiftList[itoId] = [];
         });
+        for (let i = 0; i < essentialShift.length; i++) {
+            essentialShiftList.add(essentialShift[i]);
+        }
         for (let i = startDate; i <= endDate; i++) {
             let vacantShift = essentialShift;
             let assignedShiftList = [];
@@ -141,42 +145,29 @@ export default class Utility {
                 //console.log("dateOfMonth="+i+"itoId="+itoId+",shiftList="+JSON.stringify(roster[itoId].shiftList[i]));
                 //console.log(itoId,shiftInfoList,i);
                 shiftInfoList = shiftInfoList.split("+");
-                shiftInfoList.forEach(shiftInfo => {
-                    if (shiftInfo === "b1") {
-                        vacantShift = vacantShift.replace("b", "");
-                    } else {
+                for (let j = 0; j < shiftInfoList.length; j++) {
+                    let shiftInfo;
+                    if (shiftInfoList[j] === "b1"){
+                        shiftInfo="b";
+                    }else{
+                        shiftInfo=shiftInfoList[j];
+                    }
+                    console.log("itoId="+itoId+",i="+i+",shiftInfo="+shiftInfo+",r="+essentialShiftList.has(shiftInfo))
+                    if (essentialShiftList.has(shiftInfo)){
                         vacantShift = vacantShift.replace(shiftInfo, "");
+                        if (assignedShiftList.includes(shiftInfo)) {
+                            duplicateShiftList[itoId].push(i);
+                        } else {
+                            assignedShiftList.push(shiftInfo);
+                        }
+                        preShift = Utility.buildPreShift(i, essentialShift, roster[itoId], systemParam);
+                        if (Utility.isBlackListShift(itoBlackListShiftPattern, itoId, preShift + "," + shiftInfo)) {
+                            blackListShiftList[itoId].push(i);
+                        }
                     }
-                    switch (shiftInfo) {
-                        case "a":
-                        case "c":
-                            if (assignedShiftList.includes(shiftInfo)) {
-                                duplicateShiftList[itoId].push(i);
-                            } else {
-                                assignedShiftList.push(shiftInfo);
-                            }
-                            preShift = Utility.buildPreShift(i, essentialShift, roster[itoId], systemParam);
-                            if (Utility.isBlackListShift(itoBlackListShiftPattern, itoId, preShift + "," + shiftInfo)) {
-                                blackListShiftList[itoId].push(i);
-                            }
-                            break;
-                        case "b":
-                        case "b1":
-                            if (assignedShiftList.includes("b")) {
-                                duplicateShiftList[itoId].push(i);
-                            } else {
-                                assignedShiftList.push('b');
-                            }
-                            preShift = Utility.buildPreShift(i, essentialShift, roster[itoId], systemParam);
-                            if (Utility.isBlackListShift(itoBlackListShiftPattern, itoId, preShift + "," + shiftInfo)) {
-                                blackListShiftList[itoId].push(i);
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                });
+                }
             });
+            //console.log("vacantShift="+vacantShift);
             if (vacantShift !== '') {
                 vacantShiftList[i] = vacantShift;
             }
