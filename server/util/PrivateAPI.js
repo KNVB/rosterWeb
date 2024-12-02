@@ -56,6 +56,9 @@ export default function PrivateAPI(adminUtil, systemParam) {
             case "updateITO":
                 sendResponse(res, updateITO, req.body.ito);
                 break;
+            case "updateRoster":
+                sendResponse(res, updateRoster,req.body);
+                break;
             default:
                 next();
                 break;
@@ -100,6 +103,10 @@ let getRosterSchedulerData = async params => {
 let updateITO = async ito => {
     let itoUtil = new ITOInfo();
     return await itoUtil.updateITO(ito);
+}
+let updateRoster = async data=>{
+    let roster = new Roster();
+    return await roster.updateRoster(data);
 }
 let sendResponse = async (res, action, param) => {
     try {

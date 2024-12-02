@@ -152,7 +152,7 @@ export default class Utility {
                     }else{
                         shiftInfo=shiftInfoList[j];
                     }
-                    console.log("itoId="+itoId+",i="+i+",shiftInfo="+shiftInfo+",r="+essentialShiftList.has(shiftInfo))
+                    //console.log("itoId="+itoId+",i="+i+",shiftInfo="+shiftInfo+",r="+essentialShiftList.has(shiftInfo))
                     if (essentialShiftList.has(shiftInfo)){
                         vacantShift = vacantShift.replace(shiftInfo, "");
                         if (assignedShiftList.includes(shiftInfo)) {

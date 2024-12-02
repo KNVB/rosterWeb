@@ -229,6 +229,10 @@ export default class RosterSchedulerData extends RosterViewerData {
             this.vacantShiftList = backupItem.vacantShiftList;
         }
     }
+    async saveToDB() {
+        let fetchAPI = new FetchAPI();
+        let result = await fetchAPI.saveToDB(this.preferredShiftList, this.roster, this.rosterMonth);
+    }
     async reload(newRosterMonth) {
         await super.reload(newRosterMonth);
         let rosterYear = newRosterMonth.getFullYear(), rosterMonth = newRosterMonth.getMonth();

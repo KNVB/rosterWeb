@@ -54,6 +54,9 @@ export default class FetchAPI {
     logout = async () => {
         return await this.#secureFetch(null, "get", "/privateAPI/logout");
     }
+    saveToDB = async (preferredShiftList, roster, rosterMonth) => {
+        return (await this.#secureFetch({ preferredShiftList, roster, rosterMonth }, "post", "/privateAPI/updateRoster"));
+    }
     updateITO = async ito => {
         return (await this.#secureFetch({ "ito": ito }, "post", "/privateAPI/updateITO"));
     }
@@ -84,7 +87,7 @@ export default class FetchAPI {
         const response = await this.#api(requestObj);
         if (response.request.responseType === "blob") {
             let fileName = this.#extractFileName(response.headers["content-disposition"]);
-            this.#downloadFile(fileName, response.data);            
+            this.#downloadFile(fileName, response.data);
         }
         return response.data;
     }

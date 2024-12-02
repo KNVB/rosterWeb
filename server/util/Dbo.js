@@ -120,7 +120,7 @@ export default class Dbo {
         this.#sqlString += "	   duty_pattern,";
         this.#sqlString += "	   v.ito_id,";
         this.#sqlString += "	   ito_name,";
-        this.#sqlString += "       join_date,"; 
+        this.#sqlString += "       join_date,";
         this.#sqlString += "	   post_name,";
         this.#sqlString += "	   shift,";
         this.#sqlString += "	   working_hour_per_day ";
@@ -128,7 +128,7 @@ export default class Dbo {
         this.#sqlString += "	           duty_pattern,";
         this.#sqlString += "			   ito_name,";
         this.#sqlString += "			   ito_info.ito_id,";
-        this.#sqlString += "               join_date,"; 
+        this.#sqlString += "               join_date,";
         this.#sqlString += "			   post_name,";
         this.#sqlString += "			   working_hour_per_day ";
         this.#sqlString += "		FROM   ito_info ";
@@ -242,6 +242,22 @@ export default class Dbo {
             await this.#connection.promise().commit();
             console.log("ITO (" + ito.itoId + ")info updated successfully.");
             console.log("===============================");
+            return true;
+        } catch (error) {
+            if (this.#connection) {
+                await this.#connection.promise().rollback();
+            }
+            throw error;
+        }
+    }
+    updateRoster = async (preferredShiftList, roster, rosterMonth) => {
+        try {
+            await this.#connection.promise().beginTransaction();
+            console.log("Update roster data transaction start.");
+            console.log("===============================");
+            console.log("year=" + rosterMonth.getFullYear() + ",month=" + (rosterMonth.getMonth()+1));
+            console.log(rosterMonth.toLocaleDateString("en-CA"));
+            await this.#connection.promise().commit();
             return true;
         } catch (error) {
             if (this.#connection) {

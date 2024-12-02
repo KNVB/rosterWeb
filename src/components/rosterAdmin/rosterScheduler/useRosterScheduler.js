@@ -114,6 +114,7 @@ export default function useRosterScheduler() {
     }
     let saveRosterToDB = () => {
         console.log("saveRosterToDB");
+        itemList.rosterSchedulerData.saveToDB();
     }
     let showLoading = () => {
         updateItemList({ "type": "showLoading" });
