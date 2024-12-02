@@ -141,41 +141,31 @@ export default class Utility {
                 //console.log("dateOfMonth="+i+"itoId="+itoId+",shiftList="+JSON.stringify(roster[itoId].shiftList[i]));
                 //console.log(itoId,shiftInfoList,i);
                 shiftInfoList = shiftInfoList.split("+");
-                shiftInfoList.forEach(shiftInfo => {
-                    if (shiftInfo === "b1") {
-                        vacantShift = vacantShift.replace("b", "");
+                for (let j = 0; j < shiftInfoList.length; j++) {
+                    let shiftInfo;
+                    if (shiftInfoList[j] === "b1") {
+                        shiftInfo = "b";
                     } else {
-                        vacantShift = vacantShift.replace(shiftInfo, "");
+                        shiftInfo = shiftInfoList[j];
                     }
-                    switch (shiftInfo) {
-                        case "a":
-                        case "c":
-                            if (assignedShiftList.includes(shiftInfo)) {
-                                duplicateShiftList[itoId].push(i);
-                            } else {
-                                assignedShiftList.push(shiftInfo);
-                            }
-                            preShift = Utility.buildPreShift(i, essentialShift, roster[itoId], systemParam);
-                            if (Utility.isBlackListShift(itoBlackListShiftPattern, itoId, preShift + "," + shiftInfo)) {
-                                blackListShiftList[itoId].push(i);
-                            }
-                            break;
-                        case "b":
-                        case "b1":
-                            if (assignedShiftList.includes("b")) {
-                                duplicateShiftList[itoId].push(i);
-                            } else {
-                                assignedShiftList.push('b');
-                            }
-                            preShift = Utility.buildPreShift(i, essentialShift, roster[itoId], systemParam);
-                            if (Utility.isBlackListShift(itoBlackListShiftPattern, itoId, preShift + "," + shiftInfo)) {
-                                blackListShiftList[itoId].push(i);
-                            }
-                            break;
-                        default:
-                            break;
+                    
+                    // Update vacant shifts
+                    vacantShift = vacantShift.replace(shiftInfo, "");
+                    
+                    //check if duplicated shift
+                    if (assignedShiftList.includes(shiftInfo)) {
+                        duplicateShiftList[itoId].push(i);
+                    } else {
+                        assignedShiftList.push(shiftInfo);
                     }
-                });
+
+                    //check if the shift combination is black listed
+                    preShift = Utility.buildPreShift(i, essentialShift, roster[itoId], systemParam);
+                    if (Utility.isBlackListShift(itoBlackListShiftPattern, itoId, preShift + "," + shiftInfo)) {
+                        blackListShiftList[itoId].push(i);
+                    }
+                    break;
+                }
             });
             if (vacantShift !== '') {
                 vacantShiftList[i] = vacantShift;
