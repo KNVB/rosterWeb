@@ -44,7 +44,7 @@ export default function useAutoPlanForm(rosterSchedulerData, dataAction) {
         for (let i = 0; i < itemList.iterationCount; i++) {
             let tempResult = itemList.autoPlanner.start();
             temp.push(tempResult);
-        }
+        }        
         temp.sort((a, b) => {
             let result;
             switch (true) {
@@ -70,7 +70,6 @@ export default function useAutoPlanForm(rosterSchedulerData, dataAction) {
             planResult,
             "type": "updatePlanResult",
         });
-        //dataAction.updateShiftFromAutoPlan(itemList.autoPlanner.start());
         dataAction.hideLoading();
     }
     let updateEndDate = e => {
