@@ -252,11 +252,39 @@ export default class Dbo {
     }
     updateRoster = async (preferredShiftList, roster, rosterMonth) => {
         try {
+            let month = rosterMonth.getMonth() + 1;
+            let year = rosterMonth.getFullYear();
             await this.#connection.promise().beginTransaction();
             console.log("Update roster data transaction start.");
             console.log("===============================");
-            console.log("year=" + rosterMonth.getFullYear() + ",month=" + (rosterMonth.getMonth()+1));
+            console.log("year=" + rosterMonth.getFullYear() + ",month=" + (rosterMonth.getMonth() + 1));
             console.log(rosterMonth.toLocaleDateString("en-CA"));
+            for (const [itoId, itoRoster] of Object.entries(roster)) {
+                this.#sqlString = "replace into last_month_balance (ito_id,shift_month,balance) values (?,?,?)";
+                await this.#executeQuery(this.#sqlString, [itoId, rosterMonth.toLocaleDateString("en-CA"), itoRoster.thisMonthBalance]);
+                this.#sqlString = "delete from shift_record where ito_id=? and month(shift_date)=? and year(shift_date)=?";
+                await this.#executeQuery(this.#sqlString, [itoId, month, year]);
+                console.log("delete " + itoId + " shift record for:" + month + "/" + year);
+                console.log(itoId + " Shift List:");
+                this.#sqlString = "replace into shift_record (ito_id,shift_date,shift,state) values (?,?,?,?)";
+                let dateList = Object.keys(itoRoster.shiftList);
+                for (let i = 0; i < dateList.length; i++) {
+                    let shiftList=itoRoster.shiftList[dateList[i]].split("+");
+                    for (let j=0;j < shiftList.length ; j++){
+                        await this.#executeQuery(this.#sqlString, [itoId, year + "-" + month + "-" + dateList[i], shiftList[j], "A"]);
+                    }
+                }
+                console.log("update " + itoId + " shift record for:" + month + "/" + year);
+                this.#sqlString = "delete from preferred_shift where ito_id=? and month(shift_date)=? and year(shift_date)=?";
+                console.log("delete " + itoId + " preferred shift data for:" + month + "/" + year);
+                this.#sqlString = "replace into preferred_shift (ito_id,preferred_shift,shift_date) values (?,?,?)";
+                for (let date in preferredShiftList[itoId]) {
+                    await this.#executeQuery(this.#sqlString, [itoId, preferredShiftList[itoId][date], year + "-" + month + "-" + date]);
+                }
+                console.log("update " + itoId + " preferred shift record for:" + month + "/" + year);
+                console.log(itoId + " roster data update completed.");
+                console.log("===============================");
+            }
             await this.#connection.promise().commit();
             return true;
         } catch (error) {

@@ -13,6 +13,9 @@ let reducer = (state, action) => {
         case "refresh":
             result.isLoading = false;
             break;
+        case "setError":
+            result.error = action.error;
+            break;
         case "showLoading":
             result.isLoading = true;
             break;
@@ -93,7 +96,7 @@ export default function useRosterScheduler() {
             "type": "hideLoading"
         });
     }
-    let isBlackListedShift=(dateOfMonth, itoId) => {
+    let isBlackListedShift = (dateOfMonth, itoId) => {
         return itemList.rosterSchedulerData.isBlackListedShift(dateOfMonth, itoId);
     }
     let isDuplicateShift = (dateOfMonth, itoId) => {
@@ -112,9 +115,13 @@ export default function useRosterScheduler() {
         itemList.rosterSchedulerData.reDo();
         updateItemList({ type: "refresh" });
     }
-    let saveRosterToDB = () => {
-        console.log("saveRosterToDB");
-        itemList.rosterSchedulerData.saveToDB();
+    let saveRosterToDB = async () => {
+        try {
+            await itemList.rosterSchedulerData.saveToDB();
+            alert("Roster Data is saved to DB successfully.");
+        } catch (error) {
+            updateItemList({ "error": error, "type": "setError" });
+        }
     }
     let showLoading = () => {
         updateItemList({ "type": "showLoading" });
